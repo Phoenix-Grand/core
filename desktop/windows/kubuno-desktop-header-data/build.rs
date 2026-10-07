@@ -2,7 +2,7 @@
 
 use std::path::{Path, PathBuf};
 
-/// Where the web host keeps the module brand logos it serves (`/<id>-logo.png`): `core/frontend/public`.
+/// Where the web host keeps the module brand logos it serves (`/<id>-logo.png`): `core/web/public`.
 const WEB_LOGOS_ENV: &str = "KUBUNO_WEB_LOGOS_DIR";
 
 fn main() {
@@ -10,19 +10,28 @@ fn main() {
     web_logos();
 }
 
-/// Embeds the very files of `core/frontend/public` the core answers `/api/v1/modules`' `logo_url` with, as the
+/// Embeds the very files of `core/web/public` the core answers `/api/v1/modules`' `logo_url` with, as the
 /// launcher's fallback before its first download. Generated at every build from those files, never copied by
 /// hand, so the desktop cannot drift from the web.
 ///
-/// The folder is `KUBUNO_WEB_LOGOS_DIR` when set, else the `core/frontend/public` of the polyrepo workspace
-/// this checkout sits in. A checkout without the core next to it still builds: the table is empty and the
-/// launcher falls back to the server's logos, then to the modules' glyphs.
+/// The folder is `KUBUNO_WEB_LOGOS_DIR` when set, else the `web/public` of the core checkout this crate is part
+/// of (a path checkout, or the git checkout Cargo makes for a module app built against a `desktop-v*` tag), else
+/// the `core/web/public` of the polyrepo workspace around it. (`core/frontend` was the web host's former folder:
+/// looking only there left every build without the table.) A checkout without the core next to it still builds:
+/// the table is empty and the launcher falls back to the server's logos, then to the modules' glyphs.
 fn web_logos() {
     println!("cargo:rerun-if-env-changed={WEB_LOGOS_ENV}");
     let out = PathBuf::from(std::env::var_os("OUT_DIR").expect("OUT_DIR is set by cargo")).join("web_logos.rs");
     let dir = std::env::var_os(WEB_LOGOS_ENV).map(PathBuf::from).or_else(|| {
         let manifest = PathBuf::from(std::env::var_os("CARGO_MANIFEST_DIR")?);
-        manifest.ancestors().map(|a| a.join("core").join("frontend").join("public")).find(|p| p.is_dir())
+        manifest.ancestors().find_map(|a| {
+            // The core checkout itself: its root holds `desktop/` and `web/public`.
+            let own = a.join("web").join("public");
+            if a.join("desktop").is_dir() && own.is_dir() {
+                return Some(own);
+            }
+            Some(a.join("core").join("web").join("public")).filter(|p| p.is_dir())
+        })
     });
     let mut files: Vec<(String, PathBuf)> = Vec::new();
     match &dir {
@@ -42,7 +51,7 @@ fn web_logos() {
                 println!("cargo:warning=no module logo found in {}: the launcher has no built-in fallback", dir.display());
             }
         }
-        None => println!("cargo:warning=core/frontend/public not found (set {WEB_LOGOS_ENV}): the launcher has no built-in logo fallback"),
+        None => println!("cargo:warning=core/web/public not found (set {WEB_LOGOS_ENV}): the launcher has no built-in logo fallback"),
     }
     files.sort();
     let mut code = String::from(

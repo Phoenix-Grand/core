@@ -1,7 +1,7 @@
 //! The splash screen's artwork: procedural, vector, drawn with Direct2D — nothing but code.
 //!
 //! One artwork per application, in the colour family of its web logo
-//! (`core/frontend/public/<module>-logo.png`), and one composition for all of them so they read
+//! (`core/web/public/<module>-logo.png`), and one composition for all of them so they read
 //! as a family:
 //!
 //! * a deep diagonal ground in the module's colours, lit by soft blooms;

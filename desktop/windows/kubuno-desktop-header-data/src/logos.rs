@@ -14,7 +14,7 @@
 //! index remembers which file answers which URL, for the next start offline.
 //!
 //! Before the first download (a first start offline, a sample), the fallback is the same web files again,
-//! embedded at BUILD time by `build.rs` from `core/frontend/public` — never a copy kept by hand — and written
+//! embedded at BUILD time by `build.rs` from `core/web/public` — never a copy kept by hand — and written
 //! out once to a directory (the user's cache directory by default), because the painters decode from a path.
 
 use std::collections::BTreeMap;
@@ -318,7 +318,7 @@ mod tests {
     fn the_embedded_fallback_is_the_web_hosts_logos() {
         let names: Vec<&str> = builtin_names().collect();
         if names.is_empty() {
-            return; // built without `core/frontend/public` next to the checkout
+            return; // built without `core/web/public` next to the checkout
         }
         for (name, bytes) in generated::WEB_LOGOS {
             assert!(name.ends_with("-logo.png") || name.ends_with("-logo.svg"), "{name}");

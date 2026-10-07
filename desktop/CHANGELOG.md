@@ -9,6 +9,12 @@ number at release time, and CI publishes that section as the GitHub Release note
 
 ## [Unreleased]
 
+### Fixed
+
+- The launcher's built-in module logos are embedded again. The build looked for them in `core/frontend/public`,
+  the web host's former folder, and embedded none (a build warning said so); it now reads `web/public` of the core
+  checkout, including the git checkout of a module app built against a `desktop-v*` tag.
+
 ## [0.1.2-alpha] - 2026-10-07
 
 ### Fixed

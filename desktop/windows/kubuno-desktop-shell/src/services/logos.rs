@@ -2,14 +2,14 @@
 //! kept on disk so the header looks the same offline as online.
 //!
 //! The source of truth is the web's: the core answers `/api/v1/modules` with each app's `logo_url`,
-//! the very file the web launcher shows (`core/frontend/public/<id>-logo.png`, or `.svg`). The
+//! the very file the web launcher shows (`core/web/public/<id>-logo.png`, or `.svg`). The
 //! desktop downloads that file and keeps it per instance, under a name derived from its CONTENT
 //! (`<key>-<hash>.<ext>`): a logo or a photo that changes on the server gets a new path, so no
 //! path-keyed decode cache of the renderer can keep showing the old one, and an unchanged one is not
 //! rewritten. A small index remembers which file answers which URL, for the next start offline.
 //!
 //! Before the first download (a first start offline, the `--sample`), the fallback is the same web
-//! files again, embedded at BUILD time (by `kubuno-desktop-header-data`'s build script) from `core/frontend/public` — never a copy kept
+//! files again, embedded at BUILD time (by `kubuno-desktop-header-data`'s build script) from `core/web/public` — never a copy kept
 //! by hand — and written out once to the user's cache directory, because the painters decode from a
 //! path.
 //!

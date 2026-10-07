@@ -173,7 +173,7 @@ mod tests {
     #[test]
     fn the_fallback_is_the_web_file() {
         if kubuno_desktop_header_data::logos::builtin_names().next().is_none() {
-            return; // built without `core/frontend/public` next to the checkout
+            return; // built without `core/web/public` next to the checkout
         }
         let drive = logos::builtin_for_url("/drive-logo.png").expect("drive's web logo is embedded");
         assert_eq!(std::fs::read(&drive).ok().as_deref().and_then(kubuno_desktop_header_data::logos::image_extension), Some("png"));
