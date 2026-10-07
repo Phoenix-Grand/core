@@ -77,6 +77,7 @@ number at release time, and CI publishes that section as the GitHub Release note
   its children. Modules whose views were classified the same way need this core.
 
 ### Fixed
+- **Signing in works on SQLite and MySQL/MariaDB**: the sign-in stored its refresh token without an id, which only PostgreSQL fills in by default, so every password sign-in failed with "Erreur base de données" (`NOT NULL constraint failed: refresh_tokens.id`) on the other engines.
 
 - **The shared PostgreSQL extensions live in `public`, so modules migrate on a fresh install.** The first core
   migration created `uuid-ossp`, `pg_trgm`, `unaccent` and `citext` without naming a schema, so they landed

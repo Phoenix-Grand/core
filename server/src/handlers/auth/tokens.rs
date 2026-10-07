@@ -120,11 +120,14 @@ pub(super) async fn issue_full_tokens(
         .execute(
             &format!(
                 r#"INSERT INTO core.refresh_tokens
-               (user_id, token_hash, device_name, device_type, ip_address, user_agent,
+               (id, user_id, token_hash, device_name, device_type, ip_address, user_agent,
                 expires_at, family_id, client_type, device_id, country, auth_strength)
-               VALUES ($1, $2, $3, $4, $5{inet_cast}, $6, $7, $8, $9, $10, $11, $12)"#
+               VALUES ($1, $2, $3, $4, $5, $6{inet_cast}, $7, $8, $9, $10, $11, $12, $13)"#
             ),
             params![
+                // The id is generated here like the other refresh_tokens inserts: only PostgreSQL has a
+                // column default, so SQLite and MySQL refused every sign-in (NOT NULL on id).
+                kubuno_db::new_id(),
                 user.id,
                 &refresh_hash,
                 device_name,
