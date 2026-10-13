@@ -986,12 +986,13 @@ pub fn paint_adorners(
     // dependency on the raw D2D color type to build one from (`kubuno_desktop_ui`
     // only ever hands out already-resolved theme colors, by design).
     if let Some(h) = hover.filter(|id| !selection.contains(id)).and_then(|id| layout.get(id)) {
-        // Hover shares the selection's exact geometry: the same `selection_frame` (3 DIP outset) and the same 1.0
-        // stroke width as a selected element below, so the hover box and the selection box have identical size and
-        // margins — they differ only by colour (a lighter accent), never by position or thickness (the web
-        // designer's rule, DESIGNER.md; the complaint was a hover border that sat tighter than the selection).
+        // Hover shares the selection's exact geometry: the same `selection_frame` (3 DIP outset) and the same 2 DIP
+        // stroke width as the primary selection below, so the hover box and the selection box have identical size,
+        // margins and thickness — they differ only by colour (a lighter accent), never by position or weight (the
+        // web designer's rule: hover and the primary selection are both 2 px). The complaint was a hover border
+        // that sat tighter and thinner than the selection.
         let frame = selection_frame(h.bounds);
-        c.stroke_rounded_w(&frame, 0.0, &theme.accent_light, 1.0);
+        c.stroke_rounded_w(&frame, 0.0, &theme.accent_light, SELECTION_STROKE);
         // The hovered control's name tag: a darkened accent, so it reads apart from a selection tag's full accent.
         paint_tag(c, frame, h.kind, h.name.as_deref(), theme.accent_hover, theme.accent_foreground, None);
     }
@@ -1007,7 +1008,8 @@ pub fn paint_adorners(
         let outline = selection_frame(sel.bounds);
         let resizable = sel.layout == LayoutKind::DockAnchor;
         let ink = if resizable { &theme.accent } else { &theme.text_secondary };
-        c.stroke_rounded_w(&outline, 0.0, ink, 1.0);
+        // The primary selection is 2 DIP (the web designer's 2 px); other elements of a multi-selection are 1 DIP.
+        c.stroke_rounded_w(&outline, 0.0, ink, if primary { SELECTION_STROKE } else { 1.0 });
         // The selected control's name tag (full accent), drawn under the grab handles so a corner handle stays
         // visible over it. The primary selection, drawn last, keeps its tag on top of the others'.
         paint_tag(c, outline, sel.kind, sel.name.as_deref(), theme.accent, theme.accent_foreground, None);
@@ -1158,6 +1160,10 @@ pub const SELECTION_FRAME_GAP: f32 = 3.0;
 /// what [`handle_at`] hit-tests against — one constant so painting and
 /// hit-testing can never silently drift apart.
 pub const RESIZE_HANDLE_SIZE: f32 = 8.0;
+
+/// The stroke width of the primary selection outline and the hover outline (DIP) — the web designer's 2 px.
+/// A non-primary selection in a multi-selection is drawn one DIP thinner.
+pub const SELECTION_STROKE: f32 = 2.0;
 
 /// A minimum size a resize never shrinks below, DIP — avoids a degenerate
 /// (zero/negative) `Width`/`Height` that [`LayoutMap::hit_test`] would then

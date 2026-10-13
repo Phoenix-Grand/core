@@ -9,6 +9,12 @@ number at release time, and CI publishes that section as the GitHub Release note
 
 ## [Unreleased]
 
+### Changed
+
+- **The designer's hover and primary-selection outlines are 2 DIP thick** (the web designer's 2 px), instead of
+  1 DIP — so the hover border reads as the same weight as the selection, matching the web designer. Other elements
+  of a multi-selection stay 1 DIP.
+
 ## [0.1.3-alpha] - 2026-10-13
 
 ### Changed
