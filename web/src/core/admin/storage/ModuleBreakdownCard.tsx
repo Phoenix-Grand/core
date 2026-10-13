@@ -9,10 +9,6 @@ import { formatAgo, formatBytes } from "../sections/format"
 import { MAX_SERIES, NEUTRAL_SERIES, useSeriesScale, type Segment } from "./charts"
 import { useCategoryReading, useCategoryRules } from "./categories"
 import type { ModuleBreakdown, ModuleUsage } from "./api"
-import CategoryComposition from "./CategoryComposition"
-import CategoryRows from "./CategoryRows"
-import DelegatedNote from "./DelegatedNote"
-import CompositionBar from "./CompositionBar"
 
 import { ViewBase } from './ModuleBreakdownCard.kbcontrol'
 import * as __parts from './ModuleBreakdownCard.parts'
@@ -125,17 +121,9 @@ export class ModuleBreakdownCard extends ViewBase {
     return !(this.nothingDeclared)
   }
 
-  /** `<CompositionBar>`, rendered by a ReactHost. */
-  get CompositionBar() {
+  get bar_total() {
     if (!(!(this.nothingDeclared))) return undefined as never
-    return CompositionBar
-  }
-
-  get composition_bar_props() {
-    return this.memo('composition_bar_props', [this.segments, this.total, this.tr, this.nothingDeclared], () => {
-      if (!(!(this.nothingDeclared))) return undefined as never
-      return ({ segments: this.segments, total: Math.max(this.total, 1), ariaLabel: this.tr('admin.sto_mod_aria') })
-    })
+    return Math.max(this.total, 1)
   }
 
   get show_declaring() {
@@ -151,18 +139,6 @@ export class ModuleBreakdownCard extends ViewBase {
   /** `React.Fragment`: renders the elements an expression holds. */
   get Fragment() {
     return Fragment
-  }
-
-  /** `<CategoryRows>`, rendered by a ReactHost. */
-  get CategoryRows() {
-    if (!(this.declaring.length > 0)) return undefined as never
-    return CategoryRows
-  }
-
-  /** `<DelegatedNote>`, rendered by a ReactHost. */
-  get DelegatedNote() {
-    if (!(this.declaring.length > 0)) return undefined as never
-    return DelegatedNote
   }
 
   /** The rows of the Repeater over `declaring`. */
@@ -193,7 +169,7 @@ export class ModuleBreakdownCard extends ViewBase {
                 </span>
               </>
             )
-      return { m, cats, expandable, isOpen, meta, identity, show_not_expandable: ((this.declaring.length > 0)) ? (!(expandable)) : undefined, part1_props: ((this.declaring.length > 0) && (expandable)) ? ({ isOpen: isOpen, setOpen: this.memo("setOpen:bound", [], () => this.setOpen.bind(this)), m: m, identity: identity }) : undefined, content_identity: ((this.declaring.length > 0) && (!(expandable))) ? ({ children: identity }) : undefined, span_text: ((this.declaring.length > 0)) ? (formatBytes(m.used_bytes)) : undefined, category_rows_props: ((this.declaring.length > 0) && (isOpen)) ? ({ rows: cats, rules: this.rules }) : undefined, delegated_note_props: ((this.declaring.length > 0) && (isOpen)) ? ({ bytes: m.delegated_bytes ?? 0, objects: m.delegated_objects ?? 0, scope: "module", className: "mt-2" }) : undefined, key: m.module_id }
+      return { m, cats, expandable, isOpen, meta, identity, show_not_expandable: ((this.declaring.length > 0)) ? (!(expandable)) : undefined, part1_props: ((this.declaring.length > 0) && (expandable)) ? ({ isOpen: isOpen, setOpen: this.memo("setOpen:bound", [], () => this.setOpen.bind(this)), m: m, identity: identity }) : undefined, content_identity: ((this.declaring.length > 0) && (!(expandable))) ? ({ children: identity }) : undefined, span_text: ((this.declaring.length > 0)) ? (formatBytes(m.used_bytes)) : undefined, rules: this.rules, deleg_bytes: m.delegated_bytes ?? 0, deleg_objects: m.delegated_objects ?? 0,key: m.module_id }
     })
     })
   }
@@ -215,15 +191,6 @@ export class ModuleBreakdownCard extends ViewBase {
   /** A part of the screen still written in React (<Figure> is no .kbview element (./Figure#default)). */
   get Part4() {
     return __parts.Part4
-  }
-
-  /** `<CategoryComposition>`, rendered by a ReactHost. */
-  get CategoryComposition() {
-    return CategoryComposition
-  }
-
-  get category_composition_props() {
-    return this.memo('category_composition_props', [this.reading, this.props, this.tr], () => ({ reading: this.reading, heldBytes: this.props.data.held_bytes, ariaLabel: this.tr('admin.sto_held_aria'), delegatedBytes: this.props.data.delegated_bytes, delegatedObjects: this.props.data.delegated_objects }))
   }
 
   get show_silent() {

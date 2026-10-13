@@ -10,10 +10,6 @@ import { adminUrl } from "../adminAction"
 import { formatBytes } from "../sections/format"
 import type { AdminSectionProps } from "../sections/registry"
 import { type Segment } from "./charts"
-import ConsumersCard from "./ConsumersCard"
-import ModuleBreakdownCard from "./ModuleBreakdownCard"
-import QuotaPolicyCard from "./QuotaPolicyCard"
-import ReconciliationCard from "./ReconciliationCard"
 import { errorMessage, useSetWarnPercent, useStorageOverview } from "./api"
 import { TrendChart } from "./TrendChart"
 
@@ -329,17 +325,10 @@ export class StorageSection extends ViewBase {
     })
   }
 
-  /** `<ModuleBreakdownCard>`, rendered by a ReactHost. */
-  get ModuleBreakdownCard() {
+  /** `<ModuleBreakdownCard Data>`: the per-module breakdown, present only within `show_data_by_module`. */
+  get moduleBreakdownData() {
     if (!(!(this.isLoading)) || !(!(this.isError || !this.data)) || !(this.data.by_module)) return undefined as never
-    return ModuleBreakdownCard
-  }
-
-  get module_breakdown_card_props() {
-    return this.memo('module_breakdown_card_props', [this.data, this.isLoading, this.isError], () => {
-      if (!(!(this.isLoading)) || !(!(this.isError || !this.data)) || !(this.data.by_module)) return undefined as never
-      return ({ data: this.data.by_module })
-    })
+    return this.data.by_module
   }
 
   get show_data_reconciliation() {
@@ -349,31 +338,35 @@ export class StorageSection extends ViewBase {
     })
   }
 
-  /** `<ReconciliationCard>`, rendered by a ReactHost. */
-  get ReconciliationCard() {
+  /** `<ReconciliationCard Data>`: the reconciliation state, present only within `show_data_reconciliation`. */
+  get reconciliationData() {
     if (!(!(this.isLoading)) || !(!(this.isError || !this.data)) || !(this.data.reconciliation)) return undefined as never
-    return ReconciliationCard
+    return this.data.reconciliation
   }
 
-  get reconciliation_card_props() {
-    return this.memo('reconciliation_card_props', [this.data, this.isLoading, this.isError], () => {
-      if (!(!(this.isLoading)) || !(!(this.isError || !this.data)) || !(this.data.reconciliation)) return undefined as never
-      return ({ data: this.data.reconciliation, modules: this.data.by_module?.modules ?? [], staleHours: this.data.by_module?.stale_hours ?? 0 })
-    })
+  /** `<ReconciliationCard Modules>`: module list, only to name a blocking module id. */
+  get reconciliationModules() {
+    if (!(!(this.isLoading)) || !(!(this.isError || !this.data)) || !(this.data.reconciliation)) return undefined as never
+    return this.data.by_module?.modules ?? []
   }
 
-  /** `<ConsumersCard>`, rendered by a ReactHost. */
-  get ConsumersCard() {
+  /** `<ReconciliationCard StaleHours>`: the staleness threshold used in blocker messages. */
+  get reconciliationStaleHours() {
+    if (!(!(this.isLoading)) || !(!(this.isError || !this.data)) || !(this.data.reconciliation)) return undefined as never
+    return this.data.by_module?.stale_hours ?? 0
+  }
+
+  /** `<ConsumersCard WarnPercent>`: the instance warn threshold, drives the fill colouring. */
+  get consumersWarnPercent() {
     if (!(!(this.isLoading)) || !(!(this.isError || !this.data))) return undefined as never
-    return ConsumersCard
+    return this.data.warn_percent
   }
 
-  get consumers_card_props() {
-    return this.memo('consumers_card_props', [this.data, this.props, this.isLoading, this.isError], () => {
-      if (!(!(this.isLoading)) || !(!(this.isError || !this.data))) return undefined as never
-      return ({ warnPercent: this.data.warn_percent, initialFilter: this.props.params.get('filter') === 'full' ? 'full'
-            : this.props.params.get('filter') === 'near' ? 'near' : 'all' })
-    })
+  /** `<ConsumersCard InitialFilter>`: the saturated-accounts filter read from the URL, if any. */
+  get consumersInitialFilter() {
+    if (!(!(this.isLoading)) || !(!(this.isError || !this.data))) return undefined as never
+    return this.props.params.get('filter') === 'full' ? 'full'
+      : this.props.params.get('filter') === 'near' ? 'near' : 'all'
   }
 
   get show_data_by_unit() {
@@ -402,17 +395,10 @@ export class StorageSection extends ViewBase {
     })
   }
 
-  /** `<QuotaPolicyCard>`, rendered by a ReactHost. */
-  get QuotaPolicyCard() {
+  /** `<QuotaPolicyCard Overview>`: the whole storage overview the policy editor reads. */
+  get quotaOverview() {
     if (!(!(this.isLoading)) || !(!(this.isError || !this.data))) return undefined as never
-    return QuotaPolicyCard
-  }
-
-  get quota_policy_card_props() {
-    return this.memo('quota_policy_card_props', [this.data, this.isLoading, this.isError], () => {
-      if (!(!(this.isLoading)) || !(!(this.isError || !this.data))) return undefined as never
-      return ({ overview: this.data })
-    })
+    return this.data
   }
 
   get part7_props() {

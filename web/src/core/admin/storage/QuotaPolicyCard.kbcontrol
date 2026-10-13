@@ -80,8 +80,7 @@
              Visible="{Binding show_error}"
              Class="mt-3 [font-size:var(--kb-text-body)]"/>
       <Panel BackColor="Surface1" Visible="{Binding show_editing}" Class="mt-4 rounded-lg border border-border p-3">
-        <!-- TODO(views-migrate): <QuotaField> is no .kbview element (./QuotaField#default) -->
-        <ReactHost Component="{Binding QuotaField}" Props="{Binding quota_field_props}"/>
+        <QuotaField Label="{Binding quotaFieldLabel}" Amount="{Binding amount}" Unit="{Binding unit}" OnAmount="quota_field_amount" OnUnit="quota_field_unit" AutoFocus="true"/>
         <Callout Body="{Res admin.sto_policy_new_only}" Class="mt-3"/>
         <Stack Direction="LeftToRight" Justify="End" Class="mt-3">
           <Button Variant="Ghost" Text="{Res admin.sto_cancel}" OnClick="button_click5"/>

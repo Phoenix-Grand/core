@@ -120,16 +120,13 @@
       </Card>
     </Panel>
     <Panel Visible="{Binding show_data_by_module}" Class="mt-4">
-      <!-- TODO(views-migrate): <ModuleBreakdownCard> is no .kbview element (./ModuleBreakdownCard#default) -->
-      <ReactHost Component="{Binding ModuleBreakdownCard}" Props="{Binding module_breakdown_card_props}"/>
+      <ModuleBreakdownCard Data="{Binding moduleBreakdownData}"/>
     </Panel>
     <Panel Visible="{Binding show_data_reconciliation}" Class="mt-4">
-      <!-- TODO(views-migrate): <ReconciliationCard> is no .kbview element (./ReconciliationCard#default) -->
-      <ReactHost Component="{Binding ReconciliationCard}" Props="{Binding reconciliation_card_props}"/>
+      <ReconciliationCard Data="{Binding reconciliationData}" Modules="{Binding reconciliationModules}" StaleHours="{Binding reconciliationStaleHours}"/>
     </Panel>
     <Panel Class="mt-4">
-      <!-- TODO(views-migrate): <ConsumersCard> is no .kbview element (./ConsumersCard#default) -->
-      <ReactHost Component="{Binding ConsumersCard}" Props="{Binding consumers_card_props}"/>
+      <ConsumersCard WarnPercent="{Binding consumersWarnPercent}" InitialFilter="{Binding consumersInitialFilter}"/>
     </Panel>
     <Panel Class="mt-4">
       <Card Title="{Res admin.sto_units_title}" Subtitle="{Res admin.sto_units_sub}">
@@ -152,8 +149,7 @@
       </Card>
     </Panel>
     <Panel Class="mt-4">
-      <!-- TODO(views-migrate): <QuotaPolicyCard> is no .kbview element (./QuotaPolicyCard#default) -->
-      <ReactHost Component="{Binding QuotaPolicyCard}" Props="{Binding quota_policy_card_props}"/>
+      <QuotaPolicyCard Overview="{Binding quotaOverview}"/>
     </Panel>
     <Panel Class="mt-4">
       <Card Title="{Res admin.sto_threshold_title}" IconSize="16" Icon="Sliders" Subtitle="{Res admin.sto_threshold_sub}">

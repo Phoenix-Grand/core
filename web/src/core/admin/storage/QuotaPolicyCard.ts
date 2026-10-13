@@ -1,7 +1,7 @@
 /**
  * Code-behind of `QuotaPolicyCard.kbcontrol` (converted from `QuotaPolicyCard.tsx` by @kubuno/views-migrate).
  */
-import { bind, type MouseEventArgs } from '@kubuno/views'
+import { bind, type MouseEventArgs, type ValueChangedEventArgs } from '@kubuno/views'
 import { useTranslation } from "react-i18next"
 import { useQuery } from "@tanstack/react-query"
 import { api } from "../../api/client"
@@ -12,7 +12,7 @@ import { PRIV } from "../../authz/types"
 import { usePrivileges } from "../../authz/usePrivileges"
 import { formatBytes } from "../sections/format"
 import OrgUnitPicker from "../dialogs/OrgUnitPicker"
-import QuotaField, { splitQuota, toBytes, type QuotaUnit } from "./QuotaField"
+import { splitQuota, toBytes, type QuotaUnit } from "./QuotaField"
 import { errorMessage, useSetDefaultQuota, type StorageOverview } from "./api"
 
 import { ViewBase } from './QuotaPolicyCard.kbcontrol'
@@ -121,17 +121,10 @@ export class QuotaPolicyCard extends ViewBase {
     return this.memo('show_editing', [this.editing], () => !!(this.editing))
   }
 
-  /** `<QuotaField>`, rendered by a ReactHost. */
-  get QuotaField() {
+  /** `<QuotaField Label>`: the field's label for the unit being edited. */
+  get quotaFieldLabel() {
     if (!(this.editing)) return undefined as never
-    return QuotaField
-  }
-
-  get quota_field_props() {
-    return this.memo('quota_field_props', [this.tr, this.editing, this.amount, this.unit, this.memo], () => {
-      if (!(this.editing)) return undefined as never
-      return ({ label: this.tr('admin.sto_policy_field', { name: this.editing.name }), amount: this.amount, unit: this.unit, onAmount: this.memo("setAmount:bound", [], () => this.setAmount.bind(this)), onUnit: this.memo("setUnit:bound", [], () => this.setUnit.bind(this)), autoFocus: true })
-    })
+    return this.tr('admin.sto_policy_field', { name: this.editing.name })
   }
 
   get enabled_unless_save_is_pending() {
@@ -238,6 +231,16 @@ export class QuotaPolicyCard extends ViewBase {
   button_click6(_sender: unknown, _args: MouseEventArgs) {
     if (!(this.editing)) return undefined as never
     void this.submit()
+  }
+
+  /** `<QuotaField OnAmount>`: the amount changed. */
+  quota_field_amount(_sender: unknown, args: ValueChangedEventArgs) {
+    this.setAmount(args.value as string)
+  }
+
+  /** `<QuotaField OnUnit>`: the unit changed. */
+  quota_field_unit(_sender: unknown, args: ValueChangedEventArgs) {
+    this.setUnit(args.value as QuotaUnit)
   }
 
   /** `setAmount` of the TSX: a value, or an update of the previous one. */

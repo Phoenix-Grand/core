@@ -9,8 +9,7 @@
              Class="[font-size:var(--kb-text-meta)]"/>
       <Callout Body="{Res admin.sto_mod_none_desc}" Visible="{Binding nothingDeclared}" Class="mt-2"/>
       <Panel Visible="{Binding show_not_nothing_declared}" Class="mt-2">
-        <!-- TODO(views-migrate): <CompositionBar> is no .kbview element (./CompositionBar#default) -->
-        <ReactHost Component="{Binding CompositionBar}" Props="{Binding composition_bar_props}"/>
+        <CompositionBar Segments="{Binding segments}" Total="{Binding bar_total}" AriaLabel="{Res admin.sto_mod_aria}"/>
       </Panel>
       <Panel HtmlTag="Ul" Visible="{Binding show_declaring}" Class="mt-5 flex flex-col divide-y divide-border border-t border-border">
         <Repeater ItemKey="key" ItemsSource="{Binding rows_declaring}">
@@ -44,10 +43,8 @@
                      Class="shrink-0 tabular-nums [font-size:var(--kb-text-body)]"/>
             </Panel>
             <Panel Visible="{Binding isOpen}" Class="pb-3 pl-6">
-              <!-- TODO(views-migrate): <CategoryRows> is no .kbview element (./CategoryRows#default) -->
-              <ReactHost Component="{Binding CategoryRows}" Props="{Binding category_rows_props}"/>
-              <!-- TODO(views-migrate): <DelegatedNote> is no .kbview element (./DelegatedNote#default) -->
-              <ReactHost Component="{Binding DelegatedNote}" Props="{Binding delegated_note_props}"/>
+              <CategoryRows Rows="{Binding cats}" Rules="{Binding rules}"/>
+              <DelegatedNote Bytes="{Binding deleg_bytes}" Objects="{Binding deleg_objects}" Scope="module" ClassName="mt-2"/>
             </Panel>
           </Panel>
         </Repeater>
@@ -71,8 +68,7 @@
           <ReactHost Component="{Binding Part4}" Props="{Binding part2_props}"/>
         </Panel>
         <Panel Class="mt-4">
-          <!-- TODO(views-migrate): <CategoryComposition> is no .kbview element (./CategoryComposition#default) -->
-          <ReactHost Component="{Binding CategoryComposition}" Props="{Binding category_composition_props}"/>
+          <CategoryComposition Reading="{Binding reading}" HeldBytes="{Binding props.data.held_bytes}" AriaLabel="{Res admin.sto_held_aria}" DelegatedBytes="{Binding props.data.delegated_bytes}" DelegatedObjects="{Binding props.data.delegated_objects}"/>
         </Panel>
       </Panel>
       <Panel Visible="{Binding show_silent}" Class="mt-4 border-t border-border pt-4">
