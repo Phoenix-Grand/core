@@ -88,8 +88,11 @@ export function drawAdorners(layer: HTMLElement, origin: { left: number; top: nu
     if (spec.parent.label) tag(layer, origin, spec.parent.rect, spec.parent.label, 'kbd-tag-parent')
   }
   if (spec.hover) {
-    box(layer, origin, spec.hover.rect, 'kbd-hover')
-    if (spec.hover.label) tag(layer, origin, spec.hover.rect, spec.hover.label, 'kbd-tag-hover')
+    // Hover uses the same outset frame as a selection (`selectionFrame`), so the two boxes share the exact same
+    // width, height and margins — they differ only by opacity (see `.kbd-hover` / `.kbd-sel`), not by geometry.
+    const frame = selectionFrame(spec.hover.rect)
+    box(layer, origin, frame, 'kbd-hover')
+    if (spec.hover.label) tag(layer, origin, frame, spec.hover.label, 'kbd-tag-hover')
   }
   if (spec.band) box(layer, origin, spec.band, 'kbd-band')
   for (const s of spec.selected) {
