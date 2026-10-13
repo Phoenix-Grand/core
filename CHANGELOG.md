@@ -10,6 +10,10 @@ number at release time, and CI publishes that section as the GitHub Release note
 ## [Unreleased]
 
 ### Changed
+- **Desktop HTTP clients are shared instead of rebuilt per request-maker.** Every `ApiClient` built its own
+  `reqwest` client — each with its own copy of the TLS root store and connection pool (~0.5–1 MB) — and the login path
+  rebuilt one on each attempt. Clients with the same configuration (user-agent, timeouts, proxy) now share a single
+  underlying HTTP client, so memory no longer grows with the number of accounts and request-makers in a process.
 - **The desktop apps bound their in-memory image and icon caches.** The Direct2D cache of decoded images (photos,
   previews, resource pictures) was unbounded — a single large photo decodes to tens of megabytes, so viewing many
   images over a session could retain hundreds of MB that was never released. It now has a resident-byte budget (128 MB)

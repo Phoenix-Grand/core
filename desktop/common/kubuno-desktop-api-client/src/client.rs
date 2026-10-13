@@ -299,16 +299,47 @@ impl ApiClientBuilder {
         if !(base.starts_with("http://") || base.starts_with("https://")) {
             return Err(ApiError::InvalidRequest("the server URL must start with http:// or https://".to_string()));
         }
-        let mut builder = reqwest::Client::builder()
-            .user_agent(self.user_agent)
-            .timeout(self.timeout)
-            .connect_timeout(self.connect_timeout);
-        if let Some(p) = self.proxy {
-            let proxy = reqwest::Proxy::all(&p).map_err(|e| ApiError::InvalidRequest(format!("proxy: {e}")))?;
-            builder = builder.proxy(proxy);
-        }
-        let http = builder.build().map_err(|e| ApiError::InvalidRequest(format!("HTTP client: {e}")))?;
+        // Reuse a shared reqwest::Client for an identical configuration instead of
+        // building a new one — with its own TLS root store and connection pool — for
+        // every ApiClient (api_for() builds one on each login attempt).
+        let key: ClientKey = (self.user_agent, self.timeout, self.connect_timeout, self.proxy);
+        let http = shared_http_client(&key)?;
         Ok(ApiClient { inner: Arc::new(Inner { http, base, tokens: self.tokens, retry: self.retry, device_key: self.device_key }) })
+    }
+}
+
+/// The configuration that determines a `reqwest::Client`'s identity (user-agent,
+/// timeouts, proxy). Clients built from the same key share one TLS configuration and
+/// connection pool.
+type ClientKey = (String, Duration, Duration, Option<String>);
+
+/// Returns a `reqwest::Client` for `key`, building (and caching) it once per distinct
+/// configuration. A `reqwest::Client` is internally reference-counted, so clones share
+/// its pool — cheap — whereas building one loads the system root store. The cache holds
+/// one entry per distinct (user-agent, timeouts, proxy) tuple: a handful in practice.
+fn shared_http_client(key: &ClientKey) -> Result<reqwest::Client, ApiError> {
+    static CLIENTS: std::sync::OnceLock<std::sync::Mutex<std::collections::HashMap<ClientKey, reqwest::Client>>> =
+        std::sync::OnceLock::new();
+    let clients = CLIENTS.get_or_init(|| std::sync::Mutex::new(std::collections::HashMap::new()));
+    if let Ok(map) = clients.lock() {
+        if let Some(c) = map.get(key) {
+            return Ok(c.clone());
+        }
+    }
+    let (user_agent, timeout, connect_timeout, proxy) = key;
+    let mut builder = reqwest::Client::builder()
+        .user_agent(user_agent)
+        .timeout(*timeout)
+        .connect_timeout(*connect_timeout);
+    if let Some(p) = proxy {
+        let proxy = reqwest::Proxy::all(p).map_err(|e| ApiError::InvalidRequest(format!("proxy: {e}")))?;
+        builder = builder.proxy(proxy);
+    }
+    let http = builder.build().map_err(|e| ApiError::InvalidRequest(format!("HTTP client: {e}")))?;
+    match clients.lock() {
+        // Another thread may have inserted the same key meanwhile; both are equivalent.
+        Ok(mut map) => Ok(map.entry(key.clone()).or_insert(http).clone()),
+        Err(_) => Ok(http),
     }
 }
 
