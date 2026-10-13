@@ -1691,7 +1691,7 @@ dependencies = [
 
 [[package]]
 name = "kubuno-desktop"
-version = "0.1.3-alpha"
+version = "0.1.4-alpha"
 dependencies = [
  "kubuno-desktop-app-storage-components",
  "kubuno-desktop-controls",
@@ -1711,7 +1711,7 @@ dependencies = [
 
 [[package]]
 name = "kubuno-desktop-account"
-version = "0.1.3-alpha"
+version = "0.1.4-alpha"
 dependencies = [
  "async-trait",
  "axum",
@@ -1733,7 +1733,7 @@ dependencies = [
 
 [[package]]
 name = "kubuno-desktop-api-client"
-version = "0.1.3-alpha"
+version = "0.1.4-alpha"
 dependencies = [
  "async-trait",
  "axum",
@@ -1751,7 +1751,7 @@ dependencies = [
 
 [[package]]
 name = "kubuno-desktop-app-storage"
-version = "0.1.3-alpha"
+version = "0.1.4-alpha"
 dependencies = [
  "hex",
  "kubuno-desktop-secrets",
@@ -1766,7 +1766,7 @@ dependencies = [
 
 [[package]]
 name = "kubuno-desktop-app-storage-components"
-version = "0.1.3-alpha"
+version = "0.1.4-alpha"
 dependencies = [
  "kubuno-desktop-app-storage",
  "kubuno-desktop-resources-model",
@@ -1778,7 +1778,7 @@ dependencies = [
 
 [[package]]
 name = "kubuno-desktop-controls"
-version = "0.1.3-alpha"
+version = "0.1.4-alpha"
 dependencies = [
  "accesskit",
  "accesskit_windows",
@@ -1792,7 +1792,7 @@ dependencies = [
 
 [[package]]
 name = "kubuno-desktop-data"
-version = "0.1.3-alpha"
+version = "0.1.4-alpha"
 dependencies = [
  "chrono",
  "futures",
@@ -1817,7 +1817,7 @@ dependencies = [
 
 [[package]]
 name = "kubuno-desktop-data-macros"
-version = "0.1.3-alpha"
+version = "0.1.4-alpha"
 dependencies = [
  "kubuno-desktop-data-model",
  "proc-macro2",
@@ -1828,7 +1828,7 @@ dependencies = [
 
 [[package]]
 name = "kubuno-desktop-data-model"
-version = "0.1.3-alpha"
+version = "0.1.4-alpha"
 dependencies = [
  "hex",
  "serde",
@@ -1838,7 +1838,7 @@ dependencies = [
 
 [[package]]
 name = "kubuno-desktop-data-tool"
-version = "0.1.3-alpha"
+version = "0.1.4-alpha"
 dependencies = [
  "chrono",
  "kubuno-desktop-data",
@@ -1854,7 +1854,7 @@ dependencies = [
 
 [[package]]
 name = "kubuno-desktop-header-data"
-version = "0.1.3-alpha"
+version = "0.1.4-alpha"
 dependencies = [
  "async-trait",
  "axum",
@@ -1873,7 +1873,7 @@ dependencies = [
 
 [[package]]
 name = "kubuno-desktop-print"
-version = "0.1.3-alpha"
+version = "0.1.4-alpha"
 dependencies = [
  "kubuno-desktop-app-storage-components",
  "kubuno-desktop-controls",
@@ -1892,7 +1892,7 @@ dependencies = [
 
 [[package]]
 name = "kubuno-desktop-resources"
-version = "0.1.3-alpha"
+version = "0.1.4-alpha"
 dependencies = [
  "kubuno-desktop-resources-macros",
  "kubuno-desktop-resources-model",
@@ -1902,7 +1902,7 @@ dependencies = [
 
 [[package]]
 name = "kubuno-desktop-resources-macros"
-version = "0.1.3-alpha"
+version = "0.1.4-alpha"
 dependencies = [
  "kubuno-desktop-resources-model",
  "proc-macro2",
@@ -1912,7 +1912,7 @@ dependencies = [
 
 [[package]]
 name = "kubuno-desktop-resources-model"
-version = "0.1.3-alpha"
+version = "0.1.4-alpha"
 dependencies = [
  "base64",
  "serde_json",
@@ -1920,14 +1920,14 @@ dependencies = [
 
 [[package]]
 name = "kubuno-desktop-resources-tool"
-version = "0.1.3-alpha"
+version = "0.1.4-alpha"
 dependencies = [
  "kubuno-desktop-resources-model",
 ]
 
 [[package]]
 name = "kubuno-desktop-secrets"
-version = "0.1.3-alpha"
+version = "0.1.4-alpha"
 dependencies = [
  "getrandom 0.2.17",
  "hex",
@@ -1943,7 +1943,7 @@ dependencies = [
 
 [[package]]
 name = "kubuno-desktop-shell"
-version = "0.1.3-alpha"
+version = "0.1.4-alpha"
 dependencies = [
  "anyhow",
  "embed-manifest",
@@ -1970,7 +1970,7 @@ dependencies = [
 
 [[package]]
 name = "kubuno-desktop-shell-common"
-version = "0.1.3-alpha"
+version = "0.1.4-alpha"
 dependencies = [
  "anyhow",
  "kubuno-desktop-account",
@@ -1985,7 +1985,7 @@ dependencies = [
 
 [[package]]
 name = "kubuno-desktop-shell-controls"
-version = "0.1.3-alpha"
+version = "0.1.4-alpha"
 dependencies = [
  "kubuno-desktop",
  "serde",
@@ -1994,21 +1994,21 @@ dependencies = [
 
 [[package]]
 name = "kubuno-desktop-shell-linux"
-version = "0.1.3-alpha"
+version = "0.1.4-alpha"
 dependencies = [
  "kubuno-desktop-shell-common",
 ]
 
 [[package]]
 name = "kubuno-desktop-shell-macos"
-version = "0.1.3-alpha"
+version = "0.1.4-alpha"
 dependencies = [
  "kubuno-desktop-shell-common",
 ]
 
 [[package]]
 name = "kubuno-desktop-single-instance"
-version = "0.1.3-alpha"
+version = "0.1.4-alpha"
 dependencies = [
  "hex",
  "libc",
@@ -2022,7 +2022,7 @@ dependencies = [
 
 [[package]]
 name = "kubuno-desktop-sync"
-version = "0.1.3-alpha"
+version = "0.1.4-alpha"
 dependencies = [
  "anyhow",
  "clap",
@@ -2043,7 +2043,7 @@ dependencies = [
 
 [[package]]
 name = "kubuno-desktop-sync-engine"
-version = "0.1.3-alpha"
+version = "0.1.4-alpha"
 dependencies = [
  "async-trait",
  "axum",
@@ -2064,7 +2064,7 @@ dependencies = [
 
 [[package]]
 name = "kubuno-desktop-ui"
-version = "0.1.3-alpha"
+version = "0.1.4-alpha"
 dependencies = [
  "accesskit",
  "accesskit_windows",
@@ -2079,7 +2079,7 @@ dependencies = [
 
 [[package]]
 name = "kubuno-desktop-views"
-version = "0.1.3-alpha"
+version = "0.1.4-alpha"
 dependencies = [
  "kubuno-desktop-controls",
  "kubuno-desktop-resources",
@@ -2098,7 +2098,7 @@ dependencies = [
 
 [[package]]
 name = "kubuno-desktop-views-ls"
-version = "0.1.3-alpha"
+version = "0.1.4-alpha"
 dependencies = [
  "crossbeam-channel",
  "kubuno-desktop-resources-model",
@@ -2123,7 +2123,7 @@ dependencies = [
 
 [[package]]
 name = "kubuno-desktop-views-macros"
-version = "0.1.3-alpha"
+version = "0.1.4-alpha"
 dependencies = [
  "kubuno-desktop-views",
  "kubuno-desktop-views-meta",
@@ -2134,7 +2134,7 @@ dependencies = [
 
 [[package]]
 name = "kubuno-desktop-views-meta"
-version = "0.1.3-alpha"
+version = "0.1.4-alpha"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -2143,7 +2143,7 @@ dependencies = [
 
 [[package]]
 name = "kubuno-desktop-views-model"
-version = "0.1.3-alpha"
+version = "0.1.4-alpha"
 dependencies = [
  "serde",
  "serde_json",
@@ -2151,7 +2151,7 @@ dependencies = [
 
 [[package]]
 name = "kubuno-desktop-views-syntax"
-version = "0.1.3-alpha"
+version = "0.1.4-alpha"
 dependencies = [
  "kubuno-desktop-views-model",
  "rowan",

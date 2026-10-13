@@ -9,6 +9,8 @@ number at release time, and CI publishes that section as the GitHub Release note
 
 ## [Unreleased]
 
+## [0.1.4-alpha] - 2026-10-13
+
 ### Changed
 
 - **The designer's hover and primary-selection outlines are 2 DIP thick** (the web designer's 2 px), instead of
