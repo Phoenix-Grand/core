@@ -15,6 +15,12 @@ number at release time, and CI publishes that section as the GitHub Release note
 - **The web view designer's viewport toolbar uses device icons** (phone / tablet / laptop / monitor, plus fit-to-pane) instead of pixel-width labels; the exact width stays in each button's tooltip and accessible name.
 
 ### Added
+- **A `.kbcontrol` can be used as a native, typed element inside another web view.** When a user control
+  declares an `x:Props` type, the compiler now reads that type from the control's code-behind and turns each
+  field into a real attribute: a value field becomes a bindable property (`File="{Binding file}"`), a function
+  field becomes an event (`onOpen` → `OnOpen="handler"`). Passing an object or a function to a control
+  type-checks instead of being rejected, so views can be composed of controls directly instead of going
+  through a React host. A control that declares no `x:Props` keeps its previous pass-through behaviour.
 - **Collaboration rooms can be closed by the module that owns them**
   (`POST /internal/collab/rooms/close`, internal secret; a module may only close its own rooms).
   Used when a module replaces the content behind a room (a REST save from outside it): the connected

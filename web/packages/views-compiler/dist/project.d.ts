@@ -18,7 +18,11 @@ export declare function viewOfCodeBehind(file: string): string | null;
 export declare function viewStem(file: string): string;
 /** Every view under `dirs` (relative to `root`), sorted. */
 export declare function scanViews(root: string, dirs?: readonly string[]): string[];
-/** The user controls of the project: one per `.kbcontrol`, rendered by its code-behind (else itself). */
+/**
+ * The user controls of the project: one per `.kbcontrol`, rendered by its code-behind (else itself). When the
+ * control names an `x:Props` type, its members are read from the code-behind (WV-7) so another view can use it
+ * as a native, typed element (`props`); a control without `x:Props` keeps the earlier pass-through behaviour.
+ */
 export declare function userControlsOf(root: string, views: readonly string[]): UserControlRef[];
 /** Folder (under {@link GENERATED_DIR}) of the generated files of views outside the project root. */
 export declare const EXTERNAL_DIR = "_external";

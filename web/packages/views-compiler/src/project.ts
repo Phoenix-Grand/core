@@ -11,6 +11,7 @@ import { fileURLToPath } from 'node:url'
 import { CompilerWasm, ViewCompiler } from './compiler.js'
 import { KbresCodec } from './kbres.js'
 import type { CompileOutput, UserControlRef } from './types.js'
+import { extractUserControlProps } from './uc-props.js'
 
 /** View file extensions (VIEWS-SPEC §1.1). */
 export const VIEW_EXTENSIONS = ['.kbview', '.kbcontrol'] as const
@@ -110,14 +111,21 @@ export function scanViews(root: string, dirs: readonly string[] = ['src']): stri
   return out.sort()
 }
 
-/** The user controls of the project: one per `.kbcontrol`, rendered by its code-behind (else itself). */
+/**
+ * The user controls of the project: one per `.kbcontrol`, rendered by its code-behind (else itself). When the
+ * control names an `x:Props` type, its members are read from the code-behind (WV-7) so another view can use it
+ * as a native, typed element (`props`); a control without `x:Props` keeps the earlier pass-through behaviour.
+ */
 export function userControlsOf(root: string, views: readonly string[]): UserControlRef[] {
   return views
     .filter((v) => v.toLowerCase().endsWith('.kbcontrol'))
     .map((v) => {
       const cb = codeBehindOf(v)
       const module = cb ? cb.replace(/\.(ts|tsx)$/, '') : v
-      return { name: viewStem(v), module: '/' + projectPath(root, module) }
+      const props = extractUserControlProps(v, cb)
+      const ref: UserControlRef = { name: viewStem(v), module: '/' + projectPath(root, module) }
+      if (props && props.length > 0) ref.props = props
+      return ref
     })
 }
 

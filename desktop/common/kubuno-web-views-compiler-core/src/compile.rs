@@ -472,10 +472,11 @@ impl<'a> Compiler<'a> {
                     }
                 }
                 None if meta.is_user_control() => {
-                    // A user control's own properties come from its code-behind (WV-7 reads them); until then
-                    // every attribute is passed through as a prop of `this.props`.
+                    // An attribute the control's `x:Props` type does not declare (WV-7), or a control with no
+                    // `x:Props` at all: passed through as a prop of `this.props`, with an `__any` check so a
+                    // binding of any shape (an object, a function) still type-checks.
                     let to = PropTarget { prop: Some(lower_first(&aname)), ..PropTarget::default() };
-                    let fake = PropertyEntry { name: aname.clone(), bindable: true, ..PropertyEntry::default() };
+                    let fake = PropertyEntry { name: aname.clone(), bindable: true, editor: Some("object".into()), ..PropertyEntry::default() };
                     if let Some(mut compiled) = self.property(&attr, &fake, &BTreeMap::from([(aname.clone(), to)]), &value, is_root, true) {
                         compiled.n = aname.clone();
                         node.props.push(compiled);

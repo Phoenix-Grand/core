@@ -8,6 +8,7 @@
 use std::fs;
 use std::path::Path;
 
+use kubuno_web_views_compiler_core::registry::UserControlProp;
 use kubuno_web_views_compiler_core::{CompileOptions, CompileRequest, RegistryInput, Session, UserControlRef};
 
 fn session() -> Session {
@@ -117,8 +118,8 @@ fn module_isolation_rejects_foreign_modules() {
     let foreign = r#"{"schema":1,"target":"web","version":"0","components":[{"name":"NoteCard","children":"None","web":{"module":"@kubuno/notes","export":"NoteCard","dom_root":"ref"}},{"name":"LocalCard","children":"None","web":{"module":"/src/controls","export":"LocalCard","dom_root":"ref"}}]}"#;
     s.add_registry(&RegistryInput { json: foreign.into(), label: "controls.json".into(), host: false }).expect("loads");
     s.set_user_controls(&[
-        UserControlRef { name: "MessageRow".into(), module: "/src/MessageRow".into() },
-        UserControlRef { name: "Bad".into(), module: "drive/Row".into() },
+        UserControlRef { name: "MessageRow".into(), module: "/src/MessageRow".into(), props: Vec::new() },
+        UserControlRef { name: "Bad".into(), module: "drive/Row".into(), props: Vec::new() },
     ]);
     let out = s.compile(&CompileRequest {
         source: "<Stack><LocalCard/><MessageRow Foo=\"1\"/></Stack>".into(),
@@ -135,6 +136,41 @@ fn module_isolation_rejects_foreign_modules() {
     let mut host = Session::new();
     host.add_registry(&RegistryInput { json: foreign.into(), label: "host.json".into(), host: true }).expect("loads");
     assert_eq!(host.registry.problems.len(), 2);
+}
+
+#[test]
+fn a_typed_user_control_binds_objects_and_wires_events() {
+    // WV-7: a `.kbcontrol` whose `x:Props` type was extracted is a typed element. An object field is a
+    // bindable property (its binding type-checks as `__any`, not `__str`), a function field is an event.
+    let mut s = session();
+    s.set_user_controls(&[UserControlRef {
+        name: "SearchResultRow".into(),
+        module: "/src/SearchResultRow".into(),
+        props: vec![
+            UserControlProp { name: "file".into(), event: false, kind: Some("object".into()), args: None },
+            UserControlProp { name: "count".into(), event: false, kind: Some("number".into()), args: None },
+            UserControlProp { name: "onOpen".into(), event: true, kind: None, args: Some("value".into()) },
+        ],
+    }]);
+    let el = s.registry.get("SearchResultRow").expect("the typed user control is registered");
+    assert!(el.is_user_control());
+    assert_eq!(el.web.prop_map.get("File").and_then(|t| t.prop.as_deref()), Some("file"));
+    assert_eq!(el.web.event_map.get("OnOpen").and_then(|e| e.prop.as_deref()), Some("onOpen"));
+
+    let out = s.compile(&CompileRequest {
+        source: r#"<Repeater ItemKey="key" ItemsSource="{Binding rows}"><SearchResultRow File="{Binding file}" Count="{Binding n}" OnOpen="open_result"/></Repeater>"#.into(),
+        options: CompileOptions { file: "src/v.kbview".into(), code_behind: Some("./v".into()), ..Default::default() },
+    });
+    assert!(out.ok, "{:?}", out.diagnostics);
+    assert!(out.handlers.iter().any(|h| h.name == "open_result"), "the event wires a handler: {:?}", out.handlers);
+    // The object binding is checked with `__any` (an object/function binding type-checks); the number with `__num`.
+    assert!(out.check.contains("__any("), "object prop → __any: {}", out.check);
+    assert!(out.check.contains("__num("), "number prop → __num: {}", out.check);
+    let plan = out.plan.expect("plan");
+    let json = serde_json::to_string(&plan).expect("plan serialises");
+    assert!(json.contains("\"kind\":\"user_control\""), "the control renders as a user_control node: {json}");
+    assert!(json.contains("\"prop\":\"file\""), "the object prop maps to this.props.file: {json}");
+    assert!(json.contains("\"prop\":\"onOpen\""), "the event maps to this.props.onOpen: {json}");
 }
 
 #[test]

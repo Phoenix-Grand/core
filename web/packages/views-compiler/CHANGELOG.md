@@ -6,6 +6,16 @@ under the published version number.
 
 ## [Unreleased]
 
+### Added
+
+- **User controls become native, typed elements (WV-7).** `userControlsOf` now reads each `.kbcontrol`'s
+  `x:Props` type from its code-behind (through the TypeScript API, already a peer dependency — no new
+  dependency) and hands its members to the compiler: a value field becomes a bindable property, a function
+  field becomes an event. Another view can then use the control as a typed element (`<SearchResultRow
+  File="{Binding file}" OnOpen="handler"/>`) and binding an object or wiring a function type-checks. A control
+  without `x:Props` keeps the earlier pass-through behaviour. Rebuild the `.wasm` (`npm run build:wasm`, from
+  the matching `web-views-compiler-core` tag) to pick up the compiler side.
+
 ## [0.1.3] - 2026-10-06
 
 ### Changed

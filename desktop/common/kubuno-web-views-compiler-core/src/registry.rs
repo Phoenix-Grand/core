@@ -6,7 +6,7 @@
 
 use std::collections::{BTreeMap, HashMap};
 
-use kubuno_desktop_views_model::{ComponentEntry, PropertyEntry, RegistryDocument};
+use kubuno_desktop_views_model::{ComponentEntry, EventEntry, PropKindEntry, PropertyEntry, RegistryDocument};
 use serde::Deserialize;
 use serde_json::{Map, Value};
 
@@ -170,6 +170,26 @@ impl Element {
     }
 }
 
+/// One member of a user control's `x:Props` type (WV-7): a bindable property (a non-function field) or an
+/// event (a function field). Extracted from the code-behind by `@kubuno/views-compiler` (`uc-props.ts`) and
+/// carried in [`UserControlRef::props`]; empty when the control declares no `x:Props` (pass-through, as before).
+#[derive(Debug, Clone, Deserialize, serde::Serialize)]
+pub struct UserControlProp {
+    /// The field name, verbatim — the React prop the compiled control reads (`file`, `onOpen`).
+    pub name: String,
+    /// The field is a function type: it becomes an event (`onOpen` → `OnOpen`), not a bindable property.
+    #[serde(default)]
+    pub event: bool,
+    /// For a property: the broad value category (`string`, `number`, `boolean`, `array`, `object`), used to
+    /// type-check its bindings. Absent / unknown is treated as `object` (a `{Binding}` of any shape).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub kind: Option<String>,
+    /// For an event: how the handler's args are built from the control's callback (`value` = the first
+    /// argument as `e.value`, `none` = no argument).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub args: Option<String>,
+}
+
 /// A user control of the project: `<MessageRow/>` for `MessageRow.kbcontrol`, rendered by the default
 /// export of its code-behind.
 #[derive(Debug, Clone, Deserialize, serde::Serialize)]
@@ -177,6 +197,30 @@ pub struct UserControlRef {
     pub name: String,
     /// The code-behind module, project-local (`/src/MessageRow` or `./MessageRow`).
     pub module: String,
+    /// The members of its `x:Props` type (WV-7), empty when it has none.
+    #[serde(default)]
+    pub props: Vec<UserControlProp>,
+}
+
+/// `file` → `File` (the PascalCase attribute of a camelCase prop field; the rest of the name is kept, so
+/// `dropHereText` → `DropHereText`).
+fn upper_first(s: &str) -> String {
+    let mut c = s.chars();
+    match c.next() {
+        Some(f) => f.to_uppercase().chain(c).collect(),
+        None => String::new(),
+    }
+}
+
+/// The event attribute of a function field: `onOpen` → `OnOpen`, `submit` → `OnSubmit` (the registry's
+/// events are `On`-prefixed; a field already shaped `on<Upper>…` keeps its single `On`).
+fn event_name(field: &str) -> String {
+    let pascal = upper_first(field);
+    if pascal.starts_with("On") && pascal.as_bytes().get(2).is_some_and(u8::is_ascii_uppercase) {
+        pascal
+    } else {
+        format!("On{pascal}")
+    }
 }
 
 /// The merged registry: host first, then project registries, then user controls.
@@ -224,7 +268,11 @@ impl WebRegistry {
         }
     }
 
-    /// Adds the user controls of the project.
+    /// Adds the user controls of the project. A control whose `x:Props` type was extracted (WV-7) becomes a
+    /// typed element: its non-function fields are bindable properties (so an object binding type-checks) and
+    /// its function fields are events (so a handler can be wired), each mapped through `prop_map`/`event_map`
+    /// to the React prop the compiled control reads (`this.props.*`). A control without `x:Props` keeps the
+    /// earlier pass-through behaviour (no declared properties; every attribute forwarded as a prop).
     pub fn add_user_controls(&mut self, controls: &[UserControlRef]) {
         for uc in controls {
             if !is_project_module(&uc.module) {
@@ -234,6 +282,60 @@ impl WebRegistry {
                 ));
                 continue;
             }
+            let mut properties: Vec<PropertyEntry> = Vec::new();
+            let mut events: Vec<EventEntry> = Vec::new();
+            let mut prop_map: BTreeMap<String, PropTarget> = BTreeMap::new();
+            let mut event_map: BTreeMap<String, EventSource> = BTreeMap::new();
+            for p in &uc.props {
+                if !crate::compile::is_identifier(&p.name) {
+                    continue;
+                }
+                if p.event {
+                    let name = event_name(&p.name);
+                    let display = name.strip_prefix("On").unwrap_or(&name).to_string();
+                    let args = match p.args.as_deref() {
+                        Some("none") => "none",
+                        _ => "value",
+                    };
+                    let (args_type, args_chain) = if args == "none" {
+                        ("EventArgs", vec!["EventArgs".to_string()])
+                    } else {
+                        ("ValueChangedEventArgs", vec!["ValueChangedEventArgs".to_string(), "EventArgs".to_string()])
+                    };
+                    events.push(EventEntry {
+                        name: name.clone(),
+                        display_name: display,
+                        category: "Action".into(),
+                        args_type: args_type.to_string(),
+                        args_chain,
+                        args_rust_type: args_type.to_string(),
+                        browsable: true,
+                        ..EventEntry::default()
+                    });
+                    event_map.insert(name, EventSource { prop: Some(p.name.clone()), args: args.to_string(), ..EventSource::default() });
+                } else {
+                    let (kind, editor) = match p.kind.as_deref() {
+                        Some("number") => (PropKindEntry::F32, None),
+                        Some("boolean") => (PropKindEntry::Bool, None),
+                        Some("array") => (PropKindEntry::String, Some("list".to_string())),
+                        Some("string") => (PropKindEntry::String, None),
+                        // `object` and anything we could not narrow: a binding of any shape (`__any`).
+                        _ => (PropKindEntry::String, Some("object".to_string())),
+                    };
+                    let attr = upper_first(&p.name);
+                    properties.push(PropertyEntry {
+                        name: attr.clone(),
+                        kind,
+                        bindable: true,
+                        browsable: true,
+                        category: Some("Data".into()),
+                        editor,
+                        ..PropertyEntry::default()
+                    });
+                    prop_map.insert(attr, PropTarget { prop: Some(p.name.clone()), ..PropTarget::default() });
+                }
+            }
+            let default_event = events.first().map(|e| e.name.clone());
             let entry = ComponentEntry {
                 name: uc.name.clone(),
                 family: "project".into(),
@@ -241,12 +343,17 @@ impl WebRegistry {
                 kind: "user_control".into(),
                 base_chain: vec![uc.name.clone(), "UserControl".into(), "Control".into(), "Component".into()],
                 children: kubuno_desktop_views_model::schema::ChildrenModelJson::None,
+                properties,
+                events,
+                default_event,
                 ..ComponentEntry::default()
             };
             let web = WebBlock {
                 module: Some(uc.module.clone()),
                 export: Some("default".into()),
                 dom_root: Some("wrapper".into()),
+                prop_map,
+                event_map,
                 ..WebBlock::default()
             };
             self.insert(Element { entry, web, origin: Origin::UserControl, source: format!("{}.kbcontrol", uc.name) });

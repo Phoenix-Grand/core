@@ -58,6 +58,7 @@ export {
 } from './host-runtime.js'
 export { runKbviewTsc, remapTscOutput, mapCheckPosition, loadRemapContext, type KbviewTscResult } from './tsc.js'
 export { encodeMappings, decodeMappings, type SourceMapV3, type Segment } from './sourcemap.js'
+export { extractUserControlProps, propsTypeOf } from './uc-props.js'
 export type * from './types.js'
 export {
   KbresCodec,

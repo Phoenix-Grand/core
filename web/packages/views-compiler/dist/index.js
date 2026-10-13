@@ -11,5 +11,6 @@ export { DESIGN_PATH, DEFAULT_DESIGN_ENTRY, DESIGN_SERVER_FILE, designEntryUrl, 
 export { HOST_RUNTIME_PACKAGE, HOST_RUNTIME_MANIFEST, findHostRuntime, parseHostRuntimeManifest, usesHostRuntime, prebundleExternals, CJS_FACADE_PREFIX, resolveShared, dropShared, devServerUrl, } from './host-runtime.js';
 export { runKbviewTsc, remapTscOutput, mapCheckPosition, loadRemapContext } from './tsc.js';
 export { encodeMappings, decodeMappings } from './sourcemap.js';
+export { extractUserControlProps, propsTypeOf } from './uc-props.js';
 export { KbresCodec, kbresName, kbresSet, nestStrings, flattenBundle, compileKbresSet, bundlesToKbres, kbresModule, DEFAULT_NEUTRAL_CULTURE, } from './kbres.js';
 export { readJsonLocales, readI18nModule, loadTypeScript, writeKbresSet, verifyKbresSet, sameBundles } from './i18n-convert.js';

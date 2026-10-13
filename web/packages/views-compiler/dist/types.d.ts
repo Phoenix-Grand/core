@@ -159,9 +159,25 @@ export interface CompileOutput {
     abi: number;
     compiler: string;
 }
+/**
+ * One member of a user control's `x:Props` type (WV-7), extracted from its code-behind: a bindable
+ * property (a non-function field) or an event (a function field).
+ */
+export interface UserControlProp {
+    /** The field name, verbatim — the React prop the compiled control reads (`file`, `onOpen`). */
+    name: string;
+    /** The field is a function type: it becomes an event (`onOpen` → `OnOpen`), not a bindable property. */
+    event: boolean;
+    /** For a property: the broad value category used to type-check its bindings. */
+    kind?: 'string' | 'number' | 'boolean' | 'array' | 'object';
+    /** For an event: how the handler's args are built (`value` = first argument as `e.value`, `none` = no args). */
+    args?: 'value' | 'none';
+}
 /** A user control of the project: `<MessageRow/>` for `MessageRow.kbcontrol`. */
 export interface UserControlRef {
     name: string;
     /** Project-root-relative module (`/src/MessageRow`), rendered by its default export. */
     module: string;
+    /** The members of its `x:Props` type (WV-7); absent when it declares none (pass-through). */
+    props?: UserControlProp[];
 }
