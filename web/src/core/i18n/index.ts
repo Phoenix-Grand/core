@@ -1,19 +1,10 @@
 import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
 
+// Seul le fallback `en` est importé statiquement (toujours nécessaire, et petit
+// par rapport à la session). Les 12 autres locales sont chargées à la demande —
+// cf. LOCALE_LOADERS plus bas — pour ne garder en mémoire que la langue active.
 import en from './locales/en/core.json'
-import fr from './locales/fr/core.json'
-import it from './locales/it/core.json'
-import de from './locales/de/core.json'
-import ru from './locales/ru/core.json'
-import zh from './locales/zh/core.json'
-import ja from './locales/ja/core.json'
-import ar from './locales/ar/core.json'
-import he from './locales/he/core.json'
-import es from './locales/es/core.json'
-import pt from './locales/pt/core.json'
-import el from './locales/el/core.json'
-import hi from './locales/hi/core.json'
 import { getPublicConfig } from '../api/publicConfig'
 
 export interface LanguageDef { code: string; label: string; flag: string }
@@ -107,23 +98,55 @@ export function detectInitialLang(): string {
   return SUPPORTED.includes(nav) ? nav : 'en'
 }
 
+// ── Locales chargées à la demande (optimisation RAM) ─────────────────────────
+// Avant, les 13 locales (~3,7 Mo) étaient toutes passées à `init` → toutes
+// bundlées et retenues dans le ResourceStore pour toute la session, alors qu'une
+// seule est affichée. Désormais `init` ne reçoit que `en` ; les autres sont des
+// chunks async chargés uniquement pour la langue active ou lors d'un changement.
+const LOCALE_LOADERS: Record<string, () => Promise<{ default: unknown }>> = {
+  fr: () => import('./locales/fr/core.json'),
+  it: () => import('./locales/it/core.json'),
+  de: () => import('./locales/de/core.json'),
+  ru: () => import('./locales/ru/core.json'),
+  zh: () => import('./locales/zh/core.json'),
+  ja: () => import('./locales/ja/core.json'),
+  ar: () => import('./locales/ar/core.json'),
+  he: () => import('./locales/he/core.json'),
+  es: () => import('./locales/es/core.json'),
+  pt: () => import('./locales/pt/core.json'),
+  el: () => import('./locales/el/core.json'),
+  hi: () => import('./locales/hi/core.json'),
+}
+
+// Bundles core chargés à la demande, mémorisés pour être ré-appliqués sur
+// `initialized` — init reconstruit le ResourceStore depuis `resources` (= en
+// seul) et effacerait sinon une locale ajoutée avant l'événement (même piège que
+// les bundles de modules, cf. le handler `initialized` plus bas).
+const _coreLocales: Record<string, Record<string, unknown>> = {}
+
+/**
+ * Charge (une seule fois) le bundle `core` d'une langue et l'enregistre. `en` est
+ * déjà en mémoire ; une langue inconnue ou un chunk injoignable laissent le
+ * fallback `en` en place. L'événement `added` du ResourceStore fait basculer
+ * l'affichage des composants déjà montés.
+ */
+export async function loadLocale(lng: string): Promise<void> {
+  if (lng === 'en' || _coreLocales[lng] || !LOCALE_LOADERS[lng]) return
+  try {
+    const m = await LOCALE_LOADERS[lng]()
+    const res = m.default as Record<string, unknown>
+    _coreLocales[lng] = res
+    i18n.addResourceBundle(lng, 'core', res, true, true)
+  } catch {
+    // Chunk de langue injoignable (réseau, déploiement) : on garde `en`.
+  }
+}
+
 void i18n
   .use(initReactI18next)
   .init({
     resources: {
       en: { core: en },
-      fr: { core: fr },
-      it: { core: it },
-      de: { core: de },
-      ru: { core: ru },
-      zh: { core: zh },
-      ja: { core: ja },
-      ar: { core: ar },
-      he: { core: he },
-      es: { core: es },
-      pt: { core: pt },
-      el: { core: el },
-      hi: { core: hi },
     },
     lng: detectInitialLang(),
     fallbackLng: 'en',
@@ -141,6 +164,11 @@ void i18n
 // Direction initiale du document selon la langue détectée (RTL pour ar/he)
 applyDir(detectInitialLang())
 
+// Charger la langue détectée (si ≠ en) : son bundle arrive en async et bascule
+// l'affichage via l'événement `added` du ResourceStore. En attendant, i18next
+// retombe sur `en` (comme pour `syncInstanceLanguage`, déjà post-montage).
+void loadLocale(detectInitialLang())
+
 // ── Persistance des bundles de modules face au reset d'init ───────────────────
 // i18next.init() est ASYNCHRONE (react-i18next) : l'événement `initialized` se
 // déclenche APRÈS l'évaluation synchrone des modules. À ce moment, init
@@ -157,6 +185,12 @@ function _applyBundle(ns: string, bundles: Record<string, Record<string, unknown
   }
 }
 i18n.on('initialized', () => {
+  // Ré-appliquer d'abord les locales core chargées à la demande (sinon la
+  // reconstruction du store depuis `resources` = en seul les effacerait), puis
+  // les bundles de modules.
+  for (const [lng, res] of Object.entries(_coreLocales)) {
+    i18n.addResourceBundle(lng, 'core', res, true, true)
+  }
   for (const [ns, bundles] of _moduleBundles) _applyBundle(ns, bundles)
 })
 
@@ -171,10 +205,13 @@ export function writeLangCookie(lng: string) {
  */
 export function setLanguage(lng: string, persistUser?: (lng: string) => void) {
   if (!SUPPORTED.includes(lng)) return
-  void i18n.changeLanguage(lng)
+  // Direction, cookie et préférence : immédiats (ne dépendent pas du bundle).
   applyDir(lng)
   writeLangCookie(lng)
   persistUser?.(lng)
+  // Charger le bundle de la langue AVANT de basculer, sinon i18next afficherait
+  // le fallback `en` le temps du chargement du chunk.
+  void loadLocale(lng).then(() => i18n.changeLanguage(lng))
 }
 
 /**
@@ -188,9 +225,9 @@ export function setLanguage(lng: string, persistUser?: (lng: string) => void) {
  */
 export function applyUserLanguage(lng: unknown) {
   if (typeof lng === 'string' && SUPPORTED.includes(lng) && lng !== i18n.language) {
-    void i18n.changeLanguage(lng)
     applyDir(lng)
     writeLangCookie(lng)
+    void loadLocale(lng).then(() => i18n.changeLanguage(lng))
   }
 }
 
@@ -235,6 +272,7 @@ export async function syncInstanceLanguage(): Promise<void> {
   const decided = readCookie(LANG_COOKIE)
   if (decided && SUPPORTED.includes(decided)) return
   if (lng === i18n.language) return
+  await loadLocale(lng)
   void i18n.changeLanguage(lng)
   applyDir(lng)
 }

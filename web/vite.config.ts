@@ -118,6 +118,11 @@ export default defineConfig({
           // core/components peut tirer du lourd (PdfViewerModal→pdfjs) : ne pas
           // le forcer dans le chunk eager.
           if (/\/src\/core\/components\//.test(id)) return undefined
+          // Les locales i18n (une par langue) sont importées dynamiquement et ne
+          // doivent PAS être forcées dans kubuno-shared (sinon elles y restent
+          // eager) : chaque langue = son chunk async, chargé à la demande. `en`
+          // (fallback, importé statiquement) reste dans le graphe eager.
+          if (/\/src\/core\/i18n\/locales\//.test(id)) return undefined
           // Les arbres de PAGES (console d'admin, réglages, installation) ne font
           // PAS partie de la surface singleton de l'import map (@kubuno/sdk ne les
           // réexporte pas). Les sortir du chunk eager kubuno-shared pour qu'ils
