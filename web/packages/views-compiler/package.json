@@ -21,8 +21,8 @@
     "CHANGELOG.md"
   ],
   "bin": {
-    "kbview-tsc": "./bin/kbview-tsc.js",
-    "kbres-convert": "./bin/kbres-convert.js"
+    "kbview-tsc": "bin/kbview-tsc.js",
+    "kbres-convert": "bin/kbres-convert.js"
   },
   "types": "./dist/index.d.ts",
   "exports": {
