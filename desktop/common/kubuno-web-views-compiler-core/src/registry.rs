@@ -286,8 +286,16 @@ impl WebRegistry {
             let mut events: Vec<EventEntry> = Vec::new();
             let mut prop_map: BTreeMap<String, PropTarget> = BTreeMap::new();
             let mut event_map: BTreeMap<String, EventSource> = BTreeMap::new();
+            // A `children: ReactNode` field (WV-7, the React slot convention) is not a bindable attribute: the
+            // control hosts the view's child elements, rendered into its `children` prop — exactly as `Panel`,
+            // `Stack` and the built-in `UserControl` do (`web.content = "children"`, `children = List`).
+            let mut children_slot = false;
             for p in &uc.props {
                 if !crate::compile::is_identifier(&p.name) {
+                    continue;
+                }
+                if !p.event && p.name == "children" {
+                    children_slot = true;
                     continue;
                 }
                 if p.event {
@@ -342,7 +350,11 @@ impl WebRegistry {
                 origin: "project".into(),
                 kind: "user_control".into(),
                 base_chain: vec![uc.name.clone(), "UserControl".into(), "Control".into(), "Component".into()],
-                children: kubuno_desktop_views_model::schema::ChildrenModelJson::None,
+                children: if children_slot {
+                    kubuno_desktop_views_model::schema::ChildrenModelJson::List
+                } else {
+                    kubuno_desktop_views_model::schema::ChildrenModelJson::None
+                },
                 properties,
                 events,
                 default_event,
@@ -354,6 +366,7 @@ impl WebRegistry {
                 dom_root: Some("wrapper".into()),
                 prop_map,
                 event_map,
+                content: children_slot.then(|| "children".to_string()),
                 ..WebBlock::default()
             };
             self.insert(Element { entry, web, origin: Origin::UserControl, source: format!("{}.kbcontrol", uc.name) });

@@ -6,6 +6,18 @@ under the published version number.
 
 ## [Unreleased]
 
+## [0.1.5] - 2026-10-13
+
+### Added
+
+- **User controls can host child elements (slots).** A `.kbcontrol` whose `x:Props` type has a `children:
+  ReactNode` field now accepts child elements when used as a native element, exactly like `Panel` or `Stack`:
+  `<Figure Label="…"><Label Text="…"/></Figure>` compiles, and the children are rendered into the control's
+  `children` prop. Previously the compiler rejected any child of a user control (`KBV-children: <X> takes no
+  child element`), so a control built around a `children` slot could only be used through a React host hole.
+  Rebuild the `.wasm` (`npm run build:wasm`, from the matching `web-views-compiler-core` tag) to pick up the
+  compiler side.
+
 ## [0.1.4] - 2026-10-13
 
 ### Added

@@ -1,8 +1,8 @@
 {
   "compiler": "kubuno-views-web",
-  "tag": "web-views-compiler-core-v0.2.2",
-  "built_from": "git tag",
+  "tag": "web-views-compiler-core-v0.2.3",
+  "built_from": "local checkout",
   "rustc": "rustc 1.98.1 (48a229cea 2026-09-01)",
-  "bytes": 555446,
-  "sha256": "d38e3dcbbc8b02ee1721ac64cef4cab491618b5e0e6a677b7259b5e0cda04f72"
+  "bytes": 556374,
+  "sha256": "e027ed12ae001198e4a51e41fdf18c4c98c0add89d7748ce4964410e1c21dd8b"
 }
