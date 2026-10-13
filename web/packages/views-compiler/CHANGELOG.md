@@ -6,6 +6,8 @@ under the published version number.
 
 ## [Unreleased]
 
+## [0.1.4] - 2026-10-13
+
 ### Added
 
 - **User controls become native, typed elements (WV-7).** `userControlsOf` now reads each `.kbcontrol`'s
