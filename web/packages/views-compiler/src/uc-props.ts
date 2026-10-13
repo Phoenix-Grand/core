@@ -100,8 +100,21 @@ function classify(
   const nn = checker.getNonNullableType(type)
   const signatures = nn.getCallSignatures()
   if (signatures.length > 0) {
-    const params = signatures[0].getParameters().length
-    return { name, event: true, args: params >= 1 ? 'value' : 'none' }
+    // A function field is an event only when it is a callback — it returns nothing (`(v) => void`). A function
+    // that returns a value (`format: (n) => string`, a comparator, a cell renderer) is a value transformer, not
+    // an event: it becomes an ordinary bindable property, and the view binds a getter that returns the function,
+    // which is passed straight through as the React prop. Unresolved / inferred return types default to event
+    // (the common case), so an async `() => void` handler is unaffected.
+    const ret = checker.getNonNullableType(signatures[0].getReturnType())
+    const returnsValue = !(ret.flags & (ts.TypeFlags.Void | ts.TypeFlags.Undefined | ts.TypeFlags.Never))
+      && !(ret.flags & ts.TypeFlags.Any)
+      && ret.getCallSignatures().length === 0 // conservative: only clearly non-void, non-callback returns
+      && (ret.flags & (ts.TypeFlags.StringLike | ts.TypeFlags.NumberLike | ts.TypeFlags.BooleanLike)) !== 0
+    if (!returnsValue) {
+      const params = signatures[0].getParameters().length
+      return { name, event: true, args: params >= 1 ? 'value' : 'none' }
+    }
+    return { name, event: false, kind: 'object' }
   }
   const f = nn.flags
   let kind: UserControlProp['kind'] = 'object'

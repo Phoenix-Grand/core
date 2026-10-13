@@ -1,6 +1,6 @@
 {
   "name": "@kubuno/views-compiler",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Build-time tooling of Kubuno .kbview web views: the WebAssembly build of the shared .kbview grammar and web compiler, the Vite plugin (plan, precompiled accessors, source maps, generated ViewBase declarations, HMR) and kbview-tsc (tsc with errors mapped back to the .kbview).",
   "license": "AGPL-3.0-or-later",
   "homepage": "https://github.com/kubuno/core/tree/main/web/packages/views-compiler",

@@ -6,6 +6,17 @@ under the published version number.
 
 ## [Unreleased]
 
+## [0.1.6] - 2026-10-13
+
+### Added
+
+- **A user control can take a value-transforming function as a property, not only an event.** A function field in a
+  control's `x:Props` is an event (`OnX`) only when it returns nothing (`(v) => void`); a function that returns a
+  value (`format: (n) => string`, a comparator, a key extractor) now becomes an ordinary bindable property, bound to
+  a getter that returns the function. Before, every function field was forced to an event, so a control with a
+  formatter-style prop could not be used as a native element where that prop was set.
+
+
 ## [0.1.5] - 2026-10-13
 
 ### Added
