@@ -38,6 +38,7 @@
 //! direct child of a `LayoutKind::DockAnchor` container (`<Panel>`) gets the
 //! 8 resize handles, everything else gets the plain flow outline.
 
+use kubuno_desktop_controls::styled::D2D1_COLOR_F;
 use kubuno_desktop_ui::Rect;
 use serde::{Deserialize, Serialize};
 
@@ -68,6 +69,11 @@ pub struct LayoutEntry {
     /// only the part of `bounds` inside it is hit by the pointer. `None` when nothing clips it. The adorners still
     /// frame the whole `bounds`, as the Windows Forms designer frames a control its parent cuts.
     pub clip: Option<Rect>,
+    /// The element's type (its registry name — `Button`, `Panel`, `TextField`…), shown on the corner name tag that
+    /// tells nested outlines apart. Empty when the entry carries no type (no tag is drawn then).
+    pub kind: &'static str,
+    /// The element's `x:Name`, shown after its type on the corner name tag; `None` when it is unnamed.
+    pub name: Option<String>,
 }
 
 impl LayoutEntry {
@@ -400,6 +406,9 @@ impl ViewNode for DesignSlot {
                 container: self.container,
                 locked: self.common.as_ref().is_some_and(|c| c.locked()),
                 clip: cut,
+                // The name tag's identity: the element's type and, when set, its `x:Name`.
+                kind: self.meta.map(|m| m.name).unwrap_or(""),
+                name: self.events.as_ref().and_then(|e| e.name.clone()),
             });
         }
         // The pointer over the clipped-away part of the element does not reach it (nor anything in it).
@@ -481,7 +490,9 @@ impl ViewNode for DesignSlot {
                 && self.inner.is_invisible_container(&*pcx.vm)
             {
                 let canvas: &dyn kubuno_desktop_ui::Canvas = canvas;
-                paint_container_outline(canvas, bounds);
+                // Nesting depth = the number of segments of the stable id ("0.1.2" → 3): the outline tint alternates
+                // with it so nested container frames stay apart.
+                paint_container_outline(canvas, bounds, self.id.split('.').count());
             }
             // A container (or a user control) clips what it holds to its own box.
             let children_clip = (self.container || self.inner.clips_children()).then(|| crate::clip::Children::push(bounds));
@@ -871,10 +882,15 @@ pub fn paint_inherited_glyph(c: &dyn kubuno_desktop_ui::Canvas, bounds: Rect) {
     c.fill_rounded(&Rect::new(x + 2.0, y + 6.0, x + 10.0, y + 12.0), 1.0, &theme.text_secondary);
 }
 
-/// Paints the design-time outline of an otherwise-invisible container: the theme's divider colour
-/// (a low-contrast grey in the light and in the dark theme alike), dashed.
-pub fn paint_container_outline(c: &dyn kubuno_desktop_ui::Canvas, bounds: Rect) {
-    let ink = c.theme().divider;
+/// Paints the design-time outline of an otherwise-invisible container, dashed. `depth` is the element's nesting
+/// depth (the number of segments of its stable id): the stroke alternates strength with it — a stronger tint at an
+/// even depth, a fainter one at an odd depth — so adjacent nested container frames can be told apart rather than
+/// piling up as identical dashed rectangles. The ink is the theme's secondary text (a low-contrast foreground that
+/// reads in the light and in the dark theme alike), faded to the depth's strength.
+pub fn paint_container_outline(c: &dyn kubuno_desktop_ui::Canvas, bounds: Rect, depth: usize) {
+    let base = c.theme().text_secondary;
+    let alpha = if depth.is_multiple_of(2) { 0.55 } else { 0.30 };
+    let ink = D2D1_COLOR_F { a: base.a * alpha, ..base };
     for dash in container_outline_dashes(bounds) {
         c.fill_rounded(&dash, 0.0, &ink);
     }
@@ -958,6 +974,8 @@ pub fn paint_adorners(
             for dash in dashed_outline(parent.bounds, 4.0, 3.0, 1.0) {
                 c.fill_rect(&dash, &theme.text_secondary);
             }
+            // A neutral tag on the selection's parent container, so it reads as context (not another selection).
+            paint_tag(c, parent.bounds, parent.kind, parent.name.as_deref(), theme.panel_background, theme.text_secondary, Some(theme.card_stroke));
         }
     }
 
@@ -969,6 +987,8 @@ pub fn paint_adorners(
     // only ever hands out already-resolved theme colors, by design).
     if let Some(h) = hover.filter(|id| !selection.contains(id)).and_then(|id| layout.get(id)) {
         c.stroke_rounded_w(&h.bounds, 0.0, &theme.accent_light, 1.0);
+        // The hovered control's name tag: a darkened accent, so it reads apart from a selection tag's full accent.
+        paint_tag(c, h.bounds, h.kind, h.name.as_deref(), theme.accent_hover, theme.accent_foreground, None);
     }
 
     // The root element is the view itself: its selection is drawn by the view frame
@@ -983,6 +1003,9 @@ pub fn paint_adorners(
         let resizable = sel.layout == LayoutKind::DockAnchor;
         let ink = if resizable { &theme.accent } else { &theme.text_secondary };
         c.stroke_rounded_w(&outline, 0.0, ink, 1.0);
+        // The selected control's name tag (full accent), drawn under the grab handles so a corner handle stays
+        // visible over it. The primary selection, drawn last, keeps its tag on top of the others'.
+        paint_tag(c, outline, sel.kind, sel.name.as_deref(), theme.accent, theme.accent_foreground, None);
         // WinForms-style grab handles on every selected element: white with a border on the primary
         // selection, filled on the others; an accent border when the element can be resized here (an
         // Anchor child - the only case `handle_at` hit-tests), grey otherwise.
@@ -996,6 +1019,46 @@ pub fn paint_adorners(
             }
         }
     }
+}
+
+/// Draws a control's name tag — its type and, when set, its `x:Name` (`TextField newPassword`) — as a small flag at
+/// the top-left of `anchor`, the WinForms / web designer's corner tag that tells nested dashed outlines apart. It
+/// hangs just above the frame, or drops inside near the top edge when there is no room above it. `fill`/`text` are
+/// its background and its text colour, `border` an optional outline (the neutral parent tag draws one). A tag is
+/// drawn only when the entry carries a type (`kind` is not empty), so the menu/ribbon overlays that record no type
+/// get a frame without a tag. Never a unit test: it needs a live `Canvas`, so the visual check exercises it.
+#[allow(clippy::too_many_arguments)]
+fn paint_tag(
+    c: &dyn kubuno_desktop_controls::ControlCanvas,
+    anchor: Rect,
+    kind: &str,
+    name: Option<&str>,
+    fill: D2D1_COLOR_F,
+    text: D2D1_COLOR_F,
+    border: Option<D2D1_COLOR_F>,
+) {
+    if kind.is_empty() {
+        return;
+    }
+    let label = match name {
+        Some(n) if !n.is_empty() => format!("{kind} {n}"),
+        _ => kind.to_string(),
+    };
+    const PAD_X: f32 = 5.0;
+    const HEIGHT: f32 = 16.0;
+    let format = &c.formats().caption;
+    let width = c.measure(&label, format) + PAD_X * 2.0;
+    // Clamp to the surface's left edge, like the web tag (`Math.max(0, …)`), so a control at the very left stays
+    // readable rather than being pushed off-screen.
+    let left = anchor.left.max(0.0);
+    // Hang above the frame, or drop inside against the top edge when there is no room above.
+    let top = if anchor.top - HEIGHT >= 2.0 { anchor.top - HEIGHT } else { anchor.top };
+    let r = Rect::new(left, top, left + width, top + HEIGHT);
+    c.fill_rounded(&r, 3.0, &fill);
+    if let Some(b) = border {
+        c.stroke_rounded(&r, 3.0, &b);
+    }
+    c.text(&label, &Rect::new(r.left + PAD_X, r.top + 1.0, r.right, r.bottom), format, &text, false);
 }
 
 /// The 1-device-pixel dot squares a WinForms-style marquee ("marching ants")
@@ -3497,7 +3560,7 @@ mod tests {
     use crate::syntax::parse;
 
     fn entry(id: &str, parent: Option<&str>, bounds: Rect, layout: LayoutKind) -> LayoutEntry {
-        LayoutEntry { id: id.to_string(), parent_id: parent.map(str::to_string), bounds, layout, container: false, locked: false, clip: None }
+        LayoutEntry { id: id.to_string(), parent_id: parent.map(str::to_string), bounds, layout, container: false, locked: false, clip: None, kind: "", name: None }
     }
 
     /// A container entry (it accepts children: a press on its empty area starts a marquee).

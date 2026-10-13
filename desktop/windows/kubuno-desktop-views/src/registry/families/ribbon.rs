@@ -2160,7 +2160,7 @@ impl ViewNode for RibbonNode {
                 .filter_map(|r| {
                     let i = self.index_of(&r.id)?;
                     let e = &self.elements[i];
-                    Some(crate::design::LayoutEntry { id: e.id.clone(), parent_id: crate::design::parent_id_of(&e.id), bounds: r.rect, layout: crate::registry::LayoutKind::None, container: e.container, locked: false, clip: None })
+                    Some(crate::design::LayoutEntry { id: e.id.clone(), parent_id: crate::design::parent_id_of(&e.id), bounds: r.rect, layout: crate::registry::LayoutKind::None, container: e.container, locked: false, clip: None, kind: e.meta.name, name: e.name.clone() })
                 })
                 .collect();
             crate::virtual_regions::defer_late(entries, Box::new(move |c| eng.borrow().paint_design_overlay(c)));

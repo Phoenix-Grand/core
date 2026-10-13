@@ -80,7 +80,7 @@ impl VirtualElement {
     /// input router.
     pub fn report(&self, cx: &mut PaintCx<'_>, rect: Rect, enabled: bool) {
         if let Some(map) = cx.design.as_mut() {
-            map.push(LayoutEntry { id: self.id.clone(), parent_id: parent_id_of(&self.id), bounds: rect, layout: LayoutKind::None, container: self.container, locked: false, clip: None });
+            map.push(LayoutEntry { id: self.id.clone(), parent_id: parent_id_of(&self.id), bounds: rect, layout: LayoutKind::None, container: self.container, locked: false, clip: None, kind: self.meta.name, name: self.name.clone() });
         }
         if let Some(router) = cx.router.as_deref_mut() {
             router.register_with_control(self.slot.clone(), rect, self.control.as_ref());

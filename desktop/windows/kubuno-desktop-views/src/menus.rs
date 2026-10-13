@@ -581,7 +581,7 @@ pub(crate) fn design_menu(cx: &mut PaintCx<'_>, at: (f32, f32), owner_id: &str, 
         let mut open: Option<(usize, Rect)> = None;
         for (i, item) in level_items.iter().enumerate() {
             let Some(row) = menu.item_rect(panel, i) else { continue };
-            entries.push(LayoutEntry { id: item.id.clone(), parent_id: parent_id_of(&item.id), bounds: row, layout: LayoutKind::Flow, container: false, locked: false, clip: None });
+            entries.push(LayoutEntry { id: item.id.clone(), parent_id: parent_id_of(&item.id), bounds: row, layout: LayoutKind::Flow, container: false, locked: false, clip: None, kind: "", name: None });
             push_row(MenuRow { id: item.id.clone(), parent: level_owner.clone(), rect: row, horizontal: false });
             if open.is_none() && item.is_command() && !item.header && selected_under(&selection, &item.id) {
                 open = Some((i, row));
@@ -901,7 +901,7 @@ impl ViewNode for MenuBarNode {
         // ── Design: every label is an element; the selected one's menu shows below it; « Type Here » ends the bar.
         if let Some(map) = cx.design.as_mut() {
             for (i, item) in self.items.iter().enumerate() {
-                map.push(LayoutEntry { id: item.id.clone(), parent_id: parent_id_of(&item.id), bounds: rects[i], layout: LayoutKind::Flow, container: false, locked: false, clip: None });
+                map.push(LayoutEntry { id: item.id.clone(), parent_id: parent_id_of(&item.id), bounds: rects[i], layout: LayoutKind::Flow, container: false, locked: false, clip: None, kind: "", name: None });
                 push_row(MenuRow { id: item.id.clone(), parent: self.id.clone(), rect: rects[i], horizontal: true });
             }
         }

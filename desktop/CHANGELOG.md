@@ -9,6 +9,14 @@ number at release time, and CI publishes that section as the GitHub Release note
 
 ## [Unreleased]
 
+### Changed
+
+- **The desktop view designer labels the controls on its design surface.** Hovering or selecting a control now
+  shows a small corner tag with its type (and its `x:Name` when it has one) — like a WinForms or Figma designer —
+  so nested controls can finally be told apart; the primary selection's parent is tagged too. Faint container
+  outlines now use a theme-aware stroke whose strength alternates with nesting depth, so a pile of nested dashed
+  rectangles reads as distinct frames, legible in both the light and dark Visual Studio themes.
+
 ### Fixed
 
 - The launcher's built-in module logos are embedded again. The build looked for them in `core/frontend/public`,
