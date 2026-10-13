@@ -971,8 +971,11 @@ pub fn paint_adorners(
     let selected = selection.primary();
     if let Some(sel) = selected.and_then(|id| layout.get(id)) {
         if let Some(parent) = sel.parent_id.as_deref().and_then(|id| layout.get(id)) {
+            // The selection's parent: a 1 DIP dashed outline in the accent at 75 % opacity, like the web designer's
+            // `.kbd-parent` (`color-mix(accent 75%, transparent)`).
+            let parent_ink = D2D1_COLOR_F { a: theme.accent.a * 0.75, ..theme.accent };
             for dash in dashed_outline(parent.bounds, 4.0, 3.0, 1.0) {
-                c.fill_rect(&dash, &theme.text_secondary);
+                c.fill_rect(&dash, &parent_ink);
             }
             // A neutral tag on the selection's parent container, so it reads as context (not another selection).
             paint_tag(c, parent.bounds, parent.kind, parent.name.as_deref(), theme.panel_background, theme.text_secondary, Some(theme.card_stroke));
@@ -992,7 +995,10 @@ pub fn paint_adorners(
         // web designer's rule: hover and the primary selection are both 2 px). The complaint was a hover border
         // that sat tighter and thinner than the selection.
         let frame = selection_frame(h.bounds);
-        c.stroke_rounded_w(&frame, 0.0, &theme.accent_light, SELECTION_STROKE);
+        // The web designer's hover border is the accent at 45 % opacity (`color-mix(accent 45%, transparent)`);
+        // build the same translucent accent here rather than a different theme token.
+        let hover_ink = D2D1_COLOR_F { a: theme.accent.a * 0.45, ..theme.accent };
+        c.stroke_rounded_w(&frame, 0.0, &hover_ink, SELECTION_STROKE);
         // The hovered control's name tag: a darkened accent, so it reads apart from a selection tag's full accent.
         paint_tag(c, frame, h.kind, h.name.as_deref(), theme.accent_hover, theme.accent_foreground, None);
     }
@@ -1008,8 +1014,10 @@ pub fn paint_adorners(
         let outline = selection_frame(sel.bounds);
         let resizable = sel.layout == LayoutKind::DockAnchor;
         let ink = if resizable { &theme.accent } else { &theme.text_secondary };
-        // The primary selection is 2 DIP (the web designer's 2 px); other elements of a multi-selection are 1 DIP.
-        c.stroke_rounded_w(&outline, 0.0, ink, if primary { SELECTION_STROKE } else { 1.0 });
+        // The selection outline is the full accent, like the web designer's (`.kbd-sel`): the primary at 2 DIP
+        // (the web's 2 px), other elements of a multi-selection at 1 DIP. Resizability is shown by the handles
+        // below (their `ink`), not by the outline colour.
+        c.stroke_rounded_w(&outline, 0.0, &theme.accent, if primary { SELECTION_STROKE } else { 1.0 });
         // The selected control's name tag (full accent), drawn under the grab handles so a corner handle stays
         // visible over it. The primary selection, drawn last, keeps its tag on top of the others'.
         paint_tag(c, outline, sel.kind, sel.name.as_deref(), theme.accent, theme.accent_foreground, None);

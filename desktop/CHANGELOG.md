@@ -13,9 +13,11 @@ number at release time, and CI publishes that section as the GitHub Release note
 
 ### Changed
 
-- **The designer's hover and primary-selection outlines are 2 DIP thick** (the web designer's 2 px), instead of
-  1 DIP — so the hover border reads as the same weight as the selection, matching the web designer. Other elements
-  of a multi-selection stay 1 DIP.
+- **The designer's selection, hover and parent adorners now match the web designer exactly** — colour, weight and
+  size. The selection outline is the full accent (the primary at 2 DIP, other elements of a multi-selection at
+  1 DIP), the hover outline is the same 2 DIP box in the accent at 45 % opacity, and the selected control's parent
+  is a 1 DIP dashed outline in the accent at 75 % opacity; all share the same 3 DIP outset frame. (The outlines
+  were previously 1 DIP, the hover and parent used different tints, and a non-resizable selection was drawn grey.)
 
 ## [0.1.3-alpha] - 2026-10-13
 
