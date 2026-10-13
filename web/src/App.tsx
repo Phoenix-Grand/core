@@ -1,4 +1,4 @@
-import { Suspense } from 'react'
+import { Suspense, lazy } from 'react'
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { KubunoLogo, ToastProvider } from '@ui'
@@ -9,14 +9,19 @@ import Shell from './core/shell/views/Shell'
 import { DocumentTitle } from './core/shell/pages/DocumentTitle'
 import { useAdminConsoleApp } from './core/admin/useAdminConsoleApp'
 import LoginPage from './core/auth/LoginPage'
-import SetupWizard from './core/setup/SetupWizard'
 import RegisterPage from './core/auth/RegisterPage'
 import ResetPasswordPage from './core/auth/ResetPasswordPage'
 import OAuthCallback from './core/auth/OAuthCallback'
 import ForcePasswordChange from './core/auth/ForcePasswordChange'
-import SettingsPage from './core/settings/SettingsPage'
-import AdminPage from './core/admin/views/AdminPage'
 import HomePage from './core/views/HomePage'
+
+// Pages lourdes ou peu fréquentes : chargées à la demande (React.lazy) pour les
+// sortir du chunk eager kubuno-shared et alléger la RAM du host — la console
+// d'admin pèse à elle seule ~2,5 Mo de source, inutile pour un non-admin. Le
+// carve-out correspondant est dans vite.config.ts (manualChunks).
+const AdminPage = lazy(() => import('./core/admin/views/AdminPage'))
+const SettingsPage = lazy(() => import('./core/settings/SettingsPage'))
+const SetupWizard = lazy(() => import('./core/setup/SetupWizard'))
 import ModulesPage from './core/views/ModulesPage'
 import AboutPage from './core/views/AboutPage'
 import LabelsPage from './core/views/LabelsPage'
@@ -161,8 +166,8 @@ export default function App() {
       {/* Pages publiques core — redirigent vers l'accueil si déjà connecté */}
       {/* Installation initiale — servie AVANT toute authentification : sur une
           instance neuve, il n'existe aucun compte. */}
-      <Route path="/setup" element={<SetupWizard />} />
-      <Route path="/setup/:step" element={<SetupWizard />} />
+      <Route path="/setup" element={<Suspense fallback={<LoadingSplash />}><SetupWizard /></Suspense>} />
+      <Route path="/setup/:step" element={<Suspense fallback={<LoadingSplash />}><SetupWizard /></Suspense>} />
 
       <Route path="/login"           element={<PublicOnlyRoute><LoginPage /></PublicOnlyRoute>} />
       <Route path="/register"        element={<PublicOnlyRoute><RegisterPage /></PublicOnlyRoute>} />
@@ -183,17 +188,17 @@ export default function App() {
       <Route path="/" element={<ProtectedRoute><Shell /></ProtectedRoute>}>
         <Route index         element={<HomePage />} />
         <Route path="modules"  element={<ModulesPage />} />
-        <Route path="settings" element={<SettingsPage />} />
+        <Route path="settings" element={<Suspense fallback={null}><SettingsPage /></Suspense>} />
         {/* La console d'administration met le LIEU dans le chemin —
             `/admin/<section>[/<fiche>[/<volet>]]` — et le reste (filtres,
             recherche, verbe d'action) en query string. AdminPage lit lui-même
             location.pathname : la forme de chaque section est déclarée dans
             adminNav.ts et interprétée par adminRoute.ts, qui redirige aussi
             toute adresse historique (`/admin?tab=users&user=…`). */}
-        <Route path="admin"                  element={<AdminPage />} />
-        <Route path="admin/:tab"             element={<AdminPage />} />
-        <Route path="admin/:tab/:record"     element={<AdminPage />} />
-        <Route path="admin/:tab/:record/:pane" element={<AdminPage />} />
+        <Route path="admin"                  element={<Suspense fallback={null}><AdminPage /></Suspense>} />
+        <Route path="admin/:tab"             element={<Suspense fallback={null}><AdminPage /></Suspense>} />
+        <Route path="admin/:tab/:record"     element={<Suspense fallback={null}><AdminPage /></Suspense>} />
+        <Route path="admin/:tab/:record/:pane" element={<Suspense fallback={null}><AdminPage /></Suspense>} />
         <Route path="about"    element={<AboutPage />} />
         <Route path="labels"   element={<LabelsPage />} />
 

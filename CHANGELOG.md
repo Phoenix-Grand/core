@@ -10,6 +10,12 @@ number at release time, and CI publishes that section as the GitHub Release note
 ## [Unreleased]
 
 ### Changed
+- **The app loads and keeps far less in memory at startup.** The administration console, the settings screens and the
+  setup wizard are now loaded on demand (code-split) instead of being bundled into the always-loaded shared chunk: a
+  user who never opens them never downloads, parses or retains that code. The eagerly-loaded shared chunk dropped from
+  ~3.3 MB to ~0.38 MB (the admin console alone was ~2.5 MB of it), so first paint is lighter and a normal (non-admin)
+  session holds much less JavaScript resident. Cached query results (e.g. large Drive folder listings) are also released
+  about five times sooner after you leave a page.
 - **Several admin and settings views compose their sub-controls directly.** The Storage panels (module breakdown, quota policy, overview), the API-token / profile / security settings tabs and the user-detail admin section now instantiate their inner controls (e.g. `CompositionBar`, `CategoryComposition`, `QuotaField`, `ApiTokenScopePicker`, `TwoFactorSection`, `IdentityCard`, `ActivityTab`, …) as native typed view elements instead of going through a generic React host — an internal consolidation on top of the typed-`.kbcontrol` support, with no change to what the pages show or do.
 - **The web view designer labels the controls on its design surface.** Hovering or selecting a control now shows a small corner tag with its type (and its `x:Name` when it has one) — like a WinForms or Figma designer — so nested controls can finally be told apart; the primary selection's parent is tagged too. Faint container outlines now use a theme-aware stroke whose strength alternates with nesting depth, and all adorners follow Visual Studio's accent colour, keeping both the light and dark Visual Studio themes legible.
 - **The web view designer's hover outline matches the selection outline.** Hovering a control now draws the same box as selecting it (same thickness, size and margins); the two are told apart only by opacity, instead of the hover being a thinner stroke.

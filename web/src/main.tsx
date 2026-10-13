@@ -92,7 +92,11 @@ installDirectoryMentions()
 
 const queryClient = new QueryClient({
   defaultOptions: {
-    queries: { retry: 1, staleTime: 30_000 },
+    // `gcTime` 60 s (défaut TanStack = 5 min) : une fois une requête sans
+    // observateur (page quittée), ses données — p.ex. un listing de dossier
+    // drive de plusieurs milliers d'entrées — sont libérées ~5× plus vite.
+    // `staleTime` 30 s inchangé : un retour sur la page re-fetch de toute façon.
+    queries: { retry: 1, staleTime: 30_000, gcTime: 60_000 },
   },
 })
 

@@ -118,6 +118,13 @@ export default defineConfig({
           // core/components peut tirer du lourd (PdfViewerModal→pdfjs) : ne pas
           // le forcer dans le chunk eager.
           if (/\/src\/core\/components\//.test(id)) return undefined
+          // Les arbres de PAGES (console d'admin, réglages, installation) ne font
+          // PAS partie de la surface singleton de l'import map (@kubuno/sdk ne les
+          // réexporte pas). Les sortir du chunk eager kubuno-shared pour qu'ils
+          // soient chargés à la demande — il FAUT que App.tsx les importe en
+          // React.lazy, sinon ils restent tirés dans le graphe eager. AVANT la
+          // règle /src/core/ ci-dessous.
+          if (/\/src\/core\/(admin|settings|setup)\//.test(id)) return undefined
           // TOUT le reste de core (i18n, stores, registries, hooks, api, shell…)
           // → kubuno-shared (instance unique partagée). AVANT la règle drive pour
           //   qu'aucun singleton core ne fuie dans le chunk drive-shared.
