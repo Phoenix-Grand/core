@@ -2,9 +2,7 @@
 <Panel Class="contents">
   <Callout Body="{Res admin.db_superuser_only}" Visible="{Binding show_case_1}"/>
   <Panel Visible="{Binding show_main}">
-    <!-- TODO(views-migrate): <SchemaPrefixCard> is no .kbview element (./SchemaPrefixCard#default) -->
-    <ReactHost Component="{Binding SchemaPrefixCard}"/>
-    <!-- TODO(views-migrate): <MainDbMigrationCard> is no .kbview element (./MainDbMigrationCard#default) -->
-    <ReactHost Component="{Binding MainDbMigrationCard}"/>
+    <SchemaPrefixCard/>
+    <MainDbMigrationCard/>
   </Panel>
 </Panel>

@@ -3,8 +3,6 @@
  */
 import { useTranslation } from "react-i18next"
 import { usePrivileges } from "../../authz/usePrivileges"
-import SchemaPrefixCard from "./SchemaPrefixCard"
-import MainDbMigrationCard from "./MainDbMigrationCard"
 
 import { ViewBase } from './DatabasePanel.kbview'
 
@@ -30,16 +28,6 @@ export class DatabasePanel extends ViewBase {
 
   get show_main() {
     return !(!this.isSuperuser)
-  }
-
-  /** `<SchemaPrefixCard>`, rendered by a ReactHost. */
-  get SchemaPrefixCard() {
-    return SchemaPrefixCard
-  }
-
-  /** `<MainDbMigrationCard>`, rendered by a ReactHost. */
-  get MainDbMigrationCard() {
-    return MainDbMigrationCard
   }
 
 }

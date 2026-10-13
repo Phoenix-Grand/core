@@ -1,7 +1,6 @@
 <!-- AlertsSection — converted from AlertsSection.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <Panel x:Props="AdminSectionProps" Class="contents">
-  <!-- TODO(views-migrate): <AlertDetail> is no .kbview element (./AlertDetail#default) -->
-  <ReactHost Component="{Binding AlertDetail}" Props="{Binding alert_detail_props}" Visible="{Binding show_case_1}"/>
+  <AlertDetail Id="{Binding alertDetailId}" OnBack="alert_detail_back" Visible="{Binding show_case_1}"/>
   <Panel Visible="{Binding show_main}" Class="min-w-0">
     <Panel Class="mb-4 flex min-w-0 flex-wrap items-center gap-x-3 gap-y-2">
       <Label HtmlTag="H1"

@@ -171,8 +171,7 @@
         </Panel>
       </Card>
       <Panel Class="min-w-0 lg:col-span-2">
-        <!-- TODO(views-migrate): <DetectorTrial> is no .kbview element (./DetectorTrial#default) -->
-        <ReactHost Component="{Binding DetectorTrial}" Props="{Binding detector_trial_props}"/>
+        <DetectorTrial DetectorId="{Binding props.id}" Draft="{Binding detectorDraft}" DraftError="{Binding draftError}"/>
       </Panel>
     </Panel>
     <Stack Direction="LeftToRight" CrossAlign="Center" WrapContents="true" Visible="{Binding canManage}" Class="mt-4">

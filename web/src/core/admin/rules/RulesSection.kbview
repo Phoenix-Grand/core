@@ -1,7 +1,6 @@
 <!-- RulesSection — converted from RulesSection.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <Panel x:Props="AdminSectionProps" Class="contents">
-  <!-- TODO(views-migrate): <RuleEditor> is no .kbview element (./RuleEditor#default) -->
-  <ReactHost Component="{Binding RuleEditor}" Props="{Binding rule_editor_props}" Visible="{Binding show_case_1}"/>
+  <RuleEditor RuleId="{Binding ruleEditorRuleId}" InitialPane="{Binding pane}" CanWrite="{Binding canWrite}" OnClose="rule_editor_close" Visible="{Binding show_case_1}"/>
   <Panel Visible="{Binding show_main}" Class="min-w-0">
     <Panel Class="mb-4 flex min-w-0 flex-wrap items-center gap-x-3 gap-y-2">
       <Label HtmlTag="H1"

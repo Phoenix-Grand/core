@@ -11,7 +11,6 @@ import { PRIV } from "../../authz/types"
 import { usePrivileges } from "../../authz/usePrivileges"
 import { adminUrl, useAdminAction } from "../adminAction"
 import type { AdminSectionProps } from "../sections/registry"
-import AlertDetail from "./AlertDetail"
 import { useAlertFacets, useAlerts, useAlertSummary, useAlertVerb, useAlertViews, useBulkAlerts, useDeleteAlertView, useSaveAlertView, useScanNow } from "./useAlerts"
 import { alertSummary, alertTitle, severityLabel, skinOf, statusLabel } from "./labels"
 import { EMPTY_FILTERS, type Alert, type AlertFilters, type AlertStatus } from "./types"
@@ -254,17 +253,15 @@ export class AlertsSection extends ViewBase {
     return !!(this.openId)
   }
 
-  /** `<AlertDetail>`, rendered by a ReactHost. */
-  get AlertDetail() {
+  /** `<AlertDetail Id>`: the id of the alert to open. */
+  get alertDetailId() {
     if (!(this.openId)) return undefined as never
-    return AlertDetail
+    return this.openId
   }
 
-  get alert_detail_props() {
-    return this.memo('alert_detail_props', [this.openId, this.props], () => {
-      if (!(this.openId)) return undefined as never
-      return ({ id: this.openId, onBack: () => this.props.navigate(adminUrl({ tab: 'alerts' })) } as React.ComponentProps<typeof AlertDetail>)
-    })
+  /** `<AlertDetail OnBack>`: go back to the alerts list. */
+  alert_detail_back(_sender: unknown, _e: EventArgs) {
+    this.props.navigate(adminUrl({ tab: 'alerts' }))
   }
 
   get show_main() {

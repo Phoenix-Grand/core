@@ -34,8 +34,7 @@
                Visible="{Binding show_blockers}"/>
       <Callout Variant="Success" Title="{Res admin.role_delegable_title}" Body="{Res admin.role_delegable_desc}" Visible="{Binding visible}"/>
       <Panel Class="border border-border rounded-lg overflow-hidden">
-        <!-- TODO(views-migrate): <PrivilegeList> is no .kbview element (./PrivilegeList#default) -->
-        <ReactHost Component="{Binding PrivilegeList}" Props="{Binding privilege_list_props}"/>
+        <PrivilegeList Keys="{Binding keys}" Catalogue="{Binding props.catalogue}" Selected="{Binding selected}" OnToggle="privilege_list_toggle"/>
       </Panel>
       <Callout Variant="Danger" Body="{Binding error}" Visible="{Binding show_error}"/>
     </Panel>

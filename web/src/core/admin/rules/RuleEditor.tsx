@@ -15,7 +15,6 @@ import ActionsEditor from "./ActionsEditor"
 import ScopeEditor from "./ScopeEditor"
 import ModePicker from "./ModePicker"
 import ImpactPanel from "./ImpactPanel"
-import RuleSummaryPanel from "./RuleSummaryPanel"
 import { useCreateRule, useRule, useRuleCatalog, useUpdateRule } from "./api"
 import { useDirectory, useScopePreview } from "./useDirectory"
 import { SEVERITIES, severityLabel } from "./labels"
@@ -24,7 +23,6 @@ import type { SummaryContext } from "./summary"
 import { emptyRuleInput, ruleToInput, type RuleInput, type RuleLimits } from "./types"
 import { useAdminCrumbs } from "../pages/AdminBreadcrumb"
 import { apiErrorDetail } from "../../api/errorMessage"
-import RuleSentence from "./RuleSentence"
 
 import { ViewBase } from './RuleEditor.kbcontrol'
 import * as __parts from './RuleEditor.parts'
@@ -522,17 +520,10 @@ export class RuleEditor extends ViewBase {
     return !(!this.canSave)
   }
 
-  /** `<RuleSummaryPanel>`, rendered by a ReactHost. */
-  get RuleSummaryPanel() {
+  /** `<RuleSummaryPanel Input>`: the rule input with its live conditions. */
+  get ruleSummaryInput() {
     if (!(!(this.catalog.isLoading || (!this.isNew && this.detail.isLoading))) || !(!(this.catalog.isError))) return undefined as never
-    return RuleSummaryPanel
-  }
-
-  get rule_summary_panel_props() {
-    return this.memo('rule_summary_panel_props', [this.input, this.wire, this.tree, this.summaryCtx, this.preview, this.isMobile, this.catalog, this.isNew, this.detail], () => {
-      if (!(!(this.catalog.isLoading || (!this.isNew && this.detail.isLoading))) || !(!(this.catalog.isError))) return undefined as never
-      return ({ input: { ...this.input, conditions: this.wire }, tree: this.tree, ctx: this.summaryCtx, preview: this.preview, flat: this.isMobile })
-    })
+    return { ...this.input, conditions: this.wire }
   }
 
   get show_is_mobile_pane_conditions() {
@@ -540,17 +531,10 @@ export class RuleEditor extends ViewBase {
     return this.isMobile && this.pane === 'conditions'
   }
 
-  /** `<RuleSentence>`, rendered by a ReactHost. */
-  get RuleSentence() {
+  /** `<RuleSentence Input>`: the rule input with its live conditions. */
+  get ruleSentenceInput() {
     if (!(!(this.catalog.isLoading || (!this.isNew && this.detail.isLoading))) || !(!(this.catalog.isError)) || !(this.isMobile && this.pane === 'conditions')) return undefined as never
-    return RuleSentence
-  }
-
-  get rule_sentence_props() {
-    return this.memo('rule_sentence_props', [this.input, this.wire, this.tree, this.summaryCtx, this.catalog, this.isNew, this.detail, this.isMobile, this.pane], () => {
-      if (!(!(this.catalog.isLoading || (!this.isNew && this.detail.isLoading))) || !(!(this.catalog.isError)) || !(this.isMobile && this.pane === 'conditions')) return undefined as never
-      return ({ input: { ...this.input, conditions: this.wire }, tree: this.tree, ctx: this.summaryCtx })
-    })
+    return { ...this.input, conditions: this.wire }
   }
 
   set<K extends keyof RuleInput>(key: K, value: RuleInput[K]) {

@@ -1,7 +1,7 @@
 /**
  * Code-behind of `LdapSection.kbview` (converted from `LdapSection.tsx` by @kubuno/views-migrate).
  */
-import { bind, type EventArgs, type MouseEventArgs } from '@kubuno/views'
+import { bind, type EventArgs, type MouseEventArgs, type ValueChangedEventArgs } from '@kubuno/views'
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
@@ -10,7 +10,6 @@ import { api } from "../../api/client"
 import { useConfirm } from "../../hooks/useConfirm"
 import ConfirmDialog from "@ui/ConfirmDialog"
 import { useAdminAction } from "../adminAction"
-import LdapDirectoryForm from "./LdapDirectoryForm"
 import { apiErrorDetail } from "../../api/errorMessage"
 import { emptyForm, type AuthProbe, type ConnectionProbe, type DirectoryForm, type LdapDirectory, type SyncReport } from "./types"
 
@@ -156,19 +155,6 @@ export class LdapSection extends ViewBase {
     return this.editing === 'new'
   }
 
-  /** `<LdapDirectoryForm>`, rendered by a ReactHost. */
-  get LdapDirectoryForm() {
-    if (!(!(this.isLoading)) || !(this.editing === 'new')) return undefined as never
-    return LdapDirectoryForm
-  }
-
-  get ldap_directory_form_props() {
-    return this.memo('ldap_directory_form_props', [this.form, this.setForm, this.memo, this.editing, this.createM, this.updateM, this.isLoading], () => {
-      if (!(!(this.isLoading)) || !(this.editing === 'new')) return undefined as never
-      return ({ form: this.form, setForm: this.setForm, isEdit: false, hasStoredPassword: false, onSave: this.memo("submit:bound", [], () => this.submit.bind(this)), onCancel: () => this.editing = null, saving: this.createM.isPending } as React.ComponentProps<typeof LdapDirectoryForm>)
-    })
-  }
-
   get show_list_editing_new() {
     if (!(!(this.isLoading))) return undefined as never
     return this.list.length === 0 && this.editing !== 'new'
@@ -263,6 +249,21 @@ export class LdapSection extends ViewBase {
   button_click(_sender: unknown, _args: MouseEventArgs) {
     if (!(!(this.isLoading)) || !(this.editing === null && this.list.length > 0)) return undefined as never
  this.setForm(emptyForm()); this.editing = 'new' }
+
+  /** `<LdapDirectoryForm SetForm>`: the form changed. */
+  ldap_directory_form_set_form(_sender: unknown, args: ValueChangedEventArgs) {
+    this.setForm(args.value as DirectoryForm)
+  }
+
+  /** `<LdapDirectoryForm OnSave>`: save the directory. */
+  ldap_directory_form_save(_sender: unknown, _e: EventArgs) {
+    this.submit()
+  }
+
+  /** `<LdapDirectoryForm OnCancel>`: leave the editor. */
+  ldap_directory_form_cancel(_sender: unknown, _e: EventArgs) {
+    this.editing = null
+  }
 
   /** `setEditing` of the TSX: a value, or an update of the previous one. */
   setEditing(value: string | null | ((prev: string | null) => string | null)) {

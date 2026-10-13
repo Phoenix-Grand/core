@@ -1,7 +1,6 @@
 <!-- DevicesSection — converted from DevicesSection.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <Panel x:Props="AdminSectionProps" Class="contents">
-  <!-- TODO(views-migrate): <DeviceDetail> is no .kbview element (./DeviceDetail#default) -->
-  <ReactHost Component="{Binding DeviceDetail}" Props="{Binding device_detail_props}" Visible="{Binding show_case_1}"/>
+  <DeviceDetail Id="{Binding device_detail_id}" OnBack="device_detail_back" Visible="{Binding show_case_1}"/>
   <Panel Visible="{Binding show_main}" Class="min-w-0">
     <Panel Class="mb-3 flex min-w-0 flex-wrap items-center gap-x-3 gap-y-2">
       <Label HtmlTag="H1"

@@ -1,7 +1,7 @@
 /**
  * Code-behind of `UsersPanel.kbcontrol` (converted from `UsersPanel.tsx` by @kubuno/views-migrate).
  */
-import { bind, type EventArgs, type MouseEventArgs } from '@kubuno/views'
+import { bind, type EventArgs, type MouseEventArgs, type ValueChangedEventArgs } from '@kubuno/views'
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useNavigate, useSearchParams } from "react-router-dom"
@@ -13,7 +13,7 @@ import { PRIV } from "../../authz/types"
 import { usePrivileges } from "../../authz/usePrivileges"
 import { useConfirm } from "../../hooks/useConfirm"
 import OrgUnitPicker from "../dialogs/OrgUnitPicker"
-import OrgUnitScopePanel, { ALL_UNITS, type OrgUnitScope } from "./OrgUnitScopePanel"
+import { ALL_UNITS, type OrgUnitScope } from "./OrgUnitScopePanel"
 import { adminUrl, useAdminAction } from "../adminAction"
 
 import { ViewBase } from './UsersPanel.kbcontrol'
@@ -175,17 +175,10 @@ export class UsersPanel extends ViewBase {
     return this.can(PRIV.ORG_UNITS_READ)
   }
 
-  /** `<OrgUnitScopePanel>`, rendered by a ReactHost. */
-  get OrgUnitScopePanel() {
+  /** `<OrgUnitScopePanel Units>`: the org units, or an empty list while they load. */
+  get scopeUnits() {
     if (!(this.can(PRIV.ORG_UNITS_READ))) return undefined as never
-    return OrgUnitScopePanel
-  }
-
-  get org_unit_scope_panel_props() {
-    return this.memo('org_unit_scope_panel_props', [this.units, this.scope, this.setScope, this.page, this.panelCollapsed, this.memo, this.can], () => {
-      if (!(this.can(PRIV.ORG_UNITS_READ))) return undefined as never
-      return ({ units: this.units ?? [], value: this.scope, onChange: next => { this.setScope(next); this.page = 0 }, collapsed: this.panelCollapsed, onCollapsedChange: this.memo("setPanelCollapsed:bound", [], () => this.setPanelCollapsed.bind(this)) } as React.ComponentProps<typeof OrgUnitScopePanel>)
-    })
+    return this.units ?? []
   }
 
   get show_can_priv_settings() {
@@ -350,6 +343,17 @@ export class UsersPanel extends ViewBase {
   button_click4(_sender: unknown, _args: MouseEventArgs) {
     if (!(this.data && this.data.total > this.limit)) return undefined as never
     this.page = this.page + 1
+  }
+
+  /** `<OrgUnitScopePanel OnChange>`: the scope changed; reset to the first page. */
+  org_unit_scope_panel_change(_sender: unknown, args: ValueChangedEventArgs) {
+    const next = args.value as OrgUnitScope
+    this.setScope(next); this.page = 0
+  }
+
+  /** `<OrgUnitScopePanel OnCollapsedChange>`: the panel was collapsed or expanded. */
+  org_unit_scope_panel_collapsed_change(_sender: unknown, args: ValueChangedEventArgs) {
+    this.setPanelCollapsed(args.value as boolean)
   }
 
   /** `setPanelCollapsed` of the TSX: a value, or an update of the previous one. */

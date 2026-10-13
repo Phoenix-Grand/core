@@ -1,12 +1,11 @@
 /**
  * Code-behind of `RoleCreateDialog.kbview` (converted from `RoleCreateDialog.tsx` by @kubuno/views-migrate).
  */
-import { bind, type EventArgs } from '@kubuno/views'
+import { bind, type EventArgs, type ValueChangedEventArgs } from '@kubuno/views'
 import { useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useToast } from "@ui"
 import type { Privilege } from "../../authz/types"
-import PrivilegeList from "./PrivilegeList"
 import { errorMessage, useCreateRole } from "./api"
 
 import { ViewBase } from './RoleCreateDialog.kbview'
@@ -122,15 +121,6 @@ export class RoleCreateDialog extends ViewBase {
     return this.memo('visible', [this.show_selected_size, this.show_not_blockers], () => this.show_selected_size && this.show_not_blockers)
   }
 
-  /** `<PrivilegeList>`, rendered by a ReactHost. */
-  get PrivilegeList() {
-    return PrivilegeList
-  }
-
-  get privilege_list_props() {
-    return this.memo('privilege_list_props', [this.keys, this.props, this.selected, this.memo, this.setSelected], () => ({ keys: this.keys, catalogue: this.props.catalogue, selected: this.selected, onToggle: this.memo("toggle:bound", [], () => this.toggle.bind(this)) }))
-  }
-
   get show_error() {
     return !!(this.error)
   }
@@ -141,6 +131,11 @@ export class RoleCreateDialog extends ViewBase {
       next.has(key) ? next.delete(key) : next.add(key)
       return next
     })
+  }
+
+  /** `<PrivilegeList OnToggle>`: a privilege was toggled. */
+  privilege_list_toggle(_sender: unknown, args: ValueChangedEventArgs) {
+    this.toggle(args.value as string)
   }
 
   submit(e?: React.FormEvent) {

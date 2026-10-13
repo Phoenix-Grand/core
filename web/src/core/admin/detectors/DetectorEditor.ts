@@ -8,7 +8,6 @@ import { type ComboboxOption } from "@ui"
 import { PRIV } from "../../authz/types"
 import { usePrivileges } from "../../authz/usePrivileges"
 import { errorMessage, useCreateDetector, useDetector, useUpdateDetector, type ChecksumAlgo, type Detector, type DetectorInput, type DetectorKind, type DetectorLimits } from "./api"
-import DetectorTrial from "./DetectorTrial"
 import { useAdminCrumbs } from "../pages/AdminBreadcrumb"
 
 import { ViewBase } from './DetectorEditor.kbcontrol'
@@ -384,13 +383,8 @@ export class DetectorEditor extends ViewBase {
     return __parts.Part13
   }
 
-  /** `<DetectorTrial>`, rendered by a ReactHost. */
-  get DetectorTrial() {
-    return DetectorTrial
-  }
-
-  get detector_trial_props() {
-    return this.memo('detector_trial_props', [this.props, this.canManage, this.draftError, this.form], () => ({ detectorId: this.props.id, draft: this.canManage && !this.draftError ? inputOf(this.form) : null, draftError: this.draftError }))
+  get detectorDraft(): DetectorInput | null {
+    return this.memo('detectorDraft', [this.canManage, this.draftError, this.form], () => this.canManage && !this.draftError ? inputOf(this.form) : null)
   }
 
   get enabled_unless_busy() {

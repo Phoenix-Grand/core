@@ -1,7 +1,7 @@
 /**
  * Code-behind of `RulesSection.kbview` (converted from `RulesSection.tsx` by @kubuno/views-migrate).
  */
-import { bind, type MouseEventArgs } from '@kubuno/views'
+import { bind, type EventArgs, type MouseEventArgs } from '@kubuno/views'
 import { useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import { AlertTriangle, Copy, FlaskConical, Pencil, Play, Power, ScrollText, Trash2 } from "lucide-react"
@@ -13,7 +13,7 @@ import { useConfirm } from "../../hooks/useConfirm"
 import { adminUrl, useAdminAction } from "../adminAction"
 import type { AdminSectionProps } from "../sections/registry"
 import { formatAgo, formatWhen } from "../sections/format"
-import RuleEditor, { type Pane } from "./RuleEditor"
+import { type Pane } from "./RuleEditor"
 import { useCreateRule, useDeleteRule, useExecutions, useRuleCatalog, useRules, useSetRuleMode } from "./api"
 import { MODE_ORDER, modeLabel, modeVariant, severityLabel, severityVariant } from "./labels"
 import { ruleToInput, type Mode, type Rule } from "./types"
@@ -343,17 +343,10 @@ export class RulesSection extends ViewBase {
     return !!(this.creating || this.openId)
   }
 
-  /** `<RuleEditor>`, rendered by a ReactHost. */
-  get RuleEditor() {
+  /** `<RuleEditor RuleId>`: the edited rule's id, `null` while creating. */
+  get ruleEditorRuleId() {
     if (!(this.creating || this.openId)) return undefined as never
-    return RuleEditor
-  }
-
-  get rule_editor_props() {
-    return this.memo('rule_editor_props', [this.creating, this.openId, this.pane, this.canWrite, this.props], () => {
-      if (!(this.creating || this.openId)) return undefined as never
-      return ({ ruleId: this.creating ? null : this.openId, initialPane: this.pane, canWrite: this.canWrite, onClose: () => this.props.navigate(adminUrl({ tab: 'rules' })) } as React.ComponentProps<typeof RuleEditor>)
-    })
+    return this.creating ? null : this.openId
   }
 
   get show_main() {
@@ -477,6 +470,12 @@ export class RulesSection extends ViewBase {
   button_click2(_sender: unknown, _args: MouseEventArgs) {
     if (!(!(this.creating || this.openId)) || !(this.canWrite)) return undefined as never
     this.props.navigate(adminUrl({ tab: 'rules', params: { new: 1 } }))
+  }
+
+  /** `<RuleEditor OnClose>`: leaves the editor, back to the rules list. */
+  rule_editor_close(_sender: unknown, _e: EventArgs) {
+    if (!(this.creating || this.openId)) return undefined as never
+    this.props.navigate(adminUrl({ tab: 'rules' }))
   }
 
   /** `setModeFilter` of the TSX: a value, or an update of the previous one. */

@@ -7,7 +7,6 @@ import { modeLabel, modeVariant, MODE_FACTS } from "./labels"
 import type { UiNode } from "./condition"
 import type { RuleInput } from "./types"
 import type { ScopePreview } from "./useDirectory"
-import RuleSentence from "./RuleSentence"
 
 import { ViewBase } from './RuleSummaryPanel.kbcontrol'
 import * as __parts from './RuleSummaryPanel.parts'
@@ -52,15 +51,6 @@ export class RuleSummaryPanel extends ViewBase {
 
   get badge_text() {
     return modeLabel(this.tr, this.props.input.mode)
-  }
-
-  /** `<RuleSentence>`, rendered by a ReactHost. */
-  get RuleSentence() {
-    return RuleSentence
-  }
-
-  get rule_sentence_props() {
-    return this.memo('rule_sentence_props', [this.props], () => ({ input: this.props.input, tree: this.props.tree, ctx: this.props.ctx }))
   }
 
   get show_input_mode_simulate() {

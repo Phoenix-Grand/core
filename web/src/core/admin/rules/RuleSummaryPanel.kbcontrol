@@ -7,8 +7,7 @@
         <Label HtmlTag="H3" Text="{Res admin.rl_summary_title}" Overflow="Wrap" ForeColor="TextPrimary" InheritFontSize="true"/>
         <Badge Variant="{Binding variant}" Size="Sm" Text="{Binding badge_text}" Class="ms-auto"/>
       </Stack>
-      <!-- TODO(views-migrate): <RuleSentence> is no .kbview element (./RuleSentence#default) -->
-      <ReactHost Component="{Binding RuleSentence}" Props="{Binding rule_sentence_props}"/>
+      <RuleSentence Input="{Binding props.input}" Tree="{Binding props.tree}" Ctx="{Binding props.ctx}"/>
       <Panel Visible="{Binding show_input_mode_simulate}" Class="mt-3">
         <!-- TODO(views-migrate): <Callout> icon: a value the property converts (null-when-false) -->
         <ReactHost Component="{Binding Part1}" Props="{Binding part1_props}"/>

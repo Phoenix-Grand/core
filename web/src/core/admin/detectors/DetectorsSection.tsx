@@ -1,7 +1,7 @@
 /**
  * Code-behind of `DetectorsSection.kbview` (converted from `DetectorsSection.tsx` by @kubuno/views-migrate).
  */
-import { bind } from '@kubuno/views'
+import { bind, type EventArgs } from '@kubuno/views'
 import { useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import { ShieldCheck, ShieldOff } from "lucide-react"
@@ -14,7 +14,6 @@ import { adminUrl, useAdminAction } from "../adminAction"
 import type { AdminSectionProps } from "../sections/registry"
 import { useDetectors, useDeleteDetector, errorMessage, type Detector } from "./api"
 import { asPercent, categoryLabel, categoryOrder, checksumLabel, kindLabel } from "./labels"
-import DetectorEditor from "./DetectorEditor"
 
 import { ViewBase } from './DetectorsSection.kbview'
 import * as __parts from './DetectorsSection.parts'
@@ -210,21 +209,16 @@ export class DetectorsSection extends ViewBase {
     return !!(this.active)
   }
 
-  /** `<DetectorEditor>`, rendered by a ReactHost. */
-  get DetectorEditor() {
+  /** `<DetectorEditor Id>`: the detector being edited (`null` for a new one). */
+  get editorId() {
     if (!(this.active)) return undefined as never
-    return DetectorEditor
+    return this.active === 'new' ? null : this.active
   }
 
-  get detector_editor_props() {
-    return this.memo('detector_editor_props', [this.active, this.data, this.editing, this.props, this.openId], () => {
-      if (!(this.active)) return undefined as never
-      const openId = this.openId
-      return ({ id: this.active === 'new' ? null : this.active, limits: this.data?.limits, onClose: () => {
-          this.editing = null
-          if (openId) this.props.navigate(adminUrl({ tab: 'detectors' }))
-        } } as React.ComponentProps<typeof DetectorEditor>)
-    })
+  /** `<DetectorEditor Limits>`: the server's detector limits. */
+  get editorLimits() {
+    if (!(this.active)) return undefined as never
+    return this.data?.limits
   }
 
   get show_main() {
@@ -267,6 +261,12 @@ export class DetectorsSection extends ViewBase {
       if (!(!(this.active)) || !(this.confirmState)) return undefined as never
       return ({ ...this.confirmState, onConfirm: this.handleConfirm, onCancel: this.handleCancel })
     })
+  }
+
+  /** `<DetectorEditor OnClose>`: the editor closed. */
+  detector_editor_close(_sender: unknown, _e: EventArgs) {
+    this.editing = null
+    if (this.openId) this.props.navigate(adminUrl({ tab: 'detectors' }))
   }
 
   /** `setEditing` of the TSX: a value, or an update of the previous one. */

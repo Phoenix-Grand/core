@@ -21,8 +21,7 @@
                  InheritFontSize="true"
                  Class="[font-size:var(--kb-text-meta)]"/>
         </Panel>
-        <!-- TODO(views-migrate): <KnownConnectionsCard> is no .kbview element (./KnownConnectionsCard#default) -->
-        <ReactHost Component="{Binding KnownConnectionsCard}" Props="{Binding known_connections_card_props}"/>
+        <KnownConnectionsCard BasePath="/admin/database" QueryKey="{Binding knownConnectionsQueryKey}" Embedded="true" Heading="{Binding knownConnectionsHeading}"/>
         <Stack Gap="16">
           <Panel>
             <Label HtmlTag="H3"

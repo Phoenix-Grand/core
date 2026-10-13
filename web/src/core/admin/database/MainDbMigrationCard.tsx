@@ -12,7 +12,6 @@ import { api } from "../../api/client"
 import { apiErrorMessage } from "../../api/errorMessage"
 import { useConfirm } from "../../hooks/useConfirm"
 import { usePrivileges } from "../../authz/usePrivileges"
-import KnownConnectionsCard from "./KnownConnectionsCard"
 
 import { ViewBase } from './MainDbMigrationCard.kbcontrol'
 import * as __parts from './MainDbMigrationCard.parts'
@@ -140,17 +139,14 @@ export class MainDbMigrationCard extends ViewBase {
               : this.tr('admin.db_current_unknown')
   }
 
-  /** `<KnownConnectionsCard>`, rendered by a ReactHost. */
-  get KnownConnectionsCard() {
+  get knownConnectionsQueryKey() {
     if (!(!(!this.isSuperuser))) return undefined as never
-    return KnownConnectionsCard
+    return ['core']
   }
 
-  get known_connections_card_props() {
-    return this.memo('known_connections_card_props', [this.tr, this.isSuperuser], () => {
-      if (!(!(!this.isSuperuser))) return undefined as never
-      return ({ basePath: "/admin/database", queryKey: ['core'], embedded: true, heading: this.tr('admin.dbconn_title') })
-    })
+  get knownConnectionsHeading() {
+    if (!(!(!this.isSuperuser))) return undefined as never
+    return this.tr('admin.dbconn_title')
   }
 
   /** The rows of the Repeater over `ENGINES`. */

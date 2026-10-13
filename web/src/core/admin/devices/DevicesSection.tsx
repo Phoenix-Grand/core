@@ -1,7 +1,7 @@
 /**
  * Code-behind of `DevicesSection.kbview` (converted from `DevicesSection.tsx` by @kubuno/views-migrate).
  */
-import { bind, type MouseEventArgs } from '@kubuno/views'
+import { bind, type EventArgs, type MouseEventArgs } from '@kubuno/views'
 import { useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { Ban, Check, LogOut, Search, SlidersHorizontal, Trash2, X } from "lucide-react"
@@ -13,7 +13,6 @@ import { PRIV } from "../../authz/types"
 import { usePrivileges } from "../../authz/usePrivileges"
 import type { AdminSectionProps } from "../sections/registry"
 import { adminUrl } from "../adminAction"
-import DeviceDetail from "./DeviceDetail"
 import { useDeviceFacets, useDevices, useForgetDevice, useSetApproval, useSignOutDevice } from "../../devices/useDevices"
 import { approvalLabel, approvalSkin, deviceName, deviceTypeLabel, signalLevelLabel } from "../../devices/labels"
 import { EMPTY_DEVICE_FILTERS, type Device, type DeviceFilters } from "../../devices/types"
@@ -272,17 +271,16 @@ export class DevicesSection extends ViewBase {
     return !!(this.openId)
   }
 
-  /** `<DeviceDetail>`, rendered by a ReactHost. */
-  get DeviceDetail() {
+  /** `<DeviceDetail Id>`: the id of the device whose detail is open. */
+  get device_detail_id(): string {
     if (!(this.openId)) return undefined as never
-    return DeviceDetail
+    return this.openId
   }
 
-  get device_detail_props() {
-    return this.memo('device_detail_props', [this.openId, this.props], () => {
-      if (!(this.openId)) return undefined as never
-      return ({ id: this.openId, onBack: () => this.props.navigate(adminUrl({ tab: 'device-sessions' })) } as React.ComponentProps<typeof DeviceDetail>)
-    })
+  /** `<DeviceDetail OnBack>`: leave the detail and return to the list. */
+  device_detail_back(_sender: unknown, _e: EventArgs) {
+    if (!(this.openId)) return undefined as never
+    this.props.navigate(adminUrl({ tab: 'device-sessions' }))
   }
 
   get show_main() {

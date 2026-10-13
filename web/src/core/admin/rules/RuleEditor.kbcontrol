@@ -54,12 +54,10 @@
                     OnClick="save"/>
           </Stack>
         </Panel>
-        <!-- TODO(views-migrate): <RuleSummaryPanel> is no .kbview element (./RuleSummaryPanel#default) -->
-        <ReactHost Component="{Binding RuleSummaryPanel}" Props="{Binding rule_summary_panel_props}"/>
+        <RuleSummaryPanel Input="{Binding ruleSummaryInput}" Tree="{Binding tree}" Ctx="{Binding summaryCtx}" Preview="{Binding preview}" Flat="{Binding isMobile}"/>
       </Panel>
       <Panel BackColor="Surface1" Visible="{Binding show_is_mobile_pane_conditions}" Class="mt-4 rounded-xl border border-border p-4">
-        <!-- TODO(views-migrate): <RuleSentence> is no .kbview element (./RuleSentence#default) -->
-        <ReactHost Component="{Binding RuleSentence}" Props="{Binding rule_sentence_props}"/>
+        <RuleSentence Input="{Binding ruleSentenceInput}" Tree="{Binding tree}" Ctx="{Binding summaryCtx}"/>
       </Panel>
     </Panel>
   </Panel>

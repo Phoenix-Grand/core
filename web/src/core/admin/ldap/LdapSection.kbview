@@ -11,8 +11,7 @@
            Class="[font-size:var(--kb-text-body)]"/>
     <!-- TODO(views-migrate): <Callout> with element children -->
     <ReactHost Component="{Binding Part1}" Props="{Binding part1_props}"/>
-    <!-- TODO(views-migrate): <LdapDirectoryForm> is no .kbview element (./LdapDirectoryForm#default) -->
-    <ReactHost Component="{Binding LdapDirectoryForm}" Props="{Binding ldap_directory_form_props}" Visible="{Binding show_editing_new}"/>
+    <LdapDirectoryForm Form="{Binding form}" SetForm="ldap_directory_form_set_form" IsEdit="false" HasStoredPassword="false" OnSave="ldap_directory_form_save" OnCancel="ldap_directory_form_cancel" Saving="{Binding createM.isPending}" Visible="{Binding show_editing_new}"/>
     <EmptyState ActionLabel="{Res ldap.add}"
                 IconSize="28"
                 Icon="Network"

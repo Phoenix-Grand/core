@@ -10,8 +10,7 @@
              Class="mb-4"
              OnAction="callout_action"/>
     <Stack Direction="LeftToRight" Gap="16" CrossAlign="Start">
-      <!-- TODO(views-migrate): <OrgUnitScopePanel> is no .kbview element (./OrgUnitScopePanel#default) -->
-      <ReactHost Component="{Binding OrgUnitScopePanel}" Props="{Binding org_unit_scope_panel_props}" Visible="{Binding show_can_priv_org}"/>
+      <OrgUnitScopePanel Units="{Binding scopeUnits}" Value="{Binding scope}" OnChange="org_unit_scope_panel_change" Collapsed="{Binding panelCollapsed}" OnCollapsedChange="org_unit_scope_panel_collapsed_change" Visible="{Binding show_can_priv_org}"/>
       <Panel Class="flex-1 min-w-0">
         <!-- TODO(views-migrate): <RegistrationToggle> is no .kbview element (a local or dynamic component) -->
         <ReactHost Component="{Binding RegistrationToggle}" Visible="{Binding show_can_priv_settings}"/>
