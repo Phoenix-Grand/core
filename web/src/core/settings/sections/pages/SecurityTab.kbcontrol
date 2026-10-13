@@ -17,7 +17,6 @@
       </Panel>
     </Panel>
     <Panel Class="h-px bg-border"/>
-    <!-- TODO(views-migrate): <TwoFactorSection> is no .kbview element (./TwoFactorSection#TwoFactorSection) -->
-    <ReactHost Component="{Binding TwoFactorSection}"/>
+    <TwoFactorSection/>
   </Panel>
 </UserControl>

@@ -5,14 +5,12 @@
       <Label HtmlTag="H3" Text="{Res settings.tok_title}" FontWeight="Medium" Overflow="Wrap" ForeColor="TextPrimary"/>
       <Label Text="{Res settings.tok_desc}" Role="Meta" Overflow="Wrap" ForeColor="TextSecondary" Class="mt-1"/>
     </Panel>
-    <!-- TODO(views-migrate): <NewTokenBanner> is no .kbview element (./NewTokenBanner#default) -->
-    <ReactHost Component="{Binding NewTokenBanner}" Props="{Binding new_token_banner_props}" Visible="{Binding show_new_token}"/>
+    <NewTokenBanner Token="{Binding bannerToken}" OnClose="new_token_banner_close" Visible="{Binding show_new_token}"/>
     <Panel Visible="{Binding show_legacy}" Class="mb-5">
       <!-- TODO(views-migrate): <Callout> with element children -->
       <ReactHost Component="{Binding Part1}" Props="{Binding part1_props}"/>
     </Panel>
-    <!-- TODO(views-migrate): <CreateTokenForm> is no .kbview element (./CreateTokenForm#default) -->
-    <ReactHost Component="{Binding CreateTokenForm}" Props="{Binding create_token_form_props}"/>
+    <CreateTokenForm OnCreated="create_token_form_created"/>
     <Label Text="{Res common.loading}" Overflow="Wrap" ForeColor="TextSecondary" Visible="{Binding isLoading}" Class="py-4"/>
     <EmptyState IconSize="26" Icon="Key" Title="{Res settings.tok_none}" Compact="true" Visible="{Binding show_tokens_tokens}"/>
     <Panel Visible="{Binding show_tokens_tokens2}" Class="space-y-2">
@@ -73,8 +71,7 @@
           </Stack>
           <Panel Class="mt-2 pl-[26px]">
             <Label Text="{Res settings.tok_scopes_label}" Role="Meta" Overflow="Wrap" ForeColor="TextSecondary" Class="mb-1"/>
-            <!-- TODO(views-migrate): <TokenScopeList> is no .kbview element (./TokenScopeList#default) -->
-            <ReactHost Component="{Binding TokenScopeList}" Props="{Binding token_scope_list_props}"/>
+            <TokenScopeList Scopes="{Binding tok.scopes}"/>
             <Label Text="{Binding p_text}"
                    Role="Meta"
                    Overflow="Wrap"

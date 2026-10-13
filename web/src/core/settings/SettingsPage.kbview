@@ -1,7 +1,6 @@
 <!-- SettingsPage — converted from SettingsPage.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <Panel Class="contents">
-  <!-- TODO(views-migrate): <MobileSettingsIndex> is no .kbview element (./navigation#MobileSettingsIndex) -->
-  <ReactHost Component="{Binding MobileSettingsIndex}" Visible="{Binding show_case_1}"/>
+  <MobileSettingsIndex Visible="{Binding show_case_1}"/>
   <Panel Visible="{Binding show_main}" Class="max-w-4xl">
     <Panel AccessibleRole="PushButton"
            AutoSize="true"

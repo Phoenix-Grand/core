@@ -26,8 +26,7 @@
         </Panel>
       </Stack>
       <Panel Class="mb-6">
-        <!-- TODO(views-migrate): <BackupCodesSection> is no .kbview element (./BackupCodesSection#default) -->
-        <ReactHost Component="{Binding BackupCodesSection}"/>
+        <BackupCodesSection/>
       </Panel>
       <Button Variant="Danger"
               Size="Sm"

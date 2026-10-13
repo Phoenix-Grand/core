@@ -1,16 +1,13 @@
 /**
  * Code-behind of `ApiTokensTab.kbcontrol` (converted from `ApiTokensTab.tsx` by @kubuno/views-migrate).
  */
-import { bind, type MouseEventArgs } from '@kubuno/views'
+import { bind, type EventArgs, type MouseEventArgs, type ValueChangedEventArgs } from '@kubuno/views'
 import { formatDate, formatRelative } from "../../../intl/datetime"
 import { useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { api } from "../../../api/client"
 import type { ApiToken } from "../../../types"
-import NewTokenBanner from "./NewTokenBanner"
-import CreateTokenForm from "./CreateTokenForm"
-import TokenScopeList from "./TokenScopeList"
 
 import { ViewBase } from './ApiTokensTab.kbcontrol'
 import * as __parts from './ApiTokensTab.parts.tsx'
@@ -58,17 +55,15 @@ export class ApiTokensTab extends ViewBase {
     return !!(this.newToken)
   }
 
-  /** `<NewTokenBanner>`, rendered by a ReactHost. */
-  get NewTokenBanner() {
+  /** `<NewTokenBanner Token>`: the raw token being shown. */
+  get bannerToken() {
     if (!(this.newToken)) return undefined as never
-    return NewTokenBanner
+    return this.newToken
   }
 
-  get new_token_banner_props() {
-    return this.memo('new_token_banner_props', [this.newToken], () => {
-      if (!(this.newToken)) return undefined as never
-      return ({ token: this.newToken, onClose: () => this.newToken = null } as React.ComponentProps<typeof NewTokenBanner>)
-    })
+  /** `<NewTokenBanner OnClose>`: dismiss the banner. */
+  new_token_banner_close(_sender: unknown, _e: EventArgs) {
+    this.newToken = null
   }
 
   get show_legacy() {
@@ -88,13 +83,9 @@ export class ApiTokensTab extends ViewBase {
     return __parts.Part1
   }
 
-  /** `<CreateTokenForm>`, rendered by a ReactHost. */
-  get CreateTokenForm() {
-    return CreateTokenForm
-  }
-
-  get create_token_form_props() {
-    return this.memo('create_token_form_props', [this.memo, this.newToken], () => ({ onCreated: this.memo("setNewToken:bound", [], () => this.setNewToken.bind(this)) }))
+  /** `<CreateTokenForm OnCreated>`: a new token was created; show it. */
+  create_token_form_created(_sender: unknown, args: ValueChangedEventArgs) {
+    this.setNewToken(args.value as string)
   }
 
   get show_tokens_tokens() {
@@ -109,12 +100,6 @@ export class ApiTokensTab extends ViewBase {
   get Part2() {
     if (!(this.tokens && this.tokens.length > 0)) return undefined as never
     return __parts.Part2
-  }
-
-  /** `<TokenScopeList>`, rendered by a ReactHost. */
-  get TokenScopeList() {
-    if (!(this.tokens && this.tokens.length > 0)) return undefined as never
-    return TokenScopeList
   }
 
   /** The rows of the Repeater over `tokens`. */
@@ -133,7 +118,7 @@ export class ApiTokensTab extends ViewBase {
                           : 'bg-surface-2 text-text-secondary'
                       }`) : undefined, span_text: ((this.tokens && this.tokens.length > 0) && (tok.expires_at)) ? (isExpired
                           ? this.tr('settings.tok_expired')
-                          : `${this.tr('settings.tok_expires_prefix')} ${formatRelative(new Date(tok.expires_at))}`) : undefined, token_scope_list_props: ((this.tokens && this.tokens.length > 0)) ? ({ scopes: tok.scopes }) : undefined, show_tok_is_legacy: ((this.tokens && this.tokens.length > 0)) ? (!!(tok.is_legacy && tok.legacy_grace_until)) : undefined, p_text: ((this.tokens && this.tokens.length > 0) && (tok.is_legacy && tok.legacy_grace_until)) ? (graceOver
+                          : `${this.tr('settings.tok_expires_prefix')} ${formatRelative(new Date(tok.expires_at))}`) : undefined, show_tok_is_legacy: ((this.tokens && this.tokens.length > 0)) ? (!!(tok.is_legacy && tok.legacy_grace_until)) : undefined, p_text: ((this.tokens && this.tokens.length > 0) && (tok.is_legacy && tok.legacy_grace_until)) ? (graceOver
                         ? this.tr('settings.tok_legacy_over')
                         : this.tr('settings.tok_legacy_until', {
                             date: formatDate(new Date(tok.legacy_grace_until), 'dateLong'),

@@ -5,7 +5,6 @@ import { useTranslation } from "react-i18next"
 import type { User } from "../../../types"
 import PasswordResetCard from "./PasswordResetCard"
 import RequirePasswordChangeCard from "./RequirePasswordChangeCard"
-import SessionsCard from "./SessionsCard"
 
 import { ViewBase } from './UserSecurityTab.kbcontrol'
 import * as __parts from './UserSecurityTab.parts.tsx'
@@ -64,11 +63,6 @@ export class UserSecurityTab extends ViewBase {
   /** `<RequirePasswordChangeCard>`, rendered by a ReactHost. */
   get RequirePasswordChangeCard() {
     return RequirePasswordChangeCard
-  }
-
-  /** `<SessionsCard>`, rendered by a ReactHost. */
-  get SessionsCard() {
-    return SessionsCard
   }
 
 }

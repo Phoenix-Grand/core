@@ -3,8 +3,7 @@
   <Panel HtmlTag="Aside" Class="{Binding aside_class}">
     <Stack Gap="12" Class="p-4">
       <Panel>
-        <!-- TODO(views-migrate): <RoleBadge> is no .kbview element (./RoleBadge#default) -->
-        <ReactHost Component="{Binding RoleBadge}" Props="{Binding role_badge_props}"/>
+        <RoleBadge Role="{Binding props.user.role}" Label="{Binding roleLabel}"/>
       </Panel>
       <Stack Direction="LeftToRight" Gap="12" CrossAlign="Start">
         <!-- TODO(views-migrate): <UserAvatar> is no .kbview element (./UserAvatar#UserAvatar) -->
@@ -21,8 +20,7 @@
       </Stack>
       <Stack Gap="6">
         <Panel>
-          <!-- TODO(views-migrate): <StatusBadge> is no .kbview element (./StatusBadge#default) -->
-          <ReactHost Component="{Binding StatusBadge}" Props="{Binding status_badge_props}"/>
+          <StatusBadge Active="{Binding props.user.is_active}" Label="{Binding statusLabel}"/>
         </Panel>
         <!-- TODO(views-migrate): elements held in an expression -->
         <ReactHost Component="{Binding Fragment}" Props="{Binding content_meta_t_admin}"/>

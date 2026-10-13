@@ -1,7 +1,7 @@
 /**
  * Code-behind of `UserDetailSection.kbcontrol` (converted from `UserDetailSection.tsx` by @kubuno/views-migrate).
  */
-import { type EventArgs } from '@kubuno/views'
+import { type EventArgs, type ValueChangedEventArgs } from '@kubuno/views'
 import { useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import type { NavigateFunction } from "react-router-dom"
@@ -13,10 +13,8 @@ import type { User } from "../../../types"
 import { confirmLeave } from "../../inline-edit/unsaved"
 import { adminUrl, adminUrlWith } from "../../adminAction"
 import { useAdminCrumbs } from "../../pages/AdminBreadcrumb"
-import IdentityCard from "./IdentityCard"
 import ProfileTab from "./UserProfileTab"
 import SecurityTab from "./UserSecurityTab"
-import ActivityTab from "./ActivityTab"
 
 import { ViewBase } from './UserDetailSection.kbcontrol'
 import * as __parts from './UserDetailSection.parts'
@@ -147,19 +145,6 @@ export class UserDetailSection extends ViewBase {
     return this.mobile ? 'flex flex-col gap-4' : 'flex items-start gap-4'
   }
 
-  /** `<IdentityCard>`, rendered by a ReactHost. */
-  get IdentityCard() {
-    if (!(!(this.isLoading)) || !(!(this.isError || !this.data))) return undefined as never
-    return IdentityCard
-  }
-
-  get identity_card_props() {
-    return this.memo('identity_card_props', [this.user, this.mobile, this.toggleActive, this.confirm, this.tr, this.memo, this.props, this.isLoading, this.isError, this.data], () => {
-      if (!(!(this.isLoading)) || !(!(this.isError || !this.data))) return undefined as never
-      return ({ user: this.user, mobile: this.mobile, busy: this.toggleActive.isPending, onToggleActive: () => void this.askToggleActive(this.user), goPane: this.memo("setPane:bound", [], () => this.setPane.bind(this)) } as React.ComponentProps<typeof IdentityCard>)
-    })
-  }
-
   get part1_props() {
     return this.memo('part1_props', [this.tr, this.tabs, this.pane, this.memo, this.confirm, this.props, this.isLoading, this.isError, this.data], () => {
       if (!(!(this.isLoading)) || !(!(this.isError || !this.data))) return undefined as never
@@ -214,19 +199,6 @@ export class UserDetailSection extends ViewBase {
     return this.pane === 'activity'
   }
 
-  /** `<ActivityTab>`, rendered by a ReactHost. */
-  get ActivityTab() {
-    if (!(!(this.isLoading)) || !(!(this.isError || !this.data)) || !(this.pane === 'activity')) return undefined as never
-    return ActivityTab
-  }
-
-  get activity_tab_props() {
-    return this.memo('activity_tab_props', [this.user, this.isLoading, this.isError, this.data, this.pane], () => {
-      if (!(!(this.isLoading)) || !(!(this.isError || !this.data)) || !(this.pane === 'activity')) return undefined as never
-      return ({ user: this.user })
-    })
-  }
-
   get show_confirm_state() {
     return this.memo('show_confirm_state', [this.confirmState, this.isLoading, this.isError, this.data], () => {
       if (!(!(this.isLoading)) || !(!(this.isError || !this.data))) return undefined as never
@@ -267,6 +239,18 @@ export class UserDetailSection extends ViewBase {
       variant:      user.is_active ? 'danger' : 'default',
     })
     if (ok) this.toggleActive.mutate(!user.is_active)
+  }
+
+  /** `<IdentityCard OnToggleActive>`: enable or disable the account. */
+  identity_card_toggle_active(_sender: unknown, _e: EventArgs) {
+    if (!(!(this.isLoading)) || !(!(this.isError || !this.data))) return undefined as never
+    void this.askToggleActive(this.user)
+  }
+
+  /** `<IdentityCard GoPane>`: jump to one of the sheet's tabs. */
+  identity_card_go_pane(_sender: unknown, args: ValueChangedEventArgs) {
+    if (!(!(this.isLoading)) || !(!(this.isError || !this.data))) return undefined as never
+    void this.setPane(args.value as 'profile' | 'security')
   }
 
   empty_state_action(_sender: unknown, _args: EventArgs) {

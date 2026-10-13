@@ -9,7 +9,6 @@ import { Callout } from "@ui"
 import { useAuthStore } from "../../../store/authStore"
 import { api } from "../../../api/client"
 import { BackupCodesPanel } from "../controls/BackupCodesPanel"
-import BackupCodesSection from "./BackupCodesSection"
 
 import { ViewBase } from './TwoFactorSection.kbcontrol'
 import * as __parts from './TwoFactorSection.parts.tsx'
@@ -116,11 +115,6 @@ export class TwoFactorSection extends ViewBase {
       if (!(!(this.step === 'codes')) || !(this.enabled)) return undefined as never
       return ({ children: this.requirementBanner })
     })
-  }
-
-  /** `<BackupCodesSection>`, rendered by a ReactHost. */
-  get BackupCodesSection() {
-    return BackupCodesSection
   }
 
   get show_show_disable_form() {

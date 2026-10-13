@@ -11,8 +11,6 @@ import type { OrgUnit, User } from "../../../types"
 import { PRIV } from "../../../authz/types"
 import { usePrivileges } from "../../../authz/usePrivileges"
 import { formatAgo, formatDay } from "../format"
-import RoleBadge from "./RoleBadge"
-import StatusBadge from "./StatusBadge"
 import { UserAvatar } from "./UserAvatar"
 
 import { ViewBase } from './IdentityCard.kbcontrol'
@@ -74,13 +72,8 @@ export class IdentityCard extends ViewBase {
           : 'sticky top-[52px] self-start shrink-0 w-[300px]'}`
   }
 
-  /** `<RoleBadge>`, rendered by a ReactHost. */
-  get RoleBadge() {
-    return RoleBadge
-  }
-
-  get role_badge_props() {
-    return this.memo('role_badge_props', [this.props, this.tr], () => ({ role: this.props.user.role, label: this.tr(`admin.role_${this.props.user.role}`, { defaultValue: this.props.user.role }) }))
+  get roleLabel() {
+    return this.tr(`admin.role_${this.props.user.role}`, { defaultValue: this.props.user.role })
   }
 
   /** `<UserAvatar>`, rendered by a ReactHost. */
@@ -96,13 +89,8 @@ export class IdentityCard extends ViewBase {
     return this.props.user.display_name || this.props.user.username
   }
 
-  /** `<StatusBadge>`, rendered by a ReactHost. */
-  get StatusBadge() {
-    return StatusBadge
-  }
-
-  get status_badge_props() {
-    return this.memo('status_badge_props', [this.props, this.tr], () => ({ active: this.props.user.is_active, label: this.props.user.is_active ? this.tr('admin.active') : this.tr('admin.inactive') }))
+  get statusLabel() {
+    return this.props.user.is_active ? this.tr('admin.active') : this.tr('admin.inactive')
   }
 
   /** `React.Fragment`: renders the elements an expression holds. */

@@ -3,8 +3,7 @@
   <Panel Class="{Binding props.className}">
     <Stack Direction="LeftToRight" Gap="6" CrossAlign="Center" Class="mb-1">
       <Label HtmlTag="Label" Text="{Binding props.label}" FontWeight="Medium" Overflow="Wrap" ForeColor="TextPrimary"/>
-      <!-- TODO(views-migrate): <VisToggle> is no .kbview element (./VisToggle#default) -->
-      <ReactHost Component="{Binding VisToggle}" Props="{Binding vis_toggle_props}" Visible="{Binding show_vis_on_vis}"/>
+      <VisToggle Value="{Binding visValue}" OnChange="vis_change" Visible="{Binding show_vis_on_vis}"/>
       <Panel HtmlTag="Span" Visible="{Binding show_action}" Class="ml-auto">
         <!-- TODO(views-migrate): elements held in an expression -->
         <ReactHost Component="{Binding Fragment}" Props="{Binding content_action}"/>

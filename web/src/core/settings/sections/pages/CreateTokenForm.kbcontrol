@@ -32,8 +32,7 @@
                  Class="ml-2"/>
         </Panel>
         <Label Text="{Res settings.tok_scopes_desc}" Role="Meta" Overflow="Wrap" ForeColor="TextSecondary" Class="mb-2"/>
-        <!-- TODO(views-migrate): <ApiTokenScopePicker> is no .kbview element (./ApiTokenScopePicker#default) -->
-        <ReactHost Component="{Binding ApiTokenScopePicker}" Props="{Binding api_token_scope_picker_props}"/>
+        <ApiTokenScopePicker Scopes="{Binding available}" Selected="{Binding scopes}" OnChange="scopePickerChanged"/>
       </Panel>
       <Callout Variant="Warning"
                Title="{Res settings.tok_expiry_required_title}"

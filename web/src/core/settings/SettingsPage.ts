@@ -17,7 +17,6 @@ import ApiTokensTab from "./sections/pages/ApiTokensTab"
 import MyDataTab from "./sections/my-data/MyDataTab"
 
 import { ViewBase } from './SettingsPage.kbview'
-import MobileSettingsIndex from './MobileSettingsIndex'
 
 export class SettingsPage extends ViewBase {
   tr!: SettingsPageStores['t']
@@ -56,11 +55,6 @@ export class SettingsPage extends ViewBase {
 
   get show_case_1() {
     return !!(this.isMobile && !this.rawTab)
-  }
-
-  /** `<MobileSettingsIndex>`, rendered by a ReactHost. */
-  get MobileSettingsIndex() {
-    return MobileSettingsIndex
   }
 
   get show_main() {

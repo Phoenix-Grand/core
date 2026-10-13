@@ -1,13 +1,12 @@
 /**
  * Code-behind of `CreateTokenForm.kbcontrol` (converted from `CreateTokenForm.tsx` by @kubuno/views-migrate).
  */
-import { bind, type EventArgs } from '@kubuno/views'
+import { bind, type EventArgs, type ValueChangedEventArgs } from '@kubuno/views'
 import { useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { api } from "../../../api/client"
 import type { TokenScope } from "../../../types"
-import ApiTokenScopePicker from "./ApiTokenScopePicker"
 
 import { ViewBase } from './CreateTokenForm.kbcontrol'
 import * as __parts from './CreateTokenForm.parts.tsx'
@@ -102,15 +101,6 @@ export class CreateTokenForm extends ViewBase {
     return this.scopes.length > 0
   }
 
-  /** `<ApiTokenScopePicker>`, rendered by a ReactHost. */
-  get ApiTokenScopePicker() {
-    return ApiTokenScopePicker
-  }
-
-  get api_token_scope_picker_props() {
-    return this.memo('api_token_scope_picker_props', [this.available, this.scopes, this.memo], () => ({ scopes: this.available, selected: this.scopes, onChange: this.memo("setScopes:bound", [], () => this.setScopes.bind(this)) }))
-  }
-
   get show_error() {
     return !!(this.error)
   }
@@ -127,6 +117,11 @@ export class CreateTokenForm extends ViewBase {
 
   panel_submit(_sender: unknown, args: EventArgs) {
     return this.handleSubmit(args.native as never)
+  }
+
+  /** `<ApiTokenScopePicker OnChange>`: the selected scopes changed. */
+  scopePickerChanged(_sender: unknown, args: ValueChangedEventArgs) {
+    this.setScopes(args.value as string[])
   }
 
   /** `setExpiresInDays` of the TSX: a value, or an update of the previous one. */

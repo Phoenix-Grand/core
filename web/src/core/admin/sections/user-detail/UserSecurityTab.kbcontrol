@@ -15,7 +15,6 @@
     <ReactHost Component="{Binding PasswordResetCard}" Props="{Binding password_reset_card_props}"/>
     <!-- TODO(views-migrate): <RequirePasswordChangeCard> is no .kbview element (./RequirePasswordChangeCard#default) -->
     <ReactHost Component="{Binding RequirePasswordChangeCard}" Props="{Binding password_reset_card_props}"/>
-    <!-- TODO(views-migrate): <SessionsCard> is no .kbview element (./SessionsCard#default) -->
-    <ReactHost Component="{Binding SessionsCard}" Props="{Binding password_reset_card_props}"/>
+    <SessionsCard User="{Binding props.user}"/>
   </Stack>
 </UserControl>

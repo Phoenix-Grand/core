@@ -2,8 +2,8 @@
  * Code-behind of `ProfileField.kbcontrol` (converted from `Field.tsx` by @kubuno/views-migrate).
  */
 import { Fragment } from 'react'
+import { type ValueChangedEventArgs } from '@kubuno/views'
 import { type Vis } from "../profileFields"
-import VisToggle from "./VisToggle"
 
 import { ViewBase } from './ProfileField.kbcontrol'
 
@@ -16,17 +16,15 @@ export class ProfileField extends ViewBase {
     return this.memo('show_vis_on_vis', [this.props], () => !!(this.props.vis && this.props.onVis))
   }
 
-  /** `<VisToggle>`, rendered by a ReactHost. */
-  get VisToggle() {
+  /** `<VisToggle Value>`: the current visibility. */
+  get visValue() {
     if (!(this.props.vis && this.props.onVis)) return undefined as never
-    return VisToggle
+    return this.props.vis
   }
 
-  get vis_toggle_props() {
-    return this.memo('vis_toggle_props', [this.props], () => {
-      if (!(this.props.vis && this.props.onVis)) return undefined as never
-      return ({ value: this.props.vis, onChange: this.props.onVis })
-    })
+  /** `<VisToggle OnChange>`: the visibility changed. */
+  vis_change(_sender: unknown, args: ValueChangedEventArgs) {
+    this.props.onVis?.(args.value as Vis)
   }
 
   get show_action() {

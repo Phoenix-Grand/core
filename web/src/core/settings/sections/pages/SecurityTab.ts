@@ -4,7 +4,6 @@
 import { bind, type EventArgs } from '@kubuno/views'
 import { useTranslation } from "react-i18next"
 import { api } from "../../../api/client"
-import TwoFactorSection from "./TwoFactorSection"
 
 import { ViewBase } from './SecurityTab.kbcontrol'
 
@@ -37,11 +36,6 @@ export class SecurityTab extends ViewBase {
 
   get show_error() {
     return !!(this.error)
-  }
-
-  /** `<TwoFactorSection>`, rendered by a ReactHost. */
-  get TwoFactorSection() {
-    return TwoFactorSection
   }
 
   async handleSubmit(e: React.FormEvent) {

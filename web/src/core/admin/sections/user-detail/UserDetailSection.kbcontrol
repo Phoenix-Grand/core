@@ -18,8 +18,7 @@
     </Stack>
     <Stack Gap="16" Visible="{Binding show_main}" Class="min-w-0">
       <Panel Class="{Binding div_class}">
-        <!-- TODO(views-migrate): <IdentityCard> is no .kbview element (./IdentityCard#default) -->
-        <ReactHost Component="{Binding IdentityCard}" Props="{Binding identity_card_props}"/>
+        <IdentityCard User="{Binding user}" Mobile="{Binding mobile}" Busy="{Binding toggleActive.isPending}" OnToggleActive="identity_card_toggle_active" GoPane="identity_card_go_pane"/>
         <Stack Gap="16" Class="min-w-0 flex-1">
           <!-- TODO(views-migrate): <Tabs> tabs: no .kbview property -->
           <ReactHost Component="{Binding Part1}" Props="{Binding part1_props}"/>
@@ -27,8 +26,7 @@
           <ReactHost Component="{Binding ProfileTab}" Props="{Binding profile_tab_props}" Visible="{Binding show_pane_profile}"/>
           <!-- TODO(views-migrate): <SecurityTab> is no .kbview element (./SecurityTab#default) -->
           <ReactHost Component="{Binding SecurityTab}" Props="{Binding security_tab_props}" Visible="{Binding show_pane_security}"/>
-          <!-- TODO(views-migrate): <ActivityTab> is no .kbview element (./ActivityTab#default) -->
-          <ReactHost Component="{Binding ActivityTab}" Props="{Binding activity_tab_props}" Visible="{Binding show_pane_activity}"/>
+          <ActivityTab User="{Binding user}" Visible="{Binding show_pane_activity}"/>
         </Stack>
       </Panel>
       <!-- TODO(views-migrate): <ConfirmDialog {...spread}> (spread props) -->
