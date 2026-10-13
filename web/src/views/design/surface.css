@@ -10,7 +10,8 @@
   --vs-border: #3f3f46;
   --vs-accent: #3794ff;
   --vs-hover: rgba(255, 255, 255, 0.08);
-  --kbd-adorner: #1a73e8;
+  /* Adorners (selection, hover, markers) follow Visual Studio's accent so they read in either theme. */
+  --kbd-adorner: var(--vs-accent);
   --kbd-toolbar-h: 32px;
   /* A page (`.kbview`: page, window, dialog) is designed on a white sheet whatever Visual Studio's theme, its
      boundary drawn as a light-grey dashed line (Windows Forms' look); a user control keeps the themed canvas. */
@@ -147,7 +148,10 @@ html.kbd-page body {
 .kbd-sel { border: 1px solid var(--kbd-adorner); }
 .kbd-sel[data-primary='true'] { border-width: 2px; }
 .kbd-parent { border: 1px dashed color-mix(in srgb, var(--kbd-adorner) 75%, transparent); }
-.kbd-outline { border: 1px dashed rgba(128, 128, 128, 0.45); }
+/* Container outlines: a theme-aware dashed stroke. Odd / even nesting depths alternate in strength so adjacent
+   nested frames stay apart (the complaint: a pile of identical dashed rectangles no one could tell apart). */
+.kbd-outline { border: 1px dashed color-mix(in srgb, var(--vs-text) 30%, transparent); }
+.kbd-outline[data-depth='1'] { border-color: color-mix(in srgb, var(--vs-text) 16%, transparent); }
 .kbd-handle { width: 7px; height: 7px; background: #fff; border: 1px solid #8a8f98; }
 .kbd-handle[data-resizable='true'] { background: var(--kbd-adorner); border-color: #fff; }
 .kbd-marker { background: var(--kbd-adorner); border-radius: 2px; }
@@ -165,3 +169,16 @@ html.kbd-page body {
   position: absolute; padding: 2px 6px; border-radius: 3px; background: #1e1e1e; color: #fff;
   font: 11px/1.4 'Segoe UI', system-ui, sans-serif; pointer-events: none; white-space: nowrap;
 }
+/* A control's name tag (type + x:Name), a small flag at the top-left of its frame — hover, selection and the
+   primary selection's parent. It hangs just above the frame (`data-above`), or sits inside near the top. */
+.kbd-tag {
+  position: absolute; max-width: 240px; padding: 1px 5px; border-radius: 3px 3px 3px 0;
+  font: 10px/1.5 'Segoe UI', system-ui, sans-serif; color: #fff; background: var(--kbd-adorner);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; pointer-events: none;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+.kbd-tag[data-above='true'] { transform: translateY(-100%); border-radius: 3px 3px 0 3px; }
+.kbd-tag-name { font-weight: 600; opacity: 0.85; }
+.kbd-tag-hover { background: color-mix(in srgb, var(--kbd-adorner) 85%, #000); opacity: 0.95; }
+.kbd-tag-sel { background: var(--kbd-adorner); }
+.kbd-tag-parent { background: var(--vs-panel); color: var(--vs-text-dim); border: 1px solid var(--vs-border); box-shadow: none; }

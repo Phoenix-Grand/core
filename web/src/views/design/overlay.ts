@@ -11,12 +11,32 @@ export interface SelectedAdorner {
   readonly bounds: Rect
   readonly primary: boolean
   readonly resizable: ReadonlySet<Handle>
+  /** Name tag: the control's type and, when set, its `x:Name`. */
+  readonly label?: Label
+}
+
+/** A rectangle that may carry a name tag (its control's type / `x:Name`). */
+export interface TaggedRect {
+  readonly rect: Rect
+  readonly label?: Label
+}
+
+/** A control's identity for a corner tag: its type (`Panel`, `Button`…) and optional `x:Name`. */
+export interface Label {
+  readonly type: string
+  readonly name?: string
+}
+
+/** A faint container outline, with its nesting depth (for the alternating tint that keeps nested frames apart). */
+export interface OutlineAdorner {
+  readonly rect: Rect
+  readonly depth: number
 }
 
 export interface AdornerSpec {
-  readonly outlines: readonly Rect[]
-  readonly hover: Rect | null
-  readonly parent: Rect | null
+  readonly outlines: readonly OutlineAdorner[]
+  readonly hover: TaggedRect | null
+  readonly parent: TaggedRect | null
   readonly selected: readonly SelectedAdorner[]
   readonly marker?: { readonly rect: Rect; readonly kind: 'line' | 'box' | 'ghost'; readonly valid: boolean } | null
   readonly band?: Rect | null
@@ -36,16 +56,46 @@ function box(layer: HTMLElement, origin: { left: number; top: number }, r: Rect,
   return el
 }
 
+/**
+ * Draws a name tag anchored to the top-left corner of `r` (the control's type, and its `x:Name` when set): a small
+ * flag like a WinForms / Figma designer, so each outline can be told from the others. It sits just above the frame,
+ * or inside it when there is no room above (the overlay clips its content). Never takes pointer events.
+ */
+function tag(layer: HTMLElement, origin: { left: number; top: number }, r: Rect, label: Label, cls: string): void {
+  const el = layer.ownerDocument.createElement('div')
+  el.className = `kbd-tag ${cls}`
+  el.appendChild(layer.ownerDocument.createTextNode(label.type))
+  if (label.name) {
+    const name = layer.ownerDocument.createElement('span')
+    name.className = 'kbd-tag-name'
+    name.textContent = label.name
+    el.append(' ', name)
+  }
+  const top = r.top - origin.top
+  el.style.left = `${Math.max(0, r.left - origin.left)}px`
+  el.style.top = `${top}px`
+  // Hang the tag above the frame unless it would be clipped at the top of the overlay, then drop it inside.
+  if (top >= 16) el.dataset.above = 'true'
+  layer.appendChild(el)
+}
+
 /** Replaces the layer's adorners with the ones `spec` describes. */
 export function drawAdorners(layer: HTMLElement, origin: { left: number; top: number }, spec: AdornerSpec): void {
   layer.replaceChildren()
-  for (const r of spec.outlines) box(layer, origin, r, 'kbd-outline')
-  if (spec.parent) box(layer, origin, spec.parent, 'kbd-parent')
-  if (spec.hover) box(layer, origin, spec.hover, 'kbd-hover')
+  for (const o of spec.outlines) box(layer, origin, o.rect, 'kbd-outline', { 'data-depth': String(o.depth % 2) })
+  if (spec.parent) {
+    box(layer, origin, spec.parent.rect, 'kbd-parent')
+    if (spec.parent.label) tag(layer, origin, spec.parent.rect, spec.parent.label, 'kbd-tag-parent')
+  }
+  if (spec.hover) {
+    box(layer, origin, spec.hover.rect, 'kbd-hover')
+    if (spec.hover.label) tag(layer, origin, spec.hover.rect, spec.hover.label, 'kbd-tag-hover')
+  }
   if (spec.band) box(layer, origin, spec.band, 'kbd-band')
   for (const s of spec.selected) {
     const frame = selectionFrame(s.bounds)
     box(layer, origin, frame, 'kbd-sel', { 'data-primary': String(s.primary) })
+    if (s.label) tag(layer, origin, frame, s.label, s.primary ? 'kbd-tag-sel kbd-tag-primary' : 'kbd-tag-sel')
     for (const { handle, rect } of handleRects(frame)) {
       box(layer, origin, rect, 'kbd-handle', { 'data-handle': handle, 'data-resizable': String(s.resizable.has(handle)) })
     }

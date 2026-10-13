@@ -56,7 +56,7 @@ import {
   type Rect,
 } from './geometry'
 import { Catalog, containerKind, designDocumentKind, indexPlan, isAbsoluteChild, literalNumber, moduleOfCodeBehind, planModules, type NodeInfo } from './model'
-import { drawAdorners, handleCursor, type SelectedAdorner } from './overlay'
+import { drawAdorners, handleCursor, type Label, type OutlineAdorner, type SelectedAdorner } from './overlay'
 import { makePlaceholder } from './placeholder'
 import {
   languageOfCulture,
@@ -188,6 +188,8 @@ export class DesignSurface {
   private text: string | null = null
   private plan: ViewPlan | null = null
   private nodes: Map<string, NodeInfo> = new Map()
+  /** Element id → `x:Name`, from the plan (its `names` is the reverse map). */
+  private names: Map<string, string> = new Map()
   private stale = false
   private generation = 0
   private codeBehind: { module: string; cls: ViewClass } | null = null
@@ -439,6 +441,7 @@ export class DesignSurface {
     if (text.trim() === '') {
       this.plan = null
       this.nodes = new Map()
+      this.names = new Map()
       this.designCls = null
       this.stale = false
       this.renderView()
@@ -559,6 +562,7 @@ export class DesignSurface {
     setDesignDataContext(this.designCls, this.dataContextFor(base, this.doc?.designData))
     this.plan = plan
     this.nodes = indexPlan(plan)
+    this.names = new Map(Object.entries(plan.names).map(([name, id]) => [id, name]))
     this.clearPreviews()
     this.applyFrameSize()
     this.refreshToolbar()
@@ -770,25 +774,36 @@ export class DesignSurface {
     return resizableHandles(this.absolute(id), this.placement(id), this.isRtl(id))
   }
 
+  /** The identity shown on a control's corner tag: its element type and `x:Name` (the root is named for its kind). */
+  private labelFor(id: string): Label {
+    if (id === '') return { type: this.plan?.kind === 'control' ? 'UserControl' : 'View' }
+    const n = this.nodes.get(id)
+    if (!n) return { type: id }
+    return { type: n.el, name: n.node.name ?? this.names.get(id) }
+  }
+
   private redraw(): void {
     if (!this.designOn) return
     const origin = this.overlay.getBoundingClientRect()
-    const outlines: Rect[] = []
+    const outlines: OutlineAdorner[] = []
     if (this.containerOutlines) {
       for (const e of this.map.entries) {
         const v = e.bare && e.id !== '' ? visibleRect(e) : null
-        if (v) outlines.push(v)
+        if (v) outlines.push({ rect: v, depth: e.id.split('.').length })
       }
     }
     const selected: SelectedAdorner[] = []
     this.selection.forEach((id, k) => {
       const b = this.shown(id)
-      if (b) selected.push({ bounds: b, primary: k === 0, resizable: this.resizable(id) })
+      if (b) selected.push({ bounds: b, primary: k === 0, resizable: this.resizable(id), label: this.labelFor(id) })
     })
     const primary = this.selection[0]
     const parentId = primary !== undefined ? parentIdOf(primary) : null
-    const parent = parentId !== null && parentId !== '' ? this.shown(parentId) : null
-    const hover = this.hover !== null && this.hover !== '' && !this.selection.includes(this.hover) ? this.shown(this.hover) : null
+    const parentRect = parentId !== null && parentId !== '' ? this.shown(parentId) : null
+    const parent = parentRect && parentId !== null ? { rect: parentRect, label: this.labelFor(parentId) } : null
+    const hoverId = this.hover
+    const hoverRect = hoverId !== null && hoverId !== '' && !this.selection.includes(hoverId) ? this.shown(hoverId) : null
+    const hover = hoverRect && hoverId !== null ? { rect: hoverRect, label: this.labelFor(hoverId) } : null
     const d = this.drag
     let ghost: Rect | null = null
     let tip: { x: number; y: number; text: string } | null = null
