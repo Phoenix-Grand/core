@@ -9,6 +9,8 @@ number at release time, and CI publishes that section as the GitHub Release note
 
 ## [Unreleased]
 
+## [0.1.3-alpha] - 2026-10-13
+
 ### Changed
 
 - **The desktop view designer labels the controls on its design surface.** Hovering or selecting a control now
