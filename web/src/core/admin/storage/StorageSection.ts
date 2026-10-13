@@ -15,7 +15,6 @@ import ModuleBreakdownCard from "./ModuleBreakdownCard"
 import QuotaPolicyCard from "./QuotaPolicyCard"
 import ReconciliationCard from "./ReconciliationCard"
 import { errorMessage, useSetWarnPercent, useStorageOverview } from "./api"
-import CompositionBar from "./CompositionBar"
 import { TrendChart } from "./TrendChart"
 
 import { ViewBase } from './StorageSection.kbview'
@@ -177,17 +176,10 @@ export class StorageSection extends ViewBase {
     })
   }
 
-  /** `<CompositionBar>`, rendered by a ReactHost. */
-  get CompositionBar() {
+  /** `<CompositionBar Total>`: the volume's size, the bar's denominator. */
+  get sto_volume_total() {
     if (!(!(this.isLoading)) || !(!(this.isError || !this.data)) || !(this.volume)) return undefined as never
-    return CompositionBar
-  }
-
-  get composition_bar_props() {
-    return this.memo('composition_bar_props', [this.volumeSegments, this.volume, this.tr, this.isLoading, this.isError, this.data], () => {
-      if (!(!(this.isLoading)) || !(!(this.isError || !this.data)) || !(this.volume)) return undefined as never
-      return ({ segments: this.volumeSegments, total: this.volume.total_bytes, ariaLabel: this.tr('admin.sto_volume_aria') })
-    })
+    return this.volume.total_bytes
   }
 
   get p_text() {
@@ -229,17 +221,16 @@ export class StorageSection extends ViewBase {
     return this.data.warn_percent
   }
 
-  /** `<CompositionBar>`, rendered by a ReactHost. */
-  get CompositionBar2() {
+  /** `<CompositionBar Total>` for the states bar: the account count (the bar's denominator). */
+  get sto_states_total() {
     if (!(!(this.isLoading)) || !(!(this.isError || !this.data))) return undefined as never
-    return CompositionBar
+    return Math.max(this.data.accounts, 1)
   }
 
-  get composition_bar_props2() {
-    return this.memo('composition_bar_props2', [this.stateSegments, this.data, this.tr, this.isLoading, this.isError], () => {
-      if (!(!(this.isLoading)) || !(!(this.isError || !this.data))) return undefined as never
-      return ({ segments: this.stateSegments, total: Math.max(this.data.accounts, 1), ariaLabel: this.tr('admin.sto_states_aria'), format: n => String(n) } as React.ComponentProps<typeof CompositionBar>)
-    })
+  /** `<CompositionBar Format>` for the states bar: a value-transforming prop (WV-7 blocker E) — the segments are
+   * account counts, not bytes, so they are shown as plain numbers instead of the control's default `formatBytes`. */
+  get sto_states_format() {
+    return (n: number) => String(n)
   }
 
   get show_states_full_states() {

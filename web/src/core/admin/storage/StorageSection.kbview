@@ -49,8 +49,7 @@
                    Class="[font-size:var(--kb-text-body)]"/>
           </Panel>
           <Panel Visible="{Binding show_volume}" Class="mt-4">
-            <!-- TODO(views-migrate): <CompositionBar> is no .kbview element (./CompositionBar#default) -->
-            <ReactHost Component="{Binding CompositionBar}" Props="{Binding composition_bar_props}"/>
+            <CompositionBar Segments="{Binding volumeSegments}" Total="{Binding sto_volume_total}" AriaLabel="{Res admin.sto_volume_aria}"/>
             <Label Text="{Binding p_text}" ForeColor="TextTertiary" InheritFontSize="true" Class="mt-3 [font-size:var(--kb-text-meta)]"/>
           </Panel>
           <Callout Body="{Res admin.sto_volume_unknown}" Visible="{Binding show_not_volume}" Class="mt-4"/>
@@ -73,8 +72,7 @@
             Icon="Boxes"
             Subtitle="{Res admin.sto_states_sub, Percent={Binding sto_states_sub_percent}}">
         <Panel Class="contents">
-          <!-- TODO(views-migrate): <CompositionBar> is no .kbview element (./CompositionBar#default) -->
-          <ReactHost Component="{Binding CompositionBar2}" Props="{Binding composition_bar_props2}"/>
+          <CompositionBar Segments="{Binding stateSegments}" Total="{Binding sto_states_total}" AriaLabel="{Res admin.sto_states_aria}" Format="{Binding sto_states_format}"/>
           <Label Text="{Res admin.sto_states_all_clear}"
                  Overflow="Wrap"
                  ForeColor="TextSecondary"
