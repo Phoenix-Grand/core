@@ -3,7 +3,7 @@
  */
 import { type EventArgs, type MouseEventArgs } from '@kubuno/views'
 import { useTranslation } from "react-i18next"
-import { formatBytes, formatDay } from "../../../admin/sections/format"
+import { formatBytes, formatDay } from "../../../../admin/sections/format"
 import { downloadUrl, type MyExportOverview, type MyExportRun } from "./api"
 import { signedUrl } from "../../../api/signedUrl"
 

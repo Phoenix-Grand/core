@@ -11,7 +11,7 @@ import { useSearchStore, resolveSearchConfig } from "../../store/searchStore"
 import SearchBar from "../SearchBar"
 import HeaderActions from "../controls/HeaderActions"
 import { Slot } from "../../slots/SlotRegistry"
-import HealthTopbarChip from "../../admin/health/HealthTopbarChip"
+import HealthTopbarChip from "../../../admin/health/HealthTopbarChip"
 import BrandLink from "../controls/BrandLink"
 
 import { ViewBase } from './AppHeader.kbcontrol'

@@ -7,7 +7,7 @@ import { useModulesStore } from './core/store/modulesStore'
 import { RouteRegistry } from './core/registry/RouteRegistry'
 import Shell from './core/shell/views/Shell'
 import { DocumentTitle } from './core/shell/pages/DocumentTitle'
-import { useAdminConsoleApp } from './core/admin/useAdminConsoleApp'
+import { useAdminConsoleApp } from './admin/useAdminConsoleApp'
 import LoginPage from './core/auth/LoginPage'
 import RegisterPage from './core/auth/RegisterPage'
 import ResetPasswordPage from './core/auth/ResetPasswordPage'
@@ -19,7 +19,7 @@ import HomePage from './core/views/HomePage'
 // sortir du chunk eager kubuno-shared et alléger la RAM du host — la console
 // d'admin pèse à elle seule ~2,5 Mo de source, inutile pour un non-admin. Le
 // carve-out correspondant est dans vite.config.ts (manualChunks).
-const AdminPage = lazy(() => import('./core/admin/views/AdminPage'))
+const AdminPage = lazy(() => import('./admin/views/AdminPage'))
 const SettingsPage = lazy(() => import('./core/settings/SettingsPage'))
 const SetupWizard = lazy(() => import('./core/setup/SetupWizard'))
 import ModulesPage from './core/views/ModulesPage'

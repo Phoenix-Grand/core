@@ -772,7 +772,7 @@ body[data-kb-dictating] [data-doc-scroll] > * { will-change: auto !important; }
 }
 
 /* ═════════════════════════════════════════════════════════════════════════════
- * RAPPORTS D'ADMINISTRATION — LE PAPIER (`core/admin/reports/paged/`)
+ * RAPPORTS D'ADMINISTRATION — LE PAPIER (`admin/reports/paged/`)
  *
  * Ces règles ne sont PAS dans `@media print`, et c'est le point : la page d'un
  * rapport n'affiche plus un document long qu'on imprimera plus tard, elle

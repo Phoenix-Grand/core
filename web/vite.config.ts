@@ -129,7 +129,10 @@ export default defineConfig({
           // soient chargés à la demande — il FAUT que App.tsx les importe en
           // React.lazy, sinon ils restent tirés dans le graphe eager. AVANT la
           // règle /src/core/ ci-dessous.
-          if (/\/src\/core\/(admin|settings|setup)\//.test(id)) return undefined
+          // La console d'admin vit dans son propre dossier `src/admin` (projet
+          // Kubuno.Web.Admin), hors de `src/core`.
+          if (/\/src\/admin\//.test(id)) return undefined
+          if (/\/src\/core\/(settings|setup)\//.test(id)) return undefined
           // TOUT le reste de core (i18n, stores, registries, hooks, api, shell…)
           // → kubuno-shared (instance unique partagée). AVANT la règle drive pour
           //   qu'aucun singleton core ne fuie dans le chunk drive-shared.

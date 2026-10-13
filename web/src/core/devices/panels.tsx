@@ -2,7 +2,7 @@ import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Info, ShieldQuestion } from 'lucide-react'
 import { Callout } from '@ui'
-import { formatAgo, formatWhen } from '../admin/sections/format'
+import { formatAgo, formatWhen } from '../../admin/sections/format'
 import {
   authStrengthLabel, clientKindLabel, deviceTypeLabel, eventKindLabel,
   sessionName, signalLevelLabel, triLabel, triSkin,

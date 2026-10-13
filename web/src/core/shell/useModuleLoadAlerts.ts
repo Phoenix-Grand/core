@@ -4,7 +4,7 @@ import { PRIV } from '../authz/types'
 import { usePrivileges } from '../authz/usePrivileges'
 import { useModuleLoadStore } from '../modules/moduleLoadStore'
 import { useNotificationStore } from '../store/notificationStore'
-import { adminUrl } from '../admin/adminAction'
+import { adminUrl } from '../../admin/adminAction'
 
 /**
  * Turns a module whose UI bundle failed to load into a bell notification.

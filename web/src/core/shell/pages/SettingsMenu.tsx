@@ -6,7 +6,7 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import { ModuleSettingsRegistry } from '../../slots/SlotRegistry'
 import { ModuleMenuRegistry } from '../../registry/ModuleMenuRegistry'
 import { useModulesStore } from '../../store/modulesStore'
-import { adminUrl } from '../../admin/adminAction'
+import { adminUrl } from '../../../admin/adminAction'
 import AppearanceDialog from '../dialogs/AppearanceDialog'
 
 /* Header settings menu (⚙). Replaces the old plain "go to settings" button with a

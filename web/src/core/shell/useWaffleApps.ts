@@ -1,7 +1,7 @@
 import { useModulesStore } from '../store/modulesStore'
 import { usePrivileges } from '../authz/usePrivileges'
 import { WaffleAppRegistry, type WaffleApp } from '../registry/WaffleAppRegistry'
-import { ADMIN_APP_ID } from '../admin/useAdminConsoleApp'
+import { ADMIN_APP_ID } from '../../admin/useAdminConsoleApp'
 
 /**
  * The full set of tiles the app launcher shows, shared by the desktop header
