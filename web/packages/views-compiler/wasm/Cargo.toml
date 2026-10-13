@@ -22,9 +22,9 @@ crate-type = ["cdylib"]
 path       = "src/lib.rs"
 
 [dependencies]
-kubuno-views-web = { package = "kubuno-web-views-compiler-core", git = "https://github.com/kubuno/core", tag = "web-views-compiler-core-v0.2.1" }
+kubuno-views-web = { package = "kubuno-web-views-compiler-core", git = "https://github.com/kubuno/core", tag = "web-views-compiler-core-v0.2.2" }
 # The `.kbres` model (WV-6: `.kbres` sets compiled to i18next bundles, the i18n converter): same repository and tag.
-kubuno-resources-model = { package = "kubuno-desktop-resources-model", git = "https://github.com/kubuno/core", tag = "web-views-compiler-core-v0.2.1" }
+kubuno-resources-model = { package = "kubuno-desktop-resources-model", git = "https://github.com/kubuno/core", tag = "web-views-compiler-core-v0.2.2" }
 serde            = { version = "1", features = ["derive"] }
 serde_json       = "1"
 
