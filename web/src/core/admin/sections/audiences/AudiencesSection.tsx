@@ -14,7 +14,6 @@ import { adminUrlWith } from "../../adminAction"
 import { AUDIENCES_MANAGE } from "./privileges"
 import { useAudiences, useAudienceMutations, type Audience } from "./api"
 import AudienceDialog from "./AudienceDialog"
-import AudienceSheet from "./AudienceSheet"
 
 import { ViewBase } from './AudiencesSection.kbview'
 import * as __parts from './AudiencesSection.parts'
@@ -174,17 +173,10 @@ export class AudiencesSection extends ViewBase {
     return !!(this.open)
   }
 
-  /** `<AudienceSheet>`, rendered by a ReactHost. */
-  get AudienceSheet() {
+  /** `<AudienceSheet Id>`: the audience id being viewed, narrowed non-null. */
+  get audienceSheetId() {
     if (!(this.open)) return undefined as never
-    return AudienceSheet
-  }
-
-  get audience_sheet_props() {
-    return this.memo('audience_sheet_props', [this.open, this.canManage], () => {
-      if (!(this.open)) return undefined as never
-      return ({ id: this.open, canManage: this.canManage })
-    })
+    return this.open
   }
 
   get show_main() {

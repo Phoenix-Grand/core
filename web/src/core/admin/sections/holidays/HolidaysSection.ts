@@ -2,15 +2,12 @@
  * Code-behind of `HolidaysSection.kbview` (converted from `HolidaysSection.tsx` by @kubuno/views-migrate).
  */
 import { useTranslation } from "react-i18next"
+import { type ValueChangedEventArgs } from '@kubuno/views'
 import { type TabDef } from "@ui"
 import { usePrivileges } from "../../../authz/usePrivileges"
 import type { AdminSectionProps } from "../registry"
 import { adminUrlWith } from "../../adminAction"
 import { HOLIDAYS_MANAGE } from "./privileges"
-import CalendarsTab from "./CalendarsTab"
-import CalendarDetail from "./CalendarDetail"
-import UnitsTab from "./UnitsTab"
-import OverviewBar from "./OverviewBar"
 
 import { ViewBase } from './HolidaysSection.kbview'
 import * as __parts from './HolidaysSection.parts'
@@ -59,19 +56,6 @@ export class HolidaysSection extends ViewBase {
     return !this.calendarId
   }
 
-  /** `<OverviewBar>`, rendered by a ReactHost. */
-  get OverviewBar() {
-    if (!(!this.calendarId)) return undefined as never
-    return OverviewBar
-  }
-
-  get overview_bar_props() {
-    return this.memo('overview_bar_props', [this.canManage, this.calendarId], () => {
-      if (!(!this.calendarId)) return undefined as never
-      return ({ canManage: this.canManage })
-    })
-  }
-
   get part1_props() {
     return this.memo('part1_props', [this.tr, this.tabs, this.pane, this.memo, this.props, this.calendarId], () => {
       if (!(!this.calendarId)) return undefined as never
@@ -93,17 +77,15 @@ export class HolidaysSection extends ViewBase {
     return !(this.calendarId)
   }
 
-  /** `<CalendarDetail>`, rendered by a ReactHost. */
-  get CalendarDetail() {
+  /** `<CalendarDetail CalendarId>`: the calendar id, present when the detail is shown. */
+  get calendarDetailCalendarId() {
     if (!(this.calendarId)) return undefined as never
-    return CalendarDetail
+    return this.calendarId
   }
 
-  get calendar_detail_props() {
-    return this.memo('calendar_detail_props', [this.calendarId, this.canManage, this.props], () => {
-      if (!(this.calendarId)) return undefined as never
-      return ({ calendarId: this.calendarId, canManage: this.canManage, onOpenCalendar: id => this.go('calendars', id) } as React.ComponentProps<typeof CalendarDetail>)
-    })
+  /** `<CalendarDetail OnOpenCalendar>`: open the given calendar. */
+  calendar_detail_open_calendar(_sender: unknown, args: ValueChangedEventArgs) {
+    this.go('calendars', args.value as string)
   }
 
   get show_pane_units() {
@@ -116,30 +98,9 @@ export class HolidaysSection extends ViewBase {
     return !(this.pane === 'units')
   }
 
-  /** `<UnitsTab>`, rendered by a ReactHost. */
-  get UnitsTab() {
-    if (!(!(this.calendarId)) || !(this.pane === 'units')) return undefined as never
-    return UnitsTab
-  }
-
-  get units_tab_props() {
-    return this.memo('units_tab_props', [this.canManage, this.calendarId, this.pane], () => {
-      if (!(!(this.calendarId)) || !(this.pane === 'units')) return undefined as never
-      return ({ canManage: this.canManage })
-    })
-  }
-
-  /** `<CalendarsTab>`, rendered by a ReactHost. */
-  get CalendarsTab() {
-    if (!(!(this.calendarId)) || !(!(this.pane === 'units'))) return undefined as never
-    return CalendarsTab
-  }
-
-  get calendars_tab_props() {
-    return this.memo('calendars_tab_props', [this.canManage, this.props, this.calendarId, this.pane], () => {
-      if (!(!(this.calendarId)) || !(!(this.pane === 'units'))) return undefined as never
-      return ({ canManage: this.canManage, onOpen: id => this.go('calendars', id) } as React.ComponentProps<typeof CalendarsTab>)
-    })
+  /** `<CalendarsTab OnOpen>`: open the given calendar. */
+  calendars_tab_open(_sender: unknown, args: ValueChangedEventArgs) {
+    this.go('calendars', args.value as string)
   }
 
   get visible() {

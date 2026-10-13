@@ -1,7 +1,6 @@
 <!-- DomainsSection — converted from DomainsSection.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <Panel x:Props="AdminSectionProps" Class="contents">
-  <!-- TODO(views-migrate): <DomainDetail> is no .kbview element (./DomainDetail#default) -->
-  <ReactHost Component="{Binding DomainDetail}" Props="{Binding domain_detail_props}" Visible="{Binding show_case_1}"/>
+  <DomainDetail DomainId="{Binding domainId}" CanManage="{Binding canManage}" OnGone="handleGone" Visible="{Binding show_case_1}"/>
   <Stack Gap="16" Visible="{Binding show_main}" Class="min-w-0">
     <Panel Class="min-w-0">
       <Label HtmlTag="H1"

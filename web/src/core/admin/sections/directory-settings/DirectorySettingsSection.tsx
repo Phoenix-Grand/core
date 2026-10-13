@@ -1,7 +1,7 @@
 /**
  * Code-behind of `DirectorySettingsSection.kbview` (converted from `DirectorySettingsSection.tsx` by @kubuno/views-migrate).
  */
-import { bind, type EventArgs } from '@kubuno/views'
+import { bind, type EventArgs, type ValueChangedEventArgs } from '@kubuno/views'
 import { Fragment } from 'react'
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
@@ -13,10 +13,6 @@ import { settingLabel } from "../../settings/pages/SettingControl"
 import { INSTANCE_SCOPE, type ActiveScope } from "../../settings/scopeTypes"
 import { useDirectoryPolicy } from "./useDirectoryPolicy"
 import { DIRECTORY_KEYS, DIR_AUDIENCE, PERSONAL_DATA_KEYS, PROFILE_FIELDS_NOT_STORED, PROFILE_KEYS, SHARING_KEYS } from "./keys"
-import AudienceRow from "./AudienceRow"
-import CheckboxRow from "./CheckboxRow"
-import ToggleRow from "./ToggleRow"
-import UnstoredFieldRow from "./UnstoredFieldRow"
 
 import { ViewBase } from './DirectorySettingsSection.kbview'
 
@@ -143,26 +139,14 @@ export class DirectorySettingsSection extends ViewBase {
     return !(!this.policy.isLoading && this.known.length === 0)
   }
 
-  /** `<ToggleRow>`, rendered by a ReactHost. */
-  get ToggleRow() {
-    if (!(!(!this.canRead)) || !(!(this.policy.isError)) || !(!(!this.policy.isLoading && this.known.length === 0))) return undefined as never
-    return ToggleRow
-  }
-
   /** The rows of the Repeater over `SHARING_KEYS`. */
   get rows_sharing_keys() {
     return this.memo('rows_sharing_keys', [this.canRead, this.policy, this.known, this.canManage, this.memo, this.chainKey], () => {
       if (!(!(!this.canRead)) || !(!(this.policy.isError)) || !(!(!this.policy.isLoading && this.known.length === 0))) return undefined as never
       return SHARING_KEYS.map((key) => {
-      return { key, toggle_row_props: ((!(!this.canRead)) && (!(this.policy.isError)) && (!(!this.policy.isLoading && this.known.length === 0))) ? ({ setting: this.policy.setting(key), policy: this.policy, readOnly: !this.canManage, onShowChain: this.memo("setChainKey:bound", [], () => this.setChainKey.bind(this)) }) : undefined, rowKey: key }
+      return { key, setting: this.policy.setting(key), policy: this.policy, readOnly: !this.canManage, rowKey: key }
     })
     })
-  }
-
-  /** `<CheckboxRow>`, rendered by a ReactHost. */
-  get CheckboxRow() {
-    if (!(!(!this.canRead)) || !(!(this.policy.isError)) || !(!(!this.policy.isLoading && this.known.length === 0))) return undefined as never
-    return CheckboxRow
   }
 
   /** The rows of the Repeater over `PROFILE_KEYS`. */
@@ -170,15 +154,9 @@ export class DirectorySettingsSection extends ViewBase {
     return this.memo('rows_profile_keys', [this.canRead, this.policy, this.known, this.canManage, this.memo, this.chainKey], () => {
       if (!(!(!this.canRead)) || !(!(this.policy.isError)) || !(!(!this.policy.isLoading && this.known.length === 0))) return undefined as never
       return PROFILE_KEYS.map((key) => {
-      return { key, checkbox_row_props: ((!(!this.canRead)) && (!(this.policy.isError)) && (!(!this.policy.isLoading && this.known.length === 0))) ? ({ setting: this.policy.setting(key), policy: this.policy, readOnly: !this.canManage, onShowChain: this.memo("setChainKey:bound", [], () => this.setChainKey.bind(this)), personal: PERSONAL_DATA_KEYS.includes(key) }) : undefined, rowKey: key }
+      return { key, setting: this.policy.setting(key), policy: this.policy, readOnly: !this.canManage, personal: PERSONAL_DATA_KEYS.includes(key), rowKey: key }
     })
     })
-  }
-
-  /** `<UnstoredFieldRow>`, rendered by a ReactHost. */
-  get UnstoredFieldRow() {
-    if (!(!(!this.canRead)) || !(!(this.policy.isError)) || !(!(!this.policy.isLoading && this.known.length === 0))) return undefined as never
-    return UnstoredFieldRow
   }
 
   /** The rows of the Repeater over `PROFILE_FIELDS_NOT_STORED`. */
@@ -186,22 +164,21 @@ export class DirectorySettingsSection extends ViewBase {
     return this.memo('rows_profile_fields_not_stored', [this.canRead, this.policy, this.known], () => {
       if (!(!(!this.canRead)) || !(!(this.policy.isError)) || !(!(!this.policy.isLoading && this.known.length === 0))) return undefined as never
       return PROFILE_FIELDS_NOT_STORED.map((f) => {
-      return { f, unstored_field_row_props: ((!(!this.canRead)) && (!(this.policy.isError)) && (!(!this.policy.isLoading && this.known.length === 0))) ? ({ field: f }) : undefined, key: f }
+      return { field: f, key: f }
     })
     })
   }
 
-  /** `<AudienceRow>`, rendered by a ReactHost. */
-  get AudienceRow() {
-    if (!(!(!this.canRead)) || !(!(this.policy.isError)) || !(!(!this.policy.isLoading && this.known.length === 0))) return undefined as never
-    return AudienceRow
-  }
-
-  get audience_row_props() {
-    return this.memo('audience_row_props', [this.policy, this.canManage, this.memo, this.chainKey, this.canRead, this.known], () => {
+  get audienceSetting() {
+    return this.memo('audienceSetting', [this.policy, this.canRead, this.known], () => {
       if (!(!(!this.canRead)) || !(!(this.policy.isError)) || !(!(!this.policy.isLoading && this.known.length === 0))) return undefined as never
-      return ({ setting: this.policy.setting(DIR_AUDIENCE), policy: this.policy, readOnly: !this.canManage, onShowChain: this.memo("setChainKey:bound", [], () => this.setChainKey.bind(this)) })
+      return this.policy.setting(DIR_AUDIENCE)
     })
+  }
+
+  get audienceReadOnly() {
+    if (!(!(!this.canRead)) || !(!(this.policy.isError)) || !(!(!this.policy.isLoading && this.known.length === 0))) return undefined as never
+    return !this.canManage
   }
 
   get visible() {
@@ -244,6 +221,11 @@ export class DirectorySettingsSection extends ViewBase {
   empty_state_action(_sender: unknown, _args: EventArgs) {
     if (!(!(!this.canRead)) || !(this.policy.isError)) return undefined as never
     void this.policy.refetch()
+  }
+
+  /** `OnShowChain` of the row controls (ToggleRow/CheckboxRow/AudienceRow): open the inheritance chain for a key. */
+  row_show_chain(_sender: unknown, args: ValueChangedEventArgs) {
+    this.setChainKey(args.value as string)
   }
 
   /** `setChainKey` of the TSX: a value, or an update of the previous one. */

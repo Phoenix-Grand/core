@@ -37,8 +37,7 @@
         <Card Title="{Res admin.dirset_card_sharing}" Subtitle="{Res admin.dirset_card_sharing_desc}" IconSize="18" Icon="Share2">
           <Panel Class="divide-y divide-border">
             <Repeater ItemKey="rowKey" ItemsSource="{Binding rows_sharing_keys}">
-              <!-- TODO(views-migrate): <ToggleRow> is no .kbview element (./ToggleRow#default) -->
-              <ReactHost Component="{Binding ToggleRow}" Props="{Binding toggle_row_props}"/>
+              <ToggleRow Setting="{Binding setting}" Policy="{Binding policy}" ReadOnly="{Binding readOnly}" OnShowChain="row_show_chain"/>
             </Repeater>
           </Panel>
         </Card>
@@ -46,12 +45,10 @@
           <Panel Class="contents">
             <Panel Class="divide-y divide-border">
               <Repeater ItemKey="rowKey" ItemsSource="{Binding rows_profile_keys}">
-                <!-- TODO(views-migrate): <CheckboxRow> is no .kbview element (./CheckboxRow#default) -->
-                <ReactHost Component="{Binding CheckboxRow}" Props="{Binding checkbox_row_props}"/>
+                <CheckboxRow Setting="{Binding setting}" Policy="{Binding policy}" ReadOnly="{Binding readOnly}" Personal="{Binding personal}" OnShowChain="row_show_chain"/>
               </Repeater>
               <Repeater ItemKey="key" ItemsSource="{Binding rows_profile_fields_not_stored}">
-                <!-- TODO(views-migrate): <UnstoredFieldRow> is no .kbview element (./UnstoredFieldRow#default) -->
-                <ReactHost Component="{Binding UnstoredFieldRow}" Props="{Binding unstored_field_row_props}"/>
+                <UnstoredFieldRow Field="{Binding field}"/>
               </Repeater>
             </Panel>
             <Label Text="{Res admin.dirset_profile_fields_note}"
@@ -72,8 +69,7 @@
           </Panel>
         </Card>
         <Card Title="{Res admin.dirset_card_reach}" Subtitle="{Res admin.dirset_card_reach_desc}" IconSize="18" Icon="Building2">
-          <!-- TODO(views-migrate): <AudienceRow> is no .kbview element (./AudienceRow#default) -->
-          <ReactHost Component="{Binding AudienceRow}" Props="{Binding audience_row_props}"/>
+          <AudienceRow Setting="{Binding audienceSetting}" Policy="{Binding policy}" ReadOnly="{Binding audienceReadOnly}" OnShowChain="row_show_chain"/>
         </Card>
       </Panel>
     </Panel>

@@ -1,7 +1,6 @@
 <!-- AudiencesSection — converted from AudiencesSection.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <Panel x:Props="AdminSectionProps" Class="contents">
-  <!-- TODO(views-migrate): <AudienceSheet> is no .kbview element (./AudienceSheet#default) -->
-  <ReactHost Component="{Binding AudienceSheet}" Props="{Binding audience_sheet_props}" Visible="{Binding show_case_1}"/>
+  <AudienceSheet Id="{Binding audienceSheetId}" CanManage="{Binding canManage}" Visible="{Binding show_case_1}"/>
   <Panel Visible="{Binding show_main}" Class="min-w-0">
     <Panel Class="mb-3 flex min-w-0 flex-wrap items-center gap-x-3 gap-y-2">
       <Label HtmlTag="H1"

@@ -36,8 +36,7 @@
     </Card>
     <!-- TODO(views-migrate): <History> is no .kbview element (a local or dynamic component) -->
     <ReactHost Component="{Binding History}" Props="{Binding history_props}"/>
-    <!-- TODO(views-migrate): <ExportSubjectsCard> is no .kbview element (./ExportSubjectsCard#default) -->
-    <ReactHost Component="{Binding ExportSubjectsCard}" Props="{Binding export_subjects_card_props}" Visible="{Binding show_selected}"/>
+    <ExportSubjectsCard ExportId="{Binding exportId}" OnClose="export_subjects_card_close" Visible="{Binding show_selected}"/>
     <!-- TODO(views-migrate): <ExportRequestDialog> is no .kbview element (./ExportRequestDialog#default) -->
     <ReactHost Component="{Binding ExportRequestDialog}" Props="{Binding export_request_dialog_props}" Visible="{Binding composing}"/>
     <!-- TODO(views-migrate): <ConfirmDialog {...spread}> (spread props) -->

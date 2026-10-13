@@ -13,14 +13,10 @@
            InheritFontSize="true"
            Class="mt-1 max-w-3xl [font-size:var(--kb-text-body)]"/>
   </Panel>
-  <!-- TODO(views-migrate): <OverviewBar> is no .kbview element (./OverviewBar#default) -->
-  <ReactHost Component="{Binding OverviewBar}" Props="{Binding overview_bar_props}" Visible="{Binding show_calendar_id}"/>
+  <OverviewBar CanManage="{Binding canManage}" Visible="{Binding show_calendar_id}"/>
   <!-- TODO(views-migrate): <Tabs> tabs: no .kbview property -->
   <ReactHost Component="{Binding Part1}" Props="{Binding part1_props}" Visible="{Binding show_calendar_id}"/>
-  <!-- TODO(views-migrate): <CalendarDetail> is no .kbview element (./CalendarDetail#default) -->
-  <ReactHost Component="{Binding CalendarDetail}" Props="{Binding calendar_detail_props}" Visible="{Binding show_calendar_id2}"/>
-  <!-- TODO(views-migrate): <UnitsTab> is no .kbview element (./UnitsTab#default) -->
-  <ReactHost Component="{Binding UnitsTab}" Props="{Binding units_tab_props}" Visible="{Binding visible}"/>
-  <!-- TODO(views-migrate): <CalendarsTab> is no .kbview element (./CalendarsTab#default) -->
-  <ReactHost Component="{Binding CalendarsTab}" Props="{Binding calendars_tab_props}" Visible="{Binding visible2}"/>
+  <CalendarDetail CalendarId="{Binding calendarDetailCalendarId}" CanManage="{Binding canManage}" OnOpenCalendar="calendar_detail_open_calendar" Visible="{Binding show_calendar_id2}"/>
+  <UnitsTab CanManage="{Binding canManage}" Visible="{Binding visible}"/>
+  <CalendarsTab CanManage="{Binding canManage}" OnOpen="calendars_tab_open" Visible="{Binding visible2}"/>
 </Stack>

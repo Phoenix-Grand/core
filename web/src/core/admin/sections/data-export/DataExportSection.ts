@@ -13,7 +13,6 @@ import { adminUrlWith } from "../../adminAction"
 import type { AdminSectionProps } from "../registry"
 import { DATA_EXPORT_EXECUTE, DATA_EXPORT_READ } from "./privileges"
 import ExportRequestDialog from "./ExportRequestDialog"
-import ExportSubjectsCard from "./ExportSubjectsCard"
 import { errorMessage, useCancelExport, useDataExport, useDeleteExport, type ExportRun } from "./api"
 
 import { ViewBase } from './DataExportSection.kbview'
@@ -164,17 +163,10 @@ export class DataExportSection extends ViewBase {
     return !!(this.selected)
   }
 
-  /** `<ExportSubjectsCard>`, rendered by a ReactHost. */
-  get ExportSubjectsCard() {
+  /** `<ExportSubjectsCard ExportId>`: the selected export's id. */
+  get exportId() {
     if (!(!(!this.canRead)) || !(!(this.isLoading)) || !(!(this.isError || !this.data)) || !(this.selected)) return undefined as never
-    return ExportSubjectsCard
-  }
-
-  get export_subjects_card_props() {
-    return this.memo('export_subjects_card_props', [this.selected, this.props, this.canRead, this.isLoading, this.isError, this.data], () => {
-      if (!(!(!this.canRead)) || !(!(this.isLoading)) || !(!(this.isError || !this.data)) || !(this.selected)) return undefined as never
-      return ({ exportId: this.selected, onClose: () => this.open(null) } as React.ComponentProps<typeof ExportSubjectsCard>)
-    })
+    return this.selected
   }
 
   /** `<ExportRequestDialog>`, rendered by a ReactHost. */
@@ -254,6 +246,10 @@ export class DataExportSection extends ViewBase {
   button_click(_sender: unknown, _args: MouseEventArgs) {
     if (!(!(!this.canRead)) || !(!(this.isLoading)) || !(!(this.isError || !this.data)) || !(this.canExecute)) return undefined as never
     this.composing = true
+  }
+
+  export_subjects_card_close(_sender: unknown, _e: EventArgs) {
+    this.open(null)
   }
 
 }

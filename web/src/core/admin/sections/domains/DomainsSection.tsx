@@ -1,7 +1,7 @@
 /**
  * Code-behind of `DomainsSection.kbview` (converted from `DomainsSection.tsx` by @kubuno/views-migrate).
  */
-import { bind } from '@kubuno/views'
+import { bind, type EventArgs } from '@kubuno/views'
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
 import { AlertTriangle, ShieldCheck } from "lucide-react"
@@ -11,7 +11,6 @@ import type { AdminSectionProps } from "../registry"
 import { adminUrl, adminUrlWith } from "../../adminAction"
 import { DOMAINS_MANAGE } from "./privileges"
 import AddDomainDialog from "./AddDomainDialog"
-import DomainDetail from "./DomainDetail"
 import { errorMessage, useDomains, useVerifyDomain, type Domain } from "./api"
 
 import { ViewBase } from './DomainsSection.kbview'
@@ -174,17 +173,10 @@ export class DomainsSection extends ViewBase {
     return !!(this.selected)
   }
 
-  /** `<DomainDetail>`, rendered by a ReactHost. */
-  get DomainDetail() {
+  /** `<DomainDetail DomainId>`: the id of the domain being shown. */
+  get domainId() {
     if (!(this.selected)) return undefined as never
-    return DomainDetail
-  }
-
-  get domain_detail_props() {
-    return this.memo('domain_detail_props', [this.selected, this.canManage, this.props], () => {
-      if (!(this.selected)) return undefined as never
-      return ({ domainId: this.selected, canManage: this.canManage, onGone: () => this.open(null) } as React.ComponentProps<typeof DomainDetail>)
-    })
+    return this.selected
   }
 
   get show_main() {
@@ -292,6 +284,11 @@ export class DomainsSection extends ViewBase {
       if (!(!(this.selected)) || !(this.adding)) return undefined as never
       return ({ domains: this.domains, onClose: () => this.adding = false, onAdded: d => this.routerNavigate(adminUrl({ tab: 'domains', params: { domain: d.id } })) } as React.ComponentProps<typeof AddDomainDialog>)
     })
+  }
+
+  /** `<DomainDetail OnGone>`: the shown domain is gone, return to the list. */
+  handleGone(_sender: unknown, _e: EventArgs) {
+    this.open(null)
   }
 
   open(id: string | null) {

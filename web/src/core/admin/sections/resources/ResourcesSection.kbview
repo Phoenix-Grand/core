@@ -15,14 +15,9 @@
   </Panel>
   <!-- TODO(views-migrate): <Tabs> tabs: no .kbview property -->
   <ReactHost Component="{Binding Part1}" Props="{Binding part1_props}"/>
-  <!-- TODO(views-migrate): <OverviewTab> is no .kbview element (./OverviewTab#default) -->
-  <ReactHost Component="{Binding OverviewTab}" Props="{Binding overview_tab_props}" Visible="{Binding show_pane_overview}"/>
-  <!-- TODO(views-migrate): <BuildingsTab> is no .kbview element (./BuildingsTab#default) -->
-  <ReactHost Component="{Binding BuildingsTab}" Props="{Binding buildings_tab_props}" Visible="{Binding show_pane_buildings}"/>
-  <!-- TODO(views-migrate): <ResourcesTab> is no .kbview element (./ResourcesTab#default) -->
-  <ReactHost Component="{Binding ResourcesTab}" Props="{Binding resources_tab_props}" Visible="{Binding show_pane_resources}"/>
-  <!-- TODO(views-migrate): <FeaturesTab> is no .kbview element (./FeaturesTab#default) -->
-  <ReactHost Component="{Binding FeaturesTab}" Props="{Binding features_tab_props}" Visible="{Binding show_pane_features}"/>
-  <!-- TODO(views-migrate): <RoomStatsTab> is no .kbview element (./RoomStatsTab#default) -->
-  <ReactHost Component="{Binding RoomStatsTab}" Visible="{Binding show_pane_room_stats}"/>
+  <OverviewTab OnGo="handleGo" Visible="{Binding show_pane_overview}"/>
+  <BuildingsTab CanManage="{Binding canManage}" Visible="{Binding show_pane_buildings}"/>
+  <ResourcesTab CanManage="{Binding canManage}" Visible="{Binding show_pane_resources}"/>
+  <FeaturesTab CanManage="{Binding canManage}" Visible="{Binding show_pane_features}"/>
+  <RoomStatsTab Visible="{Binding show_pane_room_stats}"/>
 </Stack>

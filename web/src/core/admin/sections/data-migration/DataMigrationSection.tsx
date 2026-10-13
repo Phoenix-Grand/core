@@ -1,7 +1,7 @@
 /**
  * Code-behind of `DataMigrationSection.kbview` (converted from `DataMigrationSection.tsx` by @kubuno/views-migrate).
  */
-import { bind } from '@kubuno/views'
+import { bind, type EventArgs } from '@kubuno/views'
 import { useTranslation } from "react-i18next"
 import { AlertTriangle, CheckCircle2, Loader2 } from "lucide-react"
 import { Badge, type DataTableColumn, type DataTableRowAction } from "@ui"
@@ -10,7 +10,6 @@ import type { AdminSectionProps } from "../registry"
 import { adminUrlWith } from "../../adminAction"
 import { DATA_MIGRATION_MANAGE } from "./privileges"
 import CampaignWizard from "./CampaignWizard"
-import CampaignDetail from "./CampaignDetail"
 import { useCampaigns, type Campaign } from "./api"
 
 import { ViewBase } from './DataMigrationSection.kbview'
@@ -158,17 +157,10 @@ export class DataMigrationSection extends ViewBase {
     return !!(this.selected)
   }
 
-  /** `<CampaignDetail>`, rendered by a ReactHost. */
-  get CampaignDetail() {
+  /** `<CampaignDetail CampaignId>`: the selected campaign id, once known. */
+  get campaignId() {
     if (!(this.selected)) return undefined as never
-    return CampaignDetail
-  }
-
-  get campaign_detail_props() {
-    return this.memo('campaign_detail_props', [this.selected, this.canManage, this.props], () => {
-      if (!(this.selected)) return undefined as never
-      return ({ campaignId: this.selected, canManage: this.canManage, onGone: () => this.open(null) } as React.ComponentProps<typeof CampaignDetail>)
-    })
+    return this.selected
   }
 
   get show_main() {
@@ -216,6 +208,11 @@ export class DataMigrationSection extends ViewBase {
 
   open(id: string | null) {
     return this.props.navigate(adminUrlWith('data-migration', this.props.params, { campaign: id }))
+  }
+
+  /** `<CampaignDetail OnGone>`: the detail asked to return to the list. */
+  campaign_detail_gone(_sender: unknown, _e: EventArgs) {
+    this.open(null)
   }
 
   /** `setComposing` of the TSX: a value, or an update of the previous one. */

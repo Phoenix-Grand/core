@@ -1,10 +1,9 @@
 /**
  * Code-behind of `BuildingDialog.kbview` (converted from `BuildingDialog.tsx` by @kubuno/views-migrate).
  */
-import { bind, type EventArgs, type MouseEventArgs } from '@kubuno/views'
+import { bind, type EventArgs, type MouseEventArgs, type ValueChangedEventArgs } from '@kubuno/views'
 import { useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
-import FloorsField from "./FloorsField"
 import { SlotRegistry } from "../../../slots/SlotRegistry"
 import { useModulesStore } from "../../../store/modulesStore"
 import { GEO_POINT_FIELD, type GeoPointFieldProps } from "../../geoPointField"
@@ -134,15 +133,6 @@ export class BuildingDialog extends ViewBase {
     return __parts.Part2
   }
 
-  /** `<FloorsField>`, rendered by a ReactHost. */
-  get FloorsField() {
-    return FloorsField
-  }
-
-  get floors_field_props() {
-    return this.memo('floors_field_props', [this.floors, this.setFloors, this.props, this.busy], () => ({ floors: this.floors, onChange: this.setFloors, maxLength: 15, maxFloors: this.props.floorMax, disabled: this.busy }))
-  }
-
   get show_building_building_resource() {
     return !!(this.props.building && this.props.building.resource_count > 0)
   }
@@ -246,6 +236,11 @@ export class BuildingDialog extends ViewBase {
   text_field_text_changed(_sender: unknown, args: EventArgs) {
     const e = args.native as React.ChangeEvent<HTMLInputElement, HTMLInputElement>
     this.setName(e.target.value)
+  }
+
+  /** `<FloorsField OnChange>`: the floors list changed. */
+  floors_field_change(_sender: unknown, args: ValueChangedEventArgs) {
+    this.setFloors(args.value as string[])
   }
 
 }

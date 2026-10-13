@@ -1,6 +1,7 @@
 /**
  * Code-behind of `ResourcesSection.kbview` (converted from `ResourcesSection.tsx` by @kubuno/views-migrate).
  */
+import { type ValueChangedEventArgs } from '@kubuno/views'
 import { useTranslation } from "react-i18next"
 import { type TabDef } from "@ui"
 import { usePrivileges } from "../../../authz/usePrivileges"
@@ -8,11 +9,6 @@ import type { AdminSectionProps } from "../registry"
 import { RESOURCES_MANAGE } from "./privileges"
 import { paneFromParams, type ResourcePane } from "./panes"
 import { adminUrlWith } from "../../adminAction"
-import OverviewTab from "./OverviewTab"
-import BuildingsTab from "./BuildingsTab"
-import ResourcesTab from "./ResourcesTab"
-import FeaturesTab from "./FeaturesTab"
-import RoomStatsTab from "./RoomStatsTab"
 
 import { ViewBase } from './ResourcesSection.kbview'
 import * as __parts from './ResourcesSection.parts'
@@ -67,81 +63,29 @@ export class ResourcesSection extends ViewBase {
     return this.pane === 'overview'
   }
 
-  /** `<OverviewTab>`, rendered by a ReactHost. */
-  get OverviewTab() {
-    if (!(this.pane === 'overview')) return undefined as never
-    return OverviewTab
-  }
-
-  get overview_tab_props() {
-    return this.memo('overview_tab_props', [this.memo, this.props, this.pane], () => {
-      if (!(this.pane === 'overview')) return undefined as never
-      return ({ onGo: this.memo("go:bound", [], () => this.go.bind(this)) })
-    })
-  }
-
   get show_pane_buildings() {
     return this.pane === 'buildings'
-  }
-
-  /** `<BuildingsTab>`, rendered by a ReactHost. */
-  get BuildingsTab() {
-    if (!(this.pane === 'buildings')) return undefined as never
-    return BuildingsTab
-  }
-
-  get buildings_tab_props() {
-    return this.memo('buildings_tab_props', [this.canManage, this.pane], () => {
-      if (!(this.pane === 'buildings')) return undefined as never
-      return ({ canManage: this.canManage })
-    })
   }
 
   get show_pane_resources() {
     return this.pane === 'resources'
   }
 
-  /** `<ResourcesTab>`, rendered by a ReactHost. */
-  get ResourcesTab() {
-    if (!(this.pane === 'resources')) return undefined as never
-    return ResourcesTab
-  }
-
-  get resources_tab_props() {
-    return this.memo('resources_tab_props', [this.canManage, this.pane], () => {
-      if (!(this.pane === 'resources')) return undefined as never
-      return ({ canManage: this.canManage })
-    })
-  }
-
   get show_pane_features() {
     return this.pane === 'features'
-  }
-
-  /** `<FeaturesTab>`, rendered by a ReactHost. */
-  get FeaturesTab() {
-    if (!(this.pane === 'features')) return undefined as never
-    return FeaturesTab
-  }
-
-  get features_tab_props() {
-    return this.memo('features_tab_props', [this.canManage, this.pane], () => {
-      if (!(this.pane === 'features')) return undefined as never
-      return ({ canManage: this.canManage })
-    })
   }
 
   get show_pane_room_stats() {
     return this.pane === 'room-stats'
   }
 
-  /** `<RoomStatsTab>`, rendered by a ReactHost. */
-  get RoomStatsTab() {
-    return RoomStatsTab
-  }
-
   go(next: ResourcePane) {
     return this.props.navigate(adminUrlWith('resources', this.props.params, { pane: next === 'overview' ? null : next }))
+  }
+
+  /** `<OverviewTab OnGo>`: a pane was chosen. */
+  handleGo(_sender: unknown, args: ValueChangedEventArgs) {
+    this.go(args.value as ResourcePane)
   }
 
 }

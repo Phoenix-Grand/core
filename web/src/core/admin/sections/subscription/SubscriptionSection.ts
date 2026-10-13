@@ -5,10 +5,6 @@ import { type EventArgs } from '@kubuno/views'
 import { useTranslation } from "react-i18next"
 import { PRIV } from "../../../authz/types"
 import { usePrivileges } from "../../../authz/usePrivileges"
-import InstanceCard from "./InstanceCard"
-import LicenceCard from "./LicenceCard"
-import ModulesLicenceCard from "./ModulesLicenceCard"
-import SupportCard from "./SupportCard"
 import { useSubscription } from "./api"
 
 import { ViewBase } from './SubscriptionSection.kbview'
@@ -50,43 +46,28 @@ export class SubscriptionSection extends ViewBase {
     return !(this.isLoading) && !(this.isError || !this.data)
   }
 
-  /** `<LicenceCard>`, rendered by a ReactHost. */
-  get LicenceCard() {
+  /** `<LicenceCard Licence>`: the instance licence, present only within `show_main`. */
+  get licenceCardLicence() {
     if (!(!(this.isLoading)) || !(!(this.isError || !this.data))) return undefined as never
-    return LicenceCard
+    return this.data.licence
   }
 
-  get licence_card_props() {
-    return this.memo('licence_card_props', [this.data, this.isLoading, this.isError], () => {
-      if (!(!(this.isLoading)) || !(!(this.isError || !this.data))) return undefined as never
-      return ({ licence: this.data.licence })
-    })
-  }
-
-  /** `<InstanceCard>`, rendered by a ReactHost. */
-  get InstanceCard() {
+  /** `<InstanceCard Instance>`: the instance info, present only within `show_main`. */
+  get instanceCardInstance() {
     if (!(!(this.isLoading)) || !(!(this.isError || !this.data))) return undefined as never
-    return InstanceCard
+    return this.data.instance
   }
 
-  get instance_card_props() {
-    return this.memo('instance_card_props', [this.data, this.isLoading, this.isError], () => {
-      if (!(!(this.isLoading)) || !(!(this.isError || !this.data))) return undefined as never
-      return ({ instance: this.data.instance, accounts: this.data.accounts })
-    })
-  }
-
-  /** `<SupportCard>`, rendered by a ReactHost. */
-  get SupportCard() {
+  /** `<InstanceCard Accounts>`: the account counts, present only within `show_main`. */
+  get instanceCardAccounts() {
     if (!(!(this.isLoading)) || !(!(this.isError || !this.data))) return undefined as never
-    return SupportCard
+    return this.data.accounts
   }
 
-  get support_card_props() {
-    return this.memo('support_card_props', [this.data, this.canManage, this.isLoading, this.isError], () => {
-      if (!(!(this.isLoading)) || !(!(this.isError || !this.data))) return undefined as never
-      return ({ support: this.data.support, canManage: this.canManage })
-    })
+  /** `<SupportCard Support>`: the support/contract info, present only within `show_main`. */
+  get supportCardSupport() {
+    if (!(!(this.isLoading)) || !(!(this.isError || !this.data))) return undefined as never
+    return this.data.support
   }
 
   get show_data_modules_data() {
@@ -94,17 +75,10 @@ export class SubscriptionSection extends ViewBase {
     return !!(this.data.modules && this.data.modules.length > 0)
   }
 
-  /** `<ModulesLicenceCard>`, rendered by a ReactHost. */
-  get ModulesLicenceCard() {
+  /** `<ModulesLicenceCard Modules>`: the installed modules, present only when there is at least one. */
+  get modulesLicenceCardModules() {
     if (!(!(this.isLoading)) || !(!(this.isError || !this.data)) || !(this.data.modules && this.data.modules.length > 0)) return undefined as never
-    return ModulesLicenceCard
-  }
-
-  get modules_licence_card_props() {
-    return this.memo('modules_licence_card_props', [this.data, this.isLoading, this.isError], () => {
-      if (!(!(this.isLoading)) || !(!(this.isError || !this.data)) || !(this.data.modules && this.data.modules.length > 0)) return undefined as never
-      return ({ modules: this.data.modules })
-    })
+    return this.data.modules
   }
 
   empty_state_action(_sender: unknown, _args: EventArgs) {

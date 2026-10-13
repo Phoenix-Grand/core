@@ -20,8 +20,7 @@
       <!-- TODO(views-migrate): <TextArea> rows: no .kbview property -->
       <ReactHost Component="{Binding Part2}" Props="{Binding part2_props}"/>
       <Panel Class="min-w-0">
-        <!-- TODO(views-migrate): <FloorsField> is no .kbview element (./FloorsField#default) -->
-        <ReactHost Component="{Binding FloorsField}" Props="{Binding floors_field_props}"/>
+        <FloorsField Floors="{Binding floors}" OnChange="floors_field_change" MaxLength="15" MaxFloors="{Binding props.floorMax}" Disabled="{Binding busy}"/>
       </Panel>
       <Panel Visible="{Binding show_building_building_resource}" Class="sm:col-span-2">
         <Callout Body="{Res admin.res_building_rename_warning, Count={Binding res_building_rename_warning_count}}"/>

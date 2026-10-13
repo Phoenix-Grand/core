@@ -25,18 +25,14 @@
            Class="mt-1 max-w-3xl [font-size:var(--kb-text-body)]"/>
     <Callout Title="{Res admin.sub_model_title}" Body="{Res admin.sub_model_desc}" Class="mt-4"/>
     <Panel Class="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-2">
-      <!-- TODO(views-migrate): <LicenceCard> is no .kbview element (./LicenceCard#default) -->
-      <ReactHost Component="{Binding LicenceCard}" Props="{Binding licence_card_props}"/>
-      <!-- TODO(views-migrate): <InstanceCard> is no .kbview element (./InstanceCard#default) -->
-      <ReactHost Component="{Binding InstanceCard}" Props="{Binding instance_card_props}"/>
+      <LicenceCard Licence="{Binding licenceCardLicence}"/>
+      <InstanceCard Instance="{Binding instanceCardInstance}" Accounts="{Binding instanceCardAccounts}"/>
     </Panel>
     <Panel Class="mt-4">
-      <!-- TODO(views-migrate): <SupportCard> is no .kbview element (./SupportCard#default) -->
-      <ReactHost Component="{Binding SupportCard}" Props="{Binding support_card_props}"/>
+      <SupportCard Support="{Binding supportCardSupport}" CanManage="{Binding canManage}"/>
     </Panel>
     <Panel Visible="{Binding show_data_modules_data}" Class="mt-4">
-      <!-- TODO(views-migrate): <ModulesLicenceCard> is no .kbview element (./ModulesLicenceCard#default) -->
-      <ReactHost Component="{Binding ModulesLicenceCard}" Props="{Binding modules_licence_card_props}"/>
+      <ModulesLicenceCard Modules="{Binding modulesLicenceCardModules}"/>
     </Panel>
   </Panel>
 </Panel>
