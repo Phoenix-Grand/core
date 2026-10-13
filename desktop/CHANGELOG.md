@@ -16,6 +16,9 @@ number at release time, and CI publishes that section as the GitHub Release note
   so nested controls can finally be told apart; the primary selection's parent is tagged too. Faint container
   outlines now use a theme-aware stroke whose strength alternates with nesting depth, so a pile of nested dashed
   rectangles reads as distinct frames, legible in both the light and dark Visual Studio themes.
+- **The hover outline matches the selection outline** (as in the web designer): hovering a control now draws the
+  same `selection_frame` box — identical size, margins and stroke width as a selected element — differing only by
+  colour (a lighter accent), instead of a tighter border hugging the control's own edge.
 
 ### Fixed
 

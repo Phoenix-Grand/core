@@ -986,9 +986,14 @@ pub fn paint_adorners(
     // dependency on the raw D2D color type to build one from (`kubuno_desktop_ui`
     // only ever hands out already-resolved theme colors, by design).
     if let Some(h) = hover.filter(|id| !selection.contains(id)).and_then(|id| layout.get(id)) {
-        c.stroke_rounded_w(&h.bounds, 0.0, &theme.accent_light, 1.0);
+        // Hover shares the selection's exact geometry: the same `selection_frame` (3 DIP outset) and the same 1.0
+        // stroke width as a selected element below, so the hover box and the selection box have identical size and
+        // margins — they differ only by colour (a lighter accent), never by position or thickness (the web
+        // designer's rule, DESIGNER.md; the complaint was a hover border that sat tighter than the selection).
+        let frame = selection_frame(h.bounds);
+        c.stroke_rounded_w(&frame, 0.0, &theme.accent_light, 1.0);
         // The hovered control's name tag: a darkened accent, so it reads apart from a selection tag's full accent.
-        paint_tag(c, h.bounds, h.kind, h.name.as_deref(), theme.accent_hover, theme.accent_foreground, None);
+        paint_tag(c, frame, h.kind, h.name.as_deref(), theme.accent_hover, theme.accent_foreground, None);
     }
 
     // The root element is the view itself: its selection is drawn by the view frame
