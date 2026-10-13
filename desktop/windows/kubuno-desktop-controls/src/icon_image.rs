@@ -132,6 +132,14 @@ thread_local! {
     static OFFSCREEN: RefCell<Option<Offscreen>> = const { RefCell::new(None) };
 }
 
+/// Caps for the icon caches. Icons are small, but `BITMAPS` keys multiply across
+/// icon × size × colour × device, and `SOURCES` across every distinct path/resource,
+/// so both grow without bound over a long session. Past the cap the cache starts over
+/// (the `color::raster` pattern); a still-drawing caller keeps its own clone of the
+/// returned bitmap, so the reset only costs a later re-render.
+const SOURCES_MAX: usize = 256;
+const BITMAPS_MAX: usize = 512;
+
 struct Offscreen {
     factory: ID2D1Factory1,
     wic: IWICImagingFactory,
@@ -205,7 +213,13 @@ fn source(path: &str, wic: &IWICImagingFactory) -> Option<Rc<Source>> {
             None
         }
     };
-    SOURCES.with(|m| m.borrow_mut().insert(path.to_string(), Cached { source: decoded.clone(), modified: modified(path), checked: now }));
+    SOURCES.with(|m| {
+        let mut m = m.borrow_mut();
+        if m.len() >= SOURCES_MAX {
+            m.clear();
+        }
+        m.insert(path.to_string(), Cached { source: decoded.clone(), modified: modified(path), checked: now });
+    });
     decoded
 }
 
@@ -546,7 +560,13 @@ pub fn draw(
     let key = (device, name.as_ptr() as usize, pw, ph, key_color);
     let bitmap = BITMAPS.with(|m| m.borrow().get(&key).cloned()).unwrap_or_else(|| {
         let made = rasterize(name, pw, ph, color, Some(theme)).and_then(|r| upload(ctx, &r));
-        BITMAPS.with(|m| m.borrow_mut().insert(key, made.clone()));
+        BITMAPS.with(|m| {
+            let mut m = m.borrow_mut();
+            if m.len() >= BITMAPS_MAX {
+                m.clear();
+            }
+            m.insert(key, made.clone());
+        });
         made
     })?;
     // A glyph or an SVG is already rendered in `color`; a raster image takes its transparency.

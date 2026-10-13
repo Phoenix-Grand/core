@@ -10,6 +10,11 @@ number at release time, and CI publishes that section as the GitHub Release note
 ## [Unreleased]
 
 ### Changed
+- **The desktop apps bound their in-memory image and icon caches.** The Direct2D cache of decoded images (photos,
+  previews, resource pictures) was unbounded — a single large photo decodes to tens of megabytes, so viewing many
+  images over a session could retain hundreds of MB that was never released. It now has a resident-byte budget (128 MB)
+  with least-recently-used eviction, and the icon render caches are capped too. Memory belonging to a superseded
+  graphics device is reclaimed as those entries fall out of use instead of being stranded for the window's lifetime.
 - **The app loads and keeps far less in memory at startup.** The administration console, the settings screens and the
   setup wizard are now loaded on demand (code-split) instead of being bundled into the always-loaded shared chunk: a
   user who never opens them never downloads, parses or retains that code. The eagerly-loaded shared chunk dropped from

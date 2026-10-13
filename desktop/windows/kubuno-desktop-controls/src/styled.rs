@@ -381,7 +381,69 @@ pub fn high_contrast() -> bool {
 
 thread_local! {
     /// Decoded bitmaps by path, for the device context they belong to (a new device reloads them).
-    static IMAGES: RefCell<HashMap<(usize, String), Option<ID2D1Bitmap1>>> = RefCell::new(HashMap::new());
+    /// Bounded by a resident-byte budget with LRU eviction: a single photo decodes to tens of MB,
+    /// so without a bound a browsing session would retain hundreds of MB of never-freed bitmaps
+    /// (and the entries of a superseded device, never hit again, would sit there forever).
+    static IMAGES: RefCell<ImageCache> = RefCell::new(ImageCache::default());
+}
+
+/// Approximate resident-byte budget for decoded images on one thread (a decoded bitmap costs
+/// width*height*4 bytes). Past it, least-recently-used entries are dropped — a still-drawing caller
+/// keeps its own clone of the returned bitmap, so eviction only ever costs a later re-decode.
+const IMAGES_BUDGET_BYTES: usize = 128 * 1024 * 1024;
+
+/// Byte-budgeted LRU of decoded [`ID2D1Bitmap1`]s (see [`IMAGES`]).
+#[derive(Default)]
+struct ImageCache {
+    map: HashMap<(usize, String), ImageEntry>,
+    bytes: usize,
+    tick: u64,
+}
+
+struct ImageEntry {
+    bitmap: Option<ID2D1Bitmap1>,
+    bytes: usize,
+    last: u64,
+}
+
+impl ImageCache {
+    /// A cache hit refreshes the entry's recency. `Some(None)` is a known-undecodable entry.
+    fn get(&mut self, key: &(usize, String)) -> Option<Option<ID2D1Bitmap1>> {
+        self.tick += 1;
+        let tick = self.tick;
+        let entry = self.map.get_mut(key)?;
+        entry.last = tick;
+        Some(entry.bitmap.clone())
+    }
+
+    /// Inserts a decoded bitmap and evicts least-recently-used entries until back under budget.
+    fn put(&mut self, key: (usize, String), bitmap: Option<ID2D1Bitmap1>) {
+        self.tick += 1;
+        let bytes = bitmap.as_ref().map(bitmap_bytes).unwrap_or(0);
+        let last = self.tick;
+        if let Some(old) = self.map.insert(key, ImageEntry { bitmap, bytes, last }) {
+            self.bytes = self.bytes.saturating_sub(old.bytes);
+        }
+        self.bytes += bytes;
+        while self.bytes > IMAGES_BUDGET_BYTES && self.map.len() > 1 {
+            let Some(lru) = self.map.iter().min_by_key(|(_, e)| e.last).map(|(k, _)| k.clone()) else { break };
+            if let Some(e) = self.map.remove(&lru) {
+                self.bytes = self.bytes.saturating_sub(e.bytes);
+            }
+        }
+    }
+
+    fn clear(&mut self) {
+        self.map.clear();
+        self.bytes = 0;
+    }
+}
+
+/// The resident byte cost of a decoded bitmap (width*height*4).
+fn bitmap_bytes(b: &ID2D1Bitmap1) -> usize {
+    // SAFETY: a plain COM getter on a live bitmap.
+    let s = unsafe { b.GetPixelSize() };
+    (s.width as usize) * (s.height as usize) * 4
 }
 
 /// Resolves an image URI of an application resource (`kbres:<set>/<name>`, vskubuno docs/RESOURCES.md):
@@ -417,7 +479,7 @@ fn load_svg_bytes(c: &dyn ControlCanvas, key: u64, bytes: &[u8]) -> Option<ID2D1
     let renderer = c.renderer()?;
     let device = windows::core::Interface::as_raw(&renderer.d2d_context) as usize;
     let cache_key = (device, format!("svg:{key:x}"));
-    if let Some(found) = IMAGES.with(|m| m.borrow().get(&cache_key).cloned()) {
+    if let Some(found) = IMAGES.with(|m| m.borrow_mut().get(&cache_key)) {
         return found;
     }
     let bitmap = match crate::icon_image::decode_svg_bytes(renderer, bytes) {
@@ -427,7 +489,7 @@ fn load_svg_bytes(c: &dyn ControlCanvas, key: u64, bytes: &[u8]) -> Option<ID2D1
             None
         }
     };
-    IMAGES.with(|m| m.borrow_mut().insert(cache_key, bitmap.clone()));
+    IMAGES.with(|m| m.borrow_mut().put(cache_key, bitmap.clone()));
     bitmap
 }
 
@@ -440,7 +502,7 @@ pub fn load_image(c: &dyn ControlCanvas, path: &str) -> Option<ID2D1Bitmap1> {
     let renderer = c.renderer()?;
     let device = windows::core::Interface::as_raw(&renderer.d2d_context) as usize;
     let key = (device, path.to_string());
-    if let Some(found) = IMAGES.with(|m| m.borrow().get(&key).cloned()) {
+    if let Some(found) = IMAGES.with(|m| m.borrow_mut().get(&key)) {
         return found;
     }
     let bitmap = match renderer.load_image_file(path) {
@@ -450,7 +512,7 @@ pub fn load_image(c: &dyn ControlCanvas, path: &str) -> Option<ID2D1Bitmap1> {
             None
         }
     };
-    IMAGES.with(|m| m.borrow_mut().insert(key, bitmap.clone()));
+    IMAGES.with(|m| m.borrow_mut().put(key, bitmap.clone()));
     bitmap
 }
 
@@ -461,7 +523,7 @@ pub fn load_image_bytes(c: &dyn ControlCanvas, key: u64, bytes: &[u8]) -> Option
     let renderer = c.renderer()?;
     let device = windows::core::Interface::as_raw(&renderer.d2d_context) as usize;
     let cache_key = (device, format!("mem:{key:x}"));
-    if let Some(found) = IMAGES.with(|m| m.borrow().get(&cache_key).cloned()) {
+    if let Some(found) = IMAGES.with(|m| m.borrow_mut().get(&cache_key)) {
         return found;
     }
     let bitmap = match decode_bytes(renderer, bytes) {
@@ -471,7 +533,7 @@ pub fn load_image_bytes(c: &dyn ControlCanvas, key: u64, bytes: &[u8]) -> Option
             None
         }
     };
-    IMAGES.with(|m| m.borrow_mut().insert(cache_key, bitmap.clone()));
+    IMAGES.with(|m| m.borrow_mut().put(cache_key, bitmap.clone()));
     bitmap
 }
 
