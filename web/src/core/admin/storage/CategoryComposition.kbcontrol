@@ -1,8 +1,7 @@
 <!-- CategoryComposition — converted from CategoryComposition.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="CategoryCompositionProps">
   <Panel>
-    <!-- TODO(views-migrate): <CompositionBar> is no .kbview element (./CompositionBar#default) -->
-    <ReactHost Component="{Binding CompositionBar}" Props="{Binding composition_bar_props}" Visible="{Binding show_segments}"/>
+    <CompositionBar Segments="{Binding segments}" Total="{Binding cc_total}" AriaLabel="{Binding props.ariaLabel}" Visible="{Binding show_segments}"/>
     <Label Text="{Res admin.sto_cat_empty}"
            Overflow="Wrap"
            ForeColor="TextTertiary"
@@ -23,7 +22,6 @@
     </Panel>
     <!-- TODO(views-migrate): <Callout> icon: a value the property converts (null-when-false) -->
     <ReactHost Component="{Binding Part1}" Props="{Binding part1_props}" Visible="{Binding show_reading_trash}"/>
-    <!-- TODO(views-migrate): <DelegatedNote> is no .kbview element (./DelegatedNote#default) -->
-    <ReactHost Component="{Binding DelegatedNote}" Props="{Binding delegated_note_props}"/>
+    <DelegatedNote Bytes="{Binding props.delegatedBytes}" Objects="{Binding props.delegatedObjects}" ClassName="mt-4"/>
   </Panel>
 </UserControl>

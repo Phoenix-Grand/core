@@ -5,8 +5,6 @@ import { useTranslation } from "react-i18next"
 import { formatBytes } from "../sections/format"
 import { NEUTRAL_SERIES, type Segment } from "./charts"
 import { type CategoryReading } from "./categories"
-import DelegatedNote from "./DelegatedNote"
-import CompositionBar from "./CompositionBar"
 
 import { ViewBase } from './CategoryComposition.kbcontrol'
 import * as __parts from './CategoryComposition.parts'
@@ -64,17 +62,10 @@ export class CategoryComposition extends ViewBase {
     return !(this.segments.length > 0)
   }
 
-  /** `<CompositionBar>`, rendered by a ReactHost. */
-  get CompositionBar() {
+  /** `<CompositionBar Total>`: the server's held total, the bar's denominator. */
+  get cc_total() {
     if (!(this.segments.length > 0)) return undefined as never
-    return CompositionBar
-  }
-
-  get composition_bar_props() {
-    return this.memo('composition_bar_props', [this.segments, this.props], () => {
-      if (!(this.segments.length > 0)) return undefined as never
-      return ({ segments: this.segments, total: Math.max(this.props.heldBytes, this.props.reading.heldBytes, 1), ariaLabel: this.props.ariaLabel })
-    })
+    return Math.max(this.props.heldBytes, this.props.reading.heldBytes, 1)
   }
 
   get sto_cat_split_billed() {
@@ -118,15 +109,6 @@ export class CategoryComposition extends ViewBase {
   get Part1() {
     if (!(this.props.reading.trash)) return undefined as never
     return __parts.Part1
-  }
-
-  /** `<DelegatedNote>`, rendered by a ReactHost. */
-  get DelegatedNote() {
-    return DelegatedNote
-  }
-
-  get delegated_note_props() {
-    return this.memo('delegated_note_props', [this.props], () => ({ bytes: this.props.delegatedBytes, objects: this.props.delegatedObjects, className: "mt-4" }))
   }
 
 }
