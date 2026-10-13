@@ -11,6 +11,7 @@ number at release time, and CI publishes that section as the GitHub Release note
 
 ### Changed
 - **The web view designer labels the controls on its design surface.** Hovering or selecting a control now shows a small corner tag with its type (and its `x:Name` when it has one) — like a WinForms or Figma designer — so nested controls can finally be told apart; the primary selection's parent is tagged too. Faint container outlines now use a theme-aware stroke whose strength alternates with nesting depth, and all adorners follow Visual Studio's accent colour, keeping both the light and dark Visual Studio themes legible.
+- **The web view designer's hover outline matches the selection outline.** Hovering a control now draws the same box as selecting it (same thickness, size and margins); the two are told apart only by opacity, instead of the hover being a thinner stroke.
 - **The web view designer's viewport toolbar uses device icons** (phone / tablet / laptop / monitor, plus fit-to-pane) instead of pixel-width labels; the exact width stays in each button's tooltip and accessible name.
 
 ### Added

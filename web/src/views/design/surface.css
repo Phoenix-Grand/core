@@ -144,9 +144,11 @@ html.kbd-page body {
 .kbd-overlay[data-design='false'] { pointer-events: none; }
 .kbd-overlay[data-design='false'] > * { display: none; }
 .kbd-ad { position: absolute; box-sizing: border-box; pointer-events: none; }
-.kbd-hover { border: 1px solid color-mix(in srgb, var(--kbd-adorner) 70%, transparent); }
-.kbd-sel { border: 1px solid var(--kbd-adorner); }
-.kbd-sel[data-primary='true'] { border-width: 2px; }
+/* Hover shares the selected control's exact geometry (same 2px solid border, same border-box rect and margins);
+   it is told apart only by opacity — a lighter version of the same selection box, not a thinner one. */
+.kbd-hover { border: 2px solid color-mix(in srgb, var(--kbd-adorner) 45%, transparent); }
+.kbd-sel { border: 2px solid var(--kbd-adorner); }
+.kbd-sel:not([data-primary='true']) { border-width: 1px; }
 .kbd-parent { border: 1px dashed color-mix(in srgb, var(--kbd-adorner) 75%, transparent); }
 /* Container outlines: a theme-aware dashed stroke. Odd / even nesting depths alternate in strength so adjacent
    nested frames stay apart (the complaint: a pile of identical dashed rectangles no one could tell apart). */
