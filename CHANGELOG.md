@@ -9,6 +9,9 @@ number at release time, and CI publishes that section as the GitHub Release note
 
 ## [Unreleased]
 
+### Changed
+- **The web view designer's viewport toolbar uses device icons** (phone / tablet / laptop / monitor, plus fit-to-pane) instead of pixel-width labels; the exact width stays in each button's tooltip and accessible name.
+
 ### Added
 - **Collaboration rooms can be closed by the module that owns them**
   (`POST /internal/collab/rooms/close`, internal secret; a module may only close its own rooms).

@@ -29,6 +29,17 @@ export interface ToolbarHandlers {
 
 export const WIDTH_PRESETS = [390, 768, 1280, 1440] as const
 
+/** Lucide device glyphs for the width presets (plain SVG — the toolbar is DOM outside the view's React tree). */
+const glyph = (paths: string): string =>
+  `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths}</svg>`
+const DEVICE: Record<number, { icon: string; label: string }> = {
+  390:  { label: 'Téléphone',            icon: glyph('<rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/>') },
+  768:  { label: 'Tablette',             icon: glyph('<rect width="16" height="20" x="4" y="2" rx="2" ry="2"/><path d="M12 18h.01"/>') },
+  1280: { label: 'Ordinateur portable', icon: glyph('<path d="M20 16V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v9m16 0H4m16 0 1.28 2.55a1 1 0 0 1-.9 1.45H3.62a1 1 0 0 1-.9-1.45L4 16"/>') },
+  1440: { label: 'Grand écran',         icon: glyph('<rect width="20" height="14" x="2" y="3" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/>') },
+}
+const FIT_ICON = glyph('<path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/>')
+
 interface Btn {
   el: HTMLButtonElement
   on: (s: ToolbarState) => boolean
@@ -54,11 +65,11 @@ export function createToolbar(doc: Document, languages: readonly string[], handl
     bar.appendChild(g)
     return g
   }
-  const button = (g: HTMLElement, text: string, title: string, on: Btn['on'], click: () => void): HTMLButtonElement => {
+  const button = (g: HTMLElement, text: string, title: string, on: Btn['on'], click: () => void, svgMarkup?: string): HTMLButtonElement => {
     const b = doc.createElement('button')
     b.type = 'button'
-    b.className = 'kbd-btn'
-    b.textContent = text
+    b.className = svgMarkup ? 'kbd-btn kbd-btn-icon' : 'kbd-btn'
+    if (svgMarkup) { b.innerHTML = svgMarkup; b.setAttribute('aria-label', title) } else { b.textContent = text }
     b.title = title
     b.addEventListener('click', click)
     // The toolbar never takes the keyboard from the surface for long: a click returns the focus to it.
@@ -70,8 +81,8 @@ export function createToolbar(doc: Document, languages: readonly string[], handl
 
   const width = group('Largeur')
   designBtn = button(width, '—', 'Largeur de conception (DesignWidth)', (s) => s.width === 'design', () => handlers.width('design'))
-  for (const w of WIDTH_PRESETS) button(width, String(w), `${w} px`, (s) => s.width === w, () => handlers.width(w))
-  button(width, 'Ajusté', 'Ajustée au volet', (s) => s.width === 'fit', () => handlers.width('fit'))
+  for (const w of WIDTH_PRESETS) button(width, String(w), `${DEVICE[w].label} — ${w} px`, (s) => s.width === w, () => handlers.width(w), DEVICE[w].icon)
+  button(width, 'Ajusté', 'Ajustée au volet', (s) => s.width === 'fit', () => handlers.width('fit'), FIT_ICON)
 
   const theme = group('Thème')
   button(theme, 'Clair', 'Thème Kubuno clair (kubuno-reference)', (s) => s.theme === 'light', () => handlers.theme('light'))

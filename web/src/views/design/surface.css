@@ -69,6 +69,9 @@ html.kbd-page body {
 .kbd-btn:hover { background: var(--vs-hover); }
 .kbd-btn:focus-visible { outline: 1px solid var(--vs-accent); outline-offset: -1px; }
 .kbd-btn[aria-pressed='true'] { border-color: var(--vs-accent); background: color-mix(in srgb, var(--vs-accent) 18%, transparent); }
+.kbd-btn-icon { display: inline-flex; align-items: center; justify-content: center; width: 30px; padding: 0; color: var(--vs-text-dim); }
+.kbd-btn-icon[aria-pressed='true'] { color: inherit; }
+.kbd-btn-icon svg { display: block; }
 .kbd-spacer { flex: 1 1 auto; }
 .kbd-chip {
   display: inline-flex; align-items: center; gap: 5px; height: 20px; padding: 0 7px; border-radius: 10px;
