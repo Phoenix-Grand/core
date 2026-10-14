@@ -20,14 +20,14 @@
       <Build />
       <BuildDependency Project="web/packages/ui/Kubuno.Web.UI.esproj" />
       <BuildDependency Project="web/src/sdk/Kubuno.Web.Sdk.esproj" />
-      <BuildDependency Project="web/packages/drive/Kubuno.Web.Drive.esproj" />
+      <BuildDependency Project="web/src/drive/Kubuno.Web.Drive.esproj" />
       <BuildDependency Project="web/packages/host-runtime/Kubuno.Web.Host.Runtime.esproj" />
       <BuildDependency Project="web/packages/vectors/Kubuno.Web.Vectors.esproj" />
       <BuildDependency Project="web/packages/views/Kubuno.Web.Views.esproj" />
       <BuildDependency Project="web/packages/views-compiler/Kubuno.Web.Views.Compiler.esproj" />
       <BuildDependency Project="web/packages/views-migrate/Kubuno.Web.Views.Migrate.esproj" />
     </Project>
-    <Project Path="web/packages/drive/Kubuno.Web.Drive.esproj">
+    <Project Path="web/src/drive/Kubuno.Web.Drive.esproj">
       <Platform Project="AnyCPU" />
       <Build />
       <BuildDependency Project="web/src/sdk/Kubuno.Web.Sdk.esproj" />

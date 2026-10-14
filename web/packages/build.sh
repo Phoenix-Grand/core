@@ -47,8 +47,9 @@ cp -r "$FE"/dist-types/core/* "$SDKPKG/types/core/"
 ( cd "$FE/.kubuno/views/src" && find core -name '*.kbcontrol.d.ts' -o -name '*.kbview.d.ts' ) | while read -r f; do
   mkdir -p "$SDKPKG/types/$(dirname "$f")"; cp "$FE/.kubuno/views/src/$f" "$SDKPKG/types/$f"
 done
-# @kubuno/drive : drive/ only
-rm -rf "$PKG/drive/types"; mkdir -p "$PKG/drive/types/drive"; cp -r "$FE"/dist-types/drive/* "$PKG/drive/types/drive/"
+# @kubuno/drive : drive/ only. CO-LOCATED with its sources (web/src/drive): type tree regenerated there,
+# gitignored (never committed). npm identity (@kubuno/drive) and published layout unchanged.
+rm -rf "$FE/src/drive/types"; mkdir -p "$FE/src/drive/types/drive"; cp -r "$FE"/dist-types/drive/* "$FE/src/drive/types/drive/"
 # @kubuno/views : views/ only (the .kbview runtime; self-contained, imports react only)
 rm -rf "$PKG/views/types"; mkdir -p "$PKG/views/types";     cp -r "$FE"/dist-types/views/* "$PKG/views/types/"
 
