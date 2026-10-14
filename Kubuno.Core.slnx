@@ -18,7 +18,7 @@
     <Project Path="web/Kubuno.Core.Frontend.esproj">
       <Platform Project="AnyCPU" />
       <Build />
-      <BuildDependency Project="web/packages/ui/Kubuno.Web.UI.esproj" />
+      <BuildDependency Project="web/src/ui/Kubuno.Web.UI.esproj" />
       <BuildDependency Project="web/src/sdk/Kubuno.Web.Sdk.esproj" />
       <BuildDependency Project="web/src/drive/Kubuno.Web.Drive.esproj" />
       <BuildDependency Project="web/packages/host-runtime/Kubuno.Web.Host.Runtime.esproj" />
@@ -36,20 +36,26 @@
       <Build />
       <BuildDependency Project="web/src/sdk/Kubuno.Web.Sdk.esproj" />
     </Project>
+    <Project Path="web/src/sdk/Kubuno.Web.Sdk.esproj">
+      <Platform Project="AnyCPU" />
+      <Build />
+      <BuildDependency Project="web/src/ui/Kubuno.Web.UI.esproj" />
+    </Project>
+    <Project Path="web/src/ui/Kubuno.Web.UI.esproj">
+      <Platform Project="AnyCPU" />
+      <Build />
+    </Project>
+  </Folder>
+  <Folder Name="/Web/packages/">
     <Project Path="web/packages/host-runtime/Kubuno.Web.Host.Runtime.esproj">
       <Platform Project="AnyCPU" />
       <Build />
     </Project>
-    <Project Path="web/src/sdk/Kubuno.Web.Sdk.esproj">
-      <Platform Project="AnyCPU" />
-      <Build />
-      <BuildDependency Project="web/packages/ui/Kubuno.Web.UI.esproj" />
-    </Project>
-    <Project Path="web/packages/ui/Kubuno.Web.UI.esproj">
-      <Platform Project="AnyCPU" />
-      <Build />
-    </Project>
     <Project Path="web/packages/vectors/Kubuno.Web.Vectors.esproj">
+      <Platform Project="AnyCPU" />
+      <Build />
+    </Project>
+    <Project Path="web/packages/views/Kubuno.Web.Views.esproj">
       <Platform Project="AnyCPU" />
       <Build />
     </Project>
@@ -58,10 +64,6 @@
       <Build />
     </Project>
     <Project Path="web/packages/views-migrate/Kubuno.Web.Views.Migrate.esproj">
-      <Platform Project="AnyCPU" />
-      <Build />
-    </Project>
-    <Project Path="web/packages/views/Kubuno.Web.Views.esproj">
       <Platform Project="AnyCPU" />
       <Build />
     </Project>
