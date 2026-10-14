@@ -35,14 +35,17 @@ node packages/views-compiler/bin/kbview-tsc.js -p tsconfig.emit.json
 echo "==> 2b   Assembling type trees"
 # @ui : autonomous, ships ui/ only
 rm -rf "$PKG/ui/types";    mkdir -p "$PKG/ui/types";        cp -r "$FE"/dist-types/ui/*    "$PKG/ui/types/"
-# @kubuno/sdk : sdk/ + core/ (sdk imports ../core)
-rm -rf "$PKG/sdk/types";   mkdir -p "$PKG/sdk/types/sdk" "$PKG/sdk/types/core"
-cp -r "$FE"/dist-types/sdk/*  "$PKG/sdk/types/sdk/"
-cp -r "$FE"/dist-types/core/* "$PKG/sdk/types/core/"
+# @kubuno/sdk : sdk/ + core/ (sdk imports ../core). The package is CO-LOCATED with its sources (web/src/sdk):
+# package.json/index.js/README/CHANGELOG live there, and the type tree is regenerated here (gitignored, never
+# committed — see .gitignore). The npm identity (@kubuno/sdk) and the published layout (types/, exports) are unchanged.
+SDKPKG="$FE/src/sdk"
+rm -rf "$SDKPKG/types";   mkdir -p "$SDKPKG/types/sdk" "$SDKPKG/types/core"
+cp -r "$FE"/dist-types/sdk/*  "$SDKPKG/types/sdk/"
+cp -r "$FE"/dist-types/core/* "$SDKPKG/types/core/"
 # The core's user controls (X.kbcontrol + X.ts code-behind): the emitted code-behind declarations import
 # './X.kbcontrol', whose declaration kbview-tsc generated under .kubuno/views — ship it next to them.
 ( cd "$FE/.kubuno/views/src" && find core -name '*.kbcontrol.d.ts' -o -name '*.kbview.d.ts' ) | while read -r f; do
-  mkdir -p "$PKG/sdk/types/$(dirname "$f")"; cp "$FE/.kubuno/views/src/$f" "$PKG/sdk/types/$f"
+  mkdir -p "$SDKPKG/types/$(dirname "$f")"; cp "$FE/.kubuno/views/src/$f" "$SDKPKG/types/$f"
 done
 # @kubuno/drive : drive/ only
 rm -rf "$PKG/drive/types"; mkdir -p "$PKG/drive/types/drive"; cp -r "$FE"/dist-types/drive/* "$PKG/drive/types/drive/"

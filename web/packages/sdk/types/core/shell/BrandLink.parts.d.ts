@@ -1,9 +1,0 @@
-/**
- * The parts of `BrandLink.kbview` still written in React (the codemod could not convert them; see the
- * TODO comments in the view). Each is rendered by a `<ReactHost>` with the values it reads as props.
- */
-import type { BrandLink } from './BrandLink';
-export declare function Part1({ Icon, iconSize }: {
-    Icon: NonNullable<BrandLink['Icon']>;
-    iconSize: NonNullable<BrandLink['iconSize']>;
-}): import("react").JSX.Element;

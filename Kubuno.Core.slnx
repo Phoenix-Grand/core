@@ -19,7 +19,7 @@
       <Platform Project="AnyCPU" />
       <Build />
       <BuildDependency Project="web/packages/ui/Kubuno.Web.UI.esproj" />
-      <BuildDependency Project="web/packages/sdk/Kubuno.Web.Sdk.esproj" />
+      <BuildDependency Project="web/src/sdk/Kubuno.Web.Sdk.esproj" />
       <BuildDependency Project="web/packages/drive/Kubuno.Web.Drive.esproj" />
       <BuildDependency Project="web/packages/host-runtime/Kubuno.Web.Host.Runtime.esproj" />
       <BuildDependency Project="web/packages/vectors/Kubuno.Web.Vectors.esproj" />
@@ -30,13 +30,13 @@
     <Project Path="web/packages/drive/Kubuno.Web.Drive.esproj">
       <Platform Project="AnyCPU" />
       <Build />
-      <BuildDependency Project="web/packages/sdk/Kubuno.Web.Sdk.esproj" />
+      <BuildDependency Project="web/src/sdk/Kubuno.Web.Sdk.esproj" />
     </Project>
     <Project Path="web/packages/host-runtime/Kubuno.Web.Host.Runtime.esproj">
       <Platform Project="AnyCPU" />
       <Build />
     </Project>
-    <Project Path="web/packages/sdk/Kubuno.Web.Sdk.esproj">
+    <Project Path="web/src/sdk/Kubuno.Web.Sdk.esproj">
       <Platform Project="AnyCPU" />
       <Build />
       <BuildDependency Project="web/packages/ui/Kubuno.Web.UI.esproj" />
