@@ -1,5 +1,5 @@
 import React, { createContext, useCallback, useContext, useState } from 'react'
-import { MenuDropdown, type MenuItem } from '../../../ui'
+import { MenuDropdown, type MenuItem } from '../../../ui/index'
 import { findTextTarget } from '../../../ui/textFieldMenu'
 import { ExtensionRegistry } from '../../registry/ExtensionRegistry'
 import { CONTEXT_MENU_ITEMS, type ContextMenuItemsProvider } from '../../registry/contextMenu'

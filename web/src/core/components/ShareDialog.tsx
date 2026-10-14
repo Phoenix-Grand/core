@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useSyncExternalStore } from 'react'
 import { Trash2, Check, HelpCircle, Settings, ArrowLeft, Link2, Lock, Globe } from 'lucide-react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { FloatingWindow, Dropdown, Spinner, Button } from '../../ui'
+import { FloatingWindow, Dropdown, Spinner, Button } from '../../ui/index'
 import { ShareRegistry, ShareRecipientKinds, type ShareSection } from '../registry/ShareRegistry'
 import { useShareStore, type ShareRecipient } from '../store/shareStore'
 

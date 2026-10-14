@@ -3,7 +3,7 @@
  * The web `.kbview` element registry (VIEWS-SPEC §9, §10):
  *  - its JSON has the desktop export's exact shape (so vskubuno's `ComponentRegistry.FromJson`
  *    reads it unchanged) plus the web additions;
- *  - the committed `packages/ui/kbview-registry.web.json` is up to date;
+ *  - the committed `src/ui/kbview-registry.web.json` is up to date;
  *  - it conforms to the desktop registry (same names and semantics), every difference being
  *    allowlisted with a reason. The JSON diff report is written to `KBVIEW_CONFORMANCE_REPORT`
  *    (default: `kbview-conformance-report.json` in the OS temp directory).
@@ -169,8 +169,8 @@ describe('kbview registry — typography matches the host CSS', () => {
 })
 
 describe('kbview registry — committed file', () => {
-  it('packages/ui/kbview-registry.web.json is up to date (npm run build:registry)', () => {
-    const committed = readFileSync(here('../../packages/ui/kbview-registry.web.json'), 'utf8')
+  it('src/ui/kbview-registry.web.json is up to date (npm run build:registry)', () => {
+    const committed = readFileSync(here('../ui/kbview-registry.web.json'), 'utf8')
     expect(committed === webRegistryText(), 'run `npm run build:registry`').toBe(true)
   })
 })

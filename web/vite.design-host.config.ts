@@ -109,7 +109,7 @@ function projectManifest(): Plugin {
 }
 
 /** The host registry the bundled page compiles with (`entry.bundled.tsx` embeds it). */
-const HOST_REGISTRY = here('./packages/ui/kbview-registry.web.json')
+const HOST_REGISTRY = here('./src/ui/kbview-registry.web.json')
 /** Written last, by pass 2: its absence means an unfinished build. */
 const BUILD_MANIFEST = 'design-host.json'
 
@@ -145,6 +145,10 @@ const aliases = {
   '@kubuno/views': here('./src/views/index.ts'),
 }
 
+// @kubuno/ui is co-located in src/ui with its own package.json (npm `exports` -> built dist/). The `kubuno-source`
+// export condition resolves "@ui" to its source index.ts here instead of dist/ (same as the host's vite.config.ts).
+const KUBUNO_CONDITIONS = ['kubuno-source', 'module', 'browser']
+
 const versions = {
   __APP_VERSION__: JSON.stringify(pkg.version),
   __APP_BUILD__: JSON.stringify(`host-runtime-${pkg.version}`),
@@ -157,7 +161,7 @@ const bundled: UserConfig = {
   publicDir: STAGE,
   plugins: [kbview({ generateTypes: false, designServer: false }), react(), tailwindcss(), htmlAtRoot()],
   define: versions,
-  resolve: { alias: aliases },
+  resolve: { conditions: KUBUNO_CONDITIONS, alias: aliases },
   build: {
     outDir: OUT,
     emptyOutDir: true,
@@ -185,7 +189,7 @@ const project: UserConfig = {
     // React's (and every library's) development build, as a dev server would serve it.
     'process.env.NODE_ENV': JSON.stringify('development'),
   },
-  resolve: { alias: aliases },
+  resolve: { conditions: KUBUNO_CONDITIONS, alias: aliases },
   build: {
     outDir: OUT,
     emptyOutDir: false,

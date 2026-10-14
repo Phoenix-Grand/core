@@ -7,4 +7,4 @@
  * seule instance évaluée (un seul tableau de routes, un seul i18next, etc.).
  */
 export * from './index'
-export * from '../ui'
+export * from '../ui/index'

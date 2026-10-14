@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Regenerates src/views/handles.generated.ts — the element handle types of @kubuno/views (`save: Button`
-// in a code-behind) — from the web element registry (packages/ui/kbview-registry.web.json), with the
+// in a code-behind) — from the web element registry (src/ui/kbview-registry.web.json), with the
 // same generator as the compiler (kubuno-views-web, through @kubuno/views-compiler's WASM).
 //
 //   node scripts/build-views-handles.mjs           # write

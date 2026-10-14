@@ -7,9 +7,9 @@
  * shown as placeholders, their registry entries arriving with `projectComponents`.
  */
 import './bootstrap'
-import uiPackage from '../../../packages/ui/package.json'
+import uiPackage from '../../ui/package.json'
 import hostRuntimePackage from '../../../packages/host-runtime/package.json'
-import hostRegistry from '../../../packages/ui/kbview-registry.web.json?raw'
+import hostRegistry from '../../ui/kbview-registry.web.json?raw'
 import wasmUrl from '../../../packages/views-compiler/wasm/kubuno-views-web.wasm?url'
 import { startSurface } from './surface'
 

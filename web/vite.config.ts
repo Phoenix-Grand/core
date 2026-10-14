@@ -84,6 +84,11 @@ export default defineConfig({
     __APP_BUILD__:   JSON.stringify(VERSION.build),
   },
   resolve: {
+    // @kubuno/ui is co-located in src/ui with its own package.json (npm `exports` point at the built dist/). The
+    // `kubuno-source` export condition resolves "@ui" to its source index.ts instead of dist/; the other @kubuno/*
+    // alias straight to an index.ts file, so their package.json is bypassed. Applied to every build config that
+    // resolves @ui (vite.config.ts, vite.design-host.config.ts).
+    conditions: ['kubuno-source', 'module', 'browser'],
     alias: {
       '@ui': fileURLToPath(new URL('./src/ui', import.meta.url)),
       '@kubuno/sdk': fileURLToPath(new URL('./src/sdk/index.ts', import.meta.url)),

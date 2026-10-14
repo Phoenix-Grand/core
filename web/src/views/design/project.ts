@@ -6,7 +6,7 @@
  * code-behind are imported through the dev server by `importModule`, which each entry defines in a module the dev
  * server transforms (so that its dynamic imports and HMR work).
  */
-import uiPackage from '../../../packages/ui/package.json'
+import uiPackage from '../../ui/package.json'
 import { startSurface, type DesignSurface, type ProjectInfo } from './surface'
 
 /** The route of the design page on a dev server. */

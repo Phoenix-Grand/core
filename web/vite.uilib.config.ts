@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 import { resolve } from 'node:path'
 
 /**
- * Builds the publishable `@kubuno/ui` bundle (packages/ui/dist/index.js).
+ * Builds the publishable `@kubuno/ui` bundle (src/ui/dist/index.js).
  *
  * It used to be produced ad hoc, so the committed bundle drifted from the
  * source — a Button fix landed in the host but not in the published package.
@@ -23,7 +23,7 @@ export default defineConfig({
       formats: ['es'],
       fileName: () => 'index.js',
     },
-    outDir: resolve(__dirname, 'packages/ui/dist'),
+    outDir: resolve(__dirname, 'src/ui/dist'),
     emptyOutDir: true,
     // Vite 8 minifies with oxc; esbuild is no longer bundled.
     minify: true,
