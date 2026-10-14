@@ -27,6 +27,10 @@
       <BuildDependency Project="web/packages/views-compiler/Kubuno.Web.Views.Compiler.esproj" />
       <BuildDependency Project="web/packages/views-migrate/Kubuno.Web.Views.Migrate.esproj" />
     </Project>
+    <Project Path="web/src/admin/Kubuno.Web.Admin.esproj">
+      <Platform Project="AnyCPU" />
+      <Build />
+    </Project>
     <Project Path="web/src/drive/Kubuno.Web.Drive.esproj">
       <Platform Project="AnyCPU" />
       <Build />

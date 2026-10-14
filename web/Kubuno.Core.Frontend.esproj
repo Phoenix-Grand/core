@@ -9,7 +9,7 @@
     <!-- F5: the Vite dev server (proxying /api, /modules and /ws to the dev core on :8080) and Edge with the script debugger. -->
     <LaunchJsonFolder>.kubuno</LaunchJsonFolder>
     <!-- Shown by their own projects (Packages). -->
-    <DefaultItemExcludes>$(DefaultItemExcludes);src\ui\**;packages\ui\**;src\sdk\**;packages\sdk\**;src\drive\**;packages\drive\**</DefaultItemExcludes>
+    <DefaultItemExcludes>$(DefaultItemExcludes);src\admin\**;src\ui\**;packages\ui\**;src\sdk\**;packages\sdk\**;src\drive\**;packages\drive\**</DefaultItemExcludes>
   </PropertyGroup>
 
 </Project>
