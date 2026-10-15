@@ -3,11 +3,11 @@
   "version": "0.1.17",
   "description": "Kubuno shared UI primitives (@ui) — pure, framework-level visual components used by the host and every module.",
   "license": "AGPL-3.0-or-later",
-  "homepage": "https://github.com/kubuno/core/tree/main/web/packages/ui",
+  "homepage": "https://github.com/kubuno/core/tree/main/web/src/ui",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kubuno/core.git",
-    "directory": "web/packages/ui"
+    "directory": "web/src/ui"
   },
   "type": "module",
   "sideEffects": false,
@@ -21,10 +21,12 @@
   "types": "./types/index.d.ts",
   "exports": {
     ".": {
+      "kubuno-source": "./index.ts",
       "types": "./types/index.d.ts",
       "import": "./dist/index.js"
     },
     "./*": {
+      "kubuno-source": "./*",
       "types": "./types/*.d.ts",
       "import": "./dist/index.js"
     }

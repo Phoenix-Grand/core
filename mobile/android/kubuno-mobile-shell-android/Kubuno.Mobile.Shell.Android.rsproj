@@ -1,0 +1,12 @@
+<Project Sdk="Kubuno.Rust.Sdk/1.1.0">
+
+  <!-- Written by hand following "Kubuno: Generate Visual Studio Projects" (vskubuno docs/RSPROJ.md). This file is
+       yours: it is never overwritten by a later run - edit it freely, or delete it and re-run the command to get a
+       fresh default. The crate belongs to the cross-OS workspace ..\..\Cargo.toml (mobile/), found by the SDK from
+       the manifests (CargoWorkspaceRoot). It is a cdylib packaged as an APK with cargo-apk; the Android target is
+       selected at build time (x86_64-linux-android for the emulator, aarch64-linux-android for devices). -->
+  <PropertyGroup>
+    <CargoPackage>kubuno-mobile-shell-android</CargoPackage>
+  </PropertyGroup>
+
+</Project>

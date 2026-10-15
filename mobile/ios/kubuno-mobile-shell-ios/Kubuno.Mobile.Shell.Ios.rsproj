@@ -1,0 +1,12 @@
+<Project Sdk="Kubuno.Rust.Sdk/1.1.1">
+
+  <!-- Written by hand following "Kubuno: Generate Visual Studio Projects" (vskubuno docs/RSPROJ.md). This file is
+       yours: it is never overwritten by a later run - edit it freely, or delete it and re-run the command to get a
+       fresh default. The crate belongs to the cross-OS workspace ..\..\Cargo.toml (mobile/), found by the SDK from
+       the manifests (CargoWorkspaceRoot). It is the shared iOS shell (a library every module's iOS app links, plus
+       the standalone demo binary); it is built and packaged into a .app on a Mac, on Windows it only type-checks. -->
+  <PropertyGroup>
+    <CargoPackage>kubuno-mobile-shell-ios</CargoPackage>
+  </PropertyGroup>
+
+</Project>

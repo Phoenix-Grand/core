@@ -127,6 +127,12 @@ function buildManifest(): Plugin {
   return {
     name: 'kubuno-design-host-manifest',
     closeBundle() {
+      // Emit the host registry as a standalone file beside the bundle. The bundled page embeds it
+      // (entry.bundled.tsx), but the Visual Studio Toolbox / Properties window read a registry FILE
+      // (WebRegistry.Load), not the live page: a view bridged to the bundled host (a mobile `.kbview`)
+      // has no node_modules/@kubuno/ui/kbview-registry.web.json, so without this copy its Toolbox is
+      // empty. Written before the file list below so it ships in design-host.json's `files`.
+      cpSync(HOST_REGISTRY, join(OUT, 'kbview-registry.web.json'))
       const files = list(OUT, '').filter((f) => f !== BUILD_MANIFEST).sort()
       if (!files.includes('index.html') || !files.includes(`${PROJECT}/shared.json`)) {
         this.error(`[host-runtime] incomplete build in ${OUT}: run both passes (npm run build:design-host)`)

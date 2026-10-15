@@ -114,10 +114,25 @@ html.kbd-page body {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35), 0 4px 14px rgba(0, 0, 0, 0.18);
 }
 .kbd-frame[data-auto-height='true'] { min-height: 120px; }
+/* A device frame (phone / tablet): a dark bezel with rounded corners around the view, so a mobile .kbview reads as a
+   device rather than a web page. The frame's width/height are the device's (oriented), set on the element. */
+.kbd-frame[data-device='true'] {
+  box-sizing: border-box;
+  border: 12px solid var(--kbd-device-bezel, #16181d);
+  border-radius: 36px;
+  box-shadow: 0 10px 44px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+}
 /* A page: white canvas, the page's boundary dashed. Drawn on the unscaled zoom box (just outside the page, so it never
    covers the view and stays 1px at every zoom); the page itself keeps its own theme (the light / dark preview). */
 .kbd-canvas[data-document='page'] { background: var(--kbd-page-canvas); }
 .kbd-canvas[data-document='page'] .kbd-zoom { outline: 1px dashed var(--kbd-page-boundary); }
+/* A device frame sits on the neutral Visual Studio stage (not the white page sheet), so the space around a narrow
+   phone reads as a backdrop; the bezel — not a dashed line — is the device's boundary, and its shadow lifts it off
+   the stage. These win over the page rules above for a view shown as a device. */
+.kbd-canvas[data-device='true'] { background: var(--vs-canvas); }
+.kbd-canvas[data-device='true'] .kbd-zoom { outline: none; }
+.kbd-canvas[data-device='true'] .kbd-frame { box-shadow: 0 10px 44px rgba(0, 0, 0, 0.4); }
 .kbd-canvas[data-document='page'] .kbd-frame { box-shadow: none; }
 /* The view's root fills the frame (the design size is the view's surface, like a Windows Forms form): a root Panel
    whose children are all placed by X / Y has no height of its own otherwise. */

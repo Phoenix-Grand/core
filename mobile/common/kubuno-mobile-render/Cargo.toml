@@ -1,0 +1,24 @@
+[package]
+name        = "kubuno-mobile-render"
+description = "The portable (OS-neutral) Kubuno mobile renderer: lays out a `.kbcontrol`/`.kbview` with taffy (CSS flexbox), rasterises it on the CPU with tiny-skia (soft shadows, glyph-outline text, Lucide icons) and presents it on a wgpu surface. The OS shell (android/, ios/) owns the window and the wgpu surface and calls in; this crate never touches a window system."
+version.workspace    = true
+edition.workspace    = true
+license.workspace    = true
+repository.workspace = true
+
+[dependencies]
+wgpu      = { workspace = true }
+skrifa    = { workspace = true }
+log       = { workspace = true }
+taffy        = { workspace = true }
+tiny-skia    = { workspace = true }
+kurbo        = { workspace = true }
+jpeg-decoder = { workspace = true }
+
+# Parse a real `.kbview`/`.kbcontrol` with the shared grammar (same parser as web and desktop) and
+# render the resulting control tree. The renderer walks the typed AST directly.
+kubuno-desktop-views-syntax = { workspace = true }
+
+[dev-dependencies]
+# `examples/render_views` writes the rasterised views as PNG files for a quick look without a device.
+tiny-skia = { workspace = true, features = ["png-format"] }

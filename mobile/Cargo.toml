@@ -1,0 +1,65 @@
+# Kubuno Mobile: ONE Cargo workspace for every mobile OS (core repository, mobile/), independent of the
+# desktop's (../desktop), the server's (../server) and the shared server crates' (../common).
+#
+# This is the Rust-in-Visual-Studio mobile client, mirroring desktop/ (study: vskubuno/docs/
+# MOBILE-RUST-FEASIBILITY.md, Path B): the app is rendered by a portable Rust engine (vello + wgpu),
+# no Java/Kotlin UI, no Tauri/webview.
+#
+#   common/   what every mobile OS shares, complete and portable: the renderer (the `.kbcontrol`/`.kbview`
+#             shape+text vocabulary painted with vello over wgpu), independent of any window system.
+#   android/  only what Android does differently: the NativeActivity shell (android-activity, no Java), the
+#             wgpu surface built from the NDK NativeWindow, font loading, the APK (cargo-apk). Built on a
+#             machine with the Android SDK/NDK (CI / the .142 verification box).
+#   ios/      what iOS does differently (phase 2: UIKit+Metal shell; build/signature require a Mac).
+#
+# The existing Kotlin/Gradle libraries (android/core-*, settings.gradle.kts) still live here during the
+# migration; Gradle ignores this manifest and Cargo ignores Gradle's.
+[workspace]
+resolver = "2"
+members  = [
+    "common/kubuno-mobile-render",
+    "android/kubuno-mobile-shell-android",
+    "ios/kubuno-mobile-shell-ios",
+]
+
+[workspace.package]
+version    = "0.1.0"
+edition    = "2021"
+license    = "AGPL-3.0-or-later"
+repository = "https://github.com/kubuno/core"
+
+[workspace.dependencies]
+kubuno-mobile-render = { path = "common/kubuno-mobile-render" }
+
+# The shared .kbview/.kbcontrol grammar — the SAME parser the web and desktop use (platform-neutral,
+# builds for wasm32/Linux/macOS, no UI/Windows dependency). It lives in the desktop workspace
+# (../desktop), so it is referenced by relative path rather than published. This is the whole point of
+# the mobile Rust client: one view language, parsed by one grammar, rendered by native renderers.
+kubuno-desktop-views-syntax = { path = "../desktop/common/kubuno-desktop-views-syntax" }
+
+# The portable renderer stack (same versions across every crate so the wgpu types match): taffy lays the view
+# out (CSS flexbox, like the web design surface), tiny-skia rasterises it on the CPU, wgpu only presents it.
+wgpu              = "0.20"
+skrifa            = "0.22"
+taffy             = "0.6"
+tiny-skia         = { version = "0.11", default-features = false, features = ["std", "simd"] }
+kurbo             = "0.11"
+jpeg-decoder      = "0.3"
+raw-window-handle = "0.6"
+pollster          = "0.3"
+log               = "0.4"
+
+# Android shell.
+android-activity = { version = "0.6", features = ["native-activity"] }
+ndk              = "0.9"
+android_logger   = "0.14"
+
+# iOS shell (winit drives the UIKit UIWindow + the Metal layer that wgpu renders into; built/run on a Mac).
+winit            = "0.30"
+
+# The view is rasterised on the CPU: keep it fast even in debug builds (cargo-apk builds the dev profile).
+[profile.dev.package."*"]
+opt-level = 2
+
+[profile.dev.package.kubuno-mobile-render]
+opt-level = 2

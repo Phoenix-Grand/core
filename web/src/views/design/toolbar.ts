@@ -8,12 +8,27 @@ import type { KubunoThemeMode } from './bootstrap'
 
 export type WidthChoice = 'design' | 'fit' | number
 
+/** A device frame, or none (the responsive page). */
+export type DeviceChoice = 'phone' | 'tablet' | null
+
+/**
+ * Device frames in logical (CSS) pixels — the scale the shared controls are sized in (their typographic roles, paddings
+ * and gaps are theme values at this scale, like the web). The view is shown at this fixed size — scaled to fit the pane
+ * — with phone/tablet proportions and a bezel, rather than as a responsive web page. Rotating swaps width and height.
+ */
+export const DEVICE_FRAMES: Record<Exclude<DeviceChoice, null>, { w: number; h: number; label: string }> = {
+  phone: { w: 390, h: 844, label: 'Téléphone' },
+  tablet: { w: 834, h: 1194, label: 'Tablette' },
+}
+
 export interface ToolbarState {
   readonly width: WidthChoice
   readonly designWidth: number
   readonly theme: KubunoThemeMode
   readonly lang: string
   readonly design: boolean
+  readonly device: DeviceChoice
+  readonly landscape: boolean
   readonly sample: boolean
   readonly sampleTitle: string
   readonly zoom: number
@@ -25,6 +40,8 @@ export interface ToolbarHandlers {
   theme(t: KubunoThemeMode): void
   lang(l: string): void
   design(on: boolean): void
+  device(d: DeviceChoice): void
+  rotate(): void
 }
 
 export const WIDTH_PRESETS = [390, 768, 1280, 1440] as const
@@ -39,13 +56,19 @@ const DEVICE: Record<number, { icon: string; label: string }> = {
   1440: { label: 'Grand écran',         icon: glyph('<rect width="20" height="14" x="2" y="3" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/>') },
 }
 const FIT_ICON = glyph('<path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/>')
+const DEVICE_ICON: Record<'phone' | 'tablet', string> = {
+  phone: glyph('<rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/>'),
+  tablet: glyph('<rect width="16" height="20" x="4" y="2" rx="2" ry="2"/><path d="M12 18h.01"/>'),
+}
+const NO_DEVICE_ICON = glyph('<rect width="20" height="14" x="2" y="3" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/>')
+const ROTATE_ICON = glyph('<path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/>')
 
 interface Btn {
   el: HTMLButtonElement
   on: (s: ToolbarState) => boolean
 }
 
-export function createToolbar(doc: Document, languages: readonly string[], handlers: ToolbarHandlers): { el: HTMLElement; update(s: ToolbarState): void } {
+export function createToolbar(doc: Document, languages: readonly string[], handlers: ToolbarHandlers, options: { mobile?: boolean } = {}): { el: HTMLElement; update(s: ToolbarState): void } {
   const bar = doc.createElement('div')
   bar.className = 'kbd-toolbar'
   bar.setAttribute('role', 'toolbar')
@@ -79,10 +102,21 @@ export function createToolbar(doc: Document, languages: readonly string[], handl
     return b
   }
 
-  const width = group('Largeur')
-  designBtn = button(width, '—', 'Largeur de conception (DesignWidth)', (s) => s.width === 'design', () => handlers.width('design'))
-  for (const w of WIDTH_PRESETS) button(width, String(w), `${DEVICE[w].label} — ${w} px`, (s) => s.width === w, () => handlers.width(w), DEVICE[w].icon)
-  button(width, 'Ajusté', 'Ajustée au volet', (s) => s.width === 'fit', () => handlers.width('fit'), FIT_ICON)
+  // The responsive-width presets are a web concept (page breakpoints); a mobile view uses a device frame instead, so
+  // this group is left out when editing for mobile.
+  if (!options.mobile) {
+    const width = group('Largeur')
+    designBtn = button(width, '—', 'Largeur de conception (DesignWidth)', (s) => s.width === 'design', () => handlers.width('design'))
+    for (const w of WIDTH_PRESETS) button(width, String(w), `${DEVICE[w].label} — ${w} px`, (s) => s.width === w, () => handlers.width(w), DEVICE[w].icon)
+    button(width, 'Ajusté', 'Ajustée au volet', (s) => s.width === 'fit', () => handlers.width('fit'), FIT_ICON)
+  }
+
+  // A device frame (phone/tablet, portrait or landscape) instead of the responsive page — for mobile views.
+  const dev = group('Appareil')
+  button(dev, 'Aucun', 'Aucun cadre (page web responsive)', (s) => s.device === null, () => handlers.device(null), NO_DEVICE_ICON)
+  button(dev, 'Téléphone', `Cadre téléphone — ${DEVICE_FRAMES.phone.w}×${DEVICE_FRAMES.phone.h}`, (s) => s.device === 'phone', () => handlers.device('phone'), DEVICE_ICON.phone)
+  button(dev, 'Tablette', `Cadre tablette — ${DEVICE_FRAMES.tablet.w}×${DEVICE_FRAMES.tablet.h}`, (s) => s.device === 'tablet', () => handlers.device('tablet'), DEVICE_ICON.tablet)
+  const rotateBtn = button(dev, 'Pivoter', 'Pivoter (portrait / paysage)', (s) => s.landscape, () => handlers.rotate(), ROTATE_ICON)
 
   const theme = group('Thème')
   button(theme, 'Clair', 'Thème Kubuno clair (kubuno-reference)', (s) => s.theme === 'light', () => handlers.theme('light'))
@@ -113,6 +147,7 @@ export function createToolbar(doc: Document, languages: readonly string[], handl
     el: bar,
     update(s) {
       if (designBtn) designBtn.textContent = `${s.designWidth} (conception)`
+      rotateBtn.disabled = s.device === null
       for (const b of buttons) b.el.setAttribute('aria-pressed', String(b.on(s)))
       sample.dataset.on = String(s.sample)
       sample.title = s.sampleTitle

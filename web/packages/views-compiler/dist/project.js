@@ -111,19 +111,33 @@ export function scanViews(root, dirs = ['src']) {
  * The user controls of the project: one per `.kbcontrol`, rendered by its code-behind (else itself). When the
  * control names an `x:Props` type, its members are read from the code-behind (WV-7) so another view can use it
  * as a native, typed element (`props`); a control without `x:Props` keeps the earlier pass-through behaviour.
+ *
+ * A `.kbview` that declares an `x:Props` is *also* exposed as a native, typed element: an `x:Props` makes the view
+ * a parametrized component (same `ViewBase` + `.component()` shape as a control), so a container view can place it
+ * as `<ThatView .../>` instead of wrapping it in a React host. A `.kbview` with no `x:Props` is a plain screen and
+ * is not exposed (its name would only pollute the element namespace).
  */
 export function userControlsOf(root, views) {
-    return views
-        .filter((v) => v.toLowerCase().endsWith('.kbcontrol'))
-        .map((v) => {
+    const out = [];
+    for (const v of views) {
+        const lower = v.toLowerCase();
+        const isControl = lower.endsWith('.kbcontrol');
+        const isView = lower.endsWith('.kbview');
+        if (!isControl && !isView)
+            continue;
         const cb = codeBehindOf(v);
-        const module = cb ? cb.replace(/\.(ts|tsx)$/, '') : v;
         const props = extractUserControlProps(v, cb);
+        // A control is always exposed (pass-through when it has no x:Props, as before). A view is exposed only when it
+        // declares an x:Props — that is the signal that it is meant to be used as a typed component, not just a screen.
+        if (isView && !(props && props.length > 0))
+            continue;
+        const module = cb ? cb.replace(/\.(ts|tsx)$/, '') : v;
         const ref = { name: viewStem(v), module: '/' + projectPath(root, module) };
         if (props && props.length > 0)
             ref.props = props;
-        return ref;
-    });
+        out.push(ref);
+    }
+    return out;
 }
 /** Folder (under {@link GENERATED_DIR}) of the generated files of views outside the project root. */
 export const EXTERNAL_DIR = '_external';

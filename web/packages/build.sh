@@ -34,7 +34,7 @@ node packages/views-compiler/bin/kbview-tsc.js -p tsconfig.emit.json
 
 echo "==> 2b   Assembling type trees"
 # @ui : autonomous, ships ui/ only
-rm -rf "$PKG/ui/types";    mkdir -p "$PKG/ui/types";        cp -r "$FE"/dist-types/ui/*    "$PKG/ui/types/"
+rm -rf "$FE/src/ui/types";    mkdir -p "$FE/src/ui/types";        cp -r "$FE"/dist-types/ui/*    "$FE/src/ui/types/"
 # @kubuno/sdk : sdk/ + core/ (sdk imports ../core). The package is CO-LOCATED with its sources (web/src/sdk):
 # package.json/index.js/README/CHANGELOG live there, and the type tree is regenerated here (gitignored, never
 # committed — see .gitignore). The npm identity (@kubuno/sdk) and the published layout (types/, exports) are unchanged.
@@ -56,10 +56,10 @@ rm -rf "$PKG/views/types"; mkdir -p "$PKG/views/types";     cp -r "$FE"/dist-typ
 echo "==> 3/4  Building @kubuno/ui ESM bundle"
 # ⚠️ The `cd` is load-bearing, not stylistic. Vite resolves `outDir` against the
 # CURRENT WORKING DIRECTORY, not against the config file. Run from web/ as
-#     npx vite build --config packages/ui/vite.config.ts
+#     npx vite build --config src/ui/vite.config.ts
 # and the library lands in `web/dist/` — where `emptyOutDir` first WIPES the
 # host application build. Always build a package from inside the package.
-( cd "$PKG/ui" && "$FE/node_modules/.bin/vite" build )
+( cd "$FE/src/ui" && "$FE/node_modules/.bin/vite" build )
 
 echo "==> 4/4  Building @kubuno/host-runtime (bundled page, then the project-mode page + shared modules)"
 # vite.design-host.config.ts writes to an absolute outDir (packages/host-runtime/dist): safe from web/.

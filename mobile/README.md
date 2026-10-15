@@ -13,14 +13,57 @@ This folder used to be the separate `kubuno/mobile` repository; it moved here in
 ```
 mobile/
   settings.gradle.kts, build.gradle.kts, gradle/   the Gradle root (one multi-project build)
-  common/    the code shared by Android and iOS (Kotlin Multiplatform, phase 2, see below)
-  android/   the Android libraries (today: all of them)
+  Cargo.toml                                        the Rust client workspace (Visual Studio; see below)
+  common/    the code shared by Android and iOS (Kotlin libs, and the Rust renderer kubuno-mobile-render)
+  android/   the Android libraries (Kotlin), and the Rust shell kubuno-mobile-shell-android
   ios/       what iOS does differently (phase 2)
 ```
 
 The rule is the one of the whole repository: `common/` carries everything that can be shared, the OS folders only
-override. Today every library is still Android/JVM Kotlin, so everything sits in `android/`; the conversion to Kotlin
-Multiplatform moves them into `common/` (plan below).
+override. The Kotlin/JVM libraries all sit in `android/` today (the conversion to Kotlin Multiplatform moves them into
+`common/`, plan below). The Rust client (next section) follows the same rule in its own Cargo workspace.
+
+## Rust engine and shells (Visual Studio)
+
+Alongside the Kotlin libraries, `mobile/` hosts the **shared engine of the Rust mobile apps**, built from Visual
+Studio exactly like Kubuno Desktop (one Cargo workspace, `.rsproj` per crate, `common/` + per-OS folders) — Path B of
+the study `vskubuno/docs/MOBILE-RUST-FEASIBILITY.md`: the UI is a set of `.kbview` screens rendered by a portable Rust
+engine, no Java/Kotlin UI, no webview — the same "one view language, native renderers" identity as web and desktop.
+It holds **no app**: each module's mobile app lives in that module's repository (`<module>/mobile`, laid out like its
+desktop app: `common/`, `android/`, `ios/`) — Drive, Mail, Photos, Maps, Chat, Office Documents.
+
+```
+mobile/Cargo.toml                                    the mobile Rust workspace (independent of desktop/, server/)
+  common/kubuno-mobile-render         (Kubuno.Mobile.Render.rsproj)          the portable renderer: parses a
+                                      .kbview with the shared view grammar (kubuno-desktop-views-syntax, by path from
+                                      ../desktop/common), lays it out with taffy (CSS flexbox, like the web design
+                                      surface), rasterises it on the CPU with tiny-skia and presents it on a wgpu
+                                      surface; no window system
+  android/kubuno-mobile-shell-android (Kubuno.Mobile.Shell.Android.rsproj)   the Android shell, a library: a pure-Rust
+                                      NativeActivity (window, GPU surface, font, touch gestures, render loop)
+  ios/kubuno-mobile-shell-ios         (Kubuno.Mobile.Shell.Ios.rsproj)       the iOS shell, a library: winit + wgpu over
+                                      Metal (UIWindow, safe area, font, render loop); built on a Mac
+```
+
+**How a module's app plugs in.** Its `common` crate declares an `App { id, label, views, setup }` (the screens, in
+order) and, in `setup`, registers what the renderer does not provide itself: its own controls as **host controls**
+(`HostControl` + `register_host_control`: the app paints them through a `HostCanvas`, can be a full-bleed background
+layer under the floating content, draw an overlay above everything, and receives the shell's pan / pinch gestures —
+Maps' interactive map, for instance) and the **images** its screens show (`register_image`). Its `android` crate is
+the APK (its `android_main` calls `kubuno_mobile_shell_android::run(app, APP)`, and its Cargo metadata carries the
+package id, label and launcher icon); its `ios` crate's `main` calls `kubuno_mobile_shell_ios::run(APP)`.
+
+The shells keep a standalone demo (feature `standalone`, on by default) showing the renderer's sample screen
+(`views/home.kbview`), to try the engine without any module. Build it (on a machine with the Android SDK/NDK):
+
+```powershell
+$env:CARGO_TARGET_DIR = 'C:\kubuno-build\desktop-target'   # shared with desktop builds
+cd mobile/android/kubuno-mobile-shell-android
+cargo apk build --target x86_64-linux-android              # emulator; aarch64-linux-android for devices
+```
+
+The Kotlin libraries and the Rust engine coexist during the migration: Gradle ignores `Cargo.toml`, Cargo ignores
+Gradle's build files.
 
 ## The libraries
 

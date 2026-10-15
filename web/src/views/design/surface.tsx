@@ -72,7 +72,7 @@ import {
   type PageMessage,
   type UserControlInfo,
 } from './protocol'
-import { createToolbar, type ToolbarState, type WidthChoice } from './toolbar'
+import { createToolbar, DEVICE_FRAMES, type DeviceChoice, type ToolbarState, type WidthChoice } from './toolbar'
 import './surface.css'
 
 /** `GET /__kubuno_design__/project.json` (dev-server mode). */
@@ -97,6 +97,9 @@ export interface SurfaceConfig {
   readonly wasmUrl: string
   /** Where `<id>/theme.json` of the Kubuno themes are served. */
   readonly themesBase: string
+  /** The device form factor the host is editing for (`mobile`: the viewport shows a device frame, not a web page,
+   *  and the responsive-width presets are hidden). Set from the `?ff=` query of the bundled host URL. */
+  readonly formFactor?: 'mobile' | null
   /** Dev-server mode: the project description. */
   readonly loadProject?: () => Promise<ProjectInfo>
   /** Bundled mode: the host registry's text. */
@@ -113,10 +116,12 @@ interface Prefs {
   width: WidthChoice
   theme: KubunoThemeMode
   lang: string | null
+  device: DeviceChoice
+  landscape: boolean
 }
 
 function readPrefs(): Prefs {
-  const fallback: Prefs = { width: 'design', theme: 'light', lang: null }
+  const fallback: Prefs = { width: 'design', theme: 'light', lang: null, device: null, landscape: false }
   try {
     const raw = localStorage.getItem(PREFS_KEY)
     if (!raw) return fallback
@@ -125,6 +130,8 @@ function readPrefs(): Prefs {
       width: p.width === 'fit' || p.width === 'design' || (typeof p.width === 'number' && p.width > 0) ? p.width : 'design',
       theme: p.theme === 'dark' ? 'dark' : 'light',
       lang: typeof p.lang === 'string' && (DESIGN_LANGUAGES as readonly string[]).includes(p.lang) ? p.lang : null,
+      device: p.device === 'phone' || p.device === 'tablet' ? p.device : null,
+      landscape: p.landscape === true,
     }
   } catch {
     return fallback
@@ -204,6 +211,9 @@ export class DesignSurface {
   private map: LayoutMap = makeLayoutMap([])
   private containerOutlines = true
   private zoomPref = 1
+  // An explicit zoom (the toolbar's Zoom menu or Ctrl+wheel) wins everywhere, including a device frame
+  // (which otherwise fits the pane). Reset when the device changes, so switching device fits again.
+  private zoomExplicit = false
   private prefs: Prefs = readPrefs()
   private langChosen: boolean
   private drag: Drag | null = null
@@ -218,6 +228,9 @@ export class DesignSurface {
   constructor(private readonly config: SurfaceConfig) {
     this.channel = openChannel(window)
     this.langChosen = this.prefs.lang !== null
+    // A mobile view opens as a device straight away (a phone frame, not a responsive page), unless the viewer already
+    // chose a device for it.
+    if (config.formFactor === 'mobile' && this.prefs.device === null) this.prefs = { ...this.prefs, device: 'phone' }
     this.channel.post({
       type: 'surfaceInfo', version: 1, target: 'web', views: '1', ui: config.uiVersion,
       hostRuntime: config.hostRuntime, mode: config.mode,
@@ -231,7 +244,9 @@ export class DesignSurface {
       theme: (t) => void this.setTheme(t, true),
       lang: (l) => this.setLanguage(l, true),
       design: (on) => this.setDesignMode(on, true),
-    })
+      device: (d) => this.setDevice(d, true),
+      rotate: () => this.rotateDevice(true),
+    }, { mobile: config.formFactor === 'mobile' })
     this.canvas = d.createElement('div')
     this.canvas.className = 'kbd-canvas'
     this.stage = d.createElement('div')
@@ -381,6 +396,7 @@ export class DesignSurface {
         break
       case 'setZoom':
         this.zoomPref = m.zoom
+        this.zoomExplicit = m.zoom > 0
         this.applyFrameSize()
         break
       case 'setResources': {
@@ -596,7 +612,16 @@ export class DesignSurface {
     return [s?.[0] ?? null, s?.[1] ?? null]
   }
 
+  /** The device frame's size (oriented), or null when the view is shown as a responsive page. */
+  private deviceSize(): [number, number] | null {
+    if (!this.prefs.device) return null
+    const f = DEVICE_FRAMES[this.prefs.device]
+    return this.prefs.landscape ? [f.h, f.w] : [f.w, f.h]
+  }
+
   private frameWidth(): number {
+    const device = this.deviceSize()
+    if (device) return device[0]
     const [dw] = this.designSize()
     const w = this.prefs.width
     if (w === 'fit') return Math.max(240, this.canvas.clientWidth - 64)
@@ -605,23 +630,35 @@ export class DesignSurface {
   }
 
   private zoom(): number {
-    if (this.zoomPref > 0) return this.zoomPref
+    // An explicit zoom (the Zoom menu or Ctrl+wheel) wins everywhere. Otherwise a device frame fits the pane
+    // (it is tall — 844 px for a phone — so a fixed 100 % would overflow), and a responsive page honours the
+    // chosen zoom, falling back to fit-to-pane when none is set (zoomPref 0).
+    if (this.zoomExplicit && this.zoomPref > 0) return this.zoomPref
+    if (this.zoomPref > 0 && !this.prefs.device) return this.zoomPref
     const w = this.frameWidth()
     const h = this.frame.offsetHeight || 1
     return Math.max(0.1, Math.min(1, (this.canvas.clientWidth - 64) / w, (this.canvas.clientHeight - 64) / h))
   }
 
   private applyFrameSize(): void {
+    const device = this.deviceSize()
     const [, dh] = this.designSize()
     const w = this.frameWidth()
     this.frame.style.width = `${w}px`
-    if (dh) {
-      this.frame.style.height = `${dh}px`
+    // A device frame fixes the height to the device (phone/tablet proportions); otherwise DesignHeight when the view
+    // declares one, else the height follows the content (a responsive page).
+    const fixedHeight = device ? device[1] : dh;
+    if (fixedHeight) {
+      this.frame.style.height = `${fixedHeight}px`
       this.frame.dataset.autoHeight = 'false'
     } else {
       this.frame.style.height = ''
       this.frame.dataset.autoHeight = 'true'
     }
+    this.frame.dataset.device = device ? 'true' : 'false'
+    // A device frame sits on a neutral stage (not the white page canvas), so the empty space around a narrow phone
+    // reads as a backdrop rather than unused page.
+    this.canvas.dataset.device = device ? 'true' : 'false'
     this.canvas.dataset.document = designDocumentKind(this.doc?.file, this.plan)
     const chrome = this.doc?.designData?.frame
     const isControl = this.plan?.kind === 'control'
@@ -638,6 +675,23 @@ export class DesignSurface {
 
   private setWidth(w: WidthChoice, fromToolbar: boolean): void {
     this.prefs = { ...this.prefs, width: w }
+    writePrefs(this.prefs)
+    this.applyFrameSize()
+    if (fromToolbar) this.viewportChanged()
+  }
+
+  private setDevice(d: DeviceChoice, fromToolbar: boolean): void {
+    this.prefs = { ...this.prefs, device: d }
+    writePrefs(this.prefs)
+    // Changing the device fits the new frame to the pane again (drop any Ctrl+wheel / menu zoom).
+    this.zoomExplicit = false
+    this.applyFrameSize()
+    if (fromToolbar) this.viewportChanged()
+  }
+
+  private rotateDevice(fromToolbar: boolean): void {
+    if (!this.prefs.device) return
+    this.prefs = { ...this.prefs, landscape: !this.prefs.landscape }
     writePrefs(this.prefs)
     this.applyFrameSize()
     if (fromToolbar) this.viewportChanged()
@@ -701,6 +755,8 @@ export class DesignSurface {
       theme: this.prefs.theme,
       lang: this.currentLang(),
       design: this.designOn,
+      device: this.prefs.device,
+      landscape: this.prefs.landscape,
       sample,
       sampleTitle: sample
         ? `Données d'exemple : ${data ? `${stemOf(this.doc?.file ?? '')}.design.json` : ''}${data && hasDesignValues ? ' + ' : ''}${hasDesignValues ? 'attributs d:' : ''}`
@@ -994,7 +1050,7 @@ export class DesignSurface {
     })
     mo.observe(document.body, { subtree: true, childList: true, attributes: true, characterData: true })
     const ro = new ResizeObserver(() => {
-      if (this.zoomPref === 0 || this.prefs.width === 'fit') this.applyFrameSize()
+      if (this.zoomPref === 0 || this.prefs.width === 'fit' || this.prefs.device) this.applyFrameSize()
       this.scheduleMap()
     })
     ro.observe(this.frame)
@@ -1147,6 +1203,25 @@ export class DesignSurface {
   private onWheel(e: WheelEvent): void {
     if (!this.designOn) return
     e.preventDefault()
+    // Ctrl+wheel zooms (centred on the pointer), like every other visual editor; the Zoom menu follows.
+    if (e.ctrlKey) {
+      const rect = this.canvas.getBoundingClientRect()
+      const current = this.zoom()
+      const next = Math.max(0.1, Math.min(4, current * Math.exp(-e.deltaY * 0.0015)))
+      if (next !== current) {
+        const ox = e.clientX - rect.left
+        const oy = e.clientY - rect.top
+        const cx = this.canvas.scrollLeft + ox
+        const cy = this.canvas.scrollTop + oy
+        const ratio = next / current
+        this.zoomPref = next
+        this.zoomExplicit = true
+        this.applyFrameSize()
+        this.canvas.scrollLeft = cx * ratio - ox
+        this.canvas.scrollTop = cy * ratio - oy
+      }
+      return
+    }
     const dx = e.shiftKey && !e.deltaX ? e.deltaY : e.deltaX
     const dy = e.shiftKey && !e.deltaX ? 0 : e.deltaY
     // Scroll what is under the pointer (a ScrollArea of the view), else the canvas.

@@ -130,6 +130,10 @@ export const TextFieldMeta = {
       doc: 'Web only: what the browser may fill in the field (an HTML autocomplete token: current-password, new-password, email, off…).',
       docFr: "Web uniquement : ce que le navigateur peut remplir dans le champ (un jeton autocomplete HTML : current-password, new-password, email, off…).",
       to: { prop: 'autoComplete' } },
+    { name: 'Bare', kind: 'Bool', default: 'false', category: 'Appearance', webOnly: true,
+      doc: 'Web only: no chrome — no frame, no background, just the focus stroke under the text. For a title or search line that must not read as a form field (e.g. the floating search pill of a map).',
+      docFr: "Web uniquement : sans chrome — pas de cadre ni de fond, seulement le trait de focus sous le texte. Pour une ligne de titre ou de recherche qui ne doit pas ressembler à un champ de formulaire (ex. la pilule de recherche flottante d'une carte).",
+      to: { prop: 'bare' } },
   ],
   events: [
     { name: 'OnTextChanged', category: 'Property Changed', args: 'ValueChangedEventArgs', aliases: ['OnChanged'],

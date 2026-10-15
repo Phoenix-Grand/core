@@ -22,6 +22,11 @@ export declare function scanViews(root: string, dirs?: readonly string[]): strin
  * The user controls of the project: one per `.kbcontrol`, rendered by its code-behind (else itself). When the
  * control names an `x:Props` type, its members are read from the code-behind (WV-7) so another view can use it
  * as a native, typed element (`props`); a control without `x:Props` keeps the earlier pass-through behaviour.
+ *
+ * A `.kbview` that declares an `x:Props` is *also* exposed as a native, typed element: an `x:Props` makes the view
+ * a parametrized component (same `ViewBase` + `.component()` shape as a control), so a container view can place it
+ * as `<ThatView .../>` instead of wrapping it in a React host. A `.kbview` with no `x:Props` is a plain screen and
+ * is not exposed (its name would only pollute the element namespace).
  */
 export declare function userControlsOf(root: string, views: readonly string[]): UserControlRef[];
 /** Folder (under {@link GENERATED_DIR}) of the generated files of views outside the project root. */

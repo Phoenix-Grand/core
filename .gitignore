@@ -75,6 +75,9 @@ obj/
 /web/src/sdk/*.tgz
 /web/src/drive/types/
 /web/src/drive/*.tgz
+/web/src/ui/types/
+/web/src/ui/dist/
+/web/src/ui/*.tgz
 
 # .kbview web views: generated declarations and check files (never committed, WEB-VIEWS.md §2.1),
 # the cargo target of the compiler's WASM build, and the compiler package's tsc state.

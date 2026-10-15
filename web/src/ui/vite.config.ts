@@ -11,7 +11,7 @@ export default defineConfig({
     outDir: 'dist',
     emptyOutDir: true,
     lib: {
-      entry: fileURLToPath(new URL('../../src/ui/index.ts', import.meta.url)),
+      entry: fileURLToPath(new URL('./index.ts', import.meta.url)),
       formats: ['es'],
       fileName: () => 'index.js',
     },

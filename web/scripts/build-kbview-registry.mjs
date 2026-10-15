@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Writes packages/ui/kbview-registry.web.json from the `*.meta.ts` tables (VIEWS-SPEC §9), and the core
+// Writes src/ui/kbview-registry.web.json from the `*.meta.ts` tables (VIEWS-SPEC §9), and the core
 // project's own registry (its shell custom controls) src/core/shell/menus/kbview-controls.json.
 //
 //   npm run build:registry            regenerate the files
@@ -15,7 +15,7 @@ import { SHELL_CONTROLS } from '../src/core/shell/menus/controls.meta.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const outputs = [
-  { file: resolve(root, 'packages/ui/kbview-registry.web.json'), text: webRegistryText(), cmd: 'build:registry' },
+  { file: resolve(root, 'src/ui/kbview-registry.web.json'), text: webRegistryText(), cmd: 'build:registry' },
   { file: resolve(root, 'src/core/shell/menus/kbview-controls.json'), text: projectRegistryText(SHELL_CONTROLS), cmd: 'build:registry' },
 ]
 

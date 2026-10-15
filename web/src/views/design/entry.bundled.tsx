@@ -13,6 +13,10 @@ import hostRegistry from '../../ui/kbview-registry.web.json?raw'
 import wasmUrl from '../../../packages/views-compiler/wasm/kubuno-views-web.wasm?url'
 import { startSurface } from './surface'
 
+// The host (Visual Studio) states the device form factor through the page URL (`?ff=mobile` for a mobile view),
+// since the bundled page is a static build with no other channel before it starts.
+const formFactor = new URLSearchParams(location.search).get('ff') === 'mobile' ? 'mobile' : null
+
 startSurface({
   mode: 'bundled',
   uiVersion: uiPackage.version,
@@ -20,4 +24,5 @@ startSurface({
   wasmUrl,
   themesBase: './themes',
   hostRegistry,
+  formFactor,
 })

@@ -9,7 +9,69 @@ number at release time, and CI publishes that section as the GitHub Release note
 
 ## [Unreleased]
 
+### Added
+- **The Kubuno mobile apps, converted to the shared `.kbview` view language.** The mobile apps' screens —
+  previously Jetpack Compose (Kotlin) — are being rewritten as `.kbview` files in the shared view vocabulary
+  (`kubuno-mobile-render/src/views/<app>/`), the same language the web and desktop designers edit, rendered on
+  the device by the portable Rust renderer. **Drive**: the file browser (list and grid), settings, transfers,
+  account, the item action sheet, the empty-folder state, and the onboarding screens (server, login, two-factor).
+  **Mail**: the inbox, the thread reader, compose, search and settings. **Photos**: the gallery (date-sectioned
+  tile grid with the floating navigation pill), albums, the create tab, the full-screen viewer, search and
+  onboarding. **Maps**: the overlays and sheets that float over the native MapLibre map — the search pill with
+  category chips, the home sheet, the place card, the directions top card and route sheet, the turn-by-turn
+  navigation HUD, the GPX track card, the layers picker, the saved-places library and search. **Chat**: the
+  conversation list, a conversation thread with incoming/outgoing message bubbles, new chat, the Actus and
+  You tabs, the call screen and onboarding. **Documents**: the document list (tabs + grid), the reader and the
+  editor (with its formatting toolbar), and the actions, share and export sheets.
+- **The mobile renderer lays views out like the designer, with soft shadows.** `kubuno-mobile-render` now lays a
+  view out with a CSS flexbox engine (taffy) — the model of the web design surface — instead of an approximate
+  hand-written one, so the device matches the designer: no more overlapping or clipped controls in list rows,
+  chips and floating pills. It rasterises on the CPU (tiny-skia): Gaussian-blurred drop shadows instead of hard
+  blocks, label backgrounds (chips, badges), word wrapping and ellipsis, glyph-outline text (characters the font
+  lacks, such as emoji, are skipped instead of drawn as boxes), the embedded Lucide icons, and the safe-area
+  insets of the device (status bar, notch / Dynamic Island, home indicator). The view is re-rasterised only
+  when it changes. Verified live on the Android emulator, on a real iPhone and in the iOS Simulator.
+  `cargo run -p kubuno-mobile-render --example render_views -- <font.ttf> <dir>` renders every embedded view
+  to PNG for a quick look without a device.
+- **Each converted mobile app installs as its own app, with its original icon.** The shell is built once per
+  module (`KUBUNO_APP=<drive|mail|photos|maps|chat|documents>`) into a separate installable app
+  (`com.kubuno.<module>`) showing that module's screens, with the module's published web logo as its launcher
+  icon — so Drive, Mail, Photos, Maps, Chat and Documents appear and open as distinct apps.
+- **Bold text renders.** A control's `FontWeight` (SemiBold and up) now draws in a real bold face when the
+  device has one (iOS bundles one; Android uses Roboto-Bold when present), and is synthesised by stroking the
+  outlines otherwise.
+- **The map is a `MapView` control, full-screen behind the overlays, showing the same map as the web — and you
+  can pinch-zoom and drag it.** The Maps screens now use a `MapView` element for the map surface — the native
+  MapLibre control on a device — instead of a flat placeholder. It fills the whole screen and sits behind the
+  floating search pill, buttons and sheets (as in a map app), and responds to finger gestures: one finger drags
+  (pan), two fingers pinch to zoom; a quick tap still advances the demo. In the preview renderer it shows the
+  *actual* Kubuno web basemap — the OpenFreeMap "Liberty" vector style restyled with the Kubuno theme (the same
+  `applyTheme` pass the web uses) — pre-rendered at several zoom levels (compact JPEG, ~2.7 MB for the set) so
+  zooming reveals real detail, with a location pin on the idle map and a real road-following route (OSRM) with
+  origin/destination markers for
+  directions, navigation and tracks. Map data © OpenStreetMap contributors (ODbL); tiles from OpenFreeMap — the
+  control draws the attribution, kept visible above the overlays.
+- **The Photos app shows real photos.** The gallery, albums and viewer display real royalty-free images
+  (cover-fit, rounded) instead of coloured blocks, so the Photos screens look like a photo library.
+- **A pure-Rust iOS shell (`mobile/ios/kubuno-mobile-shell-ios`).** A winit + wgpu (Metal) app that drives the
+  same portable renderer and the same `.kbview` views as the Android shell, tap to advance through the apps'
+  hero screens, laid out within the device's safe area. Runs on a real iPhone and in the iOS Simulator.
+
+### Fixed
+- **Ctrl+wheel zooms the desktop view designer.** In the Visual Studio design preview of a `.kbview`
+  (the Direct2D `view_embed` surface), Ctrl+wheel now zooms the view (centred on the pointer) instead of
+  scrolling, matching the web/mobile design surface and every other visual editor; the Zoom menu follows.
+
 ### Changed
+- **Mobile: the renderer and the Android / iOS shells hold no app any more.** Every module's mobile app — Drive, Mail,
+  Photos, Maps, Chat and Office Documents — moves to its own repository (`<module>/mobile`, laid out like the desktop:
+  `common/`, `android/`, `ios/`). The renderer gains an `App` descriptor and two extension points for an app: host
+  controls (`HostControl`, `register_host_control` — a control the app draws itself through a `HostCanvas`, such as
+  Maps' interactive map, with full-bleed background layers, an overlay drawn above everything, and the shells' touch
+  gestures routed to it) and images (`register_image`, for the `Image="…"` boxes). The shells become libraries
+  (`run(app)`): each module's Android / iOS crate provides the entry point and its APK identity, instead of a build
+  script rewriting the shell. The shells' standalone demo (feature `standalone`, on by default) now shows the
+  renderer's sample screen. The iOS shell joins the Visual Studio solution (`Mobile/iOS`).
 - **Desktop HTTP clients are shared instead of rebuilt per request-maker.** Every `ApiClient` built its own
   `reqwest` client — each with its own copy of the TLS root store and connection pool (~0.5–1 MB) — and the login path
   rebuilt one on each attempt. Clients with the same configuration (user-agent, timeouts, proxy) now share a single
@@ -33,8 +95,31 @@ number at release time, and CI publishes that section as the GitHub Release note
 - **The web view designer labels the controls on its design surface.** Hovering or selecting a control now shows a small corner tag with its type (and its `x:Name` when it has one) — like a WinForms or Figma designer — so nested controls can finally be told apart; the primary selection's parent is tagged too. Faint container outlines now use a theme-aware stroke whose strength alternates with nesting depth, and all adorners follow Visual Studio's accent colour, keeping both the light and dark Visual Studio themes legible.
 - **The web view designer's hover outline matches the selection outline.** Hovering a control now draws the same box as selecting it (same thickness, size and margins); the two are told apart only by opacity, instead of the hover being a thinner stroke.
 - **The web view designer's viewport toolbar uses device icons** (phone / tablet / laptop / monitor, plus fit-to-pane) instead of pixel-width labels; the exact width stays in each button's tooltip and accessible name.
+- **The web view designer can frame a view as a device (phone / tablet, portrait or landscape).** A new "Appareil"
+  group in the viewport toolbar shows the view at a fixed device size with a bezel — phone/tablet proportions, fitted
+  to the pane and sitting on a neutral stage rather than a white page — instead of as a responsive web page, with a
+  rotate button for landscape. A view opened **for mobile** (the host states the form factor) starts as a phone
+  straight away and hides the responsive-width presets, so a mobile `.kbview` reads as a device, including when the
+  shared designer is hosted in Visual Studio for the mobile Rust client. "Aucun" returns to the responsive page; the
+  choice is remembered. (A view that declares `DesignHeight` is still framed to its own design size when no device is
+  chosen.)
 
 ### Added
+- **A pure-Rust mobile client, built from Visual Studio like Kubuno Desktop.** `mobile/` now hosts a Cargo
+  workspace (`mobile/common`, `mobile/android`, with `.rsproj` projects) for a native mobile client whose UI is
+  rendered entirely in Rust (laid out with taffy, rasterised with tiny-skia, shown through `wgpu`) — no Java/Kotlin UI, no webview. The portable renderer
+  (`kubuno-mobile-render`, in `common/`) builds scenes from the `.kbcontrol`/`.kbview` shape-and-text vocabulary and
+  paints them onto a GPU surface; the Android shell (`kubuno-mobile-shell-android`) is a pure-Rust `NativeActivity`
+  that creates that surface from the NDK window and is packaged as an APK with `cargo-apk`. The Visual Studio solution
+  (`Kubuno.Core.slnx`) now shows these under a `Mobile/Common` and `Mobile/Android` folder, mirroring disk. The
+  existing Kotlin libraries are unchanged and continue to build; the two coexist during the migration. The renderer
+  parses a real `.kbview`/`.kbcontrol` with the **shared view grammar** (`kubuno-desktop-views-syntax`, the exact
+  parser the web compiler and the desktop runtime use — one view language, not a copy) and renders the **shared
+  control vocabulary** (the registry's `Panel`/`Stack` containers with `BackColor`/`Surface`/`CornerRadius`/
+  `Elevation`, `Label` sized by its typographic `Role`, `Button` styled by its `Variant`; flow and dock layout; theme
+  tokens and hex colours; views authored in logical pixels and scaled to the device). So the same `.kbview` renders
+  the same way in the Visual Studio designer and on the device — verified on the Android emulator against the
+  designer, entirely on the GPU.
 - **A `.kbcontrol` can be used as a native, typed element inside another web view.** When a user control
   declares an `x:Props` type, the compiler now reads that type from the control's code-behind and turns each
   field into a real attribute: a value field becomes a bindable property (`File="{Binding file}"`), a function
@@ -108,6 +193,10 @@ number at release time, and CI publishes that section as the GitHub Release note
   its children. Modules whose views were classified the same way need this core.
 
 ### Fixed
+- **The `.kbview` language server builds again.** `kubuno-desktop-views-ls` failed to compile after `UserControlRef`
+  gained an `x:Props` members field: its project scan built the struct without it. The scan now leaves the members
+  empty (they are resolved from the code-behind elsewhere), so the language server — and the Visual Studio view
+  designer that depends on it — builds.
 - **Signing in works on SQLite and MySQL/MariaDB**: the sign-in stored its refresh token without an id, which only PostgreSQL fills in by default, so every password sign-in failed with "Erreur base de données" (`NOT NULL constraint failed: refresh_tokens.id`) on the other engines.
 
 - **The shared PostgreSQL extensions live in `public`, so modules migrate on a fresh install.** The first core

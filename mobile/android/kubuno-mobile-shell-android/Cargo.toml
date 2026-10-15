@@ -1,0 +1,44 @@
+[package]
+name        = "kubuno-mobile-shell-android"
+description = "The Kubuno Android shell: a pure-Rust NativeActivity (android-activity, no Java/Kotlin) that builds a wgpu surface from the NDK NativeWindow, loads a device font, and drives the portable renderer (kubuno-mobile-render). Packaged as an APK with cargo-apk."
+version.workspace    = true
+edition.workspace    = true
+license.workspace    = true
+repository.workspace = true
+publish              = false
+
+# A library every module's Android app links (`rlib`): its own crate defines the APK's `android_main` and calls
+# `run` with its app. The `cdylib` is the standalone demo APK (feature `standalone`) showing the renderer's sample
+# screen; no Java/Kotlin is compiled either way.
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[features]
+default    = ["standalone"]
+# The demo `android_main` (the renderer's sample screen). A module's Android crate depends on this shell with
+# `default-features = false`.
+standalone = []
+
+[dependencies]
+kubuno-mobile-render = { workspace = true }
+android-activity     = { workspace = true }
+ndk                  = { workspace = true }
+wgpu                 = { workspace = true }
+raw-window-handle    = { workspace = true }
+pollster             = { workspace = true }
+log                  = { workspace = true }
+android_logger       = { workspace = true }
+
+# cargo-apk packaging of the standalone demo APK (package id, SDK levels, label). A module's APK carries its own
+# metadata in its Android crate.
+[package.metadata.android]
+package = "com.kubuno.mobile"
+# Emulator target for the .142 verification box; aarch64-linux-android is added for real devices.
+build_targets = ["x86_64-linux-android"]
+
+[package.metadata.android.sdk]
+min_sdk_version    = 24
+target_sdk_version = 35
+
+[package.metadata.android.application]
+label = "Kubuno"

@@ -1059,7 +1059,13 @@ pub fn main() -> ExitCode {
             }
             if frame_drag.is_none() {
                 let (wx, wy) = f.wheel_dip();
-                if f.mods.shift {
+                if f.mods.ctrl && wy != 0.0 {
+                    // Ctrl+wheel zooms (like the web/mobile surface and every other visual editor): scale the
+                    // current factor (the explicit zoom, or the current fit) and store it as the explicit request,
+                    // which the frame below re-applies through host::set_zoom so the Zoom menu follows.
+                    let current = if zoom_request.get() > 0.0 { zoom_request.get() } else { host::zoom() };
+                    zoom_request.set((current * (-wy * 0.0015).exp()).clamp(0.1, 4.0));
+                } else if f.mods.shift {
                     scroll.0 += wx + wy;
                 } else {
                     scroll.0 += wx;

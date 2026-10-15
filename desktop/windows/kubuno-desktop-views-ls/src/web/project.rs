@@ -226,7 +226,9 @@ impl WebProject {
                     .filter_map(|v| {
                         let name = v.file_stem()?.to_str()?.to_string();
                         let module_file = code_behind_of(v).map(|cb| cb.with_extension("")).unwrap_or_else(|| v.clone());
-                        Some(UserControlRef { name, module: format!("/{}", project_path(&self.root, &module_file)) })
+                        // The x:Props members are resolved from the code-behind elsewhere (WV-7); this scan only
+                        // lists the controls, so props start empty ("empty when it has none").
+                        Some(UserControlRef { name, module: format!("/{}", project_path(&self.root, &module_file)), props: Vec::new() })
                     })
                     .collect();
                 self.session.set_user_controls(&controls);

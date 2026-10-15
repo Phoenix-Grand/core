@@ -1,0 +1,39 @@
+# The Kubuno iOS shell: a pure-Rust app (winit + wgpu over Metal) that drives the same portable renderer
+# (kubuno-mobile-render) and the same .kbview views as the Android shell. Built and run on a Mac (Xcode SDK,
+# iOS Simulator); packaged into a .app bundle and installed with `xcrun simctl`.
+[package]
+name        = "kubuno-mobile-shell-ios"
+description = "The Kubuno iOS shell: a pure-Rust app (winit + wgpu/Metal) driving the portable kubuno-mobile-render renderer, packaged as a .app for the iOS Simulator."
+version.workspace    = true
+edition.workspace    = true
+license.workspace    = true
+repository.workspace = true
+publish              = false
+
+# A library every module's iOS app links: its own crate's `main` calls `run` with its app.
+[lib]
+path = "src/lib.rs"
+
+# The standalone demo app: the renderer's sample screen.
+[[bin]]
+name              = "kubuno-mobile-shell-ios"
+path              = "src/main.rs"
+required-features = ["standalone"]
+
+[features]
+default    = ["standalone"]
+# The demo binary (the renderer's sample screen). A module's iOS crate depends on this shell with
+# `default-features = false`.
+standalone = []
+
+[dependencies]
+kubuno-mobile-render = { workspace = true }
+winit                = { workspace = true }
+wgpu                 = { workspace = true }
+raw-window-handle    = { workspace = true }
+pollster             = { workspace = true }
+log                  = { workspace = true }
+
+# Read UIKit's safeAreaInsets from the window's UIView (the same objc2 winit 0.30 uses).
+[target.'cfg(target_os = "ios")'.dependencies]
+objc2 = "0.5"
