@@ -1169,18 +1169,18 @@ impl ShellWindow {
             None
         });
         let queue = self.deferred.clone();
-        self.on_message(WM_SHELL_WORK, move |m| {
+        self.on_message(WM_SHELL_WORK, move |_| {
             let work = queue.borrow_mut().pop_front();
             match work {
                 Some(Deferred::PickLoginFolder { current }) => {
-                    if let Some(folder) = crate::platform::folder_picker::pick(m.hwnd, Resources::login_folder_picker_title(), &current) {
+                    if let Some(folder) = pick_folder(Resources::login_folder_picker_title(), &current) {
                         drop(ui.begin_invoke(move |w: &mut ShellWindow| {
                             w.login_page.with(|p| p.set_folder(&folder));
                         }));
                     }
                 }
                 Some(Deferred::MoveFolder { id, folder }) => {
-                    if let Some(target) = crate::platform::folder_picker::pick(m.hwnd, Resources::move_folder_picker_title(), &folder) {
+                    if let Some(target) = pick_folder(Resources::move_folder_picker_title(), &folder) {
                         drop(ui.begin_invoke(move |w: &mut ShellWindow| w.move_folder(&id, &folder, &target)));
                     }
                 }
@@ -1371,6 +1371,21 @@ fn accounts() -> Vec<AccountInfo> {
             id: c.id,
         })
         .collect()
+}
+
+/// Asks the user for a folder (the system's Explorer dialog, owned by the active window), starting at `current` when
+/// it is not empty. `None` when the dialog is dismissed - a cancel is not an error.
+fn pick_folder(title: &str, current: &str) -> Option<String> {
+    let mut dialog = FolderBrowserDialog::new();
+    dialog.description = title.to_string();
+    if !current.trim().is_empty() {
+        dialog.selected_path = Some(current.into());
+    }
+    if dialog.show_dialog() == DialogResult::Ok {
+        dialog.selected_path.map(|p| p.to_string_lossy().into_owned())
+    } else {
+        None
+    }
 }
 
 #[cfg(test)]
