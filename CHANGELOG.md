@@ -56,6 +56,15 @@ number at release time, and CI publishes that section as the GitHub Release note
 - **A pure-Rust iOS shell (`mobile/ios/kubuno-mobile-shell-ios`).** A winit + wgpu (Metal) app that drives the
   same portable renderer and the same `.kbview` views as the Android shell, tap to advance through the apps'
   hero screens, laid out within the device's safe area. Runs on a real iPhone and in the iOS Simulator.
+- **The mobile apps respond to the finger and update themselves.** The renderer now drives real interaction, not
+  just a slideshow: a view's elements carry their name and their handlers (`OnClick="…"`), a tap is hit-tested to
+  the top-most element under the finger and routed to the app, which can change which screen is shown (the shells
+  ask the app for the current screen each frame and redraw). Labels and lists are data-driven — a `Text="{Bind …}"`
+  resolves against the app's data context and a `Repeater Items="…"` expands its template once per item, so a screen
+  can show a changing status line and a changing list of rows. Background work (a server call) runs off the UI
+  thread and posts its result back through a UI task queue that wakes the shell (Android's native waker, iOS's
+  event-loop proxy); the next frame picks up the new data and re-renders — no polling, no touch needed. These are
+  the engine foundations the apps' real behaviour (account, network, live map, logic) will build on.
 
 ### Fixed
 - **Ctrl+wheel zooms the desktop view designer.** In the Visual Studio design preview of a `.kbview`

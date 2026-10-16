@@ -91,6 +91,8 @@ impl ApplicationHandler for Shell {
                 }
             }
             WindowEvent::RedrawRequested => {
+                // Apply any results background work posted back to the UI thread before drawing.
+                kubuno_mobile_render::run_ui_tasks();
                 let idx = self.app.view_index.map(|f| f().min(self.app.views.len() - 1)).unwrap_or(self.idx);
                 let view = self.app.views[idx];
                 if let Some(g) = self.gpu.as_mut() {
@@ -100,6 +102,14 @@ impl ApplicationHandler for Shell {
                 }
             }
             _ => {}
+        }
+    }
+
+    // A worker thread posted a UI task and woke the loop (through the event-loop proxy): run it and redraw.
+    fn user_event(&mut self, _event_loop: &ActiveEventLoop, _event: ()) {
+        kubuno_mobile_render::run_ui_tasks();
+        if let Some(g) = self.gpu.as_ref() {
+            g.window.request_redraw();
         }
     }
 }
@@ -293,6 +303,11 @@ pub fn run(app: App) {
     // Logs show up in `xcrun simctl spawn booted log stream` / the run output.
     let event_loop = EventLoop::new().expect("create event loop");
     event_loop.set_control_flow(ControlFlow::Wait);
+    // Background work posts its result to the UI thread; waking the proxy makes the loop run it at once.
+    let proxy = event_loop.create_proxy();
+    kubuno_mobile_render::set_waker(move || {
+        let _ = proxy.send_event(());
+    });
     let mut shell = Shell { gpu: None, app, idx: 0 };
     event_loop.run_app(&mut shell).expect("run app");
 }

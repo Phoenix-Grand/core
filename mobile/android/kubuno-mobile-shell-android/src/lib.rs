@@ -58,6 +58,10 @@ pub fn run(app: AndroidApp, kubuno_app: App) {
     log::info!("KUBUNO: {} started (pure-Rust NativeActivity shell)", kubuno_app.label);
     // Register the app's host controls before the first frame.
     (kubuno_app.setup)();
+    // Background work (network calls) posts its result to the UI thread; its waker nudges this loop so the result is
+    // applied at once instead of waiting for the next poll.
+    let waker = app.create_waker();
+    kubuno_mobile_render::set_waker(move || waker.wake());
 
     let mut gpu: Option<Gpu> = None;
     let mut quit = false;
@@ -71,6 +75,8 @@ pub fn run(app: AndroidApp, kubuno_app: App) {
     let mut touch = Touch::default();
 
     while !quit {
+        // Apply any results background work posted back to the UI thread (updates the app's state / data context).
+        kubuno_mobile_render::run_ui_tasks();
         // The app chooses the screen from its own state when it is wired (view_index); otherwise the shell cycles.
         let view_now = kubuno_app.view_index.map(|f| f().min(views.len() - 1)).unwrap_or(view_idx);
         let current = views[view_now];
