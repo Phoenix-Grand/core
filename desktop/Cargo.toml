@@ -42,6 +42,8 @@ members  = [
     "windows/kubuno-desktop-app-storage-components",
     "windows/kubuno-desktop-controls",
     "windows/kubuno-desktop-data",
+    # The control gallery: the sample application of the design system (UI reference).
+    "windows/kubuno-desktop-gallery",
     "windows/kubuno-desktop-data-tool",
     "windows/kubuno-desktop-header-data",
     "windows/kubuno-desktop-print",

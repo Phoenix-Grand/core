@@ -233,7 +233,7 @@ Windows shell, from `desktop/`:
 
 ```bash
 cargo build --release -p kubuno-desktop-shell     # → target/release/kubuno-desktop.exe
-cargo run   -p kubuno-desktop-ui --example gallery  # the component gallery (UI reference)
+cargo run   -p kubuno-desktop-gallery               # the control gallery, a sample app of the core (UI reference)
 ```
 
 Every exe links the UI framework (`kubuno-desktop-ui`) and Rust's `std` statically: it runs

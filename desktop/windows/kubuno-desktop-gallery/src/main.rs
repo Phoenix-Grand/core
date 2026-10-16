@@ -12,8 +12,8 @@
 //! keyboard; Tab / Shift+Tab move the focus within the page.
 //!
 //! ```text
-//! cargo run -p kubuno-desktop-ui --example gallery -j 1
-//! cargo run -p kubuno-desktop-ui --example gallery -j 1 -- --page fields   # open on a page
+//! cargo run -p kubuno-desktop-gallery -j 1
+//! cargo run -p kubuno-desktop-gallery -j 1 -- --page fields   # open on a page
 //! ```
 //!
 //! `KUBUNO_UI_DARK=1` opens in the dark palette - several tokens differ, and a

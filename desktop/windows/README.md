@@ -74,7 +74,7 @@ From `desktop/` (the workspace root):
 ```powershell
 cargo build --release -p kubuno-desktop-shell     # → target\release\kubuno-desktop.exe (the shell)
 cargo test  -p kubuno-desktop-shell               # interaction geometry, text fields
-cargo run   -p kubuno-desktop-ui --example gallery  # component gallery (UI reference)
+cargo run   -p kubuno-desktop-gallery               # control gallery, a sample app of the core (UI reference)
 ```
 
 **Build directory.** When the repository lives on a network share, the MSVC linker

@@ -619,7 +619,7 @@ impl ViewNode for MaskedFieldNode {
 
 // ─────────────────────────────────────────────────────────────────────────
 // Dropdown - a real `host::popup` list, exactly as
-// `kubuno-desktop-ui/examples/gallery/pages/editors.rs`'s own interactive column
+// `kubuno-desktop-gallery/src/pages/editors.rs`'s own interactive column
 // drives one (`Dropdown::place_drop_down` / `drop_down_paint_bounds` /
 // `paint_drop_down_at`, its list in a popup of its own).
 // ─────────────────────────────────────────────────────────────────────────
@@ -899,7 +899,7 @@ impl ViewNode for DropdownNode {
 // ─────────────────────────────────────────────────────────────────────────
 // ComboBox - the same real popup treatment as Dropdown, over
 // `kubuno_desktop_ui::lists::ComboBox` instead (a select-only ARIA combobox; see
-// `kubuno-desktop-ui/examples/gallery/pages/lists.rs`'s own interactive column).
+// `kubuno-desktop-gallery/src/pages/lists.rs`'s own interactive column).
 // ─────────────────────────────────────────────────────────────────────────
 
 component! {
@@ -1192,7 +1192,7 @@ impl ViewNode for ComboBoxNode {
 // ─────────────────────────────────────────────────────────────────────────
 // DatePicker - the calendar panel in a real `host::popup`, via
 // `DatePicker::popup_drop_down` itself (it does its own `.clone()` +
-// `host::popup`, exactly as `kubuno-desktop-ui/examples/gallery/pages/datetime.rs`'s
+// `host::popup`, exactly as `kubuno-desktop-gallery/src/pages/datetime.rs`'s
 // interactive column relies on).
 // ─────────────────────────────────────────────────────────────────────────
 
@@ -1260,8 +1260,8 @@ fn parse_iso_date(s: &str) -> Option<Date> {
 }
 
 /// Handles a click on the field: the check box toggles, a spin button steps
-/// the selected segment, the value selects the segment under the pointer and
-/// - when the field has a panel - toggles it. The exact behaviour
+/// the selected segment, the value selects the segment under the pointer and -
+/// when the field has a panel - toggles it. The exact behaviour
 /// `kubuno-desktop-ui`'s own gallery (`datetime.rs`'s `click_field`) drives the real
 /// widget with; reproduced here rather than reached through (examples are
 /// not part of the crate's public API).

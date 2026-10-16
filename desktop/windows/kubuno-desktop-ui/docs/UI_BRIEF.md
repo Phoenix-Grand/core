@@ -96,7 +96,7 @@ did. Do not invent a number.
   replica.
 * Unit tests: measurement, hit-testing, state transitions, and - where a
   predecessor exists - geometry equality with it.
-* A gallery page at `examples/gallery/pages/<family>.rs` exposing
+* A gallery page at `kubuno-desktop-gallery/src/pages/<family>.rs` (the core's gallery sample) exposing
   `pub fn draw(c: &dyn Canvas, f: &Frame)`, showing every variant × state, and
   the old/new pair where one exists.
 * Doc comments that say **where each number came from**.

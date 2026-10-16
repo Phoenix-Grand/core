@@ -114,6 +114,11 @@ number at release time, and CI publishes that section as the GitHub Release note
   scrolling, matching the web/mobile design surface and every other visual editor; the Zoom menu follows.
 
 ### Changed
+- **The desktop control gallery is a sample application of the core.** The gallery that shows every general control of
+  the desktop design system (`kubuno-desktop-ui` and its WinForms replicas) in every variant and state, light and
+  dark, was an example hidden inside the `kubuno-desktop-ui` crate. It is now its own project,
+  `desktop/windows/kubuno-desktop-gallery`, listed in the Visual Studio solution under `Desktop/Samples` and run with
+  `cargo run -p kubuno-desktop-gallery` (the UI parity capture script follows).
 - **Mobile: the renderer and the Android / iOS shells hold no app any more.** Every module's mobile app - Drive, Mail,
   Photos, Maps, Chat and Office Documents - moves to its own repository (`<module>/mobile`, laid out like the desktop:
   `common/`, `android/`, `ios/`). The renderer gains an `App` descriptor and two extension points for an app: host

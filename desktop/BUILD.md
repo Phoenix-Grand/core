@@ -32,7 +32,7 @@ From `desktop/`:
 ```bash
 cargo build --release -p kubuno-desktop-shell       # → target/release/kubuno-desktop.exe (the shell)
 cargo test  -p kubuno-desktop-shell -p kubuno-desktop-shell-common
-cargo run   -p kubuno-desktop-ui --example gallery  # the component gallery (UI reference)
+cargo run   -p kubuno-desktop-gallery               # the control gallery, a sample app of the core (UI reference)
 cargo run   -p kubuno-desktop-shell -- --sample     # the offline sample: no server, nothing registered
 ```
 

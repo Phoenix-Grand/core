@@ -106,11 +106,11 @@ if ($Exe) {
     # gallery used to silently drop -Page and capture whatever page came first,
     # which reads as "my page renders like the buttons page" rather than as a
     # tooling slip.
-    $isGallery = (Split-Path -Leaf $exe) -eq 'gallery.exe'
+    $isGallery = (Split-Path -Leaf $exe) -eq 'kubuno-desktop-gallery.exe'
 }
 else {
-    $exe = Join-Path $env:CARGO_TARGET_DIR 'debug\examples\gallery.exe'
-    if (-not (Test-Path $exe)) { $exe = Join-Path $root 'target\debug\examples\gallery.exe' }
+    $exe = Join-Path $env:CARGO_TARGET_DIR 'debug\kubuno-desktop-gallery.exe'
+    if (-not (Test-Path $exe)) { $exe = Join-Path $root 'target\debug\kubuno-desktop-gallery.exe' }
     $isGallery = $true
 }
 if (-not (Test-Path $exe)) { Write-Error "$exe not found - build it first"; exit 2 }

@@ -1,0 +1,37 @@
+[package]
+name        = "kubuno-desktop-gallery"
+description = "The Kubuno desktop control gallery: a sample application of the core showing every general control of the design system (kubuno-desktop-ui and its WinForms replicas, kubuno-desktop-controls) in every variant and state, light and dark - the UI reference modules build their own user controls from."
+version.workspace    = true
+edition.workspace    = true
+license.workspace    = true
+repository.workspace = true
+publish              = false
+
+[[bin]]
+name = "kubuno-desktop-gallery"
+path = "src/main.rs"
+
+[dependencies]
+kubuno-desktop-ui                 = { workspace = true }
+kubuno-desktop-controls           = { workspace = true }
+kubuno-drive-desktop-app-controls = { workspace = true }
+
+# Same version and features as kubuno-desktop-ui (the gallery drives the same Win32 / Direct2D surfaces).
+[dependencies.windows]
+version  = "0.62"
+features = [
+    "Win32_Foundation",
+    "Win32_Graphics_Direct2D",
+    "Win32_Graphics_Direct2D_Common",
+    "Win32_Graphics_DirectWrite",
+    "Win32_Graphics_Dxgi_Common",
+    "Win32_Graphics_Gdi",
+    "Win32_UI_Input_KeyboardAndMouse",
+    "Win32_UI_WindowsAndMessaging",
+    "Win32_UI_HiDpi",
+    "Win32_System_Threading",
+    "Win32_System_SystemInformation",
+    "Win32_System_Registry",
+    "Win32_Graphics_Dwm",
+    "Win32_System_LibraryLoader",
+]
