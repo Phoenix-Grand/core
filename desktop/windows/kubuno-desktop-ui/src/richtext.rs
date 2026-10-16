@@ -96,9 +96,9 @@ pub mod richtext_metrics {
     /// The marker (`list-style-position: outside`) ends this far before the
     /// item's text - the space a browser puts after « • » and « 1. ».
     pub const MARKER_GAP: f32 = space::XS;
-    /// `outline: 3px` of `.kb-field-focus:has(:focus-visible)`, drawn inward so
-    /// the ring stays inside the bounds the caller gave.
-    pub const FOCUS_OUTLINE: f32 = 3.0;
+    /// `outline: 3px` of `.kb-field-focus:has(:focus-visible)`, painted by
+    /// [`crate::focus::paint_field_outline`] (2 DIP of it outside the field).
+    pub const FOCUS_OUTLINE: f32 = crate::focus::FIELD_OUTLINE;
     /// The caret: one DIP, `currentColor` (the web never sets `caret-color`).
     pub const CARET_W: f32 = 1.0;
     /// The browser's highlight: `--color-primary` at 35 % - the same recipe as
@@ -2738,7 +2738,7 @@ impl Widget for RichTextBox {
         c.stroke_rounded(&bounds, radius::SM, &line);
         if state.show_focus_ring() && !disabled {
             let ring = if self.invalid { &t.danger } else { &t.accent };
-            c.stroke_rounded_w(&bounds, radius::SM, ring, m::FOCUS_OUTLINE);
+            crate::focus::paint_field_outline(c, bounds, radius::SM, ring);
         }
     }
 

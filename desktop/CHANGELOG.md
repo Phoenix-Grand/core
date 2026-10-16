@@ -9,6 +9,16 @@ number at release time, and CI publishes that section as the GitHub Release note
 
 ## [Unreleased]
 
+### Fixed
+- **The focus outline of text fields and other inputs now looks like the web's.** It was drawn entirely inside the
+  field, which squared off its inner corners and ate into the content. It now matches `.kb-field-focus`: a 3 DIP band
+  that covers the border and extends 2 DIP outside the field, with rounded corners concentric with the field's.
+  This applies to text fields, text areas, search fields, rich text, numeric and domain fields, date and time
+  pickers, combo boxes, list boxes, editable labels, dropdowns and the inline rename box
+  (`kubuno_desktop_ui::focus::paint_field_outline`).
+- The focus ring of rich-text toolbar buttons is now drawn outside the button (`ring-2`), as on the web, instead of
+  inside it.
+
 ## [0.1.6-alpha] - 2026-10-16
 
 ### Added

@@ -34,7 +34,34 @@
 
 use kubuno_desktop_controls::host::{self, vk, Frame, InputEvent, Modifiers};
 
+use kubuno_drive_desktop_app_controls::Canvas;
+use windows::Win32::Graphics::Direct2D::Common::D2D1_COLOR_F;
+
 use crate::{Rect, WidgetState};
+
+/// `.kb-field-focus` (`core/web/src/index.css`): `outline: 3px solid`.
+pub const FIELD_OUTLINE: f32 = 3.0;
+/// `.kb-field-focus`: `outline-offset: -1px` - the band starts one DIP inside
+/// the border box, so it covers the 1 DIP border and spills 2 DIP outside.
+pub const FIELD_OUTLINE_OFFSET: f32 = -1.0;
+/// How far the field outline reaches past the field's border box.
+pub const FIELD_OUTLINE_OUTSET: f32 = FIELD_OUTLINE + FIELD_OUTLINE_OFFSET;
+/// How far the field outline reaches inside the field's border box: only the
+/// border, never the content.
+pub const FIELD_OUTLINE_INSET: f32 = -FIELD_OUTLINE_OFFSET;
+
+/// Paints the `.kb-field-focus` outline of a field whose border box is `field`,
+/// with corner radius `radius` (`colour`: primary, or danger for an invalid
+/// field).
+///
+/// Like the browser's outline, the band lies mostly OUTSIDE the field: it
+/// covers the border and grows 2 DIP out, its corners concentric with the
+/// field's (outer radius `radius + 2`, inner `radius - 1`). Drawing it inside
+/// the bounds instead squares the inner corners off and eats into the content.
+pub fn paint_field_outline(c: &dyn Canvas, field: Rect, radius: f32, colour: &D2D1_COLOR_F) {
+    let out = FIELD_OUTLINE_OUTSET;
+    c.stroke_rounded_w(&field.inflate(out, out), radius + out, colour, FIELD_OUTLINE);
+}
 
 /// A focusable control's identity: stable across frames, cheap to compare.
 ///

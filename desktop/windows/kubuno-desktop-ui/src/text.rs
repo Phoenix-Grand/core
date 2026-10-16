@@ -99,10 +99,10 @@ const LINE: f32 = 20.0;
 /// [`FOCUS_OUTLINE`], which is what `.kb-field-focus` says today.
 pub const FOCUS_RING: f32 = 2.0;
 /// `.kb-field-focus:focus-visible { outline: 3px solid var(--color-primary);
-/// outline-offset: -1px }` - drawn INWARD here, so the field never paints
-/// outside the bounds it was given; it covers the 1 DIP border, which the web
-/// recolours to the same primary.
-pub const FOCUS_OUTLINE: f32 = 3.0;
+/// outline-offset: -1px }` - painted by [`crate::focus::paint_field_outline`]:
+/// it covers the 1 DIP border (which the web recolours to the same primary)
+/// and spills 2 DIP outside the field, as in a browser.
+pub const FOCUS_OUTLINE: f32 = crate::focus::FIELD_OUTLINE;
 /// A leading/trailing glyph. The web sizes these per call site (14, 15 or 16);
 /// the desktop draws every inline icon at 16, as the omnibar does.
 const ICON: f32 = 16.0;
@@ -1284,7 +1284,7 @@ fn paint_edge(c: &dyn Canvas, bounds: Rect, edge: &Edge, ground: &D2D1_COLOR_F) 
         c.stroke_rounded(&bounds, edge.radius, &faded(line));
     } else if edge.focused {
         let ring = if edge.invalid { &t.danger } else { &t.accent };
-        c.stroke_rounded_w(&bounds, edge.radius, ring, FOCUS_OUTLINE);
+        crate::focus::paint_field_outline(c, bounds, edge.radius, ring);
     } else {
         c.stroke_rounded(&bounds, edge.radius, line);
     }

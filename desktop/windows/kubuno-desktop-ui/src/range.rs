@@ -126,9 +126,6 @@ const SPIN_COLUMN: f32 = 24.0;
 const SPIN_GLYPH: f32 = 11.0;
 /// `@ui/Input`: `px-3`.
 const FIELD_PAD_X: f32 = 12.0;
-/// `@ui/Input`: `focus:ring-2` - the accent ring of a focused field, drawn
-/// inward. Same number `kubuno_drive_desktop_app_controls::edit_box` uses for the same ring.
-const FIELD_FOCUS_RING: f32 = 2.0;
 /// A one-DIP rule: `border-l` between the field and its spin column, `border-b`
 /// between the two spin buttons.
 const FIELD_RULE: f32 = 1.0;
@@ -154,7 +151,7 @@ const SLIDER_DISABLED_OPACITY: f32 = 0.6;
 /// straight on the accent disc would merge with it and vanish (the defect the
 /// composition audit caught). The slider reserves this much room around the
 /// thumb so the ring never leaves the slider's bounds.
-const SLIDER_FOCUS_RING: f32 = FIELD_FOCUS_RING;
+const SLIDER_FOCUS_RING: f32 = 2.0;
 
 /// `@ui/RangeSlider`'s value bubble: `px-1.5 py-0.5 text-xs` - 6 / 2 DIP of
 /// padding around a 12 DIP line of `text-xs` (`line-height: 1rem` = 16).
@@ -1663,7 +1660,7 @@ fn paint_field_frame(canvas: &dyn Canvas, bounds: Rect, look: FieldLook, state: 
     // browser's `:focus-visible` answers yes for every text field.
     if state.focused && !state.disabled {
         let ring = if look.invalid { t.danger } else { t.accent };
-        canvas.stroke_rounded_w(&bounds, radius::SM, &ring, FIELD_FOCUS_RING);
+        crate::focus::paint_field_outline(canvas, bounds, radius::SM, &ring);
     } else {
         let border = if look.invalid { t.danger } else { t.card_stroke };
         canvas.stroke_rounded(&bounds, radius::SM, &faded(border, k));
@@ -2254,8 +2251,8 @@ impl NumericField {
         let text = edit.text();
 
         let cy = (bounds.top + bounds.bottom) / 2.0;
-        let line_top = (cy - EDIT_LINE_BOX / 2.0).max(bounds.top + FIELD_FOCUS_RING);
-        let line_bottom = (cy + EDIT_LINE_BOX / 2.0).min(bounds.bottom - FIELD_FOCUS_RING);
+        let line_top = (cy - EDIT_LINE_BOX / 2.0).max(bounds.top + crate::focus::FIELD_OUTLINE_INSET);
+        let line_bottom = (cy + EDIT_LINE_BOX / 2.0).min(bounds.bottom - crate::focus::FIELD_OUTLINE_INSET);
 
         // The clip leaves one caret width past the right edge, so a caret at
         // the very end of an overflowing number stays visible.

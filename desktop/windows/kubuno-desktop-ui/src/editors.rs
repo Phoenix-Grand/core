@@ -104,7 +104,7 @@ use crate::display::{Label, Role};
 use crate::lists::{list_metrics, menu_metrics};
 use crate::metrics::{control, height, radius, space, SHADOW_GREY, SHADOW_MENU};
 use crate::range::NumericField;
-use crate::text::{TextField, FOCUS_RING};
+use crate::text::TextField;
 use crate::graphics::owner_draw::{self, DrawItemEventArgs, DrawItemState, DrawMode};
 use crate::graphics::Graphics;
 use crate::widget::{Widget, WidgetState};
@@ -139,9 +139,9 @@ pub mod dropdown_metrics {
     pub const CARET_GAP: f32 = 4.0;
     /// `borderRadius: 'var(--radius-md)'`, which this system resolves to 4.
     pub const RADIUS: f32 = radius::SM;
-    /// `boxShadow: 0 0 0 2px PRIMARY` on an open or focused trigger - the same
-    /// 2 DIP ring `@ui/Input` wears (`focus:ring-2`).
-    pub const FOCUS_RING: f32 = 2.0;
+    /// `outline: 3px solid PRIMARY; outline-offset: -1px` on an open or focused
+    /// trigger - the `.kb-field-focus` outline `@ui/Input` wears.
+    pub const FOCUS_RING: f32 = crate::focus::FIELD_OUTLINE;
     /// `opacity: disabled ? 0.5 : 1`. Note this is **0.5**, not the 0.6
     /// `@ui/Input` fades to: the two web files really do differ.
     pub const DISABLED_ALPHA: f32 = 0.5;
@@ -530,12 +530,23 @@ fn paint_box(
     }
 }
 
-/// The accent focus ring every selector of the family wears on
-/// `:focus-visible` - the same 2 DIP ring `@ui/Input` draws
-/// ([`crate::text::FOCUS_RING`]).
+/// The accent focus stroke every selector of the family wears when open or on
+/// `:focus-visible`: `outline: 3px solid PRIMARY; outline-offset: -1px` on
+/// `Dropdown.tsx` - the `.kb-field-focus` outline of `@ui/Input`.
 fn paint_focus_ring(c: &dyn Canvas, r: Rect, corner: f32) {
-    c.stroke_rounded_w(&r, corner, &c.theme().accent, FOCUS_RING);
+    crate::focus::paint_field_outline(c, r, corner, &c.theme().accent);
 }
+
+/// `Toolbar.tsx`: `focus-visible:ring-2 ring-primary` - a 2 DIP box-shadow
+/// OUTSIDE the cell, its corners grown by the same amount so it stays
+/// concentric.
+fn paint_toolbar_ring(c: &dyn Canvas, cell: Rect, corner: f32) {
+    let w = TOOLBAR_FOCUS_RING;
+    c.stroke_rounded_w(&cell.inflate(w, w), corner + w, &c.theme().accent, w);
+}
+
+/// `ring-2`: the toolbar cells' focus ring width.
+const TOOLBAR_FOCUS_RING: f32 = 2.0;
 
 /// What a keystroke did to a selector with a dropped list.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -1855,7 +1866,7 @@ impl Widget for Editable {
         }
         // `kb-field-focus`: a label reached with Tab shows the field's ring.
         if state.show_focus_ring() && !dead {
-            paint_focus_ring(canvas, bounds, radius::SM);
+            crate::focus::paint_field_outline(canvas, bounds, radius::SM, &t.accent);
         }
 
         let mut label = self.label();
@@ -4124,7 +4135,7 @@ impl Widget for RichTextToolbar {
                     }
                     // The roving focus, on `:focus-visible` only.
                     if ring_at == Some(i) && enabled {
-                        paint_focus_ring(canvas, cell, rich_metrics::RADIUS);
+                        paint_toolbar_ring(canvas, cell, rich_metrics::RADIUS);
                     }
                 }
             }

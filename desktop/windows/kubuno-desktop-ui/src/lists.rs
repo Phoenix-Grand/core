@@ -592,11 +592,10 @@ fn paint_list_panel(c: &dyn Canvas, bounds: Rect, disabled: bool) {
 }
 
 /// The focus-visible ring of a focusable list panel - `.kb-field-focus`'s
-/// `outline … var(--color-primary)`, drawn inward at the crate's field-ring
-/// width ([`FOCUS_RING`]) so it never leaves the control's bounds.
+/// `outline … var(--color-primary)`, the same outline as every field.
 fn paint_list_ring(c: &dyn Canvas, bounds: Rect) {
     let t = c.theme();
-    c.stroke_rounded_w(&bounds, radius::LG, &t.accent, FOCUS_RING);
+    crate::focus::paint_field_outline(c, bounds, radius::LG, &t.accent);
 }
 
 /// One list row: the selection / hover fill and the label.
@@ -1723,7 +1722,7 @@ impl ComboBox {
         };
         c.fill_rounded(&field, radius::SM, &face);
         if ring {
-            c.stroke_rounded_w(&field, radius::SM, &t.accent, FOCUS_RING);
+            crate::focus::paint_field_outline(c, field, radius::SM, &t.accent);
         } else {
             c.stroke_rounded(&field, radius::SM, &t.card_stroke);
         }
@@ -1854,9 +1853,6 @@ impl ComboBox {
 
 /// `Dropdown.openDropdown` anchors the popup at `r.bottom + 2`.
 const DROP_DOWN_OFFSET: f32 = 2.0;
-/// `@ui/Input`: `focus:ring-2` - a 2 DIP ring in the accent, drawn inward;
-/// the value every field of this crate uses (`text::FOCUS_RING`).
-const FOCUS_RING: f32 = 2.0;
 /// `Input`: `disabled:opacity-60`.
 const DISABLED_FIELD_ALPHA: f32 = 0.6;
 

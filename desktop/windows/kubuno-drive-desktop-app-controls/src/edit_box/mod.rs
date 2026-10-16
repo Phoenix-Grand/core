@@ -20,9 +20,9 @@ const BOX_PAD_X: f32 = 12.0;
 /// The omnibar pill supplies its own gutters (mode icon on the left, ✕ and
 /// buttons on the right), so the text it hands us only needs a hair of inset.
 const PILL_PAD_X: f32 = 6.0;
-/// `@ui/Input`: `focus:ring-2` - the accent ring of a focused field. Drawn
-/// inward, as `stroke_rounded_w` does, and it subsumes `focus:border-primary`.
-const FOCUS_RING: f32 = 2.0;
+/// `.kb-field-focus`: `outline: 3px solid var(--color-primary)` - the accent
+/// outline of a focused field, which subsumes `border-color: primary`.
+const FIELD_OUTLINE: f32 = 3.0;
 /// Height of the line box the selection and the caret cover: 14 DIP of text at
 /// `leading-normal`. The browser highlights the LINE, not the whole field.
 const LINE_BOX: f32 = 20.0;
@@ -50,11 +50,14 @@ impl EditView<'_> {
 ///
 /// The ring is unconditional because this box only exists while it owns the
 /// caret: an inline editor is by construction the focused field, so it always
-/// reads `focus:ring-2 focus:ring-primary` (same chrome as a dialog field).
+/// reads `.kb-field-focus` (same chrome as a dialog field): `outline: 3px`
+/// with `outline-offset: -1px`, so the band covers the border and spills
+/// 2 DIP outside the box, its corners concentric with the box's.
 pub fn draw_box(c: &dyn Canvas, rect: &Rect, v: &EditView) {
     let t = c.theme();
     c.fill_rounded(rect, radius::SM, &t.layer_background);
-    c.stroke_rounded_w(rect, radius::SM, &t.accent, FOCUS_RING);
+    let out = FIELD_OUTLINE - 1.0;
+    c.stroke_rounded_w(&rect.inflate(out, out), radius::SM + out, &t.accent, FIELD_OUTLINE);
     draw_padded(c, rect, v, BOX_PAD_X);
 }
 

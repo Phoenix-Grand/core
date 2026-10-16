@@ -212,8 +212,6 @@ const FIELD_PAD_X: f32 = space::MD;
 const FIELD_GAP: f32 = space::SM;
 /// `<Calendar size={14} />` / `<Clock size={14} />` in the trigger.
 const FIELD_ICON: f32 = 14.0;
-/// `focus:ring-2 focus:ring-primary focus:border-primary`.
-const FIELD_FOCUS_RING: f32 = 2.0;
 /// `disabled && 'bg-surface-2 cursor-not-allowed opacity-60'`.
 const DISABLED_FIELD_ALPHA: f32 = 0.6;
 /// `computePos` anchors the popover at `r.bottom + 4`. (A combo's is 2 - they
@@ -1985,7 +1983,7 @@ impl DatePicker {
         let ring = !dead && (state.show_focus_ring() || self.open);
         let accent = if self.invalid { t.danger } else { t.accent };
         if ring {
-            c.stroke_rounded_w(&field, radius::SM, &accent, FIELD_FOCUS_RING);
+            crate::focus::paint_field_outline(c, field, radius::SM, &accent);
         } else if self.invalid && !dead {
             c.stroke_rounded(&field, radius::SM, &t.danger);
         } else if state.hot && !dead {
