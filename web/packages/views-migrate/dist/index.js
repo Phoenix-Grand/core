@@ -1,5 +1,5 @@
 /**
- * `@kubuno/views-migrate` — the codemod from React/TSX screens to `.kbview` views (vskubuno docs/WEB-VIEWS.md §6.2,
+ * `@kubuno/views-migrate` - the codemod from React/TSX screens to `.kbview` views (vskubuno docs/WEB-VIEWS.md §6.2,
  * WV-11). A devDependency; `kbview-migrate` is its command line.
  */
 export { migrateFile, componentsOf } from './migrate.js';

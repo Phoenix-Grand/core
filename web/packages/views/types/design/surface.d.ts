@@ -24,6 +24,9 @@ export interface SurfaceConfig {
     readonly wasmUrl: string;
     /** Where `<id>/theme.json` of the Kubuno themes are served. */
     readonly themesBase: string;
+    /** The device form factor the host is editing for (`mobile`: the viewport shows a device frame, not a web page,
+     *  and the responsive-width presets are hidden). Set from the `?ff=` query of the bundled host URL. */
+    readonly formFactor?: 'mobile' | null;
     /** Dev-server mode: the project description. */
     readonly loadProject?: () => Promise<ProjectInfo>;
     /** Bundled mode: the host registry's text. */
@@ -55,6 +58,8 @@ export declare class DesignSurface {
     private text;
     private plan;
     private nodes;
+    /** Element id → `x:Name`, from the plan (its `names` is the reverse map). */
+    private names;
     private stale;
     private generation;
     private codeBehind;
@@ -67,6 +72,7 @@ export declare class DesignSurface {
     private map;
     private containerOutlines;
     private zoomPref;
+    private zoomExplicit;
     private prefs;
     private langChosen;
     private drag;
@@ -100,10 +106,14 @@ export declare class DesignSurface {
     private renderView;
     private showMessage;
     private designSize;
+    /** The device frame's size (oriented), or null when the view is shown as a responsive page. */
+    private deviceSize;
     private frameWidth;
     private zoom;
     private applyFrameSize;
     private setWidth;
+    private setDevice;
+    private rotateDevice;
     private setTheme;
     private applyLanguage;
     private setLanguage;
@@ -120,6 +130,8 @@ export declare class DesignSurface {
     /** The part of an element its clipping ancestors leave visible (adorners are drawn around it), `null` when none. */
     private shown;
     private resizable;
+    /** The identity shown on a control's corner tag: its element type and `x:Name` (the root is named for its kind). */
+    private labelFor;
     private redraw;
     private postSelection;
     /** The element under a page point: the deepest `[data-kb-id]`, the view itself (`""`) over the canvas. */

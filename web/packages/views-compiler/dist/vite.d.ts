@@ -16,7 +16,7 @@ export interface KbviewPluginOptions extends ProjectOptions {
     /** Language of a neutral `.kbres` file without a `Culture` attribute. Default `en`. */
     neutralCulture?: string;
 }
-/** `file(line,col): severity code: message` — the format tsc, MSBuild and VS use. */
+/** `file(line,col): severity code: message` - the format tsc, MSBuild and VS use. */
 export declare function formatDiagnostic(file: string, d: Diagnostic): string;
 /** The plugin. Add it to `plugins` (before `@vitejs/plugin-react`). */
 export declare function kbview(options?: KbviewPluginOptions): Plugin;

@@ -1,5 +1,5 @@
 /**
- * `kbview-migrate` — converts TSX screens of a web project to `.kbview` views (WEB-VIEWS.md §6.2, WV-11).
+ * `kbview-migrate` - converts TSX screens of a web project to `.kbview` views (WEB-VIEWS.md §6.2, WV-11).
  *
  *   kbview-migrate [--project <dir>] [--write] [--report <file.json>] [--component <Name>] [--layout --app-root <dir>] <file.tsx>…
  *   kbview-migrate --relayout [--project <dir>] [--write] [--report <file.json>] [--app-root <dir>]… [--exclude <dir>]…
@@ -244,12 +244,12 @@ function setNested(doc, key, value) {
 }
 /**
  * Writes the `defaultValue`s of `t('k', { defaultValue })` whose key no bundle has (the TSX showed the default in
- * every language) where the project's strings are loaded from, in the fallback language every language falls back to
- * — so the view shows the same text:
+ * every language) where the project's strings are loaded from, in the fallback language every language falls back to -
+ * so the view shows the same text:
  *  1. `src/**\/locales/<lang>/<ns>.json` (the core's bundles);
  *  2. else a module's catalogue `src/i18n.data.json` (`{ <lang>: { … } }`) when its `src/i18n.ts` registers `ns`
  *     (`registerModuleTranslations('<ns>', …)`); `i18n.ts` is generated from it, so its generator
- *     (`src/gen_i18n.mjs`) runs again — without one, the log says to regenerate it;
+ *     (`src/gen_i18n.mjs`) runs again - without one, the log says to regenerate it;
  *  3. else `src/views-defaults.json`, which nothing loads: the log says so, to move by hand.
  */
 export function storeDefaults(root, defaults, lang = 'en') {
@@ -299,10 +299,10 @@ export function storeDefaults(root, defaults, lang = 'en') {
                 files.push(reg);
             }
             else
-                log.push(`defaults: ${relative(root, data)} (${lang}) — ${relative(root, gen)} FAILED (${(r.stderr || r.error?.message || '').trim()}): generate ${relative(root, reg)} again by hand`);
+                log.push(`defaults: ${relative(root, data)} (${lang}) - ${relative(root, gen)} FAILED (${(r.stderr || r.error?.message || '').trim()}): generate ${relative(root, reg)} again by hand`);
         }
         else
-            log.push(`defaults: ${relative(root, data)} (${lang}) — generate ${relative(root, reg)} again from it (no src/gen_i18n.mjs)`);
+            log.push(`defaults: ${relative(root, data)} (${lang}) - generate ${relative(root, reg)} again from it (no src/gen_i18n.mjs)`);
     }
     if (left.length) {
         const file = join(root, 'src', 'views-defaults.json');
@@ -311,7 +311,7 @@ export function storeDefaults(root, defaults, lang = 'en') {
             (prev[d.ns] ??= {})[d.key] = d.value;
         writeFileSync(file, JSON.stringify(prev, null, 2) + '\n');
         files.push(file);
-        log.push(`defaults: ${left.length} text(s) in ${relative(root, file)}, which NOTHING LOADS — move them into the bundles (no ${lang} bundle or catalogue for ${[...new Set(left.map((d) => d.ns))].join(', ')})`);
+        log.push(`defaults: ${left.length} text(s) in ${relative(root, file)}, which NOTHING LOADS - move them into the bundles (no ${lang} bundle or catalogue for ${[...new Set(left.map((d) => d.ns))].join(', ')})`);
     }
     return { files, left, log };
 }

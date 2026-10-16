@@ -14,8 +14,8 @@
  *   Vite's own transform, which leaves standard decorators as they are.
  * - `vite serve` also serves the Visual Studio design surface at `/__kubuno_design__/` (`design-server.ts`). For a
  *   project without a design entry of its own (a module), the page is `@kubuno/host-runtime`'s, and the host's
- *   shared specifiers (`react`, `@ui`, `@kubuno/sdk`, …) resolve to that package's modules — one instance each, for
- *   the page and the project's code alike — instead of the project's `node_modules` (`host-runtime.ts`).
+ *   shared specifiers (`react`, `@ui`, `@kubuno/sdk`, …) resolve to that package's modules - one instance each, for
+ *   the page and the project's code alike - instead of the project's `node_modules` (`host-runtime.ts`).
  * - `X.kbres` (a string resource set: the neutral file and its `X.<lang>.kbres` satellites) → `export default` its
  *   i18next bundles by language (`kbres.ts`, WV-6), for `registerModuleTranslations(ns, bundles)`.
  */
@@ -27,7 +27,7 @@ import { HOST_RUNTIME_PACKAGE, dropShared, findHostRuntime, prebundleExternals, 
 import { emitViewModule } from './emit.js';
 import { compileKbresSet, kbresModule, kbresSet } from './kbres.js';
 import { codeBehindOf, isViewFile, loadNodeKbres, projectPath, readProjectConfig, viewOfCodeBehind, writeGenerated, ViewProject } from './project.js';
-/** `file(line,col): severity code: message` — the format tsc, MSBuild and VS use. */
+/** `file(line,col): severity code: message` - the format tsc, MSBuild and VS use. */
 export function formatDiagnostic(file, d) {
     return `${file}(${d.line},${d.column}): ${d.severity} KBV-${d.code}: ${d.message}`;
 }

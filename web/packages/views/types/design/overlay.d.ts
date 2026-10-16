@@ -10,11 +10,28 @@ export interface SelectedAdorner {
     readonly bounds: Rect;
     readonly primary: boolean;
     readonly resizable: ReadonlySet<Handle>;
+    /** Name tag: the control's type and, when set, its `x:Name`. */
+    readonly label?: Label;
+}
+/** A rectangle that may carry a name tag (its control's type / `x:Name`). */
+export interface TaggedRect {
+    readonly rect: Rect;
+    readonly label?: Label;
+}
+/** A control's identity for a corner tag: its type (`Panel`, `Button`…) and optional `x:Name`. */
+export interface Label {
+    readonly type: string;
+    readonly name?: string;
+}
+/** A faint container outline, with its nesting depth (for the alternating tint that keeps nested frames apart). */
+export interface OutlineAdorner {
+    readonly rect: Rect;
+    readonly depth: number;
 }
 export interface AdornerSpec {
-    readonly outlines: readonly Rect[];
-    readonly hover: Rect | null;
-    readonly parent: Rect | null;
+    readonly outlines: readonly OutlineAdorner[];
+    readonly hover: TaggedRect | null;
+    readonly parent: TaggedRect | null;
     readonly selected: readonly SelectedAdorner[];
     readonly marker?: {
         readonly rect: Rect;

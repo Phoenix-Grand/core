@@ -1,5 +1,5 @@
 /**
- * WV-7: the typed surface of a user control (`.kbcontrol`) — the members of the `x:Props` type named by its
+ * WV-7: the typed surface of a user control (`.kbcontrol`) - the members of the `x:Props` type named by its
  * root, read from the code-behind so another view can use the control as a native, typed element.
  *
  * Each non-function field becomes a bindable property (so an object binding type-checks), each function field
@@ -8,7 +8,7 @@
  *
  * This reads types with the TypeScript compiler API (`typescript`, already a peer dependency of the tooling);
  * it never needs the project's full type graph: unresolved imports fall back to `object` (an `__any` binding),
- * which is correct, just less precise. Any failure returns `undefined` — the control stays a pass-through, as
+ * which is correct, just less precise. Any failure returns `undefined` - the control stays a pass-through, as
  * before WV-7, so a broken or unusual code-behind can never break a build.
  */
 import { createRequire } from 'node:module';
@@ -53,7 +53,7 @@ export function extractUserControlProps(kbcontrolFile, codeBehindFile) {
         return undefined;
     try {
         // One file, no lib, no module resolution: fast, and enough for the type's own shape. Unresolved imports
-        // become `any`, which we treat as an object (an `__any` binding) — the safe default.
+        // become `any`, which we treat as an object (an `__any` binding) - the safe default.
         const options = {
             noLib: true,
             noResolve: true,
@@ -97,7 +97,7 @@ function classify(ts, checker, name, type) {
     const nn = checker.getNonNullableType(type);
     const signatures = nn.getCallSignatures();
     if (signatures.length > 0) {
-        // A function field is an event only when it is a callback — it returns nothing (`(v) => void`). A function
+        // A function field is an event only when it is a callback - it returns nothing (`(v) => void`). A function
         // that returns a value (`format: (n) => string`, a comparator, a cell renderer) is a value transformer, not
         // an event: it becomes an ordinary bindable property, and the view binds a getter that returns the function,
         // which is passed straight through as the React prop. Unresolved / inferred return types default to event

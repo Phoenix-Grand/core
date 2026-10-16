@@ -12,7 +12,7 @@ export interface KbresDiagnostic {
     column: number;
     message: string;
 }
-/** The strings of one `.kbres` file (its other entries — images, colours… — are not i18n strings). */
+/** The strings of one `.kbres` file (its other entries - images, colours… - are not i18n strings). */
 export interface KbresDocument {
     /** `Culture` of a neutral file: the language of its strings. */
     culture?: string;

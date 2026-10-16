@@ -5,7 +5,7 @@ export type Status = 'converted' | 'partial' | 'skipped';
 export interface MigrateConfig {
     project: Project;
     registry: Registry;
-    /** The project root (`core/frontend`), for relative paths in the report. */
+    /** The project root (`core/web`), for relative paths in the report. */
     root: string;
     /** i18next default namespace of the project (`core`). */
     defaultNs: string;

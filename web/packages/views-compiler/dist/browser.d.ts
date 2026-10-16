@@ -1,5 +1,5 @@
 /**
- * `@kubuno/views-compiler/browser` — the compiler in a browser page (the Visual Studio design surface
+ * `@kubuno/views-compiler/browser` - the compiler in a browser page (the Visual Studio design surface
  * parses the unsaved `.kbview` buffer with the same grammar as the build, WEB-VIEWS §2.1).
  *
  * The `.wasm` is fetched from `wasmUrl` (default: next to this file in the package,

@@ -1,5 +1,5 @@
 /**
- * The compiler session over the WebAssembly build of `kubuno-views-web` — the same code in Node (Vite
+ * The compiler session over the WebAssembly build of `kubuno-views-web` - the same code in Node (Vite
  * plugin, `kbview-tsc`) and in the browser (the Visual Studio design surface parses unsaved buffers).
  *
  * The `.wasm` exposes a C ABI (no wasm-bindgen): `kb_alloc(len)`, `kb_call(ptr, len) -> (ptr << 32) | len`

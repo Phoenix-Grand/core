@@ -1,5 +1,5 @@
 /**
- * `@kubuno/views-compiler` — the build-time side of `.kbview` web views (vskubuno docs/WEB-VIEWS.md, WV-2):
+ * `@kubuno/views-compiler` - the build-time side of `.kbview` web views (vskubuno docs/WEB-VIEWS.md, WV-2):
  * the WebAssembly build of the shared `.kbview` grammar and web compiler, the Vite plugin, and `kbview-tsc`.
  * A devDependency: nothing here ships to the browser except through `./browser` (the design surface).
  */

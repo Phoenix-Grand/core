@@ -1,7 +1,7 @@
 /**
  * The split pre-pass (`kbview-migrate --split`): a file exporting several screens (`ApiTokenForms.tsx` exporting
  * `NewTokenBanner` and `CreateTokenForm`) is cut into one file per exported component BEFORE the conversion, so each
- * becomes a view of its own (one `.kbview` per component — what the designer opens). A pure TSX refactor, nothing is
+ * becomes a view of its own (one `.kbview` per component - what the designer opens). A pure TSX refactor, nothing is
  * converted here:
  *
  * - every exported component other than the one named like the file moves to `<Component>.tsx` next to it, with the

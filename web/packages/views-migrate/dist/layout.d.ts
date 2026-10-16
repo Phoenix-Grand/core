@@ -60,7 +60,7 @@ export declare function slash(p: string): string;
 /** The stem a file belongs to (`X.parts.tsx`, `X.kbview.design.json`, `X.test.tsx`, `X.fr.kbres` → `X`). */
 export declare function stemOf(file: string): string;
 /**
- * The units of the project under `dirs`: every view (with its code-behind and parts), and — with `components` —
+ * The units of the project under `dirs`: every view (with its code-behind and parts), and - with `components` -
  * every React component file (`X.tsx`, PascalCase, rendering JSX) that is no view's code-behind or parts.
  */
 export declare function unitsOf(files: readonly string[], opts?: {
@@ -85,7 +85,7 @@ export declare function surfaceOfComponent(text: string, stem: string): 'window'
  * 2. a window or a dialog (its root element, a full-screen overlay, its name) is a view;
  * 3. a component a route renders (alone: not next to other elements), or the application's root component renders
  *    in place of the routes, is a view (a page);
- * 4. a component other components place (JSX, a `<ReactHost>`, a host's slot) is a user control — `shared` when
+ * 4. a component other components place (JSX, a `<ReactHost>`, a host's slot) is a user control - `shared` when
  *    several components place it;
  * 5. a component nothing uses is a view when named like one (`…Page`, `…Screen`), else a user control.
  */
@@ -111,7 +111,7 @@ export interface Move {
     to: string;
 }
 /**
- * Where each unit goes (VIEWS-SPEC §1.2): at an app root, and in a folder past `split` views, the role folders —
+ * Where each unit goes (VIEWS-SPEC §1.2): at an app root, and in a folder past `split` views, the role folders -
  * `views/` (pages, windows), `dialogs/`, `pages/` (user controls one component places: panes, sections, rows) and
  * `controls/` (user controls several components place). A feature folder below keeps its views and user controls
  * side by side. A view changing kind changes extension (`.kbview` ↔ `.kbcontrol`), its design data with it.
@@ -124,8 +124,8 @@ export interface Relocation {
     edited: Map<string, string>;
 }
 /**
- * Applies `moves` to `sources` (code files, path → text): every relative specifier naming a moved file — or written
- * in a moved file — is rewritten, and the code-behind / parts headers follow a view's new extension. Files other than
+ * Applies `moves` to `sources` (code files, path → text): every relative specifier naming a moved file - or written
+ * in a moved file - is rewritten, and the code-behind / parts headers follow a view's new extension. Files other than
  * code (views, design data, resources) are moved by the caller (`git mv`); `exists` tells which files there are.
  */
 export declare function relocate(sources: Sources, moves: readonly Move[], exists: (p: string) => boolean): Relocation;

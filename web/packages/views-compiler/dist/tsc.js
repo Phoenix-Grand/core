@@ -1,5 +1,5 @@
 /**
- * `kbview-tsc` — `tsc` for projects with `.kbview` views (WEB-VIEWS §2.1, Vue's `vue-tsc` approach).
+ * `kbview-tsc` - `tsc` for projects with `.kbview` views (WEB-VIEWS §2.1, Vue's `vue-tsc` approach).
  *
  *   kbview-tsc -b            # instead of `tsc -b`
  *   kbview-tsc --noEmit -p . # any tsc arguments are passed through

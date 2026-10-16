@@ -62,5 +62,11 @@ export type ContainerKind = 'leaf' | 'flow' | 'dock' | 'absolute' | 'single' | '
 export declare function containerKind(nodes: ReadonlyMap<string, NodeInfo>, catalog: Catalog, id: string): ContainerKind;
 /** Whether an element is placed by `X` / `Y` (a child of an absolute container). */
 export declare function isAbsoluteChild(nodes: ReadonlyMap<string, NodeInfo>, catalog: Catalog, id: string): boolean;
+/**
+ * What the surface shows: a `page` (`.kbview`: a page, window or dialog - designed on a white sheet, its boundary
+ * dashed) or a `control` (`.kbcontrol`: a user control, on the canvas in Visual Studio's colours). The file's
+ * extension decides; without a file yet, the plan's kind does; with neither, the canvas keeps Visual Studio's colours.
+ */
+export declare function designDocumentKind(file: string | null | undefined, plan: ViewPlan | null): 'page' | 'control';
 /** `src/a/X.kbcontrol` + `./X` → `/src/a/X` (posix, `.` / `..` resolved). */
 export declare function moduleOfCodeBehind(file: string, codeBehind: string): string;

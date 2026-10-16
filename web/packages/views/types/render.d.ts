@@ -10,7 +10,7 @@
  */
 import { type ComponentType, type ReactNode } from 'react';
 import { type Scope } from './binding';
-import type { PlanNode } from './plan';
+import type { PlanNode, ViewPlan } from './plan';
 import { type Cell, type ViewClass } from './view';
 import { tokenColor } from './style';
 export { tokenColor };
@@ -22,6 +22,15 @@ interface NodeProps {
 export declare const KbNode: import("react").MemoExoticComponent<({ node, scope }: NodeProps) => ReactNode>;
 /** The size class of a width (VIEWS-SPEC §5.3). */
 export declare function sizeClassOf(width: number): string;
+/**
+ * The node a view renders first. A user control whose `<UserControl>` root has nothing of its own - no name, no
+ * property, no DOM event, no menu - and holds one element it does not lay out (no `Dock`, `Anchor` or position)
+ * renders that element as its DOM root (VIEWS-SPEC §1.1, web):
+ * the control is exactly as large as its content and its host's child selectors (`space-y-*`, `divide-y`) reach
+ * it, as they reached the component it was converted from. The designer keeps the root (the surface the control is
+ * designed on).
+ */
+export declare function contentRoot(plan: ViewPlan, design: boolean): PlanNode;
 interface ViewRootProps {
     cell: Cell;
     cls: ViewClass;
