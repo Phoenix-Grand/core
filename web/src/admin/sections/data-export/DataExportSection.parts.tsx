@@ -65,7 +65,7 @@ function ActiveRun({ data, canExecute, onCancel, busy }: {
         <span className="flex min-w-0 flex-col">
           <span className="flex items-center gap-2 text-text-primary" style={{ fontSize: 'var(--kb-text-body)' }}>
             <Clock size={15} className="shrink-0 text-primary" />
-            {t('admin.dx_running_title', { who: run.actor_label ?? '—' })}
+            {t('admin.dx_running_title', { who: run.actor_label ?? '-' })}
           </span>
           <span className="text-text-secondary" style={{ fontSize: 'var(--kb-text-meta)' }}>
             {t('admin.dx_running_desc', {
@@ -197,7 +197,7 @@ function History({ data, canExecute, onOpen, onCancel, onDelete }: {
             {formatWhen(r.requested_at, i18n.language)}
           </span>
           <span className="truncate text-text-tertiary" style={{ fontSize: 'var(--kb-text-meta)' }}>
-            {r.actor_label ?? '—'}
+            {r.actor_label ?? '-'}
           </span>
         </span>
       ),
@@ -250,7 +250,7 @@ function History({ data, canExecute, onOpen, onCancel, onDelete }: {
       align: 'right',
       minWidth: 100,
       sortValue: r => r.size_bytes ?? -1,
-      cell: r => (r.size_bytes == null ? '—' : formatBytes(r.size_bytes)),
+      cell: r => (r.size_bytes == null ? '-' : formatBytes(r.size_bytes)),
     },
     {
       id: 'downloads',
@@ -271,7 +271,7 @@ function History({ data, canExecute, onOpen, onCancel, onDelete }: {
       minWidth: 100,
       defaultHidden: true,
       sortValue: r => r.duration_ms ?? -1,
-      cell: r => (r.duration_ms == null ? '—' : formatDuration(r.duration_ms)),
+      cell: r => (r.duration_ms == null ? '-' : formatDuration(r.duration_ms)),
     },
     {
       id: 'entries',
@@ -280,7 +280,7 @@ function History({ data, canExecute, onOpen, onCancel, onDelete }: {
       minWidth: 100,
       defaultHidden: true,
       sortValue: r => r.entries_count ?? -1,
-      cell: r => (r.entries_count == null ? '—' : String(r.entries_count)),
+      cell: r => (r.entries_count == null ? '-' : String(r.entries_count)),
     },
   ]
 

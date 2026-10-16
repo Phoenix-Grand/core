@@ -10,7 +10,7 @@
 //! whole subtree**. Expanding the subtree at check time would mean a recursive
 //! query per privilege test; instead the resolution query expands it once, using
 //! the `core.org_unit_descendants` function shipped with migration `000041`
-//! (depth-guarded — a cycle in the tree truncates the walk instead of hanging
+//! (depth-guarded - a cycle in the tree truncates the walk instead of hanging
 //! the backend). What lands in [`PrivilegeScope::units`] is the flat set of unit
 //! ids the caller may act on.
 //!
@@ -46,7 +46,7 @@ impl PrivilegeScope {
     /// True when the privilege covers `unit`.
     ///
     /// `None` (an account attached to no unit) is covered by instance scope
-    /// only — see the module note on why that default is not negotiable.
+    /// only - see the module note on why that default is not negotiable.
     pub fn covers(&self, unit: Option<Uuid>) -> bool {
         if self.instance {
             return true;
@@ -83,7 +83,7 @@ pub struct AdminContext {
 }
 
 impl AdminContext {
-    /// A context holding nothing at all — an ordinary user.
+    /// A context holding nothing at all - an ordinary user.
     pub fn empty(user_id: Uuid, origin: ActorOrigin, token_id: Option<Uuid>) -> Self {
         Self {
             user_id,
@@ -184,8 +184,8 @@ impl AdminContext {
     /// run arbitrary code.
     ///
     /// A personal API token is refused outright, whatever its owner holds. These
-    /// are precisely the operations reserved to a person — granting a role,
-    /// installing a module, approving a theme — and a bearer has no second factor
+    /// are precisely the operations reserved to a person - granting a role,
+    /// installing a module, approving a theme - and a bearer has no second factor
     /// and nobody at the keyboard to answer a challenge. A *scoped* token has
     /// already lost the flag through the intersection; this closes the same door
     /// for a **legacy** token, which keeps its owner's flag during the grace
@@ -214,7 +214,7 @@ impl AdminContext {
     /// The organisational subtree a listing must be confined to for `key`.
     ///
     /// `None` means "no restriction" (instance scope or superuser). `Some(set)`
-    /// is the exact set of unit ids to filter on — never empty, because a caller
+    /// is the exact set of unit ids to filter on - never empty, because a caller
     /// with an empty set does not hold the privilege at all.
     pub fn subtree_filter(&self, key: &str) -> Option<Vec<Uuid>> {
         // A denied key is not held at all: the listing must match nothing rather
@@ -298,7 +298,7 @@ pub struct EffectivePrivileges {
 /// An instance has a handful of administrators; the only way to reach this number
 /// is an assignment carried by a group that half the company belongs to, and in
 /// that case a process-global set of every member is the wrong thing to hold in
-/// memory. Falling back to the plain resolution is always correct — it is what
+/// memory. Falling back to the plain resolution is always correct - it is what
 /// happened before this fast path existed.
 ///
 /// [`cache::Roster::Unbounded`]: super::cache::Roster::Unbounded
@@ -308,7 +308,7 @@ const MAX_HOLDERS: usize = 4096;
 ///
 /// Answered from the process-global roster, which costs one query per instance
 /// per TTL rather than one per caller. A `false` here means the caller's context
-/// is empty and needs no resolution — the fast path `/me` relies on.
+/// is empty and needs no resolution - the fast path `/me` relies on.
 pub async fn holds_any_assignment(db: &DbPool, user_id: Uuid) -> Result<bool, AppError> {
     use super::cache::Roster;
 
@@ -409,7 +409,7 @@ pub async fn resolve(
         })?
         .flatten();
 
-    // The caller's non-expired assignments — direct or carried by a group —
+    // The caller's non-expired assignments - direct or carried by a group -
     // joined to the privilege keys of each assignment's role. `$1`/`$2` are both
     // the caller (a positional placeholder is never reused across engines).
     let mine_cte = format!(

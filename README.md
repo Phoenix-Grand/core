@@ -7,7 +7,7 @@
 
 <img src=".github/logo.png" alt="Kubuno logo" width="120">
 
-# Kubuno — Core
+# Kubuno - Core
 
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](LICENSE)
 ![Rust](https://img.shields.io/badge/Rust-edition_2021-orange.svg)
@@ -15,7 +15,7 @@
 ![Databases](https://img.shields.io/badge/DB-PostgreSQL_%7C_MySQL%2FMariaDB_%7C_SQLite-336791.svg)
 ![Status](https://img.shields.io/badge/status-alpha-yellow.svg)
 
-**The heart of Kubuno — a self-hosted, libre (AGPLv3) cloud platform, a sovereign alternative to Google Workspace and Microsoft 365.**
+**The heart of Kubuno - a self-hosted, libre (AGPLv3) cloud platform, a sovereign alternative to Google Workspace and Microsoft 365.**
 
 The *core* is the platform's "operating system": it provides the infrastructure (auth, database, events, storage, reverse proxy, WebSocket, module lifecycle, administration console) that **independent modules** (drive, calendar, mail, photos, office, chat…) rely on to run.
 
@@ -29,27 +29,27 @@ The *core* is the platform's "operating system": it provides the infrastructure 
 
 ## Why Kubuno?
 
-- **Modular architecture** — each module (drive, calendar, mail, office, photos…) is a **separate process** that connects to the core at startup. The core proxies its routes, distributes events and manages its lifecycle; nothing is hard-wired.
-- **Your data, your rules** — fully self-hosted, no third-party service required, no telemetry.
-- **One binary, three database engines** — the same server runs on **PostgreSQL**, **MySQL/MariaDB** or **SQLite**, the engine being chosen at run time from the connection URL. An instance — or a single module — can be migrated from one engine to another from the administration console, and several instances can share one database server thanks to a configurable schema prefix.
-- **Guided first run** — a fresh instance opens on a setup assistant that asks for the database and the first administrator: there is no default password.
-- **Built-in marketplace** — browse the official catalogue and install modules **at runtime** from the admin console, or offline from the command line (`kubuno modules:install <file>.kbpkg`). Modules ship as self-contained **Kubuno packages (`.kbpkg`)** the core unpacks itself, identically on Linux, Windows and macOS.
-- **Secure by default** — JWT + HttpOnly refresh tokens with rotation, no access token in any script-readable cookie (images, media, downloads and sockets use short-lived signed tickets bound to one session, app and address — see [`AUTH.md`](AUTH.md)), Argon2id, AES-256-GCM with a data key separate from the signing secret, account lockout and a self-hosted sign-in CAPTCHA after repeated failures, a tamper-evident (HMAC-chained) administrative audit trail, anti-DDoS rate budgets per IP and per user, signed module-to-core authentication, and a seccomp sandbox that forbids process execution inside modules.
-- **A complete administration console** — directory (users, groups, organisational units, target audiences, buildings and resources, directory policy), LDAP / Active Directory and OpenID Connect sign-in, per-unit settings with inheritance and locks, security dashboard, alert centre, automation rules, content detectors, printable reports, backups (whole database, compressed, restorable), data migration from other servers, data export, domains, public holidays, themes and native HTTPS (TLS certificates, ACME).
-- **Fast and lean backend** — Rust + Axum; the database also serves as the event bus and the job queue, with no Redis or extra broker.
-- **Runtime-loaded frontend** — the React 19 host loads modules **at runtime** via ESM import maps and shared singletons (`@kubuno/sdk`, `@kubuno/ui`), without ever naming a module statically, so every app shares one consistent shell.
-- **Packaged themes (skins)** — themes are importable `.zip` bundles that restyle the whole platform or targeted modules with CSS variables, stylesheets and (admin-trusted) scripts; several themes ship with the core. See [`THEMES.md`](THEMES.md).
-- **Cross-module labels and @mentions** — user-owned labels attach to items of *any* module (files, tasks, events…) and can be shared; typing `@` in any text field suggests people from the instance directory.
-- **Voice search** — a microphone in the search bar, backed by the self-hosted [speech-to-text](https://github.com/kubuno/stt) service.
-- **i18n** — 13 languages, RTL included.
+- **Modular architecture** - each module (drive, calendar, mail, office, photos…) is a **separate process** that connects to the core at startup. The core proxies its routes, distributes events and manages its lifecycle; nothing is hard-wired.
+- **Your data, your rules** - fully self-hosted, no third-party service required, no telemetry.
+- **One binary, three database engines** - the same server runs on **PostgreSQL**, **MySQL/MariaDB** or **SQLite**, the engine being chosen at run time from the connection URL. An instance - or a single module - can be migrated from one engine to another from the administration console, and several instances can share one database server thanks to a configurable schema prefix.
+- **Guided first run** - a fresh instance opens on a setup assistant that asks for the database and the first administrator: there is no default password.
+- **Built-in marketplace** - browse the official catalogue and install modules **at runtime** from the admin console, or offline from the command line (`kubuno modules:install <file>.kbpkg`). Modules ship as self-contained **Kubuno packages (`.kbpkg`)** the core unpacks itself, identically on Linux, Windows and macOS.
+- **Secure by default** - JWT + HttpOnly refresh tokens with rotation, no access token in any script-readable cookie (images, media, downloads and sockets use short-lived signed tickets bound to one session, app and address - see [`AUTH.md`](AUTH.md)), Argon2id, AES-256-GCM with a data key separate from the signing secret, account lockout and a self-hosted sign-in CAPTCHA after repeated failures, a tamper-evident (HMAC-chained) administrative audit trail, anti-DDoS rate budgets per IP and per user, signed module-to-core authentication, and a seccomp sandbox that forbids process execution inside modules.
+- **A complete administration console** - directory (users, groups, organisational units, target audiences, buildings and resources, directory policy), LDAP / Active Directory and OpenID Connect sign-in, per-unit settings with inheritance and locks, security dashboard, alert centre, automation rules, content detectors, printable reports, backups (whole database, compressed, restorable), data migration from other servers, data export, domains, public holidays, themes and native HTTPS (TLS certificates, ACME).
+- **Fast and lean backend** - Rust + Axum; the database also serves as the event bus and the job queue, with no Redis or extra broker.
+- **Runtime-loaded frontend** - the React 19 host loads modules **at runtime** via ESM import maps and shared singletons (`@kubuno/sdk`, `@kubuno/ui`), without ever naming a module statically, so every app shares one consistent shell.
+- **Packaged themes (skins)** - themes are importable `.zip` bundles that restyle the whole platform or targeted modules with CSS variables, stylesheets and (admin-trusted) scripts; several themes ship with the core. See [`THEMES.md`](THEMES.md).
+- **Cross-module labels and @mentions** - user-owned labels attach to items of *any* module (files, tasks, events…) and can be shared; typing `@` in any text field suggests people from the instance directory.
+- **Voice search** - a microphone in the search bar, backed by the self-hosted [speech-to-text](https://github.com/kubuno/stt) service.
+- **i18n** - 13 languages, RTL included.
 
 ## Architecture
 
 ```
 ┌──────────────────────────────────────────────────────────┐
 │  Frontend host (React 19 / Vite)                         │
-│  — shell, auth, admin console, registries, import map    │
-│  — loads /modules/<id>/entry.js at runtime               │
+│  - shell, auth, admin console, registries, import map    │
+│  - loads /modules/<id>/entry.js at runtime               │
 ├──────────────────────────────────────────────────────────┤
 │  Core (Rust / Axum)            ← THIS REPO               │
 │  auth · events · storage · proxy · websocket · modules   │
@@ -65,11 +65,11 @@ This repository contains:
 | Component | Path | Role |
 |---|---|---|
 | **[kubuno-core](server/README.md)** | `server/` | Server application (bin `kubuno-core`) and administration CLI (`kubuno`) |
-| **[kubuno-db](common/kubuno-db/README.md)** | `common/kubuno-db` | Database foundation: one binary over PostgreSQL / MySQL-MariaDB / SQLite — shared |
-| **[kubuno-storage](common/kubuno-storage/README.md)** | `common/kubuno-storage` | Storage abstraction (local filesystem; S3 declared, not implemented yet) — shared |
-| **[kubuno-seccomp](common/kubuno-seccomp/README.md)** | `common/kubuno-seccomp` | Execution sandbox (seccomp) — shared |
-| **[kubuno-modauth](common/kubuno-modauth/README.md)** | `common/kubuno-modauth` | Signed module ↔ core authentication — shared |
-| **[kubuno-mcp](common/kubuno-mcp/README.md)** | `common/kubuno-mcp` | MCP server building blocks — used by the core |
+| **[kubuno-db](common/kubuno-db/README.md)** | `common/kubuno-db` | Database foundation: one binary over PostgreSQL / MySQL-MariaDB / SQLite - shared |
+| **[kubuno-storage](common/kubuno-storage/README.md)** | `common/kubuno-storage` | Storage abstraction (local filesystem; S3 declared, not implemented yet) - shared |
+| **[kubuno-seccomp](common/kubuno-seccomp/README.md)** | `common/kubuno-seccomp` | Execution sandbox (seccomp) - shared |
+| **[kubuno-modauth](common/kubuno-modauth/README.md)** | `common/kubuno-modauth` | Signed module ↔ core authentication - shared |
+| **[kubuno-mcp](common/kubuno-mcp/README.md)** | `common/kubuno-mcp` | MCP server building blocks - used by the core |
 | **Web host** | `web/` | React shell + shared libraries `@kubuno/sdk`, `@kubuno/ui`, `@kubuno/drive` |
 | **Migrations** | `server/migrations/` | Core database schema |
 | **Themes** | `web/themes/` | Skin themes shipped with the platform (see [`THEMES.md`](THEMES.md)) |
@@ -258,7 +258,7 @@ The core ships as **native packages**, each installing the server, the frontend 
 | Windows 10/11 / Server | `.exe` (NSIS installer) | `build_windows.sh` | Windows service (WinSW) |
 | macOS (Apple Silicon) | `.pkg` | `build_macos.sh` | launchd |
 
-Tagged releases (`v*`) attach all of them to the corresponding **GitHub Release** via CI (`build.yml` for the `.deb`, `dist.yml` for RPM / Windows / macOS). The only runtime prerequisite is a reachable database server — PostgreSQL 16 or MySQL / MariaDB — or none at all with SQLite. Full details and per-platform notes: **[`PACKAGING.md`](PACKAGING.md)**.
+Tagged releases (`v*`) attach all of them to the corresponding **GitHub Release** via CI (`build.yml` for the `.deb`, `dist.yml` for RPM / Windows / macOS). The only runtime prerequisite is a reachable database server - PostgreSQL 16 or MySQL / MariaDB - or none at all with SQLite. Full details and per-platform notes: **[`PACKAGING.md`](PACKAGING.md)**.
 
 Modules are **not** system services: they install as `.kbpkg` packages into the core, from the Marketplace or with the CLI:
 
@@ -269,7 +269,7 @@ sudo kubuno modules:list
 
 ### Administering from the command line
 
-The `kubuno` command also administers the directory from the server itself — for
+The `kubuno` command also administers the directory from the server itself - for
 scripts, headless installs, or when no browser is at hand. It runs the very same
 operations as the administration console (same password policies, quotas,
 guards and audit entries, recorded with the "system" origin):
@@ -313,11 +313,11 @@ Copy [`config.toml.example`](config.toml.example) → `config.toml` (every optio
 
 ## Tech stack
 
-Rust 2021 · Axum 0.7 · Tokio · SQLx 0.9 (PostgreSQL · MySQL/MariaDB · SQLite) · jsonwebtoken · argon2 · aes-gcm — React 19 · TypeScript · Vite · Tailwind CSS v4 · Zustand · React Query.
+Rust 2021 · Axum 0.7 · Tokio · SQLx 0.9 (PostgreSQL · MySQL/MariaDB · SQLite) · jsonwebtoken · argon2 · aes-gcm - React 19 · TypeScript · Vite · Tailwind CSS v4 · Zustand · React Query.
 
 ## Security
 
-Please report vulnerabilities privately — see [`SECURITY.md`](SECURITY.md).
+Please report vulnerabilities privately - see [`SECURITY.md`](SECURITY.md).
 
 How the browser authenticates requests it makes on its own (images, media, downloads, event
 streams, WebSockets) is described in [`AUTH.md`](AUTH.md).

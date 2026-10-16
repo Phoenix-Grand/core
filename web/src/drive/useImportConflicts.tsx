@@ -1,4 +1,4 @@
-// Shared import pipeline with name-conflict prompting — used by every drive
+// Shared import pipeline with name-conflict prompting - used by every drive
 // import surface (StorageExplorer, DriveApp). Whenever an imported file OR folder
 // already exists in its target directory, the user is asked: overwrite / keep
 // both / cancel. Works for loose files, drag-dropped trees and folder imports,

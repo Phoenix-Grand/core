@@ -11,7 +11,7 @@
 //! - [`BindingProvider`]: a component that answers binding paths below its name
 //!   (`{Binding Source=customers, Path=Name}` is the path `customers.Name`). The runtime paints the
 //!   view with a [`ScopedViewModel`] around the application's view model: a path whose first
-//!   segment names a provider goes to it, every other path to the view model — so a view model no
+//!   segment names a provider goes to it, every other path to the view model - so a view model no
 //!   longer forwards anything.
 //! - **Events.** A component raises its events to its Rust subscribers at once. For the `.kbview`
 //!   handler its element names (`OnRowValidating="…"`), [`raise_now`] runs the handler
@@ -335,7 +335,7 @@ pub fn can_raise_now() -> bool {
 
 /// Runs the `.kbview` handler of `event` raised by the component named `component` now, when the
 /// component is being called through a binding or the runtime (see the module doc). Returns
-/// whether it did — `false`: queue the event for the element's handler instead.
+/// whether it did - `false`: queue the event for the element's handler instead.
 pub fn raise_now(component: &str, event: &'static str, args: &mut dyn EventArgs) -> bool {
     let Some(ptr) = SINK.with(|s| s.take()) else { return false };
     struct Restore(NonNull<SinkFn<'static>>);

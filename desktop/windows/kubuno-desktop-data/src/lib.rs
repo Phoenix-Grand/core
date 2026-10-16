@@ -1,4 +1,4 @@
-//! # `kubuno-desktop-data` — data access components for Kubuno desktop applications
+//! # `kubuno-desktop-data` - data access components for Kubuno desktop applications
 //!
 //! The runtime of `vskubuno/docs/DATA.md` (lots DATA-1 to DATA-3): ADO.NET/WinForms-style components,
 //! declared in a view like any non-visual component (the designer lists them in its component tray)
@@ -6,7 +6,7 @@
 //!
 //! - [`DbConnection`]: provider (PostgreSQL, SQLite; MySQL/MariaDB with the `mysql` feature, SQL
 //!   Server with `mssql`), connection string resolved from the secrets chain ([`secrets`]:
-//!   environment, Windows Credential Manager, user secrets — never from the view), pooling, retry
+//!   environment, Windows Credential Manager, user secrets - never from the view), pooling, retry
 //!   policy, TLS by default for remote servers, `StateChange`; [`ConnectionStringBuilder`] with
 //!   redacted output.
 //! - [`DbCommand`]: parameterized SQL (`@name`) or a stored procedure, execute / scalar / query.
@@ -27,7 +27,7 @@
 //! ([`DataError`]) are logged with `tracing` before they are returned and never contain a secret.
 //!
 //! An application links the components' registrations (static constructors) with
-//! `extern crate kubuno_desktop_data as _;` — the Kubuno templates add it.
+//! `extern crate kubuno_desktop_data as _;` - the Kubuno templates add it.
 
 pub mod adapter;
 pub mod binding_source;
@@ -86,7 +86,7 @@ pub use kubuno_desktop_data_macros::data_source as __data_source_impl;
 /// `sqlx` against the offline query cache `.sqlx`. Nothing is written into the project.
 ///
 /// ```ignore
-/// // src/data/mod.rs — the path is relative to this file (then to `src/`, then to the package).
+/// // src/data/mod.rs - the path is relative to this file (then to `src/`, then to the package).
 /// kubuno_desktop::data::data_source!("shop.kbdata"); // or kubuno_desktop_data::data_source!
 /// ```
 ///
@@ -121,7 +121,7 @@ pub use kubuno_desktop_data_macros::data_source as __data_source_impl;
 /// structs, [`TypedRow`] and the `*_task` reads/queries through [`DbCommand`], checked at run time.
 ///
 /// **The application's `Cargo.toml`** needs only `kubuno-desktop` with its `data` feature (or `kubuno-desktop-data`):
-/// no `sqlx` dependency — the expansion goes through `kubuno_desktop_data::sqlx`. PostgreSQL / SQLite are the
+/// no `sqlx` dependency - the expansion goes through `kubuno_desktop_data::sqlx`. PostgreSQL / SQLite are the
 /// defaults; `.kbdata` files for MySQL need kubuno-desktop-data's `mysql` feature.
 ///
 /// **Offline cache.** Builds read `.sqlx/query-<sha256 of the SQL>.json` of the package (or of the

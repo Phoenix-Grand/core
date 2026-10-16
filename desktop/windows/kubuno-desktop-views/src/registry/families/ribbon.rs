@@ -1,4 +1,4 @@
-//! Component family `ribbon` — the Office ribbon as a designable family of controls
+//! Component family `ribbon` - the Office ribbon as a designable family of controls
 //! (`vskubuno/docs/RIBBON.md`): `<Ribbon>` and every element composing it (tabs, contextual tab
 //! groups, groups, joined control groups and boxes, the quick access toolbar, the Backstage and
 //! its entries, buttons, toggles, radio buttons, menu / split buttons, colour pickers, menu items,
@@ -9,7 +9,7 @@
 //! every frame (properties, bindings and command state resolved), runs it, and maps what the
 //! engine reports back to the sub-elements: every sub-element is a real control (a class of the
 //! `RibbonControl` level) whose rectangle the node declares as a virtual region
-//! (`crate::virtual_regions`) — selected on the design surface, routed by the input router, the
+//! (`crate::virtual_regions`) - selected on the design surface, routed by the input router, the
 //! sender of its own events.
 
 use std::cell::{Cell, RefCell};
@@ -111,7 +111,7 @@ pub const ICON_EDITOR: &str = "icon";
 pub const HIDDEN_LAYOUT: &[&str] = &["X", "Y", "Dock", "Anchor", "Margin", "TabIndex"];
 
 /// A group's `SizeDefinition` values (`RIBBON.md` §5): `Auto`, `Custom` (its
-/// `<RibbonGroup.SizeDefinitions>`) and the Win32 templates — the Properties window's drop-down.
+/// `<RibbonGroup.SizeDefinitions>`) and the Win32 templates - the Properties window's drop-down.
 /// Kept equal to `kubuno_desktop_ui::ribbon::scaling::Template::names()` by a test.
 pub const SIZE_DEFINITIONS: &[&str] = &[
     "Auto", "Custom", "OneButton", "TwoButtons", "ThreeButtons", "ThreeButtons-OneBigAndTwoSmall", "ThreeButtonsAndOneCheckBox", "FourButtons", "FiveButtons", "SixButtons",
@@ -294,7 +294,7 @@ component! {
 component! {
     mod_name: ribbon_backstage,
     name: "RibbonBackstage",
-    doc: "The Backstage: the « Fichier » tab and the view it opens over the page — tabs (each showing a view) and buttons.",
+    doc: "The Backstage: the « Fichier » tab and the view it opens over the page - tabs (each showing a view) and buttons.",
     ctor: kubuno_desktop_ui::ribbon::Backstage::new(Vec::new()),
     children: ChildrenModel::List(&["BackstageTab", "BackstageButton", "BackstageSeparator"]),
     props: [
@@ -713,7 +713,7 @@ pub fn french(key: &str) -> Option<&'static str> {
         "RibbonBox.Orientation" => "Horizontal : une ligne du groupe. Vertical : une colonne à part.",
         "RibbonQuickAccessToolbar" => "La barre d'outils Accès rapide : de petites commandes toujours affichées (enregistrer, annuler, rétablir), après « Fichier » ou sous le ruban.",
         "RibbonQuickAccessToolbar.Position" => "Son emplacement (QatPosition du ruban l'emporte quand il est défini).",
-        "RibbonBackstage" => "Le Backstage : l'onglet « Fichier » et la vue qu'il ouvre par-dessus la page — des onglets (chacun montrant une vue) et des boutons.",
+        "RibbonBackstage" => "Le Backstage : l'onglet « Fichier » et la vue qu'il ouvre par-dessus la page - des onglets (chacun montrant une vue) et des boutons.",
         "RibbonBackstage.Header" => "Texte de l'onglet qui l'ouvre.",
         "BackstageTab" => "Un onglet du Backstage : une ligne de son bandeau qui montre une vue (son unique enfant) à droite.",
         "BackstageTab.Header" => "Texte de la ligne.",
@@ -999,7 +999,7 @@ struct Cmd {
     checkable: bool,
 }
 
-/// `<Ribbon>`'s live node — see the module doc.
+/// `<Ribbon>`'s live node - see the module doc.
 pub struct RibbonNode {
     engine: Rc<RefCell<Ribbon>>,
     elements: Vec<VirtualElement>,
@@ -1475,7 +1475,7 @@ impl RibbonNode {
         let own_text = a.tip_text.resolve(vm);
         let title = if own_title.is_empty() { cmd.map(|c| c.attrs.tip_title.resolve(vm)).unwrap_or_default() } else { own_title };
         let text = if own_text.is_empty() { cmd.map(|c| c.attrs.tip_text.resolve(vm)).unwrap_or_default() } else { own_text };
-        let tip = [title, text].into_iter().filter(|s| !s.is_empty()).collect::<Vec<_>>().join(" — ");
+        let tip = [title, text].into_iter().filter(|s| !s.is_empty()).collect::<Vec<_>>().join(" - ");
         if a.show_label {
             it = it.label(label.clone());
             if !tip.is_empty() {
@@ -1913,7 +1913,7 @@ impl RibbonNode {
     }
 
     /// Publishes the tabs, the quick access toolbar and the controls drawn this frame to assistive
-    /// technology, under the ribbon's own node: each with its name (its label, else its tooltip — an
+    /// technology, under the ribbon's own node: each with its name (its label, else its tooltip - an
     /// icon-only button's only words), role and state, and pressable (UI Automation's Invoke clicks
     /// it, `RibbonNode::paint`).
     fn publish_access(&self, cx: &mut PaintCx<'_>, regions: &[kubuno_desktop_ui::ribbon::RibbonRegion]) {

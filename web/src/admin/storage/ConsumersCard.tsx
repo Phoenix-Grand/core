@@ -18,7 +18,7 @@ import * as __parts from './ConsumersCard.parts'
 
 export type ConsumersCardProps = {
   warnPercent: number
-  /** `/admin/storage?filter=full` — the saturated accounts, addressable directly. */
+  /** `/admin/storage?filter=full` - the saturated accounts, addressable directly. */
   initialFilter?: ConsumerFilter
 }
 

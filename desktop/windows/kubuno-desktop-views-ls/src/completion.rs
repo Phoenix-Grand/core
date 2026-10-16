@@ -1,23 +1,23 @@
-//! `textDocument/completion` — four contexts, resolved purely from what node
+//! `textDocument/completion` - four contexts, resolved purely from what node
 //! the cursor's token belongs to in the `kubuno_desktop_views::syntax` tree (no
 //! separate re-lexing of the prefix: the error-tolerant parser already
 //! produces a sensible tree for a file mid-edit, per `syntax::parser`'s own
 //! recovery strategy):
 //!
-//! 1. **Element name** — cursor right after `<` (a brand new child), or
-//!    inside an element name being typed — offers every registered
+//! 1. **Element name** - cursor right after `<` (a brand new child), or
+//!    inside an element name being typed - offers every registered
 //!    component name, gated by whether the *containing* element's
 //!    [`kubuno_desktop_views::registry::ChildrenModel`] still accepts a(nother) child
 //!    at all.
-//! 2. **Attribute name** — cursor in the gap between the tag name/a previous
-//!    attribute and the tag's closer, or mid-typing an attribute name —
+//! 2. **Attribute name** - cursor in the gap between the tag name/a previous
+//!    attribute and the tag's closer, or mid-typing an attribute name -
 //!    offers the element's registered properties/events plus the
 //!    always-available [`crate::common_attrs`] and `x:Name`.
-//! 3. **Attribute value** — cursor inside a quoted value whose attribute is
-//!    [`kubuno_desktop_views::registry::PropKind::Enum`] — offers the closed set of
+//! 3. **Attribute value** - cursor inside a quoted value whose attribute is
+//!    [`kubuno_desktop_views::registry::PropKind::Enum`] - offers the closed set of
 //!    valid values.
-//! 4. **Closing tag** — cursor right after `</` (with or without a partial
-//!    name already typed) — offers the one name that actually closes the
+//! 4. **Closing tag** - cursor right after `</` (with or without a partial
+//!    name already typed) - offers the one name that actually closes the
 //!    innermost open element.
 
 use kubuno_desktop_views::ast::{AstNode, Attribute, Element};
@@ -35,7 +35,7 @@ pub fn completion(doc: &Document, pos: Position) -> Vec<CompletionItem> {
     let Some(token) = tree::token_at_offset(&root, offset) else { return Vec::new() };
 
     // 4. Closing tag: `</` already produces an END_TAG node even before any
-    // name follows (see `syntax::parser::parse_end_tag`) — the L_ANGLE_SLASH
+    // name follows (see `syntax::parser::parse_end_tag`) - the L_ANGLE_SLASH
     // token itself, or a partially typed IDENT, both have an END_TAG parent.
     if token.kind() == SyntaxKind::L_ANGLE_SLASH || (token.kind() == SyntaxKind::IDENT && parent_kind(&token) == Some(SyntaxKind::END_TAG)) {
         if let Some(end_tag) = token.parent() {
@@ -83,7 +83,7 @@ pub fn completion(doc: &Document, pos: Position) -> Vec<CompletionItem> {
     // name itself.
     if token.kind() == SyntaxKind::L_ANGLE || tree::is_start_tag_name(&token) {
         // `L_ANGLE`'s parent is the new element's own START_TAG; the tag-name
-        // IDENT's parent is that same START_TAG — either way, one `.parent()`
+        // IDENT's parent is that same START_TAG - either way, one `.parent()`
         // reaches the START_TAG and a second reaches the ELEMENT being typed.
         if let Some(start_tag) = token.parent() {
             if let Some(new_element) = start_tag.parent() {
@@ -101,14 +101,14 @@ fn parent_kind(token: &kubuno_desktop_views::syntax::SyntaxToken) -> Option<Synt
 }
 
 /// Whether `offset` sits strictly between a `STRING` token's opening and
-/// closing quote (not on the quote itself) — so completion is not offered
+/// closing quote (not on the quote itself) - so completion is not offered
 /// while the cursor is technically still on the boundary token but visually
 /// outside the value (e.g. right before the opening `"`).
 fn is_strictly_inside_quotes(token: &kubuno_desktop_views::syntax::SyntaxToken, offset: rowan::TextSize) -> bool {
     let range = token.text_range();
     let len: u32 = range.len().into();
     if len < 2 {
-        return false; // A lone/unterminated quote — nothing sane to offer inside.
+        return false; // A lone/unterminated quote - nothing sane to offer inside.
     }
     let start: u32 = range.start().into();
     let end: u32 = range.end().into();
@@ -116,7 +116,7 @@ fn is_strictly_inside_quotes(token: &kubuno_desktop_views::syntax::SyntaxToken, 
     offset > start && offset < end
 }
 
-/// Every registered component name — [`element_name_items`]'s payload once
+/// Every registered component name - [`element_name_items`]'s payload once
 /// the containing element's children model has been checked.
 fn all_component_items() -> Vec<CompletionItem> {
     registry::all().iter().map(component_item).collect()
@@ -132,13 +132,13 @@ fn component_item(meta: &ComponentMeta) -> CompletionItem {
 }
 
 /// `container`: the node the new/being-typed element itself sits directly
-/// inside — `None` (or a `DOCUMENT`) means it is the file's root, which is
+/// inside - `None` (or a `DOCUMENT`) means it is the file's root, which is
 /// always offered every component (no parent `ChildrenModel` to gate
 /// against). Otherwise, resolve the nearest ancestor `Element` and only
 /// offer components when its registry entry still accepts a(nother) child.
 ///
 /// `new_element` is the (possibly still nameless/malformed) `ELEMENT` node
-/// the parser already created for whatever the cursor is sitting in — the
+/// the parser already created for whatever the cursor is sitting in - the
 /// error-tolerant grammar starts an `ELEMENT`/`START_TAG` the moment it sees
 /// `<`, before any name follows (`syntax::parser::parse_start_tag`), so it
 /// already counts as one of `container`'s children by the time this function
@@ -160,7 +160,7 @@ fn element_name_items(container: Option<&SyntaxNode>, new_element: &SyntaxNode) 
         ChildrenModel::None => Vec::new(),
         ChildrenModel::SingleWidget if other_children >= 1 => Vec::new(),
         // `List`'s payload is the "gated" child names `crate::validate`
-        // enforces (`ChildrenModel::List`'s own doc) — completion here does
+        // enforces (`ChildrenModel::List`'s own doc) - completion here does
         // not yet filter by it, so every registered component is still
         // offered, same as before that payload existed.
         ChildrenModel::SingleWidget | ChildrenModel::List(_) => all_component_items(),
@@ -320,9 +320,9 @@ pub fn corner_radius_items() -> Vec<CompletionItem> {
         .collect()
 }
 
-/// The values of an icon attribute: every glyph of the Kubuno icon set — its set as the detail, a
+/// The values of an icon attribute: every glyph of the Kubuno icon set - its set as the detail, a
 /// picture of it (an SVG drawn from the glyph's own paths) and its keywords as the documentation,
-/// the keywords also matching the filter (`folder-open` finds `FolderOpen`) — then the short
+/// the keywords also matching the filter (`folder-open` finds `FolderOpen`) - then the short
 /// aliases (`trash` → `Trash2`). An image file is typed as a path (`resources/save.svg`).
 pub fn icon_items() -> Vec<CompletionItem> {
     let catalog = kubuno_desktop_views::icon::catalog_json();
@@ -342,7 +342,7 @@ pub fn icon_items() -> Vec<CompletionItem> {
                         detail: Some(format!("{set} icon")),
                         documentation: Some(Documentation::MarkupContent(MarkupContent {
                             kind: MarkupKind::Markdown,
-                            value: format!("{picture}**{name}** — {set}\n\n{}", keywords.join(", ")),
+                            value: format!("{picture}**{name}** - {set}\n\n{}", keywords.join(", ")),
                         })),
                         filter_text: Some(format!("{name} {}", keywords.join(" "))),
                         sort_text: Some(format!("{}{name}", if set == "Lucide" { 0 } else { 1 })),

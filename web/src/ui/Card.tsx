@@ -11,11 +11,11 @@ export interface CardProps {
   actions?:  ReactNode
   /** Secondary line under the title. */
   subtitle?: ReactNode
-  /** Bottom band, separated by a hairline — totals, pagination, a submit row. */
+  /** Bottom band, separated by a hairline - totals, pagination, a submit row. */
   footer?:   ReactNode
   /** Tighter padding, for cards stacked in a dense settings column. */
   dense?:    boolean
-  /** Drop the body padding entirely — for a table or list that must bleed to the
+  /** Drop the body padding entirely - for a table or list that must bleed to the
    *  card edges (the DataTable does this). */
   flush?:    boolean
   className?:     string
@@ -24,13 +24,13 @@ export interface CardProps {
 }
 
 /**
- * Card — the single container for a titled block of admin/settings content.
+ * Card - the single container for a titled block of admin/settings content.
  *
  * It replaces the three hand-copied variants that had drifted apart across the
  * admin panels (different radii, different border colours, headers built with
  * three different markups). Everything here is token-driven: `bg-surface-0`,
  * `border-border` and the `--kb-*` scales, so a theme that remaps its variables
- * — light or dark — re-skins every card at once.
+ * - light or dark - re-skins every card at once.
  *
  * The root is `min-w-0` on purpose: a card is routinely a flex/grid child, and
  * without it a wide child (a table, a long path) would push the card past its

@@ -2,13 +2,13 @@ import { MM } from './geometry'
 import type { PageGeometry } from './geometry'
 
 /**
- * The stamp across a report's sheets — text or image, and never an element.
+ * The stamp across a report's sheets - text or image, and never an element.
  *
  * ## Why it is painted, not placed
  *
  * The first version was an absolutely positioned `<div>`. It looked right on
  * screen and printed wrong: a 22-sheet report came out on 17 pages. Bisecting
- * the CSS cleared the rotation, the overflow and the size in turn — only
+ * the CSS cleared the rotation, the overflow and the size in turn - only
  * removing the element restored the count. An out-of-flow box inside a
  * page-broken document perturbs this engine's fragmentation, full stop.
  *
@@ -26,7 +26,7 @@ export interface WatermarkSpec {
   kind: WatermarkKind
   /** The words, when `kind` is `text`. */
   text:  string
-  /** A `data:` URL, when `kind` is `image`. Never a remote one — see `readImage`. */
+  /** A `data:` URL, when `kind` is `image`. Never a remote one - see `readImage`. */
   image: string | null
   /** Multiplier on the size that fits the sheet by itself. 1 = that size. */
   scale:   number
@@ -51,8 +51,8 @@ export function hasWatermark(w: WatermarkSpec): boolean {
  * The type size that makes one line of text span the sheet on its own.
  *
  * A fixed size cannot work: it suits one word and sends a sentence off the edge
- * of the paper. The line is fitted to the sheet's DIAGONAL — the longest
- * straight run a rotated stamp can use — from a rough average glyph advance
+ * of the paper. The line is fitted to the sheet's DIAGONAL - the longest
+ * straight run a rotated stamp can use - from a rough average glyph advance
  * (0.58 em for a bold sans), which is close enough for something drawn at 15 %
  * opacity.
  */
@@ -72,7 +72,7 @@ const escapeXml = (s: string) =>
  * family is named for the SYSTEM to resolve and falls back to whatever sans it
  * has. On something drawn at 15 % opacity that is not worth an embedded font.
  * ⚠ Kept in step with the platform stack (`--font-family-sans`, `index.css`) by
- * hand — it is the one place in this feature where a font is named statically
+ * hand - it is the one place in this feature where a font is named statically
  * rather than measured, so a change of stack has to be copied here.
  */
 export function stampUrl(g: PageGeometry, w: WatermarkSpec): string | undefined {
@@ -94,7 +94,7 @@ export function stampUrl(g: PageGeometry, w: WatermarkSpec): string | undefined 
       `font-size="${size.toFixed(1)}" font-weight="700" letter-spacing="2" ` +
       `fill="black" fill-opacity="${w.opacity}">${escapeXml(w.text)}</text>`
   } else {
-    // Half the sheet's width at scale 1 — a stamp, not a background photograph.
+    // Half the sheet's width at scale 1 - a stamp, not a background photograph.
     // `meet` keeps the picture's own proportions whatever box it is given.
     const box = Math.min(width, height) * 0.55 * w.scale
     body =
@@ -121,7 +121,7 @@ const MAX_EDGE = 1400
  * an A4, which is more than a watermark ever needs.
  *
  * Rejects anything that is not an image, and keeps PNG for pictures with an
- * alpha channel (a logo on transparent) — re-encoding those as JPEG would paint
+ * alpha channel (a logo on transparent) - re-encoding those as JPEG would paint
  * the transparency black.
  */
 export function readImage(file: File): Promise<string> {

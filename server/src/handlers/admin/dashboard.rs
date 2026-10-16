@@ -1,4 +1,4 @@
-//! `/admin/dashboard` — the instance overview, as panels of counted facts.
+//! `/admin/dashboard` - the instance overview, as panels of counted facts.
 //!
 //! # The rule, identical to its sibling
 //!
@@ -30,7 +30,7 @@
 //! # What is missing, and why it is missing rather than zero
 //!
 //! The reference console this page is modelled on also panels **file sharing
-//! exposure** — how much is shared, internally and externally. That fact lives
+//! exposure** - how much is shared, internally and externally. That fact lives
 //! in `drive`, in `photos`, in `office`: module schemas the core never reads. It
 //! is not rendered here, and the page says so in words, because a panel showing
 //! `0` would be read as "nothing is shared" when it means "nobody measured".
@@ -43,11 +43,11 @@
 //! # Serving a report as well as a page
 //!
 //! The console's report page (`/admin/reports/<panel>`) is a printable document
-//! about ONE panel over ONE period, and it reads this same endpoint — narrowed
+//! about ONE panel over ONE period, and it reads this same endpoint - narrowed
 //! by `?panel=<id>` and widened by `?full=true`. Both are explicit parameters
 //! rather than a change of default: a report must not truncate a ranking at six
 //! accounts, and a dashboard must not pay a report's query cost to draw six.
-//! Everything else — the window, the comparison, the privileges — is the same
+//! Everything else - the window, the comparison, the privileges - is the same
 //! reading, so a figure printed on paper and the figure on the card can never
 //! disagree.
 //!
@@ -156,7 +156,7 @@ struct Panel {
     /// The same measurement over the window of identical length before this one.
     ///
     /// `None` means the panel describes the present and nothing recorded its
-    /// past — see the note at the top of the file. The console prints "état
+    /// past - see the note at the top of the file. The console prints "état
     /// actuel" rather than inventing an arrow.
     previous_total: Option<i64>,
     /// Read as a top-N list rather than as parts of a whole.
@@ -175,9 +175,9 @@ struct Panel {
     /// by a report, which would otherwise present a cut list as a complete one.
     breakdown_truncated: bool,
     /// A limit of the MEASUREMENT, printed under the chart. Never a warning
-    /// about the instance — a statement about what the number can mean.
+    /// about the instance - a statement about what the number can mean.
     caveat: Option<&'static str>,
-    /// Where the figure comes from — the table, the predicate, the unit. Read by
+    /// Where the figure comes from - the table, the predicate, the unit. Read by
     /// the report page, which states the method under the tables.
     ///
     /// Carried by the constructors rather than added afterwards: a panel whose
@@ -203,7 +203,7 @@ struct Panel {
 /// decided to withhold.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 enum Records {
-    /// Not asked for — a dashboard card. Nothing is read and nothing is said.
+    /// Not asked for - a dashboard card. Nothing is read and nothing is said.
     NotAsked,
     /// Asked for, and the caller holds what it takes.
     Asked,
@@ -291,7 +291,7 @@ impl Panel {
         self
     }
 
-    /// The records read behind the figure, or the reason there are none — the
+    /// The records read behind the figure, or the reason there are none - the
     /// pair [`records_of`] returns.
     fn with_records(mut self, records: (Option<DetailTable>, Option<&'static str>)) -> Self {
         self.detail = records.0;
@@ -380,7 +380,7 @@ async fn day_keyed_totals(
 ///
 /// `full` says whether the caller is a REPORT: every ranking is then read up to
 /// the shared ceiling instead of stopping at the handful a card draws.
-/// Breakdowns over a CLOSED vocabulary ignore it — their statements carry no
+/// Breakdowns over a CLOSED vocabulary ignore it - their statements carry no
 /// `LIMIT` and are complete either way.
 /// `ask` says whether the caller wants the RECORDS behind the figure, and
 /// whether it may have them. Only the windowed panels can answer it; the
@@ -405,7 +405,7 @@ async fn compute(
                 .with_series(period::series(db, &what, win, id).await?)
                 // The accounts themselves, which is the whole point of the
                 // figure: "twelve accounts appeared" is not actionable, "these
-                // twelve did" is. Gated on `core.users.read` as well — see
+                // twelve did" is. Gated on `core.users.read` as well - see
                 // `Panelled::naming_accounts`.
                 .with_records(records_of(db, &what, win, ask, detail::ACCOUNT, id).await?)
         }
@@ -414,8 +414,8 @@ async fn compute(
         //
         // There are exactly three, and it matters that the list is short: this
         // instance has no "archived" account, so no such slice is drawn. The
-        // subtlety is that `is_active = FALSE` covers TWO different situations —
-        // suspended and awaiting erasure — and only `deleted_at` tells them
+        // subtlety is that `is_active = FALSE` covers TWO different situations -
+        // suspended and awaiting erasure - and only `deleted_at` tells them
         // apart (see migration 000109, which exists precisely because the
         // confusion was destroying suspended accounts). The `CASE` below reads
         // `deleted_at` FIRST for that reason.
@@ -461,7 +461,7 @@ async fn compute(
         //
         // The obvious source is wrong, and quietly: a refresh token is re-minted
         // on every ROTATION (`handlers::auth::refresh`), so rows of that table
-        // count "how often a session renewed itself" — a figure that rises with
+        // count "how often a session renewed itself" - a figure that rises with
         // the length of a working day and not at all with the number of people.
         // A `session_opened` event is written exactly once per sign-in, by both
         // the password path and the OIDC one, and it is the same source the
@@ -475,7 +475,7 @@ async fn compute(
                 .with_records(records_of(db, &what, win, ask, detail::DEVICE, id).await?)
         }
 
-        // The same events, counted by PERSON — the figure the reference console
+        // The same events, counted by PERSON - the figure the reference console
         // calls "unique sign-ins", and a different question from the one above:
         // one account signing in from three machines is three sign-ins and one
         // person. `actor_id` is the account the event was recorded for.
@@ -523,7 +523,7 @@ async fn compute(
         // Counted by the core's own proxy, which every browser call to every
         // module crosses (`crate::modules::usage`). No module declares anything,
         // none can opt out, and the counter holds nothing finer than
-        // `(day, module, account)` — see migration 000123 for what it refuses to
+        // `(day, module, account)` - see migration 000123 for what it refuses to
         // store and why.
         "app_usage" => {
             let (first, last) = win.local_days();
@@ -577,7 +577,7 @@ async fn compute(
             )
             .caveat("app_usage_scope")
             // `core.module_usage_daily` holds nothing finer than
-            // `(day, module, account)` — by design, see migration 000123. There
+            // `(day, module, account)` - by design, see migration 000123. There
             // is no individual visit to list, and inventing one would be worse
             // than saying so.
             .without_records(detail::absent::AGGREGATED)
@@ -608,7 +608,7 @@ async fn compute(
 
             let (first, _) = win.local_days();
             // The last point measured BEFORE the window opened. `None` when the
-            // instance is younger than the window, or was switched off then —
+            // instance is younger than the window, or was switched off then -
             // and `None` prints no percentage at all rather than a change from
             // an imagined zero.
             let previous: Option<i64> = db
@@ -729,7 +729,7 @@ async fn compute(
 /// How far back each source can actually answer.
 ///
 /// Served with the page so the console can say, on a 180-day window, that the
-/// attendance counters only keep 90 — instead of drawing a flat start that reads
+/// attendance counters only keep 90 - instead of drawing a flat start that reads
 /// as a quiet quarter when it is a purged one. `usage_since` covers the other
 /// end of the same problem: a counter that started last Tuesday must not make
 /// the applications look abandoned before that.
@@ -798,17 +798,17 @@ pub struct DashboardQuery {
     pub detail: Option<bool>,
 }
 
-/// `GET /api/v1/admin/dashboard` — every panel the caller may see.
+/// `GET /api/v1/admin/dashboard` - every panel the caller may see.
 pub async fn dashboard(
     State(state): State<AppState>,
-    // `AdminAudit` performs the exact same authorisation `AdminUser` did — it is
-    // built on it — and additionally carries the context needed to record the
+    // `AdminAudit` performs the exact same authorisation `AdminUser` did - it is
+    // built on it - and additionally carries the context needed to record the
     // consultation of the records below.
     audit: AdminAudit,
     ctx: AdminCtx,
     Query(q): Query<DashboardQuery>,
 ) -> Result<Json<Value>, AppError> {
-    // Opening the page at all — the same key the nav entry is gated on. Each
+    // Opening the page at all - the same key the nav entry is gated on. Each
     // panel is narrowed again below, at instance scope.
     ctx.require(keys::STATS_READ)?;
 
@@ -843,8 +843,8 @@ pub async fn dashboard(
             withheld.push(spec.id);
             continue;
         }
-        // The records take the panel's own privilege — held already, or the
-        // panel would not be here — plus, where the rows name accounts, the one
+        // The records take the panel's own privilege - held already, or the
+        // panel would not be here - plus, where the rows name accounts, the one
         // that opens the directory. Both at INSTANCE scope, like the figure.
         let ask = match (wants_detail, spec.detail_privilege) {
             (false, _) => Records::NotAsked,
@@ -930,7 +930,7 @@ mod tests {
 
     /// A panel whose records name accounts must ask for the privilege that
     /// opens the directory. Without this, a delegated reporter holding
-    /// statistics alone would be handed the list of who was created — a figure
+    /// statistics alone would be handed the list of who was created - a figure
     /// they may read, turned into a directory they may not.
     #[test]
     fn the_records_that_name_accounts_take_the_directory_privilege() {
@@ -951,7 +951,7 @@ mod tests {
     }
 
     /// A snapshot has no window, therefore no dated records to list. Said by the
-    /// constructor, so no panel can forget to say it — and an event panel starts
+    /// constructor, so no panel can forget to say it - and an event panel starts
     /// with nothing said, because its records depend on what the caller asked.
     #[test]
     fn a_snapshot_states_that_it_has_no_records() {

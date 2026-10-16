@@ -1,7 +1,7 @@
 <!-- ListView: Details with Column children over bound rows; Item children with sub-items; List and LargeIcon views. -->
 <Stack xmlns="https://kubuno.com/views" xmlns:x="https://kubuno.com/views/x" Gap="20">
   <Stack Gap="6">
-    <Label Text="Details — Columns over ItemsSource (2 000 rows), MultiSelect" Role="Meta" ForeColor="TextSecondary"/>
+    <Label Text="Details - Columns over ItemsSource (2 000 rows), MultiSelect" Role="Meta" ForeColor="TextSecondary"/>
     <ListView ItemsSource="{Binding files}" MultiSelect="true" Height="220" SelectedIndex="{Binding file, Mode=TwoWay}"
               AccessibleName="Fichiers" AccessibleDescription="gallery-list" OnItemActivate="file_activate">
       <Column Header="Nom" Binding="{Binding Name}"/>
@@ -12,7 +12,7 @@
   </Stack>
   <Stack Direction="LeftToRight" Gap="20" WrapContents="true" CrossAlign="Start">
     <Stack Gap="6" Width="300">
-      <Label Text="Details — Item children" Role="Meta" ForeColor="TextSecondary"/>
+      <Label Text="Details - Item children" Role="Meta" ForeColor="TextSecondary"/>
       <ListView AccessibleName="Contacts">
         <Column Header="Nom"/>
         <Column Header="Ville" Width="110"/>

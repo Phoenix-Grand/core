@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2026 Kubuno contributors
 // SPDX-License-Identifier: AGPL-3.0-or-later
 /**
- * `@kubuno/host-runtime/entry` — the Visual Studio design page of a MODULE project, in project mode.
+ * `@kubuno/host-runtime/entry` - the Visual Studio design page of a MODULE project, in project mode.
  *
  * Loaded by the module's own Vite dev server at `/__kubuno_design__/` (`@kubuno/views-compiler`'s plugin, for a
  * project whose `kubuno.views.json` names no `design.entry`). Copied untouched into `dist/project/entry.js` by the
@@ -11,7 +11,7 @@
  * - the page's stylesheet (the host CSS, its fonts, the surface's chrome) is linked first, so that the project's
  *   own stylesheet (`design.setup`) lands after it, as in the host;
  * - `design-page.js` is the prebuilt page, built with the host's shared modules (`./shared/*`), which the plugin
- *   gives the project's code for `react`, `@ui`, `@kubuno/sdk`, `@kubuno/drive`, `@kubuno/views`, … — one instance
+ *   gives the project's code for `react`, `@ui`, `@kubuno/sdk`, `@kubuno/drive`, `@kubuno/views`, … - one instance
  *   of each for the page and the project;
  * - a module of the project changed on disk (HMR): the page picks up the latest code-behind and controls.
  */

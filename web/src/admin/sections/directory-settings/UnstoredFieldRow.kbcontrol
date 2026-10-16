@@ -1,4 +1,4 @@
-<!-- UnstoredFieldRow — converted from UnstoredFieldRow.tsx by @kubuno/views-migrate. -->
+<!-- UnstoredFieldRow - converted from UnstoredFieldRow.tsx by @kubuno/views-migrate. -->
 <UserControl x:Props="UnstoredFieldRowProps">
   <Stack Direction="LeftToRight" Gap="12" CrossAlign="Center" Class="py-3">
     <CheckBox Enabled="false" Text="{Binding text}" OnCheckedChanged="check_box_checked_changed"/>

@@ -25,7 +25,7 @@ import com.kubuno.android.ui.theme.KubunoTheme
 
 /**
  * The Kubuno button, transcribed from the web design system (core/frontend/
- * src/ui/Button.tsx). Colour and fill carry the hierarchy — buttons are NEVER
+ * src/ui/Button.tsx). Colour and fill carry the hierarchy - buttons are NEVER
  * bold, and the radius is fixed at 6dp (rounded-md), never overridable.
  */
 enum class KubunoButtonVariant { PRIMARY, SECONDARY, GHOST, TEXT, DANGER, TEXT_DANGER }

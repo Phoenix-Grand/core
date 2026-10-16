@@ -17,7 +17,7 @@ value class AccountId(val value: String) {
 }
 
 /**
- * Everything non-secret about an account. Tokens never live here — they stay
+ * Everything non-secret about an account. Tokens never live here - they stay
  * in the per-account encrypted store.
  *
  * [serverUrl] is normalised without a trailing slash, and together with

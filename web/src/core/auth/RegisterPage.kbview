@@ -1,4 +1,4 @@
-<!-- RegisterPage — converted from RegisterPage.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- RegisterPage - converted from RegisterPage.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <Stack Direction="LeftToRight" Gap="0" CrossAlign="Center" Justify="Center" BackColor="Surface1" Class="min-h-screen p-8">
   <Panel Class="w-full max-w-md bg-white rounded-xl shadow-sm border border-border p-8">
     <Stack Direction="LeftToRight" CrossAlign="Center" Class="mb-6">

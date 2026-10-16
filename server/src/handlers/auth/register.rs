@@ -52,7 +52,7 @@ pub async fn register(
     //
     // Checked against **verified** domains only: a registry entry nobody has
     // proven would let whoever typed it decide who may open an account here.
-    // The refusal names the accepted domains — an address at the wrong domain is
+    // The refusal names the accepted domains - an address at the wrong domain is
     // a mistake, not an attack, and hiding the list would only make it a
     // guessing game. Nothing about existing accounts is disclosed by it.
     let restricted: bool = crate::settings::instance_value(&state.db, "auth.registration_domains_only")
@@ -87,7 +87,7 @@ pub async fn register(
         return Err(AppError::Conflict("Email ou nom d'utilisateur déjà utilisé".into()));
     }
 
-    // A public sign-up names no unit, so it lands at the root of the tree — not
+    // A public sign-up names no unit, so it lands at the root of the tree - not
     // outside it. An account outside the tree is invisible to every DELEGATED
     // administrator (`handlers/admin/users.rs` filters by subtree) and resolves
     // its settings as `default → instance`, SKIPPING every unit-level value,
@@ -95,14 +95,14 @@ pub async fn register(
     // naming the unit here is what makes the intention readable at the call site.
     let root_unit = crate::database::seed::root_org_unit(&state.db).await;
 
-    // The configured default, not the column default — and resolved FROM THE
+    // The configured default, not the column default - and resolved FROM THE
     // UNIT the account is being created in, so a per-unit (or locked) quota set
     // on the root applies to the people who sign up into it. Until this was
     // read, raising `storage.default_quota_bytes` changed nothing for the
     // accounts it was raised for.
     let quota = crate::models::user::default_quota_for(&state.db, root_unit).await;
 
-    // The password policy of the unit the account is about to land in — the
+    // The password policy of the unit the account is about to land in - the
     // most specific scope that can be known before the row exists. Resolved and
     // applied BEFORE hashing: a refused password must not cost an argon2id, and
     // a public route is the one an attacker can call at will.

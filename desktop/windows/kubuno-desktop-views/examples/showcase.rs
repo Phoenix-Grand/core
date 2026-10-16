@@ -1,5 +1,5 @@
 //! Visual check for the five component families integrated in this phase
-//! (`display`/`choice`/`text`/`containers`/`data`) — one tab per family, all
+//! (`display`/`choice`/`text`/`containers`/`data`) - one tab per family, all
 //! wired against a single [`ShowcaseViewModel`]. Not a generic file viewer
 //! like `view_preview` (that one stays scoped to `settings.kbview`'s own
 //! bindings): this example's view model exists only to give
@@ -25,7 +25,7 @@ use kubuno_desktop_views::{handlers, node::ViewEventKind};
 
 const SHOWCASE_PATH: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/examples/views/showcase.kbview");
 
-/// One row `DataTable`'s `ItemsSource="{Binding Users}"` reads — proof the
+/// One row `DataTable`'s `ItemsSource="{Binding Users}"` reads - proof the
 /// `Value::List`/`Row` binding (not just static `<Column>` markup) is wired
 /// end to end, alongside the static-children `ListBox`/`ListView`/`TreeView`
 /// on the same tab.
@@ -173,7 +173,7 @@ fn main() -> ExitCode {
     let mut vm = ShowcaseViewModel::default();
     let mut handlers = handler_table();
 
-    let result = host::run_with_chrome("Kubuno XML views — family showcase", 1000, 760, Theme::light(), Chrome::Kubuno, move |c, f: &Frame| {
+    let result = host::run_with_chrome("Kubuno XML views - family showcase", 1000, 760, Theme::light(), Chrome::Kubuno, move |c, f: &Frame| {
         host::request_repaint_after(250);
         watcher.poll(&mut runtime);
 
@@ -212,7 +212,7 @@ fn main() -> ExitCode {
     }
 }
 
-/// See `view_preview.rs`'s own copy — kept identical rather than shared,
+/// See `view_preview.rs`'s own copy - kept identical rather than shared,
 /// since that example belongs to another agent's file right now.
 fn paint_diagnostics_banner(c: &dyn ControlCanvas, content: Rect, top: f32, runtime: &Runtime) -> f32 {
     let diags = runtime.diagnostics();
@@ -223,7 +223,7 @@ fn paint_diagnostics_banner(c: &dyn ControlCanvas, content: Rect, top: f32, runt
     c.fill_rounded(&banner, 4.0, &theme.danger_light);
     let fmt = &c.formats().body_strong;
     let head = Rect::new(banner.left + 8.0, banner.top + 4.0, banner.right - 8.0, banner.top + 20.0);
-    c.text(&format!("{} diagnostic(s) — showing the last good view", diags.len()), &head, fmt, &theme.danger, false);
+    c.text(&format!("{} diagnostic(s) - showing the last good view", diags.len()), &head, fmt, &theme.danger, false);
     let small = &c.formats().caption;
     for (i, d) in diags.iter().take(3).enumerate() {
         let y = banner.top + 22.0 + 16.0 * i as f32;

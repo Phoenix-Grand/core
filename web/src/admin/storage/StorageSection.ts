@@ -223,7 +223,7 @@ export class StorageSection extends ViewBase {
     return Math.max(this.data.accounts, 1)
   }
 
-  /** `<CompositionBar Format>` for the states bar: a value-transforming prop (WV-7 blocker E) — the segments are
+  /** `<CompositionBar Format>` for the states bar: a value-transforming prop (WV-7 blocker E) - the segments are
    * account counts, not bytes, so they are shown as plain numbers instead of the control's default `formatBytes`. */
   get sto_states_format() {
     return (n: number) => String(n)

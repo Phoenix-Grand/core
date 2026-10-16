@@ -1,5 +1,5 @@
 <!--
-  The home page: three cards, the one the Tauri build had — the sync state (a dot, what it says, the
+  The home page: three cards, the one the Tauri build had - the sync state (a dot, what it says, the
   last summary, « Synchroniser maintenant »), the connection (the server and the switch that cuts the
   network on purpose) and the quick links. The application tiles are not here: they live in the
   waffle, as on the web. Every action is raised as Command (sync_now, open_folder, open_web,

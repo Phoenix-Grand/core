@@ -1,4 +1,4 @@
-<!-- RuleSentence — converted from RuleSentence.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- RuleSentence - converted from RuleSentence.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="RuleSentenceProps">
   <Panel HtmlTag="P" ForeColor="TextPrimary" Class="leading-relaxed">
     <!-- TODO(views-migrate): a list whose item is not a single element -->

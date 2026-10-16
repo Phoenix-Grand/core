@@ -2,7 +2,7 @@
 //!
 //! Read-only by design: nothing here writes an entry, and there is no delete
 //! route. Retention (`crate::audit::retention`) is the only thing that removes
-//! rows, and it removes them by age alone — a trail an administrator can prune
+//! rows, and it removes them by age alone - a trail an administrator can prune
 //! selectively is not a trail.
 
 use axum::{
@@ -27,7 +27,7 @@ use crate::{
     state::AppState,
 };
 
-/// `GET /api/v1/admin/audit` — one page of the trail, newest first.
+/// `GET /api/v1/admin/audit` - one page of the trail, newest first.
 ///
 /// Pagination is by cursor (`occurred_at` + `id`), never by offset: entries are
 /// written while the operator reads, and an offset would shift every page under
@@ -46,7 +46,7 @@ pub async fn list_audit(
     })))
 }
 
-/// `GET /api/v1/admin/audit/verify` — recompute the tamper-evidence hash chain.
+/// `GET /api/v1/admin/audit/verify` - recompute the tamper-evidence hash chain.
 ///
 /// Returns how many chained rows were checked and, if the chain is broken, the id
 /// of the first offending row and a short reason (`content` = a row was edited,
@@ -66,7 +66,7 @@ pub async fn verify_audit(
     Ok(Json(json!({ "report": report })))
 }
 
-/// `GET /api/v1/admin/audit/:id` — one entry plus its field-by-field diff.
+/// `GET /api/v1/admin/audit/:id` - one entry plus its field-by-field diff.
 pub async fn get_audit_entry(
     State(state): State<AppState>,
     _admin: AdminUser,
@@ -79,7 +79,7 @@ pub async fn get_audit_entry(
     Ok(Json(json!({ "entry": row, "diff": diff })))
 }
 
-/// `GET /api/v1/admin/audit/facets` — distinct values for the filter selects.
+/// `GET /api/v1/admin/audit/facets` - distinct values for the filter selects.
 ///
 /// Bounded lists (a few dozen action names at most), so this stays cheap; it
 /// saves the screen from hard-coding a catalogue that would drift the moment a
@@ -136,11 +136,11 @@ pub async fn audit_facets(
     })))
 }
 
-/// `GET /api/v1/admin/audit/export` — the filtered trail as a CSV stream.
+/// `GET /api/v1/admin/audit/export` - the filtered trail as a CSV stream.
 ///
 /// Streamed in chunks rather than materialised: an export of a year of activity
 /// must not have to fit in memory, on either side of the wire. The export is
-/// itself audited — reading the whole trail is an act worth recording.
+/// itself audited - reading the whole trail is an act worth recording.
 pub async fn export_audit_csv(
     State(state): State<AppState>,
     audit: AdminAudit,
@@ -233,7 +233,7 @@ pub async fn export_audit_csv(
         .into_response())
 }
 
-/// `GET /api/v1/admin/audit/retention` — current window and the floor, so the
+/// `GET /api/v1/admin/audit/retention` - current window and the floor, so the
 /// screen can explain why a lower value is refused.
 pub async fn audit_retention(
     State(state): State<AppState>,

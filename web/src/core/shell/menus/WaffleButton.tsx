@@ -1,5 +1,5 @@
 /**
- * `WaffleButton` — the header's app-launcher button and the popover that carries the `WaffleMenu` user
+ * `WaffleButton` - the header's app-launcher button and the popover that carries the `WaffleMenu` user
  * control (contract: vskubuno `docs/SHELL-CONTROLS.md`). The popover is platform chrome, so it lives here,
  * not in the user control: a Radix menu portalled to <body> (never clipped by an ancestor's overflow,
  * transform or stacking context), anchored to the button with flip and clamping to the viewport, closed by

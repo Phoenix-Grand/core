@@ -1,4 +1,4 @@
-<!-- ConsumersCard — converted from ConsumersCard.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- ConsumersCard - converted from ConsumersCard.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="ConsumersCardProps">
   <Panel Class="contents">
     <!-- TODO(views-migrate): <DataTable> columns, rowKey, onRetry, rowActions, onRowClick, filtered, onClearFilters, defaultSort, minTableWidth, t, toolbar, emptyState: no .kbview property -->

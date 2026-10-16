@@ -4,7 +4,7 @@
 //! migration `000060` applies and a missing row falls back to the declared
 //! factory default rather than taking a background job down.
 //!
-//! Values are **clamped, never trusted** — same discipline as
+//! Values are **clamped, never trusted** - same discipline as
 //! [`crate::backup::policy`]. A retention of zero would delete the archive the
 //! moment it became available; a hold of a year would make the feature
 //! unusable. Both are refused at the API and clamped again here, because the
@@ -214,7 +214,7 @@ pub async fn load(db: &DbPool) -> Policy {
 ///
 /// A separate struct rather than three more fields on [`Policy`], because the
 /// two answer different questions and share only the disk they write to. The
-/// values they do share — the retention and the per-file ceiling — are read from
+/// values they do share - the retention and the per-file ceiling - are read from
 /// the **same** keys on purpose: "how long an archive of this instance lives" has
 /// one answer, and giving the self-service path its own copy would let the two
 /// drift until an operator who shortened the retention discovers half the
@@ -222,7 +222,7 @@ pub async fn load(db: &DbPool) -> Policy {
 #[derive(Debug, Clone, Serialize)]
 pub struct SelfPolicy {
     /// Hours between "the archive is finished" and "it can be downloaded".
-    /// **Zero by default**, unlike the administrator's 48 h — see
+    /// **Zero by default**, unlike the administrator's 48 h - see
     /// [`KEY_SELF_HOLD_HOURS`] for the reasoning, which is that the hold defends
     /// against exfiltrating *everybody's* data from a stolen session, and a
     /// stolen session can already read this one account's data in the interface.
@@ -248,7 +248,7 @@ impl Default for SelfPolicy {
 }
 
 impl SelfPolicy {
-    /// The two dates of a personal request, computed once and stored — same rule
+    /// The two dates of a personal request, computed once and stored - same rule
     /// as [`Policy::window_from`], and the same reason.
     pub fn window_from(&self, now: DateTime<Utc>) -> (DateTime<Utc>, DateTime<Utc>) {
         let available = now + chrono::Duration::hours(self.hold_hours.clamp(0, SELF_HOLD_HOURS_MAX));
@@ -319,7 +319,7 @@ pub async fn load_self(db: &DbPool) -> SelfPolicy {
 /// account itself, which is what gives the setting the granularity the feature
 /// is specified with: the value may be written at the instance, on an
 /// organisational unit, on a group or on one account, and the most specific one
-/// — or the most general **lock** — wins. Nothing here knows about units; it
+/// - or the most general **lock** - wins. Nothing here knows about units; it
 /// asks the chain, exactly as the password policy does.
 ///
 /// A read failure falls back to the declared factory default (enabled) rather
@@ -337,7 +337,7 @@ pub async fn self_service_enabled(db: &DbPool, user_id: uuid::Uuid) -> bool {
             .unwrap_or(true),
         Err(e) => {
             tracing::error!(error = %e, user_id = %user_id,
-                "export: résolution du libre-service impossible — valeur d'usine retenue");
+                "export: résolution du libre-service impossible - valeur d'usine retenue");
             true
         }
     }

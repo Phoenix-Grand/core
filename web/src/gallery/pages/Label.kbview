@@ -1,11 +1,11 @@
 <!-- Label: the shared roles, the web weights and styles, alignment and overflow, theme colours. -->
 <Stack xmlns="https://kubuno.com/views" xmlns:x="https://kubuno.com/views/x" Gap="16">
   <Stack Gap="4">
-    <Label Text="Micro — badges, counters" Role="Micro"/>
-    <Label Text="Meta — metadata, captions" Role="Meta"/>
-    <Label Text="Body — labels, fields, menus" Role="Body"/>
-    <Label Text="Heading — section headers" Role="Heading"/>
-    <Label Text="Title — object name" Role="Title"/>
+    <Label Text="Micro - badges, counters" Role="Micro"/>
+    <Label Text="Meta - metadata, captions" Role="Meta"/>
+    <Label Text="Body - labels, fields, menus" Role="Body"/>
+    <Label Text="Heading - section headers" Role="Heading"/>
+    <Label Text="Title - object name" Role="Title"/>
   </Stack>
   <Stack Gap="4">
     <Label Text="FontWeight Regular" FontWeight="Regular"/>

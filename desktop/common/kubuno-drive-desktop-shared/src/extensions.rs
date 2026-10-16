@@ -31,13 +31,13 @@ pub fn right(s: &str, length: usize) -> &str {
     &s[start..]
 }
 
-/// Port of `LinqExtensions.AddSorted` — inserts while keeping the list sorted.
+/// Port of `LinqExtensions.AddSorted` - inserts while keeping the list sorted.
 pub fn add_sorted<T: Ord>(list: &mut Vec<T>, item: T) {
     let index = list.binary_search(&item).unwrap_or_else(|i| i);
     list.insert(index, item);
 }
 
-/// Port of `TaskExtensions.WithTimeoutAsync` — resolves to `default_value`
+/// Port of `TaskExtensions.WithTimeoutAsync` - resolves to `default_value`
 /// when the future does not complete in time.
 pub async fn with_timeout<T, F>(future: F, timeout: Duration, default_value: T) -> T
 where
@@ -48,7 +48,7 @@ where
         .unwrap_or(default_value)
 }
 
-/// Port of `SafetyExtensions.IgnoreExceptions` — runs a fallible operation,
+/// Port of `SafetyExtensions.IgnoreExceptions` - runs a fallible operation,
 /// logging and swallowing the error.
 pub fn ignore_errors<T, E: std::fmt::Display>(
     result: Result<T, E>,

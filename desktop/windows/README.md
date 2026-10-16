@@ -1,7 +1,7 @@
-# Kubuno Desktop — Windows
+# Kubuno Desktop - Windows
 
 The Windows version of Kubuno Desktop: native Win32 applications written in Rust,
-drawn with Direct2D, DirectWrite and DirectComposition — no web view, no UI
+drawn with Direct2D, DirectWrite and DirectComposition - no web view, no UI
 framework, no runtime to install.
 
 This folder only holds what Windows does differently: the complete, portable app is in
@@ -22,12 +22,12 @@ windows/
 ├── kubuno-desktop-views, -views-ls, -data, -data-tool, -print, -resources, -app-storage-components/
 ├── kubuno-drive-desktop-app-controls/  the painting surface (ported from Files, MIT)
 ├── kubuno-desktop-shell-controls/, kubuno-desktop-header-data/   the header menus and their data, for every app
-├── kubuno-desktop-shell/               kubuno-desktop.exe — the Windows face of the shell's app
+├── kubuno-desktop-shell/               kubuno-desktop.exe - the Windows face of the shell's app
 ├── packaging/                          Microsoft Store (MSIX): manifest, Store logos, packaging script
 └── tools/                              UI reference and parity tooling (PowerShell)
 ```
 
-### The shell — `kubuno-desktop.exe`
+### The shell - `kubuno-desktop.exe`
 
 `kubuno-desktop-shell` puts a Windows face on the portable app of
 `../common/kubuno-desktop-shell-common`: its `main.rs` registers the Windows platform (the Documents known folder,
@@ -38,16 +38,16 @@ The launcher that stays with the user: accounts, activity, settings, favourites 
 labels, the applications of each Kubuno instance, and file synchronisation driven
 by `kubuno-sync`. It integrates with Windows itself:
 
-- **Cloud Files API** — each sync folder is registered as a sync root, so Explorer
+- **Cloud Files API** - each sync folder is registered as a sync root, so Explorer
   shows the standard in-sync / syncing overlays and a Status column, without
   administrator rights;
-- **Explorer navigation pane** — each instance's sync folder appears as a root node
+- **Explorer navigation pane** - each instance's sync folder appears as a root node
   in Explorer's left pane (a per-user namespace extension under `HKEY_CURRENT_USER`);
-- **Administration** — a native port of the web administration console (dashboard,
+- **Administration** - a native port of the web administration console (dashboard,
   users, groups, organisational units, audiences, modules, storage, settings), with
   an "open in the browser" fallback for the sections not ported yet.
 
-### Kubuno Drive — `drive.exe`
+### Kubuno Drive - `drive.exe`
 
 A native file manager for Kubuno Drive. It now lives in the drive module's repository
 ([`kubuno/drive`](https://github.com/kubuno/drive), `desktop/windows/`): window, tabs, views and actions
@@ -56,9 +56,9 @@ in `kubuno-drive-desktop`, custom Direct2D controls, the shell/storage layer, lo
 
 ### Chat and Documents
 
-- **`kubuno-chat`** — two-pane messaging for the Chat module, now in the chat module's repository
+- **`kubuno-chat`** - two-pane messaging for the Chat module, now in the chat module's repository
   ([`kubuno/chat`](https://github.com/kubuno/chat), `desktop/windows/`).
-- **`kubuno-documents`** — a native word processor for the Office module's documents, now in the office module's
+- **`kubuno-documents`** - a native word processor for the Office module's documents, now in the office module's
   repository ([`kubuno/office`](https://github.com/kubuno/office), `desktop/`; its engine in `common/core`).
 
 ## Requirements

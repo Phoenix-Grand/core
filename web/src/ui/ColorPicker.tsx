@@ -17,8 +17,8 @@ export type PickerTheme = {
 }
 
 // Extension point: an extra circular button appended to the left tool column
-// (below the SV-shape toggles + eyedropper). Lets a consuming module — e.g.
-// PaintSharp's Apex adding a "no fill" option — extend the picker without the
+// (below the SV-shape toggles + eyedropper). Lets a consuming module - e.g.
+// PaintSharp's Apex adding a "no fill" option - extend the picker without the
 // core knowing about module-specific concepts.
 export type PickerTool = {
   id: string
@@ -28,13 +28,13 @@ export type PickerTool = {
   onClick: () => void
 }
 
-// Thème sombre par défaut — correspond au chrome des éditeurs PaintSharp.
+// Thème sombre par défaut - correspond au chrome des éditeurs PaintSharp.
 export const DEFAULT_PICKER_THEME: PickerTheme = {
   accent: '#5a9bdc', border: '#212121', text: '#d6d6d6', textDim: '#8e8e8e', toolbar: '#393939',
   surface: '#252525', title: '#c0c0c0',
 }
 
-// Thème clair — pour les modules à interface claire (ex. Office documents).
+// Thème clair - pour les modules à interface claire (ex. Office documents).
 export const LIGHT_PICKER_THEME: PickerTheme = {
   accent: '#1a73e8', border: '#dadce0', text: '#202124', textDim: '#5f6368', toolbar: '#ffffff',
   surface: '#f1f3f4', title: '#5f6368',
@@ -105,7 +105,7 @@ export function harmonyColors(scheme: Scheme, h: number, s: number, v: number): 
 }
 
 // Relative hue angles (degrees from the base hue) that define each scheme's
-// geometry — reused to draw the selector glyphs so the icon matches the result.
+// geometry - reused to draw the selector glyphs so the icon matches the result.
 const HARMONY_ANGLES: Record<Scheme, number[]> = {
   comp:   [0, 180],
   analog: [-30, 0, 30],
@@ -125,7 +125,7 @@ function HarmonyIcon({ scheme, size = 20, color = 'currentColor' }: {
   const c = size / 2, R = size / 2 - 3, dot = Math.max(1.6, size * 0.095)
   const pt = (a: number): [number, number] =>
     [c + R * Math.sin(a * Math.PI / 180), c - R * Math.cos(a * Math.PI / 180)]
-  // Analogous hues sit only ±30° apart — too cramped to read at 20px, so the glyph
+  // Analogous hues sit only ±30° apart - too cramped to read at 20px, so the glyph
   // spreads them wider (illustrative only; the real harmony still uses HARMONY_ANGLES).
   const iconAngles = scheme === 'analog' ? [-48, 0, 48] : HARMONY_ANGLES[scheme]
   const pts = iconAngles.map(pt)
@@ -165,7 +165,7 @@ function HarmonyIcon({ scheme, size = 20, color = 'currentColor' }: {
 }
 
 type SvShape = 'square' | 'triangle' | 'circle'
-// Saturation/Value picker area — square, HSV triangle, or circle (Coolorus shapes).
+// Saturation/Value picker area - square, HSV triangle, or circle (Coolorus shapes).
 // Hue comes from the surrounding ring; this maps a 2D position to (s, v).
 function SvArea({ size, h, s, v, shape, onChange }: {
   size: number; h: number; s: number; v: number; shape: SvShape; onChange: (s:number,v:number)=>void
@@ -384,7 +384,7 @@ export function ColorPicker({ t, color, onChange, onClose, C: CProp = DEFAULT_PI
 
       {/* SV-shape column (left) + hue ring/SV area (centre) + harmony column (right) */}
       <div className="flex items-start gap-1.5 justify-center">
-        {/* SV area shape selector + screen eyedropper — vertical column of circular
+        {/* SV area shape selector + screen eyedropper - vertical column of circular
             buttons (mirrors the harmony column on the right), top-aligned. */}
         <div className="flex flex-col gap-1" style={{ height:SIZE }}>
           {(['square','triangle','circle'] as SvShape[]).map(sh => {
@@ -447,7 +447,7 @@ export function ColorPicker({ t, color, onChange, onClose, C: CProp = DEFAULT_PI
           <SvArea size={svSize} h={h} s={s} v={v} shape={svShape} onChange={(ns,nv)=>setHSV(h,ns,nv)} />
         </div>
 
-        {/* Harmony scheme selector — vertical column of circular icon buttons
+        {/* Harmony scheme selector - vertical column of circular icon buttons
             (replaces the old <select>). 6×32px + 5×4px gaps = 212px = wheel height. */}
         <div className="flex flex-col gap-1 justify-between" style={{ height:SIZE }}>
           {SCHEMES.map(sc => {

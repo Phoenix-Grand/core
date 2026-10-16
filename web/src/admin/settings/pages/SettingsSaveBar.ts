@@ -13,7 +13,7 @@ export interface SettingsSaveBarProps {
   count:    number
   /** Staged changes waiting in another section, tab or page. */
   elsewhere?: number
-  /** The way to reach them — a link, or a button that opens their section. */
+  /** The way to reach them - a link, or a button that opens their section. */
   elsewhereAction?: ReactNode
   /** Values the module's own declaration refuses. Blocks the write. */
   invalid?:  number

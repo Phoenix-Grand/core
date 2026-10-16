@@ -3,7 +3,7 @@
 //!
 //! SQLite runs unconditionally, on a throwaway file under `/tmp`. MySQL/MariaDB
 //! runs when `KUBUNO_DB_MYSQL_URL` names a **throwaway** database (a disposable
-//! server on a non-standard port — never a shared one); when it is unset the
+//! server on a non-standard port - never a shared one); when it is unset the
 //! MySQL test prints why it did nothing rather than failing, since a server may
 //! not be mountable in every environment.
 //!
@@ -201,7 +201,7 @@ async fn exercise_delta(pool: &DbPool) {
 }
 
 /// K tasks each take M sequences concurrently; the union must be exactly the
-/// contiguous range `1..=K*M` — no duplicate (two writers never share a seq)
+/// contiguous range `1..=K*M` - no duplicate (two writers never share a seq)
 /// and no gap.
 async fn exercise_concurrency(pool: &DbPool) {
     reset_tables(pool).await;
@@ -232,7 +232,7 @@ async fn exercise_concurrency(pool: &DbPool) {
 
 /// One SQLite test rather than several: each `#[tokio::test]` spins up its own
 /// multi-thread runtime, and several racing to open pools at once starved the
-/// connect and timed out — a harness artifact, not a primitive fault. Running
+/// connect and timed out - a harness artifact, not a primitive fault. Running
 /// the delta contract and the concurrency proof in sequence on one pool avoids
 /// it; the concurrency proof still spawns real parallel tasks inside.
 #[tokio::test(flavor = "multi_thread", worker_threads = 4)]

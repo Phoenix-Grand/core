@@ -1,4 +1,4 @@
-//! A signed-in session — the account, its token owner and an authenticated API client — and the server checks that
+//! A signed-in session - the account, its token owner and an authenticated API client - and the server checks that
 //! come before a sign-in.
 
 use std::sync::Arc;
@@ -74,7 +74,7 @@ impl Session {
         serde_json::from_value(user).map_err(|e| AccountError::Protocol(format!("profile: {e}")))
     }
 
-    /// Sign out: close the session on the server (best effort — a phone offline still signs out locally), then forget
+    /// Sign out: close the session on the server (best effort - a phone offline still signs out locally), then forget
     /// the refresh token and the account here.
     pub async fn sign_out(&self, store: Arc<dyn SecretStore>) -> Result<(), AccountError> {
         let refresh = self.owner.current_refresh().await;

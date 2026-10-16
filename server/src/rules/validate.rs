@@ -1,7 +1,7 @@
 //! Validation of a rule against the catalogue, applied on every write.
 //!
 //! Everything expensive or refusable happens **here**, once, in front of the
-//! person who can fix it — never on the hot path in front of the instance that
+//! person who can fix it - never on the hot path in front of the instance that
 //! would pay for it. By the time a rule reaches [`super::engine`] it is known
 //! to compare declared fields with permitted operators, to name actions that
 //! exist, and to fit inside the depth and breadth ceilings.
@@ -251,7 +251,7 @@ pub async fn prepare(db: &DbPool, input: &RuleInput) -> Result<RuleDraft, AppErr
 /// Four separate refusals, and each of them replaces a rule that would have
 /// looked armed while doing nothing:
 ///
-/// * a trigger with no content part cannot carry one — there is nothing to
+/// * a trigger with no content part cannot carry one - there is nothing to
 ///   inspect, so the rule could never fire;
 /// * a part the trigger does not declare is a typo, and a typo in a part name
 ///   is a detector leaf that silently reads no text at all;
@@ -315,7 +315,7 @@ async fn check_detectors(
         }
         if leaf.min_unique_matches > leaf.min_matches {
             // Not merely odd: unreachable. Distinct values are a subset of
-            // occurrences, so the rule could never fire — and would sit in the
+            // occurrences, so the rule could never fire - and would sit in the
             // console looking armed.
             return Err(AppError::Validation(format!(
                 "Le détecteur « {} » exige {} valeurs distinctes pour {} correspondances : ce seuil ne peut jamais être atteint",

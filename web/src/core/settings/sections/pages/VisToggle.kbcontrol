@@ -1,4 +1,4 @@
-<!-- VisToggle — converted from VisToggle.tsx by @kubuno/views-migrate. -->
+<!-- VisToggle - converted from VisToggle.tsx by @kubuno/views-migrate. -->
 <UserControl x:Props="VisToggleProps">
   <Panel AccessibleRole="PushButton"
          AutoSize="true"

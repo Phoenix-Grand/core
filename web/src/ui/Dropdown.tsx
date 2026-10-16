@@ -23,7 +23,7 @@ interface DropdownProps {
   dropdownMinWidth?: number
   placeholder?: string
   disabled?: boolean
-  /** Trigger height in px (default 28 — matches toolbar style) */
+  /** Trigger height in px (default 28 - matches toolbar style) */
   height?: number
   fontSize?: number
   className?: string
@@ -33,8 +33,8 @@ interface DropdownProps {
   /**
    * Whether the trigger takes the focus a click hands it.
    *
-   * `'auto'` (the default) is what a native select does — the click moves the
-   * focus here, so the field the reader has just left goes dark — EXCEPT when
+   * `'auto'` (the default) is what a native select does - the click moves the
+   * focus here, so the field the reader has just left goes dark - EXCEPT when
    * a text-editing surface holds the focus, where the click leaves it there so
    * the selection a toolbar is about to act on survives (see focusGuard.ts).
    * `true` always takes it; `false` never does. Neither is needed by a form.
@@ -117,7 +117,7 @@ export function Dropdown({
   const listId = useRef(`kb-dd-${Math.random().toString(36).slice(2, 8)}`).current
   const optId  = (i: number) => `${listId}-${i}`
   // Type-ahead: the letters typed in quick succession, matched against the
-  // start of the labels — "bo", "boo", "book" — and forgotten after a pause,
+  // start of the labels - "bo", "boo", "book" - and forgotten after a pause,
   // exactly as a native list does it.
   const typed = useRef({ text: '', at: 0 })
 
@@ -208,7 +208,7 @@ export function Dropdown({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, hi])
 
-  // Reposition the (position:fixed) popup so it stays anchored to the trigger —
+  // Reposition the (position:fixed) popup so it stays anchored to the trigger -
   // recomputed from the trigger's CURRENT rect, so it follows on scroll/resize
   // instead of drifting away. Flips above the trigger when there's no room below.
   // Is the trigger still visible, or has it scrolled out of the viewport / behind
@@ -267,13 +267,13 @@ export function Dropdown({
       else reposition()
     }
     // `pointerdown`, pas `mousedown` : un déclencheur Radix appelle `preventDefault()`
-    // sur pointerdown, ce qui SUPPRIME le mousedown de compatibilité — le menu ouvert
+    // sur pointerdown, ce qui SUPPRIME le mousedown de compatibilité - le menu ouvert
     // ne voyait alors jamais le clic et restait affiché. Capture pour passer devant
     // tout composant qui stoppe la propagation.
     // Escape closes THE LIST, and nothing else. Every window and page listens
     // for Escape on `window` too; a handler on the trigger runs after some of
     // them and a React `stopPropagation` does not reach a listener that was
-    // installed natively on the window — the editor closed under the list
+    // installed natively on the window - the editor closed under the list
     // (found by test). Capture on the window is the first thing to run, so
     // the key is consumed here before anyone else can read it.
     const onEsc = (e: KeyboardEvent) => {
@@ -332,7 +332,7 @@ export function Dropdown({
           const refuse = focusable === false || (focusable === 'auto' && focusIsWorthKeeping())
           if (refuse) e.preventDefault()
         }}
-        /* `:focus-visible`, not plain focus — the browser's own answer to "does
+        /* `:focus-visible`, not plain focus - the browser's own answer to "does
            this focus deserve to be shown?". A trigger clicked with the mouse
            keeps the DOM focus and would otherwise stay lit after its list is
            closed, which reads as a field that never let go. */

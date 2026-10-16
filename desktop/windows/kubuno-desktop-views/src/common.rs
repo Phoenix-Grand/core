@@ -5,7 +5,7 @@
 //! `AllowDrop`, `GenerateMember`…
 //!
 //! Every element is wrapped in a `crate::design::DesignSlot`; the slot reads these properties once
-//! at build time ([`CommonProps::read`], `None` when the element sets none of them — then nothing
+//! at build time ([`CommonProps::read`], `None` when the element sets none of them - then nothing
 //! changes, not even a branch per property) and applies them around its node's paint every frame:
 //!
 //! - **Visible** `false`: at run time the element is neither painted nor measured, takes no input,
@@ -15,7 +15,7 @@
 //!   leaves the Tab order; a focused descendant loses the focus.
 //! - **Colours, font, right to left**: the subtree paints through a
 //!   `kubuno_desktop_controls::styled::StyledCanvas` whose theme tokens (text, faces) and text formats are
-//!   overridden — so the `kubuno_desktop_ui` widgets, which paint with the ambient theme and formats, follow
+//!   overridden - so the `kubuno_desktop_ui` widgets, which paint with the ambient theme and formats, follow
 //!   without knowing. A control that paints its own face (a button, a text field) gets its face
 //!   tokens replaced; any other gets its box filled.
 //! - **Layout**: `MinimumSize`/`MaximumSize` clamp the box and the measure, `Margin` spaces the
@@ -59,7 +59,7 @@ pub fn is_disabled() -> bool {
     DISABLED.with(Cell::get) > 0
 }
 
-/// Marks the frame about to be painted as the designer's (or not) — set by the runtime.
+/// Marks the frame about to be painted as the designer's (or not) - set by the runtime.
 pub(crate) fn set_design_frame(design: bool) {
     DESIGN.with(|d| d.set(design));
 }
@@ -526,7 +526,7 @@ impl CommonProps {
     }
 }
 
-/// A frame where the pointer is away and no button is down — what a disabled element sees, and the
+/// A frame where the pointer is away and no button is down - what a disabled element sees, and the
 /// view under an open context menu.
 pub(crate) fn away_frame(frame: &Frame) -> Frame {
     away(frame)

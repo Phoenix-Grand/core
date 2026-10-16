@@ -1,4 +1,4 @@
-//! Instance health — the checks a self-hosted operator has nobody else to run.
+//! Instance health - the checks a self-hosted operator has nobody else to run.
 //!
 //! ## Why this exists
 //!
@@ -20,7 +20,7 @@
 //!   Two readers of the same fact drift, and the one that drifts is always the
 //!   one saying "everything is fine".
 //! * **The report is filtered by privilege.** A delegated administrator is not
-//!   shown a finding they cannot act on — and, since the score is computed over
+//!   shown a finding they cannot act on - and, since the score is computed over
 //!   what they can see, it is not a score about somebody else's problems.
 //! * **A check reports a verdict, never a credential.** The internal-secret
 //!   check grades the secret and returns one word; there is no code path in
@@ -28,18 +28,18 @@
 //!
 //! ## Layout
 //!
-//! * [`model`] — wire types, the score, the counts;
-//! * [`facts`] — one pass over the database, the configuration and the request;
-//! * [`checks`] — the catalogue, as pure functions over the facts;
-//! * [`disk`] — free space of the data volume (`statvfs`);
-//! * [`secret`] — the internal-secret verdict.
+//! * [`model`] - wire types, the score, the counts;
+//! * [`facts`] - one pass over the database, the configuration and the request;
+//! * [`checks`] - the catalogue, as pure functions over the facts;
+//! * [`disk`] - free space of the data volume (`statvfs`);
+//! * [`secret`] - the internal-secret verdict.
 //!
 //! ## Caching
 //!
 //! The evaluation costs half a dozen small queries and one `statvfs`, and the
 //! console asks for it on every admin page (the critical banner). It is cached
 //! process-wide for [`CACHE_TTL`] and invalidated on every settings write, so a
-//! setting the operator has just changed is never reported with its old value —
+//! setting the operator has just changed is never reported with its old value -
 //! the single most damaging thing a health page can do to its own credibility.
 //!
 //! The cache holds the UNFILTERED evaluation. Filtering by privilege happens
@@ -82,7 +82,7 @@ fn cache() -> &'static Mutex<Option<Cached>> {
 
 /// Drops the cached evaluation.
 ///
-/// Called from every path that changes something a check observes — the
+/// Called from every path that changes something a check observes - the
 /// settings route, the relay route, the mute endpoints. Cheap, idempotent, and
 /// safe to call more often than strictly needed: the cost of an unnecessary
 /// invalidation is one extra evaluation, the cost of a missing one is a page
@@ -116,14 +116,14 @@ fn store(checks: &[Check], generated_at: DateTime<Utc>) {
 
 /// Evaluates every check, honouring the cache unless `force` is set.
 ///
-/// `probe` describes the request being served — the only way to know whether
+/// `probe` describes the request being served - the only way to know whether
 /// TLS terminates upstream, since nothing in the configuration says so.
 ///
 /// It is deliberately NOT part of the cache key, and it is deliberately
 /// accumulated rather than read fresh (see `facts::observed`). An instance is
 /// routinely reachable both through its TLS proxy and on the plain port, so
 /// keying the cache on the probe would make the encryption verdict depend on
-/// which request last refreshed it — two reloads, two answers, and a page
+/// which request last refreshed it - two reloads, two answers, and a page
 /// nobody believes any more.
 pub async fn evaluate(
     db: &DbPool,
@@ -170,7 +170,7 @@ mod tests {
     use super::*;
 
     /// One test, not three: the cache is process-global, and `cargo test` runs
-    /// test functions on parallel threads — split assertions would race each
+    /// test functions on parallel threads - split assertions would race each
     /// other for the same slot.
     #[test]
     fn cache_lifecycle() {
@@ -193,7 +193,7 @@ mod tests {
     }
 
     /// The filter is the security boundary of this route: a delegate must see
-    /// their own perimeter, and a score computed over it — never a grade for
+    /// their own perimeter, and a score computed over it - never a grade for
     /// somebody else's instance.
     #[test]
     fn the_report_is_narrowed_to_what_the_caller_may_read() {
@@ -221,7 +221,7 @@ mod tests {
         // The counts and the score are computed over the narrowed list.
         assert_eq!(report.counts.total, report.checks.len());
 
-        // Holding nothing at all yields an empty report and no score — not a
+        // Holding nothing at all yields an empty report and no score - not a
         // reassuring 100.
         let nobody = AdminContext::empty(uuid::Uuid::nil(), ActorOrigin::Session, None);
         let empty = report_for(&nobody, checks.clone(), at, false);

@@ -1,12 +1,12 @@
 /**
  * The renderer: one renderer for compiled plans (production, dev server) and interpreted plans (the
- * designer) — the only difference is whether a binding has a precompiled getter (WEB-VIEWS §2.1).
+ * designer) - the only difference is whether a binding has a precompiled getter (WEB-VIEWS §2.1).
  *
  * Granularity: every element subscribes to its view's store and recomputes the values it reads; it
  * re-renders only when one of them changed (elements are memoised, a parent's render does not re-render
  * them). The view root re-renders on every change, to run the code-behind's `use()`. The one exception is
  * `ReactHost`: the React component it hosts renders again with its view root, as it did as a child of the TSX
- * screen the view replaces (it may read state nothing notifies the view of — a registry a module fills later).
+ * screen the view replaces (it may read state nothing notifies the view of - a registry a module fills later).
  */
 import {
   Fragment,
@@ -37,7 +37,7 @@ type AnyComponent = ComponentType<Props>
 const ViewContext = createContext<Internals | null>(null)
 /**
  * How many times the nearest view root has rendered. Only `ReactHost` elements read it: a context change reaches
- * them through the memoised elements, so the hosted component renders again whenever its view root does — the
+ * them through the memoised elements, so the hosted component renders again whenever its view root does - the
  * re-render a TSX child got from its parent, which a hosted component may depend on (`<Slot>` reads its registry
  * on render: a dialog a module registers after the first render appears on the next render of the screen).
  */
@@ -695,7 +695,7 @@ export const KbNode = memo(function KbNode({ node, scope }: NodeProps): ReactNod
   } else if (built.needsDom && !i.design && classesOnly(node, built) && (Component as { kbRootClass?: boolean }).kbRootClass) {
     // Classes alone, on a component that puts its `className` on its root (`Card`, `Callout`…): passed as that prop.
     // A `display: contents` wrapper would sit among its parent's children, where `space-y-*`, `divide-y` and
-    // `> *` selectors would land on it — and nothing of a `display: contents` box is drawn.
+    // `> *` selectors would land on it - and nothing of a `display: contents` box is drawn.
     const own = typeof built.props.className === 'string' ? built.props.className : ''
     element = createElement(Component, { ...built.props, className: [own, ...built.dom.classes].filter(Boolean).join(' ') })
   } else {
@@ -855,8 +855,8 @@ function hasSizeClasses(plan: ViewPlan): boolean {
 }
 
 /**
- * The node a view renders first. A user control whose `<UserControl>` root has nothing of its own — no name, no
- * property, no DOM event, no menu — and holds one element it does not lay out (no `Dock`, `Anchor` or position)
+ * The node a view renders first. A user control whose `<UserControl>` root has nothing of its own - no name, no
+ * property, no DOM event, no menu - and holds one element it does not lay out (no `Dock`, `Anchor` or position)
  * renders that element as its DOM root (VIEWS-SPEC §1.1, web):
  * the control is exactly as large as its content and its host's child selectors (`space-y-*`, `divide-y`) reach
  * it, as they reached the component it was converted from. The designer keeps the root (the surface the control is

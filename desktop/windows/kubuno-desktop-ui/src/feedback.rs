@@ -1,4 +1,4 @@
-//! Kubuno primitives — **feedback**: [`Spinner`], [`EmptyState`], [`Callout`],
+//! Kubuno primitives - **feedback**: [`Spinner`], [`EmptyState`], [`Callout`],
 //! [`Accordion`], [`Stepper`].
 //!
 //! The five surfaces that tell the user what is going on: something is loading,
@@ -9,19 +9,19 @@
 //!
 //! None of these draws its own text, its own glyph or its own card. They are
 //! built out of what the neighbouring families already publish, and that is the
-//! point — a title painted here and a title painted by [`crate::display`] must
+//! point - a title painted here and a title painted by [`crate::display`] must
 //! be the same title:
 //!
 //! | this module | uses |
 //! |---|---|
 //! | every text run | [`crate::display::Label`] + [`crate::display::Role`] (the web type scale) |
-//! | every glyph | [`crate::display::Icon`] — geometry, never a character |
+//! | every glyph | [`crate::display::Icon`] - geometry, never a character |
 //! | a section's count pill | [`crate::display::Badge`] |
 //! | the rule under an accordion header | [`crate::display::Separator`] |
 //! | an accordion section's card | [`crate::containers::Panel`] + [`crate::containers::Surface::Card`] |
 //! | an empty state's buttons | [`crate::buttons::Button`] |
 //!
-//! What is left — and all that is left — is *arithmetic*: where the medallion
+//! What is left - and all that is left - is *arithmetic*: where the medallion
 //! goes, how tall a folded stack is, where the five bullets of a stepper land.
 //! Every one of those is a pure function on this page, so it is a unit test and
 //! not a screenshot.
@@ -46,7 +46,7 @@
 //!
 //! ## Animation: the phase is a PARAMETER
 //!
-//! [`Spinner`] is the only animated primitive here, and it owns no clock —
+//! [`Spinner`] is the only animated primitive here, and it owns no clock -
 //! there is none in [`Canvas`] to read, and a painter that read one would draw a
 //! different picture for the same inputs, which is the end of both parity
 //! testing and pixel diffing.
@@ -80,14 +80,14 @@ use crate::{Widget, WidgetState};
 /// A line of `leading-relaxed` body text, in DIP.
 ///
 /// Tailwind's `leading-relaxed` is `line-height: 1.625`, and both `@ui/Callout`
-/// and `@ui/EmptyState` set it on their prose (and only on their prose — a title
+/// and `@ui/EmptyState` set it on their prose (and only on their prose - a title
 /// keeps the normal leading). The body face is the web's,
 /// [`crate::metrics::text::BODY`] = 13.5, so the relaxed line is
 /// `13.5 × 1.625 = 21.94`, ceiled the way `Font.Height` is ceiled everywhere
 /// else in this crate: **22**.
 pub const RELAXED_LINE: f32 = 22.0;
 
-/// `focus-visible:ring-2` — the ring every focusable part of this family wears
+/// `focus-visible:ring-2` - the ring every focusable part of this family wears
 /// (the callout's action and close button, an accordion header, a stepper
 /// step, the empty state's documentation link). Same value as the other
 /// families' local `FOCUS_RING`.
@@ -104,7 +104,7 @@ fn focus_ring(c: &dyn Canvas, rect: Rect, corner: f32) {
     c.stroke_rounded_w(&rect, corner, &c.theme().accent, FOCUS_RING);
 }
 
-/// Paints one line in an explicit DirectWrite face — for the `font-medium` /
+/// Paints one line in an explicit DirectWrite face - for the `font-medium` /
 /// `font-semibold` runs [`Role`] has no member for (`body_strong`,
 /// `caption_strong`). Always trimmed with an ellipsis: a line reaching this
 /// helper has already been wrapped, so the trim only ever bites on a caller
@@ -127,7 +127,7 @@ fn strong_line(
     }
 }
 
-/// Whether a widget must paint as inert — the Kubuno state or the replica's own
+/// Whether a widget must paint as inert - the Kubuno state or the replica's own
 /// `Control.Enabled`. Both, because a container greys a subtree through the
 /// state without mutating its children.
 fn is_inert(model: &ControlBase, state: WidgetState) -> bool {
@@ -137,7 +137,7 @@ fn is_inert(model: &ControlBase, state: WidgetState) -> bool {
 /// Greedy word wrap: the lines `text` breaks into when laid out `max_width`
 /// wide, measured by `measure`.
 ///
-/// `measure` is a closure and not a [`Canvas`] on purpose — a `TextFormats` is a
+/// `measure` is a closure and not a [`Canvas`] on purpose - a `TextFormats` is a
 /// set of COM objects a unit test cannot build, so injecting the measurement is
 /// what makes wrapping (and therefore every height that depends on it) testable
 /// without a device. It is the same split [`crate::buttons::Button::width_of`]
@@ -147,7 +147,7 @@ fn is_inert(model: &ControlBase, state: WidgetState) -> bool {
 /// paragraph starts a new line, the way a `<br>` or a second `<p>` does.
 ///
 /// A single word wider than `max_width` is **hard-broken** between characters
-/// — the web's `overflow-wrap: break-word` (`break-words`), which is what a
+/// - the web's `overflow-wrap: break-word` (`break-words`), which is what a
 /// browser does to an unbreakable run inside a `min-w-0` flex child: the word
 /// first moves to a line of its own, then splits wherever the line is full. No
 /// text is ever dropped and no intermediate line is ever ellipsized; every
@@ -253,7 +253,7 @@ fn glyph(c: &dyn Canvas, name: &'static str, x: f32, y: f32, size: f32, colour: 
 /// The fraction of the ring the accent arc covers.
 ///
 /// **NO WEB NUMBER**, and none is possible: `@ui/Spinner` is a CSS *border*
-/// trick — `rounded-full border-border border-t-primary` — so the accent is
+/// trick - `rounded-full border-border border-t-primary` - so the accent is
 /// whatever the browser's border mitring paints on the top edge of a circle,
 /// which is a quarter of the circumference between the two 45° mitre lines. A
 /// quarter is therefore the geometry the CSS produces, not a value chosen here;
@@ -268,14 +268,14 @@ pub enum SpinnerSize {
     Xs,
     /// `h-4 w-4 border-2`.
     Sm,
-    /// `h-6 w-6 border-2` — the component's own default.
+    /// `h-6 w-6 border-2` - the component's own default.
     #[default]
     Md,
     /// `h-8 w-8 border-[3px]`.
     Lg,
 }
 
-/// Every size, smallest first — for the gallery and the tests.
+/// Every size, smallest first - for the gallery and the tests.
 pub const SPINNER_SIZES: [SpinnerSize; 4] =
     [SpinnerSize::Xs, SpinnerSize::Sm, SpinnerSize::Md, SpinnerSize::Lg];
 
@@ -300,12 +300,12 @@ impl SpinnerSize {
     }
 }
 
-/// The indeterminate activity ring — `@ui/Spinner`.
+/// The indeterminate activity ring - `@ui/Spinner`.
 ///
 /// A `Spinner` has no WinForms counterpart at all (the toolkit's answer to
 /// "working…" is a `ProgressBar` in `Marquee` style, which is a bar and not a
-/// ring), so — like [`crate::display::Badge`], `Tooltip` and `Separator` before
-/// it — it composes the closest replica that carries the properties a *layout*
+/// ring), so - like [`crate::display::Badge`], `Tooltip` and `Separator` before
+/// it - it composes the closest replica that carries the properties a *layout*
 /// needs, an empty [`kubuno_desktop_controls::labels::Label`], rather than declaring a
 /// rival property block. `bounds`, `dock`, `anchor`, `minimum_size`, `visible`
 /// and `enabled` are therefore the replica's, through [`Deref`].
@@ -316,7 +316,7 @@ pub struct Spinner {
     ///
     /// The host advances it; this control owns no clock (see the module header).
     /// `animate-spin` is Tailwind's `1s linear infinite`, so a host that wants
-    /// the web's cadence advances by `dt_seconds` and nothing else — which is
+    /// the web's cadence advances by `dt_seconds` and nothing else - which is
     /// exactly what [`Spinner::advanced`] does.
     ///
     /// Unlike [`crate::range::ProgressBar::phase`], which clamps because a
@@ -349,7 +349,7 @@ impl Spinner {
     ///
     /// **NO WEB SOURCE**, and there cannot be one: the browser strokes an arc
     /// and [`Canvas`] publishes fills, strokes, text and named geometries but no
-    /// arc, so the accent quarter is rasterised here — the same move
+    /// arc, so the accent quarter is rasterised here - the same move
     /// [`crate::display::Tooltip`]'s arrow makes with its stack of one-pixel
     /// bands. Half the stroke width is the widest spacing at which consecutive
     /// round dabs still overlap into a continuous line at every size, which is
@@ -377,8 +377,8 @@ impl Spinner {
     ///
     /// `rem_euclid` and not `%`: a host that ran its accumulator backwards (a
     /// reversed animation, a clock correction) must land on a real angle rather
-    /// than a negative one. A non-finite phase — the shape a division by a zero
-    /// frame time takes — reads as the start of the turn instead of poisoning
+    /// than a negative one. A non-finite phase - the shape a division by a zero
+    /// frame time takes - reads as the start of the turn instead of poisoning
     /// every coordinate downstream with NaN.
     pub fn turn(&self) -> f32 {
         if self.phase.is_finite() {
@@ -404,13 +404,13 @@ impl Spinner {
 
     /// The repaint cadence a host asks for while a spinner is on screen
     /// (`host::request_repaint_after(Spinner::FRAME_MS)`), about 60 frames a
-    /// second — the rate a browser runs a CSS animation at.
+    /// second - the rate a browser runs a CSS animation at.
     pub const FRAME_MS: u32 = 16;
 
     /// The phase `animate-spin` is at `ms` milliseconds into a monotonic clock
     /// (`host::now_ms()`): one turn per [`Spinner::PERIOD_MS`], wrapping.
     ///
-    /// Pure, so the control still owns no clock — the host reads its own and
+    /// Pure, so the control still owns no clock - the host reads its own and
     /// passes the answer in through [`Spinner::phase`].
     pub fn phase_at(ms: u64) -> f32 {
         (ms % Self::PERIOD_MS) as f32 / Self::PERIOD_MS as f32
@@ -453,7 +453,7 @@ impl Spinner {
         let ring = self.ring_rect(bounds);
         let stroke = self.size.stroke();
         // The dabs sit on the stroke's CENTRE line, which is where
-        // `stroke_rounded_w` — an inward stroke — puts the ring underneath them.
+        // `stroke_rounded_w` - an inward stroke - puts the ring underneath them.
         let r = (self.size.box_size() - stroke) / 2.0;
         let cx = (ring.left + ring.right) / 2.0;
         let cy = (ring.top + ring.bottom) / 2.0;
@@ -490,12 +490,12 @@ impl Widget for Spinner {
         canvas.stroke_rounded_w(&ring, pill(self.size.box_size()), &t.card_stroke, stroke);
 
         // `border-t-primary`: the quarter that makes the rotation visible. A
-        // disabled spinner keeps turning in grey rather than stopping — the
+        // disabled spinner keeps turning in grey rather than stopping - the
         // work is still happening, it is the surface that is inert.
         let accent = if inert { t.text_tertiary } else { t.accent };
         // One smooth arc on the stroke's centre line (where the inward ring
-        // stroke above sits), round-capped. It used to be a row of dots — the
-        // `dab_centres` — which read as a beaded, shimmering edge once it turned.
+        // stroke above sits), round-capped. It used to be a row of dots - the
+        // `dab_centres` - which read as a beaded, shimmering edge once it turned.
         let r = (self.size.box_size() - stroke) / 2.0;
         let centre = ((ring.left + ring.right) / 2.0, (ring.top + ring.bottom) / 2.0);
         let (from, to) = self.arc();
@@ -523,7 +523,7 @@ impl Widget for Spinner {
 // Callout
 // ═════════════════════════════════════════════════════════════════════════════
 
-/// A callout's severity — one-to-one with `@ui/Callout`'s `CalloutVariant`,
+/// A callout's severity - one-to-one with `@ui/Callout`'s `CalloutVariant`,
 /// names included.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
 pub enum CalloutVariant {
@@ -553,7 +553,7 @@ impl CalloutVariant {
     /// because the project forbids a left accent bar, and the four `*-light`
     /// tokens are remapped by the dark palette (`--color-warning-light` becomes
     /// `#3d3218`), so this reads correctly in both without a branch on
-    /// [`crate::ThemeMode`]. All four tokens already existed — nothing was added
+    /// [`crate::ThemeMode`]. All four tokens already existed - nothing was added
     /// to the palette for this family.
     pub fn ground(self, t: &Theme) -> D2D1_COLOR_F {
         match self {
@@ -566,7 +566,7 @@ impl CalloutVariant {
 
     /// The hue, used for the GLYPH and the inline action only.
     ///
-    /// Never for the prose: the web spells out why — `--color-warning` (#f9ab00)
+    /// Never for the prose: the web spells out why - `--color-warning` (#f9ab00)
     /// on `--color-warning-light` (#fef7e0) fails contrast outright, so body
     /// text stays `text_primary` and the accent colour is reserved for marks
     /// where contrast is not a legibility requirement.
@@ -590,7 +590,7 @@ impl CalloutVariant {
     }
 }
 
-/// An inline banner qualifying the block it sits in — `@ui/Callout`.
+/// An inline banner qualifying the block it sits in - `@ui/Callout`.
 ///
 /// Not a toast (transient, floating) and not a dialog (blocking): a callout is
 /// *in* the flow, and it is as wide as whatever it was given.
@@ -601,14 +601,14 @@ impl CalloutVariant {
 pub struct Callout {
     body: Label,
     pub variant: CalloutVariant,
-    /// `title` — the `font-medium` first line. `None` renders body only.
+    /// `title` - the `font-medium` first line. `None` renders body only.
     pub title: Option<String>,
     /// The single inline action ("Retry", "Configure", "See the log").
     ///
     /// Stored as its label and optional glyph rather than as a
     /// [`crate::buttons::Button`]: the web draws it as a bare button tinted with
     /// the **variant's** hue, and `buttons::Variant` has no member for "the
-    /// accent of an arbitrary severity" — `Text` is always the primary accent,
+    /// accent of an arbitrary severity" - `Text` is always the primary accent,
     /// which would put a blue action on an amber callout. Adding one would mean
     /// editing another family's file.
     pub action: Option<CalloutAction>,
@@ -628,11 +628,11 @@ pub struct Callout {
     /// both are `None` the banner-wide state lights both, which is the
     /// behaviour this type always had.
     pub action_state: Option<WidgetState>,
-    /// The close button's own state — see [`Callout::action_state`].
+    /// The close button's own state - see [`Callout::action_state`].
     pub dismiss_state: Option<WidgetState>,
 }
 
-/// The two interactive parts of a [`Callout`] — the web's two `<button>`s.
+/// The two interactive parts of a [`Callout`] - the web's two `<button>`s.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum CalloutPart {
     /// The inline action.
@@ -641,7 +641,7 @@ pub enum CalloutPart {
     Dismiss,
 }
 
-/// Where everything in a [`Callout`] lands for one set of bounds — computed
+/// Where everything in a [`Callout`] lands for one set of bounds - computed
 /// once, read by the paint pass, the height and the hit test alike, so the
 /// three can never disagree.
 #[derive(Clone)]
@@ -689,7 +689,7 @@ impl DerefMut for Callout {
 }
 
 impl Callout {
-    /// `rounded-lg` — and note that this design system's `--radius-lg` is 6,
+    /// `rounded-lg` - and note that this design system's `--radius-lg` is 6,
     /// whose own token doc names « dialogs, callouts » as what it is for.
     pub const RADIUS: f32 = radius::LG;
     /// `px-3`.
@@ -700,7 +700,7 @@ impl Callout {
     pub const GAP: f32 = 10.0;
     /// `<Glyph size={16} />`.
     pub const ICON: f32 = 16.0;
-    /// `mt-px` on the glyph — one DIP, so a 16 px mark sits on the text's
+    /// `mt-px` on the glyph - one DIP, so a 16 px mark sits on the text's
     /// x-height rather than on its ascender.
     pub const ICON_TOP: f32 = 1.0;
     /// `mt-0.5` between the title and the body.
@@ -765,12 +765,12 @@ impl Callout {
         self.show_icon.then(|| self.icon.unwrap_or(self.variant.icon()))
     }
 
-    /// The action's own height — a body line inside `py-1`.
+    /// The action's own height - a body line inside `py-1`.
     pub const fn action_height() -> f32 {
         Role::Body.line_height() + Self::ACTION_PAD_Y * 2.0
     }
 
-    /// The dismiss button's box — the glyph inside `p-1`.
+    /// The dismiss button's box - the glyph inside `p-1`.
     pub const fn dismiss_box() -> f32 {
         Self::DISMISS + Self::DISMISS_PAD * 2.0
     }
@@ -812,7 +812,7 @@ impl Callout {
         self.height_for_lines(usize::from(self.title.is_some()), body_lines)
     }
 
-    /// [`Callout::height_for`] with the title's own line count — a long title
+    /// [`Callout::height_for`] with the title's own line count - a long title
     /// wraps like the web's `<p>` does rather than being cut.
     pub fn height_for_lines(&self, title_lines: usize, body_lines: usize) -> f32 {
         let mut content = 0.0_f32;
@@ -850,7 +850,7 @@ impl Callout {
     ///
     /// [`Widget::measure`] answers the same question from the replica's own
     /// designer width; this one is for the caller who already knows the column
-    /// it is about to put the callout in — which is most of them, a callout
+    /// it is about to put the callout in - which is most of them, a callout
     /// being `w-full`.
     pub fn height_at(&self, canvas: &dyn Canvas, width: f32) -> f32 {
         let probe = Rect::new(0.0, 0.0, width.max(1.0), 0.0);
@@ -880,7 +880,7 @@ impl Callout {
         CalloutLayout { title_lines, body_lines, action, dismiss: self.dismiss_rect(bounds), height }
     }
 
-    /// The interactive part under `(x, y)`, if any — what a host hit-tests
+    /// The interactive part under `(x, y)`, if any - what a host hit-tests
     /// before routing a click, and feeds back through
     /// [`Callout::action_state`] / [`Callout::dismiss_state`] for the hover.
     pub fn part_at(&self, canvas: &dyn Canvas, bounds: Rect, x: f32, y: f32) -> Option<CalloutPart> {
@@ -916,7 +916,7 @@ impl Widget for Callout {
         self.body.model()
     }
 
-    /// A callout is `w-full` — it has no intrinsic width, so the replica's
+    /// A callout is `w-full` - it has no intrinsic width, so the replica's
     /// designer width is kept and only the HEIGHT is computed, from the body
     /// wrapped into that width.
     fn measure(&self, canvas: &dyn Canvas) -> Size {
@@ -960,7 +960,7 @@ impl Widget for Callout {
         canvas.push_clip_rounded(&bounds, Self::RADIUS);
 
         if !layout.title_lines.is_empty() {
-            // `font-medium text-text-primary` — the shared `body_strong` face,
+            // `font-medium text-text-primary` - the shared `body_strong` face,
             // wrapped like the web's `<p>` rather than cut.
             let fmt = &canvas.formats().body_strong;
             for text in &layout.title_lines {
@@ -979,7 +979,7 @@ impl Widget for Callout {
 
         if let (Some(action), Some(rect)) = (&self.action, layout.action) {
             let st = self.part_state(CalloutPart::Action, state);
-            // `hover:bg-[var(--kb-black-08)]` — an 8 % black overlay, which this
+            // `hover:bg-[var(--kb-black-08)]` - an 8 % black overlay, which this
             // palette has no token for. `control_fill_hover` is its answer to
             // the same question ("a control under the pointer") and, unlike a
             // literal, it has a dark-palette value.
@@ -1039,7 +1039,7 @@ impl Widget for Callout {
 // EmptyState
 // ═════════════════════════════════════════════════════════════════════════════
 
-/// The four situations an empty area can be in — `@ui/EmptyState`'s
+/// The four situations an empty area can be in - `@ui/EmptyState`'s
 /// `EmptyStateVariant`, names and meanings included.
 ///
 /// The web component's own doc is the specification, and it is not decoration:
@@ -1047,7 +1047,7 @@ impl Widget for Callout {
 /// different words and different actions.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
 pub enum EmptyStateVariant {
-    /// The collection is genuinely empty and nothing is filtered — the ONLY
+    /// The collection is genuinely empty and nothing is filtered - the ONLY
     /// variant that invites creation. `bg-primary-light text-primary`.
     #[default]
     FirstUse,
@@ -1055,7 +1055,7 @@ pub enum EmptyStateVariant {
     /// query, so its action is secondary and never a creation.
     /// `bg-surface-2 text-text-secondary`.
     NoResults,
-    /// The data could not be loaded — nothing is known about the collection, so
+    /// The data could not be loaded - nothing is known about the collection, so
     /// "no user" would be a lie. `bg-danger-light text-danger`.
     Error,
     /// The feature exists but is out of reach: module absent, rights missing.
@@ -1072,7 +1072,7 @@ pub const EMPTY_STATE_VARIANTS: [EmptyStateVariant; 4] = [
 ];
 
 impl EmptyStateVariant {
-    /// `(medallion ground, glyph)` — the `MEDALLION` map, as tokens.
+    /// `(medallion ground, glyph)` - the `MEDALLION` map, as tokens.
     pub fn medallion(self, t: &Theme) -> (D2D1_COLOR_F, D2D1_COLOR_F) {
         match self {
             Self::FirstUse => (t.accent_light, t.accent),
@@ -1082,7 +1082,7 @@ impl EmptyStateVariant {
         }
     }
 
-    /// The main action's default style — the `ACTION_VARIANT` map. Only
+    /// The main action's default style - the `ACTION_VARIANT` map. Only
     /// `first-use` gets a primary button, which is the rule the component exists
     /// to enforce.
     pub const fn action_variant(self) -> ButtonVariant {
@@ -1093,7 +1093,7 @@ impl EmptyStateVariant {
     }
 }
 
-/// The centred « there is nothing here » block — `@ui/EmptyState`.
+/// The centred « there is nothing here » block - `@ui/EmptyState`.
 ///
 /// Its model is the title's [`crate::display::Label`]; its buttons are
 /// [`crate::buttons::Button`]s (the web renders literal `<Button size="sm">`s,
@@ -1102,7 +1102,7 @@ pub struct EmptyState {
     title: Label,
     pub icon: &'static str,
     pub variant: EmptyStateVariant,
-    /// `description` — wrapped into [`EmptyState::MAX_TEXT`].
+    /// `description` - wrapped into [`EmptyState::MAX_TEXT`].
     pub description: Option<String>,
     /// `compact`: half the vertical breathing room, for a small card.
     pub compact: bool,
@@ -1110,9 +1110,9 @@ pub struct EmptyState {
     /// the caller's business, exactly as on the web.
     pub action: Option<Button>,
     pub secondary_action: Option<Button>,
-    /// The « learn more » link — documentation, not an action.
+    /// The « learn more » link - documentation, not an action.
     pub doc_label: Option<String>,
-    /// Each action button's OWN state — `[main, secondary]`.
+    /// Each action button's OWN state - `[main, secondary]`.
     ///
     /// [`Widget::paint`] receives one [`WidgetState`] for the whole block; a
     /// host that tracks the buttons (see [`EmptyState::action_rects`]) sets
@@ -1124,7 +1124,7 @@ pub struct EmptyState {
     pub doc_state: Option<WidgetState>,
 }
 
-/// Where everything in an [`EmptyState`] lands for one set of bounds —
+/// Where everything in an [`EmptyState`] lands for one set of bounds -
 /// computed once and shared by the paint pass, the height and the hit tests.
 #[derive(Clone)]
 pub struct EmptyStateLayout {
@@ -1139,10 +1139,10 @@ pub struct EmptyStateLayout {
     /// The description, wrapped into the column.
     pub description_lines: Vec<String>,
     pub description_top: f32,
-    /// Each button's box, `0` = main action, `1` = secondary — on one row, or
+    /// Each button's box, `0` = main action, `1` = secondary - on one row, or
     /// several when `flex-wrap` has to break it.
     pub actions: Vec<(usize, Rect)>,
-    /// The documentation link's box — its measured label, centred.
+    /// The documentation link's box - its measured label, centred.
     pub doc: Option<Rect>,
     /// The height the block needs (padding included).
     pub height: f32,
@@ -1175,7 +1175,7 @@ impl EmptyState {
     pub const PAD_X_COMPACT: f32 = space::LG;
     pub const PAD_Y: f32 = 48.0;
     pub const PAD_Y_COMPACT: f32 = space::XL;
-    /// `gap-3`, or `gap-2` when compact — between the medallion, the text block
+    /// `gap-3`, or `gap-2` when compact - between the medallion, the text block
     /// and the actions.
     pub const GAP: f32 = space::MD;
     pub const GAP_COMPACT: f32 = space::SM;
@@ -1184,7 +1184,7 @@ impl EmptyState {
     pub const TEXT_GAP: f32 = space::XS;
     /// `gap-2` between the two action buttons.
     pub const ACTION_GAP: f32 = space::SM;
-    /// `max-w-sm` on the text block — Tailwind's `24rem`.
+    /// `max-w-sm` on the text block - Tailwind's `24rem`.
     pub const MAX_TEXT: f32 = 384.0;
     /// `underline-offset-2` under a meta line: how far above the line box's
     /// bottom the hover underline sits.
@@ -1232,7 +1232,7 @@ impl EmptyState {
         self
     }
 
-    /// Halves the vertical breathing room and drops the title one type step —
+    /// Halves the vertical breathing room and drops the title one type step -
     /// the web's `compact`, which also swaps `--kb-text-heading` for
     /// `--kb-text-body`.
     pub fn with_compact(mut self, on: bool) -> Self {
@@ -1296,8 +1296,8 @@ impl EmptyState {
     }
 
     /// How tall the block is for a description wrapped into `description_lines`
-    /// lines, with a one-line title and — when there are actions — one action
-    /// row. Pure — this is the arithmetic the measurement test drives.
+    /// lines, with a one-line title and - when there are actions - one action
+    /// row. Pure - this is the arithmetic the measurement test drives.
     pub fn height_for(&self, description_lines: usize) -> f32 {
         self.height_for_lines(1, description_lines, usize::from(self.has_actions()))
     }
@@ -1356,7 +1356,7 @@ impl EmptyState {
         out
     }
 
-    /// The height this block needs laid out `width` DIP wide — title and
+    /// The height this block needs laid out `width` DIP wide - title and
     /// description wrapped into the real column, buttons wrapped into rows.
     /// What a caller that knows its column (a card body) should reserve.
     pub fn height_at(&self, canvas: &dyn Canvas, width: f32) -> f32 {
@@ -1438,7 +1438,7 @@ impl EmptyState {
         }
     }
 
-    /// Each button's box inside `bounds`, `0` = main action, `1` = secondary —
+    /// Each button's box inside `bounds`, `0` = main action, `1` = secondary -
     /// what a host hit-tests and registers with its focus manager, in the
     /// web's Tab order (main first).
     pub fn action_rects(&self, canvas: &dyn Canvas, bounds: Rect) -> Vec<(usize, Rect)> {
@@ -1490,7 +1490,7 @@ impl Widget for EmptyState {
 
     /// The intrinsic size: the widest of the medallion, the title, the
     /// description (each capped at `max-w-sm`) and the action row, plus the
-    /// padding — and the height that exact width produces, so painting into
+    /// padding - and the height that exact width produces, so painting into
     /// the measured rectangle wraps into the same lines this counted.
     ///
     /// A caller that paints into a NARROWER column (a card body) must reserve
@@ -1522,7 +1522,7 @@ impl Widget for EmptyState {
         let layout = self.layout(canvas, bounds);
         canvas.push_clip(&bounds);
 
-        // The medallion — `rounded-full`, so the radius is half the box.
+        // The medallion - `rounded-full`, so the radius is half the box.
         let medallion = layout.medallion;
         let m = self.medallion_size();
         canvas.fill_rounded(&medallion, pill(m), &if inert { t.surface_2 } else { ground });
@@ -1563,7 +1563,7 @@ impl Widget for EmptyState {
             y += RELAXED_LINE;
         }
 
-        // The action row — real `buttons::Button`s, centred as a group and
+        // The action row - real `buttons::Button`s, centred as a group and
         // wrapped onto a second row when the block is too narrow for both.
         for &(slot, rect) in &layout.actions {
             let button = if slot == 0 { self.action.as_ref() } else { self.secondary_action.as_ref() };
@@ -1571,7 +1571,7 @@ impl Widget for EmptyState {
                 // The variant's rule is applied HERE rather than stored, so a
                 // caller may set `variant` and the empty-state's own variant in
                 // either order and still get the same button. The secondary
-                // keeps whatever it was given — the web defaults it to `ghost`
+                // keeps whatever it was given - the web defaults it to `ghost`
                 // at the call site, not in the component.
                 let target = if slot == 0 { self.action_or_default() } else { b.variant };
                 restyled(b, target).paint(canvas, rect, self.button_state(slot, state));
@@ -1607,8 +1607,8 @@ impl Widget for EmptyState {
 
 /// The same [`crate::buttons::Button`] in another variant.
 ///
-/// Every field that shapes it is carried over — label, size, icon, the
-/// overridable `pad_x` and the replica's `enabled` — because a copy that dropped
+/// Every field that shapes it is carried over - label, size, icon, the
+/// overridable `pad_x` and the replica's `enabled` - because a copy that dropped
 /// one would paint a different button from the one the caller built.
 fn restyled(button: &Button, variant: ButtonVariant) -> Button {
     let mut out = Button::new(&button.text).size(button.size).variant(variant);
@@ -1631,7 +1631,7 @@ pub enum AccordionSize {
 }
 
 impl AccordionSize {
-    /// `px-4` / `px-3` — also the panel's own horizontal padding.
+    /// `px-4` / `px-3` - also the panel's own horizontal padding.
     pub const fn pad_x(self) -> f32 {
         match self {
             Self::Sm => space::MD,
@@ -1648,7 +1648,7 @@ impl AccordionSize {
     }
 
     /// The clickable header's height: its padding around a
-    /// [`Role::Meta`] line — the title is `text-xs`, so 16.
+    /// [`Role::Meta`] line - the title is `text-xs`, so 16.
     pub const fn header(self) -> f32 {
         Role::Meta.line_height() + self.pad_y() * 2.0
     }
@@ -1662,7 +1662,7 @@ impl AccordionSize {
     }
 }
 
-/// One collapsible section — `AccordionItemDef`.
+/// One collapsible section - `AccordionItemDef`.
 ///
 /// `content` is the panel's height in DIP rather than a child widget: the web
 /// hands the component a `ReactNode` and lets the browser measure it, and this
@@ -1671,9 +1671,9 @@ impl AccordionSize {
 #[derive(Debug, Clone)]
 pub struct AccordionSection {
     pub title: String,
-    /// A leading glyph — `icon`, drawn at 16.
+    /// A leading glyph - `icon`, drawn at 16.
     pub icon: Option<&'static str>,
-    /// The trailing count pill — `badge`.
+    /// The trailing count pill - `badge`.
     pub badge: Option<String>,
     /// `disabled`: renders muted and stays collapsed.
     pub disabled: bool,
@@ -1708,7 +1708,7 @@ impl AccordionSection {
         self
     }
 
-    /// Whether the panel is actually showing — a disabled section « stays
+    /// Whether the panel is actually showing - a disabled section « stays
     /// collapsed », which is the web component's own rule and not a rendering
     /// accident.
     pub fn is_open(&self) -> bool {
@@ -1716,7 +1716,7 @@ impl AccordionSection {
     }
 }
 
-/// A stack of collapsible groups — `@ui/Accordion`.
+/// A stack of collapsible groups - `@ui/Accordion`.
 ///
 /// Its model is the [`crate::containers::Panel`] that also paints each section's
 /// card, so there is exactly ONE replica in the type and `padding`, `dock`,
@@ -1730,28 +1730,28 @@ pub struct Accordion {
     pub size: AccordionSize,
     /// Which section's header the pointer is on, if any.
     ///
-    /// A **Kubuno concept**, and a host-driven one — the same shape
+    /// A **Kubuno concept**, and a host-driven one - the same shape
     /// [`crate::range::ScrollBar::expanded`] takes: [`Widget::paint`] receives
     /// ONE [`WidgetState`] for the whole stack, so `state.hot` cannot say which
     /// of five headers is lit. The host answers that with
     /// [`Accordion::header_at`] and parks the answer here.
     pub hovered: Option<usize>,
-    /// Which section's header wears the focus ring — the header `<button>`'s
+    /// Which section's header wears the focus ring - the header `<button>`'s
     /// `:focus-visible`. Host-driven like [`Accordion::hovered`]: the host's
     /// focus manager knows whether the focus came from the keyboard, so it
     /// sets this only when the ring must SHOW (a click leaves it `None`).
     pub focused: Option<usize>,
 }
 
-/// A key that moves the focus between accordion headers — the WAI-ARIA
+/// A key that moves the focus between accordion headers - the WAI-ARIA
 /// accordion pattern's optional navigation (the web component relies on Tab
 /// alone; the arrows are the desktop's native expectation for a stack of
-/// headers, and they only move focus — Enter and Space are what toggle).
+/// headers, and they only move focus - Enter and Space are what toggle).
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum HeaderKey {
-    /// ↓ — the next enabled header, wrapping to the first.
+    /// ↓ - the next enabled header, wrapping to the first.
     Next,
-    /// ↑ — the previous enabled header, wrapping to the last.
+    /// ↑ - the previous enabled header, wrapping to the last.
     Previous,
     /// Home.
     First,
@@ -1839,7 +1839,7 @@ impl Accordion {
         self
     }
 
-    /// How tall one section is, header and — when open — panel.
+    /// How tall one section is, header and - when open - panel.
     pub fn section_height(&self, section: &AccordionSection) -> f32 {
         let mut h = self.size.header();
         if section.is_open() {
@@ -1862,7 +1862,7 @@ impl Accordion {
 
     /// Every section's rectangle inside `bounds`, stacked from its top edge.
     ///
-    /// Each is the WHOLE section — header plus panel when open — so a caller can
+    /// Each is the WHOLE section - header plus panel when open - so a caller can
     /// hit-test, scroll to, or outline one without re-deriving the stack.
     pub fn section_rects(&self, bounds: Rect) -> Vec<Rect> {
         let mut out = Vec::with_capacity(self.sections.len());
@@ -1880,7 +1880,7 @@ impl Accordion {
         Rect::new(section.left, section.top, section.right, section.top + self.size.header())
     }
 
-    /// The panel's content rectangle inside a section rectangle — empty (zero
+    /// The panel's content rectangle inside a section rectangle - empty (zero
     /// height) when the section is closed.
     pub fn panel_rect(&self, section: Rect, index: usize) -> Rect {
         let top = section.top + self.size.header() + Self::RULE + Self::PANEL_TOP;
@@ -1893,7 +1893,7 @@ impl Accordion {
     /// Which section `(x, y)` lands on, in the space `bounds` was painted into.
     ///
     /// `None` in the gaps between sections and outside the stack. The test is
-    /// half-open — `top` belongs to the section, `bottom` does not — so two
+    /// half-open - `top` belongs to the section, `bottom` does not - so two
     /// stacked rectangles can never both claim the same DIP.
     pub fn section_at(&self, bounds: Rect, x: f32, y: f32) -> Option<usize> {
         if x < bounds.left || x >= bounds.right {
@@ -1904,7 +1904,7 @@ impl Accordion {
             .position(|r| y >= r.top && y < r.bottom)
     }
 
-    /// Which section's HEADER `(x, y)` lands on — the only part that toggles.
+    /// Which section's HEADER `(x, y)` lands on - the only part that toggles.
     /// A disabled section is not a target, which is the web's `disabled` button.
     pub fn header_at(&self, bounds: Rect, x: f32, y: f32) -> Option<usize> {
         let index = self.section_at(bounds, x, y)?;
@@ -1957,12 +1957,12 @@ impl Widget for Accordion {
             let Some(&rect) = rects.get(i) else { continue };
             let inert = state.disabled || section.disabled;
 
-            // The card — the containers family's own `Surface::Card`, painted
+            // The card - the containers family's own `Surface::Card`, painted
             // through a real `Panel` rather than reimplemented here.
             self.frame.paint(canvas, rect, WidgetState::REST);
 
             let header = self.header_rect(rect);
-            // `hover:bg-surface-2`, clipped by the card's rounded corners —
+            // `hover:bg-surface-2`, clipped by the card's rounded corners -
             // which is what `overflow-hidden` does on the web, and what stops a
             // square fill from spilling over the top two corners.
             if self.hovered == Some(i) && !inert {
@@ -2001,7 +2001,7 @@ impl Widget for Accordion {
             );
             let mut title_right = chevron_x - Self::HEADER_GAP;
 
-            // The count pill — the display family's `Badge`, in its `Neutral`
+            // The count pill - the display family's `Badge`, in its `Neutral`
             // tone. The web writes this one inline (`bg-surface-3` with
             // `text-text-secondary`) rather than reusing its own `<Badge>`;
             // collapsing it onto the shared primitive is the deliberate
@@ -2023,7 +2023,7 @@ impl Widget for Accordion {
 
             // `text-xs font-semibold uppercase tracking-wide truncate`: the meta
             // step in the shared semibold `caption_strong` face, ellipsized
-            // (`flex-1 min-w-0 truncate`). Uppercasing is the caller's — a
+            // (`flex-1 min-w-0 truncate`). Uppercasing is the caller's - a
             // locale-aware transform is not this layer's decision.
             strong_line(
                 canvas,
@@ -2043,7 +2043,7 @@ impl Widget for Accordion {
             }
 
             if section.is_open() {
-                // `border-t border-border` — the display family's rule.
+                // `border-t border-border` - the display family's rule.
                 let rule_y = header.bottom;
                 Separator::horizontal().paint(
                     canvas,
@@ -2063,13 +2063,13 @@ impl Widget for Accordion {
 // Stepper
 // ═════════════════════════════════════════════════════════════════════════════
 
-/// The validation state of one step — `@ui/Stepper`'s `StepStatus`, all five.
+/// The validation state of one step - `@ui/Stepper`'s `StepStatus`, all five.
 ///
 /// The web component's own comment says what [`StepStatus::Error`] is for, and
 /// it is the reason a stepper is more than a decoration: « a wizard whose third
 /// step failed validation must SAY so on the indicator, otherwise the user walks
 /// forward and discovers it at submit time ». It is therefore carried here in
-/// full — bullet, glyph, label colour and connector — and not folded into
+/// full - bullet, glyph, label colour and connector - and not folded into
 /// `pending`.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
 pub enum StepStatus {
@@ -2096,10 +2096,10 @@ pub const STEP_STATUSES: [StepStatus; 5] = [
 ];
 
 impl StepStatus {
-    /// `(fill, ink, border)` — the `BULLET` map, as tokens.
+    /// `(fill, ink, border)` - the `BULLET` map, as tokens.
     ///
     /// `text-white` on the two filled bullets is `accent_foreground`, which is
-    /// the token « what sits ON the accent » — the same choice
+    /// the token « what sits ON the accent » - the same choice
     /// [`crate::buttons::Variant::Danger`] already makes for a filled danger
     /// button, so a red bullet and a red button carry the same ink.
     pub fn bullet(self, t: &Theme) -> (D2D1_COLOR_F, D2D1_COLOR_F, D2D1_COLOR_F) {
@@ -2112,7 +2112,7 @@ impl StepStatus {
         }
     }
 
-    /// The label's colour — the `LABEL` map.
+    /// The label's colour - the `LABEL` map.
     pub fn label(self, t: &Theme) -> D2D1_COLOR_F {
         match self {
             Self::Complete => t.text_primary,
@@ -2123,7 +2123,7 @@ impl StepStatus {
         }
     }
 
-    /// The glyph inside the bullet, with its size — `Check` at 14 when complete,
+    /// The glyph inside the bullet, with its size - `Check` at 14 when complete,
     /// `AlertTriangle` at 13 when failed, and the step's NUMBER otherwise.
     pub const fn mark(self) -> Option<(&'static str, f32)> {
         match self {
@@ -2134,14 +2134,14 @@ impl StepStatus {
     }
 }
 
-/// One step — `StepDef`.
+/// One step - `StepDef`.
 #[derive(Debug, Clone)]
 pub struct Step {
     pub label: String,
     pub description: Option<String>,
     /// An explicit status. `None` derives it from the position relative to the
     /// current step, which covers the linear happy path with no bookkeeping at
-    /// the call site — the web's own rule.
+    /// the call site - the web's own rule.
     pub status: Option<StepStatus>,
     /// `optional`: appends the caller's own « (optional) » marker.
     pub optional: bool,
@@ -2176,7 +2176,7 @@ pub enum StepperOrientation {
     Vertical,
 }
 
-/// The progress spine of a multi-step assistant — `@ui/Stepper`.
+/// The progress spine of a multi-step assistant - `@ui/Stepper`.
 ///
 /// Its model is a [`crate::containers::Panel`], because that is what a stepper
 /// is to a layout: a band that holds an ordered list.
@@ -2188,10 +2188,10 @@ pub struct Stepper {
     pub current: usize,
     pub orientation: StepperOrientation,
     /// `allowForward`: whether a step past the current one may be clicked. Off
-    /// by default — a wizard's later steps usually depend on data that does not
+    /// by default - a wizard's later steps usually depend on data that does not
     /// exist yet.
     pub allow_forward: bool,
-    /// Which step's row the pointer is on — lit `hover:bg-surface-2` when
+    /// Which step's row the pointer is on - lit `hover:bg-surface-2` when
     /// that step is reachable (a `<button>` on the web). Host-driven, like
     /// [`Accordion::hovered`]; see [`Stepper::step_at`].
     pub hovered: Option<usize>,
@@ -2199,11 +2199,11 @@ pub struct Stepper {
     /// the host only when the ring must show.
     pub focused: Option<usize>,
     /// The two words of the compact summary's counter, `(« Step », « of »)`,
-    /// which paints « Step 2 of 5 » — the web's `ui.st_step` / `ui.st_of`.
+    /// which paints « Step 2 of 5 » - the web's `ui.st_step` / `ui.st_of`.
     /// A primitive invents no sentence, so without them the counter is the
     /// language-neutral « 2 / 5 ».
     pub counter_words: Option<(String, String)>,
-    /// The word an optional step's marker carries — the web's
+    /// The word an optional step's marker carries - the web's
     /// `ui.st_optional`, painted « (word) » after the label. `None` paints no
     /// marker ([`Step::optional`] is still carried for the host).
     pub optional_marker: Option<String>,
@@ -2214,7 +2214,7 @@ pub struct Stepper {
 pub enum StepperView {
     /// The full trail of bullets.
     Trail,
-    /// « Step 2 of 5 », the current label and a rail — the web's replacement
+    /// « Step 2 of 5 », the current label and a rail - the web's replacement
     /// for a trail that would not fit.
     Compact,
 }
@@ -2238,7 +2238,7 @@ impl Default for Stepper {
 }
 
 impl Stepper {
-    /// `h-7 w-7 rounded-full border` — the bullet and its hairline.
+    /// `h-7 w-7 rounded-full border` - the bullet and its hairline.
     pub const BULLET: f32 = 28.0;
     pub const BULLET_BORDER: f32 = 1.0;
     /// `<Check size={14} />` and `<AlertTriangle size={13} />`. The two differ
@@ -2250,7 +2250,7 @@ impl Stepper {
     pub const BULLET_GAP: f32 = 10.0;
     /// `px-1 py-1` around each step's clickable row.
     pub const ITEM_PAD: f32 = space::XS;
-    /// `gap-1` — between two `<li>`s, and inside one between its content and its
+    /// `gap-1` - between two `<li>`s, and inside one between its content and its
     /// connector.
     pub const CELL_GAP: f32 = space::XS;
     /// `min-w-4` on a horizontal connector, `h-px` thick.
@@ -2262,12 +2262,12 @@ impl Stepper {
     /// `flex-col gap-3` between two rows of a vertical trail.
     pub const VERTICAL_ROW_GAP: f32 = space::MD;
     /// Below this container width the horizontal trail would wrap onto several
-    /// lines — a shape the project explicitly rejects — and the web replaces it
+    /// lines - a shape the project explicitly rejects - and the web replaces it
     /// with « Step 2 of 5 » and a rail.
     ///
     /// [`Widget::paint`] makes that switch itself, from the width it is given
     /// (the web measures its container, not the window). The counter's words
-    /// are the caller's ([`Stepper::counter_words`]) — a primitive in this
+    /// are the caller's ([`Stepper::counter_words`]) - a primitive in this
     /// crate paints the strings it is handed rather than composing its own.
     ///
     /// The web applies it to a vertical trail too; here a vertical trail keeps
@@ -2315,7 +2315,7 @@ impl Stepper {
     }
 
     /// What this stepper paints in a container `width` DIP wide: the compact
-    /// summary below [`Stepper::COMPACT_WIDTH`] (horizontal only — see
+    /// summary below [`Stepper::COMPACT_WIDTH`] (horizontal only - see
     /// [`Stepper::is_compact`]), the trail otherwise.
     pub fn view_at(&self, width: f32) -> StepperView {
         if self.is_compact(width) {
@@ -2349,7 +2349,7 @@ impl Stepper {
             + Self::RAIL
     }
 
-    /// The height this stepper needs in a container `width` DIP wide — the
+    /// The height this stepper needs in a container `width` DIP wide - the
     /// compact summary's or the trail's, whichever [`Stepper::view_at`] picks.
     pub fn height_at(&self, width: f32) -> f32 {
         match self.view_at(width) {
@@ -2358,7 +2358,7 @@ impl Stepper {
         }
     }
 
-    /// The compact rail's segments inside `bounds` — `flex gap-1`, one
+    /// The compact rail's segments inside `bounds` - `flex gap-1`, one
     /// `h-1 flex-1 rounded-full` segment per step, at the bottom of the
     /// summary.
     pub fn rail_rects(&self, bounds: Rect) -> Vec<Rect> {
@@ -2377,7 +2377,7 @@ impl Stepper {
             .collect()
     }
 
-    /// The reachable steps, in order — the Tab stops of the trail (the web
+    /// The reachable steps, in order - the Tab stops of the trail (the web
     /// renders only these as `<button>`s, so « the Tab order only ever offers
     /// what can actually be activated »).
     pub fn reachable_steps(&self) -> Vec<usize> {
@@ -2408,7 +2408,7 @@ impl Stepper {
         self.orientation == StepperOrientation::Horizontal
     }
 
-    /// The current index, clamped into the list — the web's `currentIndex`.
+    /// The current index, clamped into the list - the web's `currentIndex`.
     pub fn current_index(&self) -> usize {
         if self.steps.is_empty() {
             0
@@ -2432,7 +2432,7 @@ impl Stepper {
         }
     }
 
-    /// Whether step `index` may be clicked — `reachable` in the web.
+    /// Whether step `index` may be clicked - `reachable` in the web.
     pub fn is_reachable(&self, index: usize) -> bool {
         index < self.steps.len()
             && self.status(index) != StepStatus::Disabled
@@ -2480,7 +2480,7 @@ impl Stepper {
     ///
     /// Horizontally the `<ol>` splits into equal `flex-1` cells with
     /// [`Stepper::CELL_GAP`] between them; inside a cell the content and its
-    /// connector are `flex-1` too, so they halve what is left — with the
+    /// connector are `flex-1` too, so they halve what is left - with the
     /// connector floored at [`Stepper::CONNECTOR_MIN`], and the last cell
     /// keeping the whole width because it has no connector.
     pub fn step_rects(&self, bounds: Rect) -> Vec<Rect> {
@@ -2644,7 +2644,7 @@ impl Widget for Stepper {
 
     fn paint(&self, canvas: &dyn Canvas, bounds: Rect, state: WidgetState) {
         // The web swaps the trail for the summary below `COMPACT_WIDTH` of
-        // ITS container: « narrow containers do not shrink the trail — they
+        // ITS container: « narrow containers do not shrink the trail - they
         // replace it ». Squeezing five bullets into a card is how the labels
         // ended up as « S… », « C… ».
         if self.view_at(bounds.right - bounds.left) == StepperView::Compact {
@@ -2672,7 +2672,7 @@ impl Widget for Stepper {
             let (fill, ink, border) = status.bullet(t);
             let reachable = !state.disabled && self.is_reachable(i);
 
-            // `hover:bg-surface-2 rounded-md` — only on a step that is a real
+            // `hover:bg-surface-2 rounded-md` - only on a step that is a real
             // `<button>`, i.e. a reachable one.
             if reachable && self.hovered == Some(i) {
                 canvas.fill_rounded(&row, Self::ROW_RADIUS, &t.surface_2);
@@ -2704,7 +2704,7 @@ impl Widget for Stepper {
             }
 
             // The label block: a body line, then the optional description at the
-            // meta step. Both trimmed — the web writes `truncate` on each.
+            // meta step. Both trimmed - the web writes `truncate` on each.
             let left = bullet.right + Self::BULLET_GAP;
             let right = (row.right - Self::ITEM_PAD).max(left);
             let label_line = Role::Body.line_height();
@@ -2816,7 +2816,7 @@ mod tests {
         // Backwards too.
         s.phase = -0.25;
         assert!((s.turn() - 0.75).abs() < 1e-6);
-        // A non-finite phase — a division by a zero frame time — reads as the
+        // A non-finite phase - a division by a zero frame time - reads as the
         // start of the turn rather than poisoning every coordinate with NaN.
         s.phase = f32::NAN;
         assert_eq!(s.turn(), 0.0);
@@ -3026,7 +3026,7 @@ mod tests {
     #[test]
     fn a_callouts_height_is_its_padding_its_lines_and_its_action() {
         let base = Callout::new("un mot");
-        // No title: padding, then one relaxed line — but never less than the
+        // No title: padding, then one relaxed line - but never less than the
         // glyph column.
         let one = base.height_for(1);
         assert_eq!(one, Callout::PAD_Y * 2.0 + RELAXED_LINE.max(Callout::ICON_TOP + Callout::ICON));
@@ -3283,7 +3283,7 @@ mod tests {
         assert_eq!(s.status(1), StepStatus::Error, "an explicit status wins over the position");
         assert_eq!(s.status(0), StepStatus::Complete);
         assert!(s.has_error());
-        // Its bullet is the danger fill and its label the danger ink — not the
+        // Its bullet is the danger fill and its label the danger ink - not the
         // pending grey it would have had.
         assert_eq!(StepStatus::Error.mark(), Some(("AlertTriangle", Stepper::BULLET_ALERT)));
         assert_eq!(StepStatus::Complete.mark(), Some(("Check", Stepper::BULLET_TICK)));

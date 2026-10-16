@@ -1,12 +1,12 @@
-//! `/admin/alerts` — the HTTP surface of the alert centre.
+//! `/admin/alerts` - the HTTP surface of the alert centre.
 //!
 //! Reads are gated on `core.alerts.read` and narrowed per alert *type*; every
 //! write is gated on `core.alerts.manage` and rides an audited transaction, so
 //! a status change or an assignment can never land without its trail entry (see
 //! [`crate::audit::AuditTx`]).
 //!
-//! The two verbs the console cannot delegate to another screen — putting a
-//! dead-lettered job back in the queue, or discarding it — live here too. That
+//! The two verbs the console cannot delegate to another screen - putting a
+//! dead-lettered job back in the queue, or discarding it - live here too. That
 //! is deliberate: the catalogue refuses to ship an alert type with no action,
 //! and there is no background-jobs page to send the operator to.
 
@@ -46,7 +46,7 @@ fn actor_label(user: &crate::models::user::User) -> String {
 
 // ── Reads ────────────────────────────────────────────────────────────────────
 
-/// `GET /api/v1/admin/alerts` — one page of the queue.
+/// `GET /api/v1/admin/alerts` - one page of the queue.
 pub async fn list_alerts(
     State(state): State<AppState>,
     _admin: AdminUser,
@@ -61,7 +61,7 @@ pub async fn list_alerts(
     })))
 }
 
-/// `GET /api/v1/admin/alerts/summary` — the counters behind the badges.
+/// `GET /api/v1/admin/alerts/summary` - the counters behind the badges.
 ///
 /// Computed server-side so the bell, the landing card and the queue cannot
 /// disagree about how many criticals are open.
@@ -75,7 +75,7 @@ pub async fn alerts_summary(
     Ok(Json(json!(summary)))
 }
 
-/// `GET /api/v1/admin/alerts/facets` — distinct kinds and sources present, plus
+/// `GET /api/v1/admin/alerts/facets` - distinct kinds and sources present, plus
 /// the accounts an alert may be handed to.
 pub async fn alerts_facets(
     State(state): State<AppState>,
@@ -99,7 +99,7 @@ pub async fn alerts_facets(
     })))
 }
 
-/// `GET /api/v1/admin/alerts/:id` — one alert, its timeline and its siblings.
+/// `GET /api/v1/admin/alerts/:id` - one alert, its timeline and its siblings.
 pub async fn get_alert(
     State(state): State<AppState>,
     _admin: AdminUser,
@@ -122,7 +122,7 @@ pub async fn get_alert(
 #[derive(Debug, Deserialize)]
 pub struct StatusDto {
     pub status: String,
-    /// Optional note recorded on the timeline with the transition — "why did you
+    /// Optional note recorded on the timeline with the transition - "why did you
     /// close this?" is the question the next operator always asks.
     #[serde(default)]
     pub comment: Option<String>,
@@ -282,7 +282,7 @@ pub struct BulkDto {
     pub assignee_id: Option<Uuid>,
 }
 
-/// `POST /api/v1/admin/alerts/bulk` — the same transition over a selection.
+/// `POST /api/v1/admin/alerts/bulk` - the same transition over a selection.
 ///
 /// Each alert gets its **own** audited transaction: a bulk gesture is a
 /// convenience for the operator, not a reason for the trail to lose track of
@@ -406,7 +406,7 @@ async fn dead_letter_job_type(
 ///
 /// Puts every job of the alert's type that gave up back in the queue, resets its
 /// attempt counter and wakes the runners. Then closes the alert: the condition
-/// that produced it no longer holds, and the next scan would close it anyway —
+/// that produced it no longer holds, and the next scan would close it anyway -
 /// doing it here is what makes the button feel like it worked.
 pub async fn retry_dead_jobs(
     State(state): State<AppState>,
@@ -535,7 +535,7 @@ pub async fn discard_dead_jobs(
     Ok(Json(json!({ "discarded": discarded, "job_type": job_type })))
 }
 
-/// `POST /api/v1/admin/alerts/scan` — run the producers now.
+/// `POST /api/v1/admin/alerts/scan` - run the producers now.
 ///
 /// The scan is a scheduled job; this is the "I just fixed it, check again"
 /// button, and it is the same code path rather than a second implementation.
@@ -568,7 +568,7 @@ pub async fn list_alert_views(
     Ok(Json(json!({ "views": views })))
 }
 
-/// `POST /api/v1/admin/alerts/views` — save (or overwrite) a filter set.
+/// `POST /api/v1/admin/alerts/views` - save (or overwrite) a filter set.
 ///
 /// Owned by the caller, so it needs no management privilege: a personal working
 /// set changes nothing anybody else sees.

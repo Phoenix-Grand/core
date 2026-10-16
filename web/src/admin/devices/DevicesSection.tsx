@@ -144,7 +144,7 @@ export class DevicesSection extends ViewBase {
       id: 'user',
       header: this.tr('devices.col_account'),
       width: 170,
-      cell: (d) => <span className="truncate text-text-secondary">{d.user_label ?? '—'}</span>,
+      cell: (d) => <span className="truncate text-text-secondary">{d.user_label ?? '-'}</span>,
       sortValue: (d) => d.user_label ?? '',
     },
     {
@@ -153,7 +153,7 @@ export class DevicesSection extends ViewBase {
       width: 150,
       cell: (d) => (
         <span className="truncate text-text-secondary">
-          {[d.platform, d.platform_version].filter(Boolean).join(' ') || '—'}
+          {[d.platform, d.platform_version].filter(Boolean).join(' ') || '-'}
         </span>
       ),
       sortValue: (d) => d.platform ?? '',
@@ -192,7 +192,7 @@ export class DevicesSection extends ViewBase {
       id: 'country',
       header: this.tr('devices.col_country'),
       width: 90,
-      cell: (d) => <span className="text-text-secondary">{d.last_country ?? '—'}</span>,
+      cell: (d) => <span className="text-text-secondary">{d.last_country ?? '-'}</span>,
       sortValue: (d) => d.last_country ?? '',
     },
     {

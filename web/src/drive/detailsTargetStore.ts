@@ -2,7 +2,7 @@
  * What the details panel is currently describing.
  *
  * The shell's right panel mounts a component with NO props (see `RailEntry`), so
- * the explorer cannot hand it the selection directly — it publishes it here
+ * the explorer cannot hand it the selection directly - it publishes it here
  * instead. That indirection is the price of reusing the shell panel, and it is
  * cheaper than a second panel implementation: the shell one already brings the
  * resize handle, the per-application width memory, the overlay behaviour on

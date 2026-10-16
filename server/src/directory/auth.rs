@@ -4,21 +4,21 @@
 //!
 //! An account can exist locally *and* in the directory, so something has to say
 //! which credential decides. **An administrator decides**, per organisational
-//! unit — see [`crate::auth::methods`], which owns the policy, its inheritance
+//! unit - see [`crate::auth::methods`], which owns the policy, its inheritance
 //! and its anti-lockout guard. This module only *applies* it:
 //!
 //! > For the account in front of us, resolve the accepted methods. If `local` is
 //! > accepted (or the administrative fallback applies) and the account holds a
 //! > hash, the local password decides and nothing else is consulted. Otherwise,
 //! > if `directory` is accepted, the directory that governs the account decides
-//! > — or, when none does yet, each enabled directory gets a turn. If neither
+//! > - or, when none does yet, each enabled directory gets a turn. If neither
 //! > applies, the password route admits nobody.
 //!
 //! Three consequences, all of them intentional:
 //!
 //! 1. **The instance cannot lock itself out.** `auth.local_admin_fallback` is on
 //!    by default, so an administrator holding a hash is routed to `Local`
-//!    whatever the unit's policy says — see
+//!    whatever the unit's policy says - see
 //!    [`a_local_administrator_is_never_routed_to_a_directory`] below. Turning
 //!    that fallback off, or narrowing a unit's methods, is refused outright when
 //!    it would strand an administrator
@@ -27,7 +27,7 @@
 //!    regardless.
 //!
 //! 2. **A directory-provisioned account has no local fallback.** It carries no
-//!    hash — there is nothing to fall back to — so revoking somebody in the
+//!    hash - there is nothing to fall back to - so revoking somebody in the
 //!    directory revokes them here, which is the whole point of connecting one.
 //!
 //! 3. **Linking does not seize an account.** A local account matched by a
@@ -65,7 +65,7 @@ pub enum Authority {
     LocalPassword,
     /// No local hash, and a directory governs the account.
     Directory(Uuid),
-    /// No local hash and no directory — an OIDC-only account, or one whose
+    /// No local hash and no directory - an OIDC-only account, or one whose
     /// directory row was deleted. The password route cannot admit it.
     External,
 }
@@ -129,7 +129,7 @@ impl PasswordRoute {
 /// password while it is on, even where `local` is not accepted.
 pub fn route_for(user: Option<&User>, methods: MethodSet, admin_fallback: bool) -> PasswordRoute {
     let Some(u) = user else {
-        // Nothing is known — not even whether this login exists. The answer must
+        // Nothing is known - not even whether this login exists. The answer must
         // therefore depend on the instance policy alone.
         return if methods.directory {
             PasswordRoute::AnyDirectory
@@ -167,7 +167,7 @@ pub struct DirectoryLogin {
 
 /// Resolves an entry and binds as it. The password never leaves this function.
 ///
-/// Returns the mapped entry on success — the caller decides what to do with it
+/// Returns the mapped entry on success - the caller decides what to do with it
 /// (provision, refresh, or nothing).
 pub async fn search_then_bind(
     dir: &LdapDirectory,
@@ -226,7 +226,7 @@ pub async fn search_then_bind(
     }
 
     // The bind is the authentication. It runs on the same connection, which
-    // re-binds it as the person — hence nothing else is done with it afterwards.
+    // re-binds it as the person - hence nothing else is done with it afterwards.
     let result = conn.bind_as(&mapped.dn, password).await;
     conn.close().await;
     result?;
@@ -237,7 +237,7 @@ pub async fn search_then_bind(
 /// Full sign-in against the directories, for somebody the instance has no local
 /// password for.
 ///
-/// `only` narrows the attempt to a single directory — used when the account is
+/// `only` narrows the attempt to a single directory - used when the account is
 /// already governed by one, so an unknown password is not replayed against every
 /// other directory in the instance.
 pub async fn authenticate(
@@ -363,7 +363,7 @@ mod tests {
     #[test]
     fn a_local_administrator_is_never_routed_to_a_directory() {
         // The anti-lockout proof, at the level of the rule itself. The unit says
-        // "directory only" and the account has even been linked to one — the
+        // "directory only" and the account has even been linked to one - the
         // administrator is still routed to their local password, because
         // `auth.local_admin_fallback` is on.
         let mut u = user();
@@ -377,7 +377,7 @@ mod tests {
             "le secours local des administrateurs l'emporte sur la politique de l'unité"
         );
 
-        // And the same account without the fallback IS routed to its directory —
+        // And the same account without the fallback IS routed to its directory -
         // which is what makes the fallback meaningful rather than decorative.
         assert!(matches!(
             route_for(Some(&u), directory_only, false),
@@ -412,7 +412,7 @@ mod tests {
 
     #[test]
     fn an_unknown_login_never_reveals_whether_it_exists() {
-        // Two different instance policies, two different behaviours — but the
+        // Two different instance policies, two different behaviours - but the
         // behaviour depends on the POLICY, never on the login. Nothing here can
         // be used to probe for an account.
         let with_dir = MethodSet::parse(Some(&serde_json::json!(["local", "directory"])));

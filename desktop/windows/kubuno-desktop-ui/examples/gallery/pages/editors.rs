@@ -1,20 +1,20 @@
-//! Gallery page — the editor family.
+//! Gallery page - the editor family.
 //!
 //! None of these five primitives has a hand-written predecessor in
 //! `kubuno-drive-desktop-app-controls`, so there is no [`super::sheet::pair`] here: there is
 //! nothing to sit beside. What the page shows instead is every **state** the
 //! family can be in, painted from the same inputs the unit tests use.
 //!
-//! The static exposition (left) paints each state once — including the
+//! The static exposition (left) paints each state once - including the
 //! keyboard-focus rings (`:focus-visible`), the overflow cases (a label too
 //! long for its trigger, a name too long for its field, a toolbar narrower
 //! than its commands) and the three dropped lists, INLINE, so they can be
 //! compared side by side.
 //!
 //! The live column (right) is the real thing: every dropped list is a floating
-//! surface in a `host::popup` window of its own — placed against the MONITOR,
+//! surface in a `host::popup` window of its own - placed against the MONITOR,
 //! so it may hang past the gallery window's edge and flips above its trigger
-//! when there is no room below — with its hover and clicks reported back to
+//! when there is no room below - with its hover and clicks reported back to
 //! this page. The keyboard follows the web (`Dropdown.tsx`,
 //! `FontPicker.tsx`, `FontSizeField.tsx`, the WAI-ARIA toolbar):
 //!
@@ -48,7 +48,7 @@ use super::sheet::{cells, Page, MARGIN};
 
 /// The gap between two cells on this page.
 const GAP: f32 = 16.0;
-/// The height a `Dropdown`, an `Editable` and a `FontPicker` trigger take —
+/// The height a `Dropdown`, an `Editable` and a `FontPicker` trigger take -
 /// `height::BUTTON_MD`, the `h-9` every field in this system is.
 const FIELD_H: f32 = 36.0;
 /// The toolbar height a glued font field is set at (`FontSizeField.tsx`'s
@@ -56,7 +56,7 @@ const FIELD_H: f32 = 36.0;
 const TOOLBAR_H: f32 = 30.0;
 const PAIR_FONT_W: f32 = 150.0;
 const PAIR_SIZE_W: f32 = 62.0;
-/// A tooltip waits this long under a still pointer before it shows — the
+/// A tooltip waits this long under a still pointer before it shows - the
 /// browser's delay for a `title`, which is what `@ui/RichText`'s buttons use.
 const TOOLTIP_DELAY_MS: u64 = 500;
 /// The search typed into the static exposition's open font picker: narrow
@@ -97,19 +97,19 @@ pub fn draw(c: &dyn Canvas, f: &Frame) {
     let w5 = (span - 4.0 * GAP) / 5.0;
     let row = cells(MARGIN, top, w5, FIELD_H, GAP, 5);
 
-    // 1 — a label longer than the trigger: `truncate`, never spilled.
+    // 1 - a label longer than the trigger: `truncate`, never spilled.
     let mut long = sort_dropdown();
     long.add_option("Trier par date de dernière modification", Some("Clock"));
     long.set_selected_index(4);
     long.paint(c, row[0], WidgetState::REST);
 
-    // 2 — the hover fill, and a placeholder standing in for an empty
+    // 2 - the hover fill, and a placeholder standing in for an empty
     //     selection (`selected?.label ?? placeholder`).
     let mut hovered = sort_dropdown();
     hovered.placeholder = "Choisir un tri…".into();
     hovered.paint(c, row[1], WidgetState::REST.hot(true));
 
-    // 3 — `ghost`: no border, secondary ink, at the toolbar height and its
+    // 3 - `ghost`: no border, secondary ink, at the toolbar height and its
     //     OWN measured width (« omit `width` for natural sizing »).
     let mut ghost = sort_dropdown();
     ghost.variant = DropdownVariant::Ghost;
@@ -124,12 +124,12 @@ pub fn draw(c: &dyn Canvas, f: &Frame) {
     );
     ghost.paint(c, ghost_cell, WidgetState::REST);
 
-    // 4 — reached with Tab: the focused `<Input>`'s accent border + ring.
+    // 4 - reached with Tab: the focused `<Input>`'s accent border + ring.
     let mut keyed = sort_dropdown();
     keyed.set_selected_index(0);
     keyed.paint(c, row[3], WidgetState::REST.focused(true).focus_visible(true));
 
-    // 5 — disabled: `opacity: 0.5`, and the list refuses to drop.
+    // 5 - disabled: `opacity: 0.5`, and the list refuses to drop.
     let mut dead = sort_dropdown();
     dead.set_selected_index(1);
     dead.open = true;
@@ -141,21 +141,21 @@ pub fn draw(c: &dyn Canvas, f: &Frame) {
     page.section("Editable");
     let top = page.caption(
         "repos (nom trop long : ellipse) · survol (cadre de l'Input, placeholder) · focus clavier \
-         · édition (sélection) — MÊME rectangle, MÊME ligne de base",
+         · édition (sélection) - MÊME rectangle, MÊME ligne de base",
     );
     let w4 = (span - 3.0 * GAP) / 4.0;
     let row = cells(MARGIN, top, w4, FIELD_H, GAP, 4);
 
-    // 1 — at rest: a bare label, ellipsised when too long for the cell.
-    named("Rapport annuel 2025 — version définitive relue").paint(c, row[0], WidgetState::REST);
+    // 1 - at rest: a bare label, ellipsised when too long for the cell.
+    named("Rapport annuel 2025 - version définitive relue").paint(c, row[0], WidgetState::REST);
 
-    // 2 — hovered and empty: `@ui/Input`'s frame and the greyed placeholder.
+    // 2 - hovered and empty: `@ui/Input`'s frame and the greyed placeholder.
     named("").paint(c, row[1], WidgetState::REST.hot(true));
 
-    // 3 — reached with Tab at rest: the frame and the field's ring.
+    // 3 - reached with Tab at rest: the frame and the field's ring.
     named("Rapport annuel").paint(c, row[2], WidgetState::REST.focused(true).focus_visible(true));
 
-    // 4 — editing: the SAME string, now a `TextField` — caret, selection band
+    // 4 - editing: the SAME string, now a `TextField` - caret, selection band
     //     and scroll are `edit_box::EditView`'s.
     let mut editing = named("Rapport annuel");
     editing.begin_edit();
@@ -163,7 +163,7 @@ pub fn draw(c: &dyn Canvas, f: &Frame) {
     editing.paint(c, row[3], WidgetState::REST);
 
     // A hairline under the four, so the reader can check by eye that the
-    // strings sit on one baseline — the whole point of the cell.
+    // strings sit on one baseline - the whole point of the cell.
     let t = c.theme();
     let base = row[0].bottom + 3.0;
     c.fill_rounded(&Rect::new(row[0].left, base, row[3].right, base + 1.0), 0.0, &t.divider);
@@ -174,20 +174,20 @@ pub fn draw(c: &dyn Canvas, f: &Frame) {
     page.section("RichTextToolbar");
     let top = page.caption(
         "gras + liste à puces actifs, focus clavier sur « Italique » · désactivée · trop étroite \
-         (coupée à son bord) — puis le groupe d'alignement (extension)",
+         (coupée à son bord) - puis le groupe d'alignement (extension)",
     );
     let bar_h = kubuno_desktop_ui::editors::rich_metrics::HEIGHT;
 
-    // 1 — `@ui/RichText`'s bar exactly, with two commands on and the roving
+    // 1 - `@ui/RichText`'s bar exactly, with two commands on and the roving
     //     focus ringed on the second button.
     let mut bar = RichTextToolbar::standard();
     bar.apply(RichTextCommand::Bold);
     bar.apply(RichTextCommand::BulletList);
     bar.focus_index = Some(1);
-    // 2 — disabled: every glyph fades, and no command lights.
+    // 2 - disabled: every glyph fades, and no command lights.
     let mut off = RichTextToolbar::standard();
     off.set_active(RichTextCommand::Link, true);
-    // 3 — narrower than its commands: `overflow-hidden` cuts them at its edge.
+    // 3 - narrower than its commands: `overflow-hidden` cuts them at its edge.
     let narrow = RichTextToolbar::standard();
 
     let mut x = MARGIN;
@@ -206,7 +206,7 @@ pub fn draw(c: &dyn Canvas, f: &Frame) {
     let narrow_cell = Rect::new(x, top, (x + 130.0).min(right), top + bar_h);
     narrow.paint(c, narrow_cell, states[2]);
 
-    // 4 — the alignment group, which `@ui/RichText` does not have; centring
+    // 4 - the alignment group, which `@ui/RichText` does not have; centring
     //     is exclusive with the other three.
     let top2 = top + bar_h + space_sm();
     let mut aligned = RichTextToolbar::with_alignments();
@@ -233,7 +233,7 @@ pub fn draw(c: &dyn Canvas, f: &Frame) {
     let wide = (span - 2.0 * GAP) / 3.0;
     let open_row = cells(MARGIN, top, wide, FIELD_H, GAP, 3);
 
-    // 1 — a long dropdown, scrolled, with its bar and its checked row.
+    // 1 - a long dropdown, scrolled, with its bar and its checked row.
     let mut dropped = country_dropdown();
     dropped.set_selected_index(10);
     dropped.open = true;
@@ -241,7 +241,7 @@ pub fn draw(c: &dyn Canvas, f: &Frame) {
     dropped.hot_index = dropped.item_at(open_row[0], mx, my).or(Some(9));
     dropped.paint(c, open_row[0], WidgetState::REST);
 
-    // 2 — the pair the web calls `FontSizeField`: a picker and a size sharing
+    // 2 - the pair the web calls `FontSizeField`: a picker and a size sharing
     //     one height, the joined corners squared and the middle borders
     //     overlapped into one divider (the -1). The size is being typed into
     //     (all selected, as on focus) and its preset list is dropped.
@@ -262,12 +262,12 @@ pub fn draw(c: &dyn Canvas, f: &Frame) {
     size.hot_index = size.item_at(size_cell, mx, my).or(Some(7));
     size.paint(c, size_cell, WidgetState::REST.focused(true));
 
-    // 3 — the font picker, open and searching. Last, so its panel is on top.
+    // 3 - the font picker, open and searching. Last, so its panel is on top.
     let mut picker = picker_over_real_fonts();
     picker.open = true;
     picker.query = FONT_QUERY.into();
     picker.search_caret = true;
-    // Placed as the web's `useLayoutEffect` does — `max-content` wide, and
+    // Placed as the web's `useLayoutEffect` does - `max-content` wide, and
     // slid back inside the viewport (here: the exposition, less its margin)
     // when it would run past its bottom edge instead of being cut there.
     let viewport = Rect::new(page.area.left, page.area.top, page.area.right, page.area.bottom - MARGIN / 2.0);
@@ -276,13 +276,13 @@ pub fn draw(c: &dyn Canvas, f: &Frame) {
     picker.paint(c, open_row[2], WidgetState::REST);
 }
 
-/// `space::SM` — the gap between two stacked toolbar specimens.
+/// `space::SM` - the gap between two stacked toolbar specimens.
 fn space_sm() -> f32 {
     kubuno_desktop_ui::metrics::space::SM
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// The interactive column — the same editors, live, keyboard included.
+// The interactive column - the same editors, live, keyboard included.
 // ─────────────────────────────────────────────────────────────────────────────
 
 /// Which floating list, if any, is dropped. One at a time: opening one closes
@@ -313,7 +313,7 @@ struct Ui {
     font: FontPicker,
     size: FontSizeField,
     open: Open,
-    /// Last frame's open panel, in client DIP — clicks are routed against it
+    /// Last frame's open panel, in client DIP - clicks are routed against it
     /// at the top of the next frame, before anything underneath sees them.
     panel: Option<Rect>,
     /// Last frame's trigger of the open control (a click there closes).
@@ -431,7 +431,7 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
         // in the panel is the panel's (routed against LAST frame's geometry,
         // swallowed); on the open control's trigger it closes the list (the
         // web's toggle) and is swallowed too; anywhere else it closes the list
-        // and goes through — the web's `pointerdown` close, which is not a
+        // and goes through - the web's `pointerdown` close, which is not a
         // backdrop.
         if f.dismiss && ui.open != Open::None {
             close_all(ui);
@@ -468,7 +468,7 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
         let field_w = (right - left).min(280.0);
 
         // ── Editable ─────────────────────────────────────────────────────────
-        y = interact::caption(c, left, right, y, "Editable — clic, double clic (mot), triple clic · Entrée/F2 · Échap · Ctrl+A/C/X/V");
+        y = interact::caption(c, left, right, y, "Editable - clic, double clic (mot), triple clic · Entrée/F2 · Échap · Ctrl+A/C/X/V");
         let ed_r = Rect::new(left, y, left + field_w, y + FIELD_H);
         let st = live.focus_with("ed", ed_r, FocusOpts::TEXT);
         if live.hover(ed_r) {
@@ -498,8 +498,8 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
         ui.ed.paint(c, ed_r, st.apply(live.state(ed_r)));
         y = ed_r.bottom + GAP;
 
-        // ── RichTextToolbar — one Tab stop, arrows inside ────────────────────
-        y = interact::caption(c, left, right, y, "RichTextToolbar — clic ou ←/→ + Entrée · listes et styles exclusifs comme l'éditeur");
+        // ── RichTextToolbar - one Tab stop, arrows inside ────────────────────
+        y = interact::caption(c, left, right, y, "RichTextToolbar - clic ou ←/→ + Entrée · listes et styles exclusifs comme l'éditeur");
         let bar_w = ui.bar.measure(c).width.min(right - left);
         let bar_r = Rect::new(left, y, left + bar_w, y + kubuno_desktop_ui::editors::rich_metrics::HEIGHT);
         let st = live.focus("rt", bar_r);
@@ -540,18 +540,18 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
         y = bar_r.bottom + GAP;
 
         // ── Two dropdowns ────────────────────────────────────────────────────
-        y = interact::caption(c, left, right, y, "Dropdown — icônes · clavier : ↓ Entrée Espace, flèches, Échap, Tab");
+        y = interact::caption(c, left, right, y, "Dropdown - icônes · clavier : ↓ Entrée Espace, flèches, Échap, Tab");
         let sort_b = Rect::new(left, y, left + field_w, y + FIELD_H);
         drive_dropdown(c, &live, ui, Open::Sort, sort_b, now);
         y = sort_b.bottom + GAP;
 
-        y = interact::caption(c, left, right, y, "Dropdown — 20 pays : molette, saisie rapide (« f », « fi », « l » « l »…)");
+        y = interact::caption(c, left, right, y, "Dropdown - 20 pays : molette, saisie rapide (« f », « fi », « l » « l »…)");
         let country_b = Rect::new(left, y, left + field_w, y + FIELD_H);
         drive_dropdown(c, &live, ui, Open::Country, country_b, now);
         y = country_b.bottom + GAP;
 
         // ── The glued pair: FontPicker | FontSizeField ───────────────────────
-        y = interact::caption(c, left, right, y, "FontPicker + FontSizeField — Entrée/recherche · taille : saisir, ↑/↓, Alt+↓");
+        y = interact::caption(c, left, right, y, "FontPicker + FontSizeField - Entrée/recherche · taille : saisir, ↑/↓, Alt+↓");
         let font_b = Rect::new(left, y, left + PAIR_FONT_W, y + TOOLBAR_H);
         let size_b = Rect::new(font_b.right - 1.0, y, font_b.right - 1.0 + PAIR_SIZE_W, y + TOOLBAR_H);
 
@@ -765,7 +765,7 @@ fn drive_dropdown(c: &dyn Canvas, live: &Live, ui: &mut Ui, me: Open, bounds: Re
 fn command_status(bar: &RichTextToolbar, cmd: RichTextCommand) -> String {
     let on: Vec<&str> = RichTextCommand::ALL.iter().filter(|c| bar.is_active(**c)).map(|c| c.label()).collect();
     let state = if on.is_empty() { "aucun".to_string() } else { on.join(", ") };
-    format!("{} — actifs : {state}", cmd.label())
+    format!("{} - actifs : {state}", cmd.label())
 }
 
 /// A tooltip under `anchor`, floated in an overlay window (the pointer passes
@@ -784,7 +784,7 @@ fn float_tooltip(c: &dyn Canvas, f: &Frame, text: &str, anchor: Rect) {
     host::overlay(pb, move |cv| tip.paint_placed(cv, &local, WidgetState::REST));
 }
 
-/// The four sort options, three of which carry an icon — so the whole list
+/// The four sort options, three of which carry an icon - so the whole list
 /// reserves the gutter (`anyIcon`) and every label stays in one column.
 fn sort_dropdown() -> Dropdown {
     let mut d = Dropdown::new();
@@ -803,7 +803,7 @@ fn country_dropdown() -> Dropdown {
     d
 }
 
-/// An `Editable` holding `text` — one storage location, the `TextBox` replica.
+/// An `Editable` holding `text` - one storage location, the `TextBox` replica.
 fn named(text: &str) -> Editable {
     let mut e = Editable::new();
     e.set_text(text);
@@ -821,7 +821,7 @@ fn size_field(value: f64) -> FontSizeField {
 fn picker_over_real_fonts() -> FontPicker {
     let mut p = FontPicker::system();
     // `recent` is a plain list of names: the ones present are pinned, the ones
-    // absent are simply not there — no invented families.
+    // absent are simply not there - no invented families.
     p.recent = ["Segoe UI", "Consolas", "Georgia"].iter().map(|s| s.to_string()).collect();
     p.placeholder = "Police mixte".into();
     let want = p.items.iter().position(|f| f == "Segoe UI").unwrap_or(0);

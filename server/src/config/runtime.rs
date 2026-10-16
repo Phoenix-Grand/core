@@ -82,8 +82,8 @@ pub async fn security_ttls(db: &DbPool, settings: &Settings) -> SecurityTtls {
 }
 
 /// Révoque les sessions excédentaires d'un utilisateur (au-delà de `max_sessions`),
-/// en conservant les plus RÉCEMMENT UTILISÉES (last_used_at). Trier par activité —
-/// et non par date de création — évite de déconnecter une session ancienne mais
+/// en conservant les plus RÉCEMMENT UTILISÉES (last_used_at). Trier par activité -
+/// et non par date de création - évite de déconnecter une session ancienne mais
 /// active au profit d'une nouvelle (= déconnexions « aléatoires »).
 pub async fn enforce_max_sessions(db: &DbPool, user_id: uuid::Uuid, max_sessions: i64) {
     if max_sessions <= 0 { return; }

@@ -3,7 +3,7 @@
 //! Four rule kinds, and no fifth. The grammar is closed because every kind is
 //! expanded by [`super::rules`]: a kind the expander does not know would be a
 //! row storing a promise the product never keeps. Anything the four cannot
-//! describe — an Islamic, Hebrew, Chinese or astronomical feast — is stored as
+//! describe - an Islamic, Hebrew, Chinese or astronomical feast - is stored as
 //! the dates it actually falls on, honestly bounded by the window the dataset
 //! computed.
 
@@ -31,7 +31,7 @@ pub enum Category {
     Optional,
     HalfDay,
     ArmedForces,
-    /// A day the law names as *worked* — the compensating Saturdays several
+    /// A day the law names as *worked* - the compensating Saturdays several
     /// countries schedule around a long weekend.
     Workday,
     /// Marked, celebrated, but not a day off (Mother's Day, a flag day).
@@ -85,7 +85,7 @@ pub enum Observance {
     None,
     /// Saturday and Sunday both move to the following Monday.
     NextWorkday,
-    /// Saturday moves back to Friday, Sunday forward to Monday — the shape that
+    /// Saturday moves back to Friday, Sunday forward to Monday - the shape that
     /// keeps the day off adjacent to the date it commemorates.
     NearestWorkday,
     SundayToMonday,
@@ -123,7 +123,7 @@ impl Observance {
 }
 
 /// Which Easter a rule counts from. Orthodox Easter is the Julian computation,
-/// stated in the Gregorian calendar — the two fall on the same day only about a
+/// stated in the Gregorian calendar - the two fall on the same day only about a
 /// quarter of the time, so a single Easter would misdate half of eastern Europe.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
@@ -163,7 +163,7 @@ impl Rule {
         }
     }
 
-    /// The `rule` column value — parameters only, without the discriminant.
+    /// The `rule` column value - parameters only, without the discriminant.
     pub fn params(&self) -> Value {
         match self {
             Self::Fixed { month, day } => json!({ "month": month, "day": day }),
@@ -304,7 +304,7 @@ impl Rule {
     }
 }
 
-/// A calendar — a territory, or a list an organisation keeps for itself.
+/// A calendar - a territory, or a list an organisation keeps for itself.
 #[derive(Debug, Clone, Serialize)]
 pub struct HolidayCalendar {
     pub id: Uuid,
@@ -349,7 +349,7 @@ pub struct Holiday {
     pub is_orphan: bool,
 }
 
-/// Serialised as the **two columns it is stored in** — `kind` and `rule` — and
+/// Serialised as the **two columns it is stored in** - `kind` and `rule` - and
 /// not as the tagged enum's natural shape.
 ///
 /// Derived, `#[serde(flatten)]` on a tagged enum spreads the parameters over the
@@ -386,7 +386,7 @@ impl Holiday {
     }
 }
 
-/// One day, on one date, for one reader — what a module actually renders.
+/// One day, on one date, for one reader - what a module actually renders.
 #[derive(Debug, Clone, Serialize)]
 pub struct Occurrence {
     pub date: NaiveDate,
@@ -394,7 +394,7 @@ pub struct Occurrence {
     pub key: String,
     pub category: Category,
     /// Where it comes from, so a module can group by territory when two
-    /// calendars apply ("Jours fériés — France" / "— Belgique").
+    /// calendars apply ("Jours fériés - France" / "- Belgique").
     pub calendar_code: String,
     pub calendar_name: String,
     pub color: Option<String>,

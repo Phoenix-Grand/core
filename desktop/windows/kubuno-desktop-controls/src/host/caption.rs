@@ -17,7 +17,7 @@ pub enum Hot {
 impl Hot {
     /// The Win32 `HT*` code this slot maps to for `WM_NCHITTEST`. The system
     /// buttons keep their native codes so Windows 11's snap-layouts flyout
-    /// pops on hover of the maximise button — a wholly custom code would kill
+    /// pops on hover of the maximise button - a wholly custom code would kill
     /// that affordance.
     pub const fn ht_code(self) -> u32 {
         use windows::Win32::UI::WindowsAndMessaging::*;

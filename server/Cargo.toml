@@ -120,7 +120,7 @@ rustls      = { version = "0.23", default-features = false, features = ["ring", 
 # cryptography of its own: rustls remains the sole TLS engine. (PEM parsing uses
 # the existing `rustls-pemfile` dependency declared further down.)
 x509-parser    = "0.18"
-# ACME (Let's Encrypt) client for automatic certificates. ring only — NO
+# ACME (Let's Encrypt) client for automatic certificates. ring only - NO
 # aws-lc-rs (default features off) to keep the single ring provider the core
 # already links; rcgen for the finalize key, hyper-rustls for the built-in
 # client. Terminates over rustls, like everything else.
@@ -185,7 +185,7 @@ uuid   = { version = "1", features = ["v4", "serde"] }
 # CIDR matching for the trusted reverse-proxy list (client address resolution)
 ipnet  = "2"
 # `statvfs` only: the health checks need the free space of the data volume, and
-# the standard library exposes no such API. Nothing here spawns a process — the
+# the standard library exposes no such API. Nothing here spawns a process - the
 # seccomp filter still refuses `execve`/`execveat` (see kubuno-seccomp).
 libc   = "0.2"
 chrono = { version = "0.4", features = ["serde"] }
@@ -210,12 +210,12 @@ quick-xml           = { version = "0.37", features = ["serialize"] }
 utoipa              = { version = "5", features = ["axum_extras", "uuid", "chrono"] }
 # Outbound SMTP (crate::mailer). rustls rather than native-tls: the rest of the
 # core's TLS is rustls (axum-server, sqlx), and OpenSSL has no business being
-# linked in for one feature. `pool` is off — the core sends a handful of
+# linked in for one feature. `pool` is off - the core sends a handful of
 # transactional messages, not a campaign.
 lettre              = { version = "0.11", default-features = false, features = [
     "tokio1", "tokio1-rustls-tls", "smtp-transport", "builder", "hostname",
 ] }
-# LDAP / Active Directory client (crate::directory). Pure Rust — the seccomp
+# LDAP / Active Directory client (crate::directory). Pure Rust - the seccomp
 # filter forbids `execve`, so shelling out to `ldapsearch` was never an option.
 # `ldap3` is the only maintained pure-Rust LDAPv3 client with async I/O,
 # STARTTLS and LDAPS; `default-features = false` drops its blocking wrapper and
@@ -226,7 +226,7 @@ ldap3               = { version = "0.12", default-features = false, features = [
 # DNS, for proving that somebody controls the domain they just declared.
 #
 # 0.25 rather than 0.26: the latter demands rustc 1.88 and this workspace states
-# 1.82 as its floor — a dependency must not silently raise what the product
+# 1.82 as its floor - a dependency must not silently raise what the product
 # claims to build on. Default features are exactly what is needed (tokio, plus
 # the system resolver configuration read from /etc/resolv.conf).
 hickory-resolver    = "0.26"

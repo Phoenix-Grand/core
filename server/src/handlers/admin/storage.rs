@@ -2,10 +2,10 @@
 //!
 //! ## Two totals that are not the same number, and why both are shown
 //!
-//! * **Consumed** — `SUM(core.users.used_bytes)`. What accounts actually hold.
+//! * **Consumed** - `SUM(core.users.used_bytes)`. What accounts actually hold.
 //!   The counter is maintained by whichever module stores the bytes; the core
 //!   only sums it.
-//! * **Allocated** — `SUM(core.users.quota_bytes)`. What the instance has
+//! * **Allocated** - `SUM(core.users.quota_bytes)`. What the instance has
 //!   *promised*. Routinely several times the physical volume, and that is not a
 //!   bug: quotas are ceilings, and an instance that only ever allocated what it
 //!   owns would be sized for a worst case that never happens.
@@ -17,15 +17,15 @@
 //!
 //! ## The breakdown per module, and what it does *not* claim
 //!
-//! `core.users.used_bytes` still has no provenance of its own — it is a single
+//! `core.users.used_bytes` still has no provenance of its own - it is a single
 //! number, and splitting it into plausible slices would be a chart that lies.
 //! The breakdown is therefore not derived from it: it is assembled from what
 //! each module **declared about itself** through `POST /internal/storage/usage`
 //! (see [`crate::storage::usage`]). Three states, kept apart on purpose:
 //!
-//! * a module that declared — its own measurement, with the time it was taken;
-//! * a module that declared **zero** — a measured zero;
-//! * a module that has **never** declared — reported as unknown, not as zero.
+//! * a module that declared - its own measurement, with the time it was taken;
+//! * a module that declared **zero** - a measured zero;
+//! * a module that has **never** declared - reported as unknown, not as zero.
 //!
 //! Whatever the declarations do not account for is returned as
 //! `unattributed_bytes` and named on the page. That residue is the honest
@@ -136,7 +136,7 @@ async fn quota_percent(db: &DbPool) -> i64 {
         .clamp(50, 100)
 }
 
-/// `GET /admin/storage/overview` — every instance-wide figure the page opens on.
+/// `GET /admin/storage/overview` - every instance-wide figure the page opens on.
 pub async fn overview(
     State(state): State<AppState>,
     _admin: AdminUser,
@@ -190,7 +190,7 @@ pub async fn overview(
     // ── Where it sits: the physical volume ──────────────────────────────────
     // The same probe as `continuity.disk_space`, so the page and the health
     // report cannot report two different disks. `None` means the volume could
-    // not be interrogated — reported as unknown, never as "plenty of room".
+    // not be interrogated - reported as unknown, never as "plenty of room".
     let data_path = state.settings.storage.local_path().to_string();
     let volume = disk::usage_of(FsPath::new(&data_path)).map(|u| {
         json!({
@@ -278,7 +278,7 @@ pub async fn overview(
         .collect();
 
     // ── Where it came from: the per-module breakdown ────────────────────────
-    // Built from what the modules declared about themselves — never from
+    // Built from what the modules declared about themselves - never from
     // splitting `used`, which carries no provenance. Modules that never declared
     // are listed with a null figure rather than a zero, and the share no module
     // claimed is reported as its own named quantity. See
@@ -287,8 +287,8 @@ pub async fn overview(
 
     // ── The repair's current position, computed without applying anything ───
     // The hourly job is what corrects; this is only the page's reading of where
-    // it stands, so an operator can see that the counter is being realigned —
-    // or why it is not — without waiting for a log line.
+    // it stands, so an operator can see that the counter is being realigned -
+    // or why it is not - without waiting for a log line.
     let reconciliation = crate::storage::usage::repair_preview(&state.db).await?;
 
     // ── The policy in force ─────────────────────────────────────────────────
@@ -317,7 +317,7 @@ pub async fn overview(
 /// One account's storage sheet: every module, every category, volumes and object
 /// counts.
 ///
-/// ## ⚠️ PRIVACY — THE LINE THIS ENDPOINT HOLDS
+/// ## ⚠️ PRIVACY - THE LINE THIS ENDPOINT HOLDS
 ///
 /// This is the most detailed view an administrator has of what one person
 /// stores, and it is made of **nothing but volumes, counts of objects and
@@ -326,8 +326,8 @@ pub async fn overview(
 /// document title, a thumbnail, or any per-object row.
 ///
 /// The reason is a boundary, not a preference. An administrator has two
-/// legitimate questions — "how big a disk do I need" and "why is this account
-/// full" — and both are answered entirely by volumes. "What does this person
+/// legitimate questions - "how big a disk do I need" and "why is this account
+/// full" - and both are answered entirely by volumes. "What does this person
 /// keep" is a third question, it is not theirs to ask, and an interface that
 /// answers it turns running a server into reading somebody's life. Category
 /// identifiers are chosen under the same constraint: see
@@ -424,7 +424,7 @@ async fn default_quota_policy(db: &DbPool) -> Result<Value, AppError> {
 #[derive(Deserialize)]
 pub struct ConsumersQuery {
     pub limit: Option<i64>,
-    /// `all` (default), `near` — at or past the warning threshold, `full` — at or
+    /// `all` (default), `near` - at or past the warning threshold, `full` - at or
     /// past their own quota.
     pub filter: Option<String>,
     /// `used` (default) or `percent`. They rank differently on purpose: the first
@@ -433,7 +433,7 @@ pub struct ConsumersQuery {
     pub sort: Option<String>,
 }
 
-/// `GET /admin/storage/consumers` — the accounts holding the most, with what an
+/// `GET /admin/storage/consumers` - the accounts holding the most, with what an
 /// operator needs to act on one.
 ///
 /// **Confined to the caller's organisational subtree**, on the account key: the

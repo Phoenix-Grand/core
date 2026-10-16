@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  Sign-in · Credentials — shared by every Kubuno mobile app (derived from Drive's onboarding LoginScreen): the server
+  Sign-in · Credentials - shared by every Kubuno mobile app (derived from Drive's onboarding LoginScreen): the server
   host, the identifier and the password (masked), Sign in, and Change server. Enter in the identifier moves to the
   password (TabIndex); Enter in the password signs in. Light theme, logical px.
 -->

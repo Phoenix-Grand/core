@@ -1,14 +1,14 @@
 //! The control library's own Direct2D drawing surface.
 //!
 //! It implements [`kubuno_drive_desktop_app_controls::Canvas`], the contract every control in
-//! this crate paints through — so the demo host (and, in time, every Kubuno
+//! this crate paints through - so the demo host (and, in time, every Kubuno
 //! desktop app that mounts these controls) gets the whole design system
 //! (palette, shape tokens, DirectWrite formats, Material Symbols geometries)
 //! without knowing anything about how a control draws itself.
 //!
 //! This is a faithful copy of the shell's `Painter` (`shell/src/painter.rs`):
 //! the SAME primitives, the SAME pixel-snapping and DPI behaviour. It has to
-//! be — the reference sheets are painted by the real toolkit, and any drift in
+//! be - the reference sheets are painted by the real toolkit, and any drift in
 //! how a border snaps or a shadow ramps would make every side-by-side
 //! comparison lie. The shell keeps its own copy only because Rust forbids
 //! implementing a foreign trait on a foreign type across crates; the two are
@@ -54,13 +54,13 @@ pub struct Painter<'a> {
     /// paint. Rebuilding three DirectWrite text formats sixty times a second
     /// would be the kind of cost that never shows up in a profile as one line.
     pub visuals:  &'a Visuals,
-    /// The window's themed-part cache — `uxtheme.dll`'s own rendering of a
+    /// The window's themed-part cache - `uxtheme.dll`'s own rendering of a
     /// control's chrome, kept as Direct2D bitmaps.
     ///
     /// BORROWED for exactly the reason `visuals` is, one step further: it holds
     /// theme handles and GPU bitmaps, and a `Painter` lives for one frame. An
     /// owned cache would be a cache that is empty on every frame, i.e. a full
-    /// GDI round trip per control per frame — the cost the cache exists to
+    /// GDI round trip per control per frame - the cost the cache exists to
     /// remove. The host owns it, so its lifetime is the window's.
     pub parts:    &'a ThemeRenderer,
     brush:        ID2D1SolidColorBrush,
@@ -126,14 +126,14 @@ impl<'a> Painter<'a> {
     }
 
     /// Tells the painter what the surface was cleared to before the paint
-    /// started — the answer `Canvas::current_bg` gives while no container has
+    /// started - the answer `Canvas::current_bg` gives while no container has
     /// pushed a background.
     ///
     /// The widgets' "opaque ground" preamble fills their bounds with
     /// `current_bg()` before painting. On the web nothing is painted there, so
     /// the only faithful value for an unpushed stack is one that paints
     /// NOTHING visible: the host passes the exact colour it cleared the main
-    /// window to (the preamble then repaints the same pixels — invisible), and
+    /// window to (the preamble then repaints the same pixels - invisible), and
     /// a fully transparent colour for a floating surface, whose window is
     /// cleared to transparent (a source-over fill with alpha 0 is a no-op, so
     /// no square block appears around a rounded panel or its shadow).
@@ -154,7 +154,7 @@ impl<'a> Painter<'a> {
         &self.brush
     }
 
-    /// Snaps a DIP value onto the physical pixel grid — without this, a 1 px
+    /// Snaps a DIP value onto the physical pixel grid - without this, a 1 px
     /// border lands between two device pixels and renders as a soft 2 px halo
     /// at fractional DPI scales.
     fn px(&self, v: f32) -> f32 {
@@ -180,7 +180,7 @@ impl<'a> Painter<'a> {
     }
 
     /// Records that `rect` (in the current, possibly offset, coordinates) was
-    /// drawn, for every open `begin_extent` scope — cut by the clips that scope
+    /// drawn, for every open `begin_extent` scope - cut by the clips that scope
     /// did not already have in force.
     fn touch(&self, rect: &Rect) {
         let mut scopes = self.extents.borrow_mut();
@@ -248,7 +248,7 @@ impl<'a> Painter<'a> {
                     let _ = layout.SetTrimming(&trimming, &sign);
                 }
             }
-            // What the text really covers — it may spill past a box too narrow
+            // What the text really covers - it may spill past a box too narrow
             // for it (no wrapping), and that spill is what a scrolled area
             // must reach.
             let mut m = Default::default();
@@ -266,7 +266,7 @@ impl<'a> Painter<'a> {
     }
 
     /// Draws icon `name` `size` DIP square centred in `rect`: a glyph of the vector set (each layer
-    /// in the colour `pick` gives it), or what `kubuno_drive_desktop_app_controls::icon_source` describes — an
+    /// in the colour `pick` gives it), or what `kubuno_drive_desktop_app_controls::icon_source` describes - an
     /// image file (`crate::icon_image`, rendered at the pixel size it covers, `base` being an SVG's
     /// `currentColor`), and the drawing options of either (a tint, a size of its own, a mirror).
     fn vector(
@@ -369,11 +369,11 @@ impl Canvas for Painter<'_> {
         unsafe { self.ctx.FillRoundedRectangle(&rr, self.set_color(color)) };
     }
 
-    /// A genuine top-only rounded rectangle — rounded top corners, square
-    /// bottom ones — built as a hand-made path.
+    /// A genuine top-only rounded rectangle - rounded top corners, square
+    /// bottom ones - built as a hand-made path.
     ///
     /// DELIBERATE DEVIATION FROM THE SHELL: the shell's `fill_top_rounded`
-    /// approximates the shape with a fully rounded fill, and says so — it
+    /// approximates the shape with a fully rounded fill, and says so - it
     /// "has no tab strip, so the top-only shape is not worth a hand built
     /// geometry". This library DOES mount `TabControl` (the `layout_panels`
     /// family), whose `TabContainer` is exactly this shape, so approximating it
@@ -480,7 +480,7 @@ impl Canvas for Painter<'_> {
         }
     }
 
-    /// One anti-aliased arc path with round caps — smooth at every angle, where
+    /// One anti-aliased arc path with round caps - smooth at every angle, where
     /// the default's row of dots reads as a beaded, shimmering edge once it
     /// turns. NOT snapped to the pixel grid: a curve that moves every frame
     /// would jitter from snap to snap.
@@ -735,7 +735,7 @@ impl Canvas for Painter<'_> {
         unsafe {
             // COPY *replaces* the destination pixels instead of blending into
             // them, which is the only way a fill can remove what is already
-            // there — SourceOver with a transparent colour is a no-op.
+            // there - SourceOver with a transparent colour is a no-op.
             self.ctx.SetPrimitiveBlend(D2D1_PRIMITIVE_BLEND_COPY);
             self.ctx.FillRoundedRectangle(&rr, self.set_color(&clear));
             self.ctx.SetPrimitiveBlend(D2D1_PRIMITIVE_BLEND_SOURCE_OVER);
@@ -816,7 +816,7 @@ impl Canvas for Painter<'_> {
     }
 
     fn pop_bg(&self) {
-        // A mismatched pop from an ill-behaved container is worth noticing —
+        // A mismatched pop from an ill-behaved container is worth noticing -
         // eating it silently would let two containers' pushes stay stacked
         // past their scope, but panicking on it in release would be worse.
         let _ = self.bg_stack.borrow_mut().pop();
@@ -867,8 +867,8 @@ impl Canvas for Painter<'_> {
 /// What makes this surface usable by a *control* rather than by any Kubuno
 /// drawing: it can answer for the system's own visuals.
 ///
-/// Everything else the trait offers — square fills, square strokes, the 3-D
-/// edge — is a provided method built from `Canvas` primitives, so there is one
+/// Everything else the trait offers - square fills, square strokes, the 3-D
+/// edge - is a provided method built from `Canvas` primitives, so there is one
 /// implementation of a WinForms bevel in the library and not one per host.
 impl ControlCanvas for Painter<'_> {
     fn visuals(&self) -> &Visuals {
@@ -893,8 +893,8 @@ impl ControlCanvas for Painter<'_> {
     /// The blit is `NEAREST_NEIGHBOR` and the destination comes from the cache
     /// rather than from `rect`. Both are deliberate: [`ThemeRenderer::draw_part`]
     /// rasterises the part at the exact device-pixel size of the snapped
-    /// rectangle, so the only correct blit is 1:1. Interpolating it — or letting
-    /// the caller's unsnapped rectangle decide the destination — resamples a
+    /// rectangle, so the only correct blit is 1:1. Interpolating it - or letting
+    /// the caller's unsnapped rectangle decide the destination - resamples a
     /// one-pixel theme border into a two-pixel grey smear, which is precisely
     /// the "close but not identical" this whole path exists to eliminate.
     fn draw_theme_part(
@@ -925,23 +925,23 @@ impl ControlCanvas for Painter<'_> {
 }
 
 impl Painter<'_> {
-    // The three WinForms primitives, also reachable WITHOUT a trait object —
+    // The three WinForms primitives, also reachable WITHOUT a trait object -
     // the host's own chrome and the demo binaries hold a concrete `Painter`.
     // They forward to the `ControlCanvas` defaults rather than reimplementing
     // them, so a bevel drawn by the host and a bevel drawn by a control are the
     // same pixels by construction.
 
-    /// A square filled rectangle — see [`ControlCanvas::fill_rect`].
+    /// A square filled rectangle - see [`ControlCanvas::fill_rect`].
     pub fn fill_rect(&self, rect: &Rect, color: &D2D1_COLOR_F) {
         ControlCanvas::fill_rect(self, rect, color);
     }
 
-    /// A square one-pixel outline — see [`ControlCanvas::stroke_rect`].
+    /// A square one-pixel outline - see [`ControlCanvas::stroke_rect`].
     pub fn stroke_rect(&self, rect: &Rect, color: &D2D1_COLOR_F) {
         ControlCanvas::stroke_rect(self, rect, color);
     }
 
-    /// A `DrawEdge` bevel, returning the interior — see
+    /// A `DrawEdge` bevel, returning the interior - see
     /// [`ControlCanvas::draw_edge`].
     pub fn draw_edge(&self, rect: &Rect, style: Border3DStyle, sides: Border3DSide) -> Rect {
         ControlCanvas::draw_edge(self, rect, style, sides)
@@ -964,11 +964,11 @@ impl Painter<'_> {
             // A CSS blur of radius B is a gaussian centred ON the spread
             // boundary: the shadow is already half faded there, and reaches
             // about B/2 either side. Holding full opacity all the way out to
-            // `spread` and only then ramping — as this used to — leaves a hard
+            // `spread` and only then ramping - as this used to - leaves a hard
             // step where the solid collar ends, seen as a darker band with an
             // edge rather than an even gradient.
             let half = (layer.blur / 2.0).max(0.01);
-            // A NEGATIVE spread shrinks the shape before the blur — every
+            // A NEGATIVE spread shrinks the shape before the blur - every
             // Tailwind `shadow-md/lg/xl` layer has one (`0 20px 25px -5px`). The
             // ramp must then start INSIDE the panel's edge, or the full-size
             // shape offset by `dy` shows below the panel as a hard grey slab.
@@ -981,7 +981,7 @@ impl Painter<'_> {
             let outer = layer.spread + half;
             let span = (outer - inner).max(0.01);
             // How far in the rings march: to the edge, or inside it when the
-            // spread is negative — never past the panel's own half-size, where a
+            // spread is negative - never past the panel's own half-size, where a
             // ring would turn inside out.
             let half_size = ((rect.right - rect.left).min(rect.bottom - rect.top) / 2.0).max(0.0);
             let lo = inner.min(0.0).max(-half_size);
@@ -995,7 +995,7 @@ impl Painter<'_> {
                 layer.opacity * (1.0 - x * x * (3.0 - 2.0 * x))
             };
             // Two rings per DEVICE pixel, so a step is always finer than what a
-            // pixel can show — whatever the shadow's reach or the DPI scale.
+            // pixel can show - whatever the shadow's reach or the DPI scale.
             let steps = (((outer - lo) * self.scale.get() * 2.0).ceil() as usize).clamp(16, 96);
             // Rings composite source-over, which stacks MULTIPLICATIVELY: the
             // increments are taken in optical depth, or the total comes out
@@ -1018,7 +1018,7 @@ impl Painter<'_> {
                 );
                 // Deliberately NOT snapped to the pixel grid. Rings this close
                 // together snap onto one another, piling several alphas into a
-                // single pixel ring — which is itself a dark band, the artefact
+                // single pixel ring - which is itself a dark band, the artefact
                 // all of this exists to avoid.
                 let rr = D2D1_ROUNDED_RECT {
                     rect: ring.d2d(),

@@ -1,11 +1,11 @@
-//! Drives a [`crate::compile::CompiledView`] across frames, and reloads it —
+//! Drives a [`crate::compile::CompiledView`] across frames, and reloads it -
 //! `XML_VIEWS.md` §5: "a parse or a registry-lookup error must not blank the
 //! screen. The loader keeps the **last successfully compiled plan** and keeps
 //! painting it, while showing a small in-app banner". [`Runtime`] is that
 //! loader: [`Runtime::reload_from_text`] is the "parse+compile, once per file
 //! change" half, [`Runtime::frame`] is the "bind+paint, every frame" half.
 //!
-//! File-watching itself is not here — this module works on `&str`, so it can
+//! File-watching itself is not here - this module works on `&str`, so it can
 //! be unit-tested without a filesystem (see this module's tests) or a `.
 //! kbview` file at all. [`FileWatcher`] is the thin wrapper the preview
 //! example actually drives: it reads the file and calls
@@ -15,7 +15,7 @@
 //! ## Lifecycle, threads and async (EVT-6, `vskubuno/docs/EVENTS.md` §3/§6)
 //!
 //! A runtime is also its view's "form": it raises Load → Activated → Shown when the view first
-//! appears, and handles closing — every routed frame declares `host::defer_close`, so the
+//! appears, and handles closing - every routed frame declares `host::defer_close`, so the
 //! window's close button, Alt+F4, `host::close_window`, [`Runtime::close`] or the end of the
 //! Windows session reach the next frame, which raises FormClosing (cancelable: the window stays)
 //! then FormClosed → Deactivate, shuts the view's services down and quits the host loop. It
@@ -54,7 +54,7 @@ use crate::scope::{ComponentScope, ErrorBlinkStyle, ErrorIconAlignment, ScopedVi
 use crate::syntax::Diagnostic;
 use kubuno_desktop_ui::{FocusRing, Rect};
 
-/// The host services a runtime uses — `kubuno_desktop_controls::host`'s thread-local functions in an
+/// The host services a runtime uses - `kubuno_desktop_controls::host`'s thread-local functions in an
 /// application, a scripted fake in this crate's tests.
 pub(crate) trait HostPort {
     /// This frame's unconsumed input events.
@@ -167,8 +167,8 @@ impl HostPort for RealHost {
 }
 
 /// The host as seen by a view drawn INSIDE another view's window (an MDI document, an in-window
-/// dialog): it shares the window's input, cursor and timers, but the window itself — its `Form`
-/// properties, its close, its accessibility tree, its chrome events — belongs to the outer view.
+/// dialog): it shares the window's input, cursor and timers, but the window itself - its `Form`
+/// properties, its close, its accessibility tree, its chrome events - belongs to the outer view.
 struct InnerHost;
 
 impl HostPort for InnerHost {
@@ -382,7 +382,7 @@ pub struct DesignReload {
 
 /// Owns the current compiled view (if any has ever compiled successfully),
 /// the diagnostics of the *last* reload attempt (empty when it succeeded),
-/// and the [`FocusRing`] a `.kbview` file's controls register with — the
+/// and the [`FocusRing`] a `.kbview` file's controls register with - the
 /// controller §0/§5 says must survive a reload untouched.
 pub struct Runtime {
     compiled: Option<CompiledView>,
@@ -516,7 +516,7 @@ impl Runtime {
     }
 
     /// The folder relative paths of the view (`BackgroundImage`, `Image`, `Icon`) are resolved
-    /// against — [`FileWatcher::poll`] sets it to the view file's; takes effect at the next reload.
+    /// against - [`FileWatcher::poll`] sets it to the view file's; takes effect at the next reload.
     pub fn set_base_dir(&mut self, dir: Option<PathBuf>) {
         crate::icon::set_default_base_dir(dir.as_deref());
         self.base_dir = dir;
@@ -525,7 +525,7 @@ impl Runtime {
     /// The window's `Form` properties the view declares on its root element (`Title`, `Icon`,
     /// `StartPosition`, `FormBorderStyle`, the caption buttons, `ShowInTaskbar`, `TopMost`,
     /// `Opacity`, `WindowState`, `MinimumSize`/`MaximumSize`), with its bindings resolved against
-    /// `vm` — what a window opening the view starts with (`HostOptions::form`); the runtime keeps
+    /// `vm` - what a window opening the view starts with (`HostOptions::form`); the runtime keeps
     /// the window in step every frame afterwards. `None` without a view.
     pub fn form_options(&self, vm: &dyn ViewModel) -> Option<host::FormOptions> {
         self.compiled.as_ref().map(|view| view.form.options(vm))
@@ -587,7 +587,7 @@ impl Runtime {
         self.ui.scope.clone()
     }
 
-    /// Runs `f` on the component `name` of the view as a `T` —
+    /// Runs `f` on the component `name` of the view as a `T` -
     /// `runtime.with_component::<BindingSource, _>("customers", |bs| bs.move_next())`. `None` when
     /// there is none of that class. Its events reach the view's handlers at the next frame.
     pub fn with_component<T: crate::component::Component, R>(&self, name: &str, f: impl FnOnce(&mut T) -> R) -> Option<R> {
@@ -648,7 +648,7 @@ impl Runtime {
 
     /// Compiles `text` and, on success, replaces the current tree and clears
     /// the diagnostics. On failure, the diagnostics are replaced with the new
-    /// ones but **the previous tree is left exactly as it was** — including
+    /// ones but **the previous tree is left exactly as it was** - including
     /// "there was never a good tree yet", which leaves [`Runtime::has_view`]
     /// `false`. Returns whether the reload succeeded.
     pub fn reload_from_text(&mut self, text: &str) -> bool {
@@ -700,7 +700,7 @@ impl Runtime {
         DesignReload { state, diagnostics: outcome.diagnostics, issues: if matches!(state, DesignRenderState::Stale) { Vec::new() } else { outcome.issues } }
     }
 
-    /// The diagnostics of the last [`Runtime::reload_from_text`] call — empty
+    /// The diagnostics of the last [`Runtime::reload_from_text`] call - empty
     /// after a successful one. What an in-app banner (see
     /// `examples/view_preview.rs`) shows while [`Runtime::has_view`] still
     /// paints the previous, good tree underneath.
@@ -708,7 +708,7 @@ impl Runtime {
         &self.diagnostics
     }
 
-    /// Whether a tree has ever compiled successfully — `false` only before
+    /// Whether a tree has ever compiled successfully - `false` only before
     /// the first successful [`Runtime::reload_from_text`] (a broken file
     /// after at least one good load still leaves this `true`).
     pub fn has_view(&self) -> bool {
@@ -726,9 +726,9 @@ impl Runtime {
 
     /// Paints one frame of the current tree (a no-op, painting nothing, when
     /// [`Runtime::has_view`] is `false`), returning the interactions it
-    /// produced. Also dispatches any matching handler in `handlers` — see
+    /// produced. Also dispatches any matching handler in `handlers` - see
     /// [`crate::node::PaintCx::fire`]. Equivalent to
-    /// [`Runtime::frame_with_design`] with no layout map — every existing
+    /// [`Runtime::frame_with_design`] with no layout map - every existing
     /// caller (`examples/view_preview.rs`, this module's own doc examples)
     /// keeps working unchanged; DSG-6's design mode is additive, not a
     /// breaking change to this method's signature.
@@ -771,7 +771,7 @@ impl Runtime {
         self.frame_typed_with(canvas, frame, vm, &mut no_table, bounds)
     }
 
-    /// [`Runtime::frame_typed`] with a legacy [`HandlerTable`] next to the typed handlers — the
+    /// [`Runtime::frame_typed`] with a legacy [`HandlerTable`] next to the typed handlers - the
     /// migration path (§5.4): an event runs `V`'s typed method when it has one of that name,
     /// else the table's entry (a legacy `handlers!` entry receives the event's legacy value, as
     /// with [`Runtime::frame`]).
@@ -798,12 +798,12 @@ impl Runtime {
     }
 
     /// [`Runtime::frame`], with an optional [`crate::design::LayoutMap`] to
-    /// record into (`vskubuno/docs/DESIGNER.md` §6, DSG-6) — `None` behaves
+    /// record into (`vskubuno/docs/DESIGNER.md` §6, DSG-6) - `None` behaves
     /// identically to [`Runtime::frame`] (no recording, no added cost beyond
     /// the one branch `crate::design::DesignSlot::paint` already documents).
     /// The caller (`examples/view_embed.rs`) is expected to
     /// [`crate::design::LayoutMap::clear`] the map before each call that
-    /// passes `Some` — this method does not clear it itself, so a caller
+    /// passes `Some` - this method does not clear it itself, so a caller
     /// that wants to ACCUMULATE across frames (nothing in this crate does)
     /// remains free to.
     #[allow(clippy::too_many_arguments)]
@@ -1983,7 +1983,7 @@ fn path_of(items: &[crate::window::MenuItemSpec], id: &str) -> Option<Vec<usize>
     None
 }
 
-/// Polls one `.kbview` file's mtime and reloads a [`Runtime`] when it moves —
+/// Polls one `.kbview` file's mtime and reloads a [`Runtime`] when it moves -
 /// the file-system half of hot reload, kept separate from [`Runtime`] itself
 /// so the interpreter's own tests need no filesystem (see `runtime`'s own
 /// tests, all on [`Runtime::reload_from_text`] directly).
@@ -2007,7 +2007,7 @@ impl FileWatcher {
 
     /// Reads the file and reloads `runtime` if its mtime has moved since the
     /// last check (or this is the first check at all). Returns `true` when a
-    /// reload was *attempted* (whether or not it succeeded — check
+    /// reload was *attempted* (whether or not it succeeded - check
     /// `runtime.diagnostics()` for that); `false` when nothing changed, or
     /// the file could not be read (its own error, if any, is folded into
     /// `runtime`'s diagnostics rather than panicking the caller).
@@ -2841,7 +2841,7 @@ mod tests {
   <TextField x:Name="field" Text="{Binding Source=src, Path=Value, Mode=TwoWay}" X="10" Y="10" Width="100" Height="30"/>
 </Panel>"#;
 
-    /// DATA-2: the runtime owns the named components of its view — bindings reach them by name,
+    /// DATA-2: the runtime owns the named components of its view - bindings reach them by name,
     /// their XML handlers run synchronously on a binding write (and can cancel), events raised from
     /// code are delivered at the next frame, a field in error gets its glyph next to the bound
     /// control, and a hot reload keeps the instance.

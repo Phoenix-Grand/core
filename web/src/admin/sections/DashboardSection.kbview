@@ -1,4 +1,4 @@
-<!-- DashboardSection — converted from DashboardSection.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- DashboardSection - converted from DashboardSection.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <Panel x:Props="AdminSectionProps" Class="contents">
   <EmptyState IconSize="28"
               Icon="Info"

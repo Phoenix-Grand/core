@@ -4,7 +4,7 @@
 -->
 <Stack xmlns="https://kubuno.com/views" xmlns:x="https://kubuno.com/views/x" Direction="LeftToRight" Gap="24" WrapContents="true" CrossAlign="Start">
   <Stack Gap="6" Width="240">
-    <Label Text="SelectionMode One — Item children" Role="Meta" ForeColor="TextSecondary"/>
+    <Label Text="SelectionMode One - Item children" Role="Meta" ForeColor="TextSecondary"/>
     <ListBox x:Name="fruits" SelectedIndex="{Binding fruit, Mode=TwoWay}" AccessibleName="Fruits" AccessibleDescription="gallery-list">
       <Item Text="Abricot" Icon="Apple"/>
       <Item Text="Banane" Icon="Banana"/>
@@ -16,7 +16,7 @@
     <Label Text="{Binding fruitText}" Role="Meta" ForeColor="TextSecondary"/>
   </Stack>
   <Stack Gap="6" Width="240">
-    <Label Text="MultiExtended — 10 000 bound rows" Role="Meta" ForeColor="TextSecondary"/>
+    <Label Text="MultiExtended - 10 000 bound rows" Role="Meta" ForeColor="TextSecondary"/>
     <ListBox ItemsSource="{Binding rows}" SelectionMode="MultiExtended" Height="240" SelectedValue="{Binding picked, Mode=TwoWay}"
              AccessibleName="Rows" AccessibleDescription="gallery-biglist"/>
     <Label Text="{Binding pickedText}" Role="Meta" ForeColor="TextSecondary"/>

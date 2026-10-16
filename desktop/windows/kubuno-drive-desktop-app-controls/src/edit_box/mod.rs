@@ -15,12 +15,12 @@ use crate::geometry::Rect;
 use crate::themes::shape::radius;
 use crate::Canvas;
 
-/// `@ui/Input`: `px-3` — the padding inside a full input box.
+/// `@ui/Input`: `px-3` - the padding inside a full input box.
 const BOX_PAD_X: f32 = 12.0;
 /// The omnibar pill supplies its own gutters (mode icon on the left, ✕ and
 /// buttons on the right), so the text it hands us only needs a hair of inset.
 const PILL_PAD_X: f32 = 6.0;
-/// `@ui/Input`: `focus:ring-2` — the accent ring of a focused field. Drawn
+/// `@ui/Input`: `focus:ring-2` - the accent ring of a focused field. Drawn
 /// inward, as `stroke_rounded_w` does, and it subsumes `focus:border-primary`.
 const FOCUS_RING: f32 = 2.0;
 /// Height of the line box the selection and the caret cover: 14 DIP of text at
@@ -44,7 +44,7 @@ impl EditView<'_> {
     }
 }
 
-/// Inline rename editor: box, selection, text, caret — `@ui/Input` at
+/// Inline rename editor: box, selection, text, caret - `@ui/Input` at
 /// `--radius-md` (4), on an OPAQUE `bg-white` surface (`--color-surface-0`),
 /// not the frosted flyout tint the WinUI port used.
 ///
@@ -58,7 +58,7 @@ pub fn draw_box(c: &dyn Canvas, rect: &Rect, v: &EditView) {
     draw_padded(c, rect, v, BOX_PAD_X);
 }
 
-/// Selection + text + caret only — the omnibar draws its own chrome (the
+/// Selection + text + caret only - the omnibar draws its own chrome (the
 /// rounded pill bar IS the text box).
 pub fn draw_text(c: &dyn Canvas, rect: &Rect, v: &EditView) {
     draw_padded(c, rect, v, PILL_PAD_X);

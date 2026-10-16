@@ -1,5 +1,5 @@
 //! `<PrintPreviewDialog>` (WinForms `PrintPreviewDialog`): a window showing a document's pages in a
-//! [`PrintPreviewControl`] under a Kubuno tool bar — Print, Zoom (Auto, 500 % … 10 %), one, two,
+//! [`PrintPreviewControl`] under a Kubuno tool bar - Print, Zoom (Auto, 500 % … 10 %), one, two,
 //! three, four or six pages, the page number, Close.
 //!
 //! ```xml
@@ -305,7 +305,7 @@ pub(crate) fn run_preview_window(title: &str, size: (f32, f32), preview: Result<
 
 // ── The page layout buttons of the tool bar ─────────────────────────────────────────────────────
 
-/// A tool bar button showing a page layout glyph (1, 2, 3, 4 or 6 pages) — the preview dialog's.
+/// A tool bar button showing a page layout glyph (1, 2, 3, 4 or 6 pages) - the preview dialog's.
 #[derive(Component)]
 #[kubuno(extends = ButtonBase, overrides(Control))]
 #[toolbox(hidden, icon = "file-search", category = "Printing")]

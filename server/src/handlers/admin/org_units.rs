@@ -7,7 +7,7 @@
 //!    by climbing that single chain. A second root is invisible in the tree and
 //!    resolves its own parallel inheritance. Creating a unit therefore *requires*
 //!    a parent, and no update may promote a unit back to root.
-//! 2. **No two sisters with the same name**, compared case-insensitively — an
+//! 2. **No two sisters with the same name**, compared case-insensitively - an
 //!    administrator identifies a unit by reading it in a list.
 //! 3. **A bounded depth.** See [`MAX_ORG_UNIT_DEPTH`].
 //!
@@ -33,7 +33,7 @@ use serde_json::json;
 use sqlx::FromRow;
 use uuid::Uuid;
 
-/// Deepest level a unit may sit at, the root being level 0 — so at most 35
+/// Deepest level a unit may sit at, the root being level 0 - so at most 35
 /// levels of units *below* the organisation itself.
 ///
 /// The figure is parity with the reference product (Google Workspace caps its
@@ -41,7 +41,7 @@ use uuid::Uuid;
 /// local: `core.setting_chain` (migration 000060) ranks each ancestor with
 /// `200 + (64 - LEAST(depth, 64))`. Past depth 64 every level collapses onto the
 /// same specificity of 200 and "the closest unit wins" silently stops being
-/// true — two units in the same chain would then tie, and the winner would be
+/// true - two units in the same chain would then tie, and the winner would be
 /// whatever the planner happened to order first. 35 keeps a comfortable margin
 /// under that cliff, and under the depth guard (64) built into
 /// `core.org_unit_ancestors` / `core.org_unit_descendants`.
@@ -53,7 +53,7 @@ use uuid::Uuid;
 /// (`rules/store.rs`, `resolve_subject`), three levels short of what an operator
 /// could build here: a unit at depth 33, 34 or 35 resolved a *truncated*
 /// ancestor chain, so a rule scoped near the top silently stopped applying to
-/// the deepest accounts. Silently is the operative word — nothing failed, the
+/// the deepest accounts. Silently is the operative word - nothing failed, the
 /// rule simply did not fire.
 ///
 /// Two literals describing one invariant will always drift, and the one that
@@ -87,7 +87,7 @@ pub struct OrgUnit {
 /// that is the wrong question here. Migration 000044 declares
 /// `core.org_units.manage` non-scopable, in as many words: *"restructuring is
 /// not [scopable]: moving a unit changes the tree beyond the subtree it started
-/// in."* It is literally true — reparenting a unit under a branch the caller
+/// in."* It is literally true - reparenting a unit under a branch the caller
 /// does not cover hands that branch a subtree, and deleting a unit lifts its
 /// children into the parent, which is outside the deleted unit by definition.
 ///
@@ -95,7 +95,7 @@ pub struct OrgUnit {
 /// spells out why it writes the check even where the declaration already makes
 /// it redundant: the guard nobody adds later is the one that had to be added
 /// later. Today `ensure_scopable` refuses to grant a non-scopable privilege at
-/// unit scope, so no caller can reach here holding it partially — `require` and
+/// unit scope, so no caller can reach here holding it partially - `require` and
 /// `require_instance` agree on every context that exists. The day that
 /// declaration is relaxed, this line is what keeps a branch administrator from
 /// rearranging the organisation.
@@ -108,19 +108,19 @@ fn require_manage(ctx: &AdminCtx) -> Result<(), AppError> {
 /// `authz::context::resolve` flattens each assignment's scope through
 /// `core.org_unit_descendants` and `authz::cache` keeps the result for a few
 /// seconds. That expansion is a **snapshot of the tree**, so any write here can
-/// falsify it — and in the direction that matters:
+/// falsify it - and in the direction that matters:
 ///
 ///  * creating a unit adds it to the subtree of every assignment scoped above
 ///    it; until the entry expires, the operator delegated to that branch is
 ///    refused on a unit they do own;
 ///  * moving a unit takes its whole subtree out of one delegation and into
-///    another — the stale half of that is a caller still acting on units they no
+///    another - the stale half of that is a caller still acting on units they no
 ///    longer cover;
 ///  * deleting a unit cascades its assignments away, and a cached context
 ///    outlives them.
 ///
 /// `guards.rs` already calls `invalidate_all` after every write to a role or an
-/// assignment, for the same reason and with the same bluntness — working out the
+/// assignment, for the same reason and with the same bluntness - working out the
 /// exact closure is the kind of thing that is correct the day it is written. The
 /// cost is one re-resolution per active administrator; the alternative is a
 /// five-second window of wrong answers.
@@ -216,25 +216,25 @@ async fn subtree_height(conn: &mut DbTx, id: Uuid) -> Result<i32, AppError> {
 
 // ── Reading ──────────────────────────────────────────────────────────────────
 
-/// `GET /admin/org-units` — **confined to the caller's organisational subtree**.
+/// `GET /admin/org-units` - **confined to the caller's organisational subtree**.
 ///
 /// `core.org_units.read` is declared scopable (migration 000044), and
 /// `list_users` has confined its own listing to `subtree_filter` from the day
 /// delegation landed. This one did not: it read the table whole. An
 /// administrator delegated to a single branch therefore obtained the entire
-/// organisation chart — every department, every team, every reorganisation in
+/// organisation chart - every department, every team, every reorganisation in
 /// progress. That is not an incidental leak: the chart *is* the shape of the
 /// company, and it was handed out by the endpoint whose whole job is to describe
 /// a scope.
 ///
 /// `subtree_filter` returns `None` for an instance-wide holder or a super-user
 /// (no restriction), and otherwise the already-flattened set of unit ids the
-/// caller covers — empty for a caller holding nothing, which correctly yields an
+/// caller covers - empty for a caller holding nothing, which correctly yields an
 /// empty tree rather than the whole one.
 ///
 /// A delegated caller therefore receives a **forest**: the units they cover, and
-/// no ancestor to hang them from. That is deliberate — the names of the units
-/// above are precisely what the scope excludes — and the console already renders
+/// no ancestor to hang them from. That is deliberate - the names of the units
+/// above are precisely what the scope excludes - and the console already renders
 /// any row whose `parent_id` is absent from the payload as a top-level entry.
 pub async fn list_org_units(
     State(state): State<AppState>,
@@ -245,7 +245,7 @@ pub async fn list_org_units(
     let scope_units = ctx.subtree_filter(keys::ORG_UNITS_READ);
 
     // No restriction lists every unit; a scoped caller lists only the ids they
-    // cover (an empty set yields `IN (NULL)`, i.e. nothing — the intended
+    // cover (an empty set yields `IN (NULL)`, i.e. nothing - the intended
     // outcome for a caller holding no scope).
     let mut qb = DbQueryBuilder::new(
         state.db.backend(),
@@ -266,18 +266,18 @@ pub async fn list_org_units(
 /// What a deletion would touch.
 ///
 /// Kubuno deletes a unit by lifting its children and its members up to the
-/// parent — deliberately, rather than refusing the deletion outright as the
+/// parent - deliberately, rather than refusing the deletion outright as the
 /// reference product does: an administrator reorganising a tree should not have
 /// to dismantle it leaf by leaf. But a silent reparenting is its own trap, and
 /// the reparenting is only the *announced* half. Three other things go away with
 /// the row, none of them recoverable by moving anything back:
 ///
 ///  * `core.role_assignments.scope_org_unit_id` is `ON DELETE CASCADE`
-///    (migration 000044) — every delegation granted **over** this unit
+///    (migration 000044) - every delegation granted **over** this unit
 ///    disappears. Someone loses their administration rights, and the only trace
 ///    is this entry;
 ///  * `core.target_audience_policies.org_unit_id` is `ON DELETE CASCADE`
-///    (migration 000105) — the module rollout policies of the unit;
+///    (migration 000105) - the module rollout policies of the unit;
 ///  * `core.setting_values` rows for the unit are purged by the
 ///    `org_units_purge_setting_values` trigger (migration 000060).
 ///
@@ -287,7 +287,7 @@ pub async fn list_org_units(
 pub struct DeletionImpact {
     /// Direct children, which the deletion moves up to the parent.
     pub children:          i64,
-    /// The whole subtree below the unit, children included — the units whose
+    /// The whole subtree below the unit, children included - the units whose
     /// settings inheritance changes, even though only the direct children are
     /// rewritten.
     pub descendants:       i64,
@@ -324,11 +324,11 @@ fn impact_counts_sql(backend: kubuno_db::Backend) -> String {
     )
 }
 
-/// `GET /admin/org-units/:id/impact` — what `DELETE` on this unit would do.
+/// `GET /admin/org-units/:id/impact` - what `DELETE` on this unit would do.
 ///
 /// Read-only and idempotent: it exists so a console can put the consequences in
 /// the confirmation dialog. `core.org_units.read` is scopable, so the unit must
-/// also be inside the caller's own subtree — otherwise this endpoint would
+/// also be inside the caller's own subtree - otherwise this endpoint would
 /// answer questions about branches the listing correctly refuses to show.
 pub async fn org_unit_impact(
     State(state): State<AppState>,
@@ -367,11 +367,11 @@ pub async fn org_unit_impact(
         // and saying so here spares the caller a refused DELETE.
         "is_root":           is_root,
         "deletable":         !is_root,
-        // Moved up to the parent — recoverable by moving them back.
+        // Moved up to the parent - recoverable by moving them back.
         "children":          impact.children,
         "descendants":       impact.descendants,
         "users":             impact.users,
-        // Destroyed outright — nothing brings these back.
+        // Destroyed outright - nothing brings these back.
         "role_assignments":  impact.role_assignments,
         "audience_policies": impact.audience_policies,
         "setting_overrides": impact.setting_overrides,
@@ -471,7 +471,7 @@ pub async fn create_org_unit(
 ///
 /// `Option<T>` cannot: `serde` deserialises both into `None`, which is why the
 /// previous `SET description = COALESCE($3, description)` made a description
-/// impossible to clear — sending `null` was indistinguishable from not sending
+/// impossible to clear - sending `null` was indistinguishable from not sending
 /// the field. With `Option<Option<T>>` plus `#[serde(default)]`, absent is the
 /// outer `None` and `null` is `Some(None)`.
 fn double_option<'de, T, D>(deserializer: D) -> Result<Option<Option<T>>, D::Error>
@@ -579,7 +579,7 @@ pub async fn update_org_unit(
             }
 
             // A move carries the whole subtree with it, so the ceiling applies
-            // to its deepest leaf — not to the unit being dragged.
+            // to its deepest leaf - not to the unit being dragged.
             let Some(parent_depth) = unit_depth(&mut tx, new_parent).await? else {
                 let reason = format!("Unité parente {new_parent} introuvable");
                 return Err(tx
@@ -595,7 +595,7 @@ pub async fn update_org_unit(
     }
 
     // `COALESCE` cannot express "set this to NULL": the flags do. `$2` / `$4`
-    // say whether the field was present at all, `$3` / `$5` carry the value —
+    // say whether the field was present at all, `$3` / `$5` carry the value -
     // which may legitimately be NULL. The row was locked above (`previous`), so
     // it certainly still exists: the resulting row is composed in Rust rather
     // than read back through a portable `RETURNING` we do not have.
@@ -692,7 +692,7 @@ pub async fn delete_org_unit(
         description: unit_row.try_get("description")?,
     };
 
-    // The root unit (parent_id IS NULL) cannot be deleted — there is nowhere to
+    // The root unit (parent_id IS NULL) cannot be deleted - there is nowhere to
     // lift its children and members to. Since creation now requires a parent and
     // no update may promote a unit to root, the only row this can ever refuse is
     // the organisation itself, never an accidental second root. The refusal is
@@ -730,7 +730,7 @@ pub async fn delete_org_unit(
         setting_overrides: impact_row.try_get("setting_overrides")?,
     };
 
-    // Reparent children and move users up to the parent, then delete — the
+    // Reparent children and move users up to the parent, then delete - the
     // three writes and the audit entry land in the same commit.
     //
     // Lifting a child up can collide with an existing sister of the same name
@@ -773,7 +773,7 @@ pub async fn delete_org_unit(
         )
         .await
         .map_err(|e| { tracing::error!(error = %e, "delete_org_unit: reassigning accounts"); AppError::Database(e) })?;
-    // Purge the unit's own setting overrides — the `setting_values_purge_scope`
+    // Purge the unit's own setting overrides - the `setting_values_purge_scope`
     // trigger does this on PostgreSQL; the helper is a no-op there.
     crate::settings::store::purge_setting_values_for_scope(&mut tx, "org_unit", id)
         .await
@@ -814,7 +814,7 @@ pub async fn delete_org_unit(
     Ok(Json(json!({
         "message":           "Unité supprimée",
         // Echoed back so a caller that skipped `/impact` still learns what it
-        // did — the same numbers, in the same names.
+        // did - the same numbers, in the same names.
         "children":          impact.children,
         "users":             impact.users,
         "role_assignments":  impact.role_assignments,
@@ -868,7 +868,7 @@ mod tests {
         assert!(check_depth(MAX_ORG_UNIT_DEPTH - 2, 2).is_err());
     }
 
-    /// The message must name both the ceiling and what the request asked for —
+    /// The message must name both the ceiling and what the request asked for -
     /// "too deep" alone leaves an administrator guessing.
     #[test]
     fn the_refusal_states_the_ceiling_and_the_attempted_depth() {

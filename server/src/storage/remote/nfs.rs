@@ -1,4 +1,4 @@
-//! Connecteur NFS via `libnfs-utils` (nfs-ls / nfs-cp / nfs-stat) — userspace,
+//! Connecteur NFS via `libnfs-utils` (nfs-ls / nfs-cp / nfs-stat) - userspace,
 //! pas de mount privilégié. URL : `nfs://<host>/<export>/<chemin>`.
 //!
 //! Limites de libnfs-utils : pas d'outil CLI pour mkdir/rm/mv → les opérations

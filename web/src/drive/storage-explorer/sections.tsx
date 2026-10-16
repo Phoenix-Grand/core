@@ -41,7 +41,7 @@ export function FoldersSection({ visibleFolders, view, isMobile, selectedIds, fo
   const body = (() => {
     if (spec.kind === 'icons') {
       // Mobile : dossiers à pleine largeur, un par ligne (une carte
-      // dossier est une puce horizontale nom+kebab — 2 colonnes
+      // dossier est une puce horizontale nom+kebab - 2 colonnes
       // tronquaient le nom). Desktop : `minmax(200px,…)` auto-fill.
       // Icon views breathe twice as wide as the other layouts. Mobile keeps the
       // tighter spacing, where horizontal room is scarce.
@@ -109,7 +109,7 @@ export function FilesSection({ visibleFiles, filteredFiles, files, typeFilter, v
     <section>
       <h2 className="text-xs font-semibold uppercase tracking-wider text-text-tertiary mb-2">
         {t('app.files')}
-        {typeFilter && filteredFiles.length !== files.length && <span className="ml-2 normal-case font-normal text-text-tertiary">— {filteredFiles.length} / {files.length}</span>}
+        {typeFilter && filteredFiles.length !== files.length && <span className="ml-2 normal-case font-normal text-text-tertiary">- {filteredFiles.length} / {files.length}</span>}
       </h2>
       {body}
     </section>

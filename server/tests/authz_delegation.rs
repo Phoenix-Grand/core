@@ -41,8 +41,8 @@ struct SystemRoleRow {
 
 // ── Fixtures ─────────────────────────────────────────────────────────────────
 
-/// Everything a test creates is namespaced by this suffix so parallel runs — and
-/// leftovers from a previous run — never collide.
+/// Everything a test creates is namespaced by this suffix so parallel runs - and
+/// leftovers from a previous run - never collide.
 fn tag() -> String {
     Uuid::new_v4().simple().to_string()[..12].to_string()
 }
@@ -398,7 +398,7 @@ async fn guard_2_you_cannot_grant_what_you_do_not_hold() {
         "hors de leur sous-arbre : refusé"
     );
 
-    // (c) A privilege they hold, but instance-wide — strictly broader than their own scope.
+    // (c) A privilege they hold, but instance-wide - strictly broader than their own scope.
     assert!(
         guards::ensure_can_grant(&db, &ctx, same, AssignmentScope::Instance, None)
             .await
@@ -437,7 +437,7 @@ async fn guard_3_you_cannot_touch_an_account_holding_a_role_you_do_not_hold() {
 
     let root = make_unit(&db, &format!("ou-root-{t}"), None).await;
 
-    // The delegate administers the ROOT unit — so every account is inside their
+    // The delegate administers the ROOT unit - so every account is inside their
     // perimeter. This is exactly the situation guard 3 exists for: without it,
     // "modify accounts of the root unit" is "reset the super-administrator's
     // password".
@@ -684,7 +684,7 @@ async fn the_seeded_catalogue_and_system_roles_are_coherent() {
 
     // `support-admin` is the narrow one: exactly the four privileges a support
     // desk needs, and none of the destructive ones. Asserted by name because
-    // "narrow" is the entire point of the role — a later addition of
+    // "narrow" is the entire point of the role - a later addition of
     // `core.users.delete` must break this test, not pass unnoticed.
     let support: Vec<String> = db
         .fetch_all_as::<PrivKeyRow>(

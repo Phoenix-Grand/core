@@ -1,4 +1,4 @@
-<!-- RolesList — converted from RolesList.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- RolesList - converted from RolesList.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="RolesListProps">
   <Panel Class="space-y-4">
     <Callout Body="{Res admin.roles_readonly}" Visible="{Binding show_can_grant}"/>

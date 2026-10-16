@@ -13,7 +13,7 @@ use std::path::Path;
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct DiskUsage {
     pub total_bytes: u64,
-    /// Space available to an unprivileged process — `f_bavail`, not `f_bfree`.
+    /// Space available to an unprivileged process - `f_bavail`, not `f_bfree`.
     /// The difference is the reserved root quota (5 % by default on ext4), and
     /// reporting it as free is how a "10 % left" instance stops accepting
     /// uploads.
@@ -36,13 +36,13 @@ impl DiskUsage {
 
 /// Reads the volume hosting `path`.
 ///
-/// Returns `None` when the path cannot be interrogated — a data directory that
+/// Returns `None` when the path cannot be interrogated - a data directory that
 /// does not exist yet, a path with an interior NUL, a refused `statvfs`. The
 /// caller turns that into a check that says "unknown", never into a reassuring
 /// "plenty of room".
 pub fn usage_of(path: &Path) -> Option<DiskUsage> {
     // `statvfs` follows the path, so an existing ancestor answers for a data
-    // directory that has not been created yet — which is exactly the volume the
+    // directory that has not been created yet - which is exactly the volume the
     // operator cares about.
     let target = first_existing_ancestor(path)?;
     usage_of_existing(&target)

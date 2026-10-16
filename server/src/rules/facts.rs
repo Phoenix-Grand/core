@@ -2,7 +2,7 @@
 //!
 //! The engine never matches on a Rust type. It matches on **facts**: a JSON
 //! object whose keys are exactly what the trigger's catalogue entry declares as
-//! queryable. That indirection is what keeps the core module-agnostic — a
+//! queryable. That indirection is what keeps the core module-agnostic - a
 //! module's event is a `Custom` envelope carrying an arbitrary payload, and the
 //! only thing the core does with it is flatten it and hand it to the evaluator.
 //!
@@ -93,7 +93,7 @@ pub fn facts_of(envelope: &EventEnvelope) -> Facts {
 /// Same, for a row replayed out of `core.event_log` by a backtest.
 ///
 /// The stored payload is the serialised `AppEvent`, so the flattening is the
-/// same one the live path applies — there is deliberately no second reader.
+/// same one the live path applies - there is deliberately no second reader.
 pub fn facts_of_logged(
     event_type: &str,
     source_module: Option<&str>,
@@ -155,7 +155,7 @@ fn parse_uuid(value: &Value) -> Option<Uuid> {
 }
 
 /// Best-effort structural reference: the first `<thing>_id` key that is not an
-/// account identifier. Module-agnostic on purpose — the core has no table of
+/// account identifier. Module-agnostic on purpose - the core has no table of
 /// what a module's resources are called, and never should.
 fn resource_of(values: &Value) -> (Option<String>, Option<String>) {
     let Value::Object(map) = values else {
@@ -229,7 +229,7 @@ mod tests {
             EventMeta::from_module("office"),
         ));
 
-        // The real type, not `Custom` — the defect fixed in `events::bus`.
+        // The real type, not `Custom` - the defect fixed in `events::bus`.
         assert_eq!(f.event_type, "office.document_shared");
         assert_eq!(f.values["document_id"], json!("doc-7"));
         assert_eq!(f.values["public"], json!(true));

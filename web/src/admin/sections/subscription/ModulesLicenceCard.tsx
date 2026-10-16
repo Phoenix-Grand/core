@@ -76,7 +76,7 @@ export class ModulesLicenceCard extends ViewBase {
         header: t('admin.sub_mod_col_source'),
         cell: r => r.homepage_url
           ? <ExternalLink href={r.homepage_url}>{t('admin.sub_mod_source_link')}</ExternalLink>
-          : <span className="text-text-tertiary">—</span>,
+          : <span className="text-text-tertiary">-</span>,
       },
     ], [t, i18n.language])
     return { t, i18n, columns }

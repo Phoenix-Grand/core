@@ -18,7 +18,7 @@ export class ListBox extends ViewBase {
   }
 
   get pickedText(): string {
-    return `SelectedValue = ${this.picked || '—'}`
+    return `SelectedValue = ${this.picked || '-'}`
   }
 }
 

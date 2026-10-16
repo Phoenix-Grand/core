@@ -45,7 +45,7 @@ function ContractDetails({
 }: {
   contract: NonNullable<SupportInfo['contract']>
   locale:   string
-  /** Whether this build carries any trusted signing key at all — the two
+  /** Whether this build carries any trusted signing key at all - the two
    *  reasons a contract can be declarative call for opposite explanations. */
   verificationAvailable: boolean
 }) {
@@ -87,9 +87,9 @@ function ContractDetails({
 
       <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
         <Field label={t('admin.sub_contract_subject')}>{contract.subject}</Field>
-        <Field label={t('admin.sub_contract_plan')}>{contract.plan ?? '—'}</Field>
+        <Field label={t('admin.sub_contract_plan')}>{contract.plan ?? '-'}</Field>
         <Field label={t('admin.sub_contract_expires')}>
-          {contract.expires_at ? formatDay(contract.expires_at, locale) : '—'}
+          {contract.expires_at ? formatDay(contract.expires_at, locale) : '-'}
         </Field>
         <Field label={t('admin.sub_contract_registered')}>
           {formatDay(contract.registered_at, locale)}
@@ -97,7 +97,7 @@ function ContractDetails({
         <Field label={t('admin.sub_contract_contact')}>
           {contract.contact
             ? <ContactLink contact={contract.contact} />
-            : '—'}
+            : '-'}
         </Field>
       </div>
 

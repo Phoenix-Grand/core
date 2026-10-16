@@ -1,6 +1,6 @@
 //! `<BindingNavigator>` (`vskubuno/docs/DATA.md` §8, lot DATA-2, WinForms `BindingNavigator`): the
-//! tool strip that moves through a binding source and edits it —
-//! first / previous | position box / count | next / last | add / delete | save — with the standard
+//! tool strip that moves through a binding source and edits it -
+//! first / previous | position box / count | next / last | add / delete | save - with the standard
 //! Kubuno icons (Lucide), disabled where the action is not possible.
 //!
 //! ```xml

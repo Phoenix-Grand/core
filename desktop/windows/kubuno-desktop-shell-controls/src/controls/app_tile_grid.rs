@@ -1,4 +1,4 @@
-//! `AppTileGrid` — the body of the app launcher (the web's `WaffleMenu`): the favourites card (its
+//! `AppTileGrid` - the body of the app launcher (the web's `WaffleMenu`): the favourites card (its
 //! ground, its tiles, the drop zone while editing) and every other app below it, as tiles of a
 //! 48-DIP logo over a one-line label, three to a row.
 //!
@@ -202,8 +202,8 @@ pub fn header_height(editing: bool) -> f32 {
     HEADER + if editing { EDIT_HELP } else { 0.0 }
 }
 
-/// Lays out `favorites` tiles and the other apps — `others[0]` standalone tiles, then one group per
-/// further count — in a grid `width` wide.
+/// Lays out `favorites` tiles and the other apps - `others[0]` standalone tiles, then one group per
+/// further count - in a grid `width` wide.
 pub fn layout(width: f32, favorites: usize, others: &[usize], editing: bool) -> GridLayout {
     let tw = tile_width(width);
     let step = tw + TILE_GAP;
@@ -463,7 +463,7 @@ impl AppTileGrid {
         let c: &dyn Canvas = g;
         let t = c.theme();
         if hot && !carried {
-            // `hover:bg-black/[0.06]` — the text colour at 6 %, so it also reads in the dark theme.
+            // `hover:bg-black/[0.06]` - the text colour at 6 %, so it also reads in the dark theme.
             let mut hover = t.text_primary;
             hover.a = 0.06;
             c.fill_rounded(&r, TILE_RADIUS, &hover);
@@ -533,7 +533,7 @@ impl Control for AppTileGrid {
         for (r, name) in l.group_labels.iter().zip(&group_names) {
             c.text_ellipsis(name, &at(*r), &c.formats().micro, &t.text_tertiary);
         }
-        // `bg-white`: the opaque card over the translucent panel — the application theme's surface,
+        // `bg-white`: the opaque card over the translucent panel - the application theme's surface,
         // not the ambient colour of the panel (its tint, which a free `BackColor` hands its children).
         c.fill_rounded(&at(l.card), CARD_RADIUS, &kubuno_desktop::Application::theme().layer_background);
         if let Some(zone) = l.drop_zone {

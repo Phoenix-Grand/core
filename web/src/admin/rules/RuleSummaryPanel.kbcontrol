@@ -1,4 +1,4 @@
-<!-- RuleSummaryPanel — converted from RuleSummaryPanel.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- RuleSummaryPanel - converted from RuleSummaryPanel.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="Props">
   <Panel HtmlTag="Aside" AccessibleName="{Res admin.rl_summary_title}" Class="{Binding aside_class}">
     <Panel BackColor="Surface1" Class="rounded-xl border border-border p-4">

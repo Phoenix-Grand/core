@@ -16,7 +16,7 @@ export interface EditableProps {
 }
 
 /**
- * Editable — primitive `div[contenteditable]` text box. Shares the exact border
+ * Editable - primitive `div[contenteditable]` text box. Shares the exact border
  * and focus ring of the `<Input>` primitive. Uncontrolled: seed via `defaultValue`
  * (so the caret is stable across renders) and read edits through `onTextChange`.
  * For formatted/rich text with a toolbar use `<RichText>` instead.

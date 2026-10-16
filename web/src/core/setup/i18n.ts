@@ -1,7 +1,7 @@
 // Translations for the installation wizard, in their own `setup` namespace.
 //
 // They live here rather than in `core.json` because they are read exactly once
-// in the life of an instance and by one person — the operator installing it —
+// in the life of an instance and by one person - the operator installing it -
 // and there is no reason for every user's bundle to carry them afterwards.
 //
 // All thirteen languages the product ships are written out: an installer that
@@ -29,7 +29,7 @@ export const SETUP_NS = 'setup'
  * Through `registerModuleTranslations`, never `addResourceBundle` directly:
  * `i18n.init()` is asynchronous and REBUILDS the resource store when it
  * completes, wiping every bundle added during boot. That is what once made the
- * language selector look inert — the translations were there, then silently
+ * language selector look inert - the translations were there, then silently
  * gone. The helper remembers the bundle and re-applies it after init. */
 export function registerSetupI18n() {
   registerModuleTranslations(SETUP_NS, { en, fr, es, pt, it, de, el, ru, ar, he, hi, zh, ja })

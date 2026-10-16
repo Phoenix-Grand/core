@@ -1,7 +1,7 @@
 //! The render plan: what `@kubuno/views` renders (VIEWS-SPEC §10, `WEB-VIEWS.md` §2.1 and §13 "WV-2 as
 //! built"). Pure data, serialised as JSON: the browser designer feeds it to the renderer as is (bindings
 //! evaluated by a path walker), the Vite plugin turns it into a JS module where components and icons are
-//! imported and every binding gets a precompiled accessor — the only difference between the two paths.
+//! imported and every binding gets a precompiled accessor - the only difference between the two paths.
 
 use std::collections::BTreeMap;
 

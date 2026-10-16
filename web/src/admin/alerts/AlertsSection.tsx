@@ -126,7 +126,7 @@ export class AlertsSection extends ViewBase {
             <span className={`mt-1.5 h-2 w-2 shrink-0 rounded-full ${skin.dot}`} aria-hidden />
             {/* Two lines rather than an ellipsis: on a phone the card title IS
                 the row, and "Échecs de connexion répé…" identifies nothing.
-                `whitespace-normal` is load-bearing — the card layout wraps the
+                `whitespace-normal` is load-bearing - the card layout wraps the
                 primary cell in `truncate`, whose `white-space: nowrap` would
                 otherwise keep this on one line however it is clamped. */}
             <div className="min-w-0">
@@ -178,7 +178,7 @@ export class AlertsSection extends ViewBase {
       id: 'assignee',
       header: this.tr('admin.al_col_assignee'),
       width: 150,
-      cell: (a) => <span className="truncate text-text-secondary">{a.assignee_label ?? '—'}</span>,
+      cell: (a) => <span className="truncate text-text-secondary">{a.assignee_label ?? '-'}</span>,
       sortValue: (a) => a.assignee_label ?? '',
     },
     {

@@ -145,7 +145,7 @@ pub fn ease_out_cubic(t: f64) -> f64 {
     1.0 - (1.0 - t).powf(3.0)
 }
 
-/// "Banker's" rounding (half to even) to `digits` decimals — counterpart of
+/// "Banker's" rounding (half to even) to `digits` decimals - counterpart of
 /// `Math.Round(value, digits, MidpointRounding.ToEven)`.
 fn round_to_even(value: f64, digits: i32) -> f64 {
     let factor = 10f64.powi(digits);

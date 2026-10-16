@@ -56,7 +56,7 @@ pub struct Summary {
 /// (even to the same server) can coexist, each with its own folder and state.
 ///
 /// Signing in again to the SAME server + sync folder (e.g. after a revocation)
-/// reuses the existing instance instead of minting a duplicate — which would
+/// reuses the existing instance instead of minting a duplicate - which would
 /// orphan its local stores (offline documents, drive data, sync cursors) and
 /// leave a zombie entry pointing at a dead session.
 pub fn register_instance(server: &str, folder: &str) -> Result<String> {
@@ -145,7 +145,7 @@ pub fn current_config(id: &str) -> Option<Config> {
 }
 
 /// Connection state of an instance: "online" (reachable + session valid),
-/// "expired" (reachable but the session/refresh token is no longer accepted —
+/// "expired" (reachable but the session/refresh token is no longer accepted -
 /// the user must reconnect) or "offline" (server unreachable).
 pub fn connection_state(id: &str) -> &'static str {
     // User-forced offline mode short-circuits everything.
@@ -156,7 +156,7 @@ pub fn connection_state(id: &str) -> &'static str {
     if !api::ping(&cfg.server_url) {
         return "offline";
     }
-    // Reachable — is the session still valid? `current_user` refreshes on a 401.
+    // Reachable - is the session still valid? `current_user` refreshes on a 401.
     // Only a GENUINE rejection (the refresh token itself was refused) means the
     // session is over; a transient failure (rate-limit, 5xx, network blip) leaves
     // the refresh token valid, so we stay "online" and retry rather than alarming
@@ -328,7 +328,7 @@ pub fn set_waffle_favorites(id: &str, favorites: &[String]) -> Result<()> {
     api.patch_preferences(serde_json::json!({ "waffle_favorites": favorites }))
 }
 
-/// Fetch a server-relative path as raw bytes, authenticated — the profile
+/// Fetch a server-relative path as raw bytes, authenticated - the profile
 /// photo. Goes through `Api`, so an expired token is refreshed like anywhere
 /// else.
 pub fn fetch_bytes(id: &str, path: &str) -> Result<Vec<u8>> {
@@ -388,7 +388,7 @@ pub fn admin_org_units(id: &str) -> Result<Vec<api::OrgUnit>> {
     api.admin_org_units()
 }
 
-/// The units tree together with each unit's account count, in one trip — what
+/// The units tree together with each unit's account count, in one trip - what
 /// the Unités organisationnelles page needs to draw the tree and its effectives.
 pub fn admin_org_units_with_counts(
     id: &str,
@@ -421,7 +421,7 @@ pub fn admin_modules(id: &str) -> Result<Vec<api::AdminModule>> {
 }
 
 /// The installed modules together with the instance's default-module path (the
-/// `navigation.default_module` setting), in one trip — what the Applications
+/// `navigation.default_module` setting), in one trip - what the Applications
 /// page needs to both list the modules and badge the default one.
 pub fn admin_modules_and_default(id: &str) -> Result<(Vec<api::AdminModule>, Option<String>)> {
     let cfg = Config::load(id)?;
@@ -455,7 +455,7 @@ pub fn modules_for(id: &str) -> Result<serde_json::Value> {
     api.modules()
 }
 
-/// Authenticated GET of a core route, returning raw JSON — for module APIs the
+/// Authenticated GET of a core route, returning raw JSON - for module APIs the
 /// core proxies (the desktop Chat calls `/api/v1/chat/*` through this). Handles
 /// the bearer token and its rotation for the caller.
 pub fn get_json(id: &str, path: &str) -> Result<serde_json::Value> {

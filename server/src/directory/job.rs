@@ -60,7 +60,7 @@ pub fn register(registry: &mut JobRegistry, jwt_secret: String) {
 
             let report = sync::run(&ctx.db, &jwt_secret, &dir).await?;
 
-            // Re-arm for this directory's own interval, on success only — a
+            // Re-arm for this directory's own interval, on success only - a
             // failing run is retried by the runner rather than skipping a cycle.
             let delay = Duration::from_secs(dir.sync_interval_min.clamp(5, 10_080) as u64 * 60);
             ensure_one_per_directory(&ctx.db, id, Some(delay), Some(job.id)).await?;
@@ -82,7 +82,7 @@ pub fn register(registry: &mut JobRegistry, jwt_secret: String) {
 /// [`queue::ensure_scheduled`] deduplicates on `job_type` alone, which is right
 /// for a singleton purge and wrong here: every directory has its own cycle, and
 /// the shared helper would let the first one starve all the others. The
-/// duplicate check is therefore narrowed to the payload — same statement shape,
+/// duplicate check is therefore narrowed to the payload - same statement shape,
 /// same `INSERT … WHERE NOT EXISTS`, and the executor is untouched.
 ///
 /// `exclude` is the caller's own row, still `running` while it schedules its

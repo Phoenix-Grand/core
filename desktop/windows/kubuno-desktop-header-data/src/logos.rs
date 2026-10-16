@@ -1,4 +1,4 @@
-//! The header's pictures — the modules' brand logos and the account's photo — kept on disk so a header
+//! The header's pictures - the modules' brand logos and the account's photo - kept on disk so a header
 //! looks the same offline as online.
 //!
 //! Moved here from the shell (`services/logos.rs`) with its I/O made explicit: a [`PictureCache`] is a
@@ -14,7 +14,7 @@
 //! index remembers which file answers which URL, for the next start offline.
 //!
 //! Before the first download (a first start offline, a sample), the fallback is the same web files again,
-//! embedded at BUILD time by `build.rs` from `core/web/public` — never a copy kept by hand — and written
+//! embedded at BUILD time by `build.rs` from `core/web/public` - never a copy kept by hand - and written
 //! out once to a directory (the user's cache directory by default), because the painters decode from a path.
 
 use std::collections::BTreeMap;

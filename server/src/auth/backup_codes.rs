@@ -8,11 +8,11 @@
 //! ## Why the verifier is a scan and not a lookup
 //!
 //! argon2 salts every hash, so `WHERE code_hash = $1` is impossible by
-//! construction — that is the point of a password hash. Verification therefore
+//! construction - that is the point of a password hash. Verification therefore
 //! reads the account's *unused* rows and tries them one by one. The cost is
 //! bounded by [`BATCH_SIZE`] and only paid on the sign-in path, which is already
-//! rate-limited (`crate::auth::rate_limit`). The alternative — a fast unsalted
-//! digest that would allow the lookup — would turn a stolen database dump into a
+//! rate-limited (`crate::auth::rate_limit`). The alternative - a fast unsalted
+//! digest that would allow the lookup - would turn a stolen database dump into a
 //! set of directly usable second factors.
 //!
 //! Hashing and verification run on the blocking pool: argon2id is deliberately
@@ -40,7 +40,7 @@ const CODE_LENGTH: usize = 10;
 /// Same reasoning as the generated-password alphabet: a code is read off a
 /// printout or a screenshot and typed by hand, sometimes months later, so no
 /// character may be confusable with another (`0/O`, `1/I/l`, `5/S`, `8/B`).
-/// Upper case only — [`normalize`] folds whatever the user types.
+/// Upper case only - [`normalize`] folds whatever the user types.
 /// 30 symbols over 10 characters is ~49 bits: unguessable, still dictatable.
 const ALPHABET: &[u8] = b"ACDEFGHJKLMNPQRTUVWXYZ2346789";
 
@@ -55,7 +55,7 @@ pub struct BackupCodeStatus {
     pub generated_at: Option<DateTime<Utc>>,
     /// Below this many codes the UI warns.
     pub low_threshold: i64,
-    /// `remaining <= low_threshold` — computed here so every client agrees.
+    /// `remaining <= low_threshold` - computed here so every client agrees.
     pub low: bool,
 }
 
@@ -67,7 +67,7 @@ fn generate_code() -> String {
         .collect()
 }
 
-/// `ABCDE-FGHIJ` — the grouping is purely for transcription accuracy and is
+/// `ABCDE-FGHIJ` - the grouping is purely for transcription accuracy and is
 /// stripped again by [`normalize`].
 fn format_code(raw: &str) -> String {
     let mid = CODE_LENGTH / 2;
@@ -111,7 +111,7 @@ async fn low_threshold(db: &DbPool) -> i64 {
 }
 
 /// Generates a fresh batch, **replacing** any previous one, and returns the
-/// plaintext codes — the only moment they exist outside the caller's screen.
+/// plaintext codes - the only moment they exist outside the caller's screen.
 ///
 /// Replacement is a delete, not a flag: an operator who regenerates their sheet
 /// expects the old one to be worthless immediately, including the codes already
@@ -241,7 +241,7 @@ pub async fn status(db: &DbPool, user_id: Uuid) -> Result<BackupCodeStatus, AppE
 /// Single use is enforced by the database, not by this function: the `UPDATE`
 /// carries `used_at IS NULL` in its `WHERE`, so two concurrent sign-ins racing on
 /// the same code produce exactly one winner. A replay after consumption never
-/// even reaches the comparison — the row is no longer in the candidate set.
+/// even reaches the comparison - the row is no longer in the candidate set.
 pub async fn consume(
     db: &DbPool,
     user_id: Uuid,
@@ -290,7 +290,7 @@ pub async fn consume(
 
     let Some(id) = matched else { return Ok(None) };
 
-    // `used_at` is bound (not `NOW()`), and the `$2::inet` cast is dropped —
+    // `used_at` is bound (not `NOW()`), and the `$2::inet` cast is dropped -
     // `used_ip` is bound as text (the consolidated migration stores it in a
     // portable text column, not PostgreSQL `INET`).
     let now = Utc::now();
@@ -339,7 +339,7 @@ mod tests {
             let code = generate_code();
             assert_eq!(code.chars().count(), CODE_LENGTH);
             // Of each confusable pair only one member survives: 8 over B, and
-            // 0/1/5/I/O/S are all absent. `L` therefore stays — the `1` and `I`
+            // 0/1/5/I/O/S are all absent. `L` therefore stays - the `1` and `I`
             // it could be mistaken for are gone.
             for c in ['0', '1', '5', 'B', 'I', 'O', 'S'] {
                 assert!(!code.contains(c), "caractère confusable {c} dans « {code} »");

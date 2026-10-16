@@ -15,6 +15,6 @@ export function Part1({ tone, Arrow, model_delta, i18n }: { tone: NonNullable<Re
 
 export function Part2() {
   return (
-    <span data-tone aria-hidden style={{ color: 'var(--color-primary)' }}>—</span>
+    <span data-tone aria-hidden style={{ color: 'var(--color-primary)' }}>-</span>
   )
 }

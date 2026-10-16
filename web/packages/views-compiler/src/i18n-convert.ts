@@ -6,8 +6,8 @@
  * - **`locales/<lang>/<ns>.json`** folders (the core's `core.json`): `readJsonLocales(dir, ns)`;
  * - **`i18n.ts` modules** calling `registerModuleTranslations(ns, { en, fr, … })`, the languages written inline
  *   (`const en = { … }`), imported from `./locales/en` (`export default { … }`) or from JSON files:
- *   `readI18nModule(file)` evaluates them **statically** with the TypeScript parser — object and string literals,
- *   constants, imports, spreads — and refuses anything else (a computed value would be silently lost).
+ *   `readI18nModule(file)` evaluates them **statically** with the TypeScript parser - object and string literals,
+ *   constants, imports, spreads - and refuses anything else (a computed value would be silently lost).
  *
  * The output keeps every key, value and key order: compiling the written set back (`compileKbresSet`, the Vite
  * plugin's path) gives the same bundles, which `kbres-convert --check` and the tests verify.
@@ -61,7 +61,7 @@ class Evaluator {
   }
 
   private fail(node: import('typescript').Node, what: string): never {
-    throw new StaticError(`${this.where(node)}: ${what} — kbres-convert only reads literal dictionaries (objects, strings, constants, imports)`)
+    throw new StaticError(`${this.where(node)}: ${what} - kbres-convert only reads literal dictionaries (objects, strings, constants, imports)`)
   }
 
   /** A module file of `spec` imported from `from` (`.ts`, `.tsx`, `.js`, `/index.*`, `.json`). */

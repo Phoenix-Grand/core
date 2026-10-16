@@ -8,16 +8,16 @@
 //!
 //! ## Two types
 //!
-//! * [`RUN`] — produces one archive. **Re-enqueues itself** after each batch of
+//! * [`RUN`] - produces one archive. **Re-enqueues itself** after each batch of
 //!   accounts until there are none left.
-//! * [`PRUNE`] — the retention pass. Recurring, self-re-arming.
+//! * [`PRUNE`] - the retention pass. Recurring, self-re-arming.
 //!
 //! ## Why the run is batched
 //!
 //! `jobs.job_timeout_s` defaults to fifteen minutes, and an export of a real
 //! instance is hours. A handler that tried to do it in one call would be killed
 //! by the runner, retried from zero, killed again, and would exhaust its
-//! attempts having produced nothing — the failure mode being: the bigger the
+//! attempts having produced nothing - the failure mode being: the bigger the
 //! instance, the more certainly the feature does not work.
 //!
 //! So each invocation works for a **budget** derived from that very timeout, then
@@ -26,7 +26,7 @@
 //!   * a restart or a deployment costs the accounts of one batch, never the run;
 //!   * progress is visible while it happens, because `subjects_done` is written
 //!     as the work advances rather than at the end;
-//!   * a cancellation takes effect within one batch — checked at the top of every
+//!   * a cancellation takes effect within one batch - checked at the top of every
 //!     invocation, which is what makes the "cancel a malicious export" story
 //!     actually true rather than a button that sets a flag.
 //!
@@ -36,7 +36,7 @@
 //! recorded against the account it happened on, named in the archive's manifest,
 //! and the export **continues**. An archive missing one service is useful; an
 //! export that fell over because one module was restarting is not. Only a failure
-//! of the bookkeeping itself — the run row, the archive — closes the run as
+//! of the bookkeeping itself - the run row, the archive - closes the run as
 //! failed.
 
 use std::collections::{BTreeMap, HashMap};
@@ -149,7 +149,7 @@ pub async fn enqueue_run(db: &DbPool, export_id: Uuid) -> Result<Uuid, AppError>
     let job = NewJob::new(RUN)
         // Exactly one attempt. A retry would restart the batch on a run whose
         // state already says where it got to, and the retry of a *bookkeeping*
-        // failure is the runner replaying a job whose database is unavailable —
+        // failure is the runner replaying a job whose database is unavailable -
         // three times, with a backoff, for nothing.
         .max_attempts(1)
         .payload(json!({ "export_id": export_id.to_string() }));
@@ -170,7 +170,7 @@ async fn advance(
     job_id: Uuid,
 ) -> Result<(), AppError> {
     let Some(run) = runs::get(db, export_id).await? else {
-        tracing::warn!(export_id = %export_id, "export: exécution introuvable — tâche abandonnée");
+        tracing::warn!(export_id = %export_id, "export: exécution introuvable - tâche abandonnée");
         return Ok(());
     };
 
@@ -186,7 +186,7 @@ async fn advance(
     // hold stops the remaining batches, and the staging tree goes with them.
     if run.status != "pending" && run.status != "running" {
         tracing::info!(export_id = %export_id, statut = %run.status,
-            "export: exécution close — production interrompue");
+            "export: exécution close - production interrompue");
         archive::discard_staging(&destination, export_id).await;
         return Ok(());
     }
@@ -239,7 +239,7 @@ async fn advance(
             // Re-armed rather than continued: the runner would kill this task at
             // `jobs.job_timeout_s`, and a run killed mid-account is a run that
             // repeats the account it was on.
-            tracing::debug!(export_id = %export_id, "export: budget épuisé — lot suivant replanifié");
+            tracing::debug!(export_id = %export_id, "export: budget épuisé - lot suivant replanifié");
             let next = NewJob::new(RUN)
                 .max_attempts(1)
                 .payload(json!({ "export_id": export_id.to_string() }));
@@ -259,7 +259,7 @@ async fn advance(
 ///
 /// Discovered, never listed: see [`super::contract`]. A service the operator
 /// asked for that no live module claims any more is simply absent from the plan,
-/// and every account records it as missing — which is what the manifest then
+/// and every account records it as missing - which is what the manifest then
 /// says, in as many words.
 async fn build_plan(
     db: &DbPool,
@@ -352,7 +352,7 @@ async fn put(root: &std::path::Path, relative: &str, body: &[u8]) -> Result<(), 
 /// Exports one account: the core's own record, then every planned module.
 ///
 /// Returns `Err` only when the *subject row* could not be closed. Everything
-/// else — an unreachable module, a refused entry, an extraction that failed — is
+/// else - an unreachable module, a refused entry, an extraction that failed - is
 /// recorded and carried into the manifest.
 async fn process_subject(
     db: &DbPool,
@@ -385,7 +385,7 @@ async fn process_subject(
     // (the personal export offers it, so a large mailbox comes back as something
     // that fits on the disk they are copying it to); nobody may choose a wider
     // one, because the policy's value is the instance's protection rather than a
-    // preference — `SelfPolicy::resolve_max_file_mb` clamps on the way in and the
+    // preference - `SelfPolicy::resolve_max_file_mb` clamps on the way in and the
     // column is frozen at creation.
     let max_file_bytes = subject_file_ceiling(run, pol);
 
@@ -499,7 +499,7 @@ async fn process_subject(
 
 /// Largest single file admitted into this run's archive, in bytes.
 ///
-/// The run's own value when it has one, the policy's otherwise — read at the
+/// The run's own value when it has one, the policy's otherwise - read at the
 /// moment the job runs, which is what every export produced before migration
 /// `000122` did and keeps doing.
 fn subject_file_ceiling(run: &runs::ExportRun, pol: &policy::Policy) -> u64 {
@@ -644,7 +644,7 @@ fn readme_text(run: &runs::ExportRun, subjects: &[runs::ExportSubject]) -> Strin
     out.push_str(&format!(
         "Demandé le      : {}\nDemandé par     : {}\nPérimètre       : {}\nComptes couverts: {}\n\n",
         run.requested_at.format("%d/%m/%Y %H:%M UTC"),
-        run.actor_label.as_deref().unwrap_or("—"),
+        run.actor_label.as_deref().unwrap_or("-"),
         if run.scope == "instance" {
             "toute l'instance"
         } else {
@@ -697,7 +697,7 @@ fn readme_text(run: &runs::ExportRun, subjects: &[runs::ExportSubject]) -> Strin
 /// Deletes every archive whose retention has elapsed, and records it.
 ///
 /// The row survives: "an export of everyone was produced that day" must outlive
-/// the file by years — see [`super::runs`].
+/// the file by years - see [`super::runs`].
 pub async fn prune(db: &DbPool) -> Result<u64, AppError> {
     let expired = runs::expired_files(db).await?;
     let mut removed = 0u64;

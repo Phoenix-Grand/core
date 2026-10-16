@@ -163,7 +163,7 @@ export function Part10({ result, t, result_detail, result_hint }: { result: NonN
                   )}
                   {result.hint && (
                     <p className="mt-2">
-                      <span className="text-text-secondary">{t('mailsetup.test_advice')} — </span>
+                      <span className="text-text-secondary">{t('mailsetup.test_advice')} - </span>
                       {result_hint}
                     </p>
                   )}

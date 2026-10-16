@@ -1,4 +1,4 @@
-<!-- MemberPicker — converted from MemberPicker.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- MemberPicker - converted from MemberPicker.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <Panel x:Props="MemberPickerProps" OnMouseDown="panel_mouse_down">
   <!-- TODO(views-migrate): <FloatingWindow> actions.extra: no .kbview property -->
   <ReactHost Component="{Binding Part1}" Props="{Binding part1_props}"/>

@@ -1,10 +1,10 @@
-//! Gallery page — the button family.
+//! Gallery page - the button family.
 //!
 //! The static exposition (left) shows every component in every state the web
 //! design system distinguishes: the predecessor parity pairs for `Button`,
 //! `IconButton` and `Switch` (the old control and its rebuilt version get
 //! rectangles of identical size from one canvas and one theme), then the web's
-//! states the predecessor never had — focus-visible ring, loading, overflow —
+//! states the predecessor never had - focus-visible ring, loading, overflow -
 //! and the labelled controls nested in a caller-painted card, where a wrong
 //! ground or a spilling label shows at once. The exposition is taller than the
 //! window: the tab panel it is painted into scrolls it.
@@ -44,7 +44,7 @@ const VARIANTS: [(Variant, &str); 6] = [
     (Variant::TextDanger, "textDanger"),
 ];
 
-/// The label the variant grid carries — a real word rather than "Aa", because
+/// The label the variant grid carries - a real word rather than "Aa", because
 /// the width is measured from the font and a short label would hide a padding
 /// bug. The size row uses [`SHORT`] instead, purely so its six buttons fit.
 const LABEL: &str = "Envoyer";
@@ -61,7 +61,7 @@ const TIGHT_GAP: f32 = 8.0;
 /// How long the live « Enregistrer » button stays in its loading state.
 const SAVE_DEMO_MS: u64 = 4000;
 
-/// Rounds a pair cell UP to the next multiple of 4 DIP — see the comment in
+/// Rounds a pair cell UP to the next multiple of 4 DIP - see the comment in
 /// [`variants_section`] for why the pixel diff depends on it.
 fn quantise(w: f32) -> f32 {
     (w / 4.0).ceil() * 4.0
@@ -144,7 +144,7 @@ fn cursor_over(live: &Live, r: Rect, cursor: host::Cursor) {
     }
 }
 
-/// The right-hand column: the same controls as the page, but live — pointer,
+/// The right-hand column: the same controls as the page, but live - pointer,
 /// keyboard through the focus ring, and the web's transitions.
 pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
     UI.with(|ui| {
@@ -157,7 +157,7 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
         let (left, mut y, right) = interact::panel(c, interact::panel_rect(f.size));
 
         // ── Buttons: a counter, a loading save, a round toggle ──────────────
-        y = interact::caption(c, left, right, y, "Button — clic, ou Tab puis Entrée / Espace");
+        y = interact::caption(c, left, right, y, "Button - clic, ou Tab puis Entrée / Espace");
         let label = if ui.clicks == 0 {
             "Cliquez-moi".to_string()
         } else {
@@ -204,7 +204,7 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
         y += Size::Md.height() + 16.0;
 
         // ── Switch with a label and a description ───────────────────────────
-        y = interact::caption(c, left, right, y, "Switch — clic ou Espace, glissement 150 ms");
+        y = interact::caption(c, left, right, y, "Switch - clic ou Espace, glissement 150 ms");
         let sw = Switch::new()
             .on(ui.switch)
             .label("Synchroniser en arrière-plan")
@@ -224,7 +224,7 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
         y += sw_h + 16.0;
 
         // ── A check box whose long label wraps ──────────────────────────────
-        y = interact::caption(c, left, right, y, "CheckBox — libellé long qui passe à la ligne");
+        y = interact::caption(c, left, right, y, "CheckBox - libellé long qui passe à la ligne");
         let checked = if ui.check { CheckState::Checked } else { CheckState::Unchecked };
         let cb = CheckBox::new(
             "J'accepte les conditions d'utilisation et la politique de confidentialité du service",
@@ -245,7 +245,7 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
         y += cb_h + 16.0;
 
         // ── A radio group: one Tab stop, arrows move the choice ─────────────
-        y = interact::caption(c, left, right, y, "RadioButton — Tab entre dans le groupe, flèches");
+        y = interact::caption(c, left, right, y, "RadioButton - Tab entre dans le groupe, flèches");
         let names = ["Petit", "Moyen", "Grand (désactivé)"];
         let enabled = [true, true, false];
         let stop = radio_tab_stop(Some(ui.radio), &enabled);
@@ -291,8 +291,8 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
         }
         y += 8.0;
 
-        // ── A toggle-button pair — a segmented « Liste / Grille » ──────────
-        y = interact::caption(c, left, right, y, "ToggleButton — Liste ou Grille (Entrée / Espace)");
+        // ── A toggle-button pair - a segmented « Liste / Grille » ──────────
+        y = interact::caption(c, left, right, y, "ToggleButton - Liste ou Grille (Entrée / Espace)");
         let on = |v: bool| if v { CheckState::Checked } else { CheckState::Unchecked };
         let list_b = CheckBox::toggle_button("Liste").check(on(!ui.view_grid));
         let grid_b = CheckBox::toggle_button("Grille").check(on(ui.view_grid));
@@ -313,7 +313,7 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
         y += Size::Md.height() + 16.0;
 
         // ── Overflow: the same button at a width the label does not fit ────
-        y = interact::caption(c, left, right, y, "Débordement — le libellé s'abrège, jamais ne déborde");
+        y = interact::caption(c, left, right, y, "Débordement - le libellé s'abrège, jamais ne déborde");
         let narrow = Rect::new(left, y, left + 150.0, y + Size::Md.height());
         let nb = Button::new("Enregistrer les modifications").variant(Variant::Secondary).icon("Plus");
         let ns = live.focus_state("narrow", narrow);
@@ -331,7 +331,7 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
 
 fn variants_section(p: &mut Page) {
     let c = p.c;
-    p.section("Boutons — chaque variante en repos · survol · pressé · désactivé");
+    p.section("Boutons - chaque variante en repos · survol · pressé · désactivé");
 
     // Rounded UP to a multiple of 4 DIP, which is what makes the pixel diff of
     // this page meaningful: every DPI Windows offers is a quarter step, so a
@@ -386,7 +386,7 @@ fn new_strip(c: &dyn Canvas, area: Rect, variant: Variant) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// 2. The size ramp and the icon, then the round button and the switch — old
+// 2. The size ramp and the icon, then the round button and the switch - old
 //    above new, since the two halves do not fit side by side.
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -517,9 +517,9 @@ fn new_round(c: &dyn Canvas, area: Rect) {
 
 fn states_section(p: &mut Page) {
     let c = p.c;
-    p.section("États du web — anneau de focus clavier · chargement · débordement");
+    p.section("États du web - anneau de focus clavier · chargement · débordement");
 
-    p.caption("focus-visible:ring-2 ring-offset-1 — bouton, secondaire, cercle, switch, bouton bascule");
+    p.caption("focus-visible:ring-2 ring-offset-1 - bouton, secondaire, cercle, switch, bouton bascule");
     let top = p.y;
     let h = Size::Md.height();
     // Room for the 3 DIP ring outside every control.
@@ -546,7 +546,7 @@ fn states_section(p: &mut Page) {
     b.paint(c, Rect::new(x, top, x + w, top + h), clicked);
     p.advance(h);
 
-    p.caption("loading — anneau border-current en rotation, bouton inactif · largeur imposée plus petite que le libellé");
+    p.caption("loading - anneau border-current en rotation, bouton inactif · largeur imposée plus petite que le libellé");
     let top = p.y;
     let mut x = MARGIN;
     for (v, phase) in [(Variant::Primary, 0.0), (Variant::Secondary, 0.3), (Variant::Danger, 0.6)] {
@@ -568,7 +568,7 @@ fn states_section(p: &mut Page) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// 4. The two glyph controls and the toggle button — the web is the reference.
+// 4. The two glyph controls and the toggle button - the web is the reference.
 // ─────────────────────────────────────────────────────────────────────────────
 
 /// One cell per state, wide enough for an 18 box, its 8 gap and a short label.
@@ -576,7 +576,7 @@ const GLYPH_PITCH: f32 = 116.0;
 
 fn glyph_section(p: &mut Page) {
     let c = p.c;
-    p.section("CheckBox · RadioButton · ToggleButton — référence : le web");
+    p.section("CheckBox · RadioButton · ToggleButton - référence : le web");
     p.caption("CheckBox : repos · survol · coché · partiel + focus clavier · désactivé");
 
     let h = 20.0;
@@ -609,7 +609,7 @@ fn glyph_section(p: &mut Page) {
     }
     p.advance(h);
 
-    p.caption("ToggleButton — le même CheckBox en Appearance::Button : ghost au repos, bg-primary-light + text-primary une fois enfoncé");
+    p.caption("ToggleButton - le même CheckBox en Appearance::Button : ghost au repos, bg-primary-light + text-primary une fois enfoncé");
     let top = p.y;
     let h = Size::Md.height();
     let toggles: [(CheckBox, WidgetState); 4] = [
@@ -637,7 +637,7 @@ fn glyph_section(p: &mut Page) {
 fn card_section(p: &mut Page) {
     let c = p.c;
     let t = c.theme();
-    p.section("Dans une carte — fond transparent, libellés longs (retour à la ligne ou « … »)");
+    p.section("Dans une carte - fond transparent, libellés longs (retour à la ligne ou « … »)");
 
     let card_pad = 16.0;
     let left = MARGIN;

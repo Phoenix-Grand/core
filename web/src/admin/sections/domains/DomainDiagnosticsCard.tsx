@@ -1,4 +1,4 @@
-// What this domain's DNS says about mail — read by whoever knows best.
+// What this domain's DNS says about mail - read by whoever knows best.
 //
 // The instance keeps a small reading of its own (MX hosts, SPF present, DMARC
 // present) because a Kubuno that runs no mail service still has to say
@@ -6,7 +6,7 @@
 // (see `core/registry/domainDiagnostics.ts`), that provider replaces the
 // reading: a real mail server knows the MX it expects, what an SPF record costs
 // in lookups, whether the key it actually signs with is published, its PTR and
-// its certificate. The core names no module — it renders whatever registered,
+// its certificate. The core names no module - it renders whatever registered,
 // says who produced it, and falls back to its own reading whenever the provider
 // is absent, fails, or does not handle this domain.
 
@@ -70,7 +70,7 @@ export default function DomainDiagnosticsCard({ domain, canManage }: {
 
   const data = report.data ?? null
   // The provider replaces the reading only when it actually covers this domain.
-  // Anything else — no provider, a rejected call, a domain it does not serve —
+  // Anything else - no provider, a rejected call, a domain it does not serve -
   // leaves the instance's own reading in place. Never an empty section.
   const covered = !!data?.covered
   const showOwnReading = !covered
@@ -90,7 +90,7 @@ export default function DomainDiagnosticsCard({ domain, canManage }: {
             <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-text-tertiary"
               style={{ fontSize: 'var(--kb-text-small)' }}>
               <span>{t('admin.dom_diag_by', {
-                defaultValue: 'Diagnostic fourni par {{source}} — il remplace la lecture de l’instance.',
+                defaultValue: 'Diagnostic fourni par {{source}} - il remplace la lecture de l’instance.',
                 source: data.source,
               })}</span>
               {data.href && (
@@ -149,7 +149,7 @@ function CheckLine({ check }: { check: DomainDiagnosticCheck }) {
     ok:      t('admin.dom_diag_v_ok',      { defaultValue: 'Conforme' }),
     warn:    t('admin.dom_diag_v_warn',    { defaultValue: 'À surveiller' }),
     fail:    t('admin.dom_diag_v_fail',    { defaultValue: 'À corriger' }),
-    info:    t('admin.dom_diag_v_info',    { defaultValue: 'Publié — à votre appréciation' }),
+    info:    t('admin.dom_diag_v_info',    { defaultValue: 'Publié - à votre appréciation' }),
     unknown: t('admin.dom_diag_v_unknown', { defaultValue: 'Non vérifiable' }),
   }
 
@@ -213,7 +213,7 @@ function RecordLine({ value }: { value: string }) {
   )
 }
 
-/** The instance's own reading — a reading, never a verdict: this instance does
+/** The instance's own reading - a reading, never a verdict: this instance does
  *  not run the mail service and cannot know what these records ought to be. */
 function InstanceReading({ domain, canManage }: { domain: Domain; canManage: boolean }) {
   const { t } = useTranslation()

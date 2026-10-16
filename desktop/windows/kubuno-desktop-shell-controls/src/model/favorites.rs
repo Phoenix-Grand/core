@@ -1,7 +1,7 @@
 //! The waffle's favourites: the list being edited, and what gets written back
 //! to the server (by the host's [`crate::LauncherService::save_favorites`]).
 //!
-//! The list is the SAME one the web shows — `preferences.waffle_favorites` on
+//! The list is the SAME one the web shows - `preferences.waffle_favorites` on
 //! the account, an ordered array of app ids. This module therefore has one
 //! non-obvious duty: never destroy what it does not understand.
 
@@ -10,7 +10,7 @@ pub const MAX: usize = 9;
 
 /// The favourites being edited, plus the ids this build cannot resolve.
 pub struct Draft {
-    /// Ids of apps we know, in display order — what the user reorders.
+    /// Ids of apps we know, in display order - what the user reorders.
     pub known: Vec<String>,
     /// Ids kept verbatim from the server that match no installed app here.
     unknown: Vec<String>,
@@ -44,7 +44,7 @@ impl Draft {
         } else {
             self.known.push(id.to_string());
             // The web caps AFTER pushing, so a tenth favourite added at the end
-            // simply drops itself — no message, no disabled button. Reproduced
+            // simply drops itself - no message, no disabled button. Reproduced
             // as it stands, asymmetry included: an insertion at a position
             // evicts the last one instead.
             self.known.truncate(MAX);
@@ -66,7 +66,7 @@ impl Draft {
     /// The list to persist: what is shown, then what was carried through.
     ///
     /// The unknown ids go last because their original positions no longer mean
-    /// anything once the known ones have been reordered — and appending is the
+    /// anything once the known ones have been reordered - and appending is the
     /// only placement that cannot silently reorder someone else's list.
     pub fn to_saved(&self) -> Vec<String> {
         let mut out = self.known.clone();
@@ -83,7 +83,7 @@ mod tests {
         ["drive", "mail", "notes", "maps"].iter().map(|s| s.to_string()).collect()
     }
 
-    /// An id this build cannot resolve survives an edit — the whole point.
+    /// An id this build cannot resolve survives an edit - the whole point.
     #[test]
     fn unknown_ids_are_never_lost() {
         let saved: Vec<String> = ["drive", "office-whiteboard", "mail"]
@@ -112,7 +112,7 @@ mod tests {
         assert!(!d.contains("drive"));
     }
 
-    /// The cap holds, and an addition beyond it drops ITSELF — the web's exact
+    /// The cap holds, and an addition beyond it drops ITSELF - the web's exact
     /// behaviour when appending.
     #[test]
     fn the_cap_drops_the_newcomer() {

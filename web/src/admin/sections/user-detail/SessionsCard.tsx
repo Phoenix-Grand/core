@@ -109,7 +109,7 @@ export class SessionsCard extends ViewBase {
       headerText: this.tr('admin.ud_ses_ip'),
       minWidth: 120,
       sortValue: s => s.ip_address ?? '',
-      cell: s => <span className="font-mono text-text-secondary">{s.ip_address ?? '—'}</span>,
+      cell: s => <span className="font-mono text-text-secondary">{s.ip_address ?? '-'}</span>,
     },
     {
       id: 'last_used',

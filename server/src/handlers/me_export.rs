@@ -1,4 +1,4 @@
-//! **"Download my data"** — an account exporting its own, from its own
+//! **"Download my data"** - an account exporting its own, from its own
 //! settings.
 //!
 //! ═════════════════════════════════════════════════════════════════════════════
@@ -7,7 +7,7 @@
 //!
 //! Not a new feature: the machinery of [`crate::data_export`] already produces an
 //! archive for a *selection of accounts*, and its own preamble says the
-//! single-account portability request is "an `accounts` scope of one — the same
+//! single-account portability request is "an `accounts` scope of one - the same
 //! machinery, deliberately, so the narrow errand can never drift from the wide
 //! one". This file is the door to it, opened for the person the data is about.
 //!
@@ -20,7 +20,7 @@
 //! # The subject is the caller, and there is no parameter for it
 //!
 //! No route here accepts an account identifier. The subject is taken from the
-//! token, in the handler, and is the only account a request can ever name — so
+//! token, in the handler, and is the only account a request can ever name - so
 //! there is no value an attacker can substitute, no identifier to guess, and no
 //! authorisation check that could be forgotten because there is no decision to
 //! make. `GET /me/export/:id/download` takes an id, but it is the id of a *run*,
@@ -33,7 +33,7 @@
 //! chain (instance ?? organisational unit ?? group ?? account), so an
 //! administrator can allow it everywhere and refuse it for one unit. Where it is
 //! refused, all three routes answer **404**, and the account settings show no
-//! section at all — not a disabled one.
+//! section at all - not a disabled one.
 //!
 //! `403` would have been the technically accurate status and is deliberately not
 //! used: it is an admission that the thing exists and is being withheld, which
@@ -54,8 +54,8 @@
 //! (`data_export.hold_hours`, 48 h). That delay exists so that a stolen
 //! administrator session cannot walk out with *every* account's data before
 //! another administrator notices. Here the archive contains one account's own
-//! data — which a stolen session can already read, page by page, in the
-//! interface — so the hold would buy almost nothing and would cost the one thing
+//! data - which a stolen session can already read, page by page, in the
+//! interface - so the hold would buy almost nothing and would cost the one thing
 //! portability is for: getting your data when you ask for it. It remains
 //! available as `data_export.self_hold_hours` for an instance that wants it.
 
@@ -118,7 +118,7 @@ fn label_of(user: &User) -> String {
 
 // ── Reading the page ─────────────────────────────────────────────────────────
 
-/// `GET /api/v1/me/export` — what can be exported, what is under way, what is
+/// `GET /api/v1/me/export` - what can be exported, what is under way, what is
 /// still downloadable.
 pub async fn get_my_export(
     State(state): State<AppState>,
@@ -127,7 +127,7 @@ pub async fn get_my_export(
     gate(&state, user.id).await?;
 
     // A run left `running` by a process that died would otherwise hold this
-    // account's single slot for ever — the personal equivalent of the console's
+    // account's single slot for ever - the personal equivalent of the console's
     // stuck "export in progress".
     if let Err(e) = runs::close_stalled(&state.db).await {
         tracing::error!(error = %e, "export: reprise des exécutions interrompues");
@@ -138,7 +138,7 @@ pub async fn get_my_export(
     let history = runs::list_own(&state.db, user.id, HISTORY).await?;
     let now = Utc::now();
 
-    // What the LIVE modules offer, asked now — the same discovery the console
+    // What the LIVE modules offer, asked now - the same discovery the console
     // uses. A module that is not installed, not running, or has not implemented
     // the contract simply does not appear, and nothing here names one.
     let offers = contract::describe_all(&state.db, &state.settings.server).await;
@@ -198,7 +198,7 @@ fn run_payload(run: &runs::ExportRun, now: chrono::DateTime<chrono::Utc>) -> Val
 /// The service picker: the core first, then one entry per module service.
 ///
 /// A module declaring several services is what "refine the sub-categories" means
-/// in this product — the contract lets it split its data into separately
+/// in this product - the contract lets it split its data into separately
 /// selectable bodies, and the interface groups them under the module that
 /// declared them.
 fn services_payload(offers: &[contract::ModuleOffer]) -> Vec<Value> {
@@ -243,7 +243,7 @@ pub struct RequestMyExportDto {
     pub max_file_mb: Option<i64>,
 }
 
-/// `POST /api/v1/me/export` — produce an archive of **my** data.
+/// `POST /api/v1/me/export` - produce an archive of **my** data.
 ///
 /// Returns the run, not the archive: production takes minutes on a small account
 /// and much longer on a large one, and the page follows the progress.
@@ -309,7 +309,7 @@ pub async fn request_my_export(
     let export_id = runs::create(
         &state.db,
         &runs::NewExport {
-            // An `accounts` scope of one — the shape the machinery was built
+            // An `accounts` scope of one - the shape the machinery was built
             // around, so this path can never drift from the administrative one.
             scope: "accounts".into(),
             origin: runs::ORIGIN_SELF,
@@ -329,7 +329,7 @@ pub async fn request_my_export(
     )
     .await?;
 
-    // Audited, like the administrative request — and for a reason that survives
+    // Audited, like the administrative request - and for a reason that survives
     // the difference between them: "an archive of this account was produced on
     // that day" is the fact an investigation starts from, whoever asked for it.
     //
@@ -344,7 +344,7 @@ pub async fn request_my_export(
                 .module("core")
                 .target(target::SETTING, export_id, "Export de mes données".to_string())
                 .detail(format!(
-                    "Export personnel demandé — services : {}, disponible le {}, \
+                    "Export personnel demandé - services : {}, disponible le {}, \
                      expire le {}",
                     services.join(", "),
                     available_at.format("%d/%m/%Y %H:%M UTC"),
@@ -359,7 +359,7 @@ pub async fn request_my_export(
     //
     // This is what bounds the disk: without it, an account could ask again the
     // moment each archive finished and leave a week's worth of copies of itself
-    // on the volume — every one of them a full extract of a mailbox and a drive.
+    // on the volume - every one of them a full extract of a mailbox and a drive.
     // One live archive per account, and asking for a new one is how you replace
     // it, which is also how the interface describes the button.
     discard_previous(&state, user.id, export_id).await;
@@ -414,7 +414,7 @@ async fn discard_previous(state: &AppState, user_id: Uuid, keep: Uuid) {
 
 // ── The archive itself ───────────────────────────────────────────────────────
 
-/// `GET /api/v1/me/export/:id/download` — hand over **my** archive.
+/// `GET /api/v1/me/export/:id/download` - hand over **my** archive.
 ///
 /// The ownership check is the `WHERE` clause of [`runs::get_own`], evaluated on
 /// every request rather than once at creation: an archive belongs to one account
@@ -428,7 +428,7 @@ pub async fn download_my_export(
 ) -> Result<Response, AppError> {
     gate(&state, user.id).await?;
 
-    // Somebody else's export — administrative or personal — is simply not found
+    // Somebody else's export - administrative or personal - is simply not found
     // here. Not "forbidden": from this route's point of view it does not exist.
     let Some(run) = runs::get_own(&state.db, id, user.id).await? else {
         return Err(AppError::NotFound("Archive introuvable".into()));
@@ -469,7 +469,7 @@ pub async fn download_my_export(
     // Re-validated even though it came from our own row: this is the one handler
     // here that turns a database string into an open file descriptor.
     if !archive::is_export_file(file_name) {
-        tracing::error!(export_id = %id, "export: nom d'archive non reconnu — téléchargement refusé");
+        tracing::error!(export_id = %id, "export: nom d'archive non reconnu - téléchargement refusé");
         return Err(AppError::NotFound("Archive introuvable sur le disque".into()));
     }
 
@@ -482,7 +482,7 @@ pub async fn download_my_export(
     })?;
 
     // The ceiling, claimed atomically. `None` means another request took the last
-    // one between the check above and here — the exact race a read-then-write
+    // one between the check above and here - the exact race a read-then-write
     // would lose.
     let Some(left) = runs::claim_download(&state.db, id, user.id).await? else {
         return Err(AppError::Conflict(

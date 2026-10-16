@@ -1,4 +1,4 @@
-<!-- RoleBadge — converted from RoleBadge.tsx by @kubuno/views-migrate. -->
+<!-- RoleBadge - converted from RoleBadge.tsx by @kubuno/views-migrate. -->
 <UserControl x:Props="RoleBadgeProps">
   <Badge Variant="{Binding variant}" Text="{Binding props.label}"/>
 </UserControl>

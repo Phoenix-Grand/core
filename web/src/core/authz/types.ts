@@ -56,7 +56,7 @@ export interface RoleAssignment {
   created_by: string | null
 }
 
-/** One privilege and the scope it is held over — scopes already resolved. */
+/** One privilege and the scope it is held over - scopes already resolved. */
 export interface EffectivePrivilege {
   key:       string
   instance:  boolean
@@ -67,7 +67,7 @@ export interface EffectivePrivilege {
 /**
  * What an account effectively holds.
  *
- * Returned by `GET /api/v1/me` (the `privileges` block — the caller looking at
+ * Returned by `GET /api/v1/me` (the `privileges` block - the caller looking at
  * themselves, no privilege required) and by `GET /admin/users/:id/privileges`
  * (an operator looking at someone else). Same shape from both, deliberately.
  */
@@ -89,7 +89,7 @@ export interface EffectivePrivileges {
 /**
  * The single privilege predicate used everywhere in the console.
  *
- * `can(key)` answers "does the caller hold this anywhere?" — the question the
+ * `can(key)` answers "does the caller hold this anywhere?" - the question the
  * navigation asks. `can(key, unitId)` narrows it to one organisational unit,
  * and `can(key, null)` to a target that sits in no unit (covered by instance
  * scope only, exactly like `AdminContext::has_for_unit` server-side).
@@ -102,11 +102,11 @@ export const PRIV = {
   USERS_CREATE:          'core.users.create',
   USERS_UPDATE:          'core.users.update',
   USERS_DELETE:          'core.users.delete',
-  /** Resetting someone else's password — its own key, not `users.update`. */
+  /** Resetting someone else's password - its own key, not `users.update`. */
   USER_PASSWORD:         'core.user_password.execute',
   SESSIONS_READ:         'core.sessions.read',
   /**
-   * Revoking sessions — and, in the device inventory, every mutation that ends
+   * Revoking sessions - and, in the device inventory, every mutation that ends
    * in revoking them: blocking, signing out, forgetting an entry.
    */
   SESSIONS_DELETE:       'core.sessions.delete',
@@ -132,7 +132,7 @@ export const PRIV = {
   /**
    * Opening the storage page. Its own key rather than `stats.read`: the page
    * names accounts and how much each one holds. There is no `storage.manage`
-   * counterpart — the page writes through `users.update` (one account's quota)
+   * counterpart - the page writes through `users.update` (one account's quota)
    * and `settings.manage` (the default policy).
    */
   STORAGE_READ:          'core.storage.read',

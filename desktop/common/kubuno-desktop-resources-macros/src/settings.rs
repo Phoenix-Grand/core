@@ -1,4 +1,4 @@
-//! `settings!` — the typed settings class of a `.kbsettings` file (vskubuno `docs/STORAGE-COMPONENTS.md` §5.3),
+//! `settings!` - the typed settings class of a `.kbsettings` file (vskubuno `docs/STORAGE-COMPONENTS.md` §5.3),
 //! Windows Forms' generated `Properties.Settings`:
 //!
 //! ```ignore
@@ -204,7 +204,7 @@ fn generate(krate: &TokenStream2, vis: &Visibility, type_name: &Ident, set: &str
         let getter = format_ident!("{}", snake);
         let where_ = if e.is_application() { "application, read-only".to_string() } else if e.roaming { "user, roaming".to_string() } else { "user, this machine only".to_string() };
         let shown_default = if e.ty == "StringList" { format!("{:?}", e.default_items()) } else { format!("`{}`", e.default) };
-        let mut doc = format!("**{}** `{}` ({where_}) — default {shown_default}.", e.ty, e.name);
+        let mut doc = format!("**{}** `{}` ({where_}) - default {shown_default}.", e.ty, e.name);
         if !e.values.is_empty() {
             doc.push_str(&format!(" One of: {}.", e.values.join(", ")));
         }

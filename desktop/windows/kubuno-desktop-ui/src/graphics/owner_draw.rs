@@ -1,5 +1,5 @@
 //! Owner-draw: a list-like control (`ListBox`, `ComboBox`/`Dropdown`, `ListView`, `TreeView`,
-//! `DataTable` cells, `Tabs`, menus) hands the painting of its items to its owner — WinForms'
+//! `DataTable` cells, `Tabs`, menus) hands the painting of its items to its owner - WinForms'
 //! `DrawMode.OwnerDrawFixed` / `OwnerDrawVariable` with the `DrawItem` and `MeasureItem` events.
 //!
 //! The widgets of this crate are painted with `&self` inside a frame, so the owner's handler is
@@ -196,7 +196,7 @@ impl Drop for Pop {
 pub fn with_handler<R>(handler: &mut dyn OwnerDrawHandler, f: impl FnOnce() -> R) -> R {
     let ptr: NonNull<dyn OwnerDrawHandler + '_> = NonNull::from(handler);
     // SAFETY: only the trait object's lifetime bound is erased (same layout). The pointer is used
-    // while `f` runs — during which `handler` stays mutably borrowed by this call — and removed by
+    // while `f` runs - during which `handler` stays mutably borrowed by this call - and removed by
     // `Pop` before this function returns or unwinds.
     let erased: Erased = unsafe { std::mem::transmute::<NonNull<dyn OwnerDrawHandler + '_>, Erased>(ptr) };
     HANDLERS.with(|h| h.borrow_mut().push(Some(erased)));
@@ -262,7 +262,7 @@ pub fn measure_item(e: &mut MeasureItemEventArgs<'_>) -> bool {
 
 /// Owner-drawn items **recorded ahead of time** and replayed later: what a list painted in its own
 /// popup window needs (a combo box's drop-down is painted after the page, when the owner's handler
-/// — its view model — is no longer at hand). The page's paint records each visible item through the
+/// - its view model - is no longer at hand). The page's paint records each visible item through the
 /// real handler ([`RecordedItems::record`]); the popup lends the recording as its handler.
 #[derive(Clone, Default)]
 pub struct RecordedItems {

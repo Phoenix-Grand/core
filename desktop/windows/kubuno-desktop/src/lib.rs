@@ -1,4 +1,4 @@
-//! # `kubuno-desktop` — Kubuno desktop applications, written like Windows Forms
+//! # `kubuno-desktop` - Kubuno desktop applications, written like Windows Forms
 //!
 //! The one dependency of a Kubuno desktop application. It re-exports the layers underneath
 //! ([`views`], [`controls`], [`ui`], [`events`], and [`data`] with the `data` feature) and adds the
@@ -100,7 +100,7 @@ pub use view::View;
 pub mod splash;
 pub use splash::{Artwork, Splash, SplashScreen};
 
-/// `#[kubuno_desktop::view("main_view.kbview")]` on a struct: the struct becomes the form of that view —
+/// `#[kubuno_desktop::view("main_view.kbview")]` on a struct: the struct becomes the form of that view -
 /// see [`View`] for what it generates.
 pub use kubuno_desktop_views_macros::view;
 
@@ -134,7 +134,7 @@ macro_rules! settings {
 
 #[doc(hidden)]
 pub use kubuno_desktop_resources_macros::settings as __settings_impl;
-/// Data access (connections, commands, table adapters, binding sources) — the `data` feature.
+/// Data access (connections, commands, table adapters, binding sources) - the `data` feature.
 #[cfg(feature = "data")]
 pub use kubuno_desktop_data as data;
 /// Logging (`kubuno_desktop::tracing::info!(…)`): under the debugger its lines go to Visual Studio's Output

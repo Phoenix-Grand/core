@@ -3,14 +3,14 @@ import { KubunoLogo } from '@ui'
 import { getPublicConfig } from '../../api/publicConfig'
 
 /**
- * The mark of THIS instance — its own when an administrator set one, the
+ * The mark of THIS instance - its own when an administrator set one, the
  * product's otherwise.
  *
  * `instance.logo_url` has been a public setting since the first migration and
  * was editable in the console, but nothing ever read it: a knob that changed
  * nothing. This component is the single place that honours it, so a
  * self-hosted deployment carries its own identity everywhere the product mark
- * used to be hard-coded — sign-in, shell, printed reports.
+ * used to be hard-coded - sign-in, shell, printed reports.
  *
  * Read from the PUBLIC configuration (`/config`), never from the admin
  * settings: the sign-in page must draw it before anybody is authenticated.

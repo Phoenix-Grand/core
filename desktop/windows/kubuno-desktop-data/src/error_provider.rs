@@ -4,7 +4,7 @@
 //!
 //! - **The glyph** (DATA-2): the view runtime draws the WinForms error icon, adapted to Kubuno (a
 //!   round danger-coloured badge with an exclamation mark), next to every control bound to a field
-//!   in error, with the message as its tooltip — `IconAlignment`, `IconPadding`, `BlinkStyle` and
+//!   in error, with the message as its tooltip - `IconAlignment`, `IconPadding`, `BlinkStyle` and
 //!   `BlinkRate` as in WinForms. No code: the provider answers
 //!   [`BindingProvider::field_error`] for the paths of its `DataSource`.
 //! - **Bindings**: `{Binding Source=errors, Path=Email}` (the message), `Email.HasError` (for a

@@ -9,12 +9,12 @@ import type { ThemeDef } from '../../core/store/themeStore'
  *
  * Why a shadow root rather than an <iframe>: it shares the page's realm, so
  * native scrolling works, and components that attach `document`/`window` drag
- * listeners (RangeSlider, ResizeHandle) keep working — an iframe would trap the
+ * listeners (RangeSlider, ResizeHandle) keep working - an iframe would trap the
  * wheel and swallow those events. Style isolation still holds: the active theme's
  * `<link data-kbtheme>` is excluded, and outer rules cannot pierce the boundary.
  *
  * The shadow root is seeded with the app's base stylesheets (Tailwind utilities)
- * cloned from <head> — except the active theme. Tailwind v4 emits its design
+ * cloned from <head> - except the active theme. Tailwind v4 emits its design
  * tokens on `:root, :host`, so cloning makes `:host` (this shadow host) receive
  * them. The PREVIEWED theme is then applied to the host alone: its variables as
  * inline custom properties (overriding the `:host` defaults) plus its own
@@ -41,7 +41,7 @@ export default function PreviewFrame({ theme, children }: { theme: ThemeDef; chi
       '.kb-preview-mount{padding:1.25rem;background:var(--body-bg,#f8fafd)}'
     shadow.appendChild(reset)
 
-    // Clone the app's stylesheets — skip the live theme so it cannot leak in.
+    // Clone the app's stylesheets - skip the live theme so it cannot leak in.
     document
       .querySelectorAll<HTMLLinkElement | HTMLStyleElement>('head link[rel="stylesheet"], head style')
       .forEach((node) => {

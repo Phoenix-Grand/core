@@ -83,7 +83,7 @@ export function FileRowBase({ file, thumb, selected, preSelected, focused, canMo
   )
 }
 
-// FolderRow — pendant de FileRow pour les dossiers (vues non-icônes) : mêmes
+// FolderRow - pendant de FileRow pour les dossiers (vues non-icônes) : mêmes
 // opérations + cible de dépôt (déplacer DANS le dossier).
 export function FolderRowBase({ folder, isDragTarget, selected, preSelected, focused, canMove, mergeTop, mergeBottom, zebra, onSelect, onOpen, onContextMenu, onLongPress, onDragStart, onDragOver, onDragLeave, onDrop, density = 'normal', cols }: {
   folder: Folder; isDragTarget: boolean; selected: boolean; preSelected?: boolean; focused?: boolean; canMove: boolean; mergeTop?: boolean; mergeBottom?: boolean; zebra?: boolean

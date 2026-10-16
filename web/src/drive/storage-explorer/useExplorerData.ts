@@ -44,7 +44,7 @@ export function useExplorerData({ src, caps, currentFolderId, acceptedMimeTypes,
   const error = useMemo(() => {
     if (!listError) return null
     // The API client's interceptor already flattens every non-401 failure to a
-    // bare `{ code, message }` (core/api/client.ts) — reading `response.data`
+    // bare `{ code, message }` (core/api/client.ts) - reading `response.data`
     // here yields undefined and silently loses the code. The Axios shape is kept
     // as a fallback for any caller that bypasses that interceptor.
     const e = listError as {

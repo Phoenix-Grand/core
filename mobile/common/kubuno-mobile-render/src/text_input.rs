@@ -145,7 +145,7 @@ pub fn is_focused(name: &str) -> bool {
     INPUT.with(|i| i.borrow().focused.as_deref() == Some(name))
 }
 
-/// What has been typed into field `name` (or set by the app), `None` if nothing was — the field then shows its static
+/// What has been typed into field `name` (or set by the app), `None` if nothing was - the field then shows its static
 /// `Text`.
 pub fn value(name: &str) -> Option<String> {
     INPUT.with(|i| i.borrow().values.get(name).cloned())

@@ -1,4 +1,4 @@
-<!-- AccountUsageDialog — converted from AccountUsageDialog.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- AccountUsageDialog - converted from AccountUsageDialog.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <Panel x:Props="AccountUsageDialogProps" OnMouseDown="panel_mouse_down">
   <!-- TODO(views-migrate): <FloatingWindow> actions.confirm: no .kbview property -->
   <ReactHost Component="{Binding Part1}" Props="{Binding part1_props}"/>

@@ -1,8 +1,8 @@
 /**
  * Views and user controls, and where they live (vskubuno `docs/VIEWS-SPEC.md` §1.1 and §1.2, `docs/WEB-VIEWS.md` §23).
  *
- * A screen is a **view** (`.kbview`) when it stands on its own — a page rendered by a route, a window, a dialog or a
- * flyout — and a **user control** (`.kbcontrol`, root `<UserControl>`) when it is placed inside other components:
+ * A screen is a **view** (`.kbview`) when it stands on its own - a page rendered by a route, a window, a dialog or a
+ * flyout - and a **user control** (`.kbcontrol`, root `<UserControl>`) when it is placed inside other components:
  * a pane, a section, a panel given to a host slot, a row or a card a list repeats. Its props are its properties and
  * its callbacks its events (`x:Props`).
  *
@@ -145,7 +145,7 @@ function unitFiles(dirFiles: readonly string[], stem: string): string[] {
 const PASCAL = /^[A-Z][A-Za-z0-9]*$/
 
 /**
- * The units of the project under `dirs`: every view (with its code-behind and parts), and — with `components` —
+ * The units of the project under `dirs`: every view (with its code-behind and parts), and - with `components` -
  * every React component file (`X.tsx`, PascalCase, rendering JSX) that is no view's code-behind or parts.
  */
 export function unitsOf(files: readonly string[], opts: { components?: boolean; exclude?: readonly string[] } = {}): Unit[] {
@@ -497,7 +497,7 @@ function hostKey(file: string): string {
  * 2. a window or a dialog (its root element, a full-screen overlay, its name) is a view;
  * 3. a component a route renders (alone: not next to other elements), or the application's root component renders
  *    in place of the routes, is a view (a page);
- * 4. a component other components place (JSX, a `<ReactHost>`, a host's slot) is a user control — `shared` when
+ * 4. a component other components place (JSX, a `<ReactHost>`, a host's slot) is a user control - `shared` when
  *    several components place it;
  * 5. a component nothing uses is a view when named like one (`…Page`, `…Screen`), else a user control.
  */
@@ -579,7 +579,7 @@ export interface Move {
 }
 
 /**
- * Where each unit goes (VIEWS-SPEC §1.2): at an app root, and in a folder past `split` views, the role folders —
+ * Where each unit goes (VIEWS-SPEC §1.2): at an app root, and in a folder past `split` views, the role folders -
  * `views/` (pages, windows), `dialogs/`, `pages/` (user controls one component places: panes, sections, rows) and
  * `controls/` (user controls several components place). A feature folder below keeps its views and user controls
  * side by side. A view changing kind changes extension (`.kbview` ↔ `.kbcontrol`), its design data with it.
@@ -645,8 +645,8 @@ function specifierFor(fromFile: string, target: string, original: string): strin
 }
 
 /**
- * Applies `moves` to `sources` (code files, path → text): every relative specifier naming a moved file — or written
- * in a moved file — is rewritten, and the code-behind / parts headers follow a view's new extension. Files other than
+ * Applies `moves` to `sources` (code files, path → text): every relative specifier naming a moved file - or written
+ * in a moved file - is rewritten, and the code-behind / parts headers follow a view's new extension. Files other than
  * code (views, design data, resources) are moved by the caller (`git mv`); `exists` tells which files there are.
  */
 export function relocate(sources: Sources, moves: readonly Move[], exists: (p: string) => boolean): Relocation {

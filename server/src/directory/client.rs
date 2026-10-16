@@ -11,7 +11,7 @@
 //! An internal directory is nearly always fronted by an internal authority, so
 //! "paste your CA" is the first-class answer here, not "switch verification
 //! off". Supplying a PEM builds a root store made of the system roots **plus**
-//! that authority — adding, never replacing, because an instance that also talks
+//! that authority - adding, never replacing, because an instance that also talks
 //! to a public directory must not lose the public roots to gain a private one.
 //! Turning verification off remains possible and is reported as a warning by
 //! every test.
@@ -21,7 +21,7 @@
 //! [`DirectoryError`] keeps the peer's own words. A directory misconfiguration
 //! is diagnosed from the server's answer ("Invalid credentials", "No such
 //! object", the TLS alert) and a generic "connection failed" costs an operator
-//! an afternoon. The raw text is truncated, never interpreted away — and it is
+//! an afternoon. The raw text is truncated, never interpreted away - and it is
 //! shown in the console only, never on the sign-in path.
 
 use std::sync::Arc;
@@ -62,7 +62,7 @@ pub enum DirectoryError {
     /// would be authenticating an arbitrary person.
     Ambiguous(usize),
     /// The entry exists and the password is wrong (or the account is locked,
-    /// expired, or disabled — the directory does not always distinguish).
+    /// expired, or disabled - the directory does not always distinguish).
     InvalidCredentials(String),
 }
 
@@ -75,7 +75,7 @@ impl DirectoryError {
             Self::ServiceBindFailed(_) => "Liaison du compte de service refusée".into(),
             Self::SearchFailed(_) => "Recherche refusée par l'annuaire".into(),
             Self::NoSuchUser => "Aucune entrée ne correspond au filtre".into(),
-            Self::Ambiguous(n) => format!("Le filtre correspond à {n} entrées — il doit en désigner une seule"),
+            Self::Ambiguous(n) => format!("Le filtre correspond à {n} entrées - il doit en désigner une seule"),
             Self::InvalidCredentials(_) => "Identifiants refusés par l'annuaire".into(),
         }
     }
@@ -99,7 +99,7 @@ impl DirectoryError {
             Self::Misconfigured(_) => "Renseignez l'hôte, le DN de base et le filtre de recherche.",
             Self::Unreachable(_) => {
                 "Vérifiez l'hôte, le port et le mode de chiffrement. En LDAPS le certificat doit être \
-                 signé par une autorité connue — collez l'autorité privée de votre annuaire si nécessaire."
+                 signé par une autorité connue - collez l'autorité privée de votre annuaire si nécessaire."
             }
             Self::ServiceBindFailed(_) => {
                 "Vérifiez le DN complet du compte de service (par ex. cn=service,ou=comptes,dc=exemple,dc=com) \
@@ -135,7 +135,7 @@ impl DirectoryError {
 impl std::fmt::Display for DirectoryError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self.detail() {
-            Some(d) => write!(f, "{} — {}", self.message(), d),
+            Some(d) => write!(f, "{} - {}", self.message(), d),
             None => write!(f, "{}", self.message()),
         }
     }
@@ -201,7 +201,7 @@ fn root_store_with(ca_pem: &str) -> Result<RootCertStore, DirectoryError> {
 ///
 /// The custom rustls configuration is built **only** when a private authority
 /// is supplied and verification is on. Otherwise `ldap3`'s own configuration
-/// applies — and when verification is off, `set_no_tls_verify` is what installs
+/// applies - and when verification is off, `set_no_tls_verify` is what installs
 /// the permissive verifier, which only works if we do not hand it a config.
 fn conn_settings(dir: &LdapDirectory) -> Result<LdapConnSettings, DirectoryError> {
     let timeout = Duration::from_secs(dir.connect_timeout_s.clamp(1, 120) as u64);
@@ -219,7 +219,7 @@ fn conn_settings(dir: &LdapDirectory) -> Result<LdapConnSettings, DirectoryError
     if !dir.verify_certificate {
         tracing::warn!(
             directory = %dir.slug,
-            "annuaire : vérification du certificat désactivée — la liaison est chiffrée mais non authentifiée"
+            "annuaire : vérification du certificat désactivée - la liaison est chiffrée mais non authentifiée"
         );
         return Ok(settings.set_no_tls_verify(true));
     }
@@ -270,7 +270,7 @@ impl Connection {
         }
 
         // rustls refuses to build anything before a crypto provider exists.
-        // Fallible by design — it declines to replace one already installed,
+        // Fallible by design - it declines to replace one already installed,
         // which is exactly what happens when the HTTPS listener got there first.
         let _ = rustls::crypto::ring::default_provider().install_default();
 
@@ -292,7 +292,7 @@ impl Connection {
                 .map_err(|e| DirectoryError::Unreachable(truncate(&e.to_string())))?;
             if res.rc != 0 {
                 return Err(DirectoryError::ServiceBindFailed(truncate(&format!(
-                    "code {} — {}",
+                    "code {} - {}",
                     res.rc, res.text
                 ))));
             }
@@ -323,12 +323,12 @@ impl Connection {
             tracing::warn!(
                 returned = entries.len(),
                 cap = MAX_ENTRIES,
-                "annuaire : résultat tronqué — restreignez le DN de base ou le filtre"
+                "annuaire : résultat tronqué - restreignez le DN de base ou le filtre"
             );
         }
         if res.rc != 0 {
             return Err(DirectoryError::SearchFailed(truncate(&format!(
-                "code {} — {}",
+                "code {} - {}",
                 res.rc, res.text
             ))));
         }
@@ -359,7 +359,7 @@ impl Connection {
             .map_err(|e| DirectoryError::Unreachable(truncate(&e.to_string())))?;
         if res.rc != 0 {
             return Err(DirectoryError::InvalidCredentials(truncate(&format!(
-                "code {} — {}",
+                "code {} - {}",
                 res.rc, res.text
             ))));
         }
@@ -496,7 +496,7 @@ mod tests {
             let mut buf = [0u8; 512];
             let Ok(n) = socket.read(&mut buf).await else { return };
             // LDAPMessage ::= SEQUENCE { messageID INTEGER, protocolOp … }
-            // 30 <len> 02 01 <id> …  — echo the id back or the client ignores us.
+            // 30 <len> 02 01 <id> …  - echo the id back or the client ignores us.
             let message_id = if n >= 5 && buf[0] == 0x30 && buf[2] == 0x02 { buf[4] } else { 1 };
 
             const DIAG: &[u8] = b"invalid credentials";

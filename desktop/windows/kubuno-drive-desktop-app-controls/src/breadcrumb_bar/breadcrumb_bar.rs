@@ -35,7 +35,7 @@ pub struct BreadcrumbView {
     pub segments: Vec<BreadcrumbSegment>,
 }
 
-/// Draws the breadcrumb trail through a [`Canvas`] — the control's DRAWING now
+/// Draws the breadcrumb trail through a [`Canvas`] - the control's DRAWING now
 /// lives WITH the control (mirror of `Files.App.Controls`'s `BreadcrumbBar`).
 /// Reproduces the omnibar's rendering identically: root chevron, overflow
 /// ellipsis, then each segment (hover fill, label at +8, chevron at +6).

@@ -2,8 +2,8 @@
 //!
 //! - The **device key** is a random identifier generated once per installation and sent on every request
 //!   (`X-Kubuno-Device-Key`), so the server's device inventory recognises this phone across sessions.
-//! - The **account book** lists the accounts signed in on this phone (server, user, label, device key) — most recent
-//!   first — so the app can restore the last session at launch. It holds no secret (the refresh tokens are stored
+//! - The **account book** lists the accounts signed in on this phone (server, user, label, device key) - most recent
+//!   first - so the app can restore the last session at launch. It holds no secret (the refresh tokens are stored
 //!   separately, one per account), but lives in the same OS store for simplicity: it is small, and the platform
 //!   keystore is the only storage the account layer is given.
 

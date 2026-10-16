@@ -7,7 +7,7 @@
  * Every accessor and dispatcher carries a source-map segment to its attribute in the `.kbview`.
  *
  * Imports are limited to the host singletons (`@kubuno/views`, `@ui`, `@kubuno/sdk`, `@kubuno/drive`),
- * `lucide-react` (icons, bundled as today) and the project's own files — the module isolation rule.
+ * `lucide-react` (icons, bundled as today) and the project's own files - the module isolation rule.
  */
 import { posix } from 'node:path'
 

@@ -84,7 +84,7 @@ pub async fn login(
     //
     // Past a configurable number of failures on the SUBMITTED IDENTIFIER
     // (`security.login_captcha_after_failures`; 0 disables it), the sign-in MUST
-    // carry a solved, single-use challenge before the password is considered —
+    // carry a solved, single-use challenge before the password is considered -
     // so a bot cannot probe passwords without solving one each time. The count
     // is keyed on the identifier (hashed), NOT the account, so it arms
     // identically whether or not the identifier names a real account: the gate
@@ -109,7 +109,7 @@ pub async fn login(
 
     // ── Account-level throttle (credential stuffing / brute force) ───────────
     //
-    // Persistent, per account, shared across instances (`core.login_throttle`) —
+    // Persistent, per account, shared across instances (`core.login_throttle`) -
     // the in-memory per-IP limiter cannot cap attempts against one account. A
     // known account already in backoff is refused now, with the same generic
     // answer and the same timing (the argon2 verify above always runs, so a
@@ -128,7 +128,7 @@ pub async fn login(
     // (`crate::auth::methods`). For a known account the chain runs
     // account → groups → unit and its ancestors → instance; for a login the
     // instance has never seen there is no unit to resolve from, so the instance
-    // value applies — and, crucially, the behaviour therefore does not depend on
+    // value applies - and, crucially, the behaviour therefore does not depend on
     // whether the login exists. Nothing here is an enumeration oracle.
     let scope = match user_opt.as_ref() {
         Some(u) => crate::settings::SettingScope::user(u.id),
@@ -242,7 +242,7 @@ pub async fn login(
         return Err(invalid());
     }
 
-    // The account holds a hash and it matched — but the policy for its unit may
+    // The account holds a hash and it matched - but the policy for its unit may
     // not accept a local password at all (and the administrative fallback may
     // not apply to it). Refused, with the same wording as every other failure:
     // somebody probing the form learns nothing about the account or its unit.
@@ -254,7 +254,7 @@ pub async fn login(
         return Err(invalid());
     }
 
-    // Local password verified: clear any backoff on this account (NIST — a
+    // Local password verified: clear any backoff on this account (NIST - a
     // successful sign-in resets the failure count). Done before the TOTP branch:
     // the password, which is what brute force targets, has been proven correct.
     crate::auth::login_throttle::record_success(&state.db, user.id).await;
@@ -276,7 +276,7 @@ pub async fn login(
     //
     // The sign-in itself is never refused on this basis. Locking somebody out
     // of the only screen that lets them fix their password is not a policy, it
-    // is an outage — and a refusal here would also tell a stranger that the
+    // is an outage - and a refusal here would also tell a stranger that the
     // password they typed was correct but stale.
     let policy =
         crate::settings::password_policy::PasswordPolicy::for_user(&state.db, user.id).await?;
@@ -372,7 +372,7 @@ pub struct LogoutRequest {
 }
 
 /// Revokes the session behind one raw refresh token and closes its step-up
-/// (reauth) window — a proof must not outlive the session it was granted in.
+/// (reauth) window - a proof must not outlive the session it was granted in.
 async fn revoke_session(state: &AppState, refresh_raw: &str) {
     let refresh_hash = token::hash_token(refresh_raw);
     let owner: Option<uuid::Uuid> = match revoke_and_get_owner(&state.db, &refresh_hash).await {
@@ -416,7 +416,7 @@ async fn revoke_and_get_owner(
     post,
     path = "/api/v1/auth/logout",
     tag = "auth",
-    request_body(content = LogoutRequest, description = "Optionnel — refresh_token (natif), slot (retirer UN compte), all (tous les comptes)."),
+    request_body(content = LogoutRequest, description = "Optionnel - refresh_token (natif), slot (retirer UN compte), all (tous les comptes)."),
     responses((status = 200, description = "Session(s) révoquée(s)"))
 )]
 pub async fn logout(
@@ -448,7 +448,7 @@ pub async fn logout(
             }
         }
     } else if let Some(slot) = req.slot {
-        // Remove ONE parked account. The active session survives — unless the
+        // Remove ONE parked account. The active session survives - unless the
         // removed slot IS the active account.
         if slot >= MAX_ACCOUNT_SLOTS {
             return Err(AppError::Validation("Emplacement de compte invalide".into()));
@@ -480,7 +480,7 @@ pub async fn logout(
     }
 
     // Whatever was revoked, the access cookie (deprecated, see
-    // `crate::auth::tickets`) goes too — the server-set and the legacy
+    // `crate::auth::tickets`) goes too - the server-set and the legacy
     // script-written variants.
     // Removing one parked account (`slot`) leaves the active one signed in.
     if req.slot.is_none() {

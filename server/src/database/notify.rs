@@ -12,7 +12,7 @@ use std::sync::Arc;
 /// Historically the payload was a bare [`AppEvent`]. It still may be: a module,
 /// or an older core process sharing the same database, publishes that shape and
 /// must keep working. The enveloped form carries the metadata an event cannot
-/// hold on its own — most importantly the rule-feedback depth, without which a
+/// hold on its own - most importantly the rule-feedback depth, without which a
 /// loop that crosses a process boundary is invisible to the guard.
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(untagged)]
@@ -62,7 +62,7 @@ pub async fn pg_notify(db: &DbPool, event: &AppEvent) -> Result<()> {
 /// Publishes an event on the channel together with its metadata.
 ///
 /// The path a background job takes: a job handler holds a pool and nothing else,
-/// so this is how work performed off the request path reaches the bus — and how
+/// so this is how work performed off the request path reaches the bus - and how
 /// the depth counter survives the hop. Engine-agnostic: on PostgreSQL it is a
 /// `pg_notify`; on MySQL/SQLite `kubuno_db::events::notify` writes the enveloped
 /// payload to `core.kubuno_event_outbox`, which the outbox poller drains.

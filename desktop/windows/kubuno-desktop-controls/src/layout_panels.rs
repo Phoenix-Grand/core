@@ -10,8 +10,8 @@
 //! split container puts its splitter, which rectangle a tab page receives.
 //!
 //! Following `layout::layout`, each of those rules is a **pure function** of
-//! primitives (`Rect`, `Size`, styles) — no canvas, no children borrowed off the
-//! control — so it can be unit-tested without a window. The concrete controls
+//! primitives (`Rect`, `Size`, styles) - no canvas, no children borrowed off the
+//! control - so it can be unit-tested without a window. The concrete controls
 //! own only their declared properties (the catalogue is the authority) and reuse
 //! their real base by composition:
 //!
@@ -62,7 +62,7 @@ impl FlowDirection {
     }
 }
 
-/// Horizontal or vertical orientation (`Orientation`) — shared by
+/// Horizontal or vertical orientation (`Orientation`) - shared by
 /// `SplitContainer`. Its default there is `Vertical`.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum Orientation {
@@ -84,7 +84,7 @@ pub enum FixedPanel {
 /// How a `TableLayoutPanel` track (column or row) is sized (`SizeType`).
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum SizeType {
-    /// Sized to its content — the toolkit's `AutoSize`.
+    /// Sized to its content - the toolkit's `AutoSize`.
     #[default]
     AutoSize,
     /// A fixed number of pixels.
@@ -113,7 +113,7 @@ impl TableLayoutPanelCellBorderStyle {
     /// the grid). Every value here is measured against the toolkit.
     ///
     /// `OutsetPartial` is the trap: it *paints* a partial line, so it reads like
-    /// a light style, but it reserves **3** DIP — the same as the doubles, not
+    /// a light style, but it reserves **3** DIP - the same as the doubles, not
     /// the 1 its appearance suggests.
     pub const fn thickness(self) -> f32 {
         match self {
@@ -131,10 +131,10 @@ impl TableLayoutPanelCellBorderStyle {
 pub enum TableLayoutPanelGrowStyle {
     /// The grid never grows; controls past the last cell are not placed.
     FixedSize,
-    /// New rows are added (the default) — cells fill left→right, then wrap down.
+    /// New rows are added (the default) - cells fill left→right, then wrap down.
     #[default]
     AddRows,
-    /// New columns are added — cells fill top→bottom, then wrap right.
+    /// New columns are added - cells fill top→bottom, then wrap right.
     AddColumns,
 }
 
@@ -185,7 +185,7 @@ pub enum TabDrawMode {
 }
 
 /// Resolves a control's `FontRole` to one of the shared DirectWrite formats.
-/// Every control paints text through this — never a family or point size of its
+/// Every control paints text through this - never a family or point size of its
 /// own, so the library stays themed and DPI-aware.
 fn format_for(c: &dyn Canvas, role: FontRole) -> &IDWriteTextFormat {
     let f = c.formats();
@@ -209,13 +209,13 @@ fn format_for(c: &dyn Canvas, role: FontRole) -> &IDWriteTextFormat {
 pub struct FlowChild {
     pub size: Size,
     pub margin: Padding,
-    /// `FlowLayoutPanel.SetFlowBreak(child, true)` — after this child, the next
+    /// `FlowLayoutPanel.SetFlowBreak(child, true)` - after this child, the next
     /// one starts a fresh line (or column), even if room remained.
     ///
     /// It is **subordinate to `WrapContents`**: measured against the toolkit, a
     /// panel with `WrapContents = false` ignores flow breaks entirely and runs
-    /// every child onto one line. That is not obvious from the docs — a break
-    /// reads like an explicit instruction — but a non-wrapping panel has exactly
+    /// every child onto one line. That is not obvious from the docs - a break
+    /// reads like an explicit instruction - but a non-wrapping panel has exactly
     /// one line by definition, and nothing may start a second.
     pub flow_break: bool,
 }
@@ -228,8 +228,8 @@ impl FlowChild {
 
 /// Lays `children` out inside `display` following `direction`.
 ///
-/// With `wrap` off (`WrapContents = false`) the run never wraps on space — it
-/// only breaks where a child carries an explicit `FlowBreak` — and the overflow
+/// With `wrap` off (`WrapContents = false`) the run never wraps on space - it
+/// only breaks where a child carries an explicit `FlowBreak` - and the overflow
 /// is what the panel would scroll. The four directions are the same algorithm
 /// on a mirrored/transposed axis, kept as one match so the wrap rule cannot
 /// drift between them.
@@ -270,7 +270,7 @@ pub fn flow_layout(
             FlowDirection::BottomUp => main - cell_main < display.top,
         };
         // A `FlowBreak` on the PREVIOUS child forces a fresh line here, even if
-        // room remained — handled at the top so the break and the space-wrap
+        // room remained - handled at the top so the break and the space-wrap
         // share one advance. `first` still guards a line's opening cell, which
         // never wraps however wide it is.
         //
@@ -304,8 +304,8 @@ fn wrap_main(direction: FlowDirection, display: Rect) -> f32 {
 }
 
 /// Advances the main-axis origin past a placed cell. The lane (cross axis)
-/// always grows in the positive direction when a line wraps — `lane += cross` at
-/// the wrap site — because only the *main* axis reverses between `LeftToRight`/
+/// always grows in the positive direction when a line wraps - `lane += cross` at
+/// the wrap site - because only the *main* axis reverses between `LeftToRight`/
 /// `RightToLeft` and `TopDown`/`BottomUp`.
 fn advance_main(direction: FlowDirection, main: f32, cell_main: f32) -> f32 {
     match direction {
@@ -340,7 +340,7 @@ fn place_flow_cell(direction: FlowDirection, main: f32, lane: f32, ch: &FlowChil
     }
 }
 
-/// A line long enough that no real content reaches its end — the stand-in for
+/// A line long enough that no real content reaches its end - the stand-in for
 /// the *unconstrained* proposed size `GetPreferredSize` measures against. A
 /// finite value (rather than `f32::INFINITY`) keeps every comparison and sum in
 /// ordinary arithmetic, so no `NaN` can leak into a rectangle.
@@ -383,7 +383,7 @@ pub fn flow_content_size(direction: FlowDirection, wrap: bool, children: &[FlowC
     Size::new(w.max(0.0), h.max(0.0))
 }
 
-/// `FlowLayoutPanel` — declares `FlowDirection` and `WrapContents`; everything
+/// `FlowLayoutPanel` - declares `FlowDirection` and `WrapContents`; everything
 /// else is `Panel`'s.
 #[derive(Clone)]
 pub struct FlowLayoutPanel {
@@ -440,7 +440,7 @@ impl FlowLayoutPanel {
     }
 
     /// Measures the children, flows them across the panel's client area and
-    /// writes each one's rectangle back — the flow panel's replacement for the
+    /// writes each one's rectangle back - the flow panel's replacement for the
     /// inherited Dock/Anchor pass.
     pub fn perform_layout(&mut self, c: &dyn Canvas) {
         let cells = self.flow_children(c);
@@ -458,7 +458,7 @@ impl FlowLayoutPanel {
         }
     }
 
-    /// How much bigger the control's box is than the area its children get —
+    /// How much bigger the control's box is than the area its children get -
     /// the padding plus whatever the `BorderStyle` eats. Read off `Panel` rather
     /// than recomputed, so a change to the border metric cannot drift from it.
     fn chrome(&self) -> Size {
@@ -491,7 +491,7 @@ impl Control for FlowLayoutPanel {
     fn control_mut(&mut self) -> &mut ControlBase {
         &mut self.base
     }
-    /// `GetPreferredSize`: the content's own extent plus the panel's chrome —
+    /// `GetPreferredSize`: the content's own extent plus the panel's chrome -
     /// never the current box, which would make an auto-sizing panel a fixpoint
     /// at whatever size it happens to have.
     fn preferred_size(&self, c: &dyn Canvas) -> Size {
@@ -523,7 +523,7 @@ impl Control for FlowLayoutPanel {
 // TableLayoutPanel
 // ═════════════════════════════════════════════════════════════════════════════
 
-/// A column or row style — `TableLayoutColumnStyle` / `TableLayoutRowStyle`.
+/// A column or row style - `TableLayoutColumnStyle` / `TableLayoutRowStyle`.
 /// `size` is a pixel width/height for `Absolute`, a weight for `Percent`, and
 /// ignored for `AutoSize`.
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -558,7 +558,7 @@ impl TrackStyle {
 ///
 /// The order is the toolkit's: `Absolute` tracks take their fixed size,
 /// `AutoSize` tracks take their content, and the `Percent` tracks divide what is
-/// left **weighted by their values relative to each other** — so `50/50` and
+/// left **weighted by their values relative to each other** - so `50/50` and
 /// `30/30` behave identically, and percents that do not sum to 100 still consume
 /// the whole remainder.
 ///
@@ -568,7 +568,7 @@ impl TrackStyle {
 /// * **Nothing is left unused.** If no track is `Percent`, the space the fixed
 ///   and auto tracks did not take goes to the **last** track, whatever its
 ///   style. A three-column table of `Absolute(100)` in a 300-wide panel really
-///   does come out `[100, 100, 100]`, but at 500 wide it is `[100, 100, 300]` —
+///   does come out `[100, 100, 100]`, but at 500 wide it is `[100, 100, 300]` -
 ///   the last column absorbs the slack instead of the table under-filling.
 /// * **The percent remainder is not spread.** Each percent share is floored and
 ///   the entire rounding remainder goes to the **last** percent track. At 302
@@ -635,7 +635,7 @@ impl Default for CellSpec {
 /// `GrowStyle` does **not** change the scan order (see [`place_cells`]); it only
 /// decides which dimension may be invented. Under `AddColumns` the row count is
 /// the fixed one, so the column count is whatever is needed to fit every child
-/// in that many rows — five children in two rows means three columns.
+/// in that many rows - five children in two rows means three columns.
 fn fill_columns(col_count: u32, row_count: u32, grow: TableLayoutPanelGrowStyle, n: usize) -> u32 {
     match grow {
         TableLayoutPanelGrowStyle::AddColumns => {
@@ -651,7 +651,7 @@ fn fill_columns(col_count: u32, row_count: u32, grow: TableLayoutPanelGrowStyle,
 ///
 /// Explicitly-placed children are honoured first and reserve their spanned
 /// cells. The rest fill the first empty cell scanning **left→right, then
-/// top→bottom** — and that is true under *every* `GrowStyle`.
+/// top→bottom** - and that is true under *every* `GrowStyle`.
 ///
 /// That last point is the trap this function used to get wrong. `AddColumns`
 /// reads like « fill downwards and add columns as you go », but measured against
@@ -663,7 +663,7 @@ fn fill_columns(col_count: u32, row_count: u32, grow: TableLayoutPanelGrowStyle,
 ///
 /// `FixedSize` never invents a track past the declared grid. WinForms *throws*
 /// when a child does not fit; this library has no exceptions, so the child is
-/// parked at the cell it was tried against — see `TableLayoutPanel::cells` for
+/// parked at the cell it was tried against - see `TableLayoutPanel::cells` for
 /// the deviation note.
 pub fn place_cells(
     col_count: u32,
@@ -734,7 +734,7 @@ pub fn place_cells(
     result
 }
 
-/// `TableLayoutPanel` — declares its counts, styles, cell-border style and grow
+/// `TableLayoutPanel` - declares its counts, styles, cell-border style and grow
 /// style. The styles are the port's `TableLayout{Column,Row}StyleCollection`.
 #[derive(Clone)]
 pub struct TableLayoutPanel {
@@ -744,8 +744,8 @@ pub struct TableLayoutPanel {
     pub column_styles: Vec<TrackStyle>,
     pub row_styles: Vec<TrackStyle>,
     /// `CellBorderStyle`. `None` and `Single` are painted exactly. The five
-    /// carved styles — `Inset`, `InsetDouble`, `Outset`, `OutsetDouble`,
-    /// `OutsetPartial` — reserve the right thickness (so every cell rectangle is
+    /// carved styles - `Inset`, `InsetDouble`, `Outset`, `OutsetDouble`,
+    /// `OutsetPartial` - reserve the right thickness (so every cell rectangle is
     /// correct) but are **approximated in paint** as flat lines of that
     /// thickness: their light/dark bevel is a Win32 3-D edge, and this library
     /// paints flat themed surfaces with no engraved-edge vocabulary.
@@ -759,8 +759,8 @@ pub struct TableLayoutPanel {
     ///
     /// **Deliberate deviation.** When `GrowStyle = FixedSize` and a child does
     /// not fit the declared grid, WinForms raises an `ArgumentException` and lays
-    /// nothing out. This library is exception-free — a control is a value that
-    /// measures and paints itself — so the overflowing child is instead assigned
+    /// nothing out. This library is exception-free - a control is a value that
+    /// measures and paints itself - so the overflowing child is instead assigned
     /// the cell just past the grid and can be recognised (and dropped) by the
     /// caller. The parity harness records this as `overflowThrew = 0` where the
     /// toolkit reports `1`; that difference is intended, not a defect.
@@ -789,7 +789,7 @@ impl TableLayoutPanel {
         Self::default()
     }
 
-    /// `GetColumnWidths()` — the width of each column **including the cell
+    /// `GetColumnWidths()` - the width of each column **including the cell
     /// border line that precedes it**, which is the unit the toolkit's accessor
     /// reports and the unit [`cell_rect_in`] consumes.
     ///
@@ -797,7 +797,7 @@ impl TableLayoutPanel {
     /// three-column table 301 DIP wide with `Single` borders reports
     /// `[100, 100, 100]`, and the *drawable* cell inside each is 99. Reporting
     /// the drawable 99 would be a defensible unit, but it is not the toolkit's,
-    /// and the two are easy to confuse — hence this note.
+    /// and the two are easy to confuse - hence this note.
     ///
     /// The list is as long as the grid actually grew to, not as long as
     /// `ColumnCount` was declared: a table left at `ColumnCount = 0` still
@@ -811,7 +811,7 @@ impl TableLayoutPanel {
         self.with_border(raw)
     }
 
-    /// `GetRowHeights()`, mirroring [`Self::column_widths`] — including the
+    /// `GetRowHeights()`, mirroring [`Self::column_widths`] - including the
     /// border line above each row.
     pub fn row_heights(&self, auto_content: &[f32]) -> Vec<f32> {
         let (_, n) = self.effective_counts(&self.placements());
@@ -834,7 +834,7 @@ impl TableLayoutPanel {
         self.cell_border_style.thickness() * (count as f32 + 1.0)
     }
 
-    /// The cell address requested for child `i` — unset (`-1, -1`, span 1×1)
+    /// The cell address requested for child `i` - unset (`-1, -1`, span 1×1)
     /// when the table was given no spec for it.
     pub fn cell_spec(&self, i: usize) -> CellSpec {
         self.cells.get(i).copied().unwrap_or_default()
@@ -847,7 +847,7 @@ impl TableLayoutPanel {
     }
 
     /// The content extent each column and row must accommodate, measured from
-    /// the real children — what an `AutoSize` track is sized to.
+    /// the real children - what an `AutoSize` track is sized to.
     ///
     /// A child that spans several tracks contributes to **none** of them: the
     /// toolkit resolves spanned content only after the single-cell tracks are
@@ -881,7 +881,7 @@ impl TableLayoutPanel {
     }
 
     /// The declared counts, widened to hold whatever the placement actually
-    /// used — the grid grows under `AddRows`/`AddColumns`.
+    /// used - the grid grows under `AddRows`/`AddColumns`.
     ///
     /// Under `FixedSize` it does **not** grow: the grid is exactly what was
     /// declared, and a child that did not fit (see [`Self::cells`]) must not
@@ -908,7 +908,7 @@ impl TableLayoutPanel {
         (self.column_widths(&auto_cols), self.row_heights(&auto_rows))
     }
 
-    /// The rectangle of one cell, resolved against the real children — the
+    /// The rectangle of one cell, resolved against the real children - the
     /// geometry a host would otherwise have to re-derive from
     /// [`Self::column_widths`] and [`Self::row_heights`].
     pub fn cell_rect(&self, c: &dyn Canvas, col: u32, row: u32) -> Rect {
@@ -925,7 +925,7 @@ impl TableLayoutPanel {
     /// The rectangle each child occupies, in child order.
     ///
     /// The cell is deflated by the child's `Margin`, and the child is then placed
-    /// **inside** that box according to its own `Dock`/`Anchor` — a table cell is
+    /// **inside** that box according to its own `Dock`/`Anchor` - a table cell is
     /// a miniature container, not a box that swallows whatever is put in it.
     /// `Dock = Fill`, or anchoring to both edges of an axis, stretches along that
     /// axis; otherwise the child keeps its own size and is pinned to the edges it
@@ -974,7 +974,7 @@ impl TableLayoutPanel {
 }
 
 /// Places one child inside the cell box it was given, honouring its `Dock` and
-/// `Anchor` — the miniature layout a `TableLayoutPanel` runs per cell.
+/// `Anchor` - the miniature layout a `TableLayoutPanel` runs per cell.
 ///
 /// Anchoring to both edges of an axis (or docking `Fill`) stretches along it;
 /// one edge pins to that edge at the child's own size; neither centres. This is
@@ -983,7 +983,7 @@ impl TableLayoutPanel {
 ///
 /// Public because it is the whole per-cell rule in one pure function: a caller
 /// that has already resolved its tracks (the parity harness, a host doing its
-/// own measuring) can place a child correctly without a `Canvas` — and without
+/// own measuring) can place a child correctly without a `Canvas` - and without
 /// transcribing the rule, which is how the two drift apart.
 pub fn place_in_cell(cell: Rect, cb: &ControlBase, size: Size) -> Rect {
     let (cw, ch) = (cell.right - cell.left, cell.bottom - cell.top);
@@ -1021,7 +1021,7 @@ pub fn place_in_cell(cell: Rect, cb: &ControlBase, size: Size) -> Rect {
 /// The rectangle of the cell `spec` addresses, inside a grid whose tracks are
 /// `widths`/`heights` and whose lines are `border` thick.
 ///
-/// `widths`/`heights` are in the **accessor's unit** — what
+/// `widths`/`heights` are in the **accessor's unit** - what
 /// [`TableLayoutPanel::column_widths`] returns, i.e. each track *including* the
 /// border line that precedes it. So the cell starts one border past the running
 /// sum, and gives that border back out of its own extent. Passing drawable track
@@ -1073,7 +1073,7 @@ fn paint_cell_grid(c: &dyn Canvas, origin: Rect, widths: &[f32], heights: &[f32]
 }
 
 /// Extends a style list to `count`, defaulting missing tracks to `AutoSize`.
-/// `count` is the grid's EFFECTIVE track count, not the declared one — a table
+/// `count` is the grid's EFFECTIVE track count, not the declared one - a table
 /// left at `ColumnCount = 0` still has the columns its children created.
 fn padded_styles(styles: &[TrackStyle], count: usize) -> Vec<TrackStyle> {
     let mut out = styles.to_vec();
@@ -1146,7 +1146,7 @@ impl std::ops::DerefMut for TableLayoutPanel {
 /// painted into.
 ///
 /// This is the single place this family crosses between the two spaces. Child
-/// `bounds` are parent-relative — what WinForms means by `Bounds` — so a
+/// `bounds` are parent-relative - what WinForms means by `Bounds` - so a
 /// container that moves carries its descendants with it and nothing has to be
 /// shifted by hand. They become canvas coordinates only here, at paint time.
 ///
@@ -1157,7 +1157,7 @@ impl std::ops::DerefMut for TableLayoutPanel {
 ///   Re-adding it here would indent every child twice.
 /// * **The border is not, and must be added here.** Client coordinates start
 ///   *inside* the border, so the border costs `2 × inset` of client SIZE but
-///   never offsets the client origin — which is why `table-border-single`
+///   never offsets the client origin - which is why `table-border-single`
 ///   (padding 0, border 1) reports `0,0,301,98`. Crossing to canvas is where
 ///   that inset comes back; omit it and every bordered container paints its
 ///   children one DIP high and left.
@@ -1235,7 +1235,7 @@ pub fn split_layout(bounds: Rect, p: SplitParams) -> SplitRects {
 
     // Collapsing does NOT zero the hidden panel's rectangle. Measured, the
     // toolkit gives the whole area to the surviving panel and leaves the
-    // collapsed one — and the splitter — reporting the geometry they had; they
+    // collapsed one - and the splitter - reporting the geometry they had; they
     // are merely not shown. `SplitterRectangle` keeps answering from that stale
     // position, which is why collapsing and re-expanding restores the split.
     if p.panel1_collapsed {
@@ -1251,7 +1251,7 @@ pub fn split_layout(bounds: Rect, p: SplitParams) -> SplitRects {
 /// container), Panel1 (distance unchanged), or Panel2 (distance shifts by the
 /// whole delta so Panel2 keeps its size).
 ///
-/// `None` scales by the **whole** extents, `new / old` — not by the extents less
+/// `None` scales by the **whole** extents, `new / old` - not by the extents less
 /// the splitter. Excluding the splitter width looks more principled (it is the
 /// space the panels actually share) but it is not what the toolkit does, and the
 /// two disagree by a few DIP on any real resize.
@@ -1281,12 +1281,12 @@ pub fn adjusted_distance(
     moved.trunc()
 }
 
-/// Same rectangle, moved — the local→canvas step for an already-arranged box.
+/// Same rectangle, moved - the local→canvas step for an already-arranged box.
 fn translate(r: Rect, dx: f32, dy: f32) -> Rect {
     Rect::new(r.left + dx, r.top + dy, r.right + dx, r.bottom + dy)
 }
 
-/// `SplitterPanel` — the fixed pair of panels a `SplitContainer` hosts. It adds
+/// `SplitterPanel` - the fixed pair of panels a `SplitContainer` hosts. It adds
 /// nothing over `Panel` in this port (its `Height`/`Width`/`AutoSizeMode` are
 /// `Panel`'s), but it is its own type because `Panel1`/`Panel2` are typed
 /// `SplitterPanel` and cannot be reparented or removed.
@@ -1327,14 +1327,14 @@ impl std::ops::DerefMut for SplitterPanel {
     }
 }
 
-/// `SplitContainer` — declares the split geometry and its two `SplitterPanel`s;
+/// `SplitContainer` - declares the split geometry and its two `SplitterPanel`s;
 /// derives from `ContainerControl`.
 ///
 /// ## Re-declared only to be hidden
 ///
 /// The catalogue lists `AutoScroll` and `AutoScrollPosition` as declared here,
 /// but the toolkit re-declares them for one reason: to take them off the
-/// designer surface. A split container does not scroll — **its panels do**, and
+/// designer surface. A split container does not scroll - **its panels do**, and
 /// each `SplitterPanel` is a `Panel` with its own auto-scroll state. So neither
 /// gets a field on this type: the state lives once, on the composed
 /// `ContainerControl`, and is reached through it like any other inherited
@@ -1400,14 +1400,14 @@ impl SplitContainer {
         }
     }
 
-    /// The container's client area, in **client coordinates** — the space the
+    /// The container's client area, in **client coordinates** - the space the
     /// rectangles it hands its two panels are measured in. Inherited unchanged
     /// from `ContainerControl`, so it carries the padding inset in its origin.
     ///
     /// `BorderStyle` deliberately does **not** deflate this. On a
     /// `SplitContainer` the border belongs to the two `SplitterPanel`s, not to
     /// the split, so the geometry of a `Fixed3D` container is identical to a
-    /// borderless one — measured, the two agree exactly. Insetting here would
+    /// borderless one - measured, the two agree exactly. Insetting here would
     /// shrink both panels for a border neither of them draws.
     pub fn local_display_rect(&self) -> Rect {
         self.base.local_display_rect()
@@ -1453,7 +1453,7 @@ impl Control for SplitContainer {
         self.control().clamp(self.control().size())
     }
     fn paint(&self, c: &dyn ControlCanvas, bounds: Rect) {
-        // Arrange in client space, then cross into canvas space once — the same
+        // Arrange in client space, then cross into canvas space once - the same
         // rectangles the panels carry as their parent-relative `bounds`.
         //
         // The crossing adds NO border inset here, unlike every `Panel`-derived
@@ -1493,7 +1493,7 @@ impl Control for SplitContainer {
     }
 }
 
-/// `Splitter` — the older, free-standing splitter bar (docks to an edge and
+/// `Splitter` - the older, free-standing splitter bar (docks to an edge and
 /// resizes the sibling it faces). Derives directly from `Control`, so it owns
 /// only its four new properties; its layout-changing defaults (`Dock = Left`,
 /// `Anchor = None`) are applied to the inherited `ControlBase`.
@@ -1568,7 +1568,7 @@ const TAB_DEFAULT_ROW: f32 = 20.0;
 
 /// The nominal height of one caption line inside a tab, used when `ItemSize` is
 /// auto. `Canvas` measures text *width* only, so a row's height is this plus
-/// `Padding.Y` top and bottom — which lands on the toolkit's 20 DIP row at its
+/// `Padding.Y` top and bottom - which lands on the toolkit's 20 DIP row at its
 /// default `Padding.Y = 3`.
 const TAB_CAPTION_LINE: f32 = 14.0;
 
@@ -1581,19 +1581,19 @@ const TAB_CAPTION_LINE: f32 = 14.0;
 const TAB_STRIP_INSET: f32 = 2.0;
 
 /// The raised frame the page sits inside, on the three edges away from the strip
-/// — **4** DIP, not the 2 the strip inset alone would suggest. A 300×200 control
+/// - **4** DIP, not the 2 the strip inset alone would suggest. A 300×200 control
 /// with a 20 DIP tab row gives its page `[4, 24, 292, 172]`.
 const TAB_PAGE_BORDER: f32 = 2.0 * TAB_STRIP_INSET;
 
 /// The whole strip band: every row, plus the 2 DIP inset above the first and
 /// below the last. This is the amount [`tab_display_rect`] takes off the aligned
-/// edge — it is NOT a single tab's height, which is `item_height` alone.
+/// edge - it is NOT a single tab's height, which is `item_height` alone.
 pub fn tab_strip_thickness(item_height: f32, rows: u32) -> f32 {
     let one = if item_height > 0.0 { item_height } else { TAB_DEFAULT_ROW };
     one * rows.max(1) as f32 + 2.0 * TAB_STRIP_INSET
 }
 
-/// The rectangle a `TabPage` receives — the client area less the strip band on
+/// The rectangle a `TabPage` receives - the client area less the strip band on
 /// the aligned edge and the raised page frame on the other three.
 pub fn tab_display_rect(bounds: Rect, alignment: TabAlignment, strip: f32) -> Rect {
     let b = TAB_PAGE_BORDER;
@@ -1605,7 +1605,7 @@ pub fn tab_display_rect(bounds: Rect, alignment: TabAlignment, strip: f32) -> Re
     }
 }
 
-/// The `(offset, extent)` of every tab **as if the strip were one long row** —
+/// The `(offset, extent)` of every tab **as if the strip were one long row** -
 /// the raw along-axis sizes, before any wrapping.
 ///
 /// `labels` are the measured caption extents; `pad` is `TabControl.Padding` on
@@ -1614,7 +1614,7 @@ pub fn tab_display_rect(bounds: Rect, alignment: TabAlignment, strip: f32) -> Re
 ///
 /// The running offsets are only meaningful for a single-row strip. A `Multiline`
 /// strip must feed the extents to [`tab_rows`] and then to [`tab_rects`], which
-/// restarts the offset on each row — using these offsets directly is what puts
+/// restarts the offset on each row - using these offsets directly is what puts
 /// the fourth tab at x = 480 on a 300-wide control.
 ///
 /// `FillToRight` deliberately does **not** stretch here: `TCS_RIGHTJUSTIFY`
@@ -1655,7 +1655,7 @@ pub fn tab_strip(
 ///
 /// * **Rows are rotated so the selected tab's row sits against the page.** A
 ///   five-tab, three-row strip with the first tab selected paints rows in the
-///   order 1, 2, 0 — the selected row ends up adjacent to the page area so the
+///   order 1, 2, 0 - the selected row ends up adjacent to the page area so the
 ///   active tab can join it. This is why tab 0 of such a strip is at the
 ///   *bottom* of a top-aligned strip rather than the top.
 /// * **`FillToRight` justifies only wrapped rows**, growing each tab in a row
@@ -1753,7 +1753,7 @@ pub fn tab_rows(widths: &[f32], strip_length: f32) -> Vec<u32> {
     rows
 }
 
-/// `TabPage` — a `Panel` that additionally carries the image and tooltip a tab
+/// `TabPage` - a `Panel` that additionally carries the image and tooltip a tab
 /// shows, and whether it paints the visual-style background.
 #[derive(Clone)]
 pub struct TabPage {
@@ -1822,14 +1822,14 @@ impl Control for TabPage {
     }
 }
 
-/// `TabControl` — declares the strip's presentation and owns its `TabPage`s.
+/// `TabControl` - declares the strip's presentation and owns its `TabPage`s.
 /// Derives directly from `Control`.
 ///
 /// ## Not modelled
 ///
 /// `ImageList` is absent, and deliberately so: the port has no `ImageList` type.
-/// A control here never resolves its own bitmaps — the host resolves them and
-/// passes them in already decoded (see the `shell_icon` contract on `Canvas`) —
+/// A control here never resolves its own bitmaps - the host resolves them and
+/// passes them in already decoded (see the `shell_icon` contract on `Canvas`) -
 /// so there is nothing for a tab strip to hold an image *list* in. This is the
 /// same reason `TabPage::image_index` and `TabPage::image_key` are stored but
 /// never painted: the indices are kept so a host can carry them, and the lookup
@@ -1847,12 +1847,12 @@ pub struct TabControl {
     pub multiline: bool,
     pub right_to_left_layout: bool,
     pub show_tool_tips: bool,
-    /// `ItemSize` — an explicit tab extent; `Size::EMPTY` means auto.
+    /// `ItemSize` - an explicit tab extent; `Size::EMPTY` means auto.
     pub item_size: Size,
-    /// `Padding` — a `Point(x, y)` of horizontal/vertical space added to each
+    /// `Padding` - a `Point(x, y)` of horizontal/vertical space added to each
     /// tab. Modelled as a `Size` so the two axes stay named.
     pub padding: Size,
-    /// `SelectedIndex` — `-1` when the control has no pages selected.
+    /// `SelectedIndex` - `-1` when the control has no pages selected.
     pub selected_index: i32,
 }
 
@@ -1885,12 +1885,12 @@ impl TabControl {
         Self::default()
     }
 
-    /// `TabCount` — a read-only view of the page collection.
+    /// `TabCount` - a read-only view of the page collection.
     pub fn tab_count(&self) -> usize {
         self.tab_pages.len()
     }
 
-    /// `SelectedTab` — the currently selected page, if any.
+    /// `SelectedTab` - the currently selected page, if any.
     pub fn selected_tab(&self) -> Option<&TabPage> {
         usize::try_from(self.selected_index).ok().and_then(|i| self.tab_pages.get(i))
     }
@@ -1904,7 +1904,7 @@ impl TabControl {
         }
     }
 
-    /// The control's client box, in **client coordinates** — the padding inset
+    /// The control's client box, in **client coordinates** - the padding inset
     /// carried in the origin, matching what every container in the library now
     /// reports. `TabControl` derives straight from `Control`, so it has no
     /// `ScrollableControl` to inherit this from and computes it here.
@@ -1919,14 +1919,14 @@ impl TabControl {
         )
     }
 
-    /// `DisplayRectangle` — the rectangle the selected page is given, in the tab
+    /// `DisplayRectangle` - the rectangle the selected page is given, in the tab
     /// control's client space. That is the space a `TabPage`'s parent-relative
     /// `bounds` live in; painting translates it.
     pub fn display_rect(&self, c: &dyn Canvas) -> Rect {
         tab_display_rect(self.client_box(), self.alignment, self.strip_thickness(c))
     }
 
-    /// The control's extent along the strip — its width for a top/bottom strip,
+    /// The control's extent along the strip - its width for a top/bottom strip,
     /// its height for one running down a side.
     fn along_extent(&self) -> f32 {
         let b = self.client_box();
@@ -1975,14 +1975,14 @@ impl TabControl {
     /// swapped for a side strip: with `ItemSize = 80 × 20` a left-aligned control
     /// makes each tab 20 wide and 80 tall, so `Width` stays the along-axis extent
     /// and `Height` stays the thickness. Reading `Width` as the thickness of a
-    /// vertical strip — the natural guess — comes out transposed.
+    /// vertical strip - the natural guess - comes out transposed.
     pub fn row_thickness(&self, _c: &dyn Canvas) -> f32 {
         if self.item_size.height > 0.0 {
             return self.item_size.height;
         }
         // `Normal` mode: one caption line plus `Padding.Y` above and below. The
         // line is a NOMINAL constant because `Canvas` exposes a text *width*
-        // metric and no height — with the toolkit's default `Padding.Y = 3` this
+        // metric and no height - with the toolkit's default `Padding.Y = 3` this
         // reproduces its 20 DIP row exactly. A real font height would be better;
         // it needs a `Canvas` method that does not exist yet.
         TAB_CAPTION_LINE + 2.0 * self.padding.height
@@ -1991,7 +1991,7 @@ impl TabControl {
     /// `ItemSize` as the toolkit **reports** it, not as it was set.
     ///
     /// In `Fixed` mode that is the value assigned. In `Normal` the property
-    /// resolves to a real measurement once the control has tabs — returning the
+    /// resolves to a real measurement once the control has tabs - returning the
     /// unset `0 × 0` is simply wrong. The width it reports is the FIRST tab's,
     /// which is what the toolkit does for a variable-width strip; the exact
     /// number is font-derived and will differ from GDI+'s by a DIP or two.
@@ -2003,7 +2003,7 @@ impl TabControl {
         Size::new(extents.first().copied().unwrap_or(0.0), self.row_thickness(c))
     }
 
-    /// Every tab's rectangle, in the control's client space — wrapped into rows,
+    /// Every tab's rectangle, in the control's client space - wrapped into rows,
     /// with the selected tab's row against the page.
     pub fn tab_rectangles(&self, c: &dyn Canvas) -> Vec<Rect> {
         tab_rects(
@@ -2075,7 +2075,7 @@ impl Control for TabControl {
 
         // The tabs themselves. All four alignments are placed by `tab_rects`,
         // which wraps them into rows and rotates those rows so the selected
-        // tab's row meets the page — the same geometry `tab_rectangles` reports,
+        // tab's row meets the page - the same geometry `tab_rectangles` reports,
         // so what is painted is what a hit-test would find.
         let fmt = format_for(c, self.control().font.unwrap_or(FontRole::Body));
         let fore = self.control().resolved_fore(c);
@@ -2103,7 +2103,7 @@ impl Control for TabControl {
 }
 
 // ═════════════════════════════════════════════════════════════════════════════
-// Tests — the arithmetic, without a canvas
+// Tests - the arithmetic, without a canvas
 // ═════════════════════════════════════════════════════════════════════════════
 
 #[cfg(test)]
@@ -2227,7 +2227,7 @@ mod tests {
         assert_eq!((out[1].left, out[1].right), (60.0, 100.0));
     }
 
-    /// One DIP more than fits must wrap — and must still be PLACED. A wrap that
+    /// One DIP more than fits must wrap - and must still be PLACED. A wrap that
     /// dropped the item would show up as a control vanishing from the page.
     #[test]
     fn an_item_one_dip_too_wide_wraps_and_is_still_placed() {
@@ -2251,7 +2251,7 @@ mod tests {
     }
 
     /// An item wider than the whole line cannot fit anywhere, so it takes a row
-    /// of its own and overflows it — rather than disappearing or stacking.
+    /// of its own and overflows it - rather than disappearing or stacking.
     #[test]
     fn an_item_wider_than_the_line_takes_its_own_row() {
         let cs = [child(30.0, 20.0), child(150.0, 20.0), child(30.0, 20.0)];
@@ -2297,17 +2297,17 @@ mod tests {
         assert_eq!((out[0].top, out[1].top, out[2].top), (8.0, 8.0, 8.0), "three on row 1");
         // Row 1 is 200 tall plus its 8+8 margins, so the next lane starts at
         // 216 and the cell's own top margin puts its box at 224.
-        assert_eq!(out[3].top, 224.0, "the fourth starts row 2 — it is not left behind");
+        assert_eq!(out[3].top, 224.0, "the fourth starts row 2 - it is not left behind");
         assert_eq!(out[3].left, 8.0, "at the left edge, not off to the right");
         assert_eq!((out[4].top, out[5].top), (224.0, 224.0), "and the rest follow it");
     }
 
     /// The gallery's containers sheet, to scale: six groups with a 300 DIP
-    /// minimum width and an 8 DIP margin — 316 per cell — inside a page inset by
+    /// minimum width and an 8 DIP margin - 316 per cell - inside a page inset by
     /// 12 DIP. On a 1500 **physical** pixel window at 150 % scale the line is
     /// 1000 DIP, i.e. 976 usable, so THREE cells fit (948) and the fourth (1264)
     /// cannot. Three-on-row-one is therefore the correct answer, and the fourth
-    /// group starts row two at the left edge — it is not left behind on row one.
+    /// group starts row two at the left edge - it is not left behind on row one.
     #[test]
     fn the_gallery_sheet_wraps_where_the_dip_width_says_it_should() {
         let page = Rect::new(12.0, 12.0, 1000.0 - 12.0, 800.0);
@@ -2347,7 +2347,7 @@ mod tests {
 
     #[test]
     fn percents_need_not_sum_to_100_and_still_fill() {
-        // Two equal weights that sum to 60, not 100 — they still split the whole
+        // Two equal weights that sum to 60, not 100 - they still split the whole
         // remainder in half.
         let styles = [TrackStyle::percent(30.0), TrackStyle::percent(30.0)];
         let w = resolve_tracks(100.0, &styles, &[0.0, 0.0]);
@@ -2356,7 +2356,7 @@ mod tests {
 
     /// The whole rounding remainder goes to the **last** percent track, not
     /// spread by largest-remainder. At 302 across three equal columns the
-    /// toolkit gives `[100, 100, 102]` — a spread would give `[101, 101, 100]`.
+    /// toolkit gives `[100, 100, 102]` - a spread would give `[101, 101, 100]`.
     #[test]
     fn the_percent_remainder_all_lands_on_the_last_percent_track() {
         let styles = [TrackStyle::percent(1.0), TrackStyle::percent(1.0), TrackStyle::percent(1.0)];
@@ -2366,7 +2366,7 @@ mod tests {
     }
 
     /// With no percent track to soak it up, the space the fixed and auto tracks
-    /// left over goes to the LAST track — the table never under-fills.
+    /// left over goes to the LAST track - the table never under-fills.
     #[test]
     fn leftover_space_goes_to_the_last_track() {
         let styles = [TrackStyle::absolute(10.0), TrackStyle::absolute(10.0), TrackStyle::auto()];
@@ -2392,7 +2392,7 @@ mod tests {
         assert_eq!(t.column_widths(&[0.0, 0.0]), vec![51.0, 51.0]);
     }
 
-    /// `OutsetPartial` paints a partial line but reserves the full 3 DIP — the
+    /// `OutsetPartial` paints a partial line but reserves the full 3 DIP - the
     /// one cell-border value that cannot be guessed from its appearance.
     #[test]
     fn outset_partial_reserves_three_dip() {
@@ -2421,7 +2421,7 @@ mod tests {
     /// grow, so the grid is first widened to hold everything in `RowCount` rows.
     ///
     /// Five children in two rows therefore need three columns and come out
-    /// `(0,0) (1,0) (2,0) (0,1) (1,1)` — not the column-major order the style's
+    /// `(0,0) (1,0) (2,0) (0,1) (1,1)` - not the column-major order the style's
     /// name suggests.
     #[test]
     fn add_columns_widens_the_grid_but_still_fills_row_major() {
@@ -2532,7 +2532,7 @@ mod tests {
         assert_eq!(r.panel1.right, 200.0 - 4.0 - 25.0);
     }
 
-    /// Collapsing gives the whole area to the surviving panel — but the hidden
+    /// Collapsing gives the whole area to the surviving panel - but the hidden
     /// panel and the splitter KEEP the rectangles they had rather than
     /// collapsing to zero. `SplitterRectangle` still answers from that stale
     /// position, which is how expanding again restores the same split.
@@ -2589,7 +2589,7 @@ mod tests {
     }
 
     /// `TCS_RIGHTJUSTIFY` justifies only rows that actually **wrapped**. A strip
-    /// whose tabs all fit on one row is laid out exactly like `Normal` — the
+    /// whose tabs all fit on one row is laid out exactly like `Normal` - the
     /// natural reading, that every tab stretches to fill the control, is wrong.
     #[test]
     fn fill_to_right_leaves_a_single_row_alone() {
@@ -2626,7 +2626,7 @@ mod tests {
     }
 
     /// The page frame is **4** DIP, and the strip band is `2 + ItemSize.Height +
-    /// 2` — so a 300×200 control with a 20 DIP tab row gives its page
+    /// 2` - so a 300×200 control with a 20 DIP tab row gives its page
     /// `[4, 24, 292, 172]`, the toolkit's own numbers.
     #[test]
     fn the_page_display_rect_drops_the_strip_band_and_a_four_dip_frame() {
@@ -2666,7 +2666,7 @@ mod tests {
 
     /// Rows are rotated so the SELECTED tab's row sits against the page. Five
     /// 120-wide tabs on a 300-wide control wrap 2/2/1; with tab 0 selected the
-    /// toolkit paints rows in the order 1, 2, 0 — putting tab 0 at the BOTTOM of
+    /// toolkit paints rows in the order 1, 2, 0 - putting tab 0 at the BOTTOM of
     /// a top-aligned strip, next to the page it belongs to.
     #[test]
     fn the_selected_tabs_row_is_moved_against_the_page() {
@@ -2686,7 +2686,7 @@ mod tests {
 
     /// The reference case: six 40-wide buttons in a 260-wide panel. Measured
     /// unconstrained they belong on ONE row (240 + margins), which is what an
-    /// auto-sizing FlowLayoutPanel grows to — the panel must not report its own
+    /// auto-sizing FlowLayoutPanel grows to - the panel must not report its own
     /// current size, which would make it a fixpoint at whatever it already is.
     #[test]
     fn flow_content_is_measured_unconstrained_so_it_does_not_wrap() {
@@ -2744,8 +2744,8 @@ mod tests {
 
     // ── Cell rectangles ──────────────────────────────────────────────────
 
-    /// Tracks arrive in the accessor's unit — each carrying its leading border
-    /// line — so a cell starts one line into its track and gives that line back
+    /// Tracks arrive in the accessor's unit - each carrying its leading border
+    /// line - so a cell starts one line into its track and gives that line back
     /// out of its own width. The real toolkit numbers: three 100-wide reported
     /// columns with `Single` borders put cell 1 at x = 101 and make it 99 wide.
     #[test]
@@ -2773,7 +2773,7 @@ mod tests {
             CellSpec { col: 0, row: 0, col_span: 2, row_span: 1 },
         );
         // Two reported columns (200) less the one line the cell itself starts
-        // after — the line *between* them is swallowed.
+        // after - the line *between* them is swallowed.
         assert_eq!(r.right - r.left, 199.0);
     }
 
@@ -2791,7 +2791,7 @@ mod tests {
     }
 
     /// The cell rects must tile the same width the tracks were resolved against,
-    /// borders included — otherwise the grid and its lines disagree.
+    /// borders included - otherwise the grid and its lines disagree.
     #[test]
     fn cells_tile_the_width_the_tracks_were_resolved_for() {
         let mut t = TableLayoutPanel::new();
@@ -2841,8 +2841,8 @@ mod tests {
         assert_eq!(moved[1].left, 30.0);
     }
 
-    /// With padding, the client box's ORIGIN carries the inset — matching
-    /// `DisplayRectangle` — so the first child starts at the padding rather than
+    /// With padding, the client box's ORIGIN carries the inset - matching
+    /// `DisplayRectangle` - so the first child starts at the padding rather than
     /// at zero. This is the convention the whole library now shares.
     #[test]
     fn the_client_box_origin_carries_the_padding() {
@@ -2902,7 +2902,7 @@ mod tests {
         let r = local_to_canvas(local, bounds, inset);
 
         // The independent check: identical to `client_rect_on_canvas`, i.e.
-        // `bounds.left + padding.left + inset` — true under either way of
+        // `bounds.left + padding.left + inset` - true under either way of
         // splitting the two insets, so it catches a mistake in either half.
         assert_eq!((r.left, r.top), (206.0, 106.0));
         assert_eq!(r.left, bounds.left + base.padding.left + inset);

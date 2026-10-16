@@ -1,4 +1,4 @@
-<!-- RoleIcon — converted from RoleIcon.tsx by @kubuno/views-migrate. -->
+<!-- RoleIcon - converted from RoleIcon.tsx by @kubuno/views-migrate. -->
 <UserControl x:Props="RoleIconProps">
   <Panel Class="contents">
     <Icon Name="ShieldCheck" Size="{Binding size}" Visible="{Binding show_case_1}" Class="text-danger shrink-0"/>

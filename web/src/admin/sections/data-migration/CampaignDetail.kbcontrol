@@ -1,4 +1,4 @@
-<!-- CampaignDetail — converted from CampaignDetail.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- CampaignDetail - converted from CampaignDetail.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="CampaignDetailProps">
   <Panel Class="contents">
     <Label Text="{Binding p_text}"

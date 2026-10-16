@@ -12,7 +12,7 @@ import { useAdminAction } from '../../adminAction'
  *
  * The card owns nothing but the open/closed state: `ResetPasswordDialog` runs
  * its own request and its own two-step flow (form → outcome). `onDone` is not a
- * close signal — it fires once the reset succeeded, which is when the account's
+ * close signal - it fires once the reset succeeded, which is when the account's
  * `must_change_password` flag and its session list have both changed server-side
  * and must be refetched here.
  */
@@ -22,7 +22,7 @@ export default function PasswordResetCard({ user }: { user: User }) {
   const [open, setOpen] = useState(false)
 
   // `/admin/users?user=<id>&pane=security&action=reset-password` opens the dialog
-  // itself — the end of the chain the admin search starts (adminAction.ts).
+  // itself - the end of the chain the admin search starts (adminAction.ts).
   useAdminAction('reset-password', () => setOpen(true))
 
   return (

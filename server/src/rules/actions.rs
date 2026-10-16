@@ -1,7 +1,7 @@
 //! The core's own actions, executed in process.
 //!
 //! A module's action is an HTTP call to the endpoint it declared. The core's
-//! are not, and that is the single asymmetry in the whole mechanism — argued
+//! are not, and that is the single asymmetry in the whole mechanism - argued
 //! for in [`super::dispatch`]. What is *not* asymmetric: they are declared
 //! through the same catalogue path, validated against the same parameter
 //! schema, selected by the same key, logged in the same execution row, and
@@ -71,7 +71,7 @@ impl ActionContext<'_> {
     }
 }
 
-/// Runs a core action. `Ok(false)` means "not one of mine" — the dispatcher
+/// Runs a core action. `Ok(false)` means "not one of mine" - the dispatcher
 /// then falls through to the HTTP path.
 pub async fn run(ctx: &ActionContext<'_>, key: &str) -> Result<bool, AppError> {
     match key {
@@ -84,7 +84,7 @@ pub async fn run(ctx: &ActionContext<'_>, key: &str) -> Result<bool, AppError> {
         // Consumed synchronously by `super::gate`, never dispatched. Claiming
         // them here rather than letting them fall through to the HTTP path is
         // what stops a rule that pairs a verdict with an ordinary trigger from
-        // failing with "unknown action" — the rule is merely ineffective, which
+        // failing with "unknown action" - the rule is merely ineffective, which
         // is what it is, and the log says so once.
         super::gate::ACTION_BLOCK | super::gate::ACTION_WARN => {
             tracing::info!(
@@ -115,7 +115,7 @@ struct AccountRow {
 /// and runs forever; the day its condition happens to match the only account
 /// that can undo it, the instance is locked out with no path back that does not
 /// involve a database client. That guard belongs here, in the action, rather
-/// than in the console — the console is not what will be running at 3am.
+/// than in the console - the console is not what will be running at 3am.
 async fn suspend_account(ctx: &ActionContext<'_>) -> Result<(), AppError> {
     let user_id = ctx.subject("core.suspend_account")?;
 
@@ -195,7 +195,7 @@ async fn suspend_account(ctx: &ActionContext<'_>) -> Result<(), AppError> {
         .reversible();
     if let Some(reason) = ctx.param_str("reason") {
         entry = entry.detail(format!(
-            "Règle « {} » v{} — motif : {reason}",
+            "Règle « {} » v{} - motif : {reason}",
             ctx.job.rule_name, ctx.job.rule_version
         ));
     }
@@ -276,7 +276,7 @@ async fn require_password_change(ctx: &ActionContext<'_>) -> Result<(), AppError
 ///
 /// Published on the event channel rather than pushed into the hub directly: the
 /// action holds a pool and nothing else, and `pg_notify` is the path every core
-/// process listens to — so the notification reaches the operator's browser
+/// process listens to - so the notification reaches the operator's browser
 /// whichever process ran the job.
 async fn notify_account(ctx: &ActionContext<'_>) -> Result<(), AppError> {
     let user_id = ctx.subject("core.notify")?;
@@ -291,7 +291,7 @@ async fn notify_account(ctx: &ActionContext<'_>) -> Result<(), AppError> {
         payload: json!({
             "recipient_user_ids": [user_id],
             // Also under the name the fact builder looks for, so a rule can
-            // react to a notification *about a given account* — and so the
+            // react to a notification *about a given account* - and so the
             // feedback counter has a subject to key its threshold on.
             "user_id": user_id,
             "title": title,
@@ -345,7 +345,7 @@ async fn raise_alert(ctx: &ActionContext<'_>) -> Result<(), AppError> {
         "custom":          true,
     }))
     // One row per (rule, subject) whose counter grows, rather than one row per
-    // occurrence — the whole reason the alert centre deduplicates.
+    // occurrence - the whole reason the alert centre deduplicates.
     .dedup(format!(
         "{}:{}",
         ctx.job.rule_id,

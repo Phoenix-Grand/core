@@ -18,9 +18,9 @@ pub enum ButtonVisual {
     Separator,
     /// "New ▾": `NewItem` icon + label + chevron (`CmdNew`).
     NewButton { label: String, hot: bool },
-    /// Icon-only MONOCHROME filling the whole rect — left-side block.
+    /// Icon-only MONOCHROME filling the whole rect - left-side block.
     Icon { name: &'static str, hot: bool, enabled: bool },
-    /// Multi-layer icon (fg,fg) on the left + label — Recycle Bin context.
+    /// Multi-layer icon (fg,fg) on the left + label - Recycle Bin context.
     IconLabel { name: &'static str, label: String, hot: bool, enabled: bool },
     /// Icon filling the whole rect, accent-tinted on the bottom layer (`Filter`).
     IconAccent { name: &'static str, hot: bool },

@@ -19,7 +19,7 @@ const keyBase = (kind: string) => `admin.al_${kind.replace(/\./g, '_')}`
  *
  * `admin.hc_<check_id>_*` already exists in all thirteen languages, next to the
  * check it describes. Duplicating those sentences under an alert key would be
- * thirteen more copies to keep in step with a wording that lives elsewhere —
+ * thirteen more copies to keep in step with a wording that lives elsewhere -
  * and the copy that drifts is the one an operator reads at 3 a.m.
  */
 const healthKey = (a: Alert): string | null => {
@@ -69,7 +69,7 @@ export const eventLabel = (t: TFunction, k: AlertEventKind): string =>
 /**
  * Interpolation arguments taken from the payload.
  *
- * Byte counts are pre-formatted here rather than in thirteen catalogues — no
+ * Byte counts are pre-formatted here rather than in thirteen catalogues - no
  * i18n string should have to know that 1 073 741 824 reads as "1 Go". `count`
  * is set from the payload field that governs the sentence's agreement, because
  * i18next only ever selects a plural form on an option by that exact name.

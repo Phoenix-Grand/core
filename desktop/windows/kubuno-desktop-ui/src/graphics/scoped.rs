@@ -3,7 +3,7 @@
 //! Event args are `'static` values (they are `Any`), a `Graphics` borrows its canvas for one
 //! paint. The slot bridges the two the way WinForms' `PaintEventArgs` does (its `Graphics` is
 //! disposed when the paint ends): [`GraphicsSlot::lend`] puts a lifetime-erased pointer to the
-//! `Graphics` in a shared cell and clears it when the raise returns — or unwinds. Reading the slot
+//! `Graphics` in a shared cell and clears it when the raise returns - or unwinds. Reading the slot
 //! afterwards yields a null `Graphics` that draws nothing, never a dangling one.
 //!
 //! Only shared references are ever handed out (every `Graphics` method takes `&self`), so a

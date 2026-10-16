@@ -8,7 +8,7 @@ use uuid::Uuid;
 
 /// Jeton court-terme (5 min) émis après vérification du mot de passe
 /// quand l'utilisateur a activé la 2FA. Il identifie la session en attente
-/// de validation TOTP — il n'octroie aucun accès à l'API.
+/// de validation TOTP - il n'octroie aucun accès à l'API.
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct TotpPendingClaims {
     pub sub:  Uuid,

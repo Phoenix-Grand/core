@@ -143,7 +143,7 @@ impl<'a> HandlerContext<'a> {
         &self.sender
     }
 
-    /// The sender typed as `C` — `None` (and a warning naming `handler`) when the element is
+    /// The sender typed as `C` - `None` (and a warning naming `handler`) when the element is
     /// not a `C` (`C::ELEMENT` is `"*"` for any element).
     pub fn typed_sender<C: ElementType<Resolved = ElementProps>>(&self, handler: &str) -> Option<Sender<'_, C>> {
         if C::ELEMENT != "*" && C::ELEMENT != self.sender.element {
@@ -167,7 +167,7 @@ pub trait EventSink {
     const HANDLERS: &'static [HandlerInfo];
 
     /// Runs the handler named `handler` with `args`. Returns whether the sink has a handler of
-    /// that name — also when its args or sender did not fit and it was skipped (with a
+    /// that name - also when its args or sender did not fit and it was skipped (with a
     /// warning), so a same-named legacy handler never runs in its place.
     fn handle_event(&mut self, handler: &str, cx: &HandlerContext<'_>, args: &mut dyn EventArgs) -> bool;
 

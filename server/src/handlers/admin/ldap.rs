@@ -3,7 +3,7 @@
 //! The service password is the one value with asymmetric handling: it goes
 //! **in** in clear (over the authenticated admin channel, once), is stored
 //! AES-256-GCM encrypted, and never comes back out. `GET` reports
-//! `has_bind_password: true`, nothing else — not a masked form, not its length,
+//! `has_bind_password: true`, nothing else - not a masked form, not its length,
 //! since both leak.
 //!
 //! `POST …/test` and `POST …/test-auth` are the two synchronous probes. That is
@@ -41,7 +41,7 @@ use crate::{
 /// Longest value accepted in any free-text field. Generous for a DN or a
 /// filter, bounded so a row cannot become a blob.
 const MAX_FIELD: usize = 500;
-/// The certificate authority is longer by nature — a chain of three is normal.
+/// The certificate authority is longer by nature - a chain of three is normal.
 const MAX_PEM: usize = 32_768;
 
 // ── Validation ───────────────────────────────────────────────────────────────
@@ -125,7 +125,7 @@ fn validate_user_filter(value: &str) -> Result<(), AppError> {
     validate_filter("Filtre de recherche", value)?;
     if !value.contains(crate::directory::filter::LOGIN_PLACEHOLDER) {
         return Err(AppError::Validation(
-            "Le filtre de recherche doit contenir « {login} » — c'est là que l'identifiant saisi est inséré. \
+            "Le filtre de recherche doit contenir « {login} » - c'est là que l'identifiant saisi est inséré. \
              Sans lui, la même requête serait exécutée pour tout le monde."
                 .into(),
         ));
@@ -744,7 +744,7 @@ pub async fn delete_directory(
             .target(target::LDAP_DIRECTORY, id, label)
             .before(snap(target::LDAP_DIRECTORY, &AdminLdapDirectory::from(previous)))
             .detail(format!(
-                "{deactivated} compte(s) sans mot de passe local désactivé(s) — aucune donnée supprimée"
+                "{deactivated} compte(s) sans mot de passe local désactivé(s) - aucune donnée supprimée"
             )),
     )
     .await?;
@@ -817,7 +817,7 @@ pub async fn test_directory_auth(
     )
     .await;
 
-    // The login is recorded, the password is not — and never was: it exists in
+    // The login is recorded, the password is not - and never was: it exists in
     // one stack frame and is dropped there.
     audit
         .record(
@@ -880,7 +880,7 @@ pub struct GovernDto {
 /// This is deliberately an explicit action rather than something a
 /// synchronisation does. A sync that seized every account it matched would make
 /// the console itself depend on the directory being reachable the first time it
-/// ran over the administrator's address — which is exactly the failure mode this
+/// ran over the administrator's address - which is exactly the failure mode this
 /// whole subsystem is written to avoid.
 ///
 /// The guard below is the same idea one level down: whatever the operator asks

@@ -1,7 +1,7 @@
 //! Public CAPTCHA challenge endpoint (`GET /auth/captcha`).
 //!
 //! The sign-in form calls this once the login response tells it a CAPTCHA is
-//! required (`code = "CAPTCHA_REQUIRED"`). It returns the challenge — its id,
+//! required (`code = "CAPTCHA_REQUIRED"`). It returns the challenge - its id,
 //! its `type`, and whatever that type needs to be drawn (an image, a pair of
 //! images for the slider, or a prompt for the sum). The id and the person's
 //! answer come back on the next `POST /auth/login`. Self-hosted, no third party

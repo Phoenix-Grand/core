@@ -7,7 +7,7 @@
 //! the database, owns full-text search:
 //!
 //! * at **write** time the module stores, next to each searchable column, a
-//!   plain `TEXT` column holding the output of [`normalize`] — the text
+//!   plain `TEXT` column holding the output of [`normalize`] - the text
 //!   lowercased, stripped of diacritics and reduced to Snowball **French**
 //!   stems (the very algorithm PostgreSQL's `french` dictionary uses),
 //!   separated by single spaces;
@@ -18,7 +18,7 @@
 //! Because the stemming happens in Rust before it ever reaches SQL, the stored
 //! and searched tokens are byte-for-byte identical whatever the engine, so a
 //! search returns the same rows and the same ranking on PostgreSQL, MySQL and
-//! SQLite. No `unaccent`, no `pg_trgm`, no `tsvector` — a `TEXT` column and a
+//! SQLite. No `unaccent`, no `pg_trgm`, no `tsvector` - a `TEXT` column and a
 //! `LIKE` are all three engines share.
 //!
 //! # Weighting (the old `setweight A/B/C`)
@@ -28,13 +28,13 @@
 //! (e.g. `search_title_norm`, `search_body_norm`, `search_tags_norm`), declared
 //! with a [`Weight`]. [`Query::build`] emits both the `WHERE` filter and an
 //! `ORDER BY` score that adds each column's [`Weight`] for every term it
-//! contains, so a title hit ranks above a body hit — the same intent as
+//! contains, so a title hit ranks above a body hit - the same intent as
 //! `setweight`, with no engine-specific operator.
 //!
 //! # What is gained and what is lost
 //!
 //! Gained: identical behaviour on the three engines, and portability with no DB
-//! extension. Lost: `pg_trgm`'s typo tolerance — a `LIKE '%stem%'` needs the
+//! extension. Lost: `pg_trgm`'s typo tolerance - a `LIKE '%stem%'` needs the
 //! stem to appear as a substring, so a misspelling that survives stemming
 //! ("rechrche") will not match. Stemming already folds inflections
 //! (plurals, conjugations) and [`normalize`] folds accents, so exact-but-
@@ -68,15 +68,15 @@ thread_local! {
 ///
 /// # Order matters: stem, *then* deaccent
 ///
-/// The Snowball French algorithm is accent-sensitive — its suffix rules key on
-/// `é`/`è`/… — so it must see the accented word. Stemming first and folding the
+/// The Snowball French algorithm is accent-sensitive - its suffix rules key on
+/// `é`/`è`/… - so it must see the accented word. Stemming first and folding the
 /// resulting stem to ASCII afterwards keeps the stemming faithful **and** makes
 /// matching accent-insensitive. (Deaccenting first, as a naive `unaccent`-then-
 /// `french` pipeline would, degrades the stemmer: e.g. it stops folding some
 /// inflections together.)
 ///
 /// Diacritics are removed by NFD decomposition then dropping the combining
-/// marks — no database `unaccent` extension. Ligatures NFD leaves whole (`œ`,
+/// marks - no database `unaccent` extension. Ligatures NFD leaves whole (`œ`,
 /// `æ`, `ß`, …) are expanded before stemming so the stemmer sees plain letters.
 pub fn normalize(text: &str) -> String {
     // Lowercase and expand ligatures, but keep accents for the stemmer.
@@ -131,7 +131,7 @@ fn deaccent(text: &str) -> String {
 ///
 /// [`normalize`] only ever emits runs of alphanumeric characters (ASCII after
 /// folding for Latin text, but a non-Latin letter is kept as is), so a stem can
-/// carry no `%`, `_` or backslash — the pattern needs no `ESCAPE` clause and no metacharacter
+/// carry no `%`, `_` or backslash - the pattern needs no `ESCAPE` clause and no metacharacter
 /// stripping. The value is meant to be **bound**, never interpolated.
 pub fn like_pattern(stem: &str) -> String {
     let mut p = String::with_capacity(stem.len() + 2);
@@ -148,7 +148,7 @@ pub fn like_pattern(stem: &str) -> String {
 #[derive(Debug, Clone, Copy)]
 pub struct Field {
     /// A normalized `TEXT` column. Like every identifier in [`crate::dialect`]
-    /// it is `&'static str` — never built from request data.
+    /// it is `&'static str` - never built from request data.
     pub column: &'static str,
     /// How much a term found in this column adds to the rank.
     pub weight: Weight,
@@ -214,7 +214,7 @@ pub struct SearchSql {
     pub binds: Vec<DbValue>,
     /// The next free placeholder number, for the caller's `LIMIT`/`OFFSET`.
     pub next: usize,
-    /// The stems the query reduced to, in order — handy for logging/highlighting.
+    /// The stems the query reduced to, in order - handy for logging/highlighting.
     pub terms: Vec<String>,
 }
 
@@ -541,7 +541,7 @@ mod tests {
     /// Creates the table, inserts the corpus (normalized in Rust), and asserts
     /// the stemmed/deaccented search behaves as specified. Engine-agnostic:
     /// column types come from [`crate::Backend`], so the SAME body runs against
-    /// SQLite and MySQL and must give the SAME rows — the homogeneity proof.
+    /// SQLite and MySQL and must give the SAME rows - the homogeneity proof.
     async fn assert_search_semantics(pool: &crate::DbPool) {
         use crate::{new_id, params};
 
@@ -601,13 +601,13 @@ mod tests {
 
     /// The same search, on a real MySQL/MariaDB, when `KUBUNO_DB_TEST_MYSQL_URL`
     /// points at a throwaway database. Proves the result is identical on a
-    /// second engine — the stemming being in Rust, it cannot differ. Skipped
+    /// second engine - the stemming being in Rust, it cannot differ. Skipped
     /// (not failed) when the variable is unset, so `cargo test` stays green
     /// without a server; the report records a real run.
     #[tokio::test]
     async fn mysql_stemmed_search_matches_sqlite() {
         let Ok(url) = std::env::var("KUBUNO_DB_TEST_MYSQL_URL") else {
-            eprintln!("KUBUNO_DB_TEST_MYSQL_URL unset — skipping the MySQL leg");
+            eprintln!("KUBUNO_DB_TEST_MYSQL_URL unset - skipping the MySQL leg");
             return;
         };
         let settings = crate::DbSettings {
@@ -645,7 +645,7 @@ mod tests {
         // transfers verbatim to MySQL and PostgreSQL.
         let stored = normalize("Un cheval au galop");
         let queried = normalize("chevaux");
-        // Every query stem is a substring of the stored, deaccented tokens —
+        // Every query stem is a substring of the stored, deaccented tokens -
         // exactly what `LIKE '%stem%'` tests, identically on the three engines.
         for stem in queried.split(' ').filter(|s| !s.is_empty()) {
             assert!(stored.contains(stem), "{stem:?} not in {stored:?}");

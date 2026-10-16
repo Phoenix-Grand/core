@@ -1,4 +1,4 @@
-<!-- BuildingsTab — converted from BuildingsTab.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- BuildingsTab - converted from BuildingsTab.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="BuildingsTabProps">
   <Panel Class="min-w-0">
     <Label Text="{Binding error}"

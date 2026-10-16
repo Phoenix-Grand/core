@@ -48,7 +48,7 @@ export const useModulesStore = create<ModulesState>((set) => ({
         set((s) => ({ loadedVersion: s.loadedVersion + 1 }))
         // The live `.kbview` screens compute again what they memoized from the registries the modules just filled
         // (home widgets, notification groups, the top bar's settings override): a TSX screen recomputed those on
-        // the re-render this bump causes, a view keeps its memos until told — as after a language change.
+        // the re-render this bump causes, a view keeps its memos until told - as after a language change.
         invalidateViews()
       }
     } catch {

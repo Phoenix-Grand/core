@@ -32,7 +32,7 @@ export default {
 
   admin: {
     title: 'Votre compte administrateur',
-    lead: "Ce compte administre l'instance — c'est le plus privilégié.",
+    lead: "Ce compte administre l'instance - c'est le plus privilégié.",
     pitchTitle: 'Vous détenez les clés',
     pitch: "Aucun compte n'existe avant celui-ci, et personne d'autre ne peut le créer : le mot de passe que vous choisissez n'est connu que de vous.",
     username: "Nom d'utilisateur", email: 'Adresse e-mail', password: 'Mot de passe', confirm: 'Confirmation',
@@ -52,11 +52,11 @@ export default {
     logoChosen: 'Logo choisi',
     logoHint: 'PNG, JPEG, WebP ou SVG · 200 Ko maximum',
     logoTypes: 'PNG, JPEG, WebP ou SVG uniquement.',
-    logoTooBig: 'Fichier trop lourd — 200 Ko maximum.',
+    logoTooBig: 'Fichier trop lourd - 200 Ko maximum.',
     logoUnreadable: 'Lecture du fichier impossible.',
     remove: 'Retirer',
     light: 'clair', dark: 'sombre',
-    footnote: "Logo et thème sont facultatifs — vous les changerez à tout moment dans la console d'administration.",
+    footnote: "Logo et thème sont facultatifs - vous les changerez à tout moment dans la console d'administration.",
   },
 
   install: {

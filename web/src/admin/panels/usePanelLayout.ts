@@ -4,7 +4,7 @@ import { useAuthStore } from '../../core/store/authStore'
 import type { User } from '../../core/types'
 
 /**
- * Which panels an operator keeps, and in which order — for any panelled page.
+ * Which panels an operator keeps, and in which order - for any panelled page.
  *
  * Same storage contract as the right rail and the launcher's favourites: the
  * account's server-side `preferences`, so the layout follows the person to
@@ -17,15 +17,15 @@ import type { User } from '../../core/types'
  * A single list of what to show freezes the page at the day it was saved: a
  * panel added by a later version would be absent from that list and therefore
  * invisible forever, with nothing on screen explaining why. Here an id nobody
- * has ever seen is simply *not hidden* — it appears at the end, where it can then
+ * has ever seen is simply *not hidden* - it appears at the end, where it can then
  * be moved or dismissed. The same reasoning applies in reverse: an id in `order`
  * that no longer exists is ignored rather than reserving a hole.
  *
  * ## One hook, several dashboards
  *
  * Each page passes its own preference key, its own mirror key and its own
- * factory order; everything else — the atomic write, the merge rules, the reset
- * — is identical, and identical is the point. Two dashboards that remembered
+ * factory order; everything else - the atomic write, the merge rules, the reset
+ * - is identical, and identical is the point. Two dashboards that remembered
  * their layout by two different disciplines would eventually disagree about what
  * "reset" means.
  */
@@ -78,7 +78,7 @@ export function applyLayout(available: string[], layout: PanelLayout): string[] 
   return available
     .filter(id => !hidden.has(id))
     // An id the saved order never mentioned sorts last, keeping the catalogue's
-    // own order between such ids — a new panel lands at the end, not at random.
+    // own order between such ids - a new panel lands at the end, not at random.
     .sort((a, b) =>
       (rank.get(a) ?? Number.MAX_SAFE_INTEGER) - (rank.get(b) ?? Number.MAX_SAFE_INTEGER))
 }
@@ -96,7 +96,7 @@ export function usePanelLayout(keys: PanelLayoutKeys) {
   const save = useCallback((next: PanelLayout) => {
     // Mirror first, so the page is right even if the request never lands.
     try { localStorage.setItem(cache, JSON.stringify(next)) } catch { /* best-effort */ }
-    // ONE atomic write of the whole object — never a read-modify-write of a bag,
+    // ONE atomic write of the whole object - never a read-modify-write of a bag,
     // which is what made the module-preferences race.
     api.patch<{ user: User }>('/me', { preferences: { [pref]: next } })
       .then(({ data }) => { if (data?.user) updateUser({ preferences: data.user.preferences }) })

@@ -13,7 +13,7 @@ export type HealthBlock =
   | 'communications'
   | 'identity'
 
-/** Painting order of the blocks — worst consequences first. */
+/** Painting order of the blocks - worst consequences first. */
 export const BLOCK_ORDER: HealthBlock[] = [
   'security', 'exposure', 'continuity', 'communications', 'identity',
 ]
@@ -44,7 +44,7 @@ export interface Observed {
 /**
  * Where to send the operator.
  *
- * `tab` + `verb` form `/admin/<tab>?action=<verb>` — the convention the
+ * `tab` + `verb` form `/admin/<tab>?action=<verb>` - the convention the
  * whole console uses for addressable deep actions.
  */
 export interface HealthAction {
@@ -83,7 +83,7 @@ export interface HealthCounts {
   blocked: number
   ignored: number
   not_applicable: number
-  /** Failing checks that are critical — what the global banner keys off. */
+  /** Failing checks that are critical - what the global banner keys off. */
   critical: number
   warning:  number
   info:     number
@@ -107,7 +107,7 @@ export const SEVERITY_RANK: Record<HealthSeverity, number> = {
 }
 
 /**
- * Deep-link a check's action, through the console's single URL builder — the
+ * Deep-link a check's action, through the console's single URL builder - the
  * section lands in the path, the verb in the query string.
  */
 export function actionHref(action: HealthAction): string {

@@ -11,7 +11,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <!-- Package visibility (Android 11+): to share an account with the other
-         Kubuno apps — and to borrow an access token from them — this app must
+         Kubuno apps - and to borrow an access token from them - this app must
          first be allowed to see them.
 
          The authenticator intent below does NOT achieve that on its own: the

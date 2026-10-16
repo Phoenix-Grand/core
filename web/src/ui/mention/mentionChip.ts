@@ -13,14 +13,14 @@ export function ensureMentionStyles(): void {
   style.id = STYLE_ID
   // A SOLID chip, like the label chips elsewhere in the instance: filled with
   // the accent, white text, a small radius rather than a pill. A mention is a
-  // single object dropped into a sentence — the solid block reads as one thing
+  // single object dropped into a sentence - the solid block reads as one thing
   // at a glance, where the earlier pale pill read as merely coloured words.
   // The × is white and sits slightly apart, so it is a button and not the last
   // letter of the name.
   style.textContent = `
 /* The × fills its side of the chip: a square as tall as the line, flush against
    the name and against the chip's inner edge. Sized smaller it left air on
-   three sides that no amount of margin-balancing made read as centred — the
+   three sides that no amount of margin-balancing made read as centred - the
    square is measured against the chip but seen against the name, whose letters
    stop well short of their own line box.
 
@@ -38,12 +38,12 @@ export function ensureMentionStyles(): void {
   background:var(--color-primary,#1a73e8);color:#fff;font-weight:600;font-size:.94em;
   line-height:var(--kb-mention-line);white-space:nowrap;vertical-align:baseline;text-decoration:none;}
 /* No vertical padding on the label: the line height already gives the text its
-   room, and padding here made the chip's content taller than the × beside it —
+   room, and padding here made the chip's content taller than the × beside it -
    which put the leftover above and below that button and broke the equality of
    its three margins. */
 .kb-mention__label{padding:0;}
 /* The × is DRAWN, not typed. The button box centres exactly, but a glyph's ink
-   sits wherever its typeface puts it inside the em box — here, noticeably low —
+   sits wherever its typeface puts it inside the em box - here, noticeably low -
    so a typed × looked off no matter how the box was aligned, and the offset
    would change with the instance's font. Two bars placed at 50%/50% are centred
    by construction, at any size and in any typeface. The character itself stays
@@ -92,7 +92,7 @@ export function buildMentionChipHtml(item: MentionItem): string {
  * Replace the typed `@query` before the caret with a mention chip, inside the
  * current selection's contenteditable. Uses `execCommand('insertHTML', …)` on a
  * range that spans `@query`, which keeps the NATIVE undo stack intact (a manual
- * DOM splice would sever it — the lesson from the chat editor). Returns whether
+ * DOM splice would sever it - the lesson from the chat editor). Returns whether
  * the replacement succeeded.
  */
 export function replaceMentionQueryWithChip(match: MentionMatch, item: MentionItem): boolean {

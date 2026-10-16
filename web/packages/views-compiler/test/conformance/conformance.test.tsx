@@ -19,7 +19,7 @@ let interpreted: ViewPlan
 
 beforeAll(async () => {
   // The interpreted path: the same view compiled by the WASM compiler to plain JSON (no functions, no
-  // imports): components resolved by name, bindings walked by path — what the designer renders.
+  // imports): components resolved by name, bindings walked by path - what the designer renders.
   const compiler = await loadNodeCompiler()
   compiler.addRegistry(readFileSync(join(here, '..', '..', '..', 'ui', 'kbview-registry.web.json'), 'utf8'), 'ui', true)
   compiler.addRegistry(projectRegistryJson(here, join(here, 'controls.json')), 'controls.json', false)

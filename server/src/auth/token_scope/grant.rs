@@ -1,7 +1,7 @@
 //! Resolving a raw token into the grant it carries.
 //!
 //! The one function that turns `kubuno_…` into an authorisation input. Every
-//! refusal lives here rather than being re-derived by each caller — the middleware,
+//! refusal lives here rather than being re-derived by each caller - the middleware,
 //! the module proxy and the MCP endpoint all resolve through this path, which is
 //! why closing a hole here closes it everywhere.
 
@@ -23,7 +23,7 @@ pub const TOKEN_PREFIX: &str = "kubuno_";
 /// What a presented token authorises.
 ///
 /// Carries the token's **row identifier** and its scopes. Never the token, never
-/// its hash — those stop at the query below and travel no further, so no
+/// its hash - those stop at the query below and travel no further, so no
 /// downstream consumer can leak what it does not have.
 #[derive(Debug, Clone)]
 pub struct TokenGrant {
@@ -47,7 +47,7 @@ impl TokenGrant {
         self.scopes.iter().any(|s| s == key)
     }
 
-    /// True when the token may exercise `key` at all — scope list for a scoped
+    /// True when the token may exercise `key` at all - scope list for a scoped
     /// token, "ask the owner" for a legacy one.
     pub fn may_carry(&self, key: &str) -> bool {
         self.is_legacy || self.has_scope(key)
@@ -55,7 +55,7 @@ impl TokenGrant {
 }
 
 /// What the resolution query returns. `scopes` is read as JSON so it decodes on
-/// every engine (`#[sqlx(json)]` requires the column to be JSON — the consolidated
+/// every engine (`#[sqlx(json)]` requires the column to be JSON - the consolidated
 /// migration replaces the PostgreSQL `TEXT[]` with a JSON column).
 #[derive(sqlx::FromRow)]
 struct TokenRow {
@@ -179,7 +179,7 @@ pub async fn resolve_grant(db: &DbPool, raw_token: &str) -> Result<TokenGrant, A
 ///
 /// Every use is logged (see above); the *trail* is throttled. An integration
 /// polling ten times a second would otherwise write close to a million rows a
-/// day, which does not make the deprecation more visible — it makes the trail
+/// day, which does not make the deprecation more visible - it makes the trail
 /// unreadable and grows a table an operator then has to prune. One row a minute
 /// per token keeps the signal, the timeline and the volume all usable.
 const AUDIT_THROTTLE: Duration = Duration::from_secs(60);
@@ -224,7 +224,7 @@ pub async fn audit_legacy_use(
     }
     let detail = match grant.grace_until {
         Some(until) => format!(
-            "Jeton hérité (sans portées) utilisé sur {route} — fin de grâce le {}",
+            "Jeton hérité (sans portées) utilisé sur {route} - fin de grâce le {}",
             until.format("%Y-%m-%d")
         ),
         None => format!("Jeton hérité (sans portées) utilisé sur {route}"),

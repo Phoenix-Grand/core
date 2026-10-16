@@ -1,8 +1,8 @@
-//! # `kubuno-desktop-views-meta` — the design-time grammar of Kubuno controls
+//! # `kubuno-desktop-views-meta` - the design-time grammar of Kubuno controls
 //!
 //! Work package EVT-7b of `vskubuno/docs/EVENTS.md` (§4.3, "How the tools learn about user
-//! components"): a project's own controls — `#[derive(Component)]` classes and
-//! `#[derive(UserControl)]` composites — are described by attributes on their struct, WinForms'
+//! components"): a project's own controls - `#[derive(Component)]` classes and
+//! `#[derive(UserControl)]` composites - are described by attributes on their struct, WinForms'
 //! `System.ComponentModel` attributes in Rust:
 //!
 //! ```text
@@ -73,7 +73,7 @@ pub const LEVELS: &[(&str, Option<&str>, &str)] = &[
     ("RibbonItem", Some("RibbonControl"), "ribbon_item"),
 ];
 
-/// The built-in classes of `kubuno_desktop_views::controls` and the level each derives from — what lets
+/// The built-in classes of `kubuno_desktop_views::controls` and the level each derives from - what lets
 /// `#[kubuno(extends = Button)]` know the levels of a class the macro cannot see. `kubuno-desktop-views`
 /// checks this table against its real classes in a test.
 pub const CLASSES: &[(&str, &str)] = &[
@@ -388,7 +388,7 @@ pub struct PropertyDecl {
     /// `#[type_converter("…")]`.
     pub type_converter: Option<String>,
     /// `#[property(on_change = "update_bar")]`: a method of the control called after the property is set (from its
-    /// element's attribute, a binding or a repeater row) — the body of a Windows Forms property setter.
+    /// element's attribute, a binding or a repeater row) - the body of a Windows Forms property setter.
     pub on_change: Option<String>,
 }
 
@@ -424,7 +424,7 @@ pub struct ComponentDecl {
     pub description: String,
     /// `#[category("…")]` / `#[toolbox(category = "…")]`: the Toolbox group.
     pub toolbox_category: Option<String>,
-    /// `#[toolbox(icon = "…")]`: a Lucide glyph name or a built-in control's icon — or, WinForms'
+    /// `#[toolbox(icon = "…")]`: a Lucide glyph name or a built-in control's icon - or, WinForms'
     /// `[ToolboxBitmap]`, an image file (`#[toolbox(bitmap = "address_editor.png")]`, or an `icon`
     /// ending with an image extension), relative to the file that declares the class (see
     /// [`is_image_path`] and [`resolve_toolbox_bitmap`]).
@@ -831,7 +831,7 @@ pub fn parse_decl(input: &DeriveInput, derive: Derive) -> syn::Result<ComponentD
     if let Some(name) = &decl.default_property {
         if !decl.properties.iter().any(|p| &p.name == name) && builtin_chain(&decl.extends).is_empty() {
             // A default property of the base class is fine; only an unknown one on a class with
-            // no known base is an error the tools cannot check — left to the registry.
+            // no known base is an error the tools cannot check - left to the registry.
             let _ = name;
         }
     }

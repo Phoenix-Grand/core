@@ -9,7 +9,7 @@
  */
 
 /**
- * A signal that can be unknown — and whose unknown value must never be read as
+ * A signal that can be unknown - and whose unknown value must never be read as
  * a negative, nor collapse into a positive.
  *
  * The server sends a WORD, never a nullable boolean, precisely so that a
@@ -95,7 +95,7 @@ export interface DeviceSession {
 export interface DeviceListResponse {
   devices: Device[]
   total:   number
-  /** False when no offline country database is configured — the console then
+  /** False when no offline country database is configured - the console then
    *  explains the empty column instead of leaving the reader to guess. */
   country_db_available: boolean
 }

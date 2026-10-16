@@ -1,4 +1,4 @@
-//! # kubuno-desktop-controls — the Kubuno desktop control library
+//! # kubuno-desktop-controls - the Kubuno desktop control library
 //!
 //! A native reproduction of the **WinForms control surface** on Direct2D, built
 //! to be the single set of primitives every Kubuno desktop application uses.
@@ -16,19 +16,19 @@
 //!
 //! `Control` declares 52 settable properties that all 64 other control types
 //! inherit. `ButtonBase` adds 18 shared by `Button`, `CheckBox` and
-//! `RadioButton` — and `Button` itself declares only **two**. A port that
+//! `RadioButton` - and `Button` itself declares only **two**. A port that
 //! re-implements each control from scratch would duplicate that surface 65
 //! times and let it drift.
 //!
 //! So the chain is mirrored with **composition + `Deref`**: each type owns
 //! exactly the properties its .NET counterpart *declares*, and derefs to its
 //! base for the rest. Adding a property to `ControlBase` gives it to every
-//! control, once — as it does in the toolkit.
+//! control, once - as it does in the toolkit.
 //!
 //! Two subtleties the counts hide, both of which the port respects:
 //!
 //! * A subclass often **re-declares** a property its base already owns, only to
-//!   change an attribute — `ButtonBase` re-declares `Text`, `BackColor` and
+//!   change an attribute - `ButtonBase` re-declares `Text`, `BackColor` and
 //!   `AutoSize`. That is not new storage: the value stays on `ControlBase`, and
 //!   the subclass may only give it a different **default** (`RadioButton`
 //!   starts with `TabStop = false` where `Control` starts `true`).
@@ -54,7 +54,7 @@
 //!
 //! ## What a control may and may not do
 //!
-//! * It paints through [`kubuno_drive_desktop_app_controls::Canvas`] only — never its own
+//! * It paints through [`kubuno_drive_desktop_app_controls::Canvas`] only - never its own
 //!   device, window or font object. Colours come from the theme, text from the
 //!   shared formats; a control that hard-codes either is wrong.
 //! * It owns no timer, thread or I/O.
@@ -68,10 +68,10 @@ pub mod host;
 pub mod control;
 pub mod enums;
 pub mod layout;
-/// The system's own colours, metrics and UI font — what the controls paint
+/// The system's own colours, metrics and UI font - what the controls paint
 /// with, so a replica matches the toolkit rather than the Kubuno design system.
 pub mod system;
-/// The **themed** parts, rendered by `uxtheme.dll` itself — what the controls
+/// The **themed** parts, rendered by `uxtheme.dll` itself - what the controls
 /// paint with when visual styles are on, which is how the reference sheets were
 /// made. [`system`] stays the fallback for a themed-off machine.
 pub mod theme;

@@ -23,9 +23,9 @@ export interface TabsProps<T extends string = string> {
    *  'sm' → px-3 py-1.5  |  'md' (default) → px-4 py-2 */
   size?:      'sm' | 'md'
   /**
-   * underline (default) — bottom-border indicator, horizontal scroll
-   * pills               — rounded pill background, no border
-   * stretched           — each tab fills equal width, bottom border
+   * underline (default) - bottom-border indicator, horizontal scroll
+   * pills               - rounded pill background, no border
+   * stretched           - each tab fills equal width, bottom border
    *
    * Every variant is exactly as tall as its tallest tab.
    */
@@ -82,7 +82,7 @@ export function Tabs<T extends string = string>({
     if (!list) return
     const tab = list.querySelector<HTMLElement>('[role=tab][aria-selected=true]')
     if (!tab) { setBar(null); return }
-    // `offsetLeft` against the list, which is the positioned ancestor here — no
+    // `offsetLeft` against the list, which is the positioned ancestor here - no
     // rect arithmetic needed, and it is unaffected by the strip's scroll.
     setBar(prev => {
       const next = { left: tab.offsetLeft + INSET, width: Math.max(0, tab.offsetWidth - INSET * 2) }
@@ -124,11 +124,11 @@ export function Tabs<T extends string = string>({
    *
    * A strip that overflows can perfectly well be scrolled to a place the current
    * tab is not: land on `?pane=…` from a link or the back button and the strip
-   * shows the first tabs while the panel below shows the last one — the reader
+   * shows the first tabs while the panel below shows the last one - the reader
    * is given no way to see where they are.
    *
    * Only the scroller moves, hence the arithmetic rather than `scrollIntoView`,
-   * which scrolls every ancestor that can — including the page.
+   * which scrolls every ancestor that can - including the page.
    */
   const revealActive = useCallback((smooth: boolean) => {
     const el = scrollerRef.current
@@ -137,7 +137,7 @@ export function Tabs<T extends string = string>({
     if (!tab) return
     // Rects, not `offsetLeft`: a tab is `relative` (it carries the indicator as
     // a ::before), so its offsetParent is whatever positioned ancestor happens
-    // to be above the strip — measured against that, the scroll lands short and
+    // to be above the strip - measured against that, the scroll lands short and
     // the tab stays half out of view.
     const box  = el.getBoundingClientRect()
     const seen = tab.getBoundingClientRect()
@@ -159,7 +159,7 @@ export function Tabs<T extends string = string>({
     // scrollable width without ever firing a scroll event.
     // The reveal rides along: the strip's own width settles AFTER mount (the
     // arrows appear, the shell's rails resolve), and a reveal computed against
-    // the width of one frame earlier lands tens of pixels short — measured.
+    // the width of one frame earlier lands tens of pixels short - measured.
     const ro = new ResizeObserver(() => { syncArrows(); revealActive(false) })
     ro.observe(el)
     for (const child of Array.from(el.children)) ro.observe(child)
@@ -192,7 +192,7 @@ export function Tabs<T extends string = string>({
     'flex items-center gap-1.5 whitespace-nowrap text-sm font-medium transition-colors',
     // A HEIGHT, not a pair of paddings. The height of a tab is a decision about
     // the strip, and deriving it from the label's line box made it whatever the
-    // font happened to produce — 38.28px, a number nobody chose. Stated once,
+    // font happened to produce - 38.28px, a number nobody chose. Stated once,
     // it survives a font change, a language with taller glyphs and an icon.
     // (`pills` keeps its padding: a pill is a chip around a label, and giving it
     // the height of a tab strip would make it a button. So does the small size,
@@ -206,11 +206,11 @@ export function Tabs<T extends string = string>({
     // No `-mb-px` here. It existed to make the old 3px BORDER overlap the container's
     // 1px divider, but the scrollable strip is `overflow-y-hidden` and sizes itself to
     // the tab's MARGIN box: a negative bottom margin makes the strip 1px shorter than
-    // the tab, and that missing pixel is clipped straight off the indicator — a 3px
+    // the tab, and that missing pixel is clipped straight off the indicator - a 3px
     // band rendering as 2. Measured.
     // The indicator itself is no longer drawn here: it is ONE element for the
     // whole strip, so that changing tab moves it rather than swapping two marks.
-    // Hover tints the whole tab, active or not — the pointer must get an answer
+    // Hover tints the whole tab, active or not - the pointer must get an answer
     // wherever it lands, not only on the tabs you have not selected. The active
     // one answers in its OWN colour: a grey wash under blue text reads as the
     // tab going quiet, which is the opposite of what a hover means.
@@ -218,7 +218,7 @@ export function Tabs<T extends string = string>({
     // ⚠️ The tint is painted by `.kb-tab` / `.kb-tab--on` in the core's own
     // stylesheet, NOT by `hover:bg-*` utilities. A utility here lands in a
     // cascade layer that the browsers' own button reset outranks once the
-    // modules' stylesheets have had their say — measured: the rule was
+    // modules' stylesheets have had their say - measured: the rule was
     // generated, the class was on the element, and nothing painted. Unlayered
     // CSS is the only form that cannot lose that argument.
     underlined && 'kb-tab justify-center',
@@ -234,7 +234,7 @@ export function Tabs<T extends string = string>({
     variant === 'pills' && !active(id) && 'text-text-secondary hover:bg-surface-2',
   )
 
-  /** The travelling mark. `transform` and `width` only — both are composited,
+  /** The travelling mark. `transform` and `width` only - both are composited,
    *  so the slide costs nothing in layout. */
   const indicator = underlined && bar && (
     <span
@@ -306,7 +306,7 @@ export function Tabs<T extends string = string>({
         className="no-scrollbar min-w-0 flex-1 overflow-x-auto overflow-y-hidden"
       >
         {/* Every tab gets the width of the WIDEST one. `w-max` sizes the grid to its
-            content, and `auto-cols-fr` then splits that width into equal columns —
+            content, and `auto-cols-fr` then splits that width into equal columns -
             under a max-content constraint each equal track resolves to the largest
             item's natural width. Doing it in CSS rather than by measuring in JS keeps
             it correct when the font finishes loading or the language changes. */}

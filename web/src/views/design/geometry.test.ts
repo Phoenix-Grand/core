@@ -88,7 +88,7 @@ describe('the layout map built from [data-kb-id]', () => {
     })
   }
 
-  it('records every element in document order with its parent, clip and direction — portals included', () => {
+  it('records every element in document order with its parent, clip and direction - portals included', () => {
     document.body.innerHTML = `
       <div id="frame" style="overflow: hidden">
         <div data-kb-id="">

@@ -19,7 +19,7 @@
 //!
 //! `sea-query` is the reference dynamic builder, but its sqlx bridge
 //! (`sea-query-binder`) renders to `(String, sea_query::Values)` for
-//! `sqlx::query_with`, which is still monomorphic per backend — the runtime
+//! `sqlx::query_with`, which is still monomorphic per backend - the runtime
 //! `match` over the three engines, and the value-encoding it drives, would
 //! still have to live here (it is [`crate::exec`]'s `bind_all!`). It would also
 //! add a second value enum next to [`DbValue`] and its own dependency tree. The
@@ -30,11 +30,11 @@
 //!
 //! **Structure is text; data is a bind.** Everything pushed as text
 //! ([`DbQueryBuilder::push`], [`DbQueryBuilder::push_order_by`]) is SQL the
-//! developer authored — a `&'static str`, or a fragment built by
+//! developer authored - a `&'static str`, or a fragment built by
 //! [`crate::dialect`] from `&'static str` identifiers. Every value that could
 //! come from a request goes through [`DbQueryBuilder::push_bind`] /
 //! [`DbQueryBuilder::push_in`] / [`DbQueryBuilder::push_limit_offset`], which
-//! emit a numbered placeholder and record a [`DbValue`] — the value is never
+//! emit a numbered placeholder and record a [`DbValue`] - the value is never
 //! turned into text and so can never be interpolated. This is the same
 //! discipline `sql::prepare` enforces, and it is the site of the historical
 //! app/Data SQL-injection: keeping user data off the text path is the whole
@@ -74,7 +74,7 @@ impl DbQueryBuilder {
     /// Starts a builder from an opening SQL fragment (a `SELECT ... FROM ...`,
     /// say). The fragment is **structure**, so it must be developer-authored
     /// text with no request data in it. Bind every value with
-    /// [`push_bind`](Self::push_bind) instead — and do not write `$n` by hand,
+    /// [`push_bind`](Self::push_bind) instead - and do not write `$n` by hand,
     /// the builder numbers placeholders for you.
     pub fn new(backend: Backend, initial: impl AsRef<str>) -> Self {
         DbQueryBuilder {
@@ -92,7 +92,7 @@ impl DbQueryBuilder {
     /// Appends a **structural** SQL fragment verbatim: a keyword, a column
     /// list, a parenthesis, or a fragment returned by [`crate::dialect`].
     ///
-    /// Never pass request data here — it would land on the SQL text path and
+    /// Never pass request data here - it would land on the SQL text path and
     /// re-open the injection this crate exists to close. Use
     /// [`push_bind`](Self::push_bind) for values.
     pub fn push(&mut self, fragment: impl AsRef<str>) -> &mut Self {
@@ -111,7 +111,7 @@ impl DbQueryBuilder {
 
     /// Records `value` as the next bind and returns its placeholder number,
     /// **without** writing `$n` into the SQL. The caller then writes the
-    /// reference itself with [`push`](Self::push) — the escape hatch for
+    /// reference itself with [`push`](Self::push) - the escape hatch for
     /// interpolating a fragment produced by [`crate::dialect`] or a hand-built
     /// subquery that must name a specific placeholder (a recursive CTE whose
     /// anchor is `WHERE id = $n`, say). The number must still appear in
@@ -123,11 +123,11 @@ impl DbQueryBuilder {
 
     /// Appends ` IN (<placeholders>)` for a variadic list, binding each element.
     /// Reuses [`Backend::in_list`], so an **empty** list yields `IN (NULL)`,
-    /// which matches nothing on all three engines — the caller does not need a
+    /// which matches nothing on all three engines - the caller does not need a
     /// special case for "no ids".
     ///
     /// ```ignore
-    /// qb.push("c.id").push_in(ids);   // ` IN ($4, $5, $6)`  — or ` IN (NULL)` if empty
+    /// qb.push("c.id").push_in(ids);   // ` IN ($4, $5, $6)`  - or ` IN (NULL)` if empty
     /// ```
     pub fn push_in<V, I>(&mut self, values: I) -> &mut Self
     where
@@ -170,7 +170,7 @@ impl DbQueryBuilder {
         &self.sql
     }
 
-    /// How many binds have been recorded — i.e. the number of the last `$n`.
+    /// How many binds have been recorded - i.e. the number of the last `$n`.
     pub fn bind_count(&self) -> usize {
         self.params.len()
     }
@@ -485,12 +485,12 @@ mod exec_tests {
     }
 
     /// Runs only when a throwaway server URL is provided, and **fails** rather
-    /// than skips if the connection or schema setup breaks — a test that
+    /// than skips if the connection or schema setup breaks - a test that
     /// silently does nothing is worse than none.
     #[tokio::test]
     async fn runs_against_mysql_when_configured() {
         let Ok(url) = std::env::var("KUBUNO_QB_MYSQL_URL") else {
-            eprintln!("KUBUNO_QB_MYSQL_URL unset — skipping the MySQL/MariaDB round-trip");
+            eprintln!("KUBUNO_QB_MYSQL_URL unset - skipping the MySQL/MariaDB round-trip");
             return;
         };
         let settings = DbSettings {

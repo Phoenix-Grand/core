@@ -16,9 +16,9 @@
 //! # Exactly-once across processes
 //!
 //! Several core processes may share one database. Each outbox row is therefore
-//! **claimed** before it is published — `UPDATE ... SET delivered_at = ? WHERE
+//! **claimed** before it is published - `UPDATE ... SET delivered_at = ? WHERE
 //! id = ? AND delivered_at IS NULL`, published only when `rows_affected() == 1`
-//! — so two processes never deliver the same event twice. Delivered rows are
+//! - so two processes never deliver the same event twice. Delivered rows are
 //! purged after a grace period.
 
 use std::sync::Arc;

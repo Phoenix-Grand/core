@@ -312,7 +312,7 @@ export class AssignRoleDialog extends ViewBase {
   }
 
   unitName(id: string | null) {
-    return (this.units ?? []).find(u => u.id === id)?.name ?? '—'
+    return (this.units ?? []).find(u => u.id === id)?.name ?? '-'
   }
 
   submit(e?: React.FormEvent) {

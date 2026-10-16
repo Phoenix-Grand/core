@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 # Regenerate the publishable @kubuno/* npm packages from the host frontend source.
 #
-#   @kubuno/ui    — real ESM library (dist/index.js) + types
-#   @kubuno/sdk   — type surface (sdk/ + core/ .d.ts) + runtime stub
-#   @kubuno/drive — type surface (drive/ .d.ts) + runtime stub
-#   @kubuno/views — type surface (views/ .d.ts) + runtime stub (the .kbview runtime)
-#   @kubuno/views-compiler — real Node library (Vite plugin, kbview-tsc) + the committed .wasm
-#   @kubuno/views-migrate  — real Node library (the kbview-migrate codemod)
-#   @kubuno/host-runtime   — the Visual Studio design page: static site (bundled mode) + the project-mode
+#   @kubuno/ui    - real ESM library (dist/index.js) + types
+#   @kubuno/sdk   - type surface (sdk/ + core/ .d.ts) + runtime stub
+#   @kubuno/drive - type surface (drive/ .d.ts) + runtime stub
+#   @kubuno/views - type surface (views/ .d.ts) + runtime stub (the .kbview runtime)
+#   @kubuno/views-compiler - real Node library (Vite plugin, kbview-tsc) + the committed .wasm
+#   @kubuno/views-migrate  - real Node library (the kbview-migrate codemod)
+#   @kubuno/host-runtime   - the Visual Studio design page: static site (bundled mode) + the project-mode
 #                            entry of module projects and the host shared modules (dist/project/)
 #
 # At runtime these specifiers are provided by the host via its import map; module
@@ -37,13 +37,13 @@ echo "==> 2b   Assembling type trees"
 rm -rf "$FE/src/ui/types";    mkdir -p "$FE/src/ui/types";        cp -r "$FE"/dist-types/ui/*    "$FE/src/ui/types/"
 # @kubuno/sdk : sdk/ + core/ (sdk imports ../core). The package is CO-LOCATED with its sources (web/src/sdk):
 # package.json/index.js/README/CHANGELOG live there, and the type tree is regenerated here (gitignored, never
-# committed — see .gitignore). The npm identity (@kubuno/sdk) and the published layout (types/, exports) are unchanged.
+# committed - see .gitignore). The npm identity (@kubuno/sdk) and the published layout (types/, exports) are unchanged.
 SDKPKG="$FE/src/sdk"
 rm -rf "$SDKPKG/types";   mkdir -p "$SDKPKG/types/sdk" "$SDKPKG/types/core"
 cp -r "$FE"/dist-types/sdk/*  "$SDKPKG/types/sdk/"
 cp -r "$FE"/dist-types/core/* "$SDKPKG/types/core/"
 # The core's user controls (X.kbcontrol + X.ts code-behind): the emitted code-behind declarations import
-# './X.kbcontrol', whose declaration kbview-tsc generated under .kubuno/views — ship it next to them.
+# './X.kbcontrol', whose declaration kbview-tsc generated under .kubuno/views - ship it next to them.
 ( cd "$FE/.kubuno/views/src" && find core -name '*.kbcontrol.d.ts' -o -name '*.kbview.d.ts' ) | while read -r f; do
   mkdir -p "$SDKPKG/types/$(dirname "$f")"; cp "$FE/.kubuno/views/src/$f" "$SDKPKG/types/$f"
 done
@@ -57,7 +57,7 @@ echo "==> 3/4  Building @kubuno/ui ESM bundle"
 # ⚠️ The `cd` is load-bearing, not stylistic. Vite resolves `outDir` against the
 # CURRENT WORKING DIRECTORY, not against the config file. Run from web/ as
 #     npx vite build --config src/ui/vite.config.ts
-# and the library lands in `web/dist/` — where `emptyOutDir` first WIPES the
+# and the library lands in `web/dist/` - where `emptyOutDir` first WIPES the
 # host application build. Always build a package from inside the package.
 ( cd "$FE/src/ui" && "$FE/node_modules/.bin/vite" build )
 

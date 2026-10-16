@@ -1,4 +1,4 @@
-<!-- CampaignWizard — converted from CampaignWizard.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- CampaignWizard - converted from CampaignWizard.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <Panel x:Props="CampaignWizardProps" OnMouseDown="panel_mouse_down">
   <FloatingWindow ConfirmText="{Binding confirm_text}"
                   ConfirmEnabled="{Binding enabled_unless_last_can_submit_next_disabled}"

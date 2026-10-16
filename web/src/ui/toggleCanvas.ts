@@ -1,4 +1,4 @@
-/* Canvas painter for the `Toggle` switch — pure drawing, no React. Kept apart from
+/* Canvas painter for the `Toggle` switch - pure drawing, no React. Kept apart from
  * the component so the geometry and the paint pass can be read (and reused) on their
  * own. All lengths are in CSS pixels; the device pixel ratio is applied at paint time. */
 
@@ -74,7 +74,7 @@ export function paintToggle(canvas: HTMLCanvasElement, opts: PaintToggleOptions)
 
   /* Track. The off state is painted first, then the on state over it at `progress`
    * alpha. Cross-fading replaces interpolating the two colours, which would mean
-   * parsing them — and a theme is free to express them as hex, rgb() or oklch(). */
+   * parsing them - and a theme is free to express them as hex, rgb() or oklch(). */
   const half = 0.5   // a 1px stroke straddles the path, so inset the rect by half of it
   const paintTrack = (fill: string, stroke: string, alpha: number) => {
     ctx.globalAlpha = alpha
@@ -90,7 +90,7 @@ export function paintToggle(canvas: HTMLCanvasElement, opts: PaintToggleOptions)
   if (progress > 0) paintTrack(p.on, p.on, progress)
   ctx.globalAlpha = 1
 
-  // Thumb — travels the free space left inside the track.
+  // Thumb - travels the free space left inside the track.
   const travel = g.width - g.thumbSize - g.thumbInset * 2
   ctx.save()
   ctx.shadowColor   = 'rgb(0 0 0 / 12%)'

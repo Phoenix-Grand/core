@@ -1,6 +1,6 @@
 //! Raw access for tools (the Visual Studio helper `kubuno-desktop-data-tool`, `vskubuno/docs/DATA.md` §9):
-//! SQL text run exactly as written — no `@name` rewriting, so a SQL Server `DECLARE @id INT` or a
-//! user's query window text reaches the server untouched — and the native `sqlx` pool behind a
+//! SQL text run exactly as written - no `@name` rewriting, so a SQL Server `DECLARE @id INT` or a
+//! user's query window text reaches the server untouched - and the native `sqlx` pool behind a
 //! connection, for what only `sqlx` does (its migrator).
 //!
 //! Applications use [`crate::DbCommand`]; nothing here builds SQL from values.

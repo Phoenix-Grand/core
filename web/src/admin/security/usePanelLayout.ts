@@ -5,9 +5,9 @@ import { DEFAULT_ORDER } from './panels'
 /**
  * The security dashboard's arrangement, on the shared panel-layout contract.
  *
- * The rules — one atomic write of the whole object to the account's
+ * The rules - one atomic write of the whole object to the account's
  * `preferences`, a localStorage mirror for the cold start, `{ order, hidden }`
- * rather than a list of visible ids — live in `../panels/usePanelLayout` and are
+ * rather than a list of visible ids - live in `../panels/usePanelLayout` and are
  * shared with every other panelled page. Only the three names are local: the
  * preference key, the mirror key, and this page's factory order.
  */

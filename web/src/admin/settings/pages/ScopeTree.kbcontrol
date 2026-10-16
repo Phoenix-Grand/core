@@ -1,4 +1,4 @@
-<!-- ScopeTree — converted from ScopeTree.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- ScopeTree - converted from ScopeTree.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="ScopeTreeProps">
   <Panel AccessibleName="{Res admin.m_scope_panel}">
     <Panel Visible="{Binding show_units_filter_threshold}" Class="px-2 pt-2">

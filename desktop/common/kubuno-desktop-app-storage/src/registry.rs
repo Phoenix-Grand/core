@@ -1,5 +1,5 @@
 //! The Windows Registry (`Microsoft.Win32.Registry` / `RegistryKey` of .NET): hives, 32/64-bit views, typed
-//! values, sub-keys — what the `<RegistryKey>` component and [`crate::backend::RegistryBackend`] stand on.
+//! values, sub-keys - what the `<RegistryKey>` component and [`crate::backend::RegistryBackend`] stand on.
 //!
 //! ```no_run
 //! # fn f() -> Result<(), kubuno_desktop_app_storage::StorageError> {

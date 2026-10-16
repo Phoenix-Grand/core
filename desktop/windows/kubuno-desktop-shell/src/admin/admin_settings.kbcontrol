@@ -1,6 +1,6 @@
 <!--
   The instance's settings (the console's « Instance » section), read only: the settings the server returns,
-  grouped by category — one SettingsCategory card per category, each as tall as its rows (a Repeater whose rows
+  grouped by category - one SettingsCategory card per category, each as tall as its rows (a Repeater whose rows
   name their height).
 -->
 <UserControl xmlns="https://kubuno.com/views" xmlns:x="https://kubuno.com/views/x" xmlns:d="https://kubuno.com/views/design" x:Class="InstanceSettingsSection" DesignWidth="936" DesignHeight="688" OnLoad="instance_settings_section_load">

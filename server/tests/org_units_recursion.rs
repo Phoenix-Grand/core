@@ -95,7 +95,7 @@ async fn ancestors_are_returned_closest_first() {
     assert_eq!(ids, vec![binome, equipe, dir, root], "du plus proche au plus lointain");
     assert_eq!(depths, vec![0, 1, 2, 3], "depth 0 = l'unité elle-même");
 
-    // A root is its own — and only — ancestor.
+    // A root is its own - and only - ancestor.
     let chain = ancestors(&db, root).await;
     assert_eq!(chain.len(), 1);
     assert_eq!(chain[0].id, root);

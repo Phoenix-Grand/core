@@ -1,6 +1,6 @@
 //! Personal API tokens: minting, listing, revoking.
 //!
-//! The raw token is returned **once**, by [`create`], and never again — not in a
+//! The raw token is returned **once**, by [`create`], and never again - not in a
 //! listing, not in a log, not in the audit trail. What circulates afterwards is
 //! the row id, the name its owner gave it, and its scopes.
 //!
@@ -50,7 +50,7 @@ fn generate_api_token() -> (String, String) {
 ///
 /// `legacy_grace_until` is derived at read time from `legacy_since` and the
 /// current setting, so widening or closing the migration window from the
-/// settings is reflected immediately — in the interface and in the refusals —
+/// settings is reflected immediately - in the interface and in the refusals -
 /// without a second migration or a backfill.
 pub async fn list(
     State(state): State<AppState>,
@@ -119,13 +119,13 @@ pub async fn available_scopes(
 /// Sensitive: minting a long-lived credential from a session that may have been
 /// left open is how a momentary compromise becomes a permanent one. Guarded by
 /// [`Reauthenticated`], which also means an existing API token cannot mint
-/// another one — a bearer with no second factor can never pass the challenge.
+/// another one - a bearer with no second factor can never pass the challenge.
 ///
 /// Four conditions beyond the challenge itself, in the order they are checked:
 ///
 /// 1. the account is allowed to mint tokens at all (`api_tokens.create`);
 /// 2. the scope list is non-empty, exists in the catalogue, is grantable, and is
-///    **held by the creator right now** — no delegation of what one lacks;
+///    **held by the creator right now** - no delegation of what one lacks;
 /// 3. a `core.*` write scope forces an expiry, and every expiry is clamped to the
 ///    instance ceiling;
 /// 4. the row is written with its scopes, which the database `CHECK` requires.
@@ -154,7 +154,7 @@ pub async fn create(
         return Err(AppError::Forbidden);
     }
 
-    // What the creator holds, resolved fresh — this is the ceiling on what the
+    // What the creator holds, resolved fresh - this is the ceiling on what the
     // token can be given.
     let ctx = authz_context::resolve(
         &state.db,
@@ -228,7 +228,7 @@ pub async fn create(
             AppError::Database(e)
         })?;
 
-    // The trail records what the key may do — never the key. `after` goes
+    // The trail records what the key may do - never the key. `after` goes
     // through the whitelist, which has no `token_hash` entry by construction.
     audit
         .record(
@@ -250,7 +250,7 @@ pub async fn create(
         )
         .await;
 
-    // Le token brut n'est retourné qu'une seule fois — ne jamais le logger
+    // Le token brut n'est retourné qu'une seule fois - ne jamais le logger
     Ok(Json(json!({
         "token":       raw_token,
         "id":          token.id,

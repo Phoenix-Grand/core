@@ -51,8 +51,8 @@ fn ensure_writable(resolution: &Resolution, key: &str, scope: &SettingScope) -> 
 
 /// Where a scope's subject lives, and how it is named in a refusal.
 ///
-/// `Instance` has no subject at all — its `scope_id` is the sentinel uuid of
-/// migration `000060` — and `Default` is the factory value rather than a
+/// `Instance` has no subject at all - its `scope_id` is the sentinel uuid of
+/// migration `000060` - and `Default` is the factory value rather than a
 /// storable scope. Neither is checkable, and that is a property of the model,
 /// not a gap in this function.
 ///
@@ -74,7 +74,7 @@ fn subject_relation(kind: ScopeKind) -> Option<(&'static str, &'static str)> {
 /// consequences were not merely untidy:
 ///
 ///   * `GET /admin/settings/resolved?scope_type=org_unit&scope_id=<any uuid>`
-///     answered `200` with `can_override: true` on every declared key — a full
+///     answered `200` with `can_override: true` on every declared key - a full
 ///     settings page for a unit that does not exist;
 ///   * the matching `PUT` stored a row keyed on that uuid. The purge trigger of
 ///     `000060:89` fires on the DELETE of a real subject, so it can never reach a
@@ -160,7 +160,7 @@ async fn mirror_instance_to_settings(tx: &mut DbTx, key: &str) -> Result<(), sql
 
 /// Removes the scoped setting values whose subject is being deleted, the way
 /// migration `000060`'s `setting_values_purge_scope` trigger does on PostgreSQL.
-/// `scope_type` is one of `'org_unit'`, `'group'`, `'user'` — a literal from the
+/// `scope_type` is one of `'org_unit'`, `'group'`, `'user'` - a literal from the
 /// caller, never request text. A no-op on PostgreSQL, where the trigger fires.
 ///
 /// The polymorphic `scope_id` carries no foreign key, so a recycled uuid could
@@ -250,7 +250,7 @@ pub async fn set_value(
 }
 
 /// Removes the row held at `scope`, which is what makes the setting inherit
-/// again — and keep following its parent afterwards. Deliberately **not** a
+/// again - and keep following its parent afterwards. Deliberately **not** a
 /// write of the inherited value.
 pub async fn clear_value(
     db: &DbPool,
@@ -364,7 +364,7 @@ pub async fn set_lock(
 ///
 /// Driven by the patch rather than by the whole preferences document on purpose:
 /// `preferences || patch` replaces a module subtree wholesale, so the patch is
-/// the complete new state of every module it names — which is what lets a key
+/// the complete new state of every module it names - which is what lets a key
 /// dropped from the subtree be deleted here rather than lingering.
 ///
 /// Best effort by design. A key locked by a higher scope is skipped, not
@@ -452,7 +452,7 @@ pub async fn sync_user_preferences(
     Ok(())
 }
 
-/// Scopes that override `key` below the instance — the "these will not be
+/// Scopes that override `key` below the instance - the "these will not be
 /// affected" warning shown when editing at instance level.
 #[derive(Debug, Clone, serde::Serialize)]
 pub struct OverrideRef {
@@ -573,7 +573,7 @@ mod tests {
         assert!(subject_relation(ScopeKind::Default).is_none());
     }
 
-    /// Every table named is in the `core` schema and is a bare identifier — the
+    /// Every table named is in the `core` schema and is a bare identifier - the
     /// string is interpolated into the existence query, so it must never be able
     /// to carry anything else. The values are literals, so this guards the *next*
     /// branch somebody adds.

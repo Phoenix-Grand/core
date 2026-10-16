@@ -16,7 +16,7 @@
       reference sheets must show the toolkit at the DPI the port renders at.
       This probe captures ARITHMETIC. Making the process DPI-aware would have
       WinForms scale every design-time bound by the monitor factor before the
-      layout runs, so a 24-tall band would come out 42 at 175 % — and the
+      layout runs, so a 24-tall band would come out 42 at 175 % - and the
       harness would report a difference that is a fact about the capture, not
       about the layout engine. The port never scales (Renderer sets the D2D DPI,
       so its space is already DIP); DpiUnaware puts WinForms in that same space,

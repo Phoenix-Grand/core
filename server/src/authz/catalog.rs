@@ -3,8 +3,8 @@
 //!
 //! ## A module can only write under its own name
 //!
-//! A module declares a privilege by its **domain and verb** — `documents.read`,
-//! not `office.documents.read` — and the core prefixes it with the module
+//! A module declares a privilege by its **domain and verb** - `documents.read`,
+//! not `office.documents.read` - and the core prefixes it with the module
 //! identifier at registration. This is the same shape as `settings_schema` in
 //! `handlers/modules.rs`, and for the same reason: a namespace a module can
 //! choose is a namespace a module can *claim*, and the first thing a hostile (or
@@ -13,8 +13,8 @@
 //! ## Orphans are kept
 //!
 //! Uninstalling a module does not delete its privileges. A deleted privilege
-//! would either cascade through `core.role_privileges` — silently changing what
-//! a role means, which is worse than leaving a dangling row — or break the audit
+//! would either cascade through `core.role_privileges` - silently changing what
+//! a role means, which is worse than leaving a dangling row - or break the audit
 //! trail, which references keys by name for a year. Instead the row survives,
 //! flagged `is_orphan`, and the console can show it greyed out with its history
 //! intact. Reinstalling the module clears the flag.

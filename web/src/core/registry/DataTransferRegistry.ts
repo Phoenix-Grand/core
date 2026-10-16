@@ -44,7 +44,7 @@ export interface DataCardProps {
 
 /** Static rendering of an envelope, for consumers that cannot host live React
  *  components (canvas documents, exports, thumbnails). Produced on demand by
- *  the PRODUCER module — the consumer never interprets the payload itself. */
+ *  the PRODUCER module - the consumer never interprets the payload itself. */
 export interface DataCardStaticRender {
   /** Vector markup (preferred: crisp at any scale). */
   svg?: string
@@ -178,7 +178,7 @@ export async function copyKubunoData(envelope: KubunoDataEnvelope): Promise<bool
 
 export const DataTransferRegistry = {
   /**
-   * Registers a producer module's card renderer. One renderer per module —
+   * Registers a producer module's card renderer. One renderer per module -
    * its `Component` should switch on `envelope.type` when handling several.
    */
   registerRenderer(moduleId: string, renderer: DataCardRenderer): void {

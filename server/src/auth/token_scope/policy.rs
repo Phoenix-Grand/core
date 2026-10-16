@@ -9,7 +9,7 @@ use crate::errors::AppError;
 
 /// Privilege that lets a token be presented to the modules as an administrator.
 /// Without it, a token-authenticated proxy call carries `X-Kubuno-User-Role:
-/// user` whatever the owner's role — see [`crate::modules::proxy`].
+/// user` whatever the owner's role - see [`crate::modules::proxy`].
 pub const MODULE_ADMIN: &str = "core.module_admin.execute";
 
 /// Privilege required to reach `/mcp`, the one route that authenticates by API
@@ -20,7 +20,7 @@ pub const MCP_EXECUTE: &str = "core.mcp.execute";
 /// says.
 ///
 /// `security.*` is the naming the step-up catalogue uses for the actions that
-/// demand a fresh proof of presence — disabling the second factor, reprinting
+/// demand a fresh proof of presence - disabling the second factor, reprinting
 /// the backup codes that bypass it. Those routes are already closed to a bearer
 /// (they take [`Reauthenticated`](crate::auth::reauth::Reauthenticated), which
 /// answers `REAUTH_NOT_AVAILABLE` to an API token), but the refusal here is what
@@ -119,11 +119,11 @@ async fn read_i64(db: &DbPool, key: &str) -> Option<i64> {
 ///
 /// Four independent conditions, in the order a reader would ask them:
 ///
-/// 1. the list is not empty — there is no "all" default, and never was one to
+/// 1. the list is not empty - there is no "all" default, and never was one to
 ///    fall back to;
 /// 2. every key exists in `core.privileges` and is flagged grantable;
 /// 3. no key sits in a forbidden namespace;
-/// 4. the creator holds every key **at this instant** — a token is a delegation,
+/// 4. the creator holds every key **at this instant** - a token is a delegation,
 ///    and one cannot delegate what one does not have.
 pub async fn validate_requested(
     db: &DbPool,
@@ -206,7 +206,7 @@ pub async fn validate_requested(
 /// Turns the requested lifetime into an expiry date, applying the two rules that
 /// keep a scoped token from becoming the thing it replaced.
 ///
-/// * a `core.*` write scope forbids "no expiry" — that combination *is* the
+/// * a `core.*` write scope forbids "no expiry" - that combination *is* the
 ///   defect being fixed;
 /// * whatever is asked for is clamped to the instance ceiling.
 pub async fn resolve_expiry(

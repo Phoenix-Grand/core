@@ -1,4 +1,4 @@
-//! `<FileStore>`: the app's own files (`kubuno_desktop_app_storage::FileStore`) — isolated data, a cache with eviction,
+//! `<FileStore>`: the app's own files (`kubuno_desktop_app_storage::FileStore`) - isolated data, a cache with eviction,
 //! temporary files.
 //!
 //! ```xml

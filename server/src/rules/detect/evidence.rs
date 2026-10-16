@@ -18,8 +18,8 @@
 //!
 //! `Evidence` holds offsets and fingerprints for the length of one call and is
 //! dropped with it. What reaches the execution log is
-//! [`Evidence::counters`] — how many detectors fired, how many matches, how many
-//! distinct values — and not one byte of what was inspected.
+//! [`Evidence::counters`] - how many detectors fired, how many matches, how many
+//! distinct values - and not one byte of what was inspected.
 //!
 //! ## The empty evidence is the honest default
 //!
@@ -117,7 +117,7 @@ impl Evidence {
     /// Read this next to `core.rule_executions.detail` and satisfy yourself that
     /// there is no way back to the content: a detector key an administrator
     /// chose, three integers, and a rounded confidence. Offsets are deliberately
-    /// absent — an offset plus a guess at the pattern is a value.
+    /// absent - an offset plus a guess at the pattern is a value.
     pub fn counters(&self) -> Value {
         let mut detectors: Vec<Value> = self
             .by_detector

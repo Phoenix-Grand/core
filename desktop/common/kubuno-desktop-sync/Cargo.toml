@@ -35,7 +35,7 @@ tracing    = "0.1"
 [package.metadata.deb]
 name       = "kubuno-sync"   # the Linux package keeps the daemon's name (the crate was renamed kubuno-desktop-sync)
 maintainer = "Martinien OLINGA <kubuno@toiledev.com>"
-copyright  = "2026, Kubuno — AGPL-3.0-or-later"
+copyright  = "2026, Kubuno - AGPL-3.0-or-later"
 section    = "utils"
 priority   = "optional"
 extended-description = "Daemon de synchronisation de fichiers Kubuno (offline-first, façon Nextcloud)."

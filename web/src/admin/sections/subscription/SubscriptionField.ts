@@ -9,7 +9,7 @@ import { ViewBase } from './SubscriptionField.kbcontrol'
 export type FieldProps = {
   label:    string
   children: ReactNode
-  /** Renders the value in the monospace face — for identifiers read aloud. */
+  /** Renders the value in the monospace face - for identifiers read aloud. */
   mono?:    boolean
 }
 

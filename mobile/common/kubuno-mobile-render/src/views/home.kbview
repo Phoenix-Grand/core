@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   Kubuno mobile home screen, written in the SHARED Kubuno view vocabulary (the same controls the web and desktop
-  designers know), so it renders on every surface. A screen's root is an ordinary container (Panel) — not a
+  designers know), so it renders on every surface. A screen's root is an ordinary container (Panel) - not a
   UserControl: a UserControl is a reusable composite control (.kbcontrol) used as an element of other views.
   Colours are literal brand colours here; a themed screen would use tokens (Surface1, Primary, TextPrimary, ...).
 -->

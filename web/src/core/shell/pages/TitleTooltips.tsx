@@ -13,7 +13,7 @@ import { placeTooltip } from '../../../ui/tooltipPlacement'
  * the native bubble) and a styled bubble is drawn instead; it is restored when
  * the pointer leaves, so the DOM keeps its accessible name.
  *
- * Components that need control — a forced side, a rich label, no delay — use the
+ * Components that need control - a forced side, a rich label, no delay - use the
  * `Tooltip` primitive from `@ui` directly; those carry no `title`, so they are
  * untouched by this.
  */
@@ -44,7 +44,7 @@ export default function TitleTooltips() {
       setBubble(null)
     }
 
-    // Anchored to the POINTER (below it, left-aligned) — see placeTooltip.
+    // Anchored to the POINTER (below it, left-aligned) - see placeTooltip.
     const show = (text: string) => {
       const p = placeTooltip(pointer.current.x, pointer.current.y, { width: 0, height: 0 })
       setBubble({ text, left: p.left, top: p.top, ready: false })

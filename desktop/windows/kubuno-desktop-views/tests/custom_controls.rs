@@ -1,6 +1,6 @@
 //! EVT-7b of `vskubuno/docs/EVENTS.md`: an application's own controls, compiled in with
 //! `#[derive(Component)]` / `#[derive(UserControl)]`, are registered by the derive itself (a
-//! static constructor, before `main`) and usable as XML elements — this test crate is such an
+//! static constructor, before `main`) and usable as XML elements - this test crate is such an
 //! application (`kubuno_desktop_views`' own classes are never registered).
 
 use kubuno_desktop_views::prelude::*;
@@ -484,7 +484,7 @@ impl TileCard {
 }
 
 /// Found live (the DriveCard sample): a user control got neither its `Click` nor the events its class raises from its
-/// `on_mouse_…` overrides at run time — its own view's root covered it, and the router left `Click` to a node that
+/// `on_mouse_…` overrides at run time - its own view's root covered it, and the router left `Click` to a node that
 /// never raised it. A click on a label of its view is the label's, as in Windows Forms.
 #[test]
 fn a_user_control_written_inside_a_repeater_gets_its_click_and_its_own_events() {

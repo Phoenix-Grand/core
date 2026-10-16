@@ -1,7 +1,7 @@
 //! Getting a row back from a write, on an engine that may not have `RETURNING`.
 //!
 //! PostgreSQL and SQLite (3.35+) both support `RETURNING`. MySQL and MariaDB do
-//! not — MariaDB has `INSERT ... RETURNING`, but not on `UPDATE`/`DELETE` and
+//! not - MariaDB has `INSERT ... RETURNING`, but not on `UPDATE`/`DELETE` and
 //! not with `ON DUPLICATE KEY UPDATE`, so the whole family is treated here as
 //! lacking it.
 //!
@@ -15,7 +15,7 @@
 //! # How the helpers work
 //!
 //! * PostgreSQL / SQLite: one statement, with `RETURNING` appended.
-//! * MySQL: two statements — the write, and a re-`SELECT` by primary key. Both
+//! * MySQL: two statements - the write, and a re-`SELECT` by primary key. Both
 //!   run on the [`DbTx`] you pass, so a concurrent session cannot slip between
 //!   them.
 
@@ -24,10 +24,10 @@ use crate::value::DbValue;
 
 /// Insert a row and read back one column of it.
 ///
-/// * `insert_sql` — the `INSERT`, **without** any `RETURNING` clause; it must
+/// * `insert_sql` - the `INSERT`, **without** any `RETURNING` clause; it must
 ///   bind the primary key explicitly (see [`crate::new_id`]).
-/// * `returning_col` — the column `RETURNING` would have named.
-/// * `reselect_sql` / `reselect_params` — how to find that row again by primary
+/// * `returning_col` - the column `RETURNING` would have named.
+/// * `reselect_sql` / `reselect_params` - how to find that row again by primary
 ///   key, used on MySQL only.
 pub async fn insert_returning_scalar<T: ScalarAnyRow>(
     tx: &mut DbTx,
@@ -142,7 +142,7 @@ pub fn reselect_by_id(table: &'static str, cols: &'static str) -> String {
     format!("SELECT {cols} FROM {table} WHERE id = $1")
 }
 
-/// Asserts at test time that a write statement carries no literal `RETURNING` —
+/// Asserts at test time that a write statement carries no literal `RETURNING` -
 /// the helpers append it themselves.
 pub fn debug_assert_no_returning(sql: &str) {
     debug_assert!(

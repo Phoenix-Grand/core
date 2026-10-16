@@ -7,7 +7,7 @@ import { usePrivileges } from '../../core/authz/usePrivileges'
  * Wire types and queries of the backup policy.
  *
  * Everything on this screen is computed server-side: whether the last backup is
- * recent, when the next one is due, and — above all — WHAT the dump covers.
+ * recent, when the next one is due, and - above all - WHAT the dump covers.
  * The console renders those; it never derives them. A page that decided for
  * itself what a backup contains is a page that keeps promising a file the server
  * stopped writing.
@@ -112,7 +112,7 @@ export function useBackup() {
     enabled:  allowed,
     queryFn:  () => api.get<BackupOverview>('/admin/backup').then(r => r.data),
     // A dump takes minutes. While one is in flight the page follows it rather
-    // than making the operator reload to find out whether it worked — which is
+    // than making the operator reload to find out whether it worked - which is
     // the moment they would otherwise press the button a second time.
     refetchInterval: query =>
       (query.state.data as BackupOverview | undefined)?.running ? 3_000 : false,

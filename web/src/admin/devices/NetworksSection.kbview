@@ -1,4 +1,4 @@
-<!-- NetworksSection — converted from NetworksSection.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- NetworksSection - converted from NetworksSection.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <Panel x:Props="AdminSectionProps" Class="min-w-0">
   <Panel Class="mb-3 flex min-w-0 flex-wrap items-center gap-x-3 gap-y-2">
     <Label HtmlTag="H1"

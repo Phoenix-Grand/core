@@ -61,7 +61,7 @@ pub struct Domain {
     pub has_dmarc: Option<bool>,
     pub mail_checked_at: Option<DateTime<Utc>>,
     pub created_at: DateTime<Utc>,
-    /// How many accounts carry an address at this domain — what makes a removal
+    /// How many accounts carry an address at this domain - what makes a removal
     /// destructive, and the figure the confirmation names.
     pub account_count: i64,
 }
@@ -96,8 +96,8 @@ impl Domain {
 
 /// Normalises and refuses a name.
 ///
-/// Refused early and precisely, because everything downstream — the unique
-/// index, the address comparison, the DNS query — assumes a name that is already
+/// Refused early and precisely, because everything downstream - the unique
+/// index, the address comparison, the DNS query - assumes a name that is already
 /// lower-case, ASCII and free of a scheme, a port, a path or a trailing dot.
 /// A form that accepts `https://Example.COM/` and stores it is a form that
 /// produces a domain nothing will ever match.
@@ -185,7 +185,7 @@ mod tests {
         assert!(normalise_name("exem ple.fr").is_err());
         assert!(normalise_name("exemple..fr").is_err());
         // Accented names are refused with the punycode instruction rather than
-        // silently mangled — the DNS carries the encoded form, not this one.
+        // silently mangled - the DNS carries the encoded form, not this one.
         let refusal = normalise_name("café.fr").expect_err("refusé");
         assert!(refusal.to_string().contains("punycode"));
         assert!(normalise_name("xn--caf-dma.fr").is_ok());

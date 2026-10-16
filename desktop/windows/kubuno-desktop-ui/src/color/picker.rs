@@ -1,11 +1,11 @@
-//! [`ColorPicker`] — a port of `core/frontend/src/ui/ColorPicker.tsx`, the
+//! [`ColorPicker`] - a port of `core/frontend/src/ui/ColorPicker.tsx`, the
 //! Coolorus-inspired colour panel every Kubuno module uses.
 //!
 //! The geometry is the web's own, read off the live component's DOM (a
 //! 312 DIP panel, 1 DIP border, `p-3`):
 //!
 //! ```text
-//!  13  header — « Couleur » (10 px) · ✕                        16.5 high, mb-2
+//!  13  header - « Couleur » (10 px) · ✕                        16.5 high, mb-2
 //!  37.5 [shape column 32] 6 [hue ring + SV area 210×212] 6 [harmony column 32]
 //! 259.5 harmony swatches, h-6, gap-1                             mt-2.5
 //! 291.5 preview 28×24 · « # » · hex input h-6                    mt-2
@@ -18,7 +18,7 @@
 //!
 //! Note the centre column: the row is 286 DIP wide and its two button
 //! columns and gaps take 76, so the flex item the web sizes at 212 shrinks
-//! to 210 — the ring is a 210 × 212 ELLIPSE, and the hue handle is still
+//! to 210 - the ring is a 210 × 212 ELLIPSE, and the hue handle is still
 //! placed from `SIZE / 2 = 106`. Both quirks are reproduced, since they are
 //! what the web shows.
 //!
@@ -50,7 +50,7 @@ use crate::graphics::{
 use kubuno_drive_desktop_app_controls::themes::shape::SHADOW_BLACK;
 use crate::widget::{Widget, WidgetState};
 
-/// Every number the picker is laid out with — measured on the web component.
+/// Every number the picker is laid out with - measured on the web component.
 pub mod pm {
     /// `border: 1px` + `p-3`: where the content starts inside the bounds.
     pub const INSET: f32 = 13.0;
@@ -209,7 +209,7 @@ impl Scheme {
         }
     }
 
-    /// `HARMONY_ANGLES` — the relative hue angles that define the scheme.
+    /// `HARMONY_ANGLES` - the relative hue angles that define the scheme.
     pub fn angles(self) -> &'static [f64] {
         match self {
             Self::Comp => &[0.0, 180.0],
@@ -275,7 +275,7 @@ pub struct PickerTool {
     pub active: bool,
 }
 
-/// One channel slider of the active model — a `ColorChan`.
+/// One channel slider of the active model - a `ColorChan`.
 #[derive(Debug, Clone, PartialEq)]
 pub struct Channel {
     pub label: &'static str,
@@ -409,7 +409,7 @@ pub fn triangle(size: f32) -> Triangle {
     Triangle { white: (cx, cy - r), black: (cx - r * SIN60, cy + r * 0.5), hue: (cx + r * SIN60, cy + r * 0.5) }
 }
 
-/// `bary(px, py, a, b, c)` — barycentric weights of a point.
+/// `bary(px, py, a, b, c)` - barycentric weights of a point.
 pub fn bary(px: f64, py: f64, a: (f64, f64), b: (f64, f64), c: (f64, f64)) -> (f64, f64, f64) {
     let d = (b.1 - c.1) * (a.0 - c.0) + (c.0 - b.0) * (a.1 - c.1);
     if d == 0.0 {
@@ -420,7 +420,7 @@ pub fn bary(px: f64, py: f64, a: (f64, f64), b: (f64, f64), c: (f64, f64)) -> (f
     (wa, wb, 1.0 - wa - wb)
 }
 
-/// The `(s, v)` a point `(px, py)` — relative to the area's top-left — names
+/// The `(s, v)` a point `(px, py)` - relative to the area's top-left - names
 /// in an area of side `size` and `shape`: `SvArea`'s `upd`, term for term.
 pub fn sv_from_point(shape: SvShape, size: f32, px: f64, py: f64) -> (f64, f64) {
     let size_f = size as f64;
@@ -497,7 +497,7 @@ pub fn hue_from_point(wheel: Rect, x: f32, y: f32) -> f64 {
 // Layout
 // ═════════════════════════════════════════════════════════════════════════════
 
-/// Where every part of an open [`ColorPicker`] is — one pure function, so
+/// Where every part of an open [`ColorPicker`] is - one pure function, so
 /// painting, hit-testing and measuring cannot disagree.
 #[derive(Clone)]
 pub struct PickerLayout {
@@ -575,7 +575,7 @@ impl PickerLayout {
 // The picker
 // ═════════════════════════════════════════════════════════════════════════════
 
-/// The full colour panel — `ColorPicker.tsx`.
+/// The full colour panel - `ColorPicker.tsx`.
 ///
 /// Its **state is the web's**: `[h, s, v]` plus the SV shape, the harmony
 /// scheme and the channel model, with the hex derived from the HSV
@@ -626,7 +626,7 @@ pub struct ColorPicker {
     pub eye: ScreenEyedropper,
 }
 
-/// The screen eyedropper — the web's `new EyeDropper().open()`: once armed,
+/// The screen eyedropper - the web's `new EyeDropper().open()`: once armed,
 /// the next click ANYWHERE on screen samples the pixel under the cursor;
 /// Escape cancels. The click that samples is swallowed: a host asks
 /// [`ScreenEyedropper::swallows_pointer`] before routing a press.
@@ -740,7 +740,7 @@ impl ColorPicker {
         self.opacity = colour.opacity;
     }
 
-    /// `setRgb` — through `rgbToHsv`; the opacity is left alone.
+    /// `setRgb` - through `rgbToHsv`; the opacity is left alone.
     pub fn set_rgb(&mut self, rgb: Rgb) {
         self.hsv = rgb_to_hsv(rgb.r, rgb.g, rgb.b);
     }
@@ -761,7 +761,7 @@ impl ColorPicker {
         self.color().rgb.to_hex()[1..].to_uppercase()
     }
 
-    /// Applies what was typed into the hex field — three or six digits,
+    /// Applies what was typed into the hex field - three or six digits,
     /// nothing else. Returns whether it was taken.
     pub fn apply_hex(&mut self, text: &str) -> bool {
         match parse_web_hex(text) {
@@ -778,7 +778,7 @@ impl ColorPicker {
         harmony_colors(self.scheme, self.hsv.h, self.hsv.s, self.hsv.v)
     }
 
-    /// The channel sliders of the active model, with their tracks — the
+    /// The channel sliders of the active model, with their tracks - the
     /// `chans` array of the web, stop for stop.
     pub fn channels(&self) -> Vec<Channel> {
         let (r, g, b) = self.rgb_rounded();
@@ -832,7 +832,7 @@ impl ColorPicker {
         }
     }
 
-    /// Writes channel `i` of the active model — each channel's `set` closure
+    /// Writes channel `i` of the active model - each channel's `set` closure
     /// in the web, verbatim.
     pub fn set_channel(&mut self, i: usize, x: f64) {
         let (r, g, b) = self.rgb_rounded();
@@ -1056,7 +1056,7 @@ impl ColorPicker {
         (wheel.left + (half + ring_r * a.sin()) as f32, wheel.top + (half - ring_r * a.cos()) as f32)
     }
 
-    /// Whether `(x, y)` is on the ring itself — inside its ellipse and
+    /// Whether `(x, y)` is on the ring itself - inside its ellipse and
     /// outside the inner disc (which, in the web, takes the pointer and does
     /// nothing with it).
     pub fn on_ring(wheel: Rect, x: f32, y: f32) -> bool {
@@ -1330,7 +1330,7 @@ impl ColorPicker {
         self.edit = Some((part, d));
     }
 
-    /// Applies the draft — the web's `onChange`, on every keystroke: the hex
+    /// Applies the draft - the web's `onChange`, on every keystroke: the hex
     /// field takes three or six digits and ignores the rest; a numeric box
     /// takes `Math.max(0, Math.min(max, +value))`, so an empty box is zero.
     pub fn apply_edit(&mut self) -> bool {
@@ -1539,7 +1539,7 @@ impl ColorPicker {
 // Paint helpers
 // ═════════════════════════════════════════════════════════════════════════════
 
-/// Pure white — `#fff` in the web's literals (handles, active glyphs).
+/// Pure white - `#fff` in the web's literals (handles, active glyphs).
 fn white(alpha: f32) -> D2D1_COLOR_F {
     D2D1_COLOR_F { r: 1.0, g: 1.0, b: 1.0, a: alpha }
 }
@@ -1579,7 +1579,7 @@ fn handle(g: &Graphics<'_>, cx: f32, cy: f32, d: f32, fill: Option<D2D1_COLOR_F>
     disc(g, r, fill.map(|f| fade(f, alpha)), Some((fade(border, alpha), width)));
 }
 
-/// `HarmonyIcon` — a hue-ring outline with the scheme's marker dots at their
+/// `HarmonyIcon` - a hue-ring outline with the scheme's marker dots at their
 /// true angles, joined by the harmony's polygon; `mono` is graduated dots
 /// along one radius.
 fn harmony_icon(g: &Graphics<'_>, scheme: Scheme, rect: Rect, colour: D2D1_COLOR_F) {
@@ -1696,7 +1696,7 @@ fn input(c: &dyn Canvas, rect: Rect, text_rect: Rect, value: &str, (font_size, c
     }
 }
 
-/// A `px-1.5 text-[11px]` numeric `<input>`, left-aligned — the
+/// A `px-1.5 text-[11px]` numeric `<input>`, left-aligned - the
 /// `GradientPicker`'s angle, position and opacity boxes.
 pub(super) fn number_input(c: &dyn Canvas, rect: Rect, value: &str, focused: bool, draft: Option<(&FieldDraft, bool)>, alpha: f32) {
     let text_rect = Rect::new(rect.left + 6.0, rect.top, rect.right - 6.0, rect.bottom);
@@ -2016,7 +2016,7 @@ mod eyedropper {
 }
 
 // ═════════════════════════════════════════════════════════════════════════════
-// Tests — parity with the web. The golden values below were produced by the
+// Tests - parity with the web. The golden values below were produced by the
 // live web bundle itself (`@ui`'s `rgbToHsv`, `rgbToHsl`, `rgbToCmyk`,
 // `harmonyColors` + `rgbToHex(hsvToRgb(...))`, evaluated in Chrome), so they
 // pin the port to what the browser computes, not to a re-derivation.

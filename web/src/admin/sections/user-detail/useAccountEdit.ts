@@ -4,8 +4,8 @@ import { api } from '../../../core/api/client'
 /**
  * The one write of the account sheet.
  *
- * Every editable card sends `PATCH /admin/users/:id` — the audited directory
- * endpoint — through this hook, so there is a single list of the surfaces a
+ * Every editable card sends `PATCH /admin/users/:id` - the audited directory
+ * endpoint - through this hook, so there is a single list of the surfaces a
  * change invalidates. Before, each caller kept its own and they had already
  * diverged: the storage page's consumer table went on showing an old ceiling
  * after the directory had raised it.

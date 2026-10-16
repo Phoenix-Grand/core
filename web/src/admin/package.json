@@ -2,6 +2,6 @@
   "name": "@kubuno/admin-console",
   "private": true,
   "version": "0.0.0",
-  "description": "The Kubuno core admin console — a part of the host app (web/src/admin), not a published package. This manifest exists only so Visual Studio loads Kubuno.Web.Admin as its own project node.",
+  "description": "The Kubuno core admin console - a part of the host app (web/src/admin), not a published package. This manifest exists only so Visual Studio loads Kubuno.Web.Admin as its own project node.",
   "type": "module"
 }

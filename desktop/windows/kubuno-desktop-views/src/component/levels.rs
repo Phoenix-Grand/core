@@ -111,7 +111,7 @@ fn styles_without(mut s: ControlStyles, off: ControlStyles) -> ControlStyles {
 // ── ScrollableControl ───────────────────────────────────────────────────────────────────
 
 /// The state of `ScrollableControl` (WinForms: the base of every control that scrolls its
-/// content — `Panel`, `ContainerControl`).
+/// content - `Panel`, `ContainerControl`).
 pub struct ScrollableControlCore {
     pub control: ControlCore,
     /// `AutoScroll`: scroll bars appear when the content outgrows the control.
@@ -175,7 +175,7 @@ pub trait ScrollableControl: Control + ScrollableControlLink {
 // ── ContainerControl ────────────────────────────────────────────────────────────────────
 
 /// The state of `ContainerControl` (WinForms: a control that manages the focus of the controls
-/// inside it — `Form`, `UserControl`).
+/// inside it - `Form`, `UserControl`).
 #[derive(Default)]
 pub struct ContainerControlCore {
     pub scrollable: ScrollableControlCore,

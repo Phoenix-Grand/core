@@ -92,7 +92,7 @@ impl ModuleManifest {
     /// `module_dir` : /usr/lib/kubuno/modules/<id>/
     /// L'exécutable à lancer, tel qu'il existe RÉELLEMENT sur le disque.
     ///
-    /// Un module déclare un seul `entrypoint` — `kubuno-drive` — pour tous les
+    /// Un module déclare un seul `entrypoint` - `kubuno-drive` - pour tous les
     /// systèmes, mais sur Windows le fichier livré s'appelle `kubuno-drive.exe`.
     /// Joindre le nom déclaré sans plus de façons donnerait un chemin qui
     /// n'existe pas, et l'échec ressemblerait à un binaire manquant.

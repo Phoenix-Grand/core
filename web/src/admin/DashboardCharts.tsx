@@ -1,4 +1,4 @@
-// Graphiques du tableau de bord admin — zéro dépendance externe.
+// Graphiques du tableau de bord admin - zéro dépendance externe.
 // Séries temporelles dessinées en CANVAS (HiDPI, animées, interactives :
 // survol, surbrillance, crosshair, tooltip) ; donut/jauge en SVG (net, rond).
 import { useState, useEffect } from 'react'
@@ -35,7 +35,7 @@ export function useChartSeries(): readonly string[] {
 // A canvas composites literal colours: `var(--…)` means nothing to
 // `ctx.fillStyle`. Everything painted below therefore RESOLVES its variables
 // against the live element at draw time, which is also what makes a theme switch
-// (a rewrite of those variables) repaint correctly — the draw effects depend on
+// (a rewrite of those variables) repaint correctly - the draw effects depend on
 // `useUiTheme()` so they run again when it happens.
 
 /** Last-resort ink, used only if a theme forgot to define a variable at all. */

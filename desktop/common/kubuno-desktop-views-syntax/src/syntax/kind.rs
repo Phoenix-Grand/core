@@ -20,7 +20,7 @@ pub enum SyntaxKind {
     COMMENT,
     /// A run of non-`<` characters between tags.
     TEXT,
-    /// A tag or attribute name, e.g. `Panel`, `Dock`, `x:Name` — kept as one
+    /// A tag or attribute name, e.g. `Panel`, `Dock`, `x:Name` - kept as one
     /// token; the `x:` prefix is not split off (§1: "namespace prefixes …
     /// as plain qualified names").
     IDENT,
@@ -42,7 +42,7 @@ pub enum SyntaxKind {
     QUESTION_R_ANGLE,
     /// `=`
     EQ,
-    /// Any byte sequence the lexer could not classify — kept as a token (not
+    /// Any byte sequence the lexer could not classify - kept as a token (not
     /// dropped) so the tree stays lossless even over malformed input.
     ERROR_TOKEN,
     /// End of input marker some helpers use; never actually pushed as a tree
@@ -68,7 +68,7 @@ pub enum SyntaxKind {
     /// the `ast` layer can hand it back as one logical text node.
     TEXT_NODE,
     /// A parse error the recovery strategy could not attach to a more
-    /// specific node — still carries the offending tokens losslessly.
+    /// specific node - still carries the offending tokens losslessly.
     ERROR_NODE,
 
     /// Not a real kind; keeps `SyntaxKind::__LAST as u16` a cheap bound check
@@ -83,7 +83,7 @@ impl SyntaxKind {
     }
 }
 
-/// The inverse of `SyntaxKind as u16` — a plain match, not a transmute, so an
+/// The inverse of `SyntaxKind as u16` - a plain match, not a transmute, so an
 /// out-of-range value is a clean panic (via the `unreachable!`) rather than
 /// undefined behaviour. `rowan::Language::kind_from_raw` is the only caller.
 pub(super) fn from_u16(raw: u16) -> SyntaxKind {

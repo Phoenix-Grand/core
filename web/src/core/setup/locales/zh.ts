@@ -20,7 +20,7 @@ export default {
     alreadyInitialised: '该数据库中已存在 Kubuno 架构。安装将复用它，不会删除现有数据，并保留其中已记录的管理员。',
   },
   admin: {
-    title: '您的管理员账户', lead: '该账户管理整个实例——它拥有最高权限。',
+    title: '您的管理员账户', lead: '该账户管理整个实例--它拥有最高权限。',
     pitchTitle: '钥匙在您手中',
     pitch: '在它之前不存在任何账户，也没有别人能够创建它：您所选择的密码只有您知道。',
     username: '用户名', email: '电子邮件地址', password: '密码', confirm: '确认',
@@ -33,9 +33,9 @@ export default {
     name: '实例名称', optional: '可选', logo: '标志', theme: '主题',
     logoDrop: '将图片拖到此处，或点击选择', logoChosen: '已选择标志',
     logoHint: 'PNG、JPEG、WebP 或 SVG · 最大 200 KB',
-    logoTypes: '仅支持 PNG、JPEG、WebP 或 SVG。', logoTooBig: '文件过大——最大 200 KB。',
+    logoTypes: '仅支持 PNG、JPEG、WebP 或 SVG。', logoTooBig: '文件过大--最大 200 KB。',
     logoUnreadable: '无法读取该文件。', remove: '移除', light: '浅色', dark: '深色',
-    footnote: '标志和主题均为可选——您随时可以在管理控制台中更改。',
+    footnote: '标志和主题均为可选--您随时可以在管理控制台中更改。',
   },
   install: {
     title: '准备安装', lead: '请核对摘要，然后开始安装。',

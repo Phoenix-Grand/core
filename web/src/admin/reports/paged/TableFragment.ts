@@ -19,7 +19,7 @@ export type TableFragmentProps = {
    * carry: the sheet whose addresses are short gets a narrow address column,
    * its neighbours' rows wrap where the measured ones did not, and the cut
    * lands somewhere other than where it was computed. Pinning the columns
-   * makes every fragment the same table — which is also what a reader expects
+   * makes every fragment the same table - which is also what a reader expects
    * of a table continued overleaf.
    */
   widths?: number[]

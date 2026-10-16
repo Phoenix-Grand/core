@@ -1,6 +1,6 @@
 //! `<PrintDialog>` and `<PageSetupDialog>` (WinForms `PrintDialog`, `PageSetupDialog`): Windows' own
-//! common dialogs (`PrintDlgEx`, `PageSetupDlg`) — the printer, copies, collation, page range and
-//! print to file; the paper, tray, orientation and margins — bound to a document's settings.
+//! common dialogs (`PrintDlgEx`, `PageSetupDlg`) - the printer, copies, collation, page range and
+//! print to file; the paper, tray, orientation and margins - bound to a document's settings.
 //!
 //! ```xml
 //! <PrintDialog x:Name="print_dialog1" Document="print_document1" AllowSomePages="true"/>

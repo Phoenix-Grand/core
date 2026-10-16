@@ -1,4 +1,4 @@
-// Thème du WorkspaceShell — la chrome partagée des applications avancées (éditeurs
+// Thème du WorkspaceShell - la chrome partagée des applications avancées (éditeurs
 // Office, PaintSharp, …). Même forme que l'ancien thème PaintSharp (`paintsharp/ui/theme`) plus
 // `topbarBg`/`statusBg` optionnels (barres titre/statut, plus sombres que `header`
 // côté PaintSharp). Repli sur '#111' si absents → comportement PaintSharp historique inchangé.
@@ -21,7 +21,7 @@ export type WorkspaceTheme = {
   dark?:    boolean  // true → topbar/menus style PaintSharp (sombre) ; false → style Documents (clair)
 }
 
-// Sombre — reprend la palette PaintSharp (Photoshop-like), pour que les éditeurs PaintSharp
+// Sombre - reprend la palette PaintSharp (Photoshop-like), pour que les éditeurs PaintSharp
 // restent visuellement identiques après la bascule sur le shell core.
 export const WORKSPACE_DARK: WorkspaceTheme = {
   bg: '#1e1e1e', panel: '#323232', toolbar: '#393939', header: '#2b2b2b',
@@ -29,10 +29,10 @@ export const WORKSPACE_DARK: WorkspaceTheme = {
   topbarBg: '#111111', statusBg: '#111111', dark: true,
 }
 
-// Clair — pour les apps Office (Documents, Tableur, …), aligné sur le design system.
+// Clair - pour les apps Office (Documents, Tableur, …), aligné sur le design system.
 //
 // Chaque couleur passe par une variable CSS `--kbn-ws-*` (repli = valeur historique) :
-// ces champs finissent en styles inline, où `var()` se résout au rendu — un THÈME
+// ces champs finissent en styles inline, où `var()` se résout au rendu - un THÈME
 // peut donc re-skinner toute la chrome workspace (ruban, topbar, panneaux, barre de
 // statut) en posant ces variables dans son global.css. Ne PAS faire de calcul de
 // couleur JS sur ces champs (ce sont potentiellement des chaînes `var(...)`).
@@ -52,7 +52,7 @@ export const WORKSPACE_LIGHT: WorkspaceTheme = {
   dark: false,
 }
 
-// Office « ruban coloré » (façon Word) — base claire (corps + ruban blancs) MAIS topbar
+// Office « ruban coloré » (façon Word) - base claire (corps + ruban blancs) MAIS topbar
 // + bande d'onglets BLEUES (texte blanc), onglet actif blanc à coins arrondis se fondant
 // dans le contenu. Utilisé par OfficeShell (tous les sous-éditeurs Office).
 // Mêmes variables `--kbn-ws-*` que WORKSPACE_LIGHT (chrome claire commune) ; la bande

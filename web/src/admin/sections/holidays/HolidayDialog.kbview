@@ -1,4 +1,4 @@
-<!-- HolidayDialog — converted from HolidayDialog.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- HolidayDialog - converted from HolidayDialog.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <Panel x:Props="HolidayDialogProps" OnMouseDown="panel_mouse_down">
   <FloatingWindow ConfirmText="{Res admin.hol_save}"
                   ConfirmEnabled="{Binding enabled_unless_busy_name_trim}"

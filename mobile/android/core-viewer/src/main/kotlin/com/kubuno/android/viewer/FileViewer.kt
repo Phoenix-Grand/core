@@ -41,7 +41,7 @@ import kotlinx.coroutines.withContext
 import java.io.File
 
 /**
- * One file to view: its metadata, plus — for video/audio — a [streamUrl] the
+ * One file to view: its metadata, plus - for video/audio - a [streamUrl] the
  * player can stream from over the app's authenticated client, avoiding a full
  * download. Other kinds are fetched to a file on demand.
  */
@@ -53,7 +53,7 @@ data class ViewerItem(
 )
 
 /**
- * The shared file-viewer surface — the Android equivalent of the web's
+ * The shared file-viewer surface - the Android equivalent of the web's
  * `openPreview(items, index)` delegation contract. Mail opens an attachment
  * here, drive will preview a file here; the same viewers render both.
  *
@@ -146,7 +146,7 @@ private fun ViewerPage(
         return
     }
 
-    // Media with a stream URL plays without a full download — no file fetch.
+    // Media with a stream URL plays without a full download - no file fetch.
     val streams = (kind == ViewerKind.VIDEO || kind == ViewerKind.AUDIO) &&
         item.streamUrl != null && mediaHttpClient != null
     if (streams) {

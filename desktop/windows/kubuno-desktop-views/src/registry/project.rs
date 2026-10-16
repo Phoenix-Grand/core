@@ -3,7 +3,7 @@
 //! `#[derive(Component)]` / `#[derive(UserControl)]` (**linked** classes: registered by a static
 //! constructor the derive emits, before `main`), then the classes the tools only know from the
 //! source (**declared** classes: the language server's `syn` scan of the workspace, the design
-//! surface's list from Visual Studio before the project is built — they validate, complete and
+//! surface's list from Visual Studio before the project is built - they validate, complete and
 //! show in the Properties window, and render as a labelled placeholder).
 //!
 //! The element name is the XML name space (the note's rule): a class named like a built-in
@@ -84,8 +84,8 @@ pub struct ClassRegistration {
     /// Its path, relative to the file declaring the class.
     pub view_path: Option<&'static str>,
     /// The absolute folder of its view when it was compiled: what the relative paths of the view
-    /// (`d:ItemsSource="design/rows.json"`, image files) resolve against when another view — maybe in
-    /// another folder of the project — nests it.
+    /// (`d:ItemsSource="design/rows.json"`, image files) resolve against when another view - maybe in
+    /// another folder of the project - nests it.
     pub view_dir: Option<&'static str>,
     /// The file declaring the class (`file!()`).
     pub source_file: &'static str,

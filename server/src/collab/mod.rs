@@ -6,7 +6,7 @@
 //! updates (concatenable) between the clients of the same `room` and persists
 //! them (update journal + consolidated snapshot) so that late joiners can
 //! resynchronize. The visible `.kb***` file is still written by the clients
-//! (application JSON snapshot) — here we only keep the transient CRDT state.
+//! (application JSON snapshot) - here we only keep the transient CRDT state.
 //!
 //! Auth: JWT via `?token=` (browsers cannot set headers on a WebSocket
 //! upgrade). Any authenticated user can join a room (the module controls who
@@ -170,7 +170,7 @@ impl CollabStore {
     /// the consolidated updates. Deletion is limited to the `id`s actually read:
     /// an update that arrived during the merge survives (applied on the next pass).
     ///
-    /// `force = true` recompacts even without a new update — used to migrate the
+    /// `force = true` recompacts even without a new update - used to migrate the
     /// old concatenated snapshots (which have no pending journal).
     pub async fn consolidate(db: &DbPool, room: &str, force: bool) -> Result<(), sqlx::Error> {
         let rows: Vec<(Uuid, Vec<u8>)> = db
@@ -277,8 +277,8 @@ impl CollabStore {
 
 /// One-time migration at startup: recompacts (GC) all existing collab snapshots
 /// to eliminate the bloat inherited from the old concatenation (redundant state
-/// dumps, deleted contents never collected). Sequential — a single `Y.Doc` in
-/// memory at a time — and idempotent (can be re-run harmlessly).
+/// dumps, deleted contents never collected). Sequential - a single `Y.Doc` in
+/// memory at a time - and idempotent (can be re-run harmlessly).
 pub async fn recompact_all(db: DbPool) {
     let rooms: Vec<(String,)> = match db
         .fetch_all_as::<(String,)>(
@@ -422,10 +422,10 @@ fn hub() -> &'static CollabHub {
 
 #[derive(Deserialize)]
 pub struct CollabQuery {
-    /// Socket ticket bound to this room's path — web.
+    /// Socket ticket bound to this room's path - web.
     #[serde(default)]
     pub kt: Option<String>,
-    /// Access token — native clients.
+    /// Access token - native clients.
     #[serde(default)]
     pub token: Option<String>,
 }
@@ -616,7 +616,7 @@ fn may_close(caller: Option<&str>, room: &str) -> bool {
     }
 }
 
-/// `POST /internal/collab/rooms/close` — the owning module replaced the content
+/// `POST /internal/collab/rooms/close` - the owning module replaced the content
 /// behind `room` (a REST save from a client outside the room). The room is
 /// closed: connected clients are told to reload and disconnected, later joins
 /// and stray updates are refused, and its persisted state is dropped so it can

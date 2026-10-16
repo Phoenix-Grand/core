@@ -1,4 +1,4 @@
-<!-- SettingScopeBar — converted from SettingScopeBar.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- SettingScopeBar - converted from SettingScopeBar.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="SettingScopeBarProps">
   <Panel Class="contents">
     <Panel Class="{Binding div_class}">

@@ -1,4 +1,4 @@
-//! The UI thread's async executor (`vskubuno/docs/EVENTS.md` §6, work package EVT-6) — the
+//! The UI thread's async executor (`vskubuno/docs/EVENTS.md` §6, work package EVT-6) - the
 //! role WinForms' `WindowsFormsSynchronizationContext` plays for `async void` handlers.
 //!
 //! Each view runtime owns a single-threaded executor polled from the message loop: the
@@ -16,7 +16,7 @@
 //! - [`delay`] is a timer future on the view's clock (the frame time), [`yield_now`] gives
 //!   the frame back once.
 //! - Closing the view cancels every task: their futures are dropped at their current `.await`
-//!   (WinForms has no equivalent — an `async void` handler there outlives its form and throws on
+//!   (WinForms has no equivalent - an `async void` handler there outlives its form and throws on
 //!   the next UI access); [`JoinHandle`] then reports [`Cancelled`] and [`UiHandle::update`]
 //!   returns `None`.
 //!
@@ -284,12 +284,12 @@ pub(crate) fn with_vm_scope<V: 'static, R>(ctx: &UiContext, vm: &mut V, f: impl 
 }
 
 /// Starts `future` on the current view's UI-thread executor (inside a handler, a task, a
-/// timer tick — anywhere a view's frame is running). Its first poll happens right after the
+/// timer tick - anywhere a view's frame is running). Its first poll happens right after the
 /// current handler returns, within the same frame or the next one; it then runs on the UI
 /// thread only, until it finishes or the view closes (which cancels it).
 ///
 /// Outside a view's frame there is no current view: the future is dropped, a warning logged,
-/// and the handle reports [`Cancelled`] — use `Runtime::spawn_local` there.
+/// and the handle reports [`Cancelled`] - use `Runtime::spawn_local` there.
 pub fn spawn_local<T: 'static>(future: impl Future<Output = T> + 'static) -> JoinHandle<T> {
     spawn_named("spawn_local", future)
 }
@@ -484,7 +484,7 @@ impl<V: 'static> UiHandle<V> {
         Self { ctx: Rc::downgrade(ctx), _vm: PhantomData }
     }
 
-    /// Runs `f` with `&mut` of the view model, now, and returns its result — the view repaints
+    /// Runs `f` with `&mut` of the view model, now, and returns its result - the view repaints
     /// with the change at the end of the current frame. `None` when it cannot: the view closed
     /// (the task is being cancelled), the view is painted with another view model type or
     /// untyped (`Runtime::frame`), or `update` is called from inside another `update`'s closure,

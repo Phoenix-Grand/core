@@ -33,7 +33,7 @@ export default {
     name: 'Nome dell’istanza', optional: 'facoltativo', logo: 'Logo', theme: 'Tema',
     logoDrop: 'Trascinate qui un’immagine, o fate clic per sceglierla', logoChosen: 'Logo scelto',
     logoHint: 'PNG, JPEG, WebP o SVG · 200 KB massimo',
-    logoTypes: 'Solo PNG, JPEG, WebP o SVG.', logoTooBig: 'File troppo pesante — 200 KB massimo.',
+    logoTypes: 'Solo PNG, JPEG, WebP o SVG.', logoTooBig: 'File troppo pesante - 200 KB massimo.',
     logoUnreadable: 'Impossibile leggere il file.', remove: 'Rimuovi', light: 'chiaro', dark: 'scuro',
     footnote: 'Logo e tema sono facoltativi: potrete cambiarli in qualsiasi momento nella console di amministrazione.',
   },

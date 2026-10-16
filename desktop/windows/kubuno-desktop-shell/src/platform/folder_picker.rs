@@ -14,13 +14,13 @@ use windows::Win32::UI::Shell::{
 };
 
 /// Asks the user for a folder, starting at `current` when it exists. Returns
-/// `None` when the dialog is dismissed — a cancel is not an error.
+/// `None` when the dialog is dismissed - a cancel is not an error.
 pub fn pick(owner: HWND, title: &str, current: &str) -> Option<String> {
     unsafe {
         let dialog: IFileOpenDialog =
             CoCreateInstance(&FileOpenDialog, None, CLSCTX_INPROC_SERVER).ok()?;
         // A folder picker is the file dialog in "pick folders" mode, restricted
-        // to real file-system paths — a shell library would not be syncable.
+        // to real file-system paths - a shell library would not be syncable.
         dialog
             .SetOptions(FOS_PICKFOLDERS | FOS_FORCEFILESYSTEM | FOS_PATHMUSTEXIST)
             .ok()?;

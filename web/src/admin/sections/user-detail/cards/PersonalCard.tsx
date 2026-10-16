@@ -13,8 +13,8 @@ import { accountError, useUpdateAccount } from '../useAccountEdit'
 /**
  * The six personal columns of migration `000114`.
  *
- * They were readable here and writable nowhere in the console — the edit window
- * knew five fields, none of them these — which made this the exact card the rule
+ * They were readable here and writable nowhere in the console - the edit window
+ * knew five fields, none of them these - which made this the exact card the rule
  * exists for: an operator read a wrong pronunciation on the sheet and had no way
  * to fix it. `PATCH /admin/users/:id` has always accepted them (`tidy_profile`
  * normalises the administrative path through the same rules as `PATCH /me`), so

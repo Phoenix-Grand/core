@@ -10,7 +10,7 @@ import type { MouseEvent as ReactMouseEvent, TouchEvent as ReactTouchEvent } fro
 // runtime to the host's single instance, so modules share this logic).
 
 /** True when the primary pointer is coarse (touch) and hovering is unavailable
- *  — i.e. double-click is not a sensible gesture and a tap should "open". */
+ *  - i.e. double-click is not a sensible gesture and a tap should "open". */
 export function isCoarsePointer(): boolean {
   return (
     typeof window !== 'undefined' &&

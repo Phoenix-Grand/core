@@ -2,8 +2,8 @@
 //!
 //! ## Two answers, and the difference matters
 //!
-//! An instance can *know* where somebody is — because an administrator posted
-//! `intl.holiday_calendars` on their account, their group or their unit — or it
+//! An instance can *know* where somebody is - because an administrator posted
+//! `intl.holiday_calendars` on their account, their group or their unit - or it
 //! can *guess*, from the time zone that already applies to them. The two are
 //! returned distinctly ([`Source`]) because a module must be able to say
 //! "France (d'après votre fuseau horaire)" and offer to correct it. A guess
@@ -15,7 +15,7 @@
 //! It is the only location signal this product already holds, it was set on
 //! purpose, and it costs no outward request. Reading an address, calling a
 //! geolocation service, or sniffing the browser's locale would each add a
-//! dependency — or a disclosure — to answer a question the time zone answers
+//! dependency - or a disclosure - to answer a question the time zone answers
 //! well enough to be corrected in one click.
 
 use std::collections::HashMap;
@@ -73,7 +73,7 @@ pub struct Applicable {
 
 /// Splits the stored setting: `"FR-6AE, BE"` → `["FR-6AE", "BE"]`.
 ///
-/// Tolerant on purpose — this value is typed by a human in a text field, and
+/// Tolerant on purpose - this value is typed by a human in a text field, and
 /// refusing a trailing comma would be refusing a whole configuration over
 /// punctuation.
 pub fn parse_codes(raw: &str) -> Vec<String> {

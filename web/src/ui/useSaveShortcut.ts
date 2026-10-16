@@ -30,7 +30,7 @@ function onKeyDown(e: KeyboardEvent): void {
  * stack rather than firing a no-op.
  */
 export function useSaveShortcut(onSave: SaveHandler, enabled = true): void {
-  // A ref keeps a re-created closure from re-registering — and from being stale.
+  // A ref keeps a re-created closure from re-registering - and from being stale.
   const handler = useRef(onSave)
   handler.current = onSave
 

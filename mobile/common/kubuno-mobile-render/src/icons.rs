@@ -1,6 +1,6 @@
 //! Lucide icon outlines (24x24, 2px stroke, round caps/joins) for the mobile renderer's `Icon`.
 //!
-//! AUTO-GENERATED from lucide-react (ISC licensed) by scratchpad/gen_icons.mjs — do not edit by hand.
+//! AUTO-GENERATED from lucide-react (ISC licensed) by scratchpad/gen_icons.mjs - do not edit by hand.
 //! Each icon is one or more SVG path `d` strings on the 24-unit Lucide grid, stroked (never filled).
 
 /// The outline(s) of a Lucide icon by its PascalCase name, or `None` when unknown.

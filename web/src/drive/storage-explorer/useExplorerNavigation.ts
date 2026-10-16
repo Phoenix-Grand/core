@@ -19,7 +19,7 @@ export function useExplorerNavigation({ src, pathParam, onNavigated }: {
   const [currentFolderId, setCurrentFolderId] = useState<string | null>(null)
   const [breadcrumbs, setBreadcrumbs] = useState<Array<{ id: string; name: string }>>([])
 
-  // Écrit la position dans l'URL (paramètre `pathParam`) si demandé — permet à la
+  // Écrit la position dans l'URL (paramètre `pathParam`) si demandé - permet à la
   // sidebar de piloter le volet principal et le deep-link (cas distant : id = chemin).
   const writeUrl = useCallback((id: string | null) => {
     if (!pathParam) return

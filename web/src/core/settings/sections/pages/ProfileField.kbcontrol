@@ -1,4 +1,4 @@
-<!-- Field — converted from Field.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- Field - converted from Field.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="FieldProps">
   <Panel Class="{Binding props.className}">
     <Stack Direction="LeftToRight" Gap="6" CrossAlign="Center" Class="mb-1">

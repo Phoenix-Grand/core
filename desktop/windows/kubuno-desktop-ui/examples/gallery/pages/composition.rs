@@ -1,9 +1,9 @@
-//! Gallery page — **composition**: the families assembled the way real screens
+//! Gallery page - **composition**: the families assembled the way real screens
 //! assemble them.
 //!
 //! Every other page shows one family alone, on the window ground, in rectangles
 //! the page chose for it. That is exactly the situation in which a primitive
-//! cannot go wrong — and the user reported that the renders turn « weird » as
+//! cannot go wrong - and the user reported that the renders turn « weird » as
 //! soon as components are *combined*. This page is the regression bench for
 //! that: nothing here is a demo cell, everything is a screen.
 //!
@@ -13,20 +13,20 @@
 //! one), and it scrolls with the wheel when a scene is
 //! taller than the window:
 //!
-//! 1. **Réglages** — a settings screen: `Panel` > `Card` > `GroupBox` >
+//! 1. **Réglages** - a settings screen: `Panel` > `Card` > `GroupBox` >
 //!    labelled fields (`OutlinedField`, `TextField`, `HelpButton`), switches,
 //!    check boxes, radios, `ComboBox` beside `Dropdown`, `NumericField` beside
 //!    `Slider`, a `DatePicker`, and a footer of buttons.
-//! 2. **Données** — a toolbar row (`SearchField` + `Dropdown` + buttons) above
+//! 2. **Données** - a toolbar row (`SearchField` + `Dropdown` + buttons) above
 //!    a `DataTable` whose role column carries `Badge`s, with a row menu open.
-//! 3. **Explorateur** — a file manager: `Toolbar`, `Breadcrumb`, a `Splitter`
+//! 3. **Explorateur** - a file manager: `Toolbar`, `Breadcrumb`, a `Splitter`
 //!    between a `TreeView` and `Tabs` holding a scrolled `ListView`, and a
 //!    `StatusBar`.
-//! 4. **États** — `Callout`, `ProgressBar`, `Spinner`, `EmptyState`,
+//! 4. **États** - `Callout`, `ProgressBar`, `Spinner`, `EmptyState`,
 //!    `Accordion` and `Stepper`, each inside a `Card`.
-//! 5. **Dialogue** — a modal `FloatingWindow` whose body is a form, over a page,
+//! 5. **Dialogue** - a modal `FloatingWindow` whose body is a form, over a page,
 //!    and a `ConfirmDialog` carrying a very long file name.
-//! 6. **Débordements** — long labels in narrow containers, very long words,
+//! 6. **Débordements** - long labels in narrow containers, very long words,
 //!    large numbers, disabled and focused states flush against a clip, and a
 //!    filter bar that puts every field family on ONE row so their heights and
 //!    baselines can be compared.
@@ -71,7 +71,7 @@ use super::interact::{self, Live};
 use super::sheet::{Page, MARGIN};
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Metrics — the page's own layout rhythm (the web's gaps, named once)
+// Metrics - the page's own layout rhythm (the web's gaps, named once)
 // ─────────────────────────────────────────────────────────────────────────────
 
 mod m {
@@ -97,7 +97,7 @@ mod m {
     pub const EDGE: f32 = 8.0;
     /// The vertical filter bar the alignment audit lays its controls on.
     pub const BAR_H: f32 = 48.0;
-    /// Height of the live column's scroll container — shorter than the form.
+    /// Height of the live column's scroll container - shorter than the form.
     pub const LIVE_VIEW_H: f32 = 400.0;
     /// How far a focus ring reaches outside its control (`ring-2` +
     /// `ring-offset-1`), rounded up: the inset a clipped container keeps.
@@ -156,7 +156,7 @@ fn scene_from(arg: &str) -> Option<usize> {
 }
 
 /// The scene to open first: `--scene <n|name>` on the command line, else the
-/// `KUBUNO_COMPOSITION_SCENE` environment variable — so a capture script can
+/// `KUBUNO_COMPOSITION_SCENE` environment variable - so a capture script can
 /// land on any scene without clicking.
 fn initial_scene() -> Option<usize> {
     let args: Vec<String> = std::env::args().collect();
@@ -185,7 +185,7 @@ pub fn draw(c: &dyn Canvas, f: &Frame) {
         let page = Page::new(c, f.size.0 - interact::PANEL_W(), f.size.1);
         let area = Rect::new(MARGIN, page.y, page.area.right - MARGIN, page.area.bottom);
 
-        // ── The scene strip — itself a composition: Tabs on the page ground ──
+        // ── The scene strip - itself a composition: Tabs on the page ground ──
         let mut strip = Tabs::new();
         for s in SCENES {
             strip = strip.with(s);
@@ -246,7 +246,7 @@ pub fn draw(c: &dyn Canvas, f: &Frame) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Small composition helpers — what an application writes around the primitives
+// Small composition helpers - what an application writes around the primitives
 // ─────────────────────────────────────────────────────────────────────────────
 
 /// A grey note stating what the block below exercises; returns the next top.
@@ -279,7 +279,7 @@ fn form_label_help(c: &dyn Canvas, x: f32, y: f32, text: &str, button: &HelpButt
 }
 
 /// A settings row: title + description on the left, `Switch` on the right,
-/// closed by a hairline — the shape every settings screen of the web uses.
+/// closed by a hairline - the shape every settings screen of the web uses.
 fn setting_row(c: &dyn Canvas, r: Rect, title: &str, desc: &str, on: bool, state: WidgetState) -> Rect {
     let t = c.theme();
     let f = c.formats();
@@ -294,7 +294,7 @@ fn setting_row(c: &dyn Canvas, r: Rect, title: &str, desc: &str, on: bool, state
     sw
 }
 
-/// The switch's own size — its metrics are private to the family.
+/// The switch's own size - its metrics are private to the family.
 fn switch_size(c: &dyn Canvas) -> Size {
     Switch::new().measure(c)
 }
@@ -311,7 +311,7 @@ fn card_body_width(card: &Card, w: f32) -> f32 {
     b.right - b.left
 }
 
-/// The height a card `w` DIP wide needs to show `content_h` DIP of body —
+/// The height a card `w` DIP wide needs to show `content_h` DIP of body -
 /// its header and paddings asked of the card itself, never guessed.
 fn card_height(card: &Card, w: f32, content_h: f32) -> f32 {
     let probe = Rect::new(0.0, 0.0, w, 1000.0);
@@ -349,7 +349,7 @@ const ROLES: [(&str, Option<&str>); 3] =
     [("Membre", Some("User")), ("Administrateur", Some("Shield")), ("Invité", Some("UserPlus"))];
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Scene 1 — a settings screen: Panel > Card > GroupBox > labelled controls
+// Scene 1 - a settings screen: Panel > Card > GroupBox > labelled controls
 // ─────────────────────────────────────────────────────────────────────────────
 
 fn scene_settings(c: &dyn Canvas, _f: &Frame, a: Rect) -> f32 {
@@ -359,7 +359,7 @@ fn scene_settings(c: &dyn Canvas, _f: &Frame, a: Rect) -> f32 {
         a.left,
         a.top,
         a.right,
-        "Panel (layer) > Card > GroupBox > champs libellés — les cartes sont peintes PAR L'APPELANT sur le Panel, comme dans une app",
+        "Panel (layer) > Card > GroupBox > champs libellés - les cartes sont peintes PAR L'APPELANT sur le Panel, comme dans une app",
     );
 
     // The page ground of a settings screen: a layer panel with the LG padding.
@@ -441,7 +441,7 @@ fn scene_settings(c: &dyn Canvas, _f: &Frame, a: Rect) -> f32 {
     CheckBox::new("Inclure les dossiers partagés").tri_state().check(CheckState::Indeterminate).paint(c, Rect::new(g.left, gy, g.right, gy + 20.0), WidgetState::REST);
 
     let mut by = group_rect.bottom + m::ROW_GAP;
-    // A horizontal radio group — three options on one line, each at its own width.
+    // A horizontal radio group - three options on one line, each at its own width.
     let ctl = form_label(c, body.left, by, body.right, "Thème");
     let mut x = body.left;
     for (i, name) in ["Clair", "Sombre", "Système"].into_iter().enumerate() {
@@ -452,7 +452,7 @@ fn scene_settings(c: &dyn Canvas, _f: &Frame, a: Rect) -> f32 {
     }
     by = ctl + 20.0 + m::ROW_GAP;
 
-    // NumericField beside a Slider — the value and its handle on one line.
+    // NumericField beside a Slider - the value and its handle on one line.
     let ctl = form_label(c, body.left, by, body.right, "Quota de stockage (Go)");
     let q = NumericField::ranged(0.0, 500.0).with_value(120.0).unwrap_or_default();
     let qh = q.measure(c).height;
@@ -486,7 +486,7 @@ fn scene_settings(c: &dyn Canvas, _f: &Frame, a: Rect) -> f32 {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Scene 2 — a data screen: Card > toolbar row > DataTable with badges + menu
+// Scene 2 - a data screen: Card > toolbar row > DataTable with badges + menu
 // ─────────────────────────────────────────────────────────────────────────────
 
 const PEOPLE: [(&str, &str, &str, &str); 9] = [
@@ -524,7 +524,7 @@ fn people_table(width: f32) -> DataTable {
         aligned(column("quota", "Quota", 120), HorizontalAlignment::Right),
     ];
     // The role cell carries its text (the card layout and sorting read it);
-    // the table's per-cell renderer — the web column's `cell` — draws it as a
+    // the table's per-cell renderer - the web column's `cell` - draws it as a
     // badge capped to the cell, so it never spills into the next column.
     t.items = PEOPLE
         .iter()
@@ -600,7 +600,7 @@ fn scene_data(c: &dyn Canvas, f: &Frame, a: Rect) -> f32 {
     table.hot_chrome = table.chrome_at(c, table_rect, f.mouse.0, f.mouse.1);
     table.paint(c, table_rect, WidgetState::REST);
 
-    // The row menu of row 3, open, anchored on the row's trailing edge — it is
+    // The row menu of row 3, open, anchored on the row's trailing edge - it is
     // taller than the rows left under it, so it must hang past the card.
     let anchor = table.row_rect(table_rect, 2);
     let menu = row_menu();
@@ -611,7 +611,7 @@ fn scene_data(c: &dyn Canvas, f: &Frame, a: Rect) -> f32 {
 
     // A breadcrumb + status bar under the card: two strips an admin page ends on.
     let mut yy = card_rect.bottom + m::GAP;
-    let trail = Breadcrumb::new().with("Administration").with("Espaces").with("Kubuno Cloud — équipe documentation").with("Membres");
+    let trail = Breadcrumb::new().with("Administration").with("Espaces").with("Kubuno Cloud - équipe documentation").with("Membres");
     let th = trail.measure(c).height;
     trail.paint_segments(c, Rect::new(a.left, yy, a.right, yy + th), None, false);
     yy += th + 8.0;
@@ -626,8 +626,8 @@ fn scene_data(c: &dyn Canvas, f: &Frame, a: Rect) -> f32 {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Scene 3 — a file manager: Toolbar, Breadcrumb, Splitter(TreeView | Tabs >
-// scrolled ListView), StatusBar — all inside one Card
+// Scene 3 - a file manager: Toolbar, Breadcrumb, Splitter(TreeView | Tabs >
+// scrolled ListView), StatusBar - all inside one Card
 // ─────────────────────────────────────────────────────────────────────────────
 
 fn explorer_tree() -> TreeView {
@@ -653,7 +653,7 @@ fn explorer_tree() -> TreeView {
 
 fn explorer_list(width: f32) -> ListView {
     const FILES: [(&str, &str, &str, i32); 12] = [
-        ("Avenant n°3 — contrat de maintenance.pdf", "17 sept. 2026", "1,2 Mo", 1),
+        ("Avenant n°3 - contrat de maintenance.pdf", "17 sept. 2026", "1,2 Mo", 1),
         ("Budget prévisionnel 2027.xlsx", "16 sept. 2026", "48 Ko", 1),
         ("Compte-rendu-comité-de-pilotage-trimestriel-septembre-2026-v4-final.docx", "15 sept. 2026", "212 Ko", 1),
         ("Contrat cadre.pdf", "14 sept. 2026", "3,4 Mo", 1),
@@ -754,7 +754,7 @@ fn scene_explorer(c: &dyn Canvas, f: &Frame, a: Rect) -> f32 {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Scene 4 — feedback surfaces inside cards
+// Scene 4 - feedback surfaces inside cards
 // ─────────────────────────────────────────────────────────────────────────────
 
 fn scene_states(c: &dyn Canvas, f: &Frame, a: Rect) -> f32 {
@@ -877,7 +877,7 @@ fn scene_states(c: &dyn Canvas, f: &Frame, a: Rect) -> f32 {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Scene 5 — a modal whose body is a form, and a confirm with a long name
+// Scene 5 - a modal whose body is a form, and a confirm with a long name
 // ─────────────────────────────────────────────────────────────────────────────
 
 fn scene_dialog(c: &dyn Canvas, f: &Frame, a: Rect) -> f32 {
@@ -934,7 +934,7 @@ fn scene_dialog(c: &dyn Canvas, f: &Frame, a: Rect) -> f32 {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Scene 6 — overflow, narrow containers, focus flush against clips, and one
+// Scene 6 - overflow, narrow containers, focus flush against clips, and one
 // filter bar holding every field family
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -951,7 +951,7 @@ fn scene_overflow(c: &dyn Canvas, _f: &Frame, a: Rect) -> f32 {
         Rect::new(x, top, x + w, top + h)
     };
 
-    // Row 1 — titles and labels that do not fit. The group's switch row wraps
+    // Row 1 - titles and labels that do not fit. The group's switch row wraps
     // its label into the width the switch leaves, so the row is as tall as
     // the wrapped label needs.
     let g = GroupBox::titled("Autorisations d'accès partagées aux invités externes").with_padding(Padding::all(8.0));
@@ -1015,7 +1015,7 @@ fn scene_overflow(c: &dyn Canvas, _f: &Frame, a: Rect) -> f32 {
     Badge::new("Hors ligne").size(BadgeSize::Sm).paint(c, Rect::new(b.left, b.top + 54.0, b.left + 70.0, b.top + 70.0), WidgetState::REST.disabled(true));
     y += h + m::GAP;
 
-    // Row 2 — selects, numbers, tabs and a trail in narrow cells.
+    // Row 2 - selects, numbers, tabs and a trail in narrow cells.
     // Two stacked fields per card: the cards are sized from the fields'
     // own heights, so nothing hangs below their borders.
     let cb = filled_combo(&["Téléchargements partagés de l'équipe documentation", "Documents"], 0);
@@ -1065,7 +1065,7 @@ fn scene_overflow(c: &dyn Canvas, _f: &Frame, a: Rect) -> f32 {
     callout.paint(c, Rect::new(r.left, r.top, r.right, r.top + chh), WidgetState::REST);
     y += h.max(chh) + m::GAP;
 
-    // Row 3 — list, menu row, toolbar and empty state in narrow cells. The
+    // Row 3 - list, menu row, toolbar and empty state in narrow cells. The
     // empty state's title wraps (its unbreakable word breaks between
     // characters) and the row grows to the height it needs at that width.
     let empty = EmptyState::new("Search", "Aucun résultat pour « Anticonstitutionnellement »").with_compact(true).with_description("Essayez un autre terme.");
@@ -1103,7 +1103,7 @@ fn scene_overflow(c: &dyn Canvas, _f: &Frame, a: Rect) -> f32 {
     empty.paint(c, b, WidgetState::REST);
     y += h + m::GAP;
 
-    // Row 4 — focus rings flush against a clipped container's edge.
+    // Row 4 - focus rings flush against a clipped container's edge.
     y = note(c, a.left, y, a.right, "Focus (clavier) au bord d'un conteneur découpé : l'anneau doit rester visible entier (web : ring hors de la boîte)");
     // The web's container keeps its rings whole with a `p-1` inset: the
     // content starts one ring reach inside the clip, never on it.
@@ -1136,9 +1136,9 @@ fn scene_overflow(c: &dyn Canvas, _f: &Frame, a: Rect) -> f32 {
     c.pop_clip();
     y += h + m::GAP;
 
-    // Row 5 — ONE filter bar holding every field family, each at its own
+    // Row 5 - ONE filter bar holding every field family, each at its own
     // height, centred on the bar: the heights and the text baselines must agree.
-    y = note(c, a.left, y, a.right, "Barre de filtres : chaque champ à la hauteur qu'il annonce, centré — hauteurs et lignes de base doivent coïncider");
+    y = note(c, a.left, y, a.right, "Barre de filtres : chaque champ à la hauteur qu'il annonce, centré - hauteurs et lignes de base doivent coïncider");
     let bar = Rect::new(a.left, y, a.right, y + m::BAR_H);
     c.fill_rounded(&bar, 6.0, &t.surface_2);
     let mid = (bar.top + bar.bottom) / 2.0;
@@ -1189,7 +1189,7 @@ fn scene_overflow(c: &dyn Canvas, _f: &Frame, a: Rect) -> f32 {
 }
 
 // ═════════════════════════════════════════════════════════════════════════════
-// The live column — a form inside a clipped, scrolled container, whose
+// The live column - a form inside a clipped, scrolled container, whose
 // floating parts must escape it
 // ═════════════════════════════════════════════════════════════════════════════
 
@@ -1443,7 +1443,7 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
 
         let (left, y0, right) = interact::panel(c, interact::panel_rect(f.size));
         let col_bottom = interact::panel_rect(f.size).bottom - 16.0;
-        let y = interact::caption(c, left, right, y0, "Formulaire dans une ScrollView découpée (molette) — les listes doivent en sortir");
+        let y = interact::caption(c, left, right, y0, "Formulaire dans une ScrollView découpée (molette) - les listes doivent en sortir");
 
         // ── The scroll container ──────────────────────────────────────────────
         let status_h = 40.0;
@@ -1478,7 +1478,7 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
         let b = card.body_rect(card_rect);
         let mut yy = b.top;
 
-        // Name — a real text field: click or Tab to focus, type, Backspace, Ctrl+V.
+        // Name - a real text field: click or Tab to focus, type, Backspace, Ctrl+V.
         let ctl = form_label(c, b.left, yy, b.right, "Nom de l'espace");
         let name_r = Rect::new(b.left, ctl, b.right, ctl + 36.0);
         let fs = track(&mut reveal, name_r, live.focus_with("c-name", clip_to_vp(name_r), FocusOpts::TEXT));
@@ -1507,7 +1507,7 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
         name.paint(c, name_r, fs.apply(st(name_r)));
         yy = name_r.bottom + m::ROW_GAP;
 
-        // Language — ComboBox: its list must leave the container.
+        // Language - ComboBox: its list must leave the container.
         let ctl = form_label(c, b.left, yy, b.right, "Langue de l'interface");
         let combo = filled_combo(&LANGUAGES, ui.lang);
         let combo_r = Rect::new(b.left, ctl, b.right, ctl + combo.field_height());
@@ -1519,7 +1519,7 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
         ui.combo_bounds = combo_r;
         yy = combo_r.bottom + m::ROW_GAP;
 
-        // Default role — label + « ? » (bubble) + Dropdown.
+        // Default role - label + « ? » (bubble) + Dropdown.
         let q = HelpButton::new().open(ui.open == Open::Help);
         let (ctl, qr) = form_label_help(c, b.left, yy, "Rôle par défaut", &q, WidgetState::REST);
         if ui.open == Open::None && hit(qr) {
@@ -1536,7 +1536,7 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
         ui.role_bounds = role_r;
         yy = role_r.bottom + m::ROW_GAP;
 
-        // Expiry — DatePicker: its calendar must leave the container.
+        // Expiry - DatePicker: its calendar must leave the container.
         let ctl = form_label(c, b.left, yy, b.right, "Expiration des invitations");
         let dw = ui.picker.measure(c).width;
         let date_r = Rect::new(b.left, ctl, b.left + dw, ctl + ui.picker.field_height());
@@ -1549,7 +1549,7 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
         ui.date_bounds = date_r;
         yy = date_r.bottom + m::ROW_GAP;
 
-        // Quota — NumericField + Slider on one line; arrows step when focused.
+        // Quota - NumericField + Slider on one line; arrows step when focused.
         let ctl = form_label(c, b.left, yy, b.right, "Quota par membre (Go)");
         let mut qf = NumericField::ranged(0.0, 500.0);
         let _ = qf.set_value(ui.quota);

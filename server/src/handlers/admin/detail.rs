@@ -1,15 +1,15 @@
-//! The RECORDS behind a dashboard figure — one row per underlying fact.
+//! The RECORDS behind a dashboard figure - one row per underlying fact.
 //!
 //! # Why a counter is not a report
 //!
 //! A panel answers "how many"; the question that follows is always "which
 //! ones". A report of failed sign-ins that states `47` and draws a curve is a
 //! counter printed on paper: nobody can act on it, because the accounts
-//! concerned — the only thing worth acting on — are exactly what it does not
+//! concerned - the only thing worth acting on - are exactly what it does not
 //! say. This module is the other half: the same window, the same predicate, the
 //! same privilege, listed row by row.
 //!
-//! # It is the same reading, narrowed — never a second one
+//! # It is the same reading, narrowed - never a second one
 //!
 //! [`super::period::Provenance`] already states *where* a figure comes from.
 //! The catalogues below are that statement made readable: the same table, the
@@ -30,7 +30,7 @@
 //!     name an operator reads, not by its whole profile row: no e-mail address,
 //!     no `user_agent`, no `payload`. A report is copied, printed and filed;
 //!     every extra column is a copy of personal data that outlives its purpose.
-//!   * **Nothing resurrected.** Rows are read from the live table only — the
+//!   * **Nothing resurrected.** Rows are read from the live table only - the
 //!     same one the panel counted, whose retention purge has already run. What
 //!     was purged is absent from both, so the detail can never say more than the
 //!     figure above it.
@@ -56,11 +56,11 @@ use super::period::{Counted, Window};
 /// to text in SQL.
 ///
 /// The instant is decoded as a true `DateTime<Utc>` (column 0) so it can be
-/// formatted in Rust — portably, in place of PostgreSQL's `to_char(… AT TIME
+/// formatted in Rust - portably, in place of PostgreSQL's `to_char(… AT TIME
 /// ZONE 'UTC', …)`. The remaining column count is dynamic (it depends on the
 /// catalogue), so those cells are collected positionally as `Option<String>`.
 /// One generic `FromRow` covers the three engines, which is what `fetch_all_as`
-/// requires — the pool exposes no positional multi-row read otherwise.
+/// requires - the pool exposes no positional multi-row read otherwise.
 struct DetailRow {
     when: chrono::DateTime<chrono::Utc>,
     cells: Vec<Option<String>>,
@@ -87,7 +87,7 @@ where
 impl DetailRow {
     /// The row as the console reads it: the instant as an ISO-8601 `…Z` string
     /// (the exact shape the old `to_char` produced), then every other cell
-    /// clipped to [`MAX_CELL`] characters — the Rust stand-in for `left(…, N)`.
+    /// clipped to [`MAX_CELL`] characters - the Rust stand-in for `left(…, N)`.
     fn into_cells(self) -> Vec<Option<String>> {
         let mut out = Vec::with_capacity(self.cells.len() + 1);
         out.push(Some(self.when.format("%Y-%m-%dT%H:%M:%SZ").to_string()));
@@ -144,7 +144,7 @@ pub mod absent {
 /// asks the console to render.
 #[derive(Debug, Clone, Copy, Serialize)]
 pub struct DetailColumn {
-    /// Stable id — the console's translation key and the CSV header.
+    /// Stable id - the console's translation key and the CSV header.
     pub id: &'static str,
     pub kind: &'static str,
     /// SQL producing the cell, over the alias `t`. **Written in source, always**:
@@ -152,19 +152,19 @@ pub struct DetailColumn {
     #[serde(skip)]
     expr: &'static str,
     /// Whether `expr` is a client-address column stored as PostgreSQL `inet` and
-    /// read back through the dialect's `inet_text` — its canonical text on
+    /// read back through the dialect's `inet_text` - its canonical text on
     /// PostgreSQL, the plain column on MySQL/SQLite. Kept out of the wire form.
     #[serde(skip)]
     inet: bool,
 }
 
 impl DetailColumn {
-    /// A human string — a name, a title, a reason.
+    /// A human string - a name, a title, a reason.
     const fn text(id: &'static str, expr: &'static str) -> Self {
         Self { id, kind: "text", expr, inet: false }
     }
 
-    /// An identifier printed as it is stored — an action, a severity, a country
+    /// An identifier printed as it is stored - an action, a severity, a country
     /// code. Never translated by guesswork: the console prints what the row says.
     const fn code(id: &'static str, expr: &'static str) -> Self {
         Self { id, kind: "code", expr, inet: false }
@@ -172,7 +172,7 @@ impl DetailColumn {
 
     /// A client address column (`inet` on PostgreSQL). `expr` is the raw column,
     /// read back portably through [`read`]'s `inet_text`, not wrapped in
-    /// `host(…)` — which exists on PostgreSQL only.
+    /// `host(…)` - which exists on PostgreSQL only.
     const fn inet(id: &'static str, expr: &'static str) -> Self {
         Self { id, kind: "code", expr, inet: true }
     }
@@ -192,7 +192,7 @@ impl DetailColumn {
 // same records. One catalogue per table means the columns cannot disagree
 // between two panels reading the same rows.
 
-/// `core.admin_audit` — the attributable trail (migration 000040).
+/// `core.admin_audit` - the attributable trail (migration 000040).
 ///
 /// `actor_label` is the account whose credentials were presented; for
 /// `core.auth.login_failed` it is filled from the account the attempt matched,
@@ -210,10 +210,10 @@ pub const AUDIT: &[DetailColumn] = &[
     DetailColumn::inet("ip", "t.ip_address"),
 ];
 
-/// `core.device_events` — the device timelines (migration 000065).
+/// `core.device_events` - the device timelines (migration 000065).
 ///
 /// `actor_label` is NULL for events the system observed rather than an operator
-/// performed — a sign-in is one of those (`handlers::auth::tokens` passes the
+/// performed - a sign-in is one of those (`handlers::auth::tokens` passes the
 /// account id and no label), so the account is resolved from `actor_id` when the
 /// label is absent. Without that fallback the sign-in report would list every
 /// row with an empty "account" column, which is the exact complaint this feature
@@ -241,7 +241,7 @@ pub const DEVICE: &[DetailColumn] = &[
     DetailColumn::text("detail", "t.detail"),
 ];
 
-/// `core.alerts` — raised alerts (migration 000056).
+/// `core.alerts` - raised alerts (migration 000056).
 ///
 /// `payload` is excluded: it is a producer-shaped object meant for the console's
 /// detail view, not a cell of a printed table.
@@ -258,10 +258,10 @@ pub const ALERT: &[DetailColumn] = &[
     DetailColumn::code("module", "t.module_id"),
 ];
 
-/// `core.rule_executions` — the rule engine's log (migrations 000061, 000070).
+/// `core.rule_executions` - the rule engine's log (migrations 000061, 000070).
 ///
-/// The table stores structural references only — never the content a rule
-/// inspected — so every column below is a verdict or a reference, by
+/// The table stores structural references only - never the content a rule
+/// inspected - so every column below is a verdict or a reference, by
 /// construction rather than by filtering.
 pub const RULE: &[DetailColumn] = &[
     DetailColumn::text(
@@ -290,7 +290,7 @@ pub const ACCOUNT: &[DetailColumn] = &[
     DetailColumn::text("name", "t.display_name"),
     DetailColumn::code("role", "t.role"),
     // The same three states `account_status` breaks down, spelt by the same
-    // `CASE` and in the same order — `deleted_at` first, because `is_active =
+    // `CASE` and in the same order - `deleted_at` first, because `is_active =
     // FALSE` covers both suspension and pending erasure (migration 000109).
     DetailColumn::code(
         "status",
@@ -299,7 +299,7 @@ pub const ACCOUNT: &[DetailColumn] = &[
     ),
 ];
 
-/// `core.event_log` — the system event log (migration 000003).
+/// `core.event_log` - the system event log (migration 000003).
 ///
 /// `payload` is excluded: modules write it, its shape is theirs, and a report is
 /// not a place to spill an unreviewed object.
@@ -310,7 +310,7 @@ pub const EVENT: &[DetailColumn] = &[
 
 /// The catalogue for a source table, or `None` when this build describes none.
 ///
-/// A table with no catalogue yields no detail section at all — never an
+/// A table with no catalogue yields no detail section at all - never an
 /// improvised one. Guessing columns from a schema is how a report ends up
 /// printing a column nobody meant to publish.
 pub fn for_table(table: &str) -> Option<&'static [DetailColumn]> {
@@ -344,7 +344,7 @@ pub struct DetailTable {
 /// Reads the rows behind a count.
 ///
 /// Newest first: a reader looking for what just happened should not have to turn
-/// to the last page. The tie-break on `t.id` is what makes the ordering total —
+/// to the last page. The tie-break on `t.id` is what makes the ordering total -
 /// two events in the same millisecond would otherwise come back in an order the
 /// planner chose, and two printings of the same report would disagree.
 ///
@@ -360,9 +360,9 @@ pub async fn read(
 ) -> Result<DetailTable, AppError> {
     // Portable across the three engines. Two constructs were PostgreSQL-only and
     // are gone:
-    //   * `to_char(t.{time} AT TIME ZONE 'UTC', …)` — the instant is read as a
+    //   * `to_char(t.{time} AT TIME ZONE 'UTC', …)` - the instant is read as a
     //     real `DateTime<Utc>` (first column) and formatted in Rust below.
-    //   * `left((expr)::text, N)` — each cell is cast to text through the dialect
+    //   * `left((expr)::text, N)` - each cell is cast to text through the dialect
     //     (`::text` off PostgreSQL becomes `CAST(… AS CHAR/TEXT)`) and clipped in
     //     Rust, so no engine-specific `left`/`substr` is needed.
     // A client-address column is read through `inet_text` rather than `host(…)`,
@@ -394,7 +394,7 @@ pub async fn read(
         ceiling = DETAIL_LIMIT + 1,
     );
 
-    // Safe: every fragment is a `&'static str` written in source — `Counted`'s
+    // Safe: every fragment is a `&'static str` written in source - `Counted`'s
     // table, time column and filter, and each `DetailColumn::expr` (a private
     // field only the const catalogues below set). The ceiling is an integer
     // constant; the window bounds are bound parameters.
@@ -433,7 +433,7 @@ pub async fn read(
 /// for, and for the same reason: whoever answers "who consulted this" months
 /// later must find the answer in the trail rather than in a web server log.
 ///
-/// Nothing is recorded when nothing was served — a caller that asked for the
+/// Nothing is recorded when nothing was served - a caller that asked for the
 /// detail of a panel that has none has read nothing and must not appear to have.
 ///
 /// Best-effort, like every [`crate::audit::AuditContext::record`]: an audit

@@ -1,6 +1,6 @@
 //! The **binding source schema** types of a view (`vskubuno/docs/DESIGNER.md`, "Data bindings"): what a
-//! `{Binding …}` of an element can name — the data context, the item of a template, the named data
-//! components, the resources and the converters — and how a path resolves against them.
+//! `{Binding …}` of an element can name - the data context, the item of a template, the named data
+//! components, the resources and the converters - and how a path resolves against them.
 //!
 //! Moved here from `kubuno-desktop-views-ls` (`binding_sources`) by WV-1 so a web profile can answer from the
 //! same types. The scanning that fills them (Rust code-behind, sample files) stays in the language

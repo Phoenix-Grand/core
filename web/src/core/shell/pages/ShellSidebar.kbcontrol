@@ -1,4 +1,4 @@
-<!-- Sidebar — converted from Sidebar.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- Sidebar - converted from Sidebar.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl>
   <Panel HtmlTag="Aside" Class="{Binding aside_class}">
     <Panel Visible="{Binding show_active_config}" Class="px-3 mb-1">

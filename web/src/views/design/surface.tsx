@@ -631,7 +631,7 @@ export class DesignSurface {
 
   private zoom(): number {
     // An explicit zoom (the Zoom menu or Ctrl+wheel) wins everywhere. Otherwise a device frame fits the pane
-    // (it is tall — 844 px for a phone — so a fixed 100 % would overflow), and a responsive page honours the
+    // (it is tall - 844 px for a phone - so a fixed 100 % would overflow), and a responsive page honours the
     // chosen zoom, falling back to fit-to-pane when none is set (zoomPref 0).
     if (this.zoomExplicit && this.zoomPref > 0) return this.zoomPref
     if (this.zoomPref > 0 && !this.prefs.device) return this.zoomPref

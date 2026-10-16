@@ -15,7 +15,7 @@ import {
 } from '../search/useAdminSearchSources'
 
 /**
- * The admin console's search field — the way an experienced administrator gets
+ * The admin console's search field - the way an experienced administrator gets
  * anywhere and does anything.
  *
  * Mounted in place of the shell's own bar while on `/admin` (registered through
@@ -25,11 +25,11 @@ import {
  * and the painting (`search/AdminSearchPanel.tsx`).
  *
  * ── Keyboard contract ────────────────────────────────────────────────────────
- *   ⌘/Ctrl+K, /   open the field from anywhere in the console (see AdminPage —
+ *   ⌘/Ctrl+K, /   open the field from anywhere in the console (see AdminPage -
  *                 the shortcut must live where the field is not yet mounted)
  *   ↑ ↓           walk EVERY result, categories included: the operator ranks
  *                 answers, not sections
- *   ↵             activate the highlighted row — and the first row is always
+ *   ↵             activate the highlighted row - and the first row is always
  *                 highlighted, so "type, Enter" is a complete gesture
  *   Esc           close the list; a second Esc leaves search mode (the shell's)
  *
@@ -77,7 +77,7 @@ export default function AdminSearchBar() {
   // Re-read when the signed-in account changes (the trail is per account).
   useEffect(() => { setStored(readRecents(userId)) }, [userId])
 
-  // A privilege can be revoked after a target was recorded — the stored trail is
+  // A privilege can be revoked after a target was recorded - the stored trail is
   // re-checked against the live verdict, never trusted on its own.
   const recents = useMemo(() => stored.filter(r => {
     const tab = recentTab(r.url)
@@ -99,12 +99,12 @@ export default function AdminSearchBar() {
     return [...asResults, ...suggestions]
   }, [q, results, recents, suggestions])
 
-  // The first row is always the pre-selected one — "type then Enter" must do
+  // The first row is always the pre-selected one - "type then Enter" must do
   // something sensible without ever pressing an arrow.
   useEffect(() => { setActive(0) }, [q, navigable.length])
 
   // Leaving the panel open over the console after a jump would hide the very
-  // screen the operator asked for — so the shell's search mode is closed too.
+  // screen the operator asked for - so the shell's search mode is closed too.
   const leave = useCallback((url: string) => {
     setOpen(false)
     setQ('')

@@ -1,4 +1,4 @@
-//! `<SplashArtwork>` — the artwork of a Kubuno splash screen (`kubuno_desktop_ui::splash`): the module's
+//! `<SplashArtwork>` - the artwork of a Kubuno splash screen (`kubuno_desktop_ui::splash`): the module's
 //! procedural ground, motif and hero mark, the product name, tagline and version, the status line
 //! and its progress bar, the legal and credits lines. Part of the `media` family.
 //!

@@ -1,7 +1,7 @@
 {
   "name": "@kubuno/sdk",
   "version": "0.1.13",
-  "description": "Kubuno module SDK — the stable surface (registries, stores, hooks, i18n, widgets) that runtime-loaded modules build against. Provided by the host at runtime via the import map; this package ships the type surface.",
+  "description": "Kubuno module SDK - the stable surface (registries, stores, hooks, i18n, widgets) that runtime-loaded modules build against. Provided by the host at runtime via the import map; this package ships the type surface.",
   "license": "AGPL-3.0-or-later",
   "homepage": "https://github.com/kubuno/core/tree/main/web/src/sdk",
   "repository": {

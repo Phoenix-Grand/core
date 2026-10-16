@@ -5,20 +5,20 @@
 //!
 //! A TLS private key is the instance's identity: whoever holds it can serve as
 //! this instance and read any traffic they recorded. The ACME account key is the
-//! next thing down — it can mint new certificates for the instance's domains.
+//! next thing down - it can mint new certificates for the instance's domains.
 //! Neither belongs in a table that an administrative API can read, that a backup
 //! copies wholesale, that a `SELECT` in a log can leak, or that an SQL flaw
 //! anywhere in the product could reach.
 //!
-//! Every web server treats this the same way — Apache's `SSLCertificateKeyFile`,
-//! nginx's `ssl_certificate_key`, certbot's `/etc/letsencrypt/live/…` — a file,
+//! Every web server treats this the same way - Apache's `SSLCertificateKeyFile`,
+//! nginx's `ssl_certificate_key`, certbot's `/etc/letsencrypt/live/…` - a file,
 //! owned by the service, readable by nobody else. That is what this module does.
 //! The protection is POSIX permissions rather than a cipher, which also removes
 //! a real failure mode: material encrypted with the JWT secret became
 //! permanently unreadable the day that secret was rotated.
 //!
-//! The database keeps only what the console has to display — subject, SAN,
-//! validity, source — and none of it is a secret.
+//! The database keeps only what the console has to display - subject, SAN,
+//! validity, source - and none of it is a secret.
 
 use std::path::{Path, PathBuf};
 
@@ -111,7 +111,7 @@ pub fn has_material(paths: &Paths) -> bool {
     read_material(paths).is_some()
 }
 
-/// Removes the key material. Missing files are not an error — the caller's
+/// Removes the key material. Missing files are not an error - the caller's
 /// intent ("there must be no certificate here") is satisfied either way.
 pub fn delete_material(paths: &Paths) -> Result<(), AppError> {
     for p in [&paths.key, &paths.cert] {

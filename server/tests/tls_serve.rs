@@ -1,4 +1,4 @@
-//! Vérifie la terminaison TLS native (HTTPS) — exerce exactement les APIs
+//! Vérifie la terminaison TLS native (HTTPS) - exerce exactement les APIs
 //! utilisées par main.rs : provider ring + RustlsConfig::from_pem_file +
 //! axum_server::bind_rustls, avec un vrai handshake TLS côté client (reqwest).
 
@@ -32,7 +32,7 @@ fn ensure_cert() -> Option<(String, String)> {
 #[tokio::test]
 async fn https_native_serves_over_tls() {
     let Some((cert, key)) = ensure_cert() else {
-        eprintln!("openssl indisponible — test TLS ignoré");
+        eprintln!("openssl indisponible - test TLS ignoré");
         return;
     };
 

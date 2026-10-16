@@ -70,7 +70,7 @@ impl Default for WsHub {
 
 /// Destinataires ciblés d'un event : un `Custom` portant un tableau
 /// `recipient_user_ids` dans sa charge n'est délivré qu'à ces utilisateurs
-/// (sinon broadcast — comportement historique préservé).
+/// (sinon broadcast - comportement historique préservé).
 fn targeted_recipients(event: &crate::events::AppEvent) -> Option<Vec<Uuid>> {
     if let crate::events::AppEvent::Custom { payload, .. } = event {
         payload

@@ -232,7 +232,7 @@ export abstract class View<P extends object = object> {
 
   /**
    * Sets fields from what hooks gave this render (`this.publish({ user, items })` in `use()`), notifying the view only
-   * when one changed — compared shallowly, so a hook returning a fresh but equal object or list on every render does
+   * when one changed - compared shallowly, so a hook returning a fresh but equal object or list on every render does
    * not re-render the view without end, as a `@bind` field (compared by identity) would.
    */
   protected publish(values: Readonly<Record<string, unknown>>): void {
@@ -275,7 +275,7 @@ export abstract class View<P extends object = object> {
 
 let componentFactory: ((cell: Cell, cls: ViewClass) => ComponentType<object>) | null = null
 
-/** @internal — set by the renderer (keeps this module free of React rendering code). */
+/** @internal - set by the renderer (keeps this module free of React rendering code). */
 export function setComponentFactory(f: (cell: Cell, cls: ViewClass) => ComponentType<object>): void {
   componentFactory = f
 }
@@ -288,7 +288,7 @@ function componentFor(cell: Cell, cls: ViewClass): ComponentType<object> {
 type Accessor<This, V> = { get(this: This): V; set(this: This, value: V): void }
 
 /**
- * `@bind accessor name = value` — a bindable field: assigning it re-renders the elements bound to it
+ * `@bind accessor name = value` - a bindable field: assigning it re-renders the elements bound to it
  * (VIEWS-SPEC §9.1). Mutating an object in place is not seen: assign a new object, or call `invalidate()`.
  */
 export function bind<This extends View<object>, V>(

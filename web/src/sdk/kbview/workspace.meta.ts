@@ -1,6 +1,6 @@
 /**
  * Workspace elements served by `@kubuno/sdk`: `WorkspaceShell` (an editor's frame) and
- * `DockArea` with its `DockPanel` items — the desktop's `docking` family was ported from these.
+ * `DockArea` with its `DockPanel` items - the desktop's `docking` family was ported from these.
  * Names, kinds, defaults and documentation follow the desktop registry (VIEWS-SPEC §2, §9).
  */
 import type { ComponentProps } from 'react'

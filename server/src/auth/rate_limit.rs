@@ -23,11 +23,11 @@ const WINDOW_SECS: u64 = 60;
 
 fn limit_for_path(path: &str) -> u32 {
     if path.contains("forgot-password") || path.contains("reset-password") {
-        // Brute-forceable and mail-sending — keep these tight.
+        // Brute-forceable and mail-sending - keep these tight.
         3
     } else if path.contains("/reauth") {
         // Step-up: the caller is already authenticated and each attempt is audited,
-        // so the brute-force surface is small — but an office behind one NAT can
+        // so the brute-force surface is small - but an office behind one NAT can
         // legitimately produce a burst of challenges, and locking a shared address
         // out of every sensitive action would be worse than the risk.
         30

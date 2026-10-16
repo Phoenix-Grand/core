@@ -1,4 +1,4 @@
-<!-- HeaderActions — converted from HeaderActions.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- HeaderActions - converted from HeaderActions.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="HeaderActionsProps">
   <Stack Direction="LeftToRight" Gap="0" CrossAlign="Center" Class="flex-shrink-0">
     <!-- TODO(views-migrate): <Slot> is no .kbview element (../slots/SlotRegistry#Slot) -->

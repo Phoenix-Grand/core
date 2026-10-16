@@ -7,7 +7,7 @@
 //! existing. Asserting them in isolation would only test the mock.
 //!
 //! Needs `KUBUNO_TEST_DATABASE_URL` (see `tests/common`). Without it every test
-//! prints a notice and passes — a CI with no PostgreSQL must not turn red on a
+//! prints a notice and passes - a CI with no PostgreSQL must not turn red on a
 //! missing fixture.
 
 mod common;
@@ -82,7 +82,7 @@ async fn a_backup_code_works_once_and_never_again() {
         .expect("consommation");
     assert_eq!(remaining, Some(backup_codes::BATCH_SIZE as i64 - 1));
 
-    // Replay: same code, same account — refused.
+    // Replay: same code, same account - refused.
     let replay = backup_codes::consume(&db, user, &first, None)
         .await
         .expect("rejeu");
@@ -182,7 +182,7 @@ async fn a_reauth_grant_expires_and_can_be_revoked() {
         "un droit périmé ne doit plus être honoré"
     );
 
-    // The grace window outlives the token — that is its point — until revoked.
+    // The grace window outlives the token - that is its point - until revoked.
     assert!(store::grace_until(&db, user).await.expect("grâce").is_some());
     store::revoke_all(&db, user).await;
     assert!(store::grace_until(&db, user).await.expect("après révocation").is_none());

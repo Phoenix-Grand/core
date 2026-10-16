@@ -40,7 +40,7 @@ pub struct AppSecrets {
 
 impl AppSecrets {
     /// The OS credential store (sandbox-aware). Linux without a Secret Service: the calls fail with
-    /// `Unavailable` — check [`AppSecrets::probe`] first and offer to keep the secret for the session only.
+    /// `Unavailable` - check [`AppSecrets::probe`] first and offer to keep the secret for the session only.
     #[cfg(feature = "os")]
     pub fn open(app: &AppId) -> Result<Self, StorageError> {
         Self::with_store(app, Arc::new(kubuno_desktop_secrets::OsSecretStore::new()))

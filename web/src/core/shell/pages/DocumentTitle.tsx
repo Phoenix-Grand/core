@@ -9,7 +9,7 @@ import { useModulesStore } from '../../store/modulesStore'
 // Gère le titre de l'onglet ET le favicon selon le contexte courant.
 //
 // Titre  : « nom du fichier - sous-module - module - Kubuno » (chaque segment
-//          n'est inclus que s'il existe ; les doublons sont retirés — ex. l'app
+//          n'est inclus que s'il existe ; les doublons sont retirés - ex. l'app
 //          racine d'un module dont le sous-module = le module).
 // Favicon: celui du sous-module, sinon du module, sinon celui de Kubuno.
 //

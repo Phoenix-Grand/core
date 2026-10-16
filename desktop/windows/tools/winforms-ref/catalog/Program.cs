@@ -2,7 +2,7 @@
 // every public Control subclass, its inheritance chain, and every designer-
 // visible property with its type, default value and category.
 //
-// This is ground truth for the Kubuno desktop control library — far more
+// This is ground truth for the Kubuno desktop control library - far more
 // reliable than prose documentation, because it is the shipping surface itself.
 
 using System.Collections;
@@ -15,7 +15,7 @@ var asm = typeof(Control).Assembly;
 
 // Every public, non-abstract-or-abstract type deriving from Control, plus the
 // abstract bases (ButtonBase, TextBoxBase, ListControl…) that carry the shared
-// property surface — those bases are exactly what must NOT be re-implemented
+// property surface - those bases are exactly what must NOT be re-implemented
 // per leaf control.
 var types = asm.GetTypes()
     .Where(t => t.IsPublic && !t.IsGenericTypeDefinition && typeof(Control).IsAssignableFrom(t))
@@ -52,7 +52,7 @@ var records = new List<object>();
 
 foreach (var t in types)
 {
-    // The inheritance chain up to Control — the reuse map.
+    // The inheritance chain up to Control - the reuse map.
     var chain = new List<string>();
     for (var b = t.BaseType; b != null && typeof(Control).IsAssignableFrom(b); b = b.BaseType)
         chain.Add(TypeName(b));
@@ -76,7 +76,7 @@ foreach (var t in types)
         })
         .ToList();
 
-    // Events declared here — the behaviour surface.
+    // Events declared here - the behaviour surface.
     var events = t.GetEvents(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)
         .Select(e => e.Name).OrderBy(n => n, StringComparer.Ordinal).ToList();
 

@@ -10,7 +10,7 @@ import { formatRelative } from '../../core/intl/datetime'
 
 /** Human-readable size. Below 1 GiB the megabyte is the useful unit. */
 export function formatBytes(bytes: number): string {
-  if (!Number.isFinite(bytes) || bytes < 0) return '—'
+  if (!Number.isFinite(bytes) || bytes < 0) return '-'
   if (bytes < 1024 ** 2) return `${(bytes / 1024).toFixed(0)} Ko`
   if (bytes < 1024 ** 3) return `${(bytes / 1024 ** 2).toFixed(0)} Mo`
   if (bytes < 1024 ** 4) return `${(bytes / 1024 ** 3).toFixed(1)} Go`
@@ -30,7 +30,7 @@ export function formatWhen(iso: string, locale: string): string {
   })
 }
 
-/** Date without the clock — for lifecycle fields (creation, last sign-in). */
+/** Date without the clock - for lifecycle fields (creation, last sign-in). */
 export function formatDay(iso: string, locale: string): string {
   const d = new Date(iso)
   if (Number.isNaN(d.getTime())) return iso
@@ -48,7 +48,7 @@ export function formatDay(iso: string, locale: string): string {
  * 4 secondes" in a table column is noise where "1 min 4 s" is a number.
  */
 export function formatDuration(ms: number): string {
-  if (!Number.isFinite(ms) || ms < 0) return '—'
+  if (!Number.isFinite(ms) || ms < 0) return '-'
   if (ms < 1000) return `${Math.round(ms)} ms`
   const seconds = Math.round(ms / 1000)
   if (seconds < 60) return `${seconds} s`
@@ -59,7 +59,7 @@ export function formatDuration(ms: number): string {
   return `${hours} h ${minutes % 60} min`
 }
 
-/** "3 days ago" — only ever a COMPLEMENT to an absolute date, never a replacement. */
+/** "3 days ago" - only ever a COMPLEMENT to an absolute date, never a replacement. */
 export function formatAgo(iso: string): string {
   const d = new Date(iso)
   if (Number.isNaN(d.getTime())) return iso

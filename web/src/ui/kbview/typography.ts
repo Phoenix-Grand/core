@@ -19,7 +19,7 @@ export interface FontFace {
   readonly file: string
   /** SPDX identifier of the face's licence. */
   readonly license: 'OFL-1.1' | 'Apache-2.0'
-  /** The licence text shipped next to the file, under `public/` — `null` while it is missing. */
+  /** The licence text shipped next to the file, under `public/` - `null` while it is missing. */
   readonly licenseFile: string | null
 }
 

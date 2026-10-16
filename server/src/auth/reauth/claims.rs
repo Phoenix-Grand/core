@@ -3,12 +3,12 @@
 //! ## It grants nothing
 //!
 //! This is the load-bearing property of the whole mechanism, and it is the same
-//! one already documented on [`crate::auth::jwt::TotpPendingClaims`] — the
+//! one already documented on [`crate::auth::jwt::TotpPendingClaims`] - the
 //! intermediate token issued between the password step and the TOTP step, which
 //! "identifies the session awaiting validation and grants no access to the API".
 //! A re-auth token follows that pattern deliberately:
 //!
-//!  * it is **not** an access token and can never be used as one — it is signed
+//!  * it is **not** an access token and can never be used as one - it is signed
 //!    with a *different* key (derived below), so presenting it as a `Bearer`
 //!    credential fails signature verification outright rather than relying on the
 //!    claim shape to differ;
@@ -16,13 +16,13 @@
 //!    reason. Neither key can produce a signature the other accepts;
 //!  * it carries no role, no email, no scope of authority. It says one thing:
 //!    "the human behind account `sub` proved presence at `iat` using `method`";
-//!  * it is worthless on its own — every sensitive call still needs a valid
+//!  * it is worthless on its own - every sensitive call still needs a valid
 //!    access token *in addition*. The re-auth token is a second, orthogonal
 //!    condition, never a substitute.
 //!
 //! ## Key derivation
 //!
-//! `sha256("kubuno:reauth:" || jwt_secret)`, hex-encoded — the same domain
+//! `sha256("kubuno:reauth:" || jwt_secret)`, hex-encoded - the same domain
 //! separation trick [`crate::auth::totp`] uses for the TOTP encryption key. One
 //! configured secret, several cryptographically independent uses, and no way for
 //! a token minted for one purpose to be honoured for another.
@@ -59,7 +59,7 @@ impl ReauthMethod {
 pub struct ReauthClaims {
     /// Account that proved presence.
     pub sub: Uuid,
-    /// Identifier of the matching row in `core.reauth_grants` — what makes the
+    /// Identifier of the matching row in `core.reauth_grants` - what makes the
     /// token revocable.
     pub jti: Uuid,
     pub iat: i64,

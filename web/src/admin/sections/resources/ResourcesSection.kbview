@@ -1,4 +1,4 @@
-<!-- ResourcesSection — converted from ResourcesSection.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- ResourcesSection - converted from ResourcesSection.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <Stack x:Props="AdminSectionProps" Gap="16" Class="min-w-0">
   <Panel Class="min-w-0">
     <Label HtmlTag="H1"

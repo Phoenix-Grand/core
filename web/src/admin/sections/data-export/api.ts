@@ -7,8 +7,8 @@
 // history, and the services the live modules currently offer. A page that needed
 // four requests to paint would show four different moments of the same instance.
 //
-// It polls while a run is in flight — an export advances in a background job and
-// a frozen progress bar is a page an operator stops trusting — and stops as soon
+// It polls while a run is in flight - an export advances in a background job and
+// a frozen progress bar is a page an operator stops trusting - and stops as soon
 // as nothing is left running, because a finished history that keeps hitting the
 // server every three seconds is a tab nobody closed.
 //
@@ -53,7 +53,7 @@ export interface ExportPolicy {
 
 /**
  * Why this operator may not trigger an export. A list of stable reasons the
- * console translates — never a bare boolean, because every one of them has a fix
+ * console translates - never a bare boolean, because every one of them has a fix
  * the person can act on.
  */
 export interface ExportBlocker {

@@ -11,11 +11,11 @@ import type { ResolvedSetting } from '../scopeTypes'
  * provenance line underneath.
  *
  * Extracted from the old monolithic settings page so that every page which now
- * carries a settings block paints its rows identically — including the
+ * carries a settings block paints its rows identically - including the
  * inheritance affordances, which are the part that must not diverge.
  *
  * `Dropdown` is deliberately absent: it does not follow the dark theme. Closed
- * value sets use `Combobox`, which does, and which filters — mandatory for the
+ * value sets use `Combobox`, which does, and which filters - mandatory for the
  * ~400-entry IANA zone list a calendar module declares.
  */
 
@@ -34,9 +34,9 @@ export interface SettingControlProps {
   value:    unknown
   /** A level above locked the key, or the caller may read but not write. */
   readOnly: boolean
-  /** Instant write — toggles, checkboxes and closed value sets. */
+  /** Instant write - toggles, checkboxes and closed value sets. */
   onCommit: (value: unknown) => void
-  /** Buffered edit — free text and numbers, saved from the action bar. */
+  /** Buffered edit - free text and numbers, saved from the action bar. */
   onDraft:  (value: unknown) => void
   /** The provenance line (inherited / overridden / locked) painted under it. */
   children: ReactNode

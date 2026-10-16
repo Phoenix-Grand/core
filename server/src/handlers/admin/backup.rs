@@ -6,15 +6,15 @@
 //! The five settings are edited through `PUT /admin/settings/scoped/:key`, like
 //! every other setting: one audited writer, one validator, one inheritance
 //! chain. A second write path here would be a second place for the audit entry
-//! to be forgotten — the same reasoning the storage page follows.
+//! to be forgotten - the same reasoning the storage page follows.
 //!
 //! What is here is what the settings route cannot express:
 //!
-//! * `POST /admin/backup/run` — enqueue a run now. Audited, and asynchronous on
+//! * `POST /admin/backup/run` - enqueue a run now. Audited, and asynchronous on
 //!   purpose: a dump of a large instance outlives an HTTP request, and a screen
 //!   that hangs for four minutes is a screen an operator reloads, producing a
 //!   second dump.
-//! * `POST /admin/backup/restore-test` — record that somebody restored a backup
+//! * `POST /admin/backup/restore-test` - record that somebody restored a backup
 //!   and it worked. **Declarative**: the server writes a timestamp and an audit
 //!   entry, verifies nothing, and never restores anything. The console says so
 //!   next to the button, and so does the health check.
@@ -46,7 +46,7 @@ use crate::{
 /// policy at a glance, bounded so the payload stays a page and not an archive.
 const DEFAULT_HISTORY: i64 = 20;
 
-/// `GET /admin/backup` — everything the page opens on.
+/// `GET /admin/backup` - everything the page opens on.
 pub async fn get_backup(
     State(state): State<AppState>,
     _admin: AdminUser,
@@ -110,7 +110,7 @@ pub async fn get_backup(
     })))
 }
 
-/// `POST /admin/backup/run` — a backup, now.
+/// `POST /admin/backup/run` - a backup, now.
 ///
 /// Returns `202`-shaped payload (a job id) rather than the finished dump: the
 /// work is minutes on a real instance, and holding the request open would make
@@ -166,7 +166,7 @@ pub async fn run_now(
 #[derive(Debug, Deserialize)]
 pub struct RestoreTestDto {
     /// Free-text note from the operator: which file, on which machine. Optional,
-    /// and stored only in the audit trail — the setting holds a date and nothing
+    /// and stored only in the audit trail - the setting holds a date and nothing
     /// else, because the date is the only part any check reads.
     pub note: Option<String>,
     /// Clears the declaration instead of recording one. An operator who realises
@@ -179,12 +179,12 @@ pub struct RestoreTestDto {
 /// cannot become a document.
 const MAX_NOTE: usize = 500;
 
-/// `POST /admin/backup/restore-test` — record (or withdraw) a restore drill.
+/// `POST /admin/backup/restore-test` - record (or withdraw) a restore drill.
 ///
 /// **Nothing is verified and nothing is restored.** The endpoint writes a
 /// timestamp and an audit entry naming who declared it. That is stated in the
 /// setting's description, in the health check's title and wording, and on the
-/// screen next to the button — a declarative signal presented as a verified one
+/// screen next to the button - a declarative signal presented as a verified one
 /// would be worse than no signal at all.
 pub async fn declare_restore_test(
     State(state): State<AppState>,
@@ -232,7 +232,7 @@ pub async fn declare_restore_test(
 
     let mut tx = audit.begin(&state.db).await?;
     // Written through `core.settings.value`, whose trigger (migration 000060)
-    // mirrors it into the instance scope — the same path every other legacy
+    // mirrors it into the instance scope - the same path every other legacy
     // writer takes, so there is exactly one source of truth.
     tx.execute(
         "UPDATE core.settings SET value = $1, updated_at = $2, updated_by = $3 WHERE \"key\" = $4",
@@ -255,9 +255,9 @@ pub async fn declare_restore_test(
         .detail(if clearing {
             "Déclaration de restauration retirée".to_string()
         } else if note.is_empty() {
-            "Restauration testée — déclaration sans vérification par la plateforme".to_string()
+            "Restauration testée - déclaration sans vérification par la plateforme".to_string()
         } else {
-            format!("Restauration testée (déclarative) — {note}")
+            format!("Restauration testée (déclarative) - {note}")
         })
         .reversible();
     tx.commit(entry).await?;
@@ -273,7 +273,7 @@ pub async fn declare_restore_test(
     })))
 }
 
-/// `GET /admin/backup/files` — the backup files present in the destination.
+/// `GET /admin/backup/files` - the backup files present in the destination.
 ///
 /// Only files this feature produced are listed; anything else the operator put
 /// in the directory is invisible and untouched. Read-only, so `BACKUP_READ`.
@@ -302,7 +302,7 @@ pub async fn list_files(
 #[derive(Debug, Deserialize)]
 pub struct RestoreDto {
     /// The base name of the backup file to restore, as listed by
-    /// `GET /admin/backup/files`. Never a path — the server refuses anything with
+    /// `GET /admin/backup/files`. Never a path - the server refuses anything with
     /// a separator or a `..`.
     pub file_name: String,
     /// A strong confirmation: the operator must retype the file name exactly. A
@@ -311,7 +311,7 @@ pub struct RestoreDto {
     pub confirm: String,
 }
 
-/// `POST /admin/backup/restore` — replace the whole database from a backup, now,
+/// `POST /admin/backup/restore` - replace the whole database from a backup, now,
 /// in process (no `psql`).
 ///
 /// **Super-user only** and with a strong confirmation. The endpoint takes an
@@ -326,7 +326,7 @@ pub async fn restore_now(
     Json(dto): Json<RestoreDto>,
 ) -> Result<Json<Value>, AppError> {
     // A restore runs no arbitrary code but rewrites every account and secret of
-    // the instance — reserved to a person, never an API token.
+    // the instance - reserved to a person, never an API token.
     ctx.require_superuser("restauration de la base de données")?;
     ctx.require(keys::BACKUP_MANAGE)?;
 

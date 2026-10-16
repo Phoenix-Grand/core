@@ -8,7 +8,7 @@ import * as __parts from './InlineEditField.parts.tsx'
 
 export function orDash(value: ReactNode | null | undefined): ReactNode {
   if (value === null || value === undefined || value === '') {
-    return <span className="text-text-tertiary">—</span>
+    return <span className="text-text-tertiary">-</span>
   }
   return value
 }

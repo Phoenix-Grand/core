@@ -1,7 +1,7 @@
 //! The activity log: what the sync loop has been doing.
 //!
 //! The Tauri build kept this in the web page's state, which no longer exists,
-//! so the events are recorded here in a bounded log — the shell runs for weeks
+//! so the events are recorded here in a bounded log - the shell runs for weeks
 //! and an unbounded list would just grow. The activity page shows it
 //! (`activity_page`), the header's bell counts it.
 
@@ -30,7 +30,7 @@ pub fn record(kind: &str, title: &str, body: &str) {
     log.truncate(MAX_EVENTS);
 }
 
-/// How many events are logged — what the bell's badge shows.
+/// How many events are logged - what the bell's badge shows.
 pub fn count() -> usize {
     LOG.lock().map(|l| l.len()).unwrap_or(0)
 }

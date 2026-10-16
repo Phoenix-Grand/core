@@ -1,4 +1,4 @@
-//! `AvatarDecor` — what the web's account panel draws around the active account's 96 avatar: a 3-DIP
+//! `AvatarDecor` - what the web's account panel draws around the active account's 96 avatar: a 3-DIP
 //! white outline (`outline: 3px solid #fff`, which covers its `box-shadow` ring), and
 //! the camera button at its bottom right (`absolute bottom-1 right-0`, a 32 white disc with a border and
 //! a shadow, a 15 glyph), which raises `CameraClicked`. Placed over the `<Avatar>` it decorates, 3 DIP

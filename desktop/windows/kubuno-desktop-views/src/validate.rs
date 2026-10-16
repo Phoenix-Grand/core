@@ -1,9 +1,9 @@
-//! The validator — phase 2a's brief: "given a parsed view + the registry,
+//! The validator - phase 2a's brief: "given a parsed view + the registry,
 //! report unknown elements/attributes, wrong value types/enum values, and
-//! invalid children — with line/column". `XML_VIEWS.md` §5 is explicit this
+//! invalid children - with line/column". `XML_VIEWS.md` §5 is explicit this
 //! is meant to be reused as-is by the language server and hot reload's
 //! in-app error banner, so it produces the same [`crate::syntax::Diagnostic`]
-//! shape the parser itself does — one diagnostic type, two producers.
+//! shape the parser itself does - one diagnostic type, two producers.
 
 use crate::ast::{AstNode, Document, Element};
 use crate::registry::{ChildrenModel, ComponentMeta, PropKind};
@@ -15,7 +15,7 @@ use kubuno_desktop_views_syntax::validate::{check_value, closest, is_binding_exp
 
 /// Validates a parsed `.kbview` file against `registry`. Never panics; an
 /// unparseable file (see `parse.diagnostics`) simply has fewer elements to
-/// walk — the two diagnostic sources are meant to be shown together, not one
+/// walk - the two diagnostic sources are meant to be shown together, not one
 /// gating the other (§5: "a parse or a registry-lookup error must not blank
 /// the screen").
 pub fn validate(parse: &Parse, registry: &[ComponentMeta]) -> Vec<Diagnostic> {
@@ -60,7 +60,7 @@ fn meta_of<'r>(registry: &'r [ComponentMeta], name: &str) -> Option<&'r Componen
 
 /// Non-blocking findings (the language server shows them as warnings; the view still compiles and
 /// runs): a `Dock`/`Anchor` on an element whose parent does not lay out by Dock/Anchor (anything but a
-/// `<Panel>`-like container, or the view's root element) — the attribute is simply ignored there.
+/// `<Panel>`-like container, or the view's root element) - the attribute is simply ignored there.
 pub fn warnings(parse: &Parse) -> Vec<Diagnostic> {
     let Some(doc) = Document::cast(parse.syntax()) else { return Vec::new() };
     let Some(root) = doc.root_element() else { return Vec::new() };
@@ -210,7 +210,7 @@ pub fn attribute_suggestion(meta: &ComponentMeta, name: &str, is_root: bool) -> 
     closest(name, names.into_iter()).map(str::to_string)
 }
 
-/// [`validate`] against [`crate::registry::all`] — the common case.
+/// [`validate`] against [`crate::registry::all`] - the common case.
 pub fn validate_with_default_registry(parse: &Parse) -> Vec<Diagnostic> {
     validate(parse, crate::registry::all())
 }
@@ -223,7 +223,7 @@ fn walk(element: &Element, registry: &[ComponentMeta], parse: &Parse, out: &mut 
     let element_range = element.syntax().text_range();
 
     let Some(name) = element.name() else {
-        // The parser already reported "expected an element name" — nothing
+        // The parser already reported "expected an element name" - nothing
         // new for the validator to add.
         return walk_children(element, registry, parse, out);
     };
@@ -260,7 +260,7 @@ fn walk(element: &Element, registry: &[ComponentMeta], parse: &Parse, out: &mut 
         let drop = Repair::DropAttribute(attr.syntax().text_range());
         // `d:Text="…"`: a design-time value (`kubuno_desktop_views_meta::inherit::apply_design_attributes`), free too.
         if kubuno_desktop_views_syntax::markup::is_markup(&attr_name) {
-            continue; // §1: reserved, free — not a component property.
+            continue; // §1: reserved, free - not a component property.
         }
 
         // Design-time attributes (`DesignWidth`/`DesignHeight`): the designer's canvas size, only
@@ -297,7 +297,7 @@ fn walk(element: &Element, registry: &[ComponentMeta], parse: &Parse, out: &mut 
 
         let Some(kind) = kind else {
             if meta.open_attributes {
-                // See `ComponentMeta::open_attributes`'s own doc — this
+                // See `ComponentMeta::open_attributes`'s own doc - this
                 // element's real fields are named by its PARENT, not by a
                 // closed `properties` list (`<Item Role="Admin"/>`, `Role`
                 // matching a `<Column Binding="{Binding Role}">` elsewhere).
@@ -310,9 +310,9 @@ fn walk(element: &Element, registry: &[ComponentMeta], parse: &Parse, out: &mut 
             continue;
         };
 
-        let Some(value) = attr.value() else { continue }; // Malformed string — the parser already flagged it.
+        let Some(value) = attr.value() else { continue }; // Malformed string - the parser already flagged it.
         if is_binding_expression(&value) {
-            continue; // Resolved at runtime against live state (§3) — not a static value to type-check.
+            continue; // Resolved at runtime against live state (§3) - not a static value to type-check.
         }
         // A list or an object (a custom control's `Rows` / `Shared<T>` property) comes from a binding
         // only: no XML literal spells one.
@@ -345,10 +345,10 @@ fn walk(element: &Element, registry: &[ComponentMeta], parse: &Parse, out: &mut 
     }
 
     // Gated children (`<TabItem>`, `<Item>`, `<Column>`, `<Option>`, `<Step>`,
-    // `<AccordionSection>`, `<BreadcrumbItem>`, `<ToolbarItem>` — each a
+    // `<AccordionSection>`, `<BreadcrumbItem>`, `<ToolbarItem>` - each a
     // `ChildrenModel::List` component's own `allowed` name somewhere in the
     // registry) are only valid directly under a parent whose own `allowed`
-    // names them, wherever they are actually nested — not just when the
+    // names them, wherever they are actually nested - not just when the
     // wrong parent also happens to be another restrictive `List`.
     let allowed_here: &[&str] = match meta.children {
         ChildrenModel::List(allowed) => allowed,
@@ -379,16 +379,16 @@ fn walk_children(element: &Element, registry: &[ComponentMeta], parse: &Parse, o
     }
 }
 
-/// Whether `name` is a "gated" child element — one that appears in *some*
+/// Whether `name` is a "gated" child element - one that appears in *some*
 /// component's [`ChildrenModel::List`] `allowed` list anywhere in the
 /// registry, and is therefore only ever valid directly under one of those
 /// parents (registry-driven: no separate hand-maintained list of gated
-/// names to keep in sync — see [`registry::ChildrenModel::List`]'s doc).
+/// names to keep in sync - see [`registry::ChildrenModel::List`]'s doc).
 fn is_gated(registry: &[ComponentMeta], name: &str) -> bool {
     registry.iter().any(|c| matches!(c.children, ChildrenModel::List(allowed) if allowed.contains(&name)))
 }
 
-/// Every registered component whose `allowed` list names `child_name` — the
+/// Every registered component whose `allowed` list names `child_name` - the
 /// parent(s) it is actually valid directly inside, used only to phrase the
 /// diagnostic (the accept/reject decision itself is the caller's own
 /// `allowed_here.contains(...)` check, not this function).
@@ -441,7 +441,7 @@ fn ambient_color(element: &Element, name: &str) -> Option<crate::style::ColorVal
 
 /// The contrast warnings (`vskubuno/docs/EVENTS.md` §16's colour policy): an element that sets a free
 /// `ForeColor` or `BackColor` whose text would not stand out enough from its background (WCAG AA) in
-/// the light or the dark theme — a non-blocking warning, the view still compiles.
+/// the light or the dark theme - a non-blocking warning, the view still compiles.
 pub fn contrast_warnings(parse: &Parse) -> Vec<Diagnostic> {
     let Some(doc) = Document::cast(parse.syntax()) else { return Vec::new() };
     let Some(root) = doc.root_element() else { return Vec::new() };
@@ -665,7 +665,7 @@ mod tests {
     fn tab_item_is_rejected_outside_tabs() {
         // §3's requirement: a gated child (here `<TabItem>`, valid only
         // directly inside `<Tabs>`) is rejected under ANY other parent, not
-        // just when that other parent is itself another restrictive `List` —
+        // just when that other parent is itself another restrictive `List` -
         // `<Stack>`'s own `allowed` is empty (an ordinary widget container),
         // which is exactly the case that would slip through a check that
         // only compared allow-lists between two `List` parents.
@@ -704,7 +704,7 @@ mod tests {
     fn accordion_section_is_rejected_as_a_single_widget_body() {
         // Exercises the non-`List` side: `<Card>` is `SingleWidget`, whose
         // own cardinality check ("at most one child") does not fire for
-        // exactly one child — the gated check must still catch it.
+        // exactly one child - the gated check must still catch it.
         let d = diagnostics(r#"<Card><AccordionSection Header="Oops"/></Card>"#);
         assert_eq!(d.len(), 1, "{d:?}");
         assert!(d[0].message.contains("<AccordionSection>"), "{}", d[0].message);
@@ -729,7 +729,7 @@ mod tests {
         // `XML_VIEWS.md` §7's worked example, trimmed to what phase 2a's
         // five-component registry actually covers (`Panel`, `ScrollArea`,
         // `RadioButtons`/`RadioOption`, `NumericField` are not declared yet
-        // — see the crate's top-level docs for why. This still exercises
+        // - see the crate's top-level docs for why. This still exercises
         // Card/Stack/Switch/TextField together, nested, with bindings, Dock
         // and `x:Name` all at once.
         let src = r#"

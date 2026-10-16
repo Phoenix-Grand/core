@@ -65,7 +65,7 @@ const emptyForm: FormState = {
   // The OpenID Connect standard names. Configurable because roughly nobody
   // ships them unchanged: Okta puts the handle in `login`, an Azure tenant in
   // `upn`, and a Keycloak client role list lives at
-  // `resource_access.<client>.roles` — hence dotted paths are accepted.
+  // `resource_access.<client>.roles` - hence dotted paths are accepted.
   claim_username: 'preferred_username', claim_email: 'email',
   claim_display_name: 'name', claim_groups: 'groups', sync_groups: false,
 }

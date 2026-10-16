@@ -17,7 +17,7 @@ function humanize(s: string): string {
 }
 
 /** A module's display label + sidebar icon, resolved dynamically (no hard-coded
- *  per-module knowledge — respects module independence). */
+ *  per-module knowledge - respects module independence). */
 function moduleInfo(moduleId: string, modules: ActiveModule[]): { label: string; icon: string } {
   const m = modules.find(mod => mod.module_id === moduleId)
   const item = m?.sidebar_items?.[0]

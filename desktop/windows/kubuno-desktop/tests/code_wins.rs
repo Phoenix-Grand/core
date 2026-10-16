@@ -1,5 +1,5 @@
 //! What code sets on a named control replaces what the view gives it (Windows Forms: the code's value
-//! replaces the designer's), whatever the view wrote — a literal, a resource (`{Res key}`) — and a
+//! replaces the designer's), whatever the view wrote - a literal, a resource (`{Res key}`) - and a
 //! named element accepts the literals of its view (a `<DockPanel>`'s `Title`).
 
 use kubuno_desktop::prelude::*;

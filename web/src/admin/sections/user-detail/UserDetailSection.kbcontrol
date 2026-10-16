@@ -1,4 +1,4 @@
-<!-- UserDetailSection — converted from UserDetailSection.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- UserDetailSection - converted from UserDetailSection.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="UserDetailSectionProps">
   <Panel Class="contents">
     <Stack Gap="16" Visible="{Binding show_case_1}">

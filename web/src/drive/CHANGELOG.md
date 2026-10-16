@@ -1,4 +1,4 @@
-# Changelog — @kubuno/drive
+# Changelog - @kubuno/drive
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Entries are
 added under `[Unreleased]` **as the change is made**; on npm publish, the section is stamped
@@ -10,9 +10,9 @@ under the published version number.
 
 ### Changed
 
-- **The published surface catches up with the source.** The explorer types —
+- **The published surface catches up with the source.** The explorer types -
   header, breadcrumb trail, file and folder cards and rows, sections, toolbars,
-  `useExplorerData`, `storageSource` — were regenerated. `MenuTarget` now carries
+  `useExplorerData`, `storageSource` - were regenerated. `MenuTarget` now carries
   `fromCrumb` (the trail's own caret offers the folder actions plus "new folder",
   which only makes sense for the folder you are inside) and an optional
   `statFolder`, since a listing returns a folder's children but not its own
@@ -22,7 +22,7 @@ under the published version number.
   the host no longer had.
 ### Added
 
-- `FileItem.is_protected` — the flag the platform's own files carry. Drive's
+- `FileItem.is_protected` - the flag the platform's own files carry. Drive's
   interface already read it, and the type surface did not declare it, so any
   module typechecking against the published package failed on a field its own
   API returns.

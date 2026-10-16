@@ -1,4 +1,4 @@
-<!-- ThemesTab — converted from ThemesTab.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- ThemesTab - converted from ThemesTab.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl>
   <Panel Class="max-w-3xl">
     <Label Text="{Res settings.themes_desc}" Overflow="Wrap" ForeColor="TextTertiary" Class="mb-5"/>

@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 /**
- * `/api/v1/config` — les réglages d'instance publics, lus par une demi-douzaine
+ * `/api/v1/config` - les réglages d'instance publics, lus par une demi-douzaine
  * de consommateurs sans lien entre eux : la langue et le thème au démarrage, le
  * délai d'inactivité, le logo de l'instance, la page de connexion, des widgets
  * d'accueil, des panneaux d'administration…
@@ -47,7 +47,7 @@ export function getPublicConfig(): Promise<PublicConfig> {
 }
 
 /**
- * Oublie la copie mémorisée — à appeler quand un réglage public vient d'être
+ * Oublie la copie mémorisée - à appeler quand un réglage public vient d'être
  * modifié depuis l'administration, pour que la prochaine lecture reparte du
  * serveur sans attendre la fin du délai de fraîcheur.
  */

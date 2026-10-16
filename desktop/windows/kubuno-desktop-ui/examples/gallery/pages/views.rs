@@ -1,4 +1,4 @@
-//! Gallery page — **views**: [`ListView`] in its two painted modes, and
+//! Gallery page - **views**: [`ListView`] in its two painted modes, and
 //! [`TreeView`].
 //!
 //! The static exposition is built fresh every frame from plain values, so
@@ -42,18 +42,18 @@ use super::sheet::{Page, MARGIN};
 /// The icon names an item's `ImageIndex` selects, shared by both lists.
 const ICONS: [&str; 3] = ["Folder", "File", "Image"];
 
-/// The sample listing, as the product's own file area shows it — with one name
+/// The sample listing, as the product's own file area shows it - with one name
 /// far too long for its column, so the ellipsis is on show.
 fn rows() -> Vec<ListViewItem> {
     const DATA: [(&str, &str, &str, &str, i32); 9] = [
-        ("Documents", "12 août 2026", "Dossier", "—", 0),
-        ("Photos de vacances", "09 août 2026", "Dossier", "—", 0),
-        ("Projets", "02 août 2026", "Dossier", "—", 0),
+        ("Documents", "12 août 2026", "Dossier", "-", 0),
+        ("Photos de vacances", "09 août 2026", "Dossier", "-", 0),
+        ("Projets", "02 août 2026", "Dossier", "-", 0),
         ("budget-2026.xlsx", "17 août 2026", "Classeur", "48 Ko", 1),
         ("contrat.pdf", "15 août 2026", "Document PDF", "1,2 Mo", 1),
         ("notes.md", "14 août 2026", "Markdown", "3 Ko", 1),
         (
-            "Compte rendu de la réunion de lancement du projet de refonte du site — version finale relue.docx",
+            "Compte rendu de la réunion de lancement du projet de refonte du site - version finale relue.docx",
             "13 août 2026",
             "Document Word",
             "96 Ko",
@@ -92,7 +92,7 @@ fn details(width: f32) -> ListView {
     v.columns[3].text_align = kubuno_desktop_controls::enums::HorizontalAlignment::Right;
     v.items = rows();
     v.image_list = ICONS.to_vec();
-    // Sorted on « Modifié », descending — the glyph goes on that column, not
+    // Sorted on « Modifié », descending - the glyph goes on that column, not
     // on column 0 the way the replica's painter puts it.
     v.sort_column = 1;
     v.sorting = SortOrder::Descending;
@@ -160,7 +160,7 @@ pub fn draw(c: &dyn Canvas, f: &Frame) {
     let right = page.area.right - MARGIN;
 
     // ── Details ──────────────────────────────────────────────────────────
-    page.section("ListView — Details");
+    page.section("ListView - Details");
     page.caption(
         "tri · sélection fusionnée · curseur clavier (Ctrl+↓) · focus visible · défilée de 50 · renommage F2 · nom tronqué",
     );
@@ -178,7 +178,7 @@ pub fn draw(c: &dyn Canvas, f: &Frame) {
     page.advance(list_rect.bottom - list_rect.top);
 
     // ── LargeIcon, and the tree beside it ────────────────────────────────
-    page.section("ListView — LargeIcon · TreeView");
+    page.section("ListView - LargeIcon · TreeView");
     page.caption(
         "tuiles, cases de sélection · arbre : branches, indentation, cases, curseur clavier (anneau), débordement",
     );
@@ -215,7 +215,7 @@ pub fn draw(c: &dyn Canvas, f: &Frame) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-//  The interactive column — the same two views, live under the pointer and the
+//  The interactive column - the same two views, live under the pointer and the
 //  keyboard.
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -234,7 +234,7 @@ enum Target {
 }
 
 /// An open context menu: the menu itself (its hot row persists between
-/// frames), what it acts on, where it opens, and last frame's panel — the
+/// frames), what it acts on, where it opens, and last frame's panel - the
 /// geometry a click is routed against at the top of the next frame.
 struct OpenMenu {
     menu: Menu,
@@ -285,16 +285,16 @@ const MENU_EDGE: f32 = 8.0;
 /// panel width, and more files than the six visible rows hold.
 fn panel_list(width: f32) -> ListView {
     const FILES: [(&str, &str, i32); 18] = [
-        ("Documents", "—", 0),
-        ("Photos de vacances en Bretagne, été 2026", "—", 0),
-        ("Projets", "—", 0),
-        ("Archives", "—", 0),
+        ("Documents", "-", 0),
+        ("Photos de vacances en Bretagne, été 2026", "-", 0),
+        ("Projets", "-", 0),
+        ("Archives", "-", 0),
         ("budget-2026.xlsx", "48 Ko", 1),
         ("contrat.pdf", "1,2 Mo", 1),
         ("notes.md", "3 Ko", 1),
         ("logo-kubuno.png", "212 Ko", 2),
         ("capture.png", "804 Ko", 2),
-        ("Compte rendu de réunion — version finale relue et validée.docx", "96 Ko", 1),
+        ("Compte rendu de réunion - version finale relue et validée.docx", "96 Ko", 1),
         ("devis-client.pdf", "310 Ko", 1),
         ("facture-0042.pdf", "88 Ko", 1),
         ("planning.xlsx", "61 Ko", 1),
@@ -351,7 +351,7 @@ fn panel_tree() -> TreeView {
     t
 }
 
-/// The context menu both views open — `MenuDropdown` rows built from the
+/// The context menu both views open - `MenuDropdown` rows built from the
 /// replica's item model.
 fn context_menu() -> Menu {
     Menu::with_items(vec![
@@ -432,7 +432,7 @@ fn start_rename(ui: &mut Ui, target: Target) {
     }
 }
 
-/// Commits the rename under way (Enter, or a click elsewhere — Explorer's
+/// Commits the rename under way (Enter, or a click elsewhere - Explorer's
 /// rule). An empty name is refused: the old one stays.
 fn commit_rename(ui: &mut Ui) {
     let Some(r) = ui.rename.take() else {
@@ -457,7 +457,7 @@ fn commit_rename(ui: &mut Ui) {
     ui.status = format!("Renommé en « {name} »");
 }
 
-/// Deletes the selection of one view — for real, so the list shrinks and the
+/// Deletes the selection of one view - for real, so the list shrinks and the
 /// scroll clamps.
 fn delete(ui: &mut Ui, which: Which, permanent: bool) {
     let how = if permanent { "supprimé(s) définitivement" } else { "mis à la corbeille" };
@@ -617,7 +617,7 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
             left,
             right,
             y,
-            "ListView — clic, Ctrl/Maj+clic, double-clic, clic droit",
+            "ListView - clic, Ctrl/Maj+clic, double-clic, clic droit",
         );
         y = interact::caption(c, left, right, y, "molette, barre de défilement, en-têtes triables");
         y = interact::caption(c, left, right, y, "↑↓ Début Fin PgPréc PgSuiv · Maj/Ctrl+flèches · Ctrl+A");
@@ -727,7 +727,7 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
             left,
             right,
             y,
-            "TreeView — chevron ou double-clic pour déplier",
+            "TreeView - chevron ou double-clic pour déplier",
         );
         y = interact::caption(c, left, right, y, "Ctrl/Maj+clic, clic droit, molette");
         y = interact::caption(c, left, right, y, "↑↓ · → ouvre / enfant · ← ferme / parent");

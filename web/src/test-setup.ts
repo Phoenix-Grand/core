@@ -67,7 +67,7 @@ class FakeContext2D {
     }
   }
 
-  // ── Méthodes de rendu (noops — ce contexte ne rend rien) ───────────────────
+  // ── Méthodes de rendu (noops - ce contexte ne rend rien) ───────────────────
 
   clearRect()          { /* noop */ }
   save()               { /* noop */ }
@@ -116,7 +116,7 @@ class FakeContext2D {
   putImageData()  { /* noop */ }
 }
 
-// Patch prototype une seule fois — s'applique à tous les fichiers de test.
+// Patch prototype une seule fois - s'applique à tous les fichiers de test.
 // Pas de vi.spyOn pour survivre aux restoreAllMocks().
 ;(HTMLCanvasElement.prototype as unknown as { getContext: (_id: string) => unknown }).getContext =
   (_id: string) => new FakeContext2D()

@@ -1,4 +1,4 @@
-<!-- ComingSoon — converted from ComingSoon.tsx by @kubuno/views-migrate. -->
+<!-- ComingSoon - converted from ComingSoon.tsx by @kubuno/views-migrate. -->
 <UserControl x:Props="ComingSoonProps">
   <Stack Gap="12" CrossAlign="Center" Justify="Center" Class="py-24 text-center">
     <Stack Direction="LeftToRight" Gap="0" CrossAlign="Center" Justify="Center" BackColor="Surface2" Class="w-16 h-16 rounded-2xl">

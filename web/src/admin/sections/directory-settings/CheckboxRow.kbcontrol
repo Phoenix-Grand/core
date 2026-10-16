@@ -1,4 +1,4 @@
-<!-- CheckboxRow — converted from CheckboxRow.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- CheckboxRow - converted from CheckboxRow.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="CheckboxRowProps">
   <Panel Visible="{Binding show_main}" Class="py-3">
     <Stack Direction="LeftToRight" Gap="12" CrossAlign="Start">

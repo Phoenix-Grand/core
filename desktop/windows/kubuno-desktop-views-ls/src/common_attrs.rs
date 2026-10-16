@@ -1,5 +1,5 @@
 //! The handful of attributes every element accepts regardless of its
-//! registry entry — `x:Name`, `Dock`, `Anchor`, `X`, `Y`, `Width`, `Height`
+//! registry entry - `x:Name`, `Dock`, `Anchor`, `X`, `Y`, `Width`, `Height`
 //! (`XML_VIEWS.md` §1: not a per-component concept, read by the *parent*
 //! layout engine the same way WinForms reads `Control.Dock`/`Control.Anchor`
 //! off any control).
@@ -8,12 +8,12 @@
 //!
 //! `kubuno_desktop_views::validate` has its own `COMMON_ATTRIBUTES` table (`validate.
 //! rs`) with exactly this data, but it is a private `const`, not part of the
-//! crate's public API — reasonably so, since phase 2a only needed it inside
+//! crate's public API - reasonably so, since phase 2a only needed it inside
 //! the validator itself. Completion (offering `Dock`/`Anchor`/… alongside a
 //! component's own registered properties) and hover (a doc string when the
 //! cursor is on one of them) both need the same table from outside the
-//! crate, so it is duplicated here rather than asking the crate — currently
-//! being edited by another agent for the interpreter — to export it mid-edit.
+//! crate, so it is duplicated here rather than asking the crate - currently
+//! being edited by another agent for the interpreter - to export it mid-edit.
 //! If `kubuno_desktop_views::validate` (or `registry`) later exposes this as `pub`,
 //! this module should be deleted and its one call site
 //! (`completion.rs`/`hover.rs`) switched to the real export; the risk in the

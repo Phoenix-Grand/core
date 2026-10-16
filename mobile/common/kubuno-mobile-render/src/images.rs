@@ -2,7 +2,7 @@
 //! decoded on demand and cached per thread.
 //!
 //! The renderer embeds no image of its own: an app registers the JPEGs its screens show ([`register_image`], from
-//! its [`crate::App::setup`]) — e.g. the Photos app's sample photos, which live in the photos module.
+//! its [`crate::App::setup`]) - e.g. the Photos app's sample photos, which live in the photos module.
 
 use std::cell::RefCell;
 use std::collections::HashMap;

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  Sign-in · Two-step verification — shared by every Kubuno mobile app (derived from Drive's onboarding TotpScreen): the
+  Sign-in · Two-step verification - shared by every Kubuno mobile app (derived from Drive's onboarding TotpScreen): the
   code of the authenticator app (or a backup code), Verify, and Back. Enter in the field verifies. Light theme.
 -->
 <Panel xmlns="https://kubuno.com/views" xmlns:x="https://kubuno.com/views/x"

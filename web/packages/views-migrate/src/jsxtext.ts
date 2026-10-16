@@ -26,7 +26,7 @@ export function cleanJsxText(raw: string): string {
 
 /** Decodes the HTML entities JSX text and attribute strings may hold (`&nbsp;`, `&amp;`, `&#x2019;`…). */
 export function decodeEntities(s: string): string {
-  const named: Record<string, string> = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ', hellip: '…', mdash: '—', ndash: '–', middot: '·', rsquo: '’', lsquo: '‘', laquo: '«', raquo: '»', copy: '©' }
+  const named: Record<string, string> = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ', hellip: '…', mdash: '\u2014', ndash: '–', middot: '·', rsquo: '’', lsquo: '‘', laquo: '«', raquo: '»', copy: '©' }
   return s.replace(/&(#x[0-9a-fA-F]+|#\d+|[a-zA-Z]+);/g, (m, e: string) => {
     if (e[0] === '#') {
       const code = e[1] === 'x' || e[1] === 'X' ? parseInt(e.slice(2), 16) : parseInt(e.slice(1), 10)

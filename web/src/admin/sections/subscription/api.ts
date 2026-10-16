@@ -51,7 +51,7 @@ export interface SupportContract {
   expires_at:    string | null
   registered_at: string
   expired:       boolean
-  /** `null` once expired — a countdown past zero is not a countdown. */
+  /** `null` once expired - a countdown past zero is not a countdown. */
   days_left:     number | null
   /**
    * Recomputed by the server on every read, not stored: a contract registered

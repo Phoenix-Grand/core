@@ -9,17 +9,17 @@
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://github.com/kubuno/core/blob/main/LICENSE)
 [![Docs](https://img.shields.io/badge/docs-kubuno%2Fcore-4D38DB.svg)](https://github.com/kubuno/core)
 
-**The module SDK for [Kubuno](https://github.com/kubuno/core) — the stable surface that runtime-loaded modules build against.**
+**The module SDK for [Kubuno](https://github.com/kubuno/core) - the stable surface that runtime-loaded modules build against.**
 
-Kubuno modules are independent processes whose frontend is an ESM bundle loaded by the host **at runtime** via an import map. `@kubuno/sdk` is the contract between the host and those modules: registries, stores, hooks, i18n and widgets. The real implementation (the host's singletons) is provided at runtime — this package ships the **type surface** so a module can build and type-check on its own.
+Kubuno modules are independent processes whose frontend is an ESM bundle loaded by the host **at runtime** via an import map. `@kubuno/sdk` is the contract between the host and those modules: registries, stores, hooks, i18n and widgets. The real implementation (the host's singletons) is provided at runtime - this package ships the **type surface** so a module can build and type-check on its own.
 
 ## Overview
 
 The SDK re-exports the host's stable extension points, including:
 
-- **Registries** — `RouteRegistry`, `SlotRegistry`, `WaffleAppRegistry`, `FaviconRegistry`, `FileTypeRegistry`, `WidgetRegistry`, `ExtensionRegistry`, `ModuleServiceRegistry`.
-- **Stores (Zustand)** — `useAuthStore`, `useModulesStore`, `useSidebarStore`, `useToolbarStore`, `useSearchStore`, `useNotificationStore`, `useWsStore`, …
-- **Hooks & helpers** — `useConfirm`, `usePrompt`, `useAutosave`, `useDraggable`, i18n (`t`, `getDateLocale`), the `api` client, `DashboardWidget`, `WorkspaceShell`.
+- **Registries** - `RouteRegistry`, `SlotRegistry`, `WaffleAppRegistry`, `FaviconRegistry`, `FileTypeRegistry`, `WidgetRegistry`, `ExtensionRegistry`, `ModuleServiceRegistry`.
+- **Stores (Zustand)** - `useAuthStore`, `useModulesStore`, `useSidebarStore`, `useToolbarStore`, `useSearchStore`, `useNotificationStore`, `useWsStore`, …
+- **Hooks & helpers** - `useConfirm`, `usePrompt`, `useAutosave`, `useDraggable`, i18n (`t`, `getDateLocale`), the `api` client, `DashboardWidget`, `WorkspaceShell`.
 
 ## Compatibility
 

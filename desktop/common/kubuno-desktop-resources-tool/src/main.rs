@@ -1,4 +1,4 @@
-//! `kubuno-desktop-resources-tool` — command-line helper for `.kbres` resource files
+//! `kubuno-desktop-resources-tool` - command-line helper for `.kbres` resource files
 //! (`vskubuno/docs/RESOURCES.md`).
 //!
 //! ```text

@@ -40,9 +40,9 @@ pub async fn handle_message(
 ) -> Option<Value>;
 ```
 
-- `Tool { name, description, input_schema, annotations }` — serialised with MCP's
+- `Tool { name, description, input_schema, annotations }` - serialised with MCP's
   field names (`inputSchema`).
-- `ToolCallResult::text(..)` / `ToolCallResult::error(..)` — the outcome of a call.
+- `ToolCallResult::text(..)` / `ToolCallResult::error(..)` - the outcome of a call.
 - `handle_message` returns `None` for notifications and `Some(response)` otherwise.
 
 Every call carries the id of the user it runs for, so a provider can apply that
@@ -54,9 +54,9 @@ The core implements `McpToolProvider` over the tools the running modules declare
 registration, and executes a call by proxying it to the owning module. It serves
 two endpoints over HTTP:
 
-- `POST /mcp` — for MCP clients, authenticated by a personal Kubuno API token
+- `POST /mcp` - for MCP clients, authenticated by a personal Kubuno API token
   and nothing else (the token gives the user and its scope);
-- `POST /internal/mcp` — for trusted modules acting on a user's behalf (the
+- `POST /internal/mcp` - for trusted modules acting on a user's behalf (the
   assistant, mid-conversation), authenticated by the module's internal secret,
   with the user named in `x-kubuno-user-id`.
 

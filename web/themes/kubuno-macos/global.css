@@ -1,7 +1,7 @@
 /* ============================================================================
-   Kubuno — theme "macOS" (refined). System (SF) typography, Aqua controls,
+   Kubuno - theme "macOS" (refined). System (SF) typography, Aqua controls,
    blue focus glow, Finder-style selection, green switches, vibrancy and soft
-   shadows. Pure CSS — applied globally by the host, no scripts required.
+   shadows. Pure CSS - applied globally by the host, no scripts required.
    ============================================================================ */
 
 /* SF-like text rendering + slightly tighter display tracking. */
@@ -67,13 +67,13 @@ button:focus-visible, a:focus-visible, [role="button"]:focus-visible, [role="tab
 }
 
 /* ── Finder-style selection (generalised to ALL left/right panels) ─────────
-      The active/selected item — design-system active tint `bg-primary-light` —
+      The active/selected item - design-system active tint `bg-primary-light` -
       becomes a solid accent capsule with WHITE content: strong, readable
       contrast, unmistakably macOS. Two reaches:
-        • `[data-app-chrome] [class*="bg-primary-light"]` — ANY selected row inside a
+        • `[data-app-chrome] [class*="bg-primary-light"]` - ANY selected row inside a
           shell chrome panel (every module's left/right panel lives here),
           regardless of its corner radius;
-        • `.rounded-full.bg-primary-light` — pill-shaped nav items anywhere
+        • `.rounded-full.bg-primary-light` - pill-shaped nav items anywhere
           else (admin / settings sidebars). */
 [data-app-chrome] [class*="bg-primary-light"],
 .rounded-full.bg-primary-light { background-color: var(--color-primary) !important; }
@@ -105,7 +105,7 @@ button:focus-visible, a:focus-visible, [role="button"]:focus-visible, [role="tab
 .shadow-xl { box-shadow: 0 16px 48px rgba(0,0,0,.16), 0 3px 10px rgba(0,0,0,.08) !important; }
 
 /* ============================================================================
-   Floating windows & dialogs — macOS window chrome.
+   Floating windows & dialogs - macOS window chrome.
    Translucent title bar with traffic-light controls (close is live; minimize &
    zoom are decorative), centred title, hairline border, deep soft shadow and
    11px corners. Targets the FloatingWindow used by Confirm/ConflictDialog too.

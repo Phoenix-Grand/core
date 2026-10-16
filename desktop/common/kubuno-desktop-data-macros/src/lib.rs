@@ -1,4 +1,4 @@
-//! # `kubuno-desktop-data-macros` — `data_source!`
+//! # `kubuno-desktop-data-macros` - `data_source!`
 //!
 //! The procedural macro behind `kubuno_desktop_data::data_source!` (`vskubuno/docs/DATA.md`, DATA-4). Use it
 //! through `kubuno_desktop_data::data_source!("shop.kbdata")` (or `kubuno_desktop::data::data_source!`): that
@@ -110,7 +110,7 @@ fn data_source_impl(input: &Input) -> Result<TokenStream2, String> {
             .collect()
     };
     // The migrations too: the stale-cache warning compares them with the cache (an edited migration
-    // re-expands the macro; a new file cannot be tracked by rustc — Visual Studio's "Add migration"
+    // re-expands the macro; a new file cannot be tracked by rustc - Visual Studio's "Add migration"
     // touches the crate's `.kbdata` files for that).
     let migration_files: Vec<String> = manifest_dir
         .as_deref()

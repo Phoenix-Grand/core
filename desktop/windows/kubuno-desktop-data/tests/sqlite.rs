@@ -656,7 +656,7 @@ fn a_data_table_edits_cells_of_a_binding_source_and_the_save_reaches_the_file() 
 
 /// `AutoFill="true"` (what the designer's drag and drop writes, DATA-6): the first live frame of
 /// the view starts the fill on the view's executor, like the `Fill` call Windows Forms adds to
-/// `Form_Load` — no code in the view model; a detail list does not auto-fill on its own.
+/// `Form_Load` - no code in the view model; a detail list does not auto-fill on its own.
 #[test]
 fn auto_fill_fills_the_list_when_the_view_is_shown() {
     use kubuno_desktop_controls::host::{Frame, Modifiers};

@@ -1,4 +1,4 @@
-//! `kubuno-desktop-views-ls` — LSP server for `.kbview` XML views, spoken over
+//! `kubuno-desktop-views-ls` - LSP server for `.kbview` XML views, spoken over
 //! stdio (the transport VS's `ILanguageClient` and VS Code both expect;
 //! `vskubuno/docs/ARCHITECTURE.md`'s phase 3 row). See `lib.rs` for the
 //! module map; this binary is a thin wrapper around [`kubuno_desktop_views_ls::
@@ -26,7 +26,7 @@ fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
 
     // Always attempt to join the I/O threads, even if `run` returned an
     // error, so a malformed shutdown does not also leak the reader/writer
-    // threads — then surface whichever error actually happened first.
+    // threads - then surface whichever error actually happened first.
     io_threads.join()?;
     result?;
 

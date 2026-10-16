@@ -29,8 +29,8 @@ const FONT_STYLE = {
 const TEXT_TAGS = ['P', 'Span', 'Div', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'Strong', 'Em', 'Small', 'Label', 'Code', 'Li'] as const
 const HTML_TAG = {
   name: 'HtmlTag', kind: { Enum: TEXT_TAGS }, default: 'P', category: 'Accessibility', webOnly: true,
-  doc: 'Web only: the HTML element of the text — a paragraph, a heading level (H1–H6, announced as such by screen readers), an inline run (Span)…',
-  docFr: "Web uniquement : l'élément HTML du texte — un paragraphe, un niveau de titre (H1–H6, annoncé comme tel par les lecteurs d'écran), un passage en ligne (Span)…",
+  doc: 'Web only: the HTML element of the text - a paragraph, a heading level (H1–H6, announced as such by screen readers), an inline run (Span)…',
+  docFr: "Web uniquement : l'élément HTML du texte - un paragraphe, un niveau de titre (H1–H6, annoncé comme tel par les lecteurs d'écran), un passage en ligne (Span)…",
   to: { prop: 'as', values: { P: 'p', Span: 'span', Div: 'div', H1: 'h1', H2: 'h2', H3: 'h3', H4: 'h4', H5: 'h5', H6: 'h6', Strong: 'strong', Em: 'em', Small: 'small', Label: 'label', Code: 'code', Li: 'li' } },
 } as const
 const INHERIT_FONT_SIZE = {

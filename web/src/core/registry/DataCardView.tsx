@@ -70,7 +70,7 @@ export function DataCardView({ envelope }: DataCardProps) {
 }
 
 // Platform service: lets every module use the data-transfer API at runtime
-// through `ModuleServiceRegistry.get('core', …)` — no vendored helpers and no
+// through `ModuleServiceRegistry.get('core', …)` - no vendored helpers and no
 // dependency on the published npm type surface. Runs when the shared chunk
 // loads, i.e. before any module's register().
 /**
@@ -97,7 +97,7 @@ ModuleServiceRegistry.publish('core', {
   resolveDataCard: (type: string) => DataTransferRegistry.resolve(type),
   DataCardView,
   // Cross-module labels: modules pass the SAME envelope they copy to the
-  // clipboard — the picker links it to the user's labels (/labels to browse).
+  // clipboard - the picker links it to the user's labels (/labels to browse).
   openLabelPicker,
   // Roaming clipboard history (see api/clipboard.ts): record a clip, show the
   // pane (resolves with the envelope the user picked), or read it directly.

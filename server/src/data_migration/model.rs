@@ -90,7 +90,7 @@ impl SourceSpec {
         match self.security.as_str() {
             // Refused, and this is not an oversight. The pilot module's IMAP
             // client negotiates TLS for `ssl` and opens a plain socket for
-            // everything else — it sends no STARTTLS command. Accepting the
+            // everything else - it sends no STARTTLS command. Accepting the
             // value would show an administrator a control that says "chiffré"
             // and hand an entire organisation's passwords to the network in
             // clear. A missing option is a limitation; this one would be a lie.
@@ -122,7 +122,7 @@ pub struct Campaign {
     pub source_port:     i32,
     pub source_security: String,
     pub since_date:      Option<NaiveDate>,
-    // PostgreSQL `TEXT[]` today; read as a JSON array (portable) — the column is
+    // PostgreSQL `TEXT[]` today; read as a JSON array (portable) - the column is
     // migrated `TEXT[]` → `JSONB` on the schema-consolidation side.
     #[sqlx(json)]
     pub exclude_folders: Vec<String>,
@@ -183,7 +183,7 @@ pub struct CampaignTally {
     pub total:    i64,
 }
 
-/// One mapping as the console submits it, credential included — the only shape
+/// One mapping as the console submits it, credential included - the only shape
 /// in this module that carries a password, and it exists for the length of one
 /// request.
 ///
@@ -218,8 +218,8 @@ impl AccountMappingInput {
     }
 }
 
-/// Upper bound on a single campaign. Not a limit of the machinery — the job
-/// walks any number of rows — but of one *request*: a console that posts ten
+/// Upper bound on a single campaign. Not a limit of the machinery - the job
+/// walks any number of rows - but of one *request*: a console that posts ten
 /// thousand mappings in one body is a mistake, and finding out through a
 /// timeout is worse than finding out through a message.
 pub const MAX_ACCOUNTS_PER_CAMPAIGN: usize = 2000;

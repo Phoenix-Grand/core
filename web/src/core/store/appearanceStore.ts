@@ -10,9 +10,9 @@ export type AppearanceMode = 'light' | 'dark' | 'system'
 
 export interface ModuleAppearance {
   mode:    AppearanceMode
-  /** Colour scheme id — modules/themes may honour it via [data-kb-scheme]. */
+  /** Colour scheme id - modules/themes may honour it via [data-kb-scheme]. */
   scheme:  string
-  /** Information density — honoured via [data-kb-density]. */
+  /** Information density - honoured via [data-kb-density]. */
   density: string
 }
 

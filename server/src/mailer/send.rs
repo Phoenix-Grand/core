@@ -1,7 +1,7 @@
 //! The SMTP client itself.
 //!
 //! Pure Rust on purpose: `kubuno-seccomp` forbids `execve` in the core process,
-//! so shelling out to `sendmail`/`msmtp` is not an option — it would be killed
+//! so shelling out to `sendmail`/`msmtp` is not an option - it would be killed
 //! by the filter, and re-introducing a spawn is forbidden by the project rules
 //! anyway. `lettre` is the crate the mail module already uses, with the same
 //! `AsyncSmtpTransport<Tokio1Executor>` shape; the only deliberate divergence is
@@ -56,7 +56,7 @@ impl std::fmt::Display for SendError {
 
 impl std::error::Error for SendError {}
 
-/// Truncates on a character boundary — the error text is arbitrary bytes from a
+/// Truncates on a character boundary - the error text is arbitrary bytes from a
 /// remote server and slicing it blindly would panic on a multi-byte sequence.
 pub fn truncate(text: &str, max: usize) -> String {
     let text = text.trim();
@@ -68,7 +68,7 @@ pub fn truncate(text: &str, max: usize) -> String {
 }
 
 /// rustls 0.23 requires a process-wide crypto provider. The HTTPS listener
-/// installs one, but only when native TLS is configured — a relay must work on
+/// installs one, but only when native TLS is configured - a relay must work on
 /// a plain-HTTP instance too, so the first outgoing message installs it itself.
 /// `install_default` is fallible by design (it refuses to replace an existing
 /// provider); ignoring that is correct here, since any provider will do.
@@ -137,7 +137,7 @@ impl lettre::message::header::Header for AutoSubmitted {
     }
 }
 
-/// Assembles the MIME message. `multipart/alternative`, text first — the order
+/// Assembles the MIME message. `multipart/alternative`, text first - the order
 /// mail clients read as "prefer the last part they understand".
 fn build_message(cfg: &MailConfig, msg: &Outgoing) -> Result<Message, SendError> {
     let from = cfg.from_mailbox().parse().map_err(|e: lettre::address::AddressError| SendError {
@@ -188,7 +188,7 @@ fn build_message(cfg: &MailConfig, msg: &Outgoing) -> Result<Message, SendError>
 /// Connects to the relay and delivers `msg`.
 ///
 /// Never logs the recipient's message body, the reset link it may contain, or
-/// the SMTP password — only the address and the outcome.
+/// the SMTP password - only the address and the outcome.
 pub async fn deliver(cfg: &MailConfig, msg: &Outgoing) -> Result<(), SendError> {
     let email = build_message(cfg, msg)?;
     let transport = build_transport(cfg)?;

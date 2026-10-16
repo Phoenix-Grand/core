@@ -103,7 +103,7 @@ export class NetworksSection extends ViewBase {
       minWidth: 180,
       cell: (s) => (
         <div className="min-w-0">
-          <div className="truncate text-text-primary">{s.user_label ?? '—'}</div>
+          <div className="truncate text-text-primary">{s.user_label ?? '-'}</div>
           <div className="truncate text-text-tertiary" style={{ fontSize: 'var(--kb-text-meta)' }}>
             {sessionName(this.tr, s)}
           </div>
@@ -115,14 +115,14 @@ export class NetworksSection extends ViewBase {
       id: 'ip',
       header: this.tr('devices.field_last_ip'),
       width: 160,
-      cell: (s) => <span className="truncate text-text-secondary">{s.ip_address ?? '—'}</span>,
+      cell: (s) => <span className="truncate text-text-secondary">{s.ip_address ?? '-'}</span>,
       sortValue: (s) => s.ip_address ?? '',
     },
     {
       id: 'country',
       header: this.tr('devices.col_country'),
       width: 90,
-      cell: (s) => <span className="text-text-secondary">{s.country ?? '—'}</span>,
+      cell: (s) => <span className="text-text-secondary">{s.country ?? '-'}</span>,
       sortValue: (s) => s.country ?? '',
     },
     {

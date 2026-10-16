@@ -2,7 +2,7 @@ import type { MentionMatch } from './types'
 
 // Fold one character for diacritic/case-insensitive matching. Decomposition
 // (NFD) splits an accented letter into base + combining mark, and the mark is
-// stripped — so "é" folds to "e" and "Ç" to "c".
+// stripped - so "é" folds to "e" and "Ç" to "c".
 function foldChar(ch: string): string {
   return ch.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase()
 }
@@ -58,7 +58,7 @@ export function highlightMatch(label: string, query: string): HighlightSegment[]
 /**
  * Detect a trigger occurrence at the caret. The trigger must be preceded by the
  * start of text or a whitespace, and followed by non-space characters (which
- * form the query). Scans `textBeforeCaret` — the text from the start of the
+ * form the query). Scans `textBeforeCaret` - the text from the start of the
  * current line/node up to the caret.
  */
 export function detectMention(textBeforeCaret: string, trigger = '@'): MentionMatch | null {

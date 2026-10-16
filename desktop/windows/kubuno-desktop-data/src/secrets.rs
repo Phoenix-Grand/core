@@ -2,7 +2,7 @@
 //! from the source or the `.kbview`: a connection names a key (`ConnectionStringName="Northwind"`),
 //! and a [`SecretResolver`] looks the key `ConnectionStrings:Northwind` up in, first hit wins:
 //!
-//! 1. the environment: `ConnectionStrings__Northwind` (CI, services — the .NET convention);
+//! 1. the environment: `ConnectionStrings__Northwind` (CI, services - the .NET convention);
 //! 2. the app's secrets of the unified naming scheme (vskubuno `docs/STORAGE-COMPONENTS.md`, decision Q4): the OS
 //!    credential store, target `Kubuno/app.<UserSecretsId>/ConnectionStrings.Northwind` ([`AppSecretsSource`]);
 //! 3. the older Windows Credential Manager credential `Kubuno:<UserSecretsId>:ConnectionStrings:Northwind` (its

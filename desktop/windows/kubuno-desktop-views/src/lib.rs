@@ -1,14 +1,14 @@
-//! # `kubuno-desktop-views` — declarative XML views for `kubuno_desktop_ui`
+//! # `kubuno-desktop-views` - declarative XML views for `kubuno_desktop_ui`
 //!
 //! Phases 2a-2c of the plan in `vskubuno/docs/XML_VIEWS.md` §8: the lossless
 //! syntax tree and metadata registry (2a), scoped to the tokenizer subset §6
-//! describes (2b — folded into [`syntax`]/[`ast`] rather than a separate
+//! describes (2b - folded into [`syntax`]/[`ast`] rather than a separate
 //! module), and now the interpreter (2c): parse → validate → build a live
 //! [`node::ViewNode`] tree, and paint it every frame against a
 //! [`binding::ViewModel`] and a [`binding::HandlerTable`], with hot reload
 //! keeping the last good tree on a broken file ([`runtime::Runtime`]).
 //! Nothing in `kubuno-desktop-ui` is imported by name here except through its public
-//! builder API (§4: "never the reverse" — this crate depends on `kubuno-desktop-ui`,
+//! builder API (§4: "never the reverse" - this crate depends on `kubuno-desktop-ui`,
 //! not vice versa; `kubuno-desktop-ui` is untouched).
 //!
 //! | Module | What | Design note reference |
@@ -26,7 +26,7 @@
 //!
 //! Since WV-1 (`vskubuno/docs/WEB-VIEWS.md`) [`syntax`], [`ast`], [`edit`] and the `{Binding}`/`{Res}` grammars live in the
 //! platform-neutral `kubuno-desktop-views-syntax` crate, and the registry metadata types and JSON schema in
-//! `kubuno-desktop-views-model` — both buildable for any OS and for WebAssembly, so the web tooling shares them.
+//! `kubuno-desktop-views-model` - both buildable for any OS and for WebAssembly, so the web tooling shares them.
 //! This crate re-exports them under the paths above and keeps the runtime, the rendering, Windows and
 //! the design mode.
 //!
@@ -39,7 +39,7 @@
 //!   worked example are mechanical repetition of the same pattern, left for
 //!   whichever screen needs them first rather than speculative metadata.
 //! - **Named spacing tokens** (`Padding="XL"`, `Gap="none"`): still plain DIP
-//!   numbers (see [`registry::PropKind::F32`]'s doc) — no closed enum for
+//!   numbers (see [`registry::PropKind::F32`]'s doc) - no closed enum for
 //!   them exists in `kubuno-desktop-ui`/`kubuno-desktop-controls` to validate against.
 //! - **`build.rs` code generation** (§2's option B) and the language server
 //!   (§8 phase 3): both read this crate's `ast`/`registry` unchanged: nothing
@@ -92,7 +92,7 @@ pub mod owner_draw;
 /// `use kubuno_desktop_views::prelude::*;`: what a view's code-behind uses (EVT-4).
 pub mod prelude;
 /// The line-delimited JSON IPC protocol `examples/view_embed.rs` speaks with
-/// `vskubuno`'s `RustDesignSurfaceHost` over its own stdin/stdout (DSG-6) —
+/// `vskubuno`'s `RustDesignSurfaceHost` over its own stdin/stdout (DSG-6) -
 /// see `vskubuno/docs/DESIGNER.md`'s "DSG-6 protocol" section.
 pub mod protocol;
 pub mod props;
@@ -127,7 +127,7 @@ pub mod menus;
 pub mod window;
 
 /// `#[kubuno_desktop_views::event_handlers] impl ViewModel { fn ok_click(&mut self, sender: &Sender<Button>, e: &MouseEventArgs) { … } }`:
-/// typed handlers (`vskubuno/docs/EVENTS.md` §5.4, EVT-4) — see [`events::typed`] for the
+/// typed handlers (`vskubuno/docs/EVENTS.md` §5.4, EVT-4) - see [`events::typed`] for the
 /// accepted signatures and the macro's own documentation for its errors.
 pub use kubuno_desktop_views_macros::event_handlers;
 // `#[value_converter]` on an `impl binding::ValueConverter for T`: a `Converter=Name` of the bindings.

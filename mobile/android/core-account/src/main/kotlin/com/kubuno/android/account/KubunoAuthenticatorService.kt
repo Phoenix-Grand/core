@@ -10,7 +10,7 @@ import javax.inject.Inject
  * The binder end of [KubunoAuthenticator].
  *
  * The framework binds this service, in this process, whenever any app touches
- * a `com.kubuno` account — which is exactly what keeps every refresh inside a
+ * a `com.kubuno` account - which is exactly what keeps every refresh inside a
  * single `TokenManager` instance.
  *
  * `@AndroidEntryPoint` gives the service field injection from the singleton

@@ -1,5 +1,5 @@
 /**
- * FolderGlyph — L'icône d'un dossier, centralisée pour TOUTES les vues :
+ * FolderGlyph - L'icône d'un dossier, centralisée pour TOUTES les vues :
  * grille (DriveApp/StorageExplorer), arbre latéral, menu « Aller à » du fil
  * d'ariane, modales Déplacer / Infos / sélecteur de dossier…
  *
@@ -14,7 +14,7 @@ import React, { useMemo } from 'react'
 import { Folder as FolderIcon } from 'lucide-react'
 import { useModulesStore, FaviconRegistry, ICON_MAP } from '@kubuno/sdk'
 
-/** Champs minimaux pour décider de l'icône — sous-ensemble de `Folder`. */
+/** Champs minimaux pour décider de l'icône - sous-ensemble de `Folder`. */
 export interface FolderGlyphSource {
   name:          string
   is_protected?: boolean
@@ -49,7 +49,7 @@ export function FolderGlyph({ folder, size = 20, className, color, style }: {
   folder:     FolderGlyphSource
   size?:      number
   className?: string
-  /** Force la couleur (ex. bleu « actif » dans l'arbre) — sans effet sur un logo de marque. */
+  /** Force la couleur (ex. bleu « actif » dans l'arbre) - sans effet sur un logo de marque. */
   color?:     string
   style?:     React.CSSProperties
 }) {

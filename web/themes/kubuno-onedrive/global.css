@@ -1,9 +1,9 @@
 /* ============================================================================
-   Kubuno — theme "OneDrive". Microsoft 365 / OneDrive look, built on the Fluent
+   Kubuno - theme "OneDrive". Microsoft 365 / OneDrive look, built on the Fluent
    Design System: a OneDrive-blue suite header over a light neutral body, the
    Fluent blue accent (#0078d4), Segoe UI typography, small corners, flat
    controls with a Fluent focus underline, and soft "depth" elevation shadows.
-   Pure CSS — applied globally by the host, no scripts.
+   Pure CSS - applied globally by the host, no scripts.
    ============================================================================ */
 
 /* Fluent-tinted text selection. */
@@ -46,7 +46,7 @@ textarea:focus, select:focus {
   box-shadow: inset 0 -2px 0 0 var(--color-primary);
 }
 /* Fluent focus indicator: a dark "focus rectangle" offset off the control, so it
-   reads cleanly over any button colour (blue, red, white) — unlike an accent ring
+   reads cleanly over any button colour (blue, red, white) - unlike an accent ring
    that clashes on the red danger button. */
 button:focus-visible, a:focus-visible, [role="button"]:focus-visible, [role="tab"]:focus-visible,
 input:focus-visible, [role="checkbox"]:focus-visible {
@@ -66,7 +66,7 @@ input[type="checkbox"]:not(:checked):hover, input[type="radio"]:not(:checked):ho
 
 /* ── Selection: soft Fluent blue tint, dark text (OneDrive list selection) ──
       Unlike the Finder/Numix themes, OneDrive does NOT invert to a solid accent
-      capsule — the selected row keeps a light blue wash. That is exactly what
+      capsule - the selected row keeps a light blue wash. That is exactly what
       the `bg-primary-light` token already renders once it is the Fluent
       `themeLighter` blue (set in theme.json), so no colour override is needed;
       we only add the Fluent left "rail" accent on selected shell-panel rows. */
@@ -79,7 +79,7 @@ input[type="checkbox"]:not(:checked):hover, input[type="radio"]:not(:checked):ho
 .shadow-xl { box-shadow: 0 6.4px 14.4px rgba(0,0,0,.13), 0 1.2px 3.6px rgba(0,0,0,.11) !important; }
 
 /* ============================================================================
-   OneDrive-blue suite header — the signature. The shell top bar is the <header>
+   OneDrive-blue suite header - the signature. The shell top bar is the <header>
    carrying `data-app-chrome` (module-internal headers do not have it, so they
    stay untouched). It becomes OneDrive blue with white contents and a light
    search box.
@@ -119,7 +119,7 @@ header[data-app-chrome] [class*="max-w-2xl"] .text-text-tertiary,
 header[data-app-chrome] [class*="max-w-2xl"] .text-text-secondary { color: #605e5c !important; }
 
 /* ============================================================================
-   Floating windows & dialogs — Fluent surfaces.
+   Floating windows & dialogs - Fluent surfaces.
    Light, flat, small corners, a clean light title bar (no coloured chrome) and
    a soft Fluent depth shadow. Targets the FloatingWindow used by
    Confirm/ConflictDialog too.

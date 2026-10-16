@@ -2,8 +2,8 @@ import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
 
 // Seul le fallback `en` est importé statiquement (toujours nécessaire, et petit
-// par rapport à la session). Les 12 autres locales sont chargées à la demande —
-// cf. LOCALE_LOADERS plus bas — pour ne garder en mémoire que la langue active.
+// par rapport à la session). Les 12 autres locales sont chargées à la demande -
+// cf. LOCALE_LOADERS plus bas - pour ne garder en mémoire que la langue active.
 import en from './locales/en/core.json'
 import { getPublicConfig } from '../api/publicConfig'
 
@@ -36,7 +36,7 @@ export const LANG_COOKIE = 'kubuno_lang'
  *
  * Le réglage arrive par le réseau, la première peinture est synchrone : sans ce
  * miroir, chaque chargement afficherait la langue du navigateur le temps d'un
- * aller-retour. Même schéma à trois couches que le thème (`themeStore`) — valeur
+ * aller-retour. Même schéma à trois couches que le thème (`themeStore`) - valeur
  * serveur, miroir local, application immédiate au démarrage suivant.
  */
 export const INSTANCE_LANG_KEY = 'kubuno_instance_lang'
@@ -74,12 +74,12 @@ function readInstanceLang(): string | null {
  * cette fonction s'exécute au chargement du module, avant toute requête, donc
  * avant qu'on sache s'il y a une session. La préférence du compte est appliquée
  * plus tard par `applyUserLanguage` (cf. `main.tsx`), qui écrase ce qui précède
- * ET réécrit le cookie — c'est ainsi qu'elle l'emporte, et c'est aussi pourquoi
+ * ET réécrit le cookie - c'est ainsi qu'elle l'emporte, et c'est aussi pourquoi
  * le cookie seul ne suffit pas : un compte dont la préférence change sur un
  * autre appareil doit se retrouver appliqué ici.
  *
  * Le cookie passe AVANT l'instance parce qu'il n'est écrit que par une décision
- * — `setLanguage` (l'utilisateur choisit) ou `applyUserLanguage` (son compte
+ * - `setLanguage` (l'utilisateur choisit) ou `applyUserLanguage` (son compte
  * l'a choisi). Il n'est jamais posé par la détection automatique. Un cookie
  * signifie donc « quelqu'un a décidé », et la langue d'instance est un défaut :
  * un défaut ne remplace pas une décision. Corollaire assumé : changer la langue
@@ -119,7 +119,7 @@ const LOCALE_LOADERS: Record<string, () => Promise<{ default: unknown }>> = {
 }
 
 // Bundles core chargés à la demande, mémorisés pour être ré-appliqués sur
-// `initialized` — init reconstruit le ResourceStore depuis `resources` (= en
+// `initialized` - init reconstruit le ResourceStore depuis `resources` (= en
 // seul) et effacerait sinon une locale ajoutée avant l'événement (même piège que
 // les bundles de modules, cf. le handler `initialized` plus bas).
 const _coreLocales: Record<string, Record<string, unknown>> = {}
@@ -200,8 +200,8 @@ export function writeLangCookie(lng: string) {
 }
 
 /**
- * Change la langue de l'application : applique, persiste en cookie, et — si
- * `persistUser` est fourni — sauvegarde dans les préférences de l'utilisateur.
+ * Change la langue de l'application : applique, persiste en cookie, et - si
+ * `persistUser` est fourni - sauvegarde dans les préférences de l'utilisateur.
  */
 export function setLanguage(lng: string, persistUser?: (lng: string) => void) {
   if (!SUPPORTED.includes(lng)) return
@@ -220,7 +220,7 @@ export function setLanguage(lng: string, persistUser?: (lng: string) => void) {
  *
  * C'est le maillon de tête de l'ordre de résolution : appelé à la restauration
  * de session (`main.tsx`), il écrase la langue d'instance et la détection du
- * navigateur, et pose le cookie — ce qui empêche `syncInstanceLanguage`, s'il
+ * navigateur, et pose le cookie - ce qui empêche `syncInstanceLanguage`, s'il
  * répond après lui, de repasser derrière.
  */
 export function applyUserLanguage(lng: unknown) {
@@ -236,8 +236,8 @@ export function applyUserLanguage(lng: unknown) {
  * décidé.
  *
  * `/api/v1/config` est la seule surface joignable SANS session : c'est pour ça
- * que le réglage y est déclaré public. Sans ça, la page de connexion — celle qui
- * en a le plus besoin, puisqu'aucune préférence de compte n'existe encore — ne
+ * que le réglage y est déclaré public. Sans ça, la page de connexion - celle qui
+ * en a le plus besoin, puisqu'aucune préférence de compte n'existe encore - ne
  * pourrait pas s'y conformer.
  *
  * Deux effets, distincts :

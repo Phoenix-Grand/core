@@ -3,7 +3,7 @@
 //! data from one engine to another.
 //!
 //! SQLite is embedded, so its cases always run. PostgreSQL runs only when
-//! `KUBUNO_PG_TEST_URL` is set and MySQL only when `KUBUNO_MYSQL_TEST_URL` is —
+//! `KUBUNO_PG_TEST_URL` is set and MySQL only when `KUBUNO_MYSQL_TEST_URL` is -
 //! otherwise the case prints a notice and is skipped, so CI without a server
 //! stays green.
 
@@ -217,7 +217,7 @@ async fn sqlite_prefix_rename_is_a_noop() {
 #[tokio::test]
 async fn copy_pg_to_pg() {
     let Some(src) = pg_pool("coresrc").await else {
-        eprintln!("KUBUNO_PG_TEST_URL non défini — copy_pg_to_pg ignoré");
+        eprintln!("KUBUNO_PG_TEST_URL non défini - copy_pg_to_pg ignoré");
         return;
     };
     let dst = pg_pool("coredst").await.expect("second pg pool");
@@ -233,7 +233,7 @@ async fn copy_pg_to_pg() {
 #[tokio::test]
 async fn copy_pg_to_sqlite() {
     let Some(src) = pg_pool("coreport").await else {
-        eprintln!("KUBUNO_PG_TEST_URL non défini — copy_pg_to_sqlite ignoré");
+        eprintln!("KUBUNO_PG_TEST_URL non défini - copy_pg_to_sqlite ignoré");
         return;
     };
     pg_drop_schema(&src, "coreport").await;
@@ -252,7 +252,7 @@ async fn copy_pg_to_sqlite() {
 #[tokio::test]
 async fn pg_prefix_rename_moves_the_schema() {
     let Some(pool) = pg_pool("coresrc").await else {
-        eprintln!("KUBUNO_PG_TEST_URL non défini — pg_prefix_rename ignoré");
+        eprintln!("KUBUNO_PG_TEST_URL non défini - pg_prefix_rename ignoré");
         return;
     };
     // Build two prefixed schemas `pfxa_core` and `pfxa_notes`, then rename the
@@ -308,7 +308,7 @@ async fn pg_prefix_rename_moves_the_schema() {
 async fn copy_mysql_to_sqlite() {
     let url = std::env::var("KUBUNO_MYSQL_TEST_URL").ok().filter(|u| !u.trim().is_empty());
     let Some(url) = url else {
-        eprintln!("KUBUNO_MYSQL_TEST_URL non défini — copy_mysql_to_sqlite ignoré");
+        eprintln!("KUBUNO_MYSQL_TEST_URL non défini - copy_mysql_to_sqlite ignoré");
         return;
     };
     let s = settings("mysql", serde_json::json!({ "url": url }));
@@ -335,7 +335,7 @@ async fn copy_mysql_to_sqlite() {
 
 /// The MySQL/SQLite event outbox is engine plumbing, not data: a source that has
 /// it (any MySQL or SQLite instance) must copy onto a destination that does not
-/// (a PostgreSQL target never creates it) — a switch back used to fail there.
+/// (a PostgreSQL target never creates it) - a switch back used to fail there.
 #[tokio::test]
 async fn copy_leaves_the_event_outbox_behind() {
     let dir = TempDir::new();
@@ -353,7 +353,7 @@ async fn copy_leaves_the_event_outbox_behind() {
 #[tokio::test]
 async fn copy_pg_inet_keeps_the_display_form() {
     let Some(src) = pg_pool("srcinet").await else {
-        eprintln!("KUBUNO_PG_TEST_URL not set — copy_pg_inet_keeps_the_display_form skipped");
+        eprintln!("KUBUNO_PG_TEST_URL not set - copy_pg_inet_keeps_the_display_form skipped");
         return;
     };
     pg_drop_schema(&src, "srcinet").await;

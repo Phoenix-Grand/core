@@ -1,4 +1,4 @@
-//! [`Image`]: a picture to draw — a file decoded on first use for the surface's device, or a bitmap
+//! [`Image`]: a picture to draw - a file decoded on first use for the surface's device, or a bitmap
 //! the caller already holds.
 
 use std::cell::RefCell;
@@ -49,7 +49,7 @@ thread_local! {
 }
 
 impl Image {
-    /// A picture file (PNG, JPEG, BMP, GIF, TIFF, ICO — anything WIC decodes), `Image.FromFile`.
+    /// A picture file (PNG, JPEG, BMP, GIF, TIFF, ICO - anything WIC decodes), `Image.FromFile`.
     /// Decoded the first time it is drawn; a file that cannot be read draws nothing (logged once).
     pub fn from_file(path: impl AsRef<str>) -> Self {
         Self { source: Source::File(Rc::from(path.as_ref())) }

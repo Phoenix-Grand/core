@@ -2,7 +2,7 @@
 //!
 //! `core.event_log` answers "what happened to the system". This module answers
 //! the question an operator actually asks after an incident: **who did it, from
-//! where, with what credential, to what, and what did it change** — including
+//! where, with what credential, to what, and what did it change** - including
 //! the attempts that were refused.
 //!
 //! ## Shape of the thing
@@ -31,7 +31,7 @@
 //! re-armed at +24 h by its own handler.
 //!
 //! It can also be run on demand from SQL: `SELECT core.purge_admin_audit(400);`
-//! — though that path bypasses the trail entry the job writes.
+//! - though that path bypasses the trail entry the job writes.
 
 pub mod chain;
 pub mod context;

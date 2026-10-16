@@ -125,7 +125,7 @@ async fn materialize(settings: &Settings, db: &DbPool, id: &str) -> Result<Mater
     }
 
     // 2) Résolution de l'artefact ADAPTÉ À L'OS/ARCH DU CORE. Source PRÉFÉRÉE : URL
-    //    directe fournie par la marketplace (à terme, kubuno.com — supposée déjà
+    //    directe fournie par la marketplace (à terme, kubuno.com - supposée déjà
     //    résolue pour la plateforme). Repli : asset de la Release GitHub choisi selon
     //    `std::env::consts::OS/ARCH`.
     // Le catalogue dit ce que le module publie, plateforme par plateforme : c'est
@@ -139,7 +139,7 @@ async fn materialize(settings: &Settings, db: &DbPool, id: &str) -> Result<Mater
     } else if !detail.artifacts.is_empty() {
         // Le catalogue décrit bien ce module, mais aucun .kbpkg installable ici :
         // le dire franchement. Un module s'installe uniquement par son paquet
-        // Kubuno — les paquets système ne sont ni produits ni acceptés.
+        // Kubuno - les paquets système ne sont ni produits ni acceptés.
         let dispo: Vec<String> = detail.artifacts.iter()
             .map(|a| format!("{} {}/{}", a.kind, a.os, a.arch)).collect();
         return Err(AppError::Validation(format!(
@@ -154,7 +154,7 @@ async fn materialize(settings: &Settings, db: &DbPool, id: &str) -> Result<Mater
             }
             if !is_kbpkg(&url) {
                 return Err(AppError::Validation(format!(
-                    "format d'artefact refusé : {url} — un module s'installe uniquement au format .kbpkg"
+                    "format d'artefact refusé : {url} - un module s'installe uniquement au format .kbpkg"
                 )));
             }
             Artifact { url, sha256: detail.sha256.as_deref().map(|s| s.trim_start_matches("sha256:").to_ascii_lowercase()) }
@@ -178,17 +178,17 @@ async fn materialize(settings: &Settings, db: &DbPool, id: &str) -> Result<Mater
     set_phase(id, "verifying", "Vérification de l'intégrité…");
     // Le manifeste signé, quand il est disponible ET valide, fait autorité sur
     // l'empreinte : c'est la seule que quelqu'un ait signée. À défaut, on garde
-    // celle que le catalogue annonce — et la règle de non-régression ci-dessous
+    // celle que le catalogue annonce - et la règle de non-régression ci-dessous
     // empêche qu'une signature ou une empreinte disparaisse sans conséquence.
     let signed = super::manifest::fetch_signed(&http, &super::catalog::catalog_base()).await;
     let signed_digest = signed.as_ref().and_then(|s| s.digest_for(id, &asset.url).map(str::to_string));
     if signed_digest.is_none() && was_signed_before(db, id).await {
         // Deux situations très différentes derrière la même absence.
         return if signed.is_none() {
-            tracing::error!(module_id = %id, "Marketplace : manifeste signé indisponible pour un module déjà signé — installation reportée");
+            tracing::error!(module_id = %id, "Marketplace : manifeste signé indisponible pour un module déjà signé - installation reportée");
             Err(super::manifest::unavailable_error(id))
         } else {
-            tracing::error!(module_id = %id, "Marketplace : ce module était signé, le manifeste actuel ne le couvre plus — installation refusée");
+            tracing::error!(module_id = %id, "Marketplace : ce module était signé, le manifeste actuel ne le couvre plus - installation refusée");
             Err(super::manifest::downgrade_error(id))
         };
     }
@@ -198,7 +198,7 @@ async fn materialize(settings: &Settings, db: &DbPool, id: &str) -> Result<Mater
         Some(expected) => {
             let actual = sha256_hex(&bytes);
             if actual != expected {
-                tracing::error!(module_id = %id, expected, actual, "Marketplace : SHA-256 non conforme — installation refusée");
+                tracing::error!(module_id = %id, expected, actual, "Marketplace : SHA-256 non conforme - installation refusée");
                 return Err(AppError::Internal(anyhow::anyhow!(
                     "intégrité du .kbpkg non vérifiée (SHA-256 attendu {expected}, obtenu {actual})"
                 )));
@@ -211,9 +211,9 @@ async fn materialize(settings: &Settings, db: &DbPool, id: &str) -> Result<Mater
             if signed_digest.is_some() {
                 tracing::info!(module_id = %id, "Marketplace : empreinte attestée par le manifeste signé du catalogue");
             } else {
-                // Politique retenue : on accepte, mais on le dit — et la règle de
+                // Politique retenue : on accepte, mais on le dit - et la règle de
                 // non-régression ci-dessus empêche d'en profiter deux fois.
-                tracing::warn!(module_id = %id, "Marketplace : origine NON SIGNÉE — empreinte vérifiée, mais rien n'atteste qui l'a produite");
+                tracing::warn!(module_id = %id, "Marketplace : origine NON SIGNÉE - empreinte vérifiée, mais rien n'atteste qui l'a produite");
             }
         }
         None => {
@@ -223,14 +223,14 @@ async fn materialize(settings: &Settings, db: &DbPool, id: &str) -> Result<Mater
             if was_verified_before(db, id).await {
                 tracing::error!(
                     module_id = %id,
-                    "Marketplace : empreinte SHA-256 absente alors que ce module en avait une — installation refusée"
+                    "Marketplace : empreinte SHA-256 absente alors que ce module en avait une - installation refusée"
                 );
                 return Err(AppError::Validation(format!(
                     "« {id} » a déjà été installé avec une empreinte vérifiée ; l'artefact proposé n'en a plus. \
                      Installation refusée : une empreinte qui disparaît est une régression, pas une nouveauté."
                 )));
             }
-            tracing::warn!(module_id = %id, "Marketplace : aucune empreinte SHA-256 publiée — intégrité non vérifiée");
+            tracing::warn!(module_id = %id, "Marketplace : aucune empreinte SHA-256 publiée - intégrité non vérifiée");
         }
     }
 
@@ -286,11 +286,11 @@ async fn materialize(settings: &Settings, db: &DbPool, id: &str) -> Result<Mater
         match copy_dir_all(&src_cfg, &dest_cfg) {
             Ok(_) => config_written = true,
             Err(e) => tracing::warn!(module_id = %id, dir = %dest_cfg.display(), error = %e,
-                "Config du module non écrite (permissions ?) — démarrage avec les valeurs par défaut"),
+                "Config du module non écrite (permissions ?) - démarrage avec les valeurs par défaut"),
         }
     }
 
-    // A .kbpkg carries its example configuration at the module ROOT — there is no
+    // A .kbpkg carries its example configuration at the module ROOT - there is no
     // etc/ tree in it. Without this fallback no configuration was ever written for
     // a module installed from a package, so the module resolved its paths relative
     // to its working directory (which is its CONFIGURATION directory) and wrote
@@ -308,7 +308,7 @@ async fn materialize(settings: &Settings, db: &DbPool, id: &str) -> Result<Mater
                         "Configuration du module initialisée depuis config.toml.example");
                 }
                 Err(e) => tracing::warn!(module_id = %id, file = %dest_file.display(), error = %e,
-                    "Configuration du module non initialisée (permissions ?) — le module écrira ses données en chemin relatif"),
+                    "Configuration du module non initialisée (permissions ?) - le module écrira ses données en chemin relatif"),
             }
         }
     }
@@ -327,7 +327,7 @@ async fn materialize(settings: &Settings, db: &DbPool, id: &str) -> Result<Mater
     let manifest: crate::modules::manifest::ModuleManifest = toml::from_str(&toml_str)
         .map_err(|e| AppError::Internal(anyhow::anyhow!("parse module.toml: {e}")))?;
 
-    // The version of the package actually installed, read from its own manifest —
+    // The version of the package actually installed, read from its own manifest -
     // not the one the catalogue announced. The core downloads the latest release,
     // so a catalogue lagging behind made every success message, and the server
     // log, name a version that was never installed.
@@ -345,7 +345,7 @@ async fn materialize(settings: &Settings, db: &DbPool, id: &str) -> Result<Mater
 /// Give the store back to the account that runs the server.
 ///
 /// `kubuno modules:install` is documented as a `sudo` command, so everything it
-/// creates under the store belongs to root — including the store directory itself
+/// creates under the store belongs to root - including the store directory itself
 /// when the package never created it. The core runs as an unprivileged service
 /// account and can then no longer write there, which breaks every later install
 /// from the Marketplace with a permission error that points nowhere.
@@ -353,7 +353,7 @@ async fn materialize(settings: &Settings, db: &DbPool, id: &str) -> Result<Mater
 /// The target owner is DERIVED from the directory that contains the store (the
 /// data directory the packaging created for the service account) rather than
 /// hardcoded: a custom `modules_install_dir` and a custom service user work the
-/// same way. Best-effort — a failure is logged, never fatal, since an install run
+/// same way. Best-effort - a failure is logged, never fatal, since an install run
 /// by the service itself already has the right owner and nothing to repair.
 #[cfg(unix)]
 fn align_store_ownership(install_dir: &Path, dest_mod: &Path) {
@@ -370,7 +370,7 @@ fn align_store_ownership(install_dir: &Path, dest_mod: &Path) {
                 Ok(()) => tracing::info!(dir = %install_dir.display(), uid, gid,
                     "Store des modules : propriétaire réaligné sur celui du répertoire de données"),
                 Err(e) => tracing::warn!(dir = %install_dir.display(), error = %e,
-                    "Store des modules : propriétaire non réaligné — le service risque de ne plus pouvoir y écrire"),
+                    "Store des modules : propriétaire non réaligné - le service risque de ne plus pouvoir y écrire"),
             }
         }
     }
@@ -380,7 +380,7 @@ fn align_store_ownership(install_dir: &Path, dest_mod: &Path) {
         if (meta.uid(), meta.gid()) != (uid, gid) {
             if let Err(e) = chown_tree(dest_mod, uid, gid) {
                 tracing::warn!(dir = %dest_mod.display(), error = %e,
-                    "Module installé : propriétaire non réaligné — le service risque de ne pas pouvoir le lire");
+                    "Module installé : propriétaire non réaligné - le service risque de ne pas pouvoir le lire");
             }
         }
     }
@@ -532,7 +532,7 @@ async fn verify_sha256sums(mod_dir: &Path) -> Result<(), AppError> {
         })?;
         if !sha256_hex(&bytes).eq_ignore_ascii_case(expected) {
             return Err(AppError::Validation(format!(
-                "SHA-256 mismatch for « {rel} » — the package has been altered"
+                "SHA-256 mismatch for « {rel} » - the package has been altered"
             )));
         }
     }
@@ -541,7 +541,7 @@ async fn verify_sha256sums(mod_dir: &Path) -> Result<(), AppError> {
 
 /// Install a module from a LOCAL `.kbpkg` file without network or catalogue:
 /// extract → verify embedded digests → relocate into the core-writable store.
-/// Does NOT start the module — the core loads it on its next start (store rescan).
+/// Does NOT start the module - the core loads it on its next start (store rescan).
 /// Returns the module id, version and install path. Backs the
 /// `kubuno modules:install <file>` CLI command.
 ///
@@ -553,7 +553,7 @@ pub async fn install_local(settings: &Settings, file: &Path) -> Result<InstallRe
     let fname = file.file_name().and_then(|s| s.to_str()).unwrap_or_default().to_ascii_lowercase();
     if !is_kbpkg(&fname) {
         return Err(AppError::Validation(format!(
-            "« {fname} » n'est pas un paquet Kubuno — un module s'installe uniquement au format .kbpkg"
+            "« {fname} » n'est pas un paquet Kubuno - un module s'installe uniquement au format .kbpkg"
         )));
     }
     if !file.is_file() {
@@ -633,7 +633,7 @@ mod tests {
     use std::os::unix::fs::MetadataExt;
 
     /// Build `<root>/store/<id>` with a nested directory, a file and a symlink
-    /// that escapes the tree — the shape an untrusted `.kbpkg` can produce.
+    /// that escapes the tree - the shape an untrusted `.kbpkg` can produce.
     fn sample_store(root: &Path) -> (PathBuf, PathBuf, PathBuf) {
         let outside = root.join("outside.txt");
         std::fs::write(&outside, b"untouched").unwrap();

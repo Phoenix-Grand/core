@@ -20,11 +20,11 @@ export function Part1({ overlay, dragging, isOpen, width, activeEntry, t, onResi
               overlay
                 ? 'fixed bottom-1 right-16 top-16 z-50 shadow-[0_6px_18px_rgb(0_0_0/25%)]'
                 // The width transition animates the OPEN/CLOSE, but during a drag it makes
-                // every pixel lag 200ms behind the cursor — the handle then stutters and the
+                // every pixel lag 200ms behind the cursor - the handle then stutters and the
                 // line appears to flicker. Off while dragging.
                 : dragging ? 'relative' : 'relative transition-[width] duration-200 ease-in-out',
               // 16px of air between the central area and the panel. The row already puts a
-              // 4px gap between its children, so 12px here lands exactly on 16 — and only
+              // 4px gap between its children, so 12px here lands exactly on 16 - and only
               // when the panel is actually open, otherwise a closed panel would leave a
               // 16px hole against the rail.
               !overlay && isOpen && 'ml-3',
@@ -37,7 +37,7 @@ export function Part1({ overlay, dragging, isOpen, width, activeEntry, t, onResi
           >
             {isOpen && activeEntry && (
               <>
-                {/* Resize joint — the SAME control as the left sidebar's, mirrored: it sits
+                {/* Resize joint - the SAME control as the left sidebar's, mirrored: it sits
                     just OUTSIDE the panel (`right-full`), in the 16px gutter between the
                     central area and the panel, rather than tight against the card. Hidden
                     while floating: the panel is then detached from the row and dragging its
@@ -53,7 +53,7 @@ export function Part1({ overlay, dragging, isOpen, width, activeEntry, t, onResi
                     onPointerCancel={endResize}
                     /* Safety net: a capture lost for any other reason (window blur, the node
                        being re-parented) would otherwise leave the panel stuck in the
-                       dragging state — blue line, and no open/close animation any more. */
+                       dragging state - blue line, and no open/close animation any more. */
                     onLostPointerCapture={endResize}
                     onDoubleClick={() => { applyWidth(RIGHT_PANEL_WIDTH.DEFAULT); panelPrefs.setRightWidth(appId, RIGHT_PANEL_WIDTH.DEFAULT) }}
                     /* `right-full` alone butts the 12px strip against the panel, leaving it 2px
@@ -61,10 +61,10 @@ export function Part1({ overlay, dragging, isOpen, width, activeEntry, t, onResi
                        exact middle: (16 - 12) / 2 = 2 on each side. */
                     className="group absolute top-0 right-full mr-[2px] hidden h-full w-3 cursor-col-resize lg:block z-[60]"
                   >
-                    {/* Hairline — discreet at rest, tinted on hover and while dragging. */}
+                    {/* Hairline - discreet at rest, tinted on hover and while dragging. */}
                     <div className={`absolute inset-y-0 left-1/2 w-[5px] -translate-x-1/2 rounded-full transition-colors
                                 ${dragging ? 'bg-primary' : 'bg-transparent group-hover:bg-border'}`} />
-                    {/* Grip pill — invisible at rest, materialises as the pointer approaches. */}
+                    {/* Grip pill - invisible at rest, materialises as the pointer approaches. */}
                     <div className={`absolute left-1/2 top-1/2 flex h-9 w-3.5 -translate-x-1/2 -translate-y-1/2
                                 items-center justify-center rounded-full border bg-surface-0 shadow-sm transition
                                 ${dragging

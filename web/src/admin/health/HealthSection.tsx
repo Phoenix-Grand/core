@@ -46,7 +46,7 @@ export class HealthSection extends ViewBase {
       }
       for (const list of map.values()) {
         list.sort((a, b) => {
-          // Still to settle first, then by severity, then by title — so the row
+          // Still to settle first, then by severity, then by title - so the row
           // that needs attention is never below a row that does not.
           const fa = isFailing(a.status) ? 0 : 1
           const fb = isFailing(b.status) ? 0 : 1

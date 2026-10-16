@@ -30,7 +30,7 @@
 //!   task bar button, and a click on it dismisses it.
 //! * It closes **when the application shows a window**: by default the first visible top-level
 //!   window of the process (a main window, or an error dialog that must not hide behind it), or
-//!   the one named by [`Splash::close_when_window`] — never before [`SplashScreen::min_duration`]
+//!   the one named by [`Splash::close_when_window`] - never before [`SplashScreen::min_duration`]
 //!   (1.5 s by default), and in any case after [`SplashScreen::max_duration`].
 //! * **Accessibility**: UI Automation sees a window named after the product, its status line as
 //!   a polite live region (Narrator reads each new step) and a progress indicator.
@@ -40,12 +40,12 @@
 //!
 //! [`is_disabled_by_user`]: the `--no-splash` command-line flag, the `KUBUNO_NO_SPLASH`
 //! environment variable, or the per-user switch `HKCU\Software\Kubuno\Desktop`,
-//! `SplashScreen` (DWORD) = 0 — then [`SplashScreen::show`] returns an inert [`Splash`].
+//! `SplashScreen` (DWORD) = 0 - then [`SplashScreen::show`] returns an inert [`Splash`].
 //!
 //! # The look
 //!
-//! The artwork ([`art`]) is procedural — gradients, layered shapes, light effects and a hero
-//! rendition of the module's mark, all vector, nothing but code — one per application in the
+//! The artwork ([`art`]) is procedural - gradients, layered shapes, light effects and a hero
+//! rendition of the module's mark, all vector, nothing but code - one per application in the
 //! colours of its web logo ([`Artwork`]). A splash screen has its OWN fixed look, like a box
 //! cover: it is dark in the light theme and in the dark theme alike (a deep, saturated ground in
 //! the module's colour family, white type), so it reads the same on every desktop and never
@@ -389,7 +389,7 @@ impl SplashScreen {
         self
     }
 
-    /// Whether to show it at all — the application's own condition (started hidden at logon,
+    /// Whether to show it at all - the application's own condition (started hidden at logon,
     /// handing over to a running instance…). The user's switch ([`is_disabled_by_user`]) applies
     /// on top of it.
     pub fn enabled(mut self, on: bool) -> Self {
@@ -402,7 +402,7 @@ impl SplashScreen {
         &self.content
     }
 
-    /// Shows it — on its own thread, at once — and returns the handle the application drives it
+    /// Shows it - on its own thread, at once - and returns the handle the application drives it
     /// with. Disabled (by the application or the user), the handle is inert.
     pub fn show(self) -> Splash {
         if !self.enabled || is_disabled_by_user() {
@@ -555,7 +555,7 @@ impl Splash {
         }
     }
 
-    /// Closes it once `target` is shown — Windows Forms' habit of closing the splash when the main
+    /// Closes it once `target` is shown - Windows Forms' habit of closing the splash when the main
     /// form appears. A target with no window yet (a form not opened) is waited for as the first
     /// window the process shows.
     pub fn close_when<T: SplashTarget + ?Sized>(&self, target: &T) {

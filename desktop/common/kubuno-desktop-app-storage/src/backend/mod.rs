@@ -3,7 +3,7 @@
 //! | Back-end | Windows | macOS | Linux | Notes |
 //! |---|---|---|---|---|
 //! | [`FileBackend`] (the default, `Backend="Auto"` / `"File"`) | `%APPDATA%` / `%LOCALAPPDATA%` / `%ProgramData%` | `~/Library/Application Support`, `/Library/Application Support` | XDG config / data, `/etc/xdg` | JSON, one file per set and layer, atomic replace under a lock |
-//! | [`RegistryBackend`] (`Backend="Registry"`) | `HKCU\Software\Kubuno\Apps`, `HKCU\Software\Classes\Local Settings\…`, `HKLM\Software\Kubuno\Apps` | — | — | for apps that integrate with Windows tooling (Group Policy preferences, `reg.exe` scripts) |
+//! | [`RegistryBackend`] (`Backend="Registry"`) | `HKCU\Software\Kubuno\Apps`, `HKCU\Software\Classes\Local Settings\…`, `HKLM\Software\Kubuno\Apps` | - | - | for apps that integrate with Windows tooling (Group Policy preferences, `reg.exe` scripts) |
 //! | [`MemoryBackend`] (`Backend="Memory"`) | ✓ | ✓ | ✓ | tests, the designer, `--sample` runs: nothing persists |
 //!
 //! A back-end stores raw values per [`Layer`]; the typing, the defaults, the scopes and the upgrade are the
@@ -39,7 +39,7 @@ pub type Change = (String, Option<SettingValue>);
 pub trait SettingsBackend: Send + Sync + fmt::Debug {
     /// For diagnostics (`"file"`, `"registry"`, `"memory"`).
     fn name(&self) -> &'static str;
-    /// Where `layer` is kept (a file path, a Registry path) — for messages and the designer.
+    /// Where `layer` is kept (a file path, a Registry path) - for messages and the designer.
     fn location(&self, layer: Layer) -> String;
     /// The values of `layer` (an empty layer when nothing is stored).
     fn read(&self, layer: Layer) -> Result<StoredLayer, StorageError>;

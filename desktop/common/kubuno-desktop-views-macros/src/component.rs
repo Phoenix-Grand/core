@@ -438,7 +438,7 @@ fn opt_str(value: &Option<String>) -> TokenStream2 {
 
 /// The class's registration (`kubuno_desktop_views::registry::ClassRegistration`): its metadata, a
 /// factory, and a static constructor that registers it when the program starts (before `main`),
-/// so a view can name it as soon as it is compiled into the program — no call to write.
+/// so a view can name it as soon as it is compiled into the program - no call to write.
 fn registration(input: &DeriveInput, decl: &ComponentDecl, extends: &str) -> syn::Result<TokenStream2> {
     let name = &input.ident;
     let r = quote!(::kubuno_desktop_views::registry);

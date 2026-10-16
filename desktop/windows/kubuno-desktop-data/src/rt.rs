@@ -41,7 +41,7 @@ where
 }
 
 /// Blocks the current thread until `future` completes, driving it on the data runtime. For tests,
-/// tools and `main` before the window opens — never from the UI thread while it paints, and never
+/// tools and `main` before the window opens - never from the UI thread while it paints, and never
 /// from inside a data operation.
 pub fn block_on<F: Future>(future: F) -> Result<F::Output, DataError> {
     Ok(runtime()?.block_on(future))
@@ -110,7 +110,7 @@ impl Canceller {
     }
 }
 
-/// How far a long operation got — the rows a fill has read so far — shared between the data
+/// How far a long operation got - the rows a fill has read so far - shared between the data
 /// runtime (which counts) and the UI (which shows it; `customers.RowsRead`).
 #[derive(Clone, Debug, Default)]
 pub struct Progress(std::sync::Arc<std::sync::atomic::AtomicU64>);

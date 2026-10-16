@@ -14,7 +14,7 @@ use crate::ast::{AstNode, Element};
 /// (`x:Name` and the other markup attributes are [`crate::markup`]'s.)
 pub const COMMON_ATTRIBUTES: &[(&str, PropKind)] = &[
     ("Dock", PropKind::Enum(&["None", "Top", "Bottom", "Left", "Right", "Fill"])),
-    ("Anchor", PropKind::String), // A comma-combination (`"Top,Left,Right"`) — not a single closed enum.
+    ("Anchor", PropKind::String), // A comma-combination (`"Top,Left,Right"`) - not a single closed enum.
     ("X", PropKind::F32),
     ("Y", PropKind::F32),
     ("Width", PropKind::F32),

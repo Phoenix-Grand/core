@@ -1,11 +1,11 @@
-//! `/admin/security/dashboard` — the security overview, as panels of counted facts.
+//! `/admin/security/dashboard` - the security overview, as panels of counted facts.
 //!
 //! # What this endpoint is allowed to say
 //!
 //! Every number below is a `COUNT(*)` over a table the core itself writes. There
 //! is no estimation, no extrapolation, no sampling and no placeholder: a panel
 //! either has a real series or is not returned at all. That constraint is what
-//! makes the page worth opening — a security chart that guesses is worse than no
+//! makes the page worth opening - a security chart that guesses is worse than no
 //! chart, because it is read as a measurement.
 //!
 //! # What it deliberately does NOT say
@@ -13,14 +13,14 @@
 //! The console this page is modelled on also charts message authentication
 //! (SPF/DKIM/DMARC), transport encryption, spam filtering and external file
 //! shares. Kubuno's core cannot: a module owns its own PostgreSQL schema and the
-//! core never reads it. Those facts live in `mail`, in `drive`, in `photos` —
+//! core never reads it. Those facts live in `mail`, in `drive`, in `photos` -
 //! and until a module *declares* them, the honest rendering is their absence.
 //!
 //! The shape such a declaration would take is already settled by precedent:
 //! `POST /internal/storage/usage` (see [`crate::handlers::storage_usage`]) is how
 //! a module hands the core a figure about itself, authenticated by
 //! `X-Internal-Secret` and attributed to the calling module. A security-metrics
-//! channel would be its sibling — same authentication, same "the caller names
+//! channel would be its sibling - same authentication, same "the caller names
 //! itself" arbitration, a closed vocabulary of metric ids instead of a closed
 //! vocabulary of storage categories, and counters bucketed by day rather than
 //! absolute totals. It is not built here because building a channel with no
@@ -31,11 +31,11 @@
 //! # Serving a report as well as a page
 //!
 //! The console's report page (`/admin/reports/<panel>`) is a printable document
-//! about ONE panel over ONE period, and it reads this same endpoint — narrowed
+//! about ONE panel over ONE period, and it reads this same endpoint - narrowed
 //! by `?panel=<id>` and widened by `?full=true`. Both are explicit parameters
 //! rather than a change of default: a report must name every country a sign-in
 //! came from, and a dashboard must not pay for forty arcs to draw eight.
-//! Everything else — the window, the comparison, the privileges — is the same
+//! Everything else - the window, the comparison, the privileges - is the same
 //! reading, so a figure printed on paper and the figure on the card can never
 //! disagree.
 //!
@@ -78,7 +78,7 @@ use super::period::{self, Counted, Point, Provenance, Slice, PERIODS};
 /// generated statements are bound parameters (the window bounds and the time
 /// zone name).
 struct Source {
-    /// Stable id — the console's translation key and its layout key.
+    /// Stable id - the console's translation key and its layout key.
     id: &'static str,
     /// Privilege required AT INSTANCE SCOPE for the panel to be served.
     privilege: &'static str,
@@ -138,7 +138,7 @@ const SOURCES: &[Source] = &[
         table: "core.device_events",
         time: "occurred_at",
         filter: "t.kind = 'session_opened'",
-        // `detail` carries the authentication strength for this event kind — see
+        // `detail` carries the authentication strength for this event kind - see
         // `handlers::auth::tokens`, which writes it there at sign-in.
         breakdown: Some("t.detail"),
         ranking: false,
@@ -206,7 +206,7 @@ const SOURCES: &[Source] = &[
         privilege: keys::SESSIONS_READ,
         table: "core.device_events",
         time: "occurred_at",
-        // `disowned` is the account owner saying "that was not me" — the
+        // `disowned` is the account owner saying "that was not me" - the
         // strongest signal the product has. `blocked` is an operator's decision.
         filter: "t.kind IN ('blocked', 'disowned')",
         breakdown: Some("t.kind"),
@@ -296,7 +296,7 @@ impl Source {
     /// Read from the TABLE rather than declared per panel: `login_failures`,
     /// `admin_denied` and `sensitive_actions` are three predicates over one
     /// trail, and their records are the same records. Every source of this page
-    /// counts rows of an event table, so every panel has a detail — a property
+    /// counts rows of an event table, so every panel has a detail - a property
     /// the tests below hold in place rather than a coincidence.
     fn detail_columns(&self) -> Option<&'static [detail::DetailColumn]> {
         detail::for_table(self.table)
@@ -315,7 +315,7 @@ struct Panel {
     /// by a report, which would otherwise present a cut list as a complete one.
     breakdown_truncated: bool,
     caveat: Option<&'static str>,
-    /// Where the figure comes from — the table, the predicate, the unit. Read by
+    /// Where the figure comes from - the table, the predicate, the unit. Read by
     /// the report page, which states the method under the tables.
     source: Provenance,
     /// The records behind the figure. Served only to a caller that asked for
@@ -324,7 +324,7 @@ struct Panel {
     #[serde(skip_serializing_if = "Option::is_none")]
     detail: Option<DetailTable>,
     /// Why there are none, when there are none. A closed vocabulary
-    /// ([`detail::absent`]) the console turns into one sentence — a heading with
+    /// ([`detail::absent`]) the console turns into one sentence - a heading with
     /// nothing under it reads as a rendering fault.
     #[serde(skip_serializing_if = "Option::is_none")]
     detail_absent: Option<&'static str>,
@@ -335,7 +335,7 @@ struct Panel {
 /// How far back each source can actually answer.
 ///
 /// Served with the page so the console can say, on a 180-day window, that the
-/// rule log only keeps 90 — instead of drawing a flat start that reads as a quiet
+/// rule log only keeps 90 - instead of drawing a flat start that reads as a quiet
 /// quarter when it is a purged one.
 async fn retention(db: &DbPool) -> Value {
     let rows: Vec<(String, Value)> = db
@@ -393,18 +393,18 @@ pub struct DashboardQuery {
     /// List the RECORDS behind each panel, not only their count.
     ///
     /// Explicit, and audited when it is honoured: these rows name people, and
-    /// consulting them is an act of its own — the count says forty-seven failed
+    /// consulting them is an act of its own - the count says forty-seven failed
     /// sign-ins, the detail says whose. A dashboard never asks; a report always
     /// does.
     #[serde(default)]
     pub detail: Option<bool>,
 }
 
-/// `GET /api/v1/admin/security/dashboard` — every panel the caller may see.
+/// `GET /api/v1/admin/security/dashboard` - every panel the caller may see.
 pub async fn security_dashboard(
     State(state): State<AppState>,
-    // `AdminAudit` performs the exact same authorisation `AdminUser` did — it is
-    // built on it — and additionally carries the context needed to record the
+    // `AdminAudit` performs the exact same authorisation `AdminUser` did - it is
+    // built on it - and additionally carries the context needed to record the
     // consultation of the detail below.
     audit: AdminAudit,
     ctx: AdminCtx,
@@ -466,14 +466,14 @@ pub async fn security_dashboard(
         // The privilege that opened the panel is the one that opens its records:
         // the rows are the very facts the count is made of, read over the same
         // window, at the same instance scope. Nothing here widens what the
-        // caller may already read — it only stops summarising it.
+        // caller may already read - it only stops summarising it.
         let (records, records_absent) = match (wants_detail, src.detail_columns()) {
             (false, _) => (None, None),
             (true, Some(columns)) => (
                 Some(detail::read(&state.db, &counted, &win, columns, src.id).await?),
                 None,
             ),
-            // Unreachable while every source counts rows of a described table —
+            // Unreachable while every source counts rows of a described table -
             // held by `every_source_can_list_its_records` below. Stated anyway,
             // because a heading with nothing under it is worse than a sentence.
             (true, None) => (None, Some(detail::absent::AGGREGATED)),
@@ -548,7 +548,7 @@ mod tests {
 
     /// Every panel of this page counts rows of an event table, so every one of
     /// them can list those rows. A source whose table had no catalogue would
-    /// print "no records to list" under a figure made of nothing but records —
+    /// print "no records to list" under a figure made of nothing but records -
     /// the exact contradiction the detail was added to remove.
     #[test]
     fn every_source_can_list_its_records() {

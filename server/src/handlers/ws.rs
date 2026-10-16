@@ -13,10 +13,10 @@ use serde::Deserialize;
 
 #[derive(Deserialize)]
 pub struct WsQuery {
-    /// Socket ticket (`POST /api/v1/auth/tickets`, purpose `socket`) — web.
+    /// Socket ticket (`POST /api/v1/auth/tickets`, purpose `socket`) - web.
     #[serde(default)]
     pub kt: Option<String>,
-    /// Access token — native clients.
+    /// Access token - native clients.
     #[serde(default)]
     pub token: Option<String>,
 }

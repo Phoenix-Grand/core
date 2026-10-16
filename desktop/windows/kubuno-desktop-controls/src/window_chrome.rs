@@ -1,4 +1,4 @@
-//! The Kubuno window chrome: the title band every Kubuno window wears — a top-level `Form` (drawn
+//! The Kubuno window chrome: the title band every Kubuno window wears - a top-level `Form` (drawn
 //! by the host under `Chrome::Kubuno`), a dialog, a tool window, the designer's picture of a form
 //! (`kubuno-desktop-views`' design surface) and the in-window `FloatingWindow` of `kubuno-desktop-ui`.
 //!
@@ -86,7 +86,7 @@ pub const WINDOW_RADIUS: f32 = 0.0;
 pub const REST_ALPHA: f32 = 0.8;
 /// `hover:bg-white/20`: the band's own ink at a fifth of its alpha (reads on any accent).
 pub const HOVER_WASH: f32 = 0.2;
-/// Pressed (`:active`) — the web has none; one step darker than the hover.
+/// Pressed (`:active`) - the web has none; one step darker than the hover.
 pub const PRESSED_WASH: f32 = 0.3;
 /// A disabled button's ink (WinForms greys `MinimizeBox = false` next to a live maximise button).
 pub const DISABLED_ALPHA: f32 = 0.4;
@@ -337,7 +337,7 @@ pub struct ChromeLayout {
 }
 
 impl ChromeLayout {
-    /// The button at `(x, y)` — only an enabled one answers.
+    /// The button at `(x, y)` - only an enabled one answers.
     pub fn hit(&self, x: f32, y: f32) -> Option<Part> {
         self.buttons.iter().find(|(_, r, on)| *on && r.contains(x, y)).map(|(p, _, _)| *p)
     }
@@ -549,7 +549,7 @@ pub fn paint_caption(canvas: &dyn Canvas, style: &ChromeStyle, layout: &ChromeLa
                 }
             }
             TitleAlignment::Center => {
-                let text = if sub.is_empty() { title.to_string() } else { format!("{title} — {sub}") };
+                let text = if sub.is_empty() { title.to_string() } else { format!("{title} - {sub}") };
                 canvas.text_ellipsis_center(&text, &layout.title, font, &ink);
             }
         }
@@ -646,7 +646,7 @@ pub fn grip_rect(bounds: Rect) -> Rect {
 }
 
 /// The window's own frame as a picture (what DWM draws around a top-level window: its shadow and
-/// its border), for surfaces that DRAW a window rather than host one — the designer and the
+/// its border), for surfaces that DRAW a window rather than host one - the designer and the
 /// in-window floating windows. `radius` follows the window's corner preference.
 pub fn paint_frame(canvas: &dyn Canvas, outer: Rect, radius: f32, border: Option<D2D1_COLOR_F>) {
     use kubuno_drive_desktop_app_controls::themes::shape::SHADOW_WINDOW;

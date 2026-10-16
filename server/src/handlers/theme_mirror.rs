@@ -2,8 +2,8 @@
 //!
 //! The themes remain owned by the core (source of truth = `server.themes_dir`).
 //! For visibility, the core PUSHES each theme as a `<id>.zip` file under
-//! `/System/Themes` — a protected folder owned by the drive's reserved system
-//! owner — through the drive module's IPC API (authenticated with
+//! `/System/Themes` - a protected folder owned by the drive's reserved system
+//! owner - through the drive module's IPC API (authenticated with
 //! `X-Internal-Secret`). Admins still import/delete themes from the admin
 //! console; this only reflects them so they show up (and can be downloaded) in
 //! the Drive UI.

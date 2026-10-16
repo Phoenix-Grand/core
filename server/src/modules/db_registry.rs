@@ -4,7 +4,7 @@
 //! pointer: the config file for the core, the `core.module_databases` override
 //! for a module. Once it moves, the previous database is still there but the
 //! console has forgotten how to reach it. This registry keeps every connection a
-//! scope has ever pointed at — the source before a switch, the target after it —
+//! scope has ever pointed at - the source before a switch, the target after it -
 //! in `core.db_connections`, so an administrator can always go back to an earlier
 //! database.
 //!
@@ -15,7 +15,7 @@
 //!
 //! The stored password is sealed with AES-GCM under a dedicated key domain, the
 //! same scheme as [`crate::modules::db_config`], and never returns in a response
-//! or a log — the read API exposes only whether a password is stored.
+//! or a log - the read API exposes only whether a password is stored.
 
 use crate::config::DbCredentials;
 use crate::crypto::{datakey, encryption};
@@ -157,7 +157,7 @@ fn store_port(creds: &DbCredentials) -> i32 {
 /// Keyed by the connection's identity `(scope, engine, host, port, db_name,
 /// db_path)`: a brand-new target is inserted, an already-known one has its
 /// credentials, prefix, label and `last_used_at` refreshed instead of duplicated.
-/// `is_current` is never changed here — call [`mark_current`] to move the current
+/// `is_current` is never changed here - call [`mark_current`] to move the current
 /// pointer, so the single-current invariant stays in one place. Returns the row
 /// id either way.
 #[allow(clippy::too_many_arguments)]

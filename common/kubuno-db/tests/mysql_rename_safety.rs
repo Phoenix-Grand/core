@@ -1,7 +1,7 @@
 //! Regression tests for the MySQL/MariaDB schema-prefix rename: a failure half
 //! way through must put every table back (never drop a database that still
-//! holds data), and a target namespace that already exists — possibly another
-//! instance's — must be refused before anything moves.
+//! holds data), and a target namespace that already exists - possibly another
+//! instance's - must be refused before anything moves.
 //!
 //! Guarded by `KUBUNO_MYSQL_TEST_URL` (a URL whose user may CREATE/DROP
 //! databases); skipped when it is not set.
@@ -69,7 +69,7 @@ async fn cleanup(pool: &DbPool, dbs: &[String]) {
 #[tokio::test]
 async fn failed_mysql_rename_puts_every_table_back() {
     let Some(url) = mysql_url() else {
-        eprintln!("KUBUNO_MYSQL_TEST_URL non défini — test ignoré");
+        eprintln!("KUBUNO_MYSQL_TEST_URL non défini - test ignoré");
         return;
     };
     let admin = connect(&settings(&url), "mysql").await.expect("admin connect");
@@ -113,7 +113,7 @@ async fn failed_mysql_rename_puts_every_table_back() {
 #[tokio::test]
 async fn mysql_rename_refuses_an_existing_target() {
     let Some(url) = mysql_url() else {
-        eprintln!("KUBUNO_MYSQL_TEST_URL non défini — test ignoré");
+        eprintln!("KUBUNO_MYSQL_TEST_URL non défini - test ignoré");
         return;
     };
     let admin = connect(&settings(&url), "mysql").await.expect("admin connect");

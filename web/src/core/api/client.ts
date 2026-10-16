@@ -55,7 +55,7 @@ api.interceptors.response.use(
       (error.response?.data as { setup_required?: boolean } | undefined)?.setup_required &&
       // Tout le parcours d'installation, pas seulement sa première page : une
       // étape porte son propre chemin (/setup/database…), et une comparaison
-      // stricte renvoyait l'assistant à l'accueil au moindre appel d'API — ce
+      // stricte renvoyait l'assistant à l'accueil au moindre appel d'API - ce
       // qui vidait l'étape en cours à chaque rechargement.
       !window.location.pathname.startsWith('/setup')
     ) {
@@ -64,7 +64,7 @@ api.interceptors.response.use(
     }
 
     // ── Réauthentification avant action sensible ────────────────────────────
-    // Le core refuse par un 403 PORTEUR D'UN CODE (`REAUTH_REQUIRED`) — c'est ce
+    // Le core refuse par un 403 PORTEUR D'UN CODE (`REAUTH_REQUIRED`) - c'est ce
     // qui distingue ce refus d'un « accès refusé » ordinaire et permet de
     // proposer le bon écran plutôt que d'échouer sans recours. On obtient une
     // preuve fraîche, puis on rejoue la requête telle quelle.

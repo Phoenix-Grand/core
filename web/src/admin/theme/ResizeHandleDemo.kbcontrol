@@ -1,4 +1,4 @@
-<!-- ResizeHandleDemo — converted from ResizeHandleDemo.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- ResizeHandleDemo - converted from ResizeHandleDemo.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl>
   <Panel Class="relative flex h-24 rounded-xl border border-border overflow-hidden bg-white [width:300px]">
     <!-- TODO(views-migrate): <div> with a computed style -->

@@ -1,4 +1,4 @@
-//! `StorageGauge` — the header's storage pill (the web's `FilesStorageGaugeHeader`): a drive
+//! `StorageGauge` - the header's storage pill (the web's `FilesStorageGaugeHeader`): a drive
 //! glyph, the design system's quota bar and « used / quota », one clickable block that lights up
 //! under the pointer. No primitive holds those three things, so this custom control paints them
 //! with the primitives' own pieces (`ProgressBar`, the canvas' glyphs and text).
@@ -108,7 +108,7 @@ impl Control for StorageGauge {
 mod tests {
     use super::*;
 
-    /// The bar follows the web's quota thresholds — amber from 75 %, red from 90 % — and an
+    /// The bar follows the web's quota thresholds - amber from 75 %, red from 90 % - and an
     /// unset quota draws an empty bar.
     #[test]
     fn the_gauge_follows_the_quota_thresholds() {

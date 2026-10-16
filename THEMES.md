@@ -1,9 +1,9 @@
-# Kubuno — Thèmes empaquetés (skins)
+# Kubuno - Thèmes empaquetés (skins)
 
 Un **thème** Kubuno est un paquet `.zip` que l'administrateur injecte. Au-delà des
 couleurs, un thème peut redéfinir le **CSS**, la **structure (HTML)** et le
-**comportement (JS)** des « objets » d'interface — des primitives (`Button`,
-`Badge`…) aux composants complexes — **globalement** ou pour des **modules ciblés**.
+**comportement (JS)** des « objets » d'interface - des primitives (`Button`,
+`Badge`…) aux composants complexes - **globalement** ou pour des **modules ciblés**.
 
 ## 1. Structure du paquet
 
@@ -32,7 +32,7 @@ woff, woff2, ttf, otf`. Limites : 400 fichiers, 8 Mio/fichier, 40 Mio décompres
   "version": "1.0.0",            // optionnel
   "theme_api_version": 1,        // version du contrat (host = 1)
 
-  // Variables CSS posées sur :root — toujours appliquées (sans risque).
+  // Variables CSS posées sur :root - toujours appliquées (sans risque).
   "vars": {
     "--color-primary": "#00e5ff",
     "--color-surface-0": "#0d0f1a",
@@ -52,7 +52,7 @@ woff, woff2, ttf, otf`. Limites : 400 fichiers, 8 Mio/fichier, 40 Mio décompres
 ```
 
 Un thème « vars-only » (sans `global`/`modules`) reste valide : il ne fait que
-changer les couleurs — c'est le format historique, importable aussi en simple JSON.
+changer les couleurs - c'est le format historique, importable aussi en simple JSON.
 
 ## 3. CSS
 
@@ -163,7 +163,7 @@ via `themed('<clé>', Base)` (`web/src/ui/themeRegistry.tsx`).
 > `themed('<module>.<objet>', Base)` (importé de `@kubuno/sdk` ou `@ui`). Toute
 > primitive `@ui` consommée par le module est déjà thématisable de fait.
 
-## 6. Sécurité — exécution des scripts (opt-in)
+## 6. Sécurité - exécution des scripts (opt-in)
 
 La **CSS est toujours appliquée**. Le **JS d'un thème ne s'exécute pas** tant que
 l'administrateur n'a pas explicitement **autorisé les scripts** de ce thème
@@ -180,8 +180,8 @@ l'administrateur n'a pas explicitement **autorisé les scripts** de ce thème
   JSON vars-only), bascule de confiance des scripts, suppression.
 - **API** :
   - `POST /api/v1/admin/themes/import` (multipart, champ `file` = `.zip`)
-  - `GET  /api/v1/themes` (public) — manifestes + `has_scripts`, `scripts_enabled`, `assets_base`
-  - `GET  /api/v1/themes/<id>/<path>` (public) — assets du thème
+  - `GET  /api/v1/themes` (public) - manifestes + `has_scripts`, `scripts_enabled`, `assets_base`
+  - `GET  /api/v1/themes/<id>/<path>` (public) - assets du thème
   - `PATCH /api/v1/admin/themes/<id>/trust` `{ "scripts_enabled": true|false }`
   - `DELETE /api/v1/admin/themes/<id>`
 

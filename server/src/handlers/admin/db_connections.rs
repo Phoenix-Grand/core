@@ -1,17 +1,17 @@
 //! Admin console: the registry of known database connections.
 //!
-//! A switch (see [`super::db_switch`]) preserves the previous database — this
+//! A switch (see [`super::db_switch`]) preserves the previous database - this
 //! endpoint set makes it reachable again. For the main database and for each
 //! module it lists every connection the scope has pointed at, and lets a
 //! superadministrator:
 //!
-//! * **switch (existing data)** — re-point at a registered connection and restart,
+//! * **switch (existing data)** - re-point at a registered connection and restart,
 //!   using ITS data as it stands (no copy);
-//! * **switch (overwrite)** — copy the current data onto the target (overwriting
+//! * **switch (overwrite)** - copy the current data onto the target (overwriting
 //!   its old data), then re-point and restart;
-//! * **sync** — copy the current data onto a registered connection WITHOUT
+//! * **sync** - copy the current data onto a registered connection WITHOUT
 //!   switching, to refresh a standby in place;
-//! * **forget** — drop a connection from the registry (never the current one).
+//! * **forget** - drop a connection from the registry (never the current one).
 //!
 //! The stored password is never returned: a row reports only `has_password`. The
 //! registry itself lives in [`crate::modules::db_registry`]; here is the HTTP
@@ -42,7 +42,7 @@ use super::db_switch::{
     settings_from, TargetDto,
 };
 
-/// `{ "overwrite": bool }` — how a switch treats the target's existing data.
+/// `{ "overwrite": bool }` - how a switch treats the target's existing data.
 #[derive(Deserialize, Default)]
 pub struct SwitchDto {
     #[serde(default)]
@@ -61,7 +61,7 @@ fn instance_prefix(state: &AppState) -> String {
         .to_string()
 }
 
-/// A connection row as the console sees it — the password is reduced to a boolean.
+/// A connection row as the console sees it - the password is reduced to a boolean.
 fn conn_json(r: &registry::ConnRow) -> Value {
     json!({
         "id":             r.id,
@@ -99,7 +99,7 @@ async fn module_exists(state: &AppState, id: &str) -> Result<(), AppError> {
 // Core (main database)
 // ─────────────────────────────────────────────────────────────────────────────
 
-/// `GET /admin/database/connections` — the main database's known connections.
+/// `GET /admin/database/connections` - the main database's known connections.
 pub async fn list_core_connections(
     State(state): State<AppState>,
     _admin: AdminUser,
@@ -123,7 +123,7 @@ pub async fn list_core_connections(
     })))
 }
 
-/// `POST /admin/database/connections/:cid/switch` — re-point the core at a
+/// `POST /admin/database/connections/:cid/switch` - re-point the core at a
 /// registered connection (optionally overwriting its data first). A core restart
 /// finalises it, as with #3.
 pub async fn switch_core_connection(
@@ -202,7 +202,7 @@ pub async fn switch_core_connection(
         // The config now points at the target; move the current pointer to match.
         registry::mark_current(&state.db, registry::CORE_SCOPE, target.id).await?;
         tracing::warn!(to = %target.engine, overwrite,
-            "Bascule de la base principale sur une connexion enregistrée — redémarrage du core requis");
+            "Bascule de la base principale sur une connexion enregistrée - redémarrage du core requis");
 
         Ok(Json(json!({
             "restart_required": true,
@@ -231,7 +231,7 @@ pub async fn switch_core_connection(
     outcome
 }
 
-/// `POST /admin/database/connections/:cid/sync` — copy the current core data onto
+/// `POST /admin/database/connections/:cid/sync` - copy the current core data onto
 /// a registered connection WITHOUT switching (refresh a standby in place).
 pub async fn sync_core_connection(
     State(state): State<AppState>,
@@ -310,7 +310,7 @@ async fn record_core_sync(
     audit.record(db, entry).await;
 }
 
-/// `DELETE /admin/database/connections/:cid` — forget a registered connection.
+/// `DELETE /admin/database/connections/:cid` - forget a registered connection.
 pub async fn forget_core_connection(
     State(state): State<AppState>,
     audit: AdminAudit,
@@ -330,7 +330,7 @@ pub async fn forget_core_connection(
     Ok(Json(json!({ "ok": true })))
 }
 
-/// `POST /admin/database/connections` — register a connection by hand (not made
+/// `POST /admin/database/connections` - register a connection by hand (not made
 /// current). Useful to pre-seed a standby the operator will later sync onto.
 pub async fn register_core_connection(
     State(state): State<AppState>,
@@ -492,7 +492,7 @@ pub async fn switch_module_connection(
     outcome
 }
 
-/// `POST /admin/modules/:id/database/connections/:cid/sync` — copy the module's
+/// `POST /admin/modules/:id/database/connections/:cid/sync` - copy the module's
 /// current data onto a registered connection WITHOUT switching. The target must
 /// already hold the module's tables (the core cannot build a module's schema), so
 /// sync only works on a connection the module was switched to at least once.

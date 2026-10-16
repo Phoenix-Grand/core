@@ -1,4 +1,4 @@
-//! # `kubuno-desktop-app-storage` — where a Kubuno app keeps its data on the device
+//! # `kubuno-desktop-app-storage` - where a Kubuno app keeps its data on the device
 //!
 //! vskubuno `docs/STORAGE-COMPONENTS.md`. The portable engine of the storage components (`<Settings>`,
 //! `<SecretStore>`, `<RegistryKey>` of `kubuno-desktop-app-storage-components`), usable from plain Rust too:

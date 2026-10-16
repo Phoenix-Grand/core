@@ -57,7 +57,7 @@ pub struct CountryDb {
 static DB: OnceLock<Option<CountryDb>> = OnceLock::new();
 
 /// Loads the database once, at startup. A missing, empty or unreadable path
-/// disables the feature with a single informative log line — never an error:
+/// disables the feature with a single informative log line - never an error:
 /// a typo in an optional path must not keep the server from booting.
 pub fn init(path: &str) {
     let trimmed = path.trim();
@@ -81,14 +81,14 @@ pub fn init(path: &str) {
                 tracing::warn!(
                     path = %trimmed,
                     error = %e,
-                    "Base de pays hors-ligne illisible — le pays restera inconnu"
+                    "Base de pays hors-ligne illisible - le pays restera inconnu"
                 );
                 None
             }
         }
     };
     if DB.set(loaded).is_err() {
-        tracing::warn!("Base de pays déjà initialisée — rechargement ignoré");
+        tracing::warn!("Base de pays déjà initialisée - rechargement ignoré");
     }
 }
 
@@ -100,8 +100,8 @@ pub fn is_available() -> bool {
 
 /// ISO 3166-1 alpha-2 code for an address, or `None`.
 ///
-/// Addresses that cannot have a country — loopback, RFC 1918, link-local,
-/// unique-local — return `None` before the search: reporting a country for
+/// Addresses that cannot have a country - loopback, RFC 1918, link-local,
+/// unique-local - return `None` before the search: reporting a country for
 /// `192.168.1.20` would be a fabrication, and on a self-hosted LAN that is most
 /// of the traffic.
 pub fn lookup(ip: IpAddr) -> Option<String> {

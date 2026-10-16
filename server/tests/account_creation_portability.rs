@@ -43,7 +43,7 @@ fn settings(engine: &str, extra: serde_json::Value) -> DbSettings {
 /// A server pool in a fresh namespace, or `None` when the variable is unset.
 async fn server_pool(engine: &str, env: &str) -> Option<(DbPool, String)> {
     let Some(url) = std::env::var(env).ok().filter(|u| !u.trim().is_empty()) else {
-        eprintln!("{env} not set — {engine} skipped");
+        eprintln!("{env} not set - {engine} skipped");
         return None;
     };
     let prefix = format!("t{}_", &Uuid::new_v4().simple().to_string()[..10]);

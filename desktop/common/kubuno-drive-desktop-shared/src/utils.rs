@@ -1,4 +1,4 @@
-//! Port of `Files.Shared/Utils` — cross-cutting abstraction traits.
+//! Port of `Files.Shared/Utils` - cross-cutting abstraction traits.
 
 use std::future::Future;
 

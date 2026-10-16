@@ -1,4 +1,4 @@
-<!-- RoleCreateDialog — converted from RoleCreateDialog.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- RoleCreateDialog - converted from RoleCreateDialog.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <FloatingWindow x:Props="RoleCreateDialogProps"
                 ConfirmText="{Res settings.create}"
                 ConfirmEnabled="{Binding enabled_unless_name_trim}"

@@ -22,8 +22,8 @@
 //! distinct values measure how many people are exposed. Only the second is a
 //! leak, and only the second survives somebody pasting a quote.
 //!
-//! Distinctness is computed over a **fingerprint of the normalised match** — case
-//! folded, separators stripped — so `FR76 3000 6…` and `fr7630006…` are one
+//! Distinctness is computed over a **fingerprint of the normalised match** - case
+//! folded, separators stripped - so `FR76 3000 6…` and `fr7630006…` are one
 //! value, and no inspected value exists in the engine's state even in memory
 //! beyond the scan.
 //!

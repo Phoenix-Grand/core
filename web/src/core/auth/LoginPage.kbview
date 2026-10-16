@@ -1,4 +1,4 @@
-<!-- LoginPage — converted from LoginPage.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- LoginPage - converted from LoginPage.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <Stack x:Props="LoginPageProps" Direction="LeftToRight" Gap="0" Class="min-h-screen bg-white">
   <Panel Class="hidden lg:flex lg:w-[45%] flex-col justify-center items-center p-12 relative overflow-hidden [background:linear-gradient(160deg,_#08174d_0%,_#03091a_100%)]">
     <!-- TODO(views-migrate): <LoginAnimation> is no .kbview element (./LoginAnimationGL#default) -->

@@ -239,7 +239,7 @@ async fn runner_executes_registered_jobs_end_to_end() {
         .await
         .expect("enqueue");
 
-    // An unregistered type must stay untouched — no runner may burn it.
+    // An unregistered type must stay untouched - no runner may burn it.
     let orphan_type = unique_type("run.unknown");
     let orphan = queue::enqueue(&db, NewJob::new(orphan_type.as_str())).await.expect("enqueue");
 

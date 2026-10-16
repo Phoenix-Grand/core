@@ -26,7 +26,7 @@
 //!   properties are [`ElementProps`](crate::events::ElementProps).
 //!
 //! In a view, the element's node keeps rendering it (`kubuno_desktop_ui`'s widgets, rebuilt every frame
-//! from the bound properties) — except `<Button>`, whose node syncs its properties into its
+//! from the bound properties) - except `<Button>`, whose node syncs its properties into its
 //! [`Button`] and paints through the class's `on_paint`. Built in Rust and hosted by
 //! [`crate::component::ControlHost`], [`Button`] and [`Label`] paint themselves; the other classes
 //! paint nothing yet outside a view (EVT-7b gives each its standalone look).
@@ -345,7 +345,7 @@ pub mod ribbon;
 
 /// The structural elements (`<TabItem>`, `<Item>`, `<Column>`…) as non-visual components
 /// (WinForms `ToolStripItem`, `ColumnHeader`, `TabPage`'s role here): their parent control
-/// raises their events. Not in the prelude — `Option` would shadow `std::option::Option`.
+/// raises their events. Not in the prelude - `Option` would shadow `std::option::Option`.
 pub mod items {
     use crate::component::{Component, ComponentCore};
 
@@ -395,7 +395,7 @@ pub mod items {
 }
 
 /// The built-in non-visual components (WinForms' component tray, EVT-7b): elements a view
-/// declares that paint nothing. Not in the prelude — `Timer` is also the Rust timer of
+/// declares that paint nothing. Not in the prelude - `Timer` is also the Rust timer of
 /// [`crate::events::Timer`].
 pub mod components {
     use crate::component::{Component, ComponentCore};

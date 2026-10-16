@@ -1,6 +1,6 @@
 /**
  * Details-view model: which optional columns exist, their defaults, and how a
- * folder/file renders into each cell. Pure data + formatting — no React.
+ * folder/file renders into each cell. Pure data + formatting - no React.
  */
 import { formatSize, type Folder, type FileItem } from '../api'
 import { mimeLabel } from '../FileInfoModal'

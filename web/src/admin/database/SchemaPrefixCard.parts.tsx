@@ -15,7 +15,7 @@ export function Part1({ t }: { t: NonNullable<SchemaPrefixCard['tr']> }) {
 export function Part2({ t, done }: { t: NonNullable<SchemaPrefixCard['tr']>; done: NonNullable<SchemaPrefixCard['done']> }) {
   return (
     <Callout variant="success">
-                  {t('admin.dbprefix_done', { schemas: done.length ? done.join(', ') : '—' })}
+                  {t('admin.dbprefix_done', { schemas: done.length ? done.join(', ') : '-' })}
                   <div className="mt-1">{t('admin.dbprefix_restart_hint')}</div>
                 </Callout>
   )

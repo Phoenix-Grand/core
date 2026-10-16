@@ -17,7 +17,7 @@ use crate::errors::AppError;
 
 use super::config;
 
-/// A certificate row as the console sees it — never the private key.
+/// A certificate row as the console sees it - never the private key.
 #[derive(Debug, Clone, Serialize, sqlx::FromRow)]
 pub struct StoredCert {
     pub id: Uuid,
@@ -91,7 +91,7 @@ fn parse_metadata(cert_pem: &[u8]) -> Result<CertMeta, AppError> {
 /// Stores `cert_pem` + `key_pem` as the new active certificate, deactivating any
 /// previous one. Atomicity is the caller's transaction (`tx`): the console
 /// upload runs it inside the audited transaction, so a crash between the two
-/// writes never leaves two active — or zero — certificates behind.
+/// writes never leaves two active - or zero - certificates behind.
 ///
 /// The pair is validated first (rustls refuses a mismatched or unusable pair)
 /// and its metadata parsed for display. **The key material is written to disk**
@@ -120,7 +120,7 @@ pub async fn store_active(
     // would leave a row claiming a certificate the server cannot serve.
     super::store::write_material(paths, cert_pem, key_pem)?;
 
-    // The previous certificate is retired. Only its metadata survives — the key
+    // The previous certificate is retired. Only its metadata survives - the key
     // material it referred to has just been overwritten on disk, and there is no
     // rollback path that would want an old key back.
     tx.execute(
@@ -191,7 +191,7 @@ pub async fn store_active(
     })
 }
 
-/// Every stored certificate, newest first — the active one and the retired ones
+/// Every stored certificate, newest first - the active one and the retired ones
 /// whose metadata is kept for the history (their keys are already destroyed).
 pub async fn list(db: &DbPool) -> Result<Vec<StoredCert>, AppError> {
     db.fetch_all_as::<StoredCert>(
@@ -212,7 +212,7 @@ pub async fn list(db: &DbPool) -> Result<Vec<StoredCert>, AppError> {
 ///
 /// Refuses to delete the ACTIVE certificate while HTTPS is switched on: that
 /// would leave the instance configured to serve TLS with nothing to serve it
-/// with, and the failure would only appear at the next restart — as an instance
+/// with, and the failure would only appear at the next restart - as an instance
 /// that silently fell back to plain HTTP. Turning HTTPS off first is an explicit
 /// act; this keeps it from happening by accident.
 pub async fn delete(

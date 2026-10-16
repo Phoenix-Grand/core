@@ -4,7 +4,7 @@
 //! paint pass), hit-testing over it, and the pure request-generation logic
 //! (selection, nudge, delete) a design surface (`examples/view_embed.rs`)
 //! drives from real input. Deliberately host-agnostic: nothing here reads
-//! `kubuno_desktop_controls::host`'s global input state directly — a caller (the
+//! `kubuno_desktop_controls::host`'s global input state directly - a caller (the
 //! example, in production; a plain struct literal, in this module's own
 //! tests) hands in a small [`DesignKeyInput`]/mouse position instead, so
 //! request generation is unit-testable with no live window or `Canvas`, per
@@ -16,25 +16,25 @@
 //! [`DesignSlot`] is a [`crate::node::ViewNode`] decorator: `crate::compile::
 //! build_node` wraps EVERY element it builds in one, regardless of which
 //! family declared it (`crate::node`'s five, or any `registry::families::*`
-//! component) — so every element gets a stable id and a recorded bounds
+//! component) - so every element gets a stable id and a recorded bounds
 //! without each `ViewNode` impl having to do it itself. Its `paint` records
-//! one [`LayoutEntry`] into the frame's [`LayoutMap`] (when one is present —
+//! one [`LayoutEntry`] into the frame's [`LayoutMap`] (when one is present -
 //! [`crate::node::PaintCx::design`] is `None` outside design mode, so the
 //! only added cost is one `if let` branch per element, no allocation) and
-//! then delegates unchanged to the wrapped node — geometry, focus, binding,
+//! then delegates unchanged to the wrapped node - geometry, focus, binding,
 //! events all still flow exactly as they did before this module existed.
 //!
 //! ## Element ids and layout kind
 //!
-//! An entry's `id` is [`crate::ast::Element::stable_id`] — the same dotted
+//! An entry's `id` is [`crate::ast::Element::stable_id`] - the same dotted
 //! child-ordinal path `kubuno-desktop-views-ls`'s `kubuno/applyEdit` bridge resolves
 //! (DSG-2, `DESIGNER.md` §8): the two processes agree on "which element"
 //! without either walking the other's tree. `parent_id` is the same split
 //! DSG-2's own `edit_bridge::split_parent` does (`"2.0.3"` → `"2.0"`, `"3"` →
-//! `""`, `""` → no parent) — [`parent_id_of`] here is the DSG-6 side of that
+//! `""`, `""` → no parent) - [`parent_id_of`] here is the DSG-6 side of that
 //! shared, id-only contract. `layout` is the [`crate::registry::LayoutKind`]
 //! of the element's own PARENT container (not the element's own, when it is
-//! itself a container) — what decides its adorner per `DESIGNER.md` §4: a
+//! itself a container) - what decides its adorner per `DESIGNER.md` §4: a
 //! direct child of a `LayoutKind::DockAnchor` container (`<Panel>`) gets the
 //! 8 resize handles, everything else gets the plain flow outline.
 
@@ -53,7 +53,7 @@ use crate::registry::{self, ChildrenModel, LayoutKind};
 /// One element's own recorded frame: its stable id, its parent's (`None`
 /// only for the document root), the bounds it was actually painted into, and
 /// the [`LayoutKind`] of the CONTAINER that positioned it (its parent's
-/// layout, not its own — see the module doc).
+/// layout, not its own - see the module doc).
 #[derive(Clone)]
 pub struct LayoutEntry {
     pub id: String,
@@ -69,7 +69,7 @@ pub struct LayoutEntry {
     /// only the part of `bounds` inside it is hit by the pointer. `None` when nothing clips it. The adorners still
     /// frame the whole `bounds`, as the Windows Forms designer frames a control its parent cuts.
     pub clip: Option<Rect>,
-    /// The element's type (its registry name — `Button`, `Panel`, `TextField`…), shown on the corner name tag that
+    /// The element's type (its registry name - `Button`, `Panel`, `TextField`…), shown on the corner name tag that
     /// tells nested outlines apart. Empty when the entry carries no type (no tag is drawn then).
     pub kind: &'static str,
     /// The element's `x:Name`, shown after its type on the corner name tag; `None` when it is unnamed.
@@ -86,13 +86,13 @@ impl LayoutEntry {
     }
 }
 
-/// A frame's worth of [`LayoutEntry`] — built fresh every frame design mode
+/// A frame's worth of [`LayoutEntry`] - built fresh every frame design mode
 /// is on (`crate::runtime::Runtime::frame_with_design`), read afterwards for
 /// hit-testing and adorner geometry. Entries land in paint order: a
 /// container is always pushed before its own children (`DesignSlot::paint`
 /// records itself, then delegates, and only a container's own delegate walks
 /// further into its children), so a later entry is always at least as deep
-/// as, or a later sibling of, an earlier one — [`LayoutMap::hit_test`]
+/// as, or a later sibling of, an earlier one - [`LayoutMap::hit_test`]
 /// exploits exactly that ordering.
 #[derive(Default)]
 pub struct LayoutMap {
@@ -104,7 +104,7 @@ impl LayoutMap {
         Self::default()
     }
 
-    /// Drops every entry — called once at the start of a frame that records
+    /// Drops every entry - called once at the start of a frame that records
     /// a fresh map, so a design surface never hit-tests against a stale
     /// frame's geometry after a resize/reflow.
     pub fn clear(&mut self) {
@@ -132,9 +132,9 @@ impl LayoutMap {
     /// since a container is always recorded before its own children (see the
     /// struct doc), the last entry whose bounds contain the point is always
     /// the most nested one that does (and, among overlapping siblings, the
-    /// one painted last / on top) — no separate depth bookkeeping needed.
+    /// one painted last / on top) - no separate depth bookkeeping needed.
     /// Skips a degenerate (zero-or-negative-area) entry: "appropriately skip
-    /// non-visual items" — an element that measured to nothing never steals a
+    /// non-visual items" - an element that measured to nothing never steals a
     /// click from whatever is actually under the pointer.
     ///
     /// Only the part of an element its containers leave visible is hit ([`LayoutEntry::hit_bounds`]): a button
@@ -149,7 +149,7 @@ impl LayoutMap {
 
 /// The inverse of the id's own construction (`Element::stable_id`'s doc):
 /// splits `id` at its last `.` to give `(parent_id, index)`, keeping only the
-/// parent half — `"2.0.3"` → `Some("2.0")`, `"3"` → `Some("")`, `""` (the
+/// parent half - `"2.0.3"` → `Some("2.0")`, `"3"` → `Some("")`, `""` (the
 /// document root) → `None`. Mirrors `kubuno-desktop-views-ls`'s `edit_bridge::
 /// split_parent` (`DESIGNER.md` §8), the DSG-2 side of the same id-only
 /// contract, kept here as a free function since [`LayoutEntry`] stores the
@@ -159,7 +159,7 @@ impl LayoutMap {
 /// shared by every target (WV-1).)
 pub use kubuno_desktop_views_syntax::ids::parent_id_of;
 
-/// Wraps any [`ViewNode`] with its element's stable id and parent layout —
+/// Wraps any [`ViewNode`] with its element's stable id and parent layout -
 /// see the module doc for why `crate::compile::build_node` applies this to
 /// every element uniformly instead of each component family recording
 /// itself. `measure`/`measure_for_width`/`intrinsic_width` all delegate
@@ -560,8 +560,8 @@ impl ViewNode for DesignSlot {
 
 impl DesignSlot {
     /// The frame the element sees while its containers clip it to `clip` (content coordinates): `None` (the real
-    /// one) while the pointer is over its visible part — or holds a press that started there, a drag leaving it
-    /// like a captured mouse —, else the pointer away, as over another control: the clipped-away part of a
+    /// one) while the pointer is over its visible part - or holds a press that started there, a drag leaving it
+    /// like a captured mouse -, else the pointer away, as over another control: the clipped-away part of a
     /// control is not there for the mouse (WinForms).
     fn mask_pointer(&mut self, frame: &kubuno_desktop_controls::host::Frame, clip: Rect) -> Option<kubuno_desktop_controls::host::Frame> {
         let over = !frame.pointer_outside() && clip.contains(frame.mouse.0, frame.mouse.1);
@@ -647,7 +647,7 @@ impl DesignSlot {
         let (display, key) = text.as_deref().map(crate::common::mnemonic).unwrap_or_default();
         let role = role.and_then(crate::common::role_of).unwrap_or_else(|| crate::common::default_role(meta));
         // A masked single-line field (`PasswordChar`, `UseSystemPasswordChar`): UI Automation sees a
-        // password field (`IsPassword`) whose value is the glyphs it shows, never the secret — as
+        // password field (`IsPassword`) whose value is the glyphs it shows, never the secret - as
         // assistive technology gets from a Windows password edit.
         let password_glyph = if role == host_access::AccessRole::TextInput && attr("Multiline").as_deref() != Some("true") {
             if attr("UseSystemPasswordChar").as_deref() == Some("true") {
@@ -664,7 +664,7 @@ impl DesignSlot {
             host_access::AccessRole::TextInput | host_access::AccessRole::PasswordInput | host_access::AccessRole::MultilineTextInput | host_access::AccessRole::ComboBox
         );
         // The name a screen reader announces: `AccessibleName`, else what the element shows (its
-        // text, its placeholder), else its tooltip (an icon button's only words) — the developer's
+        // text, its placeholder), else its tooltip (an icon button's only words) - the developer's
         // `x:Name` only as a last resort, as Windows Forms falls back to nothing better.
         let tooltip = self.common.as_ref().and_then(|c| c.tooltip(vm));
         let name = name
@@ -722,7 +722,7 @@ pub(crate) fn apply_literal_props(component: &mut dyn crate::component::Componen
 }
 
 /// Sets an application class's own properties (EVT-7b) on its instance, from the element's
-/// attributes resolved against `vm` — when their value changes only (the first paint, a binding
+/// attributes resolved against `vm` - when their value changes only (the first paint, a binding
 /// that moved), like the property assignments of a Windows Forms `InitializeComponent`: a value the
 /// control changed itself since (a user control's field typed into through its own two-way
 /// binding, a `Load` handler's sample data) is not overwritten at the next frame.
@@ -748,8 +748,8 @@ pub(crate) fn apply_custom_props(component: &mut dyn crate::component::Component
 }
 
 /// Delivers the events `component` queued outside a dispatch (a declared event's `raise_…`,
-/// EVT-7b) to its element's handlers — the typed handler or the legacy table entry the element
-/// names — and reports each as a [`crate::node::ViewEventKind::Other`]. `slot` is `None` in the
+/// EVT-7b) to its element's handlers - the typed handler or the legacy table entry the element
+/// names - and reports each as a [`crate::node::ViewEventKind::Other`]. `slot` is `None` in the
 /// designer (the queue is emptied, nothing runs).
 #[cfg(test)]
 pub(crate) fn deliver_queued(
@@ -791,12 +791,12 @@ pub(crate) fn deliver_taken(
 }
 
 // ─────────────────────────────────────────────────────────────────────────
-// Adorner geometry — pure, unit-testable without a `Canvas` (the actual
+// Adorner geometry - pure, unit-testable without a `Canvas` (the actual
 // painting, in `paint_adorners` below, is what needs the visual check).
 // ─────────────────────────────────────────────────────────────────────────
 
-/// The 8 compass-point resize handles for `bounds` — `DESIGNER.md` §1's
-/// "resize handles at the 8 compass points" — each a `size`-DIP square
+/// The 8 compass-point resize handles for `bounds` - `DESIGNER.md` §1's
+/// "resize handles at the 8 compass points" - each a `size`-DIP square
 /// centered on its point, in clockwise order starting at North (N, NE, E,
 /// SE, S, SW, W, NW), the same order a screen reader / a test asserting on
 /// index 0 would expect "top-center" to be.
@@ -864,7 +864,7 @@ pub const INHERITED_LOCKED_PREFIX: &str = "inherited!";
 pub const INHERITED_INNER_PREFIX: &str = "inherited:";
 
 /// The id prefix of the title bar's standard items (`ShowSearch`, `ShowWaffle`… on the view's root,
-/// `crate::window::build_header_items`): made by the framework, not elements of the document — never selected; a
+/// `crate::window::build_header_items`): made by the framework, not elements of the document - never selected; a
 /// click on them in the designer selects the view, whose properties show them.
 pub const HEADER_ITEM_PREFIX: &str = "header!";
 
@@ -883,8 +883,8 @@ pub fn paint_inherited_glyph(c: &dyn kubuno_desktop_ui::Canvas, bounds: Rect) {
 }
 
 /// Paints the design-time outline of an otherwise-invisible container, dashed. `depth` is the element's nesting
-/// depth (the number of segments of its stable id): the stroke alternates strength with it — a stronger tint at an
-/// even depth, a fainter one at an odd depth — so adjacent nested container frames can be told apart rather than
+/// depth (the number of segments of its stable id): the stroke alternates strength with it - a stronger tint at an
+/// even depth, a fainter one at an odd depth - so adjacent nested container frames can be told apart rather than
 /// piling up as identical dashed rectangles. The ink is the theme's secondary text (a low-contrast foreground that
 /// reads in the light and in the dark theme alike), faded to the depth's strength.
 pub fn paint_container_outline(c: &dyn kubuno_desktop_ui::Canvas, bounds: Rect, depth: usize) {
@@ -897,7 +897,7 @@ pub fn paint_container_outline(c: &dyn kubuno_desktop_ui::Canvas, bounds: Rect, 
 }
 
 /// The small filled rects a "marching ants" / dashed outline paints along
-/// `bounds`'s perimeter (`Canvas` has no native dash pattern — see `crate::
+/// `bounds`'s perimeter (`Canvas` has no native dash pattern - see `crate::
 /// design`'s own doc for why this crate draws it itself rather than reaching
 /// into `kubuno_desktop_controls`), `thickness` DIP thick, alternating `dash` DIP of
 /// ink with `gap` DIP of nothing, starting from the top-left corner and
@@ -925,7 +925,7 @@ pub fn dashed_outline(bounds: Rect, dash: f32, gap: f32, thickness: f32) -> Vec<
         x += step;
     }
     // Left edge, top → bottom (corners already covered by the horizontal
-    // edges above are left slightly overlapping rather than notched out —
+    // edges above are left slightly overlapping rather than notched out -
     // a dashed rect outline, not a mitred stroke).
     let mut y = bounds.top;
     while y < bounds.bottom {
@@ -945,12 +945,12 @@ pub fn dashed_outline(bounds: Rect, dash: f32, gap: f32, thickness: f32) -> Vec<
 }
 
 /// Paints one frame's adorners over an already-painted view: `parent` (the
-/// selected element's own container, dashed outline — `DESIGNER.md` §1's
+/// selected element's own container, dashed outline - `DESIGNER.md` §1's
 /// "parent-container dashed outline"), `hover` (a light highlight, skipped
 /// when it IS the selection), and `selected` (a solid outline, plus the 8
-/// resize handles ONLY when `selected.layout == LayoutKind::DockAnchor` —
+/// resize handles ONLY when `selected.layout == LayoutKind::DockAnchor` -
 /// `DESIGNER.md` §4: only an Anchor/absolute child gets free resize; a flow
-/// child gets the plain outline alone). Never draws widget content itself —
+/// child gets the plain outline alone). Never draws widget content itself -
 /// `crate::runtime::Runtime::frame_with_design` already did that before this
 /// runs. Needs a live `Canvas`, so this function itself is exercised by the
 /// visual check, not a unit test (`resize_handles`/`dashed_outline` above
@@ -983,15 +983,15 @@ pub fn paint_adorners(
     }
 
     // Hover: a plain, already-blended token (`accent_light`, the same one
-    // every hot-state fill in this codebase already uses — see e.g.
+    // every hot-state fill in this codebase already uses - see e.g.
     // `examples/view_embed.rs`'s own "Save"/"Menu" demo buttons) rather than
-    // constructing a translucent color by hand — this crate has no
+    // constructing a translucent color by hand - this crate has no
     // dependency on the raw D2D color type to build one from (`kubuno_desktop_ui`
     // only ever hands out already-resolved theme colors, by design).
     if let Some(h) = hover.filter(|id| !selection.contains(id)).and_then(|id| layout.get(id)) {
         // Hover shares the selection's exact geometry: the same `selection_frame` (3 DIP outset) and the same 2 DIP
         // stroke width as the primary selection below, so the hover box and the selection box have identical size,
-        // margins and thickness — they differ only by colour (a lighter accent), never by position or weight (the
+        // margins and thickness - they differ only by colour (a lighter accent), never by position or weight (the
         // web designer's rule: hover and the primary selection are both 2 px). The complaint was a hover border
         // that sat tighter and thinner than the selection.
         let frame = selection_frame(h.bounds);
@@ -1036,7 +1036,7 @@ pub fn paint_adorners(
     }
 }
 
-/// Draws a control's name tag — its type and, when set, its `x:Name` (`TextField newPassword`) — as a small flag at
+/// Draws a control's name tag - its type and, when set, its `x:Name` (`TextField newPassword`) - as a small flag at
 /// the top-left of `anchor`, the WinForms / web designer's corner tag that tells nested dashed outlines apart. It
 /// hangs just above the frame, or drops inside near the top edge when there is no room above it. `fill`/`text` are
 /// its background and its text colour, `border` an optional outline (the neutral parent tag draws one). A tag is
@@ -1080,11 +1080,11 @@ fn paint_tag(
 /// paints along `bounds`'s perimeter, alternating 1 device pixel of ink with 1
 /// device pixel of nothing. Unlike `dashed_outline` (DIP-sized dashes, fine
 /// for the parent-container outline), the rubber-band selection must read as
-/// crisp, round-free DOTS at any DPI — the WinForms designer reference. DIP
+/// crisp, round-free DOTS at any DPI - the WinForms designer reference. DIP
 /// dashes rounded per rect can't guarantee an exact "1 px on / 1 px off", so
 /// this walks the perimeter directly in DEVICE pixels (`scale` is
 /// `Canvas::scale()`, DPI / 96) and only converts back to DIP for the
-/// resulting `Rect`s — each dot then lands exactly on the device pixel grid
+/// resulting `Rect`s - each dot then lands exactly on the device pixel grid
 /// `ControlCanvas::fill_rect` itself snaps to, with no drift, at 175% DPI or
 /// any other. Geometry only, unit-testable with no live `Canvas` (`paint_marquee`
 /// below is what colours it in).
@@ -1144,9 +1144,9 @@ pub fn paint_marquee(c: &dyn kubuno_desktop_controls::ControlCanvas, theme: &kub
 
 // ─────────────────────────────────────────────────────────────────────────
 // DSG-9: move/resize drag geometry (Anchor), reorder geometry (Flow),
-// snapping — pure `Rect` arithmetic, unit-testable with no `Canvas` (the
+// snapping - pure `Rect` arithmetic, unit-testable with no `Canvas` (the
 // actual ghost/marker painting, further below, is what needs the visual
-// check — same split as the adorner geometry above).
+// check - same split as the adorner geometry above).
 // ─────────────────────────────────────────────────────────────────────────
 
 /// The selection frame around an element's `bounds`: the outline and the grab handles are drawn on
@@ -1165,22 +1165,22 @@ pub fn selection_frame(bounds: Rect) -> Rect {
 pub const SELECTION_FRAME_GAP: f32 = 3.0;
 
 /// The size (DIP) [`resize_handles`] paints its 8 compass squares at, and
-/// what [`handle_at`] hit-tests against — one constant so painting and
+/// what [`handle_at`] hit-tests against - one constant so painting and
 /// hit-testing can never silently drift apart.
 pub const RESIZE_HANDLE_SIZE: f32 = 8.0;
 
-/// The stroke width of the primary selection outline and the hover outline (DIP) — the web designer's 2 px.
+/// The stroke width of the primary selection outline and the hover outline (DIP) - the web designer's 2 px.
 /// A non-primary selection in a multi-selection is drawn one DIP thinner.
 pub const SELECTION_STROKE: f32 = 2.0;
 
-/// A minimum size a resize never shrinks below, DIP — avoids a degenerate
+/// A minimum size a resize never shrinks below, DIP - avoids a degenerate
 /// (zero/negative) `Width`/`Height` that [`LayoutMap::hit_test`] would then
 /// have to skip as invisible (see that method's own doc), and a `Width`/
 /// `Height` an author would have to type over before the element is usable
 /// again.
 pub const MIN_ELEMENT_SIZE: f32 = 4.0;
 
-/// The snap threshold, DIP — `DESIGNER.md` §1's "snaplines … with a small
+/// The snap threshold, DIP - `DESIGNER.md` §1's "snaplines … with a small
 /// threshold". WinForms' own designer default is in the same neighbourhood.
 pub const SNAP_THRESHOLD: f32 = 6.0;
 
@@ -1203,7 +1203,7 @@ impl Handle {
         [Handle::N, Handle::NE, Handle::E, Handle::SE, Handle::S, Handle::SW, Handle::W, Handle::NW];
 }
 
-/// Which resize handle of `bounds` (if any) contains `(x, y)` — the hit-test
+/// Which resize handle of `bounds` (if any) contains `(x, y)` - the hit-test
 /// half of [`resize_handles`]'s geometry, used both to decide whether a press
 /// arms a resize drag ([`DesignController::press`]) and, by a caller that
 /// wants it, to choose a resize cursor.
@@ -1212,7 +1212,7 @@ pub fn handle_at(bounds: Rect, handle_size: f32, x: f32, y: f32) -> Option<Handl
     handles.iter().zip(Handle::ORDER).find(|(r, _)| r.contains(x, y)).map(|(_, h)| h)
 }
 
-/// `start` translated by `(dx, dy)`, size unchanged — the geometry of an
+/// `start` translated by `(dx, dy)`, size unchanged - the geometry of an
 /// Anchor/absolute move drag (`DESIGNER.md` §4's "Free drag anywhere").
 pub fn move_rect(start: Rect, dx: f32, dy: f32) -> Rect {
     Rect::new(start.left + dx, start.top + dy, start.right + dx, start.bottom + dy)
@@ -1224,10 +1224,10 @@ pub fn move_rect(start: Rect, dx: f32, dy: f32) -> Rect {
 /// clamp that also implicitly caps how far a `W`/`N`/`NW`/`SW`/`NE` handle's
 /// leading edge can travel, so `left`/`top` never cross `right`/`bottom`).
 /// `DESIGNER.md` §4's "resize handles change `Width`/`Height` and, per the
-/// `Anchor` edges set, may also change `X`/`Y`" — this function does not
+/// `Anchor` edges set, may also change `X`/`Y`" - this function does not
 /// itself read `Anchor` (a resize is always computed against all four
 /// numbers; which of them the caller actually WRITES back is decided
-/// separately, by comparing the result to `start` — see
+/// separately, by comparing the result to `start` - see
 /// [`DesignController::end_drag`]).
 pub fn resize_rect(start: Rect, handle: Handle, dx: f32, dy: f32) -> Rect {
     let mut left = start.left;
@@ -1251,7 +1251,7 @@ pub fn resize_rect(start: Rect, handle: Handle, dx: f32, dy: f32) -> Rect {
     Rect::new(left, top, right, bottom)
 }
 
-/// Which axis a snapline runs along — `Vertical` (a line at a constant X,
+/// Which axis a snapline runs along - `Vertical` (a line at a constant X,
 /// drawn top-to-bottom) fires from an X-coordinate match (left/right/centre
 /// edges), `Horizontal` (a line at a constant Y) from a Y match.
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -1260,7 +1260,7 @@ pub enum SnapAxis {
     Horizontal,
 }
 
-/// One snapline that fired — `at` is the exact coordinate the dragged edge
+/// One snapline that fired - `at` is the exact coordinate the dragged edge
 /// snapped to (what a caller paints the guide line at), `axis` says which
 /// coordinate it constrains. `DESIGNER.md` §1's "blue guide lines when an
 /// edge or center aligns with a sibling's".
@@ -1275,14 +1275,14 @@ pub struct SnapGuide {
 /// contributes its own left/right/centre-x and top/bottom/centre-y), within
 /// `threshold` DIP, picking the CLOSEST match per axis when more than one is
 /// in range. `candidates` is deliberately just "every other bounds worth
-/// snapping to" (siblings' own painted rects, the container's own bounds) —
+/// snapping to" (siblings' own painted rects, the container's own bounds) -
 /// `LayoutMap` records painted bounds only, no padding value (see that
 /// struct's own doc), so "container padding" (`DESIGNER.md` DSG-9 item 1)
 /// snaps to the container's own outer edge, the padding-`0` line; a caller
 /// that has a real padding number could pass an already-inset container rect
 /// instead, this function does not care where a candidate rect came from.
 /// Returns the (possibly shifted, same size) `bounds` and the guides that
-/// fired, for a caller to paint — an empty `Vec` when nothing was within
+/// fired, for a caller to paint - an empty `Vec` when nothing was within
 /// `threshold` on either axis.
 pub fn snap_bounds(bounds: Rect, candidates: &[Rect], threshold: f32) -> (Rect, Vec<SnapGuide>) {
     let width = bounds.right - bounds.left;
@@ -1308,7 +1308,7 @@ pub fn snap_bounds(bounds: Rect, candidates: &[Rect], threshold: f32) -> (Rect, 
 }
 
 /// The smallest delta that moves any of `source_lines` onto any of
-/// `candidate_lines`, within `threshold` — `(0.0, None)` when nothing is
+/// `candidate_lines`, within `threshold` - `(0.0, None)` when nothing is
 /// close enough. Shared by [`snap_bounds`]'s X and Y passes.
 fn best_snap_delta(source_lines: &[f32; 3], candidate_lines: impl Iterator<Item = f32>, threshold: f32) -> (f32, Option<f32>) {
     let mut best: Option<(f32, f32, f32)> = None; // (distance, delta, target)
@@ -1327,7 +1327,7 @@ fn best_snap_delta(source_lines: &[f32; 3], candidate_lines: impl Iterator<Item 
 }
 
 /// Which way `siblings` are laid out, inferred from which axis their centres
-/// actually spread across — `LayoutMap` does not carry the container's own
+/// actually spread across - `LayoutMap` does not carry the container's own
 /// `Direction` attribute (see [`snap_bounds`]'s doc for the same kind of
 /// approximation), so comparing the spread is a robust proxy that needs no
 /// extra wire field: a `TopDown`/`BottomUp` stack's children vary mostly in Y,
@@ -1361,7 +1361,7 @@ pub fn flow_axis(siblings: &[Rect]) -> FlowAxis {
 
 /// The 0-based index (`Vec::insert` semantics, matching `kubuno_desktop_views::edit::
 /// move_child`/`move_element`) a Flow drop/reorder at `(x, y)` would land at,
-/// given `siblings` in document order — `DESIGNER.md` DSG-9 item 2's
+/// given `siblings` in document order - `DESIGNER.md` DSG-9 item 2's
 /// "insertion marker between siblings". Compares the point's coordinate along
 /// [`flow_axis`] against each sibling's own midpoint on that axis; the
 /// returned index is the count of siblings whose midpoint comes before the
@@ -1386,7 +1386,7 @@ pub fn flow_insertion_index(siblings: &[Rect], x: f32, y: f32) -> usize {
 
 /// A thin marker rect between `siblings[index - 1]` and `siblings[index]`
 /// (or before the first / after the last), spanning `container`'s
-/// cross-axis extent, `thickness` DIP thick — the paintable geometry for
+/// cross-axis extent, `thickness` DIP thick - the paintable geometry for
 /// `DESIGNER.md` DSG-9 item 2's "insertion marker" / item 3's Flow drop
 /// marker.
 pub fn flow_insertion_marker(siblings: &[Rect], container: Rect, index: usize, thickness: f32) -> Rect {
@@ -1423,11 +1423,11 @@ pub fn flow_insertion_marker(siblings: &[Rect], container: Rect, index: usize, t
 }
 
 /// Paints a drag's live ghost outline (`preview`) plus any active
-/// [`SnapGuide`]s spanning `canvas_bounds` — the local-only visual feedback
+/// [`SnapGuide`]s spanning `canvas_bounds` - the local-only visual feedback
 /// `DESIGNER.md` §2 requires ("intermediate mouse-move frames update the
 /// design surface's local, client-side preview only … never touching
 /// text"). Needs a live `Canvas`, so exercised by the visual check, not a
-/// unit test — [`snap_bounds`]/[`resize_rect`]/[`move_rect`] above are the
+/// unit test - [`snap_bounds`]/[`resize_rect`]/[`move_rect`] above are the
 /// testable geometry this reads.
 pub fn paint_drag_preview(c: &dyn kubuno_desktop_controls::ControlCanvas, theme: &kubuno_desktop_ui::Theme, preview: Rect, guides: &[SnapGuide], canvas_bounds: Rect) {
     c.stroke_rounded_w(&preview, 0.0, &theme.accent, 2.0);
@@ -1440,7 +1440,7 @@ pub fn paint_drag_preview(c: &dyn kubuno_desktop_controls::ControlCanvas, theme:
     }
 }
 
-/// Paints a Flow reorder/drop insertion marker — see
+/// Paints a Flow reorder/drop insertion marker - see
 /// [`paint_drag_preview`]'s own doc on why this needs a live `Canvas`.
 pub fn paint_insertion_marker(c: &dyn kubuno_desktop_controls::ControlCanvas, theme: &kubuno_desktop_ui::Theme, marker: Rect) {
     c.fill_rect(&marker, &theme.accent);
@@ -1448,7 +1448,7 @@ pub fn paint_insertion_marker(c: &dyn kubuno_desktop_controls::ControlCanvas, th
 
 /// Paints a toolbox [`DropTarget`]'s marker: an outline ghost at
 /// `target.xy`'s placement size for an Anchor drop, a filled insertion line
-/// for a Flow drop — `theme.danger` instead of `theme.accent` when
+/// for a Flow drop - `theme.danger` instead of `theme.accent` when
 /// `target.valid` is `false` (`DESIGNER.md` DSG-9 item 3's "not allowed …
 /// marker when invalid").
 pub fn paint_drop_marker(c: &dyn kubuno_desktop_controls::ControlCanvas, theme: &kubuno_desktop_ui::Theme, target: &DropTarget) {
@@ -1461,21 +1461,21 @@ pub fn paint_drop_marker(c: &dyn kubuno_desktop_controls::ControlCanvas, theme: 
 }
 
 // ─────────────────────────────────────────────────────────────────────────
-// Request generation — pure, driven by a small host-agnostic input struct so
+// Request generation - pure, driven by a small host-agnostic input struct so
 // it is unit-testable without `kubuno_desktop_controls::host`'s global key state
 // (see the module doc).
 // ─────────────────────────────────────────────────────────────────────────
 
 /// One `kubuno/applyEdit` op (`DESIGNER.md` §8), the exact shape DSG-2
-/// already fixed — this module never invents its own edit vocabulary, only
+/// already fixed - this module never invents its own edit vocabulary, only
 /// ever produces one of these ops (`setAttribute` for nudge/move/resize,
 /// `removeElement` for Delete, `moveElement` for a DSG-9 flow reorder,
 /// `insertChild` for a DSG-9 toolbox drop), serialised by `crate::protocol`
 /// with the identical field names DSG-2's `kubuno/applyEdit` documents. Every
 /// multi-word field name gets an explicit `#[serde(rename = "...")]` rather
-/// than relying on the enum's own `rename_all = "camelCase"`, which — per
+/// than relying on the enum's own `rename_all = "camelCase"`, which - per
 /// `DESIGNER.md` §9's own note, confirmed live during this crate's
-/// development — only camelCases the variant's TAG, never a struct variant's
+/// development - only camelCases the variant's TAG, never a struct variant's
 /// own field names.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(tag = "kind", rename_all = "camelCase")]
@@ -1492,7 +1492,7 @@ pub enum EditOp {
     },
     /// A DSG-9 flow-container reorder (§4's "Flow … drop shows an insertion
     /// caret … drop → `MoveChild`/`MoveElement`"). `new_parent_id` is the
-    /// SAME id as the element's current parent for an in-place reorder — this
+    /// SAME id as the element's current parent for an in-place reorder - this
     /// module never produces a cross-container move (out of DSG-9's own
     /// scope, §6's table); the field exists because it is what DSG-2's
     /// `moveElement` op already carries (`DESIGNER.md` §8).
@@ -1504,7 +1504,7 @@ pub enum EditOp {
         index: usize,
     },
     /// A DSG-9 toolbox drop (§4/§6's "on drop emits `insertChild`"). `xml` is
-    /// a well-formed `.kbview` fragment — the SAME field name DSG-2's own
+    /// a well-formed `.kbview` fragment - the SAME field name DSG-2's own
     /// `insertChild` op already uses (`DESIGNER.md` §8's "`insertChild
     /// {parentId, index, xml}`"), not the informal "`element`" the work
     /// package's own brief used in prose: the host forwards this op to
@@ -1519,7 +1519,7 @@ pub enum EditOp {
 }
 
 /// Which kind of gesture a batched [`SurfaceMessage::EditRequests`]
-/// (`crate::protocol`) carries — DSG-9's protocol extension (`DESIGNER.md`
+/// (`crate::protocol`) carries - DSG-9's protocol extension (`DESIGNER.md`
 /// §9): `{"ops":[...],"gesture":"move"|"resize"}`, so the host applies every
 /// op in one `IOleUndoManager`/`ITextUndoHistory` compound action (DSG-5's
 /// own scope, §2: "the same granularity WinForms' own designer gives a
@@ -1536,7 +1536,7 @@ pub enum Gesture {
     Format,
 }
 
-/// One frame's raw key state relevant to design mode — computed by the
+/// One frame's raw key state relevant to design mode - computed by the
 /// caller from whatever input source it has (`kubuno_desktop_controls::host`'s
 /// global reader in `examples/view_embed.rs`, a plain struct literal in this
 /// module's own tests), so [`DesignController::handle_keys`] itself needs no
@@ -1676,9 +1676,9 @@ impl Selection {
 // platform-neutral `kubuno-desktop-views-syntax` (`ids`, WV-1), re-exported here under their historical paths.
 pub use kubuno_desktop_views_syntax::ids::{is_ancestor_id, top_level_ids};
 
-/// Selection/hover state plus the request-generating logic — `DESIGNER.md`
+/// Selection/hover state plus the request-generating logic - `DESIGNER.md`
 /// §6's DSG-6 scope item 2: "a click selects the element under the cursor …
-/// Esc selects parent, Delete requests removal, arrows nudge (absolute) —
+/// Esc selects parent, Delete requests removal, arrows nudge (absolute) -
 /// all emitted as requests, never applied locally to the text". Nothing here
 /// ever mutates `.kbview` text itself; every state-changing gesture becomes
 /// an [`EditOp`] the caller forwards to the host (`crate::protocol::
@@ -1690,7 +1690,7 @@ pub use kubuno_desktop_views_syntax::ids::{is_ancestor_id, top_level_ids};
 /// that container it touches, Ctrl+A selects every sibling; a move/resize drag, an arrow nudge and
 /// Delete apply to every selected element.
 // No `Debug` derive: `DragSession` embeds `Rect`, which does not implement
-// it (see that struct's own comment) — `DesignController` never needed
+// it (see that struct's own comment) - `DesignController` never needed
 // `{:?}` printing itself (only its own `EditOp`/`Gesture` results do, and
 // those derive `Debug` independently).
 #[derive(Default)]
@@ -1698,7 +1698,7 @@ pub struct DesignController {
     enabled: bool,
     selection: Selection,
     hover: Option<String>,
-    /// DSG-9's move/resize/reorder drag state, `None` between gestures — see
+    /// DSG-9's move/resize/reorder drag state, `None` between gestures - see
     /// [`Self::press`]/[`Self::update_drag`]/[`Self::end_drag`]/
     /// [`Self::cancel_drag`].
     drag: Option<DragSession>,
@@ -1706,7 +1706,7 @@ pub struct DesignController {
     marquee: Option<MarqueeSession>,
 }
 
-/// Which gesture a [`DragSession`] is — the drag's OWN kind, decided once at
+/// Which gesture a [`DragSession`] is - the drag's OWN kind, decided once at
 /// [`DesignController::press`] time from the selected element's recorded
 /// [`LayoutKind`] (`DockAnchor` → `Move`/`Resize`, `Flow` → `Reorder`) and
 /// never changes for the life of the session.
@@ -1717,12 +1717,12 @@ enum DragKind {
     Reorder,
 }
 
-/// One in-progress drag — local state only, never written to `.kbview` text
+/// One in-progress drag - local state only, never written to `.kbview` text
 /// until [`DesignController::end_drag`] (`DESIGNER.md` §2's "intermediate
 /// mouse-move frames update the design surface's local, client-side preview
 /// only").
 // No `Debug` derive: `Rect` (from `kubuno_drive_desktop_app_controls`, re-exported by
-// `kubuno_desktop_ui`) does not implement it — see [`LayoutEntry`]'s own struct for
+// `kubuno_desktop_ui`) does not implement it - see [`LayoutEntry`]'s own struct for
 // the identical constraint.
 #[derive(Clone)]
 struct DragSession {
@@ -1731,7 +1731,7 @@ struct DragSession {
     element_id: String,
     parent_id: Option<String>,
     start_mouse: (f32, f32),
-    /// The primary element's own painted bounds when the drag armed — used as
+    /// The primary element's own painted bounds when the drag armed - used as
     /// the base every subsequent [`DesignController::update_drag`] offsets
     /// from. Absolute canvas DIP, same space as every [`LayoutEntry::bounds`]
     /// (a pure translation of the `X`/`Y`/`Width`/`Height` attribute space,
@@ -1742,7 +1742,7 @@ struct DragSession {
     /// `Move`/`Resize`: every element the gesture applies to (the top-level selected Anchor
     /// children, the primary included) with its bounds when the drag armed, and its live bounds.
     members: Vec<(String, Rect, Rect)>,
-    /// The snaplines that fired producing `live_bounds` — what
+    /// The snaplines that fired producing `live_bounds` - what
     /// [`DesignController::drag_guides`] paints.
     guides: Vec<SnapGuide>,
     /// `Reorder` only: the insertion index [`flow_insertion_index`] computed
@@ -1750,7 +1750,7 @@ struct DragSession {
     /// excluded) at the current pointer position.
     reorder_index: usize,
     /// `Reorder` only: `element_id`'s own index in `parent_id` when the drag
-    /// armed — [`DesignController::end_drag`] is a no-op when the pointer
+    /// armed - [`DesignController::end_drag`] is a no-op when the pointer
     /// never actually moved the index anywhere.
     reorder_original_index: usize,
     /// `Reorder` of a menu row only: another level of its menu it goes to (`crate::menus::drop_target`):
@@ -1761,7 +1761,7 @@ struct DragSession {
     /// (select-and-arm in one gesture); `true` from the start for a
     /// resize-handle press (unambiguous intent). Before that, a session
     /// exists (so mouse-up still reaches [`DesignController::end_drag`] and
-    /// cleans it up) but produces no visible preview and no `EditOp` —
+    /// cleans it up) but produces no visible preview and no `EditOp` -
     /// indistinguishable from a plain click that merely selected.
     confirmed: bool,
 }
@@ -1790,7 +1790,7 @@ struct MarqueeSession {
 }
 
 /// How far the pointer must move from the press point before an ARMED
-/// (`confirmed: false`) drag actually starts moving/reordering the element —
+/// (`confirmed: false`) drag actually starts moving/reordering the element -
 /// `DESIGNER.md` DSG-9 item 1: "start the drag once the pointer passes the
 /// drag threshold", the same WinForms/XAML-designer distinction between "a
 /// click that happens to land on a control" and "a drag of that control".
@@ -1860,7 +1860,7 @@ impl DesignController {
 
     /// `kubuno/setDesignMode {on}` (host → surface). Turning it off clears
     /// hover (a stale highlight from a moment ago would be misleading) but
-    /// deliberately keeps the selection — flipping back on with the same
+    /// deliberately keeps the selection - flipping back on with the same
     /// element still selected is the more useful default, and the host is
     /// free to send an explicit `select {id: null}` first if it wants the
     /// opposite.
@@ -1884,7 +1884,7 @@ impl DesignController {
         self.hover.as_deref()
     }
 
-    /// `kubuno/select {id}` (host → surface) — e.g. the XML pane's caret
+    /// `kubuno/select {id}` (host → surface) - e.g. the XML pane's caret
     /// moved onto a different element (`DESIGNER.md` §1's XML → Design
     /// selection sync). Replaces the whole selection; `None` clears it.
     pub fn set_selected(&mut self, id: Option<String>) {
@@ -1904,7 +1904,7 @@ impl DesignController {
         self.selection.set_many(ids, primary);
     }
 
-    /// Updates the hovered element from a raw pointer position — a no-op
+    /// Updates the hovered element from a raw pointer position - a no-op
     /// while design mode is off, so a caller can call this unconditionally
     /// every frame without its own `if design_mode` guard.
     pub fn update_hover(&mut self, layout: &LayoutMap, x: f32, y: f32) {
@@ -1919,7 +1919,7 @@ impl DesignController {
     /// `x, y`: selects the deepest element there, or clears the selection
     /// when the click landed on nothing. Returns whether the selection
     /// actually changed (what the caller uses to decide whether to emit
-    /// `selectionChanged`) — a no-op, returning `false`, while design mode
+    /// `selectionChanged`) - a no-op, returning `false`, while design mode
     /// is off.
     pub fn click_select(&mut self, layout: &LayoutMap, x: f32, y: f32) -> bool {
         if !self.enabled {
@@ -1931,15 +1931,15 @@ impl DesignController {
         changed
     }
 
-    /// Esc/Delete/arrow/Ctrl+A handling for the current selection — see the struct
+    /// Esc/Delete/arrow/Ctrl+A handling for the current selection - see the struct
     /// doc. Esc cancels a drag or a marquee, else moves the selection to the primary's parent (no
     /// [`EditOp`]); Ctrl+A selects the primary's siblings; Delete produces one `removeElement` per
     /// top-level selected element ([`top_level_ids`]); a nudging arrow one `setAttribute` per axis
     /// and per selected Anchor child. `doc` is the CURRENT document's parsed AST, needed only for a
-    /// nudge (to read each element's current literal `X`/`Y` before offsetting it — an `EditOp`
-    /// carries the new ABSOLUTE value, never a delta, per DSG-2's own `setAttribute` shape) —
+    /// nudge (to read each element's current literal `X`/`Y` before offsetting it - an `EditOp`
+    /// carries the new ABSOLUTE value, never a delta, per DSG-2's own `setAttribute` shape) -
     /// `None` degrades a nudge to a no-op rather than guessing. A no-op (nothing selected, design
-    /// mode off, no relevant key held, or a nudge with no Anchor child selected — flow children
+    /// mode off, no relevant key held, or a nudge with no Anchor child selected - flow children
     /// have no `X`/`Y` to nudge, `DESIGNER.md` §4) returns an empty `Vec`.
     pub fn handle_keys(&mut self, layout: &LayoutMap, doc: Option<&ast::Document>, keys: DesignKeyInput) -> Vec<EditOp> {
         if !self.enabled {
@@ -2029,7 +2029,7 @@ impl DesignController {
 
     // ── DSG-9: move/resize/reorder drag; §13: marquee ──────────────────
 
-    /// Whether a drag (move, resize, reorder) or a marquee is currently in progress —
+    /// Whether a drag (move, resize, reorder) or a marquee is currently in progress -
     /// what a caller (`examples/view_embed.rs`) checks to decide whether to
     /// paint the previews and whether the next mouse-up should call [`Self::end_drag`].
     pub fn is_dragging(&self) -> bool {
@@ -2046,11 +2046,11 @@ impl DesignController {
     /// - on a resize handle of the PRIMARY selection (an Anchor child, Ctrl not held): arms a
     ///   `Resize` immediately, `confirmed`, applying to every selected Anchor child;
     /// - on the empty area of a container that is not already selected and draggable (the view's
-    ///   root always): selects the container (no modifier) and arms a marquee inside it — Ctrl
+    ///   root always): selects the container (no modifier) and arms a marquee inside it - Ctrl
     ///   makes the marquee toggle, Shift add;
     /// - on anything else: Ctrl toggles it, Shift adds it, a plain press selects it (keeping the
-    ///   multi-selection, with it as the primary, when it was already selected) and — when it is
-    ///   still selected and draggable — ARMS the gesture in the same press: a group `Move` for an
+    ///   multi-selection, with it as the primary, when it was already selected) and - when it is
+    ///   still selected and draggable - ARMS the gesture in the same press: a group `Move` for an
     ///   Anchor child, a `Reorder` for a lone Flow child. The armed session starts
     ///   `confirmed: false` and produces nothing until [`Self::update_drag`] sees the pointer cross
     ///   [`DRAG_THRESHOLD`], so a plain click still just selects.
@@ -2163,7 +2163,7 @@ impl DesignController {
     fn begin_reorder(&mut self, layout: &LayoutMap, id: String, entry: &LayoutEntry, x: f32, y: f32, confirmed: bool) {
         // The dragged element's own starting index among ALL of its
         // parent's children (itself included, unlike `sibling_bounds` below)
-        // — what `end_drag` compares the final `reorder_index` against to
+        // - what `end_drag` compares the final `reorder_index` against to
         // decide whether anything actually moved.
         let original_index =
             layout.entries().iter().filter(|e| e.parent_id == entry.parent_id).position(|e| e.id == id).unwrap_or(0);
@@ -2183,11 +2183,11 @@ impl DesignController {
         });
     }
 
-    /// Updates the in-progress drag or marquee from the pointer's current position —
+    /// Updates the in-progress drag or marquee from the pointer's current position -
     /// harmless (a no-op) when [`Self::is_dragging`] is `false`. An ARMED but
     /// not yet `confirmed` session does nothing at all until the pointer crosses
     /// [`DRAG_THRESHOLD`] from the press point, at which point it becomes `confirmed` and this
-    /// same call already applies the full delta from the ORIGINAL press — no jump.
+    /// same call already applies the full delta from the ORIGINAL press - no jump.
     /// `suppress_snap` (Shift held) skips [`snap_bounds`] entirely for a `Move`/`Resize` session
     /// (`DESIGNER.md` §4's "Shift suppresses snapping, as WinForms does"). A group move snaps the
     /// bounds of the whole group against the primary's siblings that are not being moved.
@@ -2263,7 +2263,7 @@ impl DesignController {
         }
     }
 
-    /// The current live ghost rect of the PRIMARY element for a `Move`/`Resize` drag — `None` while
+    /// The current live ghost rect of the PRIMARY element for a `Move`/`Resize` drag - `None` while
     /// not dragging, during a `Reorder` (which has [`Self::reorder_marker`] instead), or while an
     /// armed session has not yet crossed [`DRAG_THRESHOLD`] (so a plain click never flashes a ghost).
     pub fn drag_preview(&self) -> Option<Rect> {
@@ -2283,7 +2283,7 @@ impl DesignController {
             .unwrap_or_default()
     }
 
-    /// The snaplines active in the current `Move`/`Resize` drag — always
+    /// The snaplines active in the current `Move`/`Resize` drag - always
     /// empty outside one.
     pub fn drag_guides(&self) -> &[SnapGuide] {
         self.drag.as_ref().map(|s| s.guides.as_slice()).unwrap_or(&[])
@@ -2299,7 +2299,7 @@ impl DesignController {
         self.marquee.as_ref().map(|m| m.hits.as_slice()).unwrap_or(&[])
     }
 
-    /// The Flow insertion marker for the current `Reorder` drag — `None`
+    /// The Flow insertion marker for the current `Reorder` drag - `None`
     /// while not reordering, or when `layout` has no entry for the parent
     /// container any more (a reload raced the drag).
     pub fn reorder_marker(&self, layout: &LayoutMap) -> Option<Rect> {
@@ -2315,7 +2315,7 @@ impl DesignController {
         Some(flow_insertion_marker(&siblings, container, session.reorder_index, 3.0))
     }
 
-    /// Cancels the in-progress drag or marquee with no [`EditOp`] — `DESIGNER.md` DSG-9
+    /// Cancels the in-progress drag or marquee with no [`EditOp`] - `DESIGNER.md` DSG-9
     /// item 1's "Esc during a drag cancels". Since a drag never writes text
     /// before [`Self::end_drag`], cancelling is simply dropping the session; nothing needs
     /// reverting (a marquee never changed the selection before its release).
@@ -2324,10 +2324,10 @@ impl DesignController {
         self.marquee = None;
     }
 
-    /// Ends the in-progress drag or marquee (mouse-up), consuming it — `None` outcome
+    /// Ends the in-progress drag or marquee (mouse-up), consuming it - `None` outcome
     /// while not dragging. A marquee changes the selection and never produces an edit. `doc` is
     /// the current document's parsed AST, needed only for a `Move`/`Resize` session (to read each
-    /// element's CURRENT literal `X`/`Y`/`Width`/`Height` before offsetting — the same
+    /// element's CURRENT literal `X`/`Y`/`Width`/`Height` before offsetting - the same
     /// "absolute value, never a delta" rule [`Self::handle_keys`]'s own nudge uses); `None`
     /// degrades a `Move`/`Resize` end to a no-op. A `Reorder` session needs no `doc` at all.
     pub fn end_drag(&mut self, doc: Option<&ast::Document>) -> DragOutcome {
@@ -2404,7 +2404,7 @@ impl DesignController {
     }
 }
 
-/// What ending a drag ([`DesignController::end_drag`]) produced — the shape
+/// What ending a drag ([`DesignController::end_drag`]) produced - the shape
 /// a caller (`examples/view_embed.rs`) matches on to decide which
 /// `SurfaceMessage` to send: a single op as the existing `editRequest`
 /// (matching Delete/nudge), a batch as the new DSG-9 `editRequests`.
@@ -2416,7 +2416,7 @@ pub enum DragOutcome {
 }
 
 /// The direct children's own painted bounds of `parent_id`, the `excluded` ones (the dragged
-/// elements) left out — the sibling geometry [`flow_insertion_index`]/
+/// elements) left out - the sibling geometry [`flow_insertion_index`]/
 /// [`flow_insertion_marker`] and [`snap_bounds`]'s own candidates are built
 /// from.
 fn sibling_bounds(layout: &LayoutMap, parent_id: &Option<String>, excluded: &[String]) -> Vec<Rect> {
@@ -2429,9 +2429,9 @@ fn sibling_bounds(layout: &LayoutMap, parent_id: &Option<String>, excluded: &[St
         .collect()
 }
 
-/// [`sibling_bounds`] plus the container's OWN outer bounds — the snap
+/// [`sibling_bounds`] plus the container's OWN outer bounds - the snap
 /// candidate set for a `Move`/`Resize` drag (`DESIGNER.md` DSG-9 item 1's
-/// "sibling edges/centres AND container padding" — see [`snap_bounds`]'s own
+/// "sibling edges/centres AND container padding" - see [`snap_bounds`]'s own
 /// doc for why a container candidate is its outer bounds, the padding-`0`
 /// line).
 fn snap_candidates(layout: &LayoutMap, parent_id: &Option<String>, excluded: &[String]) -> Vec<Rect> {
@@ -2445,10 +2445,10 @@ fn snap_candidates(layout: &LayoutMap, parent_id: &Option<String>, excluded: &[S
 }
 
 // ─────────────────────────────────────────────────────────────────────────
-// DSG-9: toolbox drop — host→surface `dragEnter`/`dragOver`/`drop`/
+// DSG-9: toolbox drop - host→surface `dragEnter`/`dragOver`/`drop`/
 // `dragLeave` (`crate::protocol::HostMessage`), independent of click
 // selection above (a toolbox drag has no `DesignController` selection of its
-// own — the dragged thing is a NEW, not-yet-inserted component).
+// own - the dragged thing is a NEW, not-yet-inserted component).
 // ─────────────────────────────────────────────────────────────────────────
 
 /// A new element's default size when dropped into an Anchor/absolute container, DIP - what the
@@ -2494,24 +2494,24 @@ pub fn user_control_design_size(component: &str) -> Option<(f32, f32)> {
 /// anchoring (`AnchorStyles.Top | AnchorStyles.Left`), written out so the Properties window shows it.
 pub const DEFAULT_DROP_ANCHOR: &str = "Top, Left";
 
-/// Where a toolbox drop would land right now — computed by
+/// Where a toolbox drop would land right now - computed by
 /// [`ToolboxController::drag_over`], consumed by
 /// [`ToolboxController::drop`] and painted by [`paint_drop_marker`].
 #[derive(Clone)]
 pub struct DropTarget {
     pub parent_id: String,
     /// The insertion index for a Flow parent, or the (already validity-
-    /// checked) append index (`children.len()`) for anything else —
+    /// checked) append index (`children.len()`) for anything else -
     /// [`crate::edit::insert_child`]'s own "at or past the current child
     /// count appends" contract makes an always-valid index cheap to compute
     /// even when a Flow-specific index would not otherwise apply.
     pub index: usize,
-    /// `Some((x, y))` — the new element's `X`/`Y` attribute values, parent-
-    /// LOCAL DIP — only when the parent's own registry [`LayoutKind`] is
+    /// `Some((x, y))` - the new element's `X`/`Y` attribute values, parent-
+    /// LOCAL DIP - only when the parent's own registry [`LayoutKind`] is
     /// `DockAnchor`; `None` for a Flow/other parent (no `X`/`Y` to set).
     pub xy: Option<(f32, f32)>,
     /// Whether `component` (the string [`ToolboxController::drag_enter`] was
-    /// given) is actually allowed here — [`can_drop_component`]'s own
+    /// given) is actually allowed here - [`can_drop_component`]'s own
     /// registry check. `DESIGNER.md` DSG-9 item 3's "not allowed" marker.
     pub valid: bool,
     /// What [`paint_drop_marker`] paints: an outline ghost of the new
@@ -2521,7 +2521,7 @@ pub struct DropTarget {
 
 /// Host-driven toolbox drag/drop (`DESIGNER.md` DSG-9 item 3): the VS
 /// Toolbox drag is OLE/WPF on the host side, translated into these four
-/// plain messages before reaching the surface at all — this controller only
+/// plain messages before reaching the surface at all - this controller only
 /// ever sees `(component, x, y)`, never a live OS drag object.
 #[derive(Default)]
 pub struct ToolboxController {
@@ -2538,7 +2538,7 @@ impl ToolboxController {
         Self::default()
     }
 
-    /// `kubuno/dragEnter {component}` — `component` is a registry element
+    /// `kubuno/dragEnter {component}` - `component` is a registry element
     /// name (`"Button"`), not yet validated against anything (that happens
     /// per-position in [`Self::drag_over`], since validity depends on WHERE
     /// the pointer is).
@@ -2547,7 +2547,7 @@ impl ToolboxController {
         self.target = None;
     }
 
-    /// `kubuno/dragLeave` — clears the drag entirely (a fresh `dragEnter`
+    /// `kubuno/dragLeave` - clears the drag entirely (a fresh `dragEnter`
     /// must follow before another `dragOver`/`drop` does anything).
     pub fn drag_leave(&mut self) {
         self.component = None;
@@ -2562,7 +2562,7 @@ impl ToolboxController {
     }
 
     /// While a control is dragged from the Toolbox over a view with a title band: the band's three drop zones
-    /// (`TitleBar.Region` Left, Center, Right — [`band_drop_zones`]) and the one the pointer is over, for
+    /// (`TitleBar.Region` Left, Center, Right - [`band_drop_zones`]) and the one the pointer is over, for
     /// [`paint_band_drop_zones`].
     pub fn band_zones(&self) -> Option<(BandZones, Option<&'static str>)> {
         let component = self.component.as_deref()?;
@@ -2580,14 +2580,14 @@ impl ToolboxController {
 
     /// `kubuno/dragOver {x, y}`: recomputes and stores the current drop
     /// target, returning it (`None` for no active drag, no element under the
-    /// point, or a hit whose leaf has no recorded parent at all — never
+    /// point, or a hit whose leaf has no recorded parent at all - never
     /// expected once there is a root element).
     ///
     /// Routing rule: if the element directly under the pointer itself
     /// accepts children (its own registry `ChildrenModel != None`), the drop
     /// targets THAT element (dropping "into" it); otherwise it targets the
     /// hit element's own PARENT (dropping "near" a leaf targets its
-    /// container) — the same rule a WinForms-class designer uses to decide
+    /// container) - the same rule a WinForms-class designer uses to decide
     /// "drop into this container" vs. "drop next to this control".
     pub fn drag_over(&mut self, layout: &LayoutMap, doc: &ast::Document, x: f32, y: f32) -> Option<&DropTarget> {
         let component = self.component.clone()?;
@@ -2669,7 +2669,7 @@ impl ToolboxController {
         self.target.as_ref()
     }
 
-    /// `kubuno/drop {x, y}` — consumes the drag entirely (a fresh
+    /// `kubuno/drop {x, y}` - consumes the drag entirely (a fresh
     /// `dragEnter` is needed for another drop), returning the
     /// [`EditOp::InsertChild`] the host forwards to `kubuno-desktop-views-ls`'s
     /// `kubuno/applyEdit`, or `None` when there is no active drag, no
@@ -2705,8 +2705,8 @@ impl ToolboxController {
 pub type BandZones = [(&'static str, Rect); 3];
 
 /// The title band's three drop zones, in `TitleBar.Region` order (Left, Center, Right): the band between the
-/// window's icon and its caption buttons cut in thirds — the centre zone around the band's middle, where the centre
-/// region is — each zone given to the region on its side (mirrored for a right-to-left window, whose caption
+/// window's icon and its caption buttons cut in thirds - the centre zone around the band's middle, where the centre
+/// region is - each zone given to the region on its side (mirrored for a right-to-left window, whose caption
 /// buttons are on the left). Inset vertically, so the zones read as targets inside the band.
 pub fn band_drop_zones(band: &kubuno_desktop_controls::window_chrome::ChromeLayout) -> [(&'static str, Rect); 3] {
     let b = band.band;
@@ -2728,7 +2728,7 @@ pub fn band_drop_zones(band: &kubuno_desktop_controls::window_chrome::ChromeLayo
 }
 
 /// The title band's drop zones while a Toolbox control is dragged over the view: a dashed outline around each, the
-/// one under the pointer washed with the accent — the band's regions are where the control can go.
+/// one under the pointer washed with the accent - the band's regions are where the control can go.
 pub fn paint_band_drop_zones(c: &dyn kubuno_desktop_controls::ControlCanvas, theme: &kubuno_desktop_ui::Theme, zones: &[(&'static str, Rect); 3], hot: Option<&str>) {
     for (region, zone) in zones {
         if zone.right - zone.left < 4.0 {
@@ -2747,11 +2747,11 @@ pub fn paint_band_drop_zones(c: &dyn kubuno_desktop_controls::ControlCanvas, the
 }
 
 /// Whether `component` may be inserted as one of `container_name`'s
-/// children, given it already has `existing_children` — `DESIGNER.md` DSG-9
+/// children, given it already has `existing_children` - `DESIGNER.md` DSG-9
 /// item 3's "Validate against the registry's allowed children (typed
 /// ChildrenModel)". Mirrors `crate::validate`'s own gating rule (a gated
-/// child name — one that appears in SOME component's own `allowed` list
-/// anywhere in the registry — is only valid directly under a parent whose
+/// child name - one that appears in SOME component's own `allowed` list
+/// anywhere in the registry - is only valid directly under a parent whose
 /// own `allowed` names it; an ungated name is fine under any `List`
 /// container) at the single-candidate granularity a drop needs, rather than
 /// reusing that module's own whole-document walk (`crate::validate::walk` is
@@ -2775,7 +2775,7 @@ fn can_drop_component(container_name: &str, existing_children: usize, component:
     }
 }
 
-/// Whether `name` is some OTHER component's gated child — see
+/// Whether `name` is some OTHER component's gated child - see
 /// `crate::validate`'s identically-purposed (and identically named, in
 /// spirit) private helper; duplicated here in miniature rather than made
 /// `pub(crate)` there, since this module owns no other coupling to
@@ -2784,7 +2784,7 @@ fn is_gated_anywhere(name: &str) -> bool {
     registry::all().iter().any(|c| matches!(c.children, ChildrenModel::List(allowed) if allowed.contains(&name)))
 }
 
-/// The new element's `.kbview` skeleton for [`ToolboxController::drop`] —
+/// The new element's `.kbview` skeleton for [`ToolboxController::drop`] -
 /// `<Component/>` for a Flow/other parent, `<Component X="…" Y="…"
 /// Width="…" Height="…" Anchor="Top, Left"/>` for an Anchor one: placed at the
 /// drop point with its [`default_drop_size`] and WinForms' default anchoring.
@@ -3110,7 +3110,7 @@ pub fn declared_design_size(doc: Option<&ast::Document>) -> Option<(f32, f32)> {
 }
 
 /// The view's title for the frame's title bar: the root element's literal `Title` (a
-/// `{Binding …}` is shown as-is — it is resolved only at runtime), `None` when absent.
+/// `{Binding …}` is shown as-is - it is resolved only at runtime), `None` when absent.
 pub fn view_title(doc: Option<&ast::Document>) -> Option<String> {
     let title = doc?.root_element()?.attribute("Title")?.value()?;
     // A `{Res …}` title shows the resource in the design-time culture (vskubuno docs/RESOURCES.md).
@@ -3126,7 +3126,7 @@ pub fn view_title(doc: Option<&ast::Document>) -> Option<String> {
 }
 
 /// The edits a canvas resize to `width`×`height` produces (one `setAttribute` on the root per
-/// axis whose rounded value changed, on the attribute [`design_size`] says holds it) — sent as
+/// axis whose rounded value changed, on the attribute [`design_size`] says holds it) - sent as
 /// ONE `editRequests` batch so the host applies it as one undo unit. Empty when nothing changed.
 pub fn design_size_ops(doc: &ast::Document, width: f32, height: f32) -> Vec<EditOp> {
     let current = design_size(Some(doc));
@@ -3141,7 +3141,7 @@ pub fn design_size_ops(doc: &ast::Document, width: f32, height: f32) -> Vec<Edit
 }
 
 /// After a canvas resize, the edits that make every anchored child of a Dock/Anchor container
-/// (`<Panel>`) keep the place the resize gave it — what the WinForms designer does when a form is
+/// (`<Panel>`) keep the place the resize gave it - what the WinForms designer does when a form is
 /// resized: the controls its anchors moved or stretched get their new `Location`/`Size` written.
 /// Without this, the new design size would become the panels' anchoring reference and the children
 /// would jump back to their old coordinates. `layout` is the frame painted AT the new size; each
@@ -3366,7 +3366,7 @@ pub fn paint_view_frame(
     paint_view_caption(c, frame, &style);
 }
 
-/// What the designer's window frame shows of the view's `Form` properties — everything the window
+/// What the designer's window frame shows of the view's `Form` properties - everything the window
 /// itself will show at run time (`WindowKind`, `FormBorderStyle`, the caption buttons, `Icon`,
 /// `Subtitle`, the title bar's height and colours, `CornerPreference`, `BorderColor`, the grip…),
 /// so the designer and the running window are painted by the same code
@@ -3377,7 +3377,7 @@ pub struct ViewFrameStyle {
     /// The root element's window properties.
     pub spec: crate::window::FormSpec,
     /// The view is a user control's (`<UserControl x:Class="…">`): designed as a plain surface, with
-    /// no window frame, title band nor caption buttons — like the Windows Forms UserControl designer.
+    /// no window frame, title band nor caption buttons - like the Windows Forms UserControl designer.
     pub user_control: bool,
 }
 
@@ -3475,7 +3475,7 @@ pub fn paint_view_frame_styled(
 
 /// Paints what sits on the band, AFTER the view (so the view's title-bar regions are known, see
 /// `crate::window::declared_slots`): the window's icon, its title and subtitle, and its caption
-/// buttons, inert — then the resize grip of a resizable window. The same painter as the running
+/// buttons, inert - then the resize grip of a resizable window. The same painter as the running
 /// window's ([`kubuno_desktop_controls::window_chrome::paint_caption`]).
 pub fn paint_view_caption(c: &dyn kubuno_desktop_controls::ControlCanvas, frame: &FrameLayout, style: &ViewFrameStyle) {
     use kubuno_desktop_controls::window_chrome as wc;
@@ -3558,7 +3558,7 @@ pub enum DesignCommand {
 
 /// A nudged coordinate as the plain literal text an `X`/`Y` attribute
 /// already uses elsewhere in this crate (`compile.rs`'s own worked examples
-/// write `Width="320"`, not `"320.0"`) — an integer DIP prints without a
+/// write `Width="320"`, not `"320.0"`) - an integer DIP prints without a
 /// decimal point, anything else keeps one.
 fn format_dip(value: f32) -> String {
     if value.fract() == 0.0 {
@@ -3666,12 +3666,12 @@ mod tests {
 
     // `DesignSlot::paint` itself (the wrapping that turns "compiled a tree"
     // into "recorded a LayoutMap") is exercised where it can actually run:
-    // `crate::compile`'s own tests confirm every element — including a
-    // `<Panel>` child, the `LayoutKind::DockAnchor` case — builds through the
+    // `crate::compile`'s own tests confirm every element - including a
+    // `<Panel>` child, the `LayoutKind::DockAnchor` case - builds through the
     // updated `build_node` without panicking; a live paint pass needs a real
     // `kubuno_desktop_controls::ControlCanvas` (Direct2D/DirectWrite), which nothing
     // in this crate's test suite constructs (see `crate::node`'s own tests'
-    // doc for why) — exactly the "without a Canvas where possible" carve-out,
+    // doc for why) - exactly the "without a Canvas where possible" carve-out,
     // covered instead by the visual check (this package's `view_embed.rs`).
 
     // ── adorner geometry ────────────────────────────────────────────────
@@ -3730,7 +3730,7 @@ mod tests {
     fn dotted_outline_is_crisp_one_device_pixel_at_fractional_dpi_scale() {
         // 175% DPI: scale = 1.75. Every dot must still be exactly ONE device
         // pixel wide/tall once converted back to DIP (1.0 / 1.75), never a
-        // blurred/anti-aliased fraction of a pixel — the whole point of
+        // blurred/anti-aliased fraction of a pixel - the whole point of
         // walking the perimeter in device pixels rather than DIPs.
         let scale = 1.75_f32;
         let bounds = Rect::new(0.3, 0.3, 20.7, 12.1); // deliberately not pixel-aligned
@@ -4067,7 +4067,7 @@ mod tests {
         assert!(changed, "selection changed from nothing to \"0.0\"");
         assert_eq!(dc.selected(), Some("0.0"));
         // Armed in the SAME press (`DESIGNER.md` DSG-9's press-and-drag fix)
-        // — but not yet confirmed, so no preview until the pointer moves.
+        // - but not yet confirmed, so no preview until the pointer moves.
         assert!(dc.is_dragging());
         assert!(dc.drag_preview().is_none());
     }
@@ -4227,7 +4227,7 @@ mod tests {
     #[cfg(feature = "family-containers")]
     #[test]
     fn toolbox_drop_into_an_empty_anchor_container_carries_xy() {
-        // `<Panel/>` is itself the document's ROOT element (stable id `""`) —
+        // `<Panel/>` is itself the document's ROOT element (stable id `""`) -
         // there is no separate wrapper node to give a child id.
         let mut map = LayoutMap::new();
         map.push(entry("", None, Rect::new(0.0, 0.0, 400.0, 300.0), LayoutKind::None));
@@ -4313,7 +4313,7 @@ mod tests {
         let mut tb = ToolboxController::new();
         tb.drag_enter("Switch".to_string());
         // Point lands inside the existing `<Button>` leaf ("0"), below its
-        // own midpoint — which does not itself accept children, so the
+        // own midpoint - which does not itself accept children, so the
         // target must be its parent Stack, inserted AFTER the Button.
         let target = tb.drag_over(&map, &doc, 10.0, 25.0).cloned().unwrap();
         assert_eq!(target.parent_id, "");

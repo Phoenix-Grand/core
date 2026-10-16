@@ -1,7 +1,7 @@
-//! [`ConnectionStringBuilder`]: parses and writes connection strings in both usual forms —
+//! [`ConnectionStringBuilder`]: parses and writes connection strings in both usual forms -
 //! `Host=db.example;Database=app;Username=app;Password={secret:DbPassword}` (ADO.NET style, keys
 //! case-insensitive, with the common aliases) and URLs (`postgres://app@db.example/app?sslmode=require`,
-//! `sqlite:app.db`) — and never shows a password: `Display` and `Debug` write `***` instead.
+//! `sqlite:app.db`) - and never shows a password: `Display` and `Debug` write `***` instead.
 
 use std::fmt;
 

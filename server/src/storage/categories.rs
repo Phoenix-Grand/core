@@ -7,7 +7,7 @@
 //! The whole point of the breakdown is that the shares add up. A free-text
 //! category lets `drive` write `"thumbs"` while `photos` writes `"thumbnails"`,
 //! and the console then shows two slices of the same thing that no operator can
-//! compare — and, worse, lets a module invent a category the core does not know
+//! compare - and, worse, lets a module invent a category the core does not know
 //! is billable, so the quota silently changes meaning. The list below is short,
 //! technical, and refused at the door when a module strays outside it.
 //!
@@ -17,7 +17,7 @@
 //!
 //! That is the whole rule, and it is sharper than "user content" because it is
 //! decidable: point at the handle. Files, the bin and a revision history the
-//! account can purge all have one — deleting, emptying, turning versioning off.
+//! account can purge all have one - deleting, emptying, turning versioning off.
 //! Thumbnails, search indexes, transcodes and upload chunks have none: the
 //! account never asked for them, cannot enumerate them and cannot remove them,
 //! so charging for them would be charging for a decision it did not make and
@@ -29,28 +29,28 @@
 //! so its history is [`Category::Versions`] and billed. `office` keeps up to
 //! `office.max_versions` revisions with no way to remove one, so its history is
 //! [`Category::Retention`] and not billed. A module that wants its retention
-//! billed does not relabel it — it gives the account a delete button.
+//! billed does not relabel it - it gives the account a delete button.
 //!
 //! ## The two properties, and why they are separate
 //!
-//! * [`Category::is_billable`] — does this count against the account's quota?
+//! * [`Category::is_billable`] - does this count against the account's quota?
 //!   Answered by the criterion above.
-//! * [`Category::is_held`] — does this count toward the physical volume
+//! * [`Category::is_held`] - does this count toward the physical volume
 //!   attributed to the declaring module? Everything the module actually stores
 //!   does, billable or not. Exactly one category is *not* held
-//!   ([`Category::Delegated`]) — see its own note.
+//!   ([`Category::Delegated`]) - see its own note.
 //!
 //! Billed is therefore always a subset of held, and the console shows both: the
 //! operator sizes a disk on `held`, the account is charged on `billable`.
 //!
-//! ## ⚠️ PRIVACY — the line this vocabulary exists to hold
+//! ## ⚠️ PRIVACY - the line this vocabulary exists to hold
 //!
 //! These identifiers are the ONLY thing an administrator ever learns about the
 //! *shape* of what an account stores. A category is a technical role
 //! ("thumbnails", "index"), never a subject, a document type, a file name, a
 //! folder name or a path. Adding a category such as `photos`, `invoices`,
 //! `medical` or `videos` would turn a capacity-planning page into a window on
-//! someone's life, and is forbidden — however useful it would look on a chart.
+//! someone's life, and is forbidden - however useful it would look on a chart.
 //! The test `no_category_names_a_kind_of_content` guards the boundary.
 
 use serde::{Deserialize, Serialize};
@@ -72,15 +72,15 @@ pub enum Category {
     /// as a category of its own precisely because it is billed: when an account
     /// saturates, "3 GiB of that is your bin" is the single most useful thing an
     /// operator can say, and the first thing to suggest before granting more
-    /// room. Managing the bin is the account's own job — emptying it is its
-    /// gesture and its decision — which is exactly the billing criterion, and
+    /// room. Managing the bin is the account's own job - emptying it is its
+    /// gesture and its decision - which is exactly the billing criterion, and
     /// charging for it is also the only thing that makes emptying it mean
     /// anything.
     Trash,
 
     /// Earlier revisions of the account's own documents, **which the account can
     /// purge**: turn versioning off, or delete a revision one at a time. Billed,
-    /// by the criterion — there is a handle and the account holds it.
+    /// by the criterion - there is a handle and the account holds it.
     ///
     /// A module whose history the account cannot reach must use
     /// [`Category::Retention`] instead. The distinction is not cosmetic: it is
@@ -88,18 +88,18 @@ pub enum Category {
     Versions,
 
     /// Copies the module keeps by its own policy and that the account has **no
-    /// way to remove** — an automatic revision log with no delete, a journal
+    /// way to remove** - an automatic revision log with no delete, a journal
     /// pruned only by a counter in the module's settings.
     ///
     /// Not billed, by the criterion: there is no handle. This category exists to
     /// stop a module from quietly billing its retention policy under the name
-    /// `versions`, and its presence on the console is a standing question —
-    /// "why can nobody clear this?" — rather than a charge.
+    /// `versions`, and its presence on the console is a standing question -
+    /// "why can nobody clear this?" - rather than a charge.
     Retention,
 
     /// Thumbnails, previews, poster frames. Not billed: derived renderings the
     /// module makes for its own display, regenerable from the content, and
-    /// created without the account ever asking — drive generates one the first
+    /// created without the account ever asking - drive generates one the first
     /// time a file is merely *looked at*.
     Thumbnails,
 
@@ -116,7 +116,7 @@ pub enum Category {
     /// must not leave a charge behind.
     Staging,
 
-    /// Resources the platform installs so the module can work — dictionaries,
+    /// Resources the platform installs so the module can work - dictionaries,
     /// fonts, themes. They sit inside the account's tree for technical reasons
     /// but the account did not put them there and cannot meaningfully remove
     /// them. Not billed: this is the clearest case of "what the module needs in
@@ -124,7 +124,7 @@ pub enum Category {
     System,
 
     /// Bytes this module caused to exist but that **another module physically
-    /// holds** — the declaration that makes the attribution rule visible instead
+    /// holds** - the declaration that makes the attribution rule visible instead
     /// of merely respected.
     ///
     /// Neither billed nor held: the holder already declared these exact bytes,
@@ -179,7 +179,7 @@ impl Category {
         Category::ALL.iter().copied().find(|c| c.as_str() == s)
     }
 
-    /// Counts against `core.users.quota_bytes` — true exactly for the
+    /// Counts against `core.users.quota_bytes` - true exactly for the
     /// categories the account can free itself.
     pub fn is_billable(self) -> bool {
         matches!(self, Category::Content | Category::Trash | Category::Versions)
@@ -187,7 +187,7 @@ impl Category {
 
     /// Counts toward the physical volume attributed to the declaring module.
     ///
-    /// False for [`Category::Delegated`] alone — those bytes belong to another
+    /// False for [`Category::Delegated`] alone - those bytes belong to another
     /// module's total and are already counted there.
     pub fn is_held(self) -> bool {
         !matches!(self, Category::Delegated)
@@ -271,7 +271,7 @@ mod tests {
     }
 
     /// The criterion is decidable, so the two revision categories must land on
-    /// opposite sides — otherwise the distinction between a history somebody
+    /// opposite sides - otherwise the distinction between a history somebody
     /// chose and one imposed on them has no effect anywhere.
     #[test]
     fn a_purgeable_history_is_billed_and_an_imposed_one_is_not() {
@@ -284,7 +284,7 @@ mod tests {
     fn billed_is_always_a_subset_of_held() {
         for c in Category::ALL {
             if c.is_billable() {
-                assert!(c.is_held(), "{c} is billed but not held — the totals cannot add up");
+                assert!(c.is_held(), "{c} is billed but not held - the totals cannot add up");
             }
         }
     }

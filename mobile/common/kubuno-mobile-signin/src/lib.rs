@@ -1,6 +1,6 @@
 //! The Kubuno mobile sign-in, shared by every app.
 //!
-//! Three screens built from the shared controls — server, credentials, two-step verification ([`VIEWS`]) — and the
+//! Three screens built from the shared controls - server, credentials, two-step verification ([`VIEWS`]) - and the
 //! flow that drives them over the account layer: check the server (`GET /health`), sign in natively, verify the
 //! second factor when the account has one, then hand the app a [`Session`]. An app adds [`VIEWS`] to its own screens,
 //! shows `VIEWS[`[`view_index`]`()]` while signing in, passes its events to [`handle`], and receives the session in the

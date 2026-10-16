@@ -1,4 +1,4 @@
-//! `/admin/rules` — the HTTP surface of the rule engine.
+//! `/admin/rules` - the HTTP surface of the rule engine.
 //!
 //! Reads are gated on `core.rules.read`; **every write is gated on
 //! `core.rules.manage`**, which no seeded role holds. That separation is the
@@ -7,7 +7,7 @@
 //! not imply "can arm that".
 //!
 //! Every mutation rides an audited transaction ([`crate::audit::AuditTx`]), so a
-//! rule cannot be created, edited, re-armed or deleted without its trail entry —
+//! rule cannot be created, edited, re-armed or deleted without its trail entry -
 //! and a mode change is audited as its own action, because "who turned this on"
 //! is the first question after an automatic suspension.
 
@@ -29,7 +29,7 @@ use crate::rules::{
 use crate::state::AppState;
 
 /// Audit target type for a rule. Local to this surface: the redaction
-/// whitelist has no rule shape, and a rule carries no secret — what is recorded
+/// whitelist has no rule shape, and a rule carries no secret - what is recorded
 /// is its name and its mode, never its condition tree.
 const TARGET_RULE: &str = "rule";
 
@@ -71,7 +71,7 @@ fn audit_snapshot(rule: &crate::rules::Rule) -> Value {
 
 // ── Catalogue ────────────────────────────────────────────────────────────────
 
-/// `GET /api/v1/admin/rules/catalog` — everything a rule can react to and do.
+/// `GET /api/v1/admin/rules/catalog` - everything a rule can react to and do.
 ///
 /// Served from the tables modules fill at registration, so a module installed
 /// five minutes ago is offered here without the core having heard of it.
@@ -84,7 +84,7 @@ pub async fn get_catalog(
     let actions = catalog::list_actions(&state.db).await?;
     // Content detectors are catalogue entries like everything else, so the
     // condition builder learns about the `detector` leaf the same way it learns
-    // about a trigger's fields — by reading this response. That is what let the
+    // about a trigger's fields - by reading this response. That is what let the
     // detector leaf arrive without the builder being rewritten for it.
     let detectors = crate::rules::detect::store::list(&state.db).await?;
     Ok(Json(json!({
@@ -95,7 +95,7 @@ pub async fn get_catalog(
         "operators": Operator::ALL.iter().map(|o| o.as_str()).collect::<Vec<_>>(),
         "modes":     Mode::SETTABLE.iter().map(|m| m.as_str()).collect::<Vec<_>>(),
         // The kinds of leaf a condition tree may hold. `compare` reads a fact,
-        // `detector` reads a content part — and there is no third, because the
+        // `detector` reads a content part - and there is no third, because the
         // vocabulary is an enum rather than a language.
         "leaf_types": ["compare", "detector"],
         // Enabled detectors only: offering a disabled one would let an operator
@@ -141,7 +141,7 @@ pub async fn list_rules(
     Ok(Json(json!({
         "rules": rules.iter().map(rule_json).collect::<Vec<_>>(),
         // What the engine is actually running right now, which is not always
-        // what the table says — a rule whose trigger vanished is stored but not
+        // what the table says - a rule whose trigger vanished is stored but not
         // indexed, and an operator must be able to see the difference.
         "indexed": indexed,
         "engine_enabled": store::engine_enabled(&state.db).await,
@@ -282,7 +282,7 @@ pub struct ModeDto {
     pub change_note: Option<String>,
 }
 
-/// `POST /api/v1/admin/rules/:id/mode` — the one-click arm/disarm.
+/// `POST /api/v1/admin/rules/:id/mode` - the one-click arm/disarm.
 ///
 /// Goes through the same validation and the same versioning as a full edit: a
 /// mode change is a new version of the rule, because "which version acted" must
@@ -405,7 +405,7 @@ pub async fn list_versions(
     })))
 }
 
-/// `GET /api/v1/admin/rules/executions` — what the engine actually did.
+/// `GET /api/v1/admin/rules/executions` - what the engine actually did.
 pub async fn list_executions(
     State(state): State<AppState>,
     ctx: AdminCtx,
@@ -427,7 +427,7 @@ pub struct BacktestDto {
     pub to: Option<chrono::DateTime<chrono::Utc>>,
 }
 
-/// `POST /api/v1/admin/rules/:id/backtest` — "what would this have done?"
+/// `POST /api/v1/admin/rules/:id/backtest` - "what would this have done?"
 ///
 /// Requires only `core.rules.read`: a replay changes nothing, acts on nobody and
 /// alerts no one. Making it a write privilege would push operators to arm a rule
@@ -445,7 +445,7 @@ pub async fn start_backtest(
     let row = store::create_backtest(&state.db, &rule, from, to, Some(ctx.user_id)).await?;
 
     // Driven by the existing runner, so a replay of a month of events cannot
-    // hold an HTTP request open — or die with it.
+    // hold an HTTP request open - or die with it.
     queue::enqueue(
         &state.db,
         NewJob::new(backtest::BACKTEST_JOB)

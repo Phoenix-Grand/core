@@ -1,4 +1,4 @@
-# Changelog — @kubuno/views-compiler
+# Changelog - @kubuno/views-compiler
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Entries are
 added under `[Unreleased]` **as the change is made**; on npm publish, the section is stamped
@@ -34,7 +34,7 @@ under the published version number.
 ### Added
 
 - **User controls become native, typed elements (WV-7).** `userControlsOf` now reads each `.kbcontrol`'s
-  `x:Props` type from its code-behind (through the TypeScript API, already a peer dependency — no new
+  `x:Props` type from its code-behind (through the TypeScript API, already a peer dependency - no new
   dependency) and hands its members to the compiler: a value field becomes a bindable property, a function
   field becomes an event. Another view can then use the control as a typed element (`<SearchResultRow
   File="{Binding file}" OnOpen="handler"/>`) and binding an object or wiring a function type-checks. A control
@@ -57,7 +57,7 @@ under the published version number.
 
 - **Module projects open in the Visual Studio designer with their own code.** With `@kubuno/host-runtime` installed
   as a devDependency, a module's development server serves that package's design page, and the module's views render
-  with their code-behinds, their own controls and React parts, the host's real elements, translations and themes —
+  with their code-behinds, their own controls and React parts, the host's real elements, translations and themes -
   instead of placeholders. The host's shared libraries (`react`, `@ui`, `@kubuno/sdk`, `@kubuno/drive`,
   `@kubuno/views`, `i18next`, `zustand`, …) resolve to the package's single copies, as the host's import map does in
   production, so the page and the module share one instance of each. Production builds are unchanged.

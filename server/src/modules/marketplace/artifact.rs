@@ -4,7 +4,7 @@
 //! **Un seul format : `.kbpkg`.** Un module n'est pas un logiciel système ; il
 //! n'enregistre aucun service et la marketplace n'a jamais appelé `dpkg`. Le
 //! `.kbpkg` (archive ZIP dont la racine est le dossier du module) est le seul
-//! format que le core installe — le seul aussi qu'il déballe sans outil externe,
+//! format que le core installe - le seul aussi qu'il déballe sans outil externe,
 //! donc le seul qui marche à l'identique sur Linux, Windows et macOS. Les paquets
 //! système (`.deb`, `.rpm`, `.exe`, `.pkg`) ne sont plus ni produits ni acceptés
 //! pour un module ; un module qui n'aurait publié que ceux-là pour la plateforme
@@ -42,13 +42,13 @@ fn parse_owner_repo(repo_url: &str) -> Option<(String, String)> {
     Some((owner, name))
 }
 
-/// `true` si `name` désigne un paquet Kubuno — le seul format d'un module.
+/// `true` si `name` désigne un paquet Kubuno - le seul format d'un module.
 pub(super) fn is_kbpkg(name: &str) -> bool {
     name.to_ascii_lowercase().ends_with(".kbpkg")
 }
 
 /// Artefact résolu : URL + empreinte SHA-256 (si publiée). Le format est
-/// implicite — c'est toujours un `.kbpkg` (archive ZIP).
+/// implicite - c'est toujours un `.kbpkg` (archive ZIP).
 pub(super) struct Artifact {
     pub url:    String,
     pub sha256: Option<String>,
@@ -57,7 +57,7 @@ pub(super) struct Artifact {
 /// Une URL d'artefact est-elle acceptable ?
 ///
 /// HTTPS exigé : le catalogue est authentifié par sa signature, mais l'artefact
-/// se télécharge ailleurs — en clair, n'importe qui sur le chemin le remplace.
+/// se télécharge ailleurs - en clair, n'importe qui sur le chemin le remplace.
 /// L'empreinte le rattraperait, sauf qu'on ne veut pas dépendre d'un seul
 /// rempart. Exception faite de la boucle locale, qui n'a pas de chemin réseau à
 /// détourner et sans laquelle on ne peut pas éprouver le dispositif.
@@ -73,18 +73,18 @@ fn acceptable_url(url: &str) -> bool {
 /// Traduit la recommandation du catalogue en artefact téléchargeable.
 ///
 /// Le catalogue a déjà fait le tri pour la plateforme annoncée ; il reste à
-/// vérifier que c'est bien un `.kbpkg` — refuser franchement vaut mieux que
+/// vérifier que c'est bien un `.kbpkg` - refuser franchement vaut mieux que
 /// télécharger cinquante mégaoctets pour buter dessus.
 pub(super) fn from_recommendation(a: &crate::modules::marketplace::catalog::CatalogArtifact)
     -> Option<Artifact>
 {
     if !acceptable_url(&a.url) {
-        tracing::error!(url = %a.url, "Marketplace : artefact proposé hors HTTPS — ignoré");
+        tracing::error!(url = %a.url, "Marketplace : artefact proposé hors HTTPS - ignoré");
         return None;
     }
     if !a.kind.eq_ignore_ascii_case("kbpkg") && !is_kbpkg(&a.filename) {
         tracing::warn!(kind = %a.kind, asset = %a.filename,
-            "Marketplace : le catalogue recommande un format qui n'est pas .kbpkg — ignoré");
+            "Marketplace : le catalogue recommande un format qui n'est pas .kbpkg - ignoré");
         return None;
     }
     tracing::info!(asset = %a.filename, "Marketplace : artefact .kbpkg recommandé par le catalogue");
@@ -122,7 +122,7 @@ pub(super) fn from_catalogue(arts: &[crate::modules::marketplace::catalog::Catal
 }
 
 /// Suffixe de nom d'asset du `.kbpkg` pour l'OS/arch **du core**. Le nom porte la
-/// cible — `<id>-<version>-<os>-<arch>.kbpkg` — avec les noms de Rust
+/// cible - `<id>-<version>-<os>-<arch>.kbpkg` - avec les noms de Rust
 /// (`std::env::consts`), identiques à ceux que `build_kbpkg.sh` grave.
 fn kbpkg_suffix() -> String {
     format!("-{}-{}.kbpkg", std::env::consts::OS, std::env::consts::ARCH)
@@ -182,7 +182,7 @@ mod tests {
         }
     }
 
-    /// The catalogue's own payload must deserialize, artefacts included —
+    /// The catalogue's own payload must deserialize, artefacts included -
     /// otherwise the server silently falls back to guessing.
     #[test]
     fn reads_a_real_catalogue_payload() {
@@ -219,7 +219,7 @@ mod tests {
         assert!(chosen.url.ends_with(".kbpkg"));
         // L'empreinte est normalisée en minuscules pour la comparaison.
         assert_eq!(chosen.sha256.as_deref(), Some("abcdef"));
-        // Sans .kbpkg, rien n'est installable — même si un .deb existe.
+        // Sans .kbpkg, rien n'est installable - même si un .deb existe.
         assert!(from_catalogue(&[art(os, arch, "deb")]).is_none());
     }
 

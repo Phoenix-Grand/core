@@ -1,4 +1,4 @@
-//! # `kubuno-desktop-views-macros` — procedural macros of the `kubuno-desktop-views` event system
+//! # `kubuno-desktop-views-macros` - procedural macros of the `kubuno-desktop-views` event system
 //!
 //! Work packages EVT-1, EVT-4, EVT-7a and EVT-7b of `vskubuno/docs/EVENTS.md`: `#[derive(EventArgs)]`,
 //! `#[event_handlers]`, `#[derive(Component)]` (the control hierarchy and, since EVT-7b, the
@@ -170,7 +170,7 @@ fn expand(mut input: DeriveInput) -> syn::Result<TokenStream2> {
         check_field(&input, f, "cancel")?;
     }
 
-    // `EventArgs: Any` — no borrowed args, and every type parameter `'static`.
+    // `EventArgs: Any` - no borrowed args, and every type parameter `'static`.
     let mut static_bounds = Vec::new();
     for param in &input.generics.params {
         match param {
@@ -502,15 +502,15 @@ fn expand_value_converter(attr: TokenStream2, item: TokenStream2) -> syn::Result
 }
 
 /// A class of the control hierarchy (`kubuno_desktop_views::component`, EVT-7a of
-/// `vskubuno/docs/EVENTS.md`): implements the plumbing of the levels the class belongs to — the
+/// `vskubuno/docs/EVENTS.md`): implements the plumbing of the levels the class belongs to - the
 /// base-state accessors, the delegation to the base object, the upcasts, `base()` / `base_mut()`,
-/// the type chain (`Lineage`, `ClassInfo`) and the `Sender` typing (`ElementType`) — and an empty
+/// the type chain (`Lineage`, `ClassInfo`) and the `Sender` typing (`ElementType`) - and an empty
 /// `impl` of every level trait (`Component`, `Control`, `ButtonBase`…) except those listed in
 /// `overrides(…)`, which the class writes itself with the methods it overrides.
 ///
 /// | Option (in `#[kubuno(…)]`) | Effect |
 /// |---|---|
-/// | `extends = Base` | the base: a built-in class (`Button`, `Label`, `Panel`… — the base field is that class) or a level (`Control`, `ButtonBase`, `Component`… — the base field is its core, `ButtonBaseCore`) |
+/// | `extends = Base` | the base: a built-in class (`Button`, `Label`, `Panel`… - the base field is that class) or a level (`Control`, `ButtonBase`, `Component`… - the base field is its core, `ButtonBaseCore`) |
 /// | `overrides(Control, ButtonBase, …)` | the level traits the class implements itself (`impl Control for RoundButton { fn on_paint(…) }`) |
 /// | `levels(ButtonBase, …)` | only when `Base` is a class of your own: the levels it belongs to (the macro cannot see it) |
 ///
@@ -722,14 +722,14 @@ pub fn derive_property_value(input: TokenStream) -> TokenStream {
     }
 }
 
-/// A Windows Forms-like form class over a `.kbview` view — use it as `#[kubuno_desktop::view("main_view.kbview")]`
+/// A Windows Forms-like form class over a `.kbview` view - use it as `#[kubuno_desktop::view("main_view.kbview")]`
 /// (the generated code names `::kubuno_desktop::…`; see the `kubuno-desktop` crate's documentation of `View`).
 ///
 /// The path is relative to the Rust file holding the attribute (like `include_str!`); the view is
 /// read at compile time and embedded, and editing it rebuilds the crate. The attribute adds one field
 /// per `x:Name`d control, typed with its handle (`status: kubuno_desktop::TextField`), a hidden
 /// `kubuno_desktop::Form`, `initialize_component()`, and implements `kubuno_desktop::View` (each handler the view
-/// names — `OnClick="hello_click"` — runs the struct's method of that name), `ViewModel`, `Deref` to
+/// names - `OnClick="hello_click"` - runs the struct's method of that name), `ViewModel`, `Deref` to
 /// `kubuno_desktop::Form`, `Default` (unless derived), `show()` and `show_dialog(owner)`. `#[bind]` on a
 /// field makes it the source of `{Binding FieldName}` (PascalCase; `#[bind("Path")]` names it), and
 /// one `#[data_context]` field answers the other binding paths.

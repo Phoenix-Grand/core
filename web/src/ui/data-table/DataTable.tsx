@@ -27,7 +27,7 @@ const DENSITY = { compact: 'py-1.5', normal: 'py-2.5', comfortable: 'py-3.5' } a
 ///
 /// Two CSS facts meet here and neither is obvious. A `<button>` keeps
 /// shrink-to-fit sizing even at `display: flex`, so it does **not** span the
-/// cell — which is why `justify-end` changes nothing, there is no free space to
+/// cell - which is why `justify-end` changes nothing, there is no free space to
 /// distribute. And being a block-level box, it ignores the `text-align` the
 /// `<th>` carries. The only thing that moves it is an automatic margin.
 ///
@@ -41,17 +41,17 @@ const HEADER_ALIGN = {
 } as const
 
 /**
- * DataTable — the one table of the design system.
+ * DataTable - the one table of the design system.
  *
  * Replaces five hand-written `<table>`s (three paddings, four header skins, no
- * sorting anywhere) and the two divergent paginations — one 0-based and
+ * sorting anywhere) and the two divergent paginations - one 0-based and
  * server-side, the other 1-based and client-side. Everything they disagreed on
  * is settled here: the public API is 0-based, the displayed page is 1-based, and
  * the bar always lives in the table's own footer.
  *
  * ── Horizontal overflow ──────────────────────────────────────────────────────
  * The table scrolls INSIDE its own box. The scroller is `overflow-x-auto` and
- * the root is `min-w-0` — without that, a wide table makes its flex/grid parent
+ * the root is `min-w-0` - without that, a wide table makes its flex/grid parent
  * grow and the whole PAGE scrolls sideways, which the project forbids.
  *
  * ── Layout ───────────────────────────────────────────────────────────────────
@@ -99,7 +99,7 @@ export function DataTable<T>({
   const rootRef = useRef<HTMLDivElement>(null)
   const width = useContainerWidth(rootRef)
   // `width === null` only on the very first render (before the layout effect):
-  // fall back to the table. Any measured width — including 0 — is honoured.
+  // fall back to the table. Any measured width - including 0 - is honoured.
   const compact = layout === 'cards' || (layout === 'auto' && width !== null && width < cardsBelow)
   const touch = isCoarsePointer()
 
@@ -166,7 +166,7 @@ export function DataTable<T>({
   }, [sorted, paginated, manualPagination, page, pageSize])
 
   // A filter that shrinks the result set can strand the user on a page that no
-  // longer exists — snap back instead of showing an empty page.
+  // longer exists - snap back instead of showing an empty page.
   useEffect(() => {
     if (paginated && page > 0 && page >= pageCount) setPage(pageCount - 1)
   }, [pageCount]) // eslint-disable-line react-hooks/exhaustive-deps
@@ -240,7 +240,7 @@ export function DataTable<T>({
         },
       },
     ]
-    // Only offered when something is actually highlighted — an item that copies
+    // Only offered when something is actually highlighted - an item that copies
     // an empty string is worse than an absent one.
     if (copyMenu.sel) {
       items.push({ type: 'separator' })
@@ -314,9 +314,9 @@ export function DataTable<T>({
       <button
         type="button"
         onClick={() => applySort(nextSort(sort, col.id))}
-        aria-label={`${columnLabel(col)} — ${dir === 'asc' ? tr('ui.dt_sort_desc') : tr('ui.dt_sort_asc')}`}
+        aria-label={`${columnLabel(col)} - ${dir === 'asc' ? tr('ui.dt_sort_desc') : tr('ui.dt_sort_asc')}`}
         // Alignment restated here because the `<th>`'s `text-align` cannot reach
-        // inside this button — see [`HEADER_ALIGN`]. Without it every sortable
+        // inside this button - see [`HEADER_ALIGN`]. Without it every sortable
         // right-aligned column shows its values right and its label left, which
         // was the case across the storage, roles, backup and rules tables.
         className={cn(
@@ -374,7 +374,7 @@ export function DataTable<T>({
           <div className="min-w-0 overflow-x-auto">
             <table
               className="w-full border-collapse"
-              // Pinned only once something has been resized — see `useColumnResize`.
+              // Pinned only once something has been resized - see `useColumnResize`.
               style={{ minWidth: minTableWidth, tableLayout: resize.pinned ? 'fixed' : 'auto' }}
             >
               <thead>
@@ -433,7 +433,7 @@ export function DataTable<T>({
                               if (e.key === 'ArrowLeft')  { e.preventDefault(); resize.nudge(col.id, -step, e.currentTarget) }
                             }}
                             /* Wide enough to grab (8px), but the visible rule is 1px and
-                               only on hover/focus — a permanent grid of lines would
+                               only on hover/focus - a permanent grid of lines would
                                compete with the data. `touch-none` stops the browser
                                scrolling the table instead of resizing. */
                             className="absolute right-0 top-0 z-10 h-full w-2 translate-x-1/2 cursor-col-resize touch-none
@@ -466,7 +466,7 @@ export function DataTable<T>({
                       onContextMenu={openCopyMenu}
                       /* Zebra on `surface-1`, hover one step further on `surface-2`.
                        * The two must not share a tone: hovering an odd row would then
-                       * produce no change at all. Selection outranks both — it is a
+                       * produce no change at all. Selection outranks both - it is a
                        * state, not a reading aid. Tint only, never a left accent bar. */
                       className={cn(
                         'border-b border-border transition-colors last:border-0',
@@ -546,7 +546,7 @@ export function DataTable<T>({
         )}
       </div>
 
-      {/* Copy menu — right-click on a row. On a touch device `MenuDropdown` renders
+      {/* Copy menu - right-click on a row. On a touch device `MenuDropdown` renders
           itself as a bottom sheet, so no separate mobile branch is needed here. */}
       {copyMenu && (
         <MenuDropdown

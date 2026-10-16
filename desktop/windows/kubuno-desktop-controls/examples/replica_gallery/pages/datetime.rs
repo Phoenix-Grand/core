@@ -1,4 +1,4 @@
-//! `07-datetime` — DateTimePicker, MonthCalendar.
+//! `07-datetime` - DateTimePicker, MonthCalendar.
 //!
 //! ## Two differences against `07-datetime.png` that are the HARNESS, not the port
 //!
@@ -13,7 +13,7 @@
 //!   native control had left over from its own `MaxSelectionCount`; the port's
 //!   selection painting is exercised either way.
 //! * **`ShowCheckBox` shows a different date.** The reference reads `lundi 17
-//!   août` — a real clock — while the port reads `lundi 15 juin` from
+//!   août` - a real clock - while the port reads `lundi 15 juin` from
 //!   [`kubuno_desktop_controls::datetime::DEFAULT_TODAY`], the deterministic sentinel
 //!   the library uses because a control is a pure value with no access to the
 //!   time. The same sentinel is why the footer says « Aujourd'hui : 01/01/2000 »
@@ -26,7 +26,7 @@ use kubuno_desktop_controls::datetime::{
 
 use crate::sheet::{group, kid, Group, Sheet};
 
-/// The reference's fixed instant: 15 June 2026, 14:30 — a Monday, which is what
+/// The reference's fixed instant: 15 June 2026, 14:30 - a Monday, which is what
 /// makes the long format worth showing.
 const WHEN: DateTime = DateTime::new(Date::new(2026, 6, 15), Time { hour: 14, minute: 30, second: 0 });
 
@@ -43,7 +43,7 @@ fn picker(format: DateTimePickerFormat) -> DateTimePicker {
 
 fn formats() -> Group {
     let mut time = picker(DateTimePickerFormat::Time);
-    // `ShowUpDown` replaces the drop-down button with a spinner — the shape a
+    // `ShowUpDown` replaces the drop-down button with a spinner - the shape a
     // time-only picker takes.
     time.show_up_down = true;
 
@@ -51,7 +51,7 @@ fn formats() -> Group {
     custom.custom_format = Some("yyyy-MM-dd HH:mm".to_string());
 
     group(
-        "DateTimePicker — Format",
+        "DateTimePicker - Format",
         320.0,
         vec![
             kid(picker(DateTimePickerFormat::Long)).w(260.0),
@@ -68,7 +68,7 @@ fn with_check_box() -> Group {
     let mut p = picker(DateTimePickerFormat::Long);
     p.show_check_box = true;
     p.checked = false;
-    group("DateTimePicker — ShowCheckBox", 320.0, vec![kid(p).w(260.0)])
+    group("DateTimePicker - ShowCheckBox", 320.0, vec![kid(p).w(260.0)])
 }
 
 fn calendar() -> Group {

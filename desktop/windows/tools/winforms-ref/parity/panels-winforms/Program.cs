@@ -1,4 +1,4 @@
-// Numeric parity probe — the WinForms side.
+// Numeric parity probe - the WinForms side.
 //
 // Builds every case declared in `panels-cases.txt` with REAL controls, realises
 // the form so the native tab control has a handle, forces the layout, and writes
@@ -410,7 +410,7 @@ static class Program
         };
         // ORDER MATTERS. Orientation decides which extent the distance is
         // measured along, SplitterWidth and the minimums decide the legal range
-        // the setter validates against — so all four precede SplitterDistance.
+        // the setter validates against - so all four precede SplitterDistance.
         sc.Orientation = c.Orient == "horizontal" ? Orientation.Horizontal : Orientation.Vertical;
         sc.SplitterWidth = (int)c.SplitW;
         sc.FixedPanel = c.Fixed switch
@@ -442,7 +442,7 @@ static class Program
             v.Add(new("splitter", R(sc.SplitterRectangle)));
             v.Add(new("panel2", R(sc.Panel2.Bounds)));
             v.Add(new("distance", new double[] { sc.SplitterDistance }));
-            // 1 when the request was not honoured verbatim — by clamping OR by
+            // 1 when the request was not honoured verbatim - by clamping OR by
             // the setter refusing it outright.
             v.Add(new("notHonoured", new double[] { (threw != 0 || sc.SplitterDistance != requested) ? 1 : 0 }));
             v.Add(new("threw", new double[] { threw }));

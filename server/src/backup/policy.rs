@@ -6,7 +6,7 @@
 //!
 //! Values are **clamped, never trusted**. A retention of `0` would delete the
 //! backup it has just written; an hour of `47` would schedule the next run in
-//! the year after next. Both are refused at the API, and clamped again here —
+//! the year after next. Both are refused at the API, and clamped again here -
 //! the scheduler must stay correct against a row written by something other than
 //! the console.
 
@@ -22,7 +22,7 @@ pub const KEY_RETENTION: &str = "backup.retention_count";
 pub const KEY_DESTINATION: &str = "backup.destination";
 pub const KEY_LAST_RESTORE_TEST: &str = "backup.last_restore_test_at";
 
-/// Every key this feature owns — used by the generic settings route to refuse a
+/// Every key this feature owns - used by the generic settings route to refuse a
 /// write it should not perform, the way the mail relay does.
 pub const ALL_KEYS: &[&str] = &[
     KEY_ENABLED,
@@ -226,7 +226,7 @@ pub async fn load(db: &DbPool) -> Policy {
 
 /// When an administrator last declared having restored a backup successfully.
 ///
-/// Declarative by construction — see the setting's own description. Read here so
+/// Declarative by construction - see the setting's own description. Read here so
 /// the health check and the console cannot disagree about the date.
 pub async fn last_restore_test(db: &DbPool) -> Option<DateTime<Utc>> {
     crate::settings::instance_value(db, KEY_LAST_RESTORE_TEST)

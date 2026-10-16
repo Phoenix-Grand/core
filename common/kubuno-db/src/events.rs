@@ -6,7 +6,7 @@
 //!
 //! ⚠️ **The reader does not exist yet.** On MySQL and SQLite the core still has
 //! to grow a poller for `<schema>.kubuno_event_outbox`. Until then, events are
-//! durably recorded and silently undelivered — the largest piece of core work a
+//! durably recorded and silently undelivered - the largest piece of core work a
 //! non-PostgreSQL deployment needs.
 
 use chrono::Utc;

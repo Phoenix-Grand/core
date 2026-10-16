@@ -1,7 +1,7 @@
 //! Automatic certificates over ACME (Let's Encrypt).
 //!
 //! The ACME protocol (RFC 8555) is handled entirely by the `instant-acme` crate,
-//! which terminates over rustls with the ring provider — the same engine the
+//! which terminates over rustls with the ring provider - the same engine the
 //! rest of the core uses. Nothing here implements ACME or any cryptography; this
 //! module orchestrates an order and hands the resulting certificate to the same
 //! storage and hot-reload path an uploaded certificate uses ([`super::cert`],
@@ -30,7 +30,7 @@ pub const KEY_EMAIL: &str = "network.acme_email";
 pub const KEY_DOMAINS: &str = "network.acme_domains";
 pub const KEY_TOS_AGREED: &str = "network.acme_tos_agreed";
 
-// The ACME account credentials contain the account key — the thing that can mint
+// The ACME account credentials contain the account key - the thing that can mint
 // certificates for this instance's domains. They live ON DISK next to the TLS
 // key material (`super::store`), not in the database: see that module for why.
 
@@ -173,20 +173,20 @@ async fn record_outcome(db: &DbPool, status: &str, detail: Option<&str>) {
 }
 
 fn acme_err(context: &str, e: impl std::fmt::Display) -> AppError {
-    AppError::Internal(anyhow::anyhow!("ACME — {context} : {e}"))
+    AppError::Internal(anyhow::anyhow!("ACME - {context} : {e}"))
 }
 
 /// One issuance at a time, process-wide.
 ///
 /// Certificate authorities enforce strict quotas (Let's Encrypt: a handful of
 /// failures per hour, a few certificates per domain per week), so overlapping
-/// orders are not merely wasteful — a double click, or the renewal worker firing
+/// orders are not merely wasteful - a double click, or the renewal worker firing
 /// while an operator presses the button, can burn the allowance and lock the
 /// instance out of renewals for days. Refusing the second caller costs nothing:
 /// the first is already doing the work.
 static ISSUING: std::sync::atomic::AtomicBool = std::sync::atomic::AtomicBool::new(false);
 
-/// Releases the issuance flag however the order ends — error or early return
+/// Releases the issuance flag however the order ends - error or early return
 /// included. A flag left set would disable renewal for the life of the process.
 struct IssuingGuard;
 
@@ -371,7 +371,7 @@ const RENEW_BEFORE_DAYS: i64 = 30;
 
 /// Background task: periodically renews the ACME certificate when the instance
 /// is in `acme` mode and the active certificate is missing or within
-/// [`RENEW_BEFORE_DAYS`] of expiry. Never fails the process — an error is logged
+/// [`RENEW_BEFORE_DAYS`] of expiry. Never fails the process - an error is logged
 /// and recorded, and the next tick tries again.
 pub async fn renewal_worker(state: AppState) {
     // A short delay after boot, then a daily cadence. Not aligned to a wall

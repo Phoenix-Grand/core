@@ -1,5 +1,5 @@
 # ══════════════════════════════════════════════════════════════════
-# Kubuno Core — fichier de configuration
+# Kubuno Core - fichier de configuration
 #
 # Usage :
 #   Développement : copiez en config.toml dans la racine du projet
@@ -11,7 +11,7 @@
 # le core détecte qu'il n'est pas installé et sert un ASSISTANT D'INSTALLATION
 # sur son port habituel (http://<machine>:8080/). L'assistant demande la base de
 # données et le premier administrateur, écrit ce fichier (commentaires compris)
-# puis démarre l'instance — sans redémarrage. Le jeton qu'il réclame est dans
+# puis démarre l'instance - sans redémarrage. Le jeton qu'il réclame est dans
 # /var/lib/kubuno/setup-token et dans « journalctl -u kubuno ».
 #
 # Les renseigner ici reste possible : une configuration complète fait
@@ -52,7 +52,7 @@ modules_dir = "/usr/lib/kubuno/modules"
 themes_dir = "/var/lib/kubuno/themes"
 
 # Secret partagé entre le core et les modules pour les appels /internal/*.
-# OBLIGATOIRE — minimum 32 octets — générez avec : openssl rand -hex 32
+# OBLIGATOIRE - minimum 32 octets - générez avec : openssl rand -hex 32
 # Le core REFUSE de démarrer si ce secret est vide ou trop court : un secret
 # vide rendrait toutes les routes /internal/* accessibles à quiconque envoie un
 # en-tête X-Internal-Secret vide.
@@ -81,7 +81,7 @@ derive_module_secrets = false
 #                            "build", "paintsharp", "code"]
 shared_secret_modules = []
 
-# Durcissement : refuse le secret MAÎTRE sur /internal/* — seuls les secrets
+# Durcissement : refuse le secret MAÎTRE sur /internal/* - seuls les secrets
 # dérivés sont acceptés. Suppose que TOUS les modules sont lancés par le core :
 # un module démarré à la main (développement) avec le secret maître serait
 # rejeté.
@@ -97,14 +97,14 @@ reject_master_internal_secret = false
 # l'en-tête à chaque requête pour contourner la limitation de débit et la
 # protection anti-déni de service.
 #
-# Défaut (si la clé est absente) : bouclage + plages privées — couvre le cas
+# Défaut (si la clé est absente) : bouclage + plages privées - couvre le cas
 # courant d'un proxy sur la même machine ou sur le même réseau privé, tout en
 # refusant un en-tête forgé depuis une adresse publique :
 #   ["127.0.0.0/8", "::1/128", "10.0.0.0/8", "172.16.0.0/12",
 #    "192.168.0.0/16", "fc00::/7"]
 #
 # ⚠️ Si votre proxy atteint le core depuis une adresse PUBLIQUE (tunnel VPN,
-# répartiteur de charge distant, front-end cloud), ajoutez sa plage ici —
+# répartiteur de charge distant, front-end cloud), ajoutez sa plage ici -
 # sinon tous vos utilisateurs distants seront comptabilisés sous l'adresse du
 # proxy et partageront le même budget de requêtes.
 # Laisser une liste vide [] désactive complètement la confiance aux en-têtes.
@@ -159,7 +159,7 @@ cert_path = ""
 
 # Clé privée PEM (PKCS#8 ou RSA, NON chiffrée).
 # Laissez vide pour l'emplacement par défaut. certbot : privkey.pem
-# Le service doit pouvoir LIRE ce fichier — et l'ÉCRIRE si vous importez les
+# Le service doit pouvoir LIRE ce fichier - et l'ÉCRIRE si vous importez les
 # certificats depuis le panneau d'administration.
 key_path = ""
 
@@ -213,7 +213,7 @@ run_migrations = true
 [auth]
 
 # Clé de signature des tokens JWT.
-# OBLIGATOIRE — minimum 32 caractères — générez avec : openssl rand -base64 48
+# OBLIGATOIRE - minimum 32 caractères - générez avec : openssl rand -base64 48
 jwt_secret = "CHANGEZ_MOI_AVEC_UNE_CLE_LONGUE_ET_ALEATOIRE"
 
 # Durée de vie du token d'accès, en secondes. 900 = 15 minutes.
@@ -288,15 +288,15 @@ local_path = "/var/lib/kubuno/files"
 level = "info"
 
 # Format des logs vers stdout / journald :
-#   "pretty" — lisible par un humain, idéal pour le développement
-#   "json"   — structuré, idéal pour Loki, Elasticsearch, etc.
+#   "pretty" - lisible par un humain, idéal pour le développement
+#   "json"   - structuré, idéal pour Loki, Elasticsearch, etc.
 # Les logs fichiers (access.log, error.log) ont toujours leur propre format
 # indépendamment de ce paramètre.
 format = "pretty"
 
 # Répertoire où écrire les fichiers de logs.
-#   access.log — toutes les requêtes HTTP, format Apache Combined Log
-#   error.log  — WARN et ERROR du core et des modules
+#   access.log - toutes les requêtes HTTP, format Apache Combined Log
+#   error.log  - WARN et ERROR du core et des modules
 # Ce répertoire doit être accessible en écriture par l'utilisateur kubuno.
 # Production (installation Debian) : /var/log/kubuno
 # Développement local              : ./logs
@@ -307,12 +307,12 @@ log_dir = "/var/log/kubuno"
 file_enabled = true
 
 # Politique de rotation des fichiers de logs.
-#   "never"  — fichiers fixes access.log / error.log (recommandé en production)
+#   "never"  - fichiers fixes access.log / error.log (recommandé en production)
 #              la rotation externe est gérée par logrotate (/etc/logrotate.d/kubuno)
 #              qui archive avec une date (ex: access.log-2026-05-21.gz) sans
 #              interrompre le processus (copytruncate).
-#   "daily"  — un nouveau fichier par jour  (ex: access.2026-05-21.log)
-#   "hourly" — un nouveau fichier par heure (ex: access.2026-05-21-16.log)
+#   "daily"  - un nouveau fichier par jour  (ex: access.2026-05-21.log)
+#   "hourly" - un nouveau fichier par heure (ex: access.2026-05-21-16.log)
 rotation = "never"
 
 # Nombre de fichiers rotatifs à conserver (ignoré si rotation = "never").

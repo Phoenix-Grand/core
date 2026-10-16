@@ -105,7 +105,7 @@ impl Member {
         !self.is_static && !self.is_private && self.kind == MemberKind::Method
     }
 
-    /// `name(a: A, b?: B): R` — the signature as shown in hovers and completions.
+    /// `name(a: A, b?: B): R` - the signature as shown in hovers and completions.
     pub fn signature(&self) -> String {
         let params: Vec<String> = self
             .params

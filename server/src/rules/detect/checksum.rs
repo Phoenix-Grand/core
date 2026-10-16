@@ -196,7 +196,7 @@ pub fn nir(candidate: &str) -> bool {
 
 // ── SIRET ────────────────────────────────────────────────────────────────────
 
-/// French establishment identifier: fourteen digits, Luhn — except La Poste.
+/// French establishment identifier: fourteen digits, Luhn - except La Poste.
 ///
 /// Every SIRET whose SIREN is `356000000` fails Luhn by construction and is
 /// checked instead by "the digits sum to a multiple of five". That is not a
@@ -221,7 +221,7 @@ pub fn siret(candidate: &str) -> bool {
 /// the key `97 - ((89·bank + 15·branch + 3·account) mod 97)`.
 ///
 /// The account number may carry letters, converted by the Bank of France's
-/// table (`A`,`J` → 1 … `I`,`R`,`Z` → 9) — the same table the account holder
+/// table (`A`,`J` → 1 … `I`,`R`,`Z` → 9) - the same table the account holder
 /// sees printed on their own statement.
 pub fn rib_fr(candidate: &str) -> bool {
     let compact: String = candidate
@@ -341,7 +341,7 @@ mod tests {
 
     #[test]
     fn iban_refuses_a_transposition_which_is_the_error_it_exists_for() {
-        // Two adjacent characters swapped — a typo mod 97 is designed to catch.
+        // Two adjacent characters swapped - a typo mod 97 is designed to catch.
         assert!(!iban("FR7630006000011234567809189"));
         assert!(!iban("DE89370400440532013001"));
         // Wrong check digits.
@@ -429,7 +429,7 @@ mod tests {
 
     #[test]
     fn rib_converts_the_letters_an_account_number_may_carry() {
-        // The body of FR1420041010050500013M02606 — the account holds an `M`,
+        // The body of FR1420041010050500013M02606 - the account holds an `M`,
         // which the Bank of France table maps to 4.
         assert!(rib_fr("20041010050500013M02606"));
         // Changing the letter changes the key, so the same digits with another
@@ -456,7 +456,7 @@ mod tests {
         assert!(Checksum::Siret.verify("44306184100047"));
         assert!(Checksum::RibFr.verify("30006000011234567890189"));
 
-        // Each refuses the others' inputs — otherwise a mislabelled detector
+        // Each refuses the others' inputs - otherwise a mislabelled detector
         // would look like it works.
         assert!(!Checksum::Iban.verify("4111111111111111"));
         assert!(!Checksum::Nir.verify("4111111111111111"));

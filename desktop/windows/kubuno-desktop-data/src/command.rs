@@ -1,5 +1,5 @@
 //! `<DbCommand>`: a parameterized SQL command (ADO.NET `DbCommand`). Its text is static; values are
-//! always parameters — named (`@name`, rewritten for the provider by [`crate::sql::rewrite_named`])
+//! always parameters - named (`@name`, rewritten for the provider by [`crate::sql::rewrite_named`])
 //! or, when the text uses the provider's own placeholders (`$1`, `?1`), positional. A parameter the
 //! text does not use, or a name the text uses without a value, is refused before any I/O.
 

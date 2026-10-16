@@ -36,7 +36,7 @@ export function Part1({ t }: { t: NonNullable<DataGroup['tr']> }) {
 
 export function Part2({ t }: { t: NonNullable<DataGroup['tr']> }) {
   return (
-    <Block title={t('admin.t_prev_g_empty', { defaultValue: 'États vides — quatre situations distinctes' })}
+    <Block title={t('admin.t_prev_g_empty', { defaultValue: 'États vides - quatre situations distinctes' })}
                  hint={t('admin.t_prev_g_empty_h', {
                    defaultValue: 'Premier usage (invite à créer) · résultat filtré vide (efface les filtres, jamais de création) · erreur (réessayer) · indisponible (documentation).',
                  })}>

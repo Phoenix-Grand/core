@@ -1,4 +1,4 @@
-//! `POST /admin/users/:id/reset-password` — the administrator's way back in.
+//! `POST /admin/users/:id/reset-password` - the administrator's way back in.
 //!
 //! Deliberately a file of its own rather than another function in
 //! `handlers/admin/users.rs`: it is the one administrative action that touches a
@@ -9,14 +9,14 @@
 //!
 //! 1. replaces `password_hash` (a generated password, or one the operator typed);
 //! 2. sets or clears `must_change_password`;
-//! 3. **revokes every refresh token of the account** — a password change that
+//! 3. **revokes every refresh token of the account** - a password change that
 //!    leaves the open sessions alive protects nothing at all: whoever holds a
 //!    live session keeps it, which is precisely the attacker one resets against;
 //! 4. writes the audit entry, in the same commit (see [`crate::audit`]).
 //!
 //! ## What never reaches the trail or the logs
 //!
-//! The password, in any form — not the plaintext, not the argon2 hash, not its
+//! The password, in any form - not the plaintext, not the argon2 hash, not its
 //! length. The `USER` whitelist in `audit/redact.rs` has no field that could
 //! carry it, and the `detail` line is built from counters only.
 //!
@@ -25,7 +25,7 @@
 //! Only when the server generated it, and only then: the operator has no other
 //! way to hand it to the person standing in front of them, which is the entire
 //! point of "generate automatically". When the operator typed the password
-//! themselves it is not echoed back — they already have it, and echoing it would
+//! themselves it is not echoed back - they already have it, and echoing it would
 //! put it in one more place for no gain.
 
 use axum::{
@@ -74,7 +74,7 @@ pub struct AdminResetPasswordDto {
     pub mode: ResetMode,
     /// Required when `mode = manual`, ignored otherwise.
     pub password: Option<String>,
-    /// Ask for a new password at the next sign-in. Defaults to true — an
+    /// Ask for a new password at the next sign-in. Defaults to true - an
     /// administrator knowing a user's password is a transient state, not a
     /// steady one.
     #[serde(default = "default_true")]
@@ -168,7 +168,7 @@ pub async fn reset_user_password(
     let (new_password, generated) = match dto.mode {
         ResetMode::Generate => {
             // A generated password must satisfy the policy it is generated
-            // under — an operator pressing "generate" and getting something the
+            // under - an operator pressing "generate" and getting something the
             // instance then refuses would have no way to tell what happened.
             // Length is raised to the minimum; a "strong" requirement is met by
             // drawing again, the alphabet carrying all four families.
@@ -180,7 +180,7 @@ pub async fn reset_user_password(
                 }
                 candidate = password::generate_password(length);
             }
-            // Reachable only if the policy is unsatisfiable by the generator —
+            // Reachable only if the policy is unsatisfiable by the generator -
             // a minimum above what it can produce. Said plainly rather than
             // returning a password the next line would reject.
             policy.check(&candidate).map_err(|_| {
@@ -232,7 +232,7 @@ pub async fn reset_user_password(
     };
 
     // Hashing is deliberate work (argon2id); doing it before `BEGIN` keeps the
-    // transaction — and the row lock on the user — as short as possible.
+    // transaction - and the row lock on the user - as short as possible.
     let hash = password::hash_password(&new_password).map_err(AppError::Internal)?;
 
     // ── Mutate, atomically, with the trail entry ─────────────────────────────
@@ -393,7 +393,7 @@ pub struct RequirePasswordChangeDto {
 /// `POST /admin/users/:id/require-password-change`
 ///
 /// The reset above answers "this password is gone". This one answers a
-/// different question — "this password is *suspect*" — and the two must not be
+/// different question - "this password is *suspect*" - and the two must not be
 /// the same button. Arming the flag alone leaves the account signed in, leaves
 /// its password working exactly once more, and makes the next sign-in end on the
 /// change screen (`auth::middleware` already closes every write behind that

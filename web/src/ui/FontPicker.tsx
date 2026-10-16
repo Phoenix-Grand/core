@@ -17,13 +17,13 @@ export interface FontPickerProps {
   disabled?: boolean
   className?: string
   variant?: 'default' | 'ghost'
-  /** Text shown (greyed) when `value` is empty — e.g. a mixed-font selection. */
+  /** Text shown (greyed) when `value` is empty - e.g. a mixed-font selection. */
   placeholder?: string
   /** Extra styles merged into the trigger button (e.g. to square joined corners). */
   buttonStyle?: React.CSSProperties
   /** Short glyph sample rendered in each font next to its name. '' hides it. */
   sampleText?: string
-  /** Colour scheme — `dark` for dark toolbars/panels. */
+  /** Colour scheme - `dark` for dark toolbars/panels. */
   theme?: 'light' | 'dark'
 }
 
@@ -47,7 +47,7 @@ export const FONT_UI_THEME: Record<'light' | 'dark', UITheme> = {
 
 interface Pos { top: number; left: number; minWidth: number }
 
-// Famille CSS sûre pour l'aperçu (guillemets + repli) — `Times New Roman` etc.
+// Famille CSS sûre pour l'aperçu (guillemets + repli) - `Times New Roman` etc.
 const cssFamily = (f: string) => `"${f.replace(/"/g, '')}", "Segoe UI", system-ui, sans-serif`
 
 // ── Font classification ──────────────────────────────────────────────────────
@@ -96,7 +96,7 @@ function highlightMatch(text: string, q: string): React.ReactNode {
  * (aperçu) et regroupée par catégorie (Sans Serif / Serif / Monospace / …), façon
  * Figma / Google Fonts. Recherche avec surbrillance, échantillon de glyphes, et
  * accessibilité complète (combobox / listbox / option). Dédoublonne la liste reçue
- * (cf. `dedupeFontFamilies`) — le regroupement des styles (Calibri Bold/Light…)
+ * (cf. `dedupeFontFamilies`) - le regroupement des styles (Calibri Bold/Light…)
  * sous une seule famille se fait au CHARGEMENT des polices (cf. `parseFontMeta`).
  */
 export function FontPicker({
@@ -211,7 +211,7 @@ export function FontPicker({
         className="w-full flex items-center justify-between gap-1 select-none"
         style={{
           height, padding: '0 6px 0 10px', fontSize, color: P.text,
-          // The TRIGGER always reads in the UI face, whatever font is selected — the
+          // The TRIGGER always reads in the UI face, whatever font is selected - the
           // field's own label must stay legible and consistent, not morph into the
           // picked face (a serif/script value made the field itself hard to read).
           // The dropdown OPTIONS still preview each in their own font (below).

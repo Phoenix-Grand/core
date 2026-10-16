@@ -1,7 +1,7 @@
 //! `lsp_types::Uri` ⇄ filesystem path conversion.
 //!
 //! `lsp-types` 0.97 represents a document URI as its own minimal RFC 3986
-//! `Uri` (backed by `fluent-uri`), not `url::Url` — it has no
+//! `Uri` (backed by `fluent-uri`), not `url::Url` - it has no
 //! `to_file_path`/`from_file_path` of its own (unlike the `url::Url` older
 //! `lsp-types` releases, and most other LSP server crates in the ecosystem,
 //! use). Rather than hand-roll percent-decoding and Windows drive-letter

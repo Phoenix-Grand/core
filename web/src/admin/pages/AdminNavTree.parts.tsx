@@ -96,7 +96,7 @@ export function Part3({ showMore, setShowMore, indent, rowClass, CARET_SLOT, car
               className={rowClass(false, false)}
             >
               {/* The caret sits where every other foldable row in this panel puts
-                  it — at the head of the line. A menu whose chevrons swap sides row
+                  it - at the head of the line. A menu whose chevrons swap sides row
                   to row is a menu the eye has to re-learn on each one. */}
               <span className={CARET_SLOT} aria-hidden>{caretIcon(showMore)}</span>
               <span className="flex min-w-0 flex-1 items-center gap-3">

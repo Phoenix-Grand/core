@@ -2,7 +2,7 @@
  * Tailwind classes → `.kbview` properties, **only where the result renders the same pixels** (WEB-VIEWS.md §6.2
  * "Tailwind classes → properties/roles where mapped"); every other class stays in the web-only `Class` attribute and
  * is counted. The host's scales are the core's (`theme.css` / `index.css`): spacing steps of 4 px, `text-xs` /
- * `text-sm` re-pointed at 11.5 / 13.5 px — the `Label` roles `Meta` / `Body` render exactly those classes.
+ * `text-sm` re-pointed at 11.5 / 13.5 px - the `Label` roles `Meta` / `Body` render exactly those classes.
  */
 
 /** Theme tokens of the text and background colour utilities (`views/style.ts` maps them back to the same variables). */
@@ -51,7 +51,7 @@ export interface ClassMapping {
 
 /**
  * Colours: a token utility becomes `ForeColor` / `BackColor` when no other class touches the same property (a
- * `hover:` / `dark:` variant, a second colour, an opacity) — the inline colour the runtime writes would override them.
+ * `hover:` / `dark:` variant, a second colour, an opacity) - the inline colour the runtime writes would override them.
  */
 function mapColours(classes: string[], props: Record<string, string>): string[] {
   const textColours = classes.filter((c) => /^(\w+:)*text-(?!(xs|sm|base|lg|xl|[2-9]xl|left|right|center|start|end|justify|wrap|nowrap|balance|pretty|ellipsis|clip)\b)/.test(c) && !SIZE.test(c.replace(/^(\w+:)+/, '')))

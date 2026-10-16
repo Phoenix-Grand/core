@@ -161,8 +161,8 @@ export class SpeechToTextPanel extends ViewBase {
   get p_text() {
     if (!(!(this.isLoading)) || !(!(this.isError || !this.cat))) return undefined as never
     return this.enabled
-                ? this.tr('admin.stt_enable_on', { defaultValue: 'Activée — le bouton micro est disponible dans la barre de recherche.' })
-                : this.tr('admin.stt_enable_off', { defaultValue: 'Désactivée — le bouton micro est masqué pour tous les utilisateurs.' })
+                ? this.tr('admin.stt_enable_on', { defaultValue: 'Activée - le bouton micro est disponible dans la barre de recherche.' })
+                : this.tr('admin.stt_enable_off', { defaultValue: 'Désactivée - le bouton micro est masqué pour tous les utilisateurs.' })
   }
 
   get enabled_unless_set_enabled_is_pending() {

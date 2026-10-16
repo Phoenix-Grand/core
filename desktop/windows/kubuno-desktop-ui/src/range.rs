@@ -1,9 +1,9 @@
-//! Kubuno primitives — **range**: the four controls whose whole reason to exist
+//! Kubuno primitives - **range**: the four controls whose whole reason to exist
 //! is a number moving between a minimum and a maximum.
 //!
 //! | primitive | replica it owns | where its pixels come from |
 //! |---|---|---|
-//! | [`ScrollBar`] | `kubuno_desktop_controls::range::{HScrollBar, VScrollBar}` | the shipping [`kubuno_drive_desktop_app_controls::Scrollbar`] — **pixel-identical**, proven in the tests below |
+//! | [`ScrollBar`] | `kubuno_desktop_controls::range::{HScrollBar, VScrollBar}` | the shipping [`kubuno_drive_desktop_app_controls::Scrollbar`] - **pixel-identical**, proven in the tests below |
 //! | [`Slider`] | `kubuno_desktop_controls::range::TrackBar` | `@ui/RangeSlider` (`core/frontend/src/ui/RangeSlider.tsx`) |
 //! | [`ProgressBar`] | `kubuno_desktop_controls::labels::ProgressBar` | `@ui/ProgressBar` (`core/frontend/src/ui/ProgressBar.tsx`) |
 //! | [`NumericField`] / [`DomainField`] | `NumericUpDown` / `DomainUpDown` | `@ui/NumberInput` + `@ui/Input` |
@@ -16,7 +16,7 @@
 //!   `SmallChange`, `LargeChange`. The thumb's length is
 //!   `LargeChange / (Maximum − Minimum + 1)` and the highest value a gesture
 //!   reaches is `Maximum − LargeChange + 1`. That arithmetic was checked against
-//!   the real toolkit and is **never re-derived here** — [`ScrollBar`] calls
+//!   the real toolkit and is **never re-derived here** - [`ScrollBar`] calls
 //!   `thumb_fraction()` and `max_reachable_value()` and does nothing else.
 //! * The **predecessor** speaks documents: `extent` (how long the content is),
 //!   `viewport` (how much of it shows) and `scroll` (how far down we are), all
@@ -32,7 +32,7 @@
 //!   value        = round(scroll)
 //! ```
 //!
-//! It is not a convention picked for convenience — it is the only mapping under
+//! It is not a convention picked for convenience - it is the only mapping under
 //! which the two agree term for term:
 //!
 //! ```text
@@ -79,7 +79,7 @@ use crate::{Canvas, Rect, Theme, Widget, WidgetState};
 /// The chevrons in the two `RepeatButton`s at the ends of an expanded bar.
 ///
 /// These are Segoe Fluent Icons codepoints drawn through
-/// [`Canvas::formats`]`().icon_tiny`, which IS that face — the crate rule that
+/// [`Canvas::formats`]`().icon_tiny`, which IS that face - the crate rule that
 /// forbids arrows-as-text targets the *text* faces (Outfit carries no
 /// `◄ ► ▲ ▼` and renders tofu). Substituting a vector chevron here would break
 /// the one thing this primitive has to guarantee: being indistinguishable from
@@ -91,13 +91,13 @@ const GLYPH_CHEVRON_RIGHT: &str = "\u{E76C}";
 
 /// `@ui/ProgressBar`: the indeterminate sliver is `w-1/3` of the track.
 const PROGRESS_SLIVER: f32 = 1.0 / 3.0;
-/// `@ui/ProgressBar`: the `warnAt` / `dangerAt` defaults of the `auto` variant —
+/// `@ui/ProgressBar`: the `warnAt` / `dangerAt` defaults of the `auto` variant -
 /// the whole point of the component being that a quota bar goes amber before it
 /// goes red, at the SAME ratio everywhere.
 const PROGRESS_WARN_AT: f32 = 0.75;
 const PROGRESS_DANGER_AT: f32 = 0.90;
 /// `@keyframes kb-progress-slide`: the sliver travels from `translateX(-100%)`
-/// to `translateX(300%)` of its own width — four sliver-widths in all.
+/// to `translateX(300%)` of its own width - four sliver-widths in all.
 const PROGRESS_SLIDE_FROM: f32 = -1.0;
 const PROGRESS_SLIDE_TO: f32 = 3.0;
 
@@ -126,7 +126,7 @@ const SPIN_COLUMN: f32 = 24.0;
 const SPIN_GLYPH: f32 = 11.0;
 /// `@ui/Input`: `px-3`.
 const FIELD_PAD_X: f32 = 12.0;
-/// `@ui/Input`: `focus:ring-2` — the accent ring of a focused field, drawn
+/// `@ui/Input`: `focus:ring-2` - the accent ring of a focused field, drawn
 /// inward. Same number `kubuno_drive_desktop_app_controls::edit_box` uses for the same ring.
 const FIELD_FOCUS_RING: f32 = 2.0;
 /// A one-DIP rule: `border-l` between the field and its spin column, `border-b`
@@ -137,7 +137,7 @@ const FIELD_DISABLED_OPACITY: f32 = 0.5;
 /// `@ui/NumberInput`: a spin button at its bound is `disabled:opacity-40`.
 const SPIN_DISABLED_OPACITY: f32 = 0.4;
 /// The line box the selection band and the caret cover while a spinner is
-/// edited — `edit_box::LINE_BOX` (private there), the same 20 DIP every
+/// edited - `edit_box::LINE_BOX` (private there), the same 20 DIP every
 /// single-line Kubuno field highlights.
 const EDIT_LINE_BOX: f32 = 20.0;
 /// The caret rule: one DIP of `currentColor`, as `edit_box` draws it.
@@ -150,13 +150,13 @@ const EDIT_SELECTION_ALPHA: f32 = 0.35;
 const SLIDER_DISABLED_OPACITY: f32 = 0.6;
 /// The keyboard focus ring around a slider's thumb: the same 2 DIP accent
 /// ring every Kubuno control wears (`focus-visible:ring-2 ring-primary`),
-/// drawn OUTSIDE the white halo so it reads as `ring-offset` — an accent ring
+/// drawn OUTSIDE the white halo so it reads as `ring-offset` - an accent ring
 /// straight on the accent disc would merge with it and vanish (the defect the
 /// composition audit caught). The slider reserves this much room around the
 /// thumb so the ring never leaves the slider's bounds.
 const SLIDER_FOCUS_RING: f32 = FIELD_FOCUS_RING;
 
-/// `@ui/RangeSlider`'s value bubble: `px-1.5 py-0.5 text-xs` — 6 / 2 DIP of
+/// `@ui/RangeSlider`'s value bubble: `px-1.5 py-0.5 text-xs` - 6 / 2 DIP of
 /// padding around a 12 DIP line of `text-xs` (`line-height: 1rem` = 16).
 const BUBBLE_PAD_X: f32 = 6.0;
 const BUBBLE_PAD_Y: f32 = 2.0;
@@ -168,7 +168,7 @@ const BUBBLE_SHADOW: [ShadowLayer; 2] = [
     ShadowLayer { dy: 1.0, blur: 3.0, spread: 0.0, opacity: 0.10 },
     ShadowLayer { dy: 1.0, blur: 2.0, spread: -1.0, opacity: 0.10 },
 ];
-/// How far [`BUBBLE_SHADOW`] reaches past the bubble (`dy + blur`) — the
+/// How far [`BUBBLE_SHADOW`] reaches past the bubble (`dy + blur`) - the
 /// margin a floating surface needs around the bubble so the shadow is not cut
 /// at the popup's edge.
 pub const VALUE_BUBBLE_MARGIN: f32 = 4.0;
@@ -186,7 +186,7 @@ const PROGRESS_HEADER_SPACING: f32 = 8.0;
 pub const SCROLL_REPEAT_DELAY_MS: u64 = 500;
 pub const SCROLL_REPEAT_INTERVAL_MS: u64 = 50;
 
-/// `c` with its alpha multiplied by `k` — how a CSS `opacity` on a whole
+/// `c` with its alpha multiplied by `k` - how a CSS `opacity` on a whole
 /// control is reproduced primitive by primitive.
 fn faded(c: D2D1_COLOR_F, k: f32) -> D2D1_COLOR_F {
     D2D1_COLOR_F { a: c.a * k, ..c }
@@ -214,13 +214,13 @@ fn css_cubic_bezier(x1: f32, y1: f32, x2: f32, y2: f32, t: f32) -> f32 {
 }
 
 // ═════════════════════════════════════════════════════════════════════════════
-// Keyboard and wheel — shared by every control of the family
+// Keyboard and wheel - shared by every control of the family
 // ═════════════════════════════════════════════════════════════════════════════
 
 /// A keyboard gesture on a range, independent of the key that produced it.
 ///
-/// Each control maps keys onto these with its own table — a slider and a
-/// scroll bar disagree on what `PageUp` means — then applies them with its own
+/// Each control maps keys onto these with its own table - a slider and a
+/// scroll bar disagree on what `PageUp` means - then applies them with its own
 /// step sizes (`SmallChange` / `LargeChange`).
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum RangeKey {
@@ -257,7 +257,7 @@ impl RangeKey {
 
     /// A scrolled area (the web's focused scroll container, WinForms'
     /// `ScrollBar`): Down / Right and `PageDown` move TOWARD the end of the
-    /// content, Up / Left and `PageUp` back toward its start — the opposite of
+    /// content, Up / Left and `PageUp` back toward its start - the opposite of
     /// a slider's `PageUp`, because a scroll value grows downward.
     pub fn for_scroll(key: u16) -> Option<Self> {
         match key {
@@ -284,7 +284,7 @@ impl RangeKey {
     ];
 }
 
-/// Turns wheel notches — fractional on a touchpad — into whole steps, keeping
+/// Turns wheel notches - fractional on a touchpad - into whole steps, keeping
 /// the remainder for the next frame so a slow two-finger scroll still moves a
 /// stepped control instead of rounding every event down to zero.
 #[derive(Debug, Clone, Copy, Default)]
@@ -305,7 +305,7 @@ impl WheelSteps {
         whole as i32
     }
 
-    /// Drops a pending fraction — when the pointer leaves the control.
+    /// Drops a pending fraction - when the pointer leaves the control.
     pub fn reset(&mut self) {
         self.rest = 0.0;
     }
@@ -315,7 +315,7 @@ impl WheelSteps {
 // ScrollBar
 // ═════════════════════════════════════════════════════════════════════════════
 
-/// The part of a scroll bar under the pointer — the WinForms hit zones, which
+/// The part of a scroll bar under the pointer - the WinForms hit zones, which
 /// are also the four gestures the replica implements (`line_up`, `page_up`,
 /// dragging, `page_down`, `line_down`).
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -323,17 +323,17 @@ pub enum ScrollPart {
     /// The arrow button at the low end (left / top). Only reachable while the
     /// bar is expanded: at rest there are no buttons.
     ArrowLow,
-    /// The track before the thumb — a page step toward `Minimum`.
+    /// The track before the thumb - a page step toward `Minimum`.
     PageLow,
     /// The grip.
     Thumb,
-    /// The track after the thumb — a page step toward `Maximum`.
+    /// The track after the thumb - a page step toward `Maximum`.
     PageHigh,
     /// The arrow button at the high end (right / bottom).
     ArrowHigh,
 }
 
-/// `HScrollBar` or `VScrollBar` — WinForms has no instantiable "ScrollBar", the
+/// `HScrollBar` or `VScrollBar` - WinForms has no instantiable "ScrollBar", the
 /// orientation *is* the type, so this port keeps that shape instead of adding
 /// an orientation field the toolkit does not have.
 #[derive(Clone)]
@@ -344,8 +344,8 @@ enum Bar {
 
 /// A Kubuno scroll bar.
 ///
-/// The **arithmetic is entirely the replica's** — see the module header for the
-/// content/viewport ⇄ min/max/large-change conversion — and the **pixels are
+/// The **arithmetic is entirely the replica's** - see the module header for the
+/// content/viewport ⇄ min/max/large-change conversion - and the **pixels are
 /// entirely the predecessor's**: a thin resting indicator that unfolds into a
 /// full gutter with two chevron buttons, the web's `::-webkit-scrollbar` skin.
 /// `range_geometry_matches_the_predecessor` below drives both from the same
@@ -358,7 +358,7 @@ pub struct ScrollBar {
     /// A **Kubuno concept**: a WinForms bar is always expanded, and the replica
     /// has nothing to say about it.
     pub expanded: bool,
-    /// The resting indicator's fade-out, `0.0..=1.0` — the predecessor's
+    /// The resting indicator's fade-out, `0.0..=1.0` - the predecessor's
     /// `alpha` argument. The control owns no timer (crate rule); the host
     /// drives it from `FADE_AFTER_MS` / `FADE_MS`.
     pub opacity: f32,
@@ -384,7 +384,7 @@ impl DerefMut for ScrollBar {
 }
 
 /// `rail`, shortened along its axis so the whole gutter lies inside the
-/// rounded rectangle `frame` (corner radius `radius`) — what keeps a bar from
+/// rounded rectangle `frame` (corner radius `radius`) - what keeps a bar from
 /// poking out of a rounded component at its corners.
 ///
 /// A gutter running along an edge meets that edge's two corners; where the
@@ -473,7 +473,7 @@ impl ScrollBar {
         self
     }
 
-    /// Whether a bar is needed at all — the predecessor's `Scrollbar::new`
+    /// Whether a bar is needed at all - the predecessor's `Scrollbar::new`
     /// returns `None` below this threshold, and the half-DIP slack is what stops
     /// a rounding error from producing a scroll bar for nothing.
     pub fn needed(extent: f32, viewport: f32) -> bool {
@@ -503,7 +503,7 @@ impl ScrollBar {
     }
 
     /// A bar already loaded from a content description, or `None` when there is
-    /// nothing to scroll — the shape of the predecessor's constructor.
+    /// nothing to scroll - the shape of the predecessor's constructor.
     pub fn from_content(horizontal: bool, extent: f32, viewport: f32, scroll: f32) -> Option<Self> {
         if !Self::needed(extent, viewport) {
             return None;
@@ -529,7 +529,7 @@ impl ScrollBar {
 
     /// The thumb's near-edge position as a fraction of the travel.
     ///
-    /// Composed from the replica's public `max_reachable_value()` — the
+    /// Composed from the replica's public `max_reachable_value()` - the
     /// `Maximum − LargeChange + 1` rule and its clamping both stay down there.
     fn travel_fraction(&self) -> f32 {
         let bar: &ScrollBarModel = self;
@@ -548,7 +548,7 @@ impl ScrollBar {
     /// [`ScrollBar::travel_fraction`] of what is left over.
     /// `(first, travel, thumb_len)` along the axis: where the thumb's near edge
     /// sits at the minimum, how far it can move, and its length. The one place
-    /// the thumb's geometry is derived — [`ScrollBar::thumb_rect`] and its
+    /// the thumb's geometry is derived - [`ScrollBar::thumb_rect`] and its
     /// inverse [`ScrollBar::value_at_thumb_start`] both read it.
     fn thumb_travel(&self, bounds: Rect) -> (f32, f32, f32) {
         let (origin, len) = if self.is_horizontal() {
@@ -557,7 +557,7 @@ impl ScrollBar {
             (bounds.top, bounds.bottom - bounds.top)
         };
         // Each arrow button eats one end of the track, but only when the bar is
-        // expanded — at rest there is nothing but the thumb.
+        // expanded - at rest there is nothing but the thumb.
         let inset = if self.expanded { m::SCROLLBAR_ARROW } else { 0.0 };
         let track = len - 2.0 * inset;
         let thumb_len = (self.thumb_fraction() * track).max(m::SCROLLBAR_THUMB_MIN).min(track);
@@ -571,7 +571,7 @@ impl ScrollBar {
 
         let width = if self.expanded { m::SCROLLBAR_THUMB } else { m::SCROLLBAR_INDICATOR };
         // The thumb hugs the gutter's far edge with the same inset on both
-        // sides — computed off the TOKEN thickness, as the predecessor does, so
+        // sides - computed off the TOKEN thickness, as the predecessor does, so
         // an over-wide gutter does not move it. Since `metrics::control`
         // RE-EXPORTS the predecessor's own constants, the two are now the same
         // number by construction rather than by coincidence.
@@ -637,7 +637,7 @@ impl ScrollBar {
     // and its clamping stay down there. Each returns whether the value moved,
     // which is what tells a host to repaint and to keep an auto-repeat going.
 
-    /// The coordinate along the bar's axis — `x` for a horizontal bar, `y` for
+    /// The coordinate along the bar's axis - `x` for a horizontal bar, `y` for
     /// a vertical one.
     pub fn along(&self, x: f32, y: f32) -> f32 {
         if self.is_horizontal() {
@@ -669,7 +669,7 @@ impl ScrollBar {
         self.value() != before
     }
 
-    /// What a press on `part` does — the WinForms hit zones: an arrow steps a
+    /// What a press on `part` does - the WinForms hit zones: an arrow steps a
     /// line, the track a page, the thumb nothing (it is dragged instead).
     /// A host repeats it every [`SCROLL_REPEAT_INTERVAL_MS`] after
     /// [`SCROLL_REPEAT_DELAY_MS`] while the button is held; a page repeat
@@ -686,7 +686,7 @@ impl ScrollBar {
     }
 
     /// Scrolls by `delta` units (DIP, for a bar loaded with
-    /// [`ScrollBar::set_content`]) — a wheel turn, in the web's sign: positive
+    /// [`ScrollBar::set_content`]) - a wheel turn, in the web's sign: positive
     /// moves toward the end. Clamped to the reachable range.
     pub fn scroll_by(&mut self, delta: f32) -> bool {
         if !delta.is_finite() {
@@ -700,7 +700,7 @@ impl ScrollBar {
     }
 
     /// The value that puts the thumb's near edge at `start` (along the axis,
-    /// in the space of `bounds`) — the inverse of [`ScrollBar::thumb_rect`],
+    /// in the space of `bounds`) - the inverse of [`ScrollBar::thumb_rect`],
     /// rounded to the nearest unit and clamped to the reachable range.
     pub fn value_at_thumb_start(&self, bounds: Rect, start: f32) -> i32 {
         let bar: &ScrollBarModel = self;
@@ -775,7 +775,7 @@ impl Widget for ScrollBar {
             thumb.right - thumb.left
         };
         // The web CHANGES the thumb's colour on hover rather than brightening
-        // it — the thumb is opaque in both palettes, so an alpha bump is a
+        // it - the thumb is opaque in both palettes, so an alpha bump is a
         // no-op. `disabled` has no predecessor to match: a bar that cannot be
         // dragged fades to the border token.
         let colour = if state.disabled {
@@ -800,10 +800,10 @@ impl Widget for ScrollBar {
 /// The part of a slider under the pointer.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum SliderPart {
-    /// The filled side of the rail — before the thumb.
+    /// The filled side of the rail - before the thumb.
     TrackBefore,
     Thumb,
-    /// The empty side of the rail — after the thumb.
+    /// The empty side of the rail - after the thumb.
     TrackAfter,
 }
 
@@ -830,7 +830,7 @@ impl TickBands {
 /// Everything numeric is the replica's: `minimum` / `maximum` / `value`,
 /// `small_change` / `large_change`, `tick_frequency` / `tick_style`,
 /// `orientation`, the `value ⇄ offset` mapping (including a vertical bar's
-/// value growing UPWARD) and the tick positions — which are placed at their own
+/// value growing UPWARD) and the tick positions - which are placed at their own
 /// value, so an uneven last gap is drawn uneven.
 ///
 /// What Kubuno adds is the look of `@ui/RangeSlider`: a pill rail, an accent
@@ -877,8 +877,8 @@ impl Slider {
     /// main axis.
     ///
     /// Inset by half a thumb at each end so the thumb never leaves the
-    /// rectangle it was handed. The web does not do this — a browser happily
-    /// lets `translate(-50%)` hang the thumb over the ends — but a desktop
+    /// rectangle it was handed. The web does not do this - a browser happily
+    /// lets `translate(-50%)` hang the thumb over the ends - but a desktop
     /// control that paints outside its bounds corrupts its neighbour.
     ///
     /// The inset also leaves room for the keyboard focus ring
@@ -900,7 +900,7 @@ impl Slider {
     }
 
     /// The pointer target: the whole length of the slider, one thumb-plus-ring
-    /// thick across the rail — the web's native range input covers the track
+    /// thick across the rail - the web's native range input covers the track
     /// and its 20 DIP transparent thumb, not only the 6 DIP rail.
     pub fn hit_rect(&self, bounds: Rect) -> Rect {
         let c = self.cross_centre(bounds);
@@ -941,7 +941,7 @@ impl Slider {
 
     /// Wheel steps (from [`WheelSteps::take`], the host's sign: positive =
     /// toward the user). A notch away from the user RAISES the value by
-    /// `SmallChange`, as a WinForms `TrackBar` does — the web's range input
+    /// `SmallChange`, as a WinForms `TrackBar` does - the web's range input
     /// ignores the wheel, so the desktop convention decides here.
     pub fn apply_wheel(&mut self, steps: i32) -> bool {
         let delta = self.inner.small_change().saturating_mul(steps);
@@ -949,7 +949,7 @@ impl Slider {
     }
 
     /// Drags to the pointer: the value under `(x, y)`, clamped. Called on the
-    /// press AND every frame while the button is held — the host captures the
+    /// press AND every frame while the button is held - the host captures the
     /// mouse, so the pointer keeps being reported outside the window.
     pub fn drag_to(&mut self, bounds: Rect, x: f32, y: f32) -> bool {
         let v = self.value_at(bounds, x, y);
@@ -982,7 +982,7 @@ impl Slider {
         }
     }
 
-    /// Paints the value bubble into `rect` — `rounded-md bg-[accent]
+    /// Paints the value bubble into `rect` - `rounded-md bg-[accent]
     /// text-white text-xs font-semibold shadow`. An associated function, so a
     /// floating surface's `'static` paint closure needs only the text and the
     /// rectangle, not the slider.
@@ -1017,7 +1017,7 @@ impl Slider {
     /// The thumb: a square of [`crate::metrics::control::SLIDER_THUMB`] centred
     /// on the value, painted as a disc.
     ///
-    /// Its centre is `TrackBar::thumb_offset` — the replica's mapping, so a
+    /// Its centre is `TrackBar::thumb_offset` - the replica's mapping, so a
     /// vertical slider fills from the bottom without a sign flip here.
     pub fn thumb_rect(&self, bounds: Rect) -> Rect {
         let (origin, len) = self.track_span(bounds);
@@ -1031,7 +1031,7 @@ impl Slider {
         }
     }
 
-    /// The filled part of the rail — left of the thumb, or BELOW it on a
+    /// The filled part of the rail - left of the thumb, or BELOW it on a
     /// vertical slider, because a `TrackBar`'s value grows upward.
     pub fn fill_rect(&self, bounds: Rect) -> Rect {
         let rail = self.rail_rect(bounds);
@@ -1062,7 +1062,7 @@ impl Slider {
         Some(if before { SliderPart::TrackBefore } else { SliderPart::TrackAfter })
     }
 
-    /// The value a click or a drag at `(x, y)` designates — the replica's
+    /// The value a click or a drag at `(x, y)` designates - the replica's
     /// `value_at_offset`, which rounds to the nearest unit and clamps.
     pub fn value_at(&self, bounds: Rect, x: f32, y: f32) -> i32 {
         let (origin, len) = self.track_span(bounds);
@@ -1072,8 +1072,8 @@ impl Slider {
 
     /// Snaps `value` to the nearest tick.
     ///
-    /// The ticks are the replica's [`TrackBar::tick_values`] — `Minimum`, then
-    /// every `TickFrequency`, then `Maximum` — so the last interval is SHORTER
+    /// The ticks are the replica's [`TrackBar::tick_values`] - `Minimum`, then
+    /// every `TickFrequency`, then `Maximum` - so the last interval is SHORTER
     /// when the range is not a whole multiple of the frequency, and snapping
     /// respects that instead of assuming an even grid. A non-positive
     /// frequency leaves only the two ends, and snapping then goes to whichever
@@ -1092,7 +1092,7 @@ impl Slider {
     }
 
     /// The two tick rows on the cross axis, `None` on a side `TickStyle` does
-    /// not ask for — which is what makes `BottomRight`, `TopLeft`, `Both` and
+    /// not ask for - which is what makes `BottomRight`, `TopLeft`, `Both` and
     /// `None` four visibly different layouts rather than one.
     fn tick_bands(&self, bounds: Rect) -> TickBands {
         let style = self.inner.tick_style();
@@ -1114,7 +1114,7 @@ impl Widget for Slider {
 
     fn measure(&self, canvas: &dyn Canvas) -> Size {
         // The LENGTH is the replica's default TrackBar extent (104 DIP); the
-        // THICKNESS is Kubuno's — the thumb and its focus ring, or the tick rows
+        // THICKNESS is Kubuno's - the thumb and its focus ring, or the tick rows
         // when they reach further. The rail is centred, so the thickness is
         // TWICE the furthest reach on either side: a one-sided tick row still
         // fits, rather than hanging below the bounds. WinForms' 45 DIP cross
@@ -1138,18 +1138,18 @@ impl Widget for Slider {
     fn paint(&self, canvas: &dyn Canvas, bounds: Rect, state: WidgetState) {
         // No ground of its own: `@ui/RangeSlider` is a transparent wrapper
         // around a rail, so whatever surface holds it (a card, a form) shows
-        // around the rail — an opaque band here read as a dark stripe inside
+        // around the rail - an opaque band here read as a dark stripe inside
         // every card of the composition page.
         let t = canvas.theme();
         let horizontal = self.is_horizontal();
         let rail = self.rail_rect(bounds);
         let r = pill(m::SLIDER_TRACK);
-        // `disabled && 'opacity-60'` — the whole slider fades, the accent does
+        // `disabled && 'opacity-60'` - the whole slider fades, the accent does
         // not turn grey.
         let k = if state.disabled { SLIDER_DISABLED_OPACITY } else { 1.0 };
 
         // `@ui/RangeSlider`'s default `trackColor` is `rgba(0,0,0,0.10)`, which
-        // is `drive_bar_track` verbatim — the token the desktop already uses for
+        // is `drive_bar_track` verbatim - the token the desktop already uses for
         // every meter rail, and which has a dark-palette answer the CSS literal
         // does not.
         canvas.fill_rounded(&rail, r, &faded(t.drive_bar_track, k));
@@ -1196,7 +1196,7 @@ impl Widget for Slider {
         let disc = thumb.inflate(-SLIDER_THUMB_RING, -SLIDER_THUMB_RING);
         canvas.fill_rounded(&disc, pill(m::SLIDER_DISC), &fill);
 
-        // The keyboard focus ring, OUTSIDE the halo (`:focus-visible` only — a
+        // The keyboard focus ring, OUTSIDE the halo (`:focus-visible` only - a
         // click-drag does not light it). `stroke_rounded_w` strokes inward, so
         // the rectangle is the thumb grown by the ring's width.
         if state.show_focus_ring() && !state.disabled {
@@ -1233,19 +1233,19 @@ pub enum ProgressVariant {
     Danger,
 }
 
-/// The track's thickness — `@ui/ProgressBar`'s `size` prop, which offers
+/// The track's thickness - `@ui/ProgressBar`'s `size` prop, which offers
 /// exactly these two and no others.
 ///
 /// An earlier draft carried a third, `Hairline`, over the 4 DIP
 /// `metrics::control::PROGRESS` of the day. That token turned out to be
-/// invented — the web draws this bar at 6 or 8 and nowhere at 4 — and it has
+/// invented - the web draws this bar at 6 or 8 and nowhere at 4 - and it has
 /// since been removed from the table, so the variant goes with it rather than
 /// being re-sourced: a size the design system does not offer is not a size.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum ProgressSize {
     /// `size="sm"` (`h-1.5`).
     Sm,
-    /// `size="md"` (`h-2`) — the component's own default.
+    /// `size="md"` (`h-2`) - the component's own default.
     #[default]
     Md,
 }
@@ -1275,10 +1275,10 @@ pub struct ProgressBar {
     pub size: ProgressSize,
     /// Where the indeterminate sliver is, `0.0..=1.0`.
     ///
-    /// The control owns no timer — the replica's `marquee_animation_speed` says
-    /// as much — so the host advances this. It is the **eased** progress of
+    /// The control owns no timer - the replica's `marquee_animation_speed` says
+    /// as much - so the host advances this. It is the **eased** progress of
     /// `@keyframes kb-progress-slide`: the web's `ease-in-out` is applied by the
-    /// caller, so no easing curve is invented here — [`ProgressBar::phase_at`]
+    /// caller, so no easing curve is invented here - [`ProgressBar::phase_at`]
     /// computes it from the web's own timing for a caller that has a clock.
     pub phase: f32,
     /// `@ui/ProgressBar`'s `label`: a line above the track, `truncate`d with an
@@ -1347,7 +1347,7 @@ impl ProgressBar {
         self.label.is_some() || self.show_value
     }
 
-    /// The value as the header prints it: `${Math.round(pct)} %` — a plain
+    /// The value as the header prints it: `${Math.round(pct)} %` - a plain
     /// space before the sign, as the web writes it.
     pub fn value_text(&self) -> String {
         format!("{} %", (self.inner.fraction() * 100.0).round() as i32)
@@ -1357,7 +1357,7 @@ impl ProgressBar {
     /// crossing every [`ProgressBar::SLIDE_MS`].
     pub const SLIDE_MS: u64 = 1300;
 
-    /// The eased [`ProgressBar::phase`] at `ms` on a monotonic clock — CSS
+    /// The eased [`ProgressBar::phase`] at `ms` on a monotonic clock - CSS
     /// `ease-in-out`, i.e. `cubic-bezier(0.42, 0, 0.58, 1)`, over
     /// [`ProgressBar::SLIDE_MS`]. For a host animating the indeterminate
     /// sliver; the control itself still owns no timer.
@@ -1408,7 +1408,7 @@ impl ProgressBar {
         }
     }
 
-    /// The track, centred in `bounds` — the bar is a band, not the whole
+    /// The track, centred in `bounds` - the bar is a band, not the whole
     /// rectangle, so a caller can give it a row and get it vertically centred.
     ///
     /// With a header ([`ProgressBar::has_header`]) the header line comes first
@@ -1449,7 +1449,7 @@ impl ProgressBar {
     /// The indeterminate sliver at the current [`ProgressBar::phase`].
     ///
     /// `w-1/3` of the track, travelling from `translateX(-100%)` to
-    /// `translateX(300%)` of its own width — so it starts fully off the left
+    /// `translateX(300%)` of its own width - so it starts fully off the left
     /// edge and ends fully off the right one.
     pub fn sliver_rect(&self, bounds: Rect) -> Rect {
         let track = self.track_rect(bounds);
@@ -1469,7 +1469,7 @@ impl Widget for ProgressBar {
     fn measure(&self, canvas: &dyn Canvas) -> Size {
         // A bar is `w-full` on the web: it has no intrinsic width, so the length
         // stays the replica's (its designer size, or the toolkit's 100 DIP).
-        // The height is the token track — never the toolkit's 23.
+        // The height is the token track - never the toolkit's 23.
         let replica = self.inner.preferred_size(canvas);
         let header =
             if self.has_header() { PROGRESS_HEADER_LINE + PROGRESS_HEADER_GAP } else { 0.0 };
@@ -1483,7 +1483,7 @@ impl Widget for ProgressBar {
         let track = self.track_rect(bounds);
 
         // The header: `flex items-baseline justify-between gap-2`, the label
-        // `min-w-0 truncate`, the value `shrink-0 tabular-nums` — the value
+        // `min-w-0 truncate`, the value `shrink-0 tabular-nums` - the value
         // keeps its width and the label gives way with an ellipsis.
         if let Some(line) = self.header_rect(bounds) {
             let f = canvas.formats();
@@ -1506,7 +1506,7 @@ impl Widget for ProgressBar {
         let h = self.size.track();
         let r = pill(h);
 
-        // `rounded-full bg-surface-2` — and `overflow-hidden`, which is what
+        // `rounded-full bg-surface-2` - and `overflow-hidden`, which is what
         // keeps the indeterminate sliver inside the pill at both ends.
         canvas.fill_rounded(&track, r, &t.surface_2);
 
@@ -1526,7 +1526,7 @@ impl Widget for ProgressBar {
 }
 
 // ═════════════════════════════════════════════════════════════════════════════
-// NumericField / DomainField — the two spinners
+// NumericField / DomainField - the two spinners
 // ═════════════════════════════════════════════════════════════════════════════
 
 /// One of a spinner's two step buttons.
@@ -1542,13 +1542,13 @@ pub enum SpinPart {
 /// Everything about a spinner's chrome that is not in [`WidgetState`].
 #[derive(Debug, Clone, Copy)]
 struct FieldLook {
-    /// `UpDownAlign::Right` — the spin column on the right.
+    /// `UpDownAlign::Right` - the spin column on the right.
     on_right: bool,
     /// `@ui/NumberInput`'s `error`: a danger border, and a danger ring.
     invalid: bool,
     /// The step button under the pointer (`hover:bg-surface-2`).
     spin_hot: Option<SpinPart>,
-    /// Whether each button can act — `disabled={atMax}` / `disabled={atMin}`.
+    /// Whether each button can act - `disabled={atMax}` / `disabled={atMin}`.
     up_enabled: bool,
     down_enabled: bool,
 }
@@ -1563,7 +1563,7 @@ fn spin_column(bounds: Rect, on_right: bool) -> Rect {
     }
 }
 
-/// The two step buttons — the column split at its middle (`flex-1` each).
+/// The two step buttons - the column split at its middle (`flex-1` each).
 fn spin_rects(bounds: Rect, on_right: bool) -> (Rect, Rect) {
     let column = spin_column(bounds, on_right);
     let mid = (column.top + column.bottom) / 2.0;
@@ -1594,8 +1594,8 @@ fn field_text_rect(bounds: Rect, on_right: bool) -> Rect {
     }
 }
 
-/// Draws the shared spinner chrome — `@ui/NumberInput`: an `h-9` `rounded-md`
-/// box with a `w-6` spin column on the side `UpDownAlign` asks for — and returns
+/// Draws the shared spinner chrome - `@ui/NumberInput`: an `h-9` `rounded-md`
+/// box with a `w-6` spin column on the side `UpDownAlign` asks for - and returns
 /// the rectangle left for the text.
 ///
 /// Shared by [`NumericField`] and [`DomainField`] so the two cannot drift, which
@@ -1659,7 +1659,7 @@ fn paint_field_frame(canvas: &dyn Canvas, bounds: Rect, look: FieldLook, state: 
 
     // `border-border`, or `border-danger` for `error`; focused, the
     // `kb-field-focus` ring (danger for `error`), which subsumes the border.
-    // A spinner is a TEXT input, so it shows its ring on any focus — the
+    // A spinner is a TEXT input, so it shows its ring on any focus - the
     // browser's `:focus-visible` answers yes for every text field.
     if state.focused && !state.disabled {
         let ring = if look.invalid { t.danger } else { t.accent };
@@ -1672,7 +1672,7 @@ fn paint_field_frame(canvas: &dyn Canvas, bounds: Rect, look: FieldLook, state: 
     field_text_rect(bounds, look.on_right)
 }
 
-/// Paints `text` in the field's text rectangle, clipped to it — a long number
+/// Paints `text` in the field's text rectangle, clipped to it - a long number
 /// is cut at the padding like the web input's content, never spilled over the
 /// spin column.
 fn paint_field_text(
@@ -1706,10 +1706,10 @@ fn field_width(canvas: &dyn Canvas, text: &str, floor: f32) -> f32 {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// NumericEdit — the text a spinner holds while it is being typed into
+// NumericEdit - the text a spinner holds while it is being typed into
 // ─────────────────────────────────────────────────────────────────────────────
 
-/// What a key did to a [`NumericEdit`] — see [`NumericEdit::handle_key`].
+/// What a key did to a [`NumericEdit`] - see [`NumericEdit::handle_key`].
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum EditOutcome {
     /// Not an editing key: leave it for someone else.
@@ -1722,7 +1722,7 @@ pub enum EditOutcome {
     Commit,
     /// `Escape`: throw the text away and show the value again.
     Revert,
-    /// `ArrowUp` / `ArrowDown` — the native number input's step keys.
+    /// `ArrowUp` / `ArrowDown` - the native number input's step keys.
     Step(SpinPart),
     /// `Ctrl+C`: put this on the clipboard.
     Copy(String),
@@ -1738,8 +1738,8 @@ pub enum EditOutcome {
 /// Pure data with pure operations, so the whole of typing is testable without a
 /// window; the host feeds it keys and text and paints it with
 /// [`NumericField::paint_editing`]. What a spinner accepts is what a number can
-/// hold — digits, a sign, a decimal separator, and hex digits in hexadecimal
-/// mode — everything else typed or pasted is dropped, as `NumericUpDown` does
+/// hold - digits, a sign, a decimal separator, and hex digits in hexadecimal
+/// mode - everything else typed or pasted is dropped, as `NumericUpDown` does
 /// with non-numeric keys.
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
 pub struct NumericEdit {
@@ -1749,7 +1749,7 @@ pub struct NumericEdit {
 }
 
 impl NumericEdit {
-    /// An edit over `text`, all of it selected — what focusing a field by
+    /// An edit over `text`, all of it selected - what focusing a field by
     /// keyboard does in every browser and in WinForms.
     pub fn new(text: impl Into<String>) -> Self {
         let text = text.into();
@@ -1787,7 +1787,7 @@ impl NumericEdit {
     }
 
     /// Places the caret at byte `at` (snapped back to a character boundary),
-    /// extending the selection from the anchor when `extend` — a click, or a
+    /// extending the selection from the anchor when `extend` - a click, or a
     /// Shift+click / drag.
     pub fn set_caret(&mut self, at: usize, extend: bool) {
         let mut at = at.min(self.text.len());
@@ -1977,7 +1977,7 @@ fn parse_numeric(field: &NumericUpDown, text: &str) -> Option<f64> {
 }
 
 /// Where the edited text starts on screen: aligned as `TextAlign` asks while
-/// it fits, otherwise scrolled so the caret stays in view — the input's own
+/// it fits, otherwise scrolled so the caret stays in view - the input's own
 /// horizontal scroll.
 fn edit_origin(canvas: &dyn Canvas, text_rect: Rect, edit: &NumericEdit, align: HorizontalAlignment) -> f32 {
     let f = canvas.formats();
@@ -2016,7 +2016,7 @@ fn edit_origin(canvas: &dyn Canvas, text_rect: Rect, edit: &NumericEdit, align: 
 ///   is applied before anything else exists;
 /// * [`NumericField::with_value`] and [`NumericField::set_range_and_value`]
 ///   apply the range **first, in one call**, and validate before touching a
-///   single field — a refused call leaves the control exactly as it was;
+///   single field - a refused call leaves the control exactly as it was;
 /// * [`NumericField::clamped`] is there for the caller who wants the toolkit's
 ///   *other* behaviour (fold into range) and should say so out loud.
 ///
@@ -2028,7 +2028,7 @@ fn edit_origin(canvas: &dyn Canvas, text_rect: Rect, edit: &NumericEdit, align: 
 /// While focused, the field is edited through a [`NumericEdit`]
 /// ([`NumericField::begin_edit`]) painted by [`NumericField::paint_editing`];
 /// the text is validated into the value by [`NumericField::commit`] on Enter
-/// and on focus loss — WinForms' `ValidateEditText` — folded into the range
+/// and on focus loss - WinForms' `ValidateEditText` - folded into the range
 /// and rounded to `DecimalPlaces`. Unparseable text is refused and the value
 /// shown again.
 pub struct NumericField {
@@ -2060,7 +2060,7 @@ impl DerefMut for NumericField {
 }
 
 impl NumericField {
-    /// A spinner with the replica's defaults — including `Maximum = 100`.
+    /// A spinner with the replica's defaults - including `Maximum = 100`.
     pub fn new() -> Self {
         Self { inner: NumericUpDown::new(), invalid: false, spin_hot: None }
     }
@@ -2098,7 +2098,7 @@ impl NumericField {
         self
     }
 
-    /// Range and value in ONE call, in the only order that works — and
+    /// Range and value in ONE call, in the only order that works - and
     /// **atomically**: the arguments are checked against each other first, so a
     /// refusal leaves the control untouched rather than half-applied.
     pub fn set_range_and_value(
@@ -2117,7 +2117,7 @@ impl NumericField {
     /// Folds `value` into the current range and assigns it, returning what was
     /// actually stored.
     ///
-    /// Cannot fail — and that is the point of it having a different name from
+    /// Cannot fail - and that is the point of it having a different name from
     /// `set_value`: clamping is a decision, not a fallback.
     pub fn clamped(&mut self, value: f64) -> f64 {
         let v = value.clamp(self.inner.minimum(), self.inner.maximum());
@@ -2150,7 +2150,7 @@ impl NumericField {
         spin_part_at(bounds, self.on_right(), x, y)
     }
 
-    /// Where the text goes (`px-3` inside the box, beside the spin column) —
+    /// Where the text goes (`px-3` inside the box, beside the spin column) -
     /// the I-beam area, and what a click is mapped against.
     pub fn text_rect(&self, bounds: Rect) -> Rect {
         field_text_rect(bounds, self.on_right())
@@ -2192,7 +2192,7 @@ impl NumericField {
         NumericEdit::new(self.inner.display_text())
     }
 
-    /// The number `text` stands for, in this field's format — `None` when it
+    /// The number `text` stands for, in this field's format - `None` when it
     /// is not a number. Not yet clamped nor rounded; see
     /// [`NumericField::commit`].
     pub fn parse_text(&self, text: &str) -> Option<f64> {
@@ -2201,7 +2201,7 @@ impl NumericField {
 
     /// Validates `edit` into the value: parsed, folded into the range and
     /// rounded to `DecimalPlaces` (`NumericUpDown.Constrain`). Returns `false`,
-    /// leaving the value as it was, when the text is not a number — the
+    /// leaving the value as it was, when the text is not a number - the
     /// caller then shows the value again.
     pub fn commit(&mut self, edit: &NumericEdit) -> bool {
         let Some(v) = self.parse_text(edit.text()) else {
@@ -2217,7 +2217,7 @@ impl NumericField {
         true
     }
 
-    /// The byte offset in `edit` nearest to `x` — where a click in the text
+    /// The byte offset in `edit` nearest to `x` - where a click in the text
     /// puts the caret.
     pub fn caret_at(&self, canvas: &dyn Canvas, bounds: Rect, edit: &NumericEdit, x: f32) -> usize {
         let text_rect = self.text_rect(bounds);
@@ -2236,8 +2236,8 @@ impl NumericField {
     }
 
     /// Paints the field while it is typed into: the chrome, then `edit`'s
-    /// selection band (`--color-primary` at 35 %), its text and — when
-    /// `caret_on`, i.e. during the blink's visible phase — the caret. All of
+    /// selection band (`--color-primary` at 35 %), its text and - when
+    /// `caret_on`, i.e. during the blink's visible phase - the caret. All of
     /// it clipped to the text rectangle, scrolled to keep the caret in view.
     pub fn paint_editing(
         &self,
@@ -2288,7 +2288,7 @@ impl Widget for NumericField {
 
     fn measure(&self, canvas: &dyn Canvas) -> Size {
         // `@ui/NumberInput` is `h-9`, the same height as every other input in
-        // the system — not the replica's font-derived `PreferredHeight`.
+        // the system - not the replica's font-derived `PreferredHeight`.
         Size::new(
             field_width(canvas, &self.inner.display_text(), self.inner.width()),
             height::BUTTON_MD,
@@ -2313,7 +2313,7 @@ impl Widget for NumericField {
 /// `kubuno_desktop_controls::range::DomainUpDown`.
 ///
 /// Worth carrying: the replica holds the whole selection state machine, ends
-/// included — `Wrap`, `Sorted` (which keeps the INDEX, not the item), and the
+/// included - `Wrap`, `Sorted` (which keeps the INDEX, not the item), and the
 /// asymmetry where stepping down from « nothing selected » picks the first item
 /// while stepping up from it picks nothing. Kubuno adds only the chrome, which
 /// is `@ui/NumberInput`'s, shared with [`NumericField`].
@@ -2349,7 +2349,7 @@ impl DomainField {
         Self { inner: DomainUpDown::new(), invalid: false, spin_hot: None }
     }
 
-    /// A field over `items`, with the first one selected — the state a form
+    /// A field over `items`, with the first one selected - the state a form
     /// actually wants, and one `set_selected_index` cannot reach on an empty
     /// list.
     pub fn with_items<I, S>(items: I) -> Self
@@ -2400,7 +2400,7 @@ impl DomainField {
     }
 
     /// One press of a step button (or ArrowUp / ArrowDown): `UpButton` is the
-    /// PREVIOUS item, `DownButton` the next — the replica's machine. Returns
+    /// PREVIOUS item, `DownButton` the next - the replica's machine. Returns
     /// whether the selection moved.
     pub fn step(&mut self, part: SpinPart) -> bool {
         let before = self.inner.selected_index();
@@ -2534,7 +2534,7 @@ mod tests {
 
     /// **The non-regression gate.** For the same content description, the rebuilt
     /// bar must put the rail and the thumb where `kubuno_drive_desktop_app_controls::Scrollbar`
-    /// puts them — resting and expanded, both axes, both ends of the travel.
+    /// puts them - resting and expanded, both axes, both ends of the travel.
     #[test]
     fn scrollbar_geometry_matches_the_predecessor() {
         let content = Rect::new(20.0, 30.0, 320.0, 430.0);
@@ -2596,7 +2596,7 @@ mod tests {
             "value = max reachable ⇒ flush with the bottom"
         );
 
-        // Same length at both ends — the thumb travels, it does not stretch.
+        // Same length at both ends - the thumb travels, it does not stretch.
         assert!(
             ((at_min.bottom - at_min.top) - (at_max.bottom - at_max.top)).abs() < 1e-3,
             "the thumb keeps its length"
@@ -2713,14 +2713,14 @@ mod tests {
         let mut s = Slider::new();
         s.set_maximum(20);
         s.set_tick_frequency(3);
-        // The replica's ticks: 0, 3, 6, 9, 12, 15, 18, 20 — note the SHORT last
+        // The replica's ticks: 0, 3, 6, 9, 12, 15, 18, 20 - note the SHORT last
         // gap, which an evenly-spread grid would get wrong.
         assert_eq!(s.tick_values(), vec![0, 3, 6, 9, 12, 15, 18, 20]);
 
         assert_eq!(s.snap_to_tick(0), 0);
         assert_eq!(s.snap_to_tick(4), 3);
         assert_eq!(s.snap_to_tick(5), 6);
-        assert_eq!(s.snap_to_tick(19), 18, "18 is one away, 20 is one away — the first wins");
+        assert_eq!(s.snap_to_tick(19), 18, "18 is one away, 20 is one away - the first wins");
         assert_eq!(s.snap_to_tick(20), 20);
 
         // A non-positive frequency leaves the two ends only.
@@ -2782,7 +2782,7 @@ mod tests {
         assert_eq!(p.resolved_variant(), ProgressVariant::Warning);
         p.set_value(90);
         assert_eq!(p.resolved_variant(), ProgressVariant::Danger);
-        // An explicit variant is never overridden — a download is not dangerous
+        // An explicit variant is never overridden - a download is not dangerous
         // at 95 %.
         p.variant = ProgressVariant::Primary;
         assert_eq!(p.resolved_variant(), ProgressVariant::Primary);
@@ -2812,7 +2812,7 @@ mod tests {
 
     // ── NumericField: the ordering trap ──────────────────────────────────────
 
-    /// The documented trap, reproduced — and then made unreachable.
+    /// The documented trap, reproduced - and then made unreachable.
     #[test]
     fn a_value_above_the_default_maximum_is_refused_unless_the_range_comes_first() {
         // The mistake: the default Maximum is 100, so 255 throws.
@@ -2821,7 +2821,7 @@ mod tests {
         assert!(naive.set_value(255.0).is_err());
         assert_eq!(naive.value(), 0.0, "a refused assignment changed nothing");
 
-        // The fix the toolkit documents — and the only order this type offers.
+        // The fix the toolkit documents - and the only order this type offers.
         let ok = NumericField::ranged(0.0, 255.0)
             .with_value(255.0)
             .expect("the range was widened first");
@@ -2868,7 +2868,7 @@ mod tests {
         assert_eq!((g.minimum(), g.maximum()), (-10.0, 10.0));
     }
 
-    /// The formatting, the increment and the spin steps all stay the replica's —
+    /// The formatting, the increment and the spin steps all stay the replica's -
     /// this only checks they are reachable and were not shadowed.
     #[test]
     fn the_replicas_surface_is_reachable_through_deref() {
@@ -2975,7 +2975,7 @@ mod tests {
     #[test]
     fn the_slider_paints_inside_what_it_measures() {
         // `measure` must hold the thumb, its focus ring and any tick row, the
-        // rail being centred — for every tick style.
+        // rail being centred - for every tick style.
         for style in [TickStyle::None, TickStyle::BottomRight, TickStyle::TopLeft, TickStyle::Both] {
             let mut s = Slider::new();
             s.set_tick_style(style);

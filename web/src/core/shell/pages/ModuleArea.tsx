@@ -26,11 +26,11 @@ export default function ModuleArea() {
   const { configs }  = useToolbarStore()
   const toolbarConfig = resolveToolbarConfig(configs, pathname)
   // Per-user module settings pages render full-bleed (no padding) and without the
-  // module toolbar — they own their chrome (breadcrumb + tab bar), like mail.
+  // module toolbar - they own their chrome (breadcrumb + tab bar), like mail.
   const isSettings    = ModuleSettingsRegistry.isSettingsRoute(pathname)
   const noPadding     = isSettings || toolbarConfig?.noPadding
   const Toolbar       = isSettings ? null : (toolbarConfig?.ToolbarComponent ?? null)
-  /* Marge intérieure de la zone centrale : 24px PAR DÉFAUT — le contenu ne doit
+  /* Marge intérieure de la zone centrale : 24px PAR DÉFAUT - le contenu ne doit
    * jamais mourir contre les bords, et surtout pas contre le bas. Un module peut
    * demander une autre valeur (`padding`) ; le mode full-bleed (`noPadding`) reste
    * prioritaire et n'en reçoit aucune, puisqu'il gère son propre chrome. */

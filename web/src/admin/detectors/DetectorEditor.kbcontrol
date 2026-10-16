@@ -1,4 +1,4 @@
-<!-- DetectorEditor — converted from DetectorEditor.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- DetectorEditor - converted from DetectorEditor.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="Props">
   <Panel Class="min-w-0">
     <Stack Direction="LeftToRight" CrossAlign="Center" WrapContents="true" Visible="{Binding show_id}">

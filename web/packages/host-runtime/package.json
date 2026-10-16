@@ -1,7 +1,7 @@
 {
   "name": "@kubuno/host-runtime",
   "version": "0.1.2",
-  "description": "Kubuno web views design host — the Visual Studio design surface page: a static build in bundled mode (React, @ui, the sdk, the @kubuno/views runtime, the .kbview compiler's WebAssembly, the host registry, the host CSS with the production fonts, the core's translations and the light / dark Kubuno themes), and the project-mode page of module projects with the host's shared modules, served by the module's own Vite dev server.",
+  "description": "Kubuno web views design host - the Visual Studio design surface page: a static build in bundled mode (React, @ui, the sdk, the @kubuno/views runtime, the .kbview compiler's WebAssembly, the host registry, the host CSS with the production fonts, the core's translations and the light / dark Kubuno themes), and the project-mode page of module projects with the host's shared modules, served by the module's own Vite dev server.",
   "license": "AGPL-3.0-or-later",
   "homepage": "https://github.com/kubuno/core/tree/main/web/packages/host-runtime",
   "repository": {

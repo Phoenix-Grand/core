@@ -1,4 +1,4 @@
-//! `StackedBar` — a composition bar: a rounded track with proportional segments laid end to end (the
+//! `StackedBar` - a composition bar: a rounded track with proportional segments laid end to end (the
 //! storage's accounts / other content / free space, the accounts' ok / near / full). A `ProgressBar`
 //! carries one fill; this one carries several, on the same track token and thickness, so the two read
 //! as one family.

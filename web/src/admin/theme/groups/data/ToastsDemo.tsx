@@ -4,7 +4,7 @@ import { Button, ToastProvider, useToast } from "@ui"
 import { AlertCircle, Bell, CheckCircle2, Undo2 } from "lucide-react"
 import PreviewStage from "../../PreviewStage"
 
-/** Buttons that fire toasts — confined to a bounded stage. */
+/** Buttons that fire toasts - confined to a bounded stage. */
 function ToastButtons() {
   const { t } = useTranslation()
   const toast = useToast()

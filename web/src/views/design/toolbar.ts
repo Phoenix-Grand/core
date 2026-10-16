@@ -12,9 +12,9 @@ export type WidthChoice = 'design' | 'fit' | number
 export type DeviceChoice = 'phone' | 'tablet' | null
 
 /**
- * Device frames in logical (CSS) pixels — the scale the shared controls are sized in (their typographic roles, paddings
- * and gaps are theme values at this scale, like the web). The view is shown at this fixed size — scaled to fit the pane
- * — with phone/tablet proportions and a bezel, rather than as a responsive web page. Rotating swaps width and height.
+ * Device frames in logical (CSS) pixels - the scale the shared controls are sized in (their typographic roles, paddings
+ * and gaps are theme values at this scale, like the web). The view is shown at this fixed size - scaled to fit the pane
+ * - with phone/tablet proportions and a bezel, rather than as a responsive web page. Rotating swaps width and height.
  */
 export const DEVICE_FRAMES: Record<Exclude<DeviceChoice, null>, { w: number; h: number; label: string }> = {
   phone: { w: 390, h: 844, label: 'Téléphone' },
@@ -46,7 +46,7 @@ export interface ToolbarHandlers {
 
 export const WIDTH_PRESETS = [390, 768, 1280, 1440] as const
 
-/** Lucide device glyphs for the width presets (plain SVG — the toolbar is DOM outside the view's React tree). */
+/** Lucide device glyphs for the width presets (plain SVG - the toolbar is DOM outside the view's React tree). */
 const glyph = (paths: string): string =>
   `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths}</svg>`
 const DEVICE: Record<number, { icon: string; label: string }> = {
@@ -106,16 +106,16 @@ export function createToolbar(doc: Document, languages: readonly string[], handl
   // this group is left out when editing for mobile.
   if (!options.mobile) {
     const width = group('Largeur')
-    designBtn = button(width, '—', 'Largeur de conception (DesignWidth)', (s) => s.width === 'design', () => handlers.width('design'))
-    for (const w of WIDTH_PRESETS) button(width, String(w), `${DEVICE[w].label} — ${w} px`, (s) => s.width === w, () => handlers.width(w), DEVICE[w].icon)
+    designBtn = button(width, '-', 'Largeur de conception (DesignWidth)', (s) => s.width === 'design', () => handlers.width('design'))
+    for (const w of WIDTH_PRESETS) button(width, String(w), `${DEVICE[w].label} - ${w} px`, (s) => s.width === w, () => handlers.width(w), DEVICE[w].icon)
     button(width, 'Ajusté', 'Ajustée au volet', (s) => s.width === 'fit', () => handlers.width('fit'), FIT_ICON)
   }
 
-  // A device frame (phone/tablet, portrait or landscape) instead of the responsive page — for mobile views.
+  // A device frame (phone/tablet, portrait or landscape) instead of the responsive page - for mobile views.
   const dev = group('Appareil')
   button(dev, 'Aucun', 'Aucun cadre (page web responsive)', (s) => s.device === null, () => handlers.device(null), NO_DEVICE_ICON)
-  button(dev, 'Téléphone', `Cadre téléphone — ${DEVICE_FRAMES.phone.w}×${DEVICE_FRAMES.phone.h}`, (s) => s.device === 'phone', () => handlers.device('phone'), DEVICE_ICON.phone)
-  button(dev, 'Tablette', `Cadre tablette — ${DEVICE_FRAMES.tablet.w}×${DEVICE_FRAMES.tablet.h}`, (s) => s.device === 'tablet', () => handlers.device('tablet'), DEVICE_ICON.tablet)
+  button(dev, 'Téléphone', `Cadre téléphone - ${DEVICE_FRAMES.phone.w}×${DEVICE_FRAMES.phone.h}`, (s) => s.device === 'phone', () => handlers.device('phone'), DEVICE_ICON.phone)
+  button(dev, 'Tablette', `Cadre tablette - ${DEVICE_FRAMES.tablet.w}×${DEVICE_FRAMES.tablet.h}`, (s) => s.device === 'tablet', () => handlers.device('tablet'), DEVICE_ICON.tablet)
   const rotateBtn = button(dev, 'Pivoter', 'Pivoter (portrait / paysage)', (s) => s.landscape, () => handlers.rotate(), ROTATE_ICON)
 
   const theme = group('Thème')

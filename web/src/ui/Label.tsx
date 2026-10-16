@@ -108,8 +108,8 @@ export interface LinkLabelProps extends React.AnchorHTMLAttributes<HTMLAnchorEle
 }
 
 /**
- * A link (the `.kbview` `LinkLabel`). With an `href`, a plain left click stays in the app — its `onClick`
- * decides where to go (SPA routing) — while a middle or modified click opens the address as any link does.
+ * A link (the `.kbview` `LinkLabel`). With an `href`, a plain left click stays in the app - its `onClick`
+ * decides where to go (SPA routing) - while a middle or modified click opens the address as any link does.
  */
 export const LinkLabel = React.forwardRef<HTMLAnchorElement, LinkLabelProps>(function LinkLabel(
   { text, role = 'Body', weight, fontStyle, inheritSize, className, onClick, href, children, ...rest },

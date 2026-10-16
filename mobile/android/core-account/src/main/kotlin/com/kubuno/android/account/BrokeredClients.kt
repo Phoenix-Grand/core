@@ -34,7 +34,7 @@ class BrokeredClient(
 )
 
 /**
- * Builds HTTP clients for accounts this app does NOT own — the ones a sibling
+ * Builds HTTP clients for accounts this app does NOT own - the ones a sibling
  * app (drive) signed in and shared through the system AccountManager.
  *
  * The refresh token stays in the owning app; this app only ever borrows
@@ -66,7 +66,7 @@ class BrokeredClients @Inject constructor(
     /**
      * Recovers a shared account whose session has died server-side.
      *
-     * A consumer app never holds the refresh token — the owning app does — so
+     * A consumer app never holds the refresh token - the owning app does - so
      * it cannot silently refresh a genuinely-dead session. Instead it asks the
      * system to re-authenticate: `getAuthToken` with a live [activity] surfaces
      * the account's sign-in (the authenticator returns it as an intent that the
@@ -114,7 +114,7 @@ class BrokeredClients @Inject constructor(
  * track expiry from the JWT and invalidate proactively; on a 401 the
  * interceptor calls [refreshAfter401], which invalidates the failed token and
  * asks the owning app's authenticator for a new one. This process never holds
- * the refresh token — the owner rotates it, we only ever see 15-minute access
+ * the refresh token - the owner rotates it, we only ever see 15-minute access
  * tokens.
  */
 private class BrokeredBearerSource(

@@ -1,4 +1,4 @@
-<!-- ProgressRing — converted from ProgressRing.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- ProgressRing - converted from ProgressRing.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="ProgressRingProps">
   <Stack Gap="0" CrossAlign="Center" Justify="Center">
     <!-- TODO(views-migrate): <div> with a computed style -->

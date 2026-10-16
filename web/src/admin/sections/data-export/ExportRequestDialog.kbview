@@ -1,4 +1,4 @@
-<!-- ExportRequestDialog — converted from ExportRequestDialog.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- ExportRequestDialog - converted from ExportRequestDialog.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <Panel x:Props="ExportRequestDialogProps">
   <!-- TODO(views-migrate): <FloatingWindow> padding: no .kbview property -->
   <ReactHost Component="{Binding Part1}" Props="{Binding part1_props}"/>

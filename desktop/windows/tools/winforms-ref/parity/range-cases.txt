@@ -1,4 +1,4 @@
-# Numeric parity cases for the RANGE family — the single source both probes read.
+# Numeric parity cases for the RANGE family - the single source both probes read.
 #
 # `range-winforms` (a .NET console app driving the REAL System.Windows.Forms
 # controls) and `kubuno-desktop-controls`'s `parity_range` example each replay every case
@@ -15,8 +15,8 @@
 # Kinds:   hscrollbar  vscrollbar  trackbar  numericupdown  domainupdown
 #
 # Steps are `name=value` (a property assignment) or a bare `name` (an action).
-# A step that the toolkit rejects by throwing — and that the port rejects by
-# returning `Err` — is recorded as status "err"; the case then continues, so one
+# A step that the toolkit rejects by throwing - and that the port rejects by
+# returning `Err` - is recorded as status "err"; the case then continues, so one
 # rejected assignment does not hide the state that follows it.
 #
 #   scrollbars     min= max= value= small= large=
@@ -24,7 +24,7 @@
 #                  (the actions are driven in WinForms by the reflected
 #                   WM_HSCROLL/WM_VSCROLL the native scroll bar sends, i.e. by
 #                   the toolkit's own scrolling arithmetic, not by re-assigning
-#                   Value — so `last` measures the reachable ceiling for real)
+#                   Value - so `last` measures the reachable ceiling for real)
 #   trackbar       min= max= value= small= large= freq=
 #   numericupdown  min= max= value= inc= dp= hex= sep=   up down
 #   domainupdown   items=a,b,c  sel=  sorted=  wrap=     up down
@@ -46,10 +46,10 @@ sb-reach-large-eq-range  | hscrollbar | large=101; last
 # computes 101 for the `last` gesture and then its own `Value` setter REFUSES
 # it, so the case is recorded as `err` and the Value never moves. (That throw
 # comes from inside `ScrollBar.WndProc`, which is why the probe must set
-# `UnhandledExceptionMode.ThrowException` — otherwise WinForms swallows it into
+# `UnhandledExceptionMode.ThrowException` - otherwise WinForms swallows it into
 # a modal dialog and the run hangs instead of recording anything.) Refusing is
-# therefore the behaviour to reproduce; handing back 101 — a Value that the
-# port's own `set_value` would reject — is not.
+# therefore the behaviour to reproduce; handing back 101 - a Value that the
+# port's own `set_value` would reject - is not.
 sb-large0-from50-last    | hscrollbar | large=0; value=50; last
 sb-large0-from50-line    | hscrollbar | large=0; value=50; linedown
 sb-large0-from50-page    | hscrollbar | large=0; value=50; pagedown

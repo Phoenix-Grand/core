@@ -10,7 +10,7 @@ import type { ConfirmOptions } from '@ui/ConfirmDialog'
  * card that is dirty registers here, and the two ways of leaving a sheet ask
  * before discarding.
  *
- * The counter is module-level rather than a context on purpose — the cards that
+ * The counter is module-level rather than a context on purpose - the cards that
  * register are scattered across tabs and sub-components, and the only consumers
  * are the "leave" handlers of the sheets themselves. A provider would have to be
  * threaded through every one of them to answer a single boolean.
@@ -33,7 +33,7 @@ export function useUnsavedEditor(dirty: boolean): void {
     dirtyCount += 1
 
     const beforeUnload = (e: BeforeUnloadEvent) => {
-      // The wording is the browser's own — no page may choose it — but the
+      // The wording is the browser's own - no page may choose it - but the
       // prompt itself is the point: a reload must not silently drop the field.
       e.preventDefault()
       e.returnValue = ''
@@ -52,7 +52,7 @@ export function useUnsavedEditor(dirty: boolean): void {
  * the caller may proceed.
  *
  * Takes the sheet's own `confirm` so the dialog it opens is the one the sheet
- * already renders — this file owns no UI.
+ * already renders - this file owns no UI.
  */
 export async function confirmLeave(
   confirm: (options: ConfirmOptions) => Promise<boolean>,

@@ -108,7 +108,7 @@ export function useIdleLogout() {
     //       vidéo de n'importe quel module, sans aucun contrat) ;
     //    b) l'événement `kubuno:media-activity` (window), que les modules émettent
     //       périodiquement pour leurs lecteurs HORS DOM (éléments `new Audio()`,
-    //       ex. lecteur musique/radio et console DJ de media) — contrat léger,
+    //       ex. lecteur musique/radio et console DJ de media) - contrat léger,
     //       aucun import croisé.
     window.addEventListener('kubuno:media-activity', onActivity)
     const mediaPoll = setInterval(() => {

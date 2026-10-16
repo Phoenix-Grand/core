@@ -26,7 +26,7 @@ export class CaptchaPreview extends ViewBase {
     const { data, isFetching } = useQuery({
       // No setting value in the key: the endpoint reads the SAVED configuration,
       // so the preview is refreshed by the panel invalidating this query once a
-      // save has actually landed (see `afterWrite`) — not on the optimistic edit,
+      // save has actually landed (see `afterWrite`) - not on the optimistic edit,
       // which would race the write and fetch the previous type. `nonce` is the
       // manual "regenerate".
       queryKey: ['captcha-preview', this.nonce] as const,

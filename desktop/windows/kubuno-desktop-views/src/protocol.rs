@@ -1,34 +1,34 @@
 //! The DSG-6 IPC protocol: line-delimited JSON on the design surface's own
-//! stdin (host → surface) and stdout (surface → host) — `vskubuno/docs/
+//! stdin (host → surface) and stdout (surface → host) - `vskubuno/docs/
 //! DESIGNER.md`'s "DSG-6 protocol" section documents the wire shapes this
 //! module implements. `stderr` stays exactly what it already was
 //! (`RustDesignSurfaceHost.cs` already captures it as plain trace/log lines,
-//! `[embed] …` — see `examples/view_embed.rs`); this module never touches
+//! `[embed] …` - see `examples/view_embed.rs`); this module never touches
 //! it.
 //!
-//! One JSON object per line, no framing beyond the newline — the same
+//! One JSON object per line, no framing beyond the newline - the same
 //! "trivially testable" shape `DESIGNER.md` §3 already chose for the
 //! `kubuno-desktop-views-ls` channel, reused here for consistency rather than
 //! inventing a second IPC style for the other Rust process.
 //!
-//! - [`HostMessage`] — what `RustDesignSurfaceHost` sends on the surface's
-//!   stdin: `setText` (re-parse+render the buffer's current text — replaces
+//! - [`HostMessage`] - what `RustDesignSurfaceHost` sends on the surface's
+//!   stdin: `setText` (re-parse+render the buffer's current text - replaces
 //!   the temp-file bridge `RustDesignSurfaceHost.SetDocumentText` used
 //!   before DSG-6), `setDesignMode` (turn the whole feature on/off), `select`
 //!   (host-driven selection, e.g. the XML pane's caret moved), and DSG-9's
 //!   toolbox drag/drop quartet `dragEnter`/`dragOver`/`drop`/`dragLeave` (the
-//!   host translates OLE/WPF drag-drop from the VS Toolbox into these —
+//!   host translates OLE/WPF drag-drop from the VS Toolbox into these -
 //!   `DESIGNER.md` DSG-9 item 3).
-//! - [`SurfaceMessage`] — what the surface sends back on stdout:
+//! - [`SurfaceMessage`] - what the surface sends back on stdout:
 //!   `selectionChanged` (a click, or an Esc-to-parent), `editRequest` (a
-//!   single [`crate::design::EditOp`] — Delete/nudge, or a DSG-9 toolbox
+//!   single [`crate::design::EditOp`] - Delete/nudge, or a DSG-9 toolbox
 //!   drop/Flow reorder), `editRequests` (DSG-9's BATCHED form for a move/
-//!   resize drag: `{ops, gesture}`, applied by the host as one undo unit —
+//!   resize drag: `{ops, gesture}`, applied by the host as one undo unit -
 //!   `DESIGNER.md` DSG-9 item 1), and `dropTargetChanged` (DSG-9's live
 //!   toolbox-drop feedback: where a drop would land right now, and whether
 //!   it is allowed).
 //!
-//! A malformed or unrecognised line is never an error — [`parse_host_message`]
+//! A malformed or unrecognised line is never an error - [`parse_host_message`]
 //! returns `None` for it, matching DSG-2's own "stale or bogus input, no-op,
 //! never a hard failure" rule (`DESIGNER.md` §8's `kubuno/applyEdit`
 //! doc: "never an error").
@@ -42,7 +42,7 @@ use kubuno_desktop_ui::Rect;
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(tag = "type", rename_all = "camelCase")]
 pub enum HostMessage {
-    /// Re-parses and renders `text` as the current document — the buffer's
+    /// Re-parses and renders `text` as the current document - the buffer's
     /// live text, pushed directly instead of through a temp file
     /// (`DESIGNER.md` §2: "the buffer, not the file on disk, is
     /// authoritative").
@@ -58,7 +58,7 @@ pub enum HostMessage {
     /// view's own widgets.
     SetDesignMode { on: bool },
     /// Host-driven selection (XML pane → Design surface sync, `DESIGNER.md`
-    /// §1) — `id: null` clears it.
+    /// §1) - `id: null` clears it.
     Select { id: Option<String> },
     /// Host-driven multi-selection (`DESIGNER.md` §13) - e.g. resent to a restarted surface. `primary`
     /// is the primary selection (one of `ids`; the first one when absent or not among them).
@@ -66,19 +66,19 @@ pub enum HostMessage {
     /// A Layout toolbar / Format menu command on the current selection (`DESIGNER.md` §13): the
     /// surface answers with ONE `editRequests {gesture: "format"}` (nothing when it does not apply).
     Format { command: FormatCommand },
-    /// DSG-9 toolbox drag/drop — a VS Toolbox drag entered the surface's own
+    /// DSG-9 toolbox drag/drop - a VS Toolbox drag entered the surface's own
     /// window. `component` is a registry element name (`"Button"`).
     DragEnter { component: String },
-    /// DSG-9: the toolbox drag moved to `(x, y)`, surface-client DIP — the
+    /// DSG-9: the toolbox drag moved to `(x, y)`, surface-client DIP - the
     /// surface recomputes its drop target and shows the insertion marker/
     /// position (`DESIGNER.md` DSG-9 item 3).
     DragOver { x: f32, y: f32 },
-    /// DSG-9: the toolbox drag was dropped at `(x, y)` — the surface emits
+    /// DSG-9: the toolbox drag was dropped at `(x, y)` - the surface emits
     /// one `editRequest { op: insertChild }` when the current target is
     /// valid, nothing otherwise.
     Drop { x: f32, y: f32 },
     /// DSG-9: the toolbox drag left the surface's own window (cancelled, or
-    /// moved onto some other UI) — clears any drop-target adorner.
+    /// moved onto some other UI) - clears any drop-target adorner.
     DragLeave,
     /// EVT-7b: the project's own controls as the language server knows them (its `kubuno/registry`
     /// entries of `origin: "project"`). The surface registers those its program does not link as
@@ -171,13 +171,13 @@ pub enum SurfaceMessage {
         ids: Vec<String>,
     },
     /// Delete, a nudging arrow, a DSG-9 Flow reorder, or a DSG-9 toolbox drop
-    /// produced this SINGLE edit request — forward it to `kubuno-desktop-views-ls`'s
+    /// produced this SINGLE edit request - forward it to `kubuno-desktop-views-ls`'s
     /// `kubuno/applyEdit`, exactly shaped like that method's own `op`
     /// parameter (`DESIGNER.md` §8).
     EditRequest { op: EditOp },
     /// DSG-9's batched form: a move or resize drag's mouse-up produces one or
     /// more `setAttribute` ops that must land as a SINGLE undo unit
-    /// (`DESIGNER.md` DSG-9 item 1) — the host applies every entry in `ops`
+    /// (`DESIGNER.md` DSG-9 item 1) - the host applies every entry in `ops`
     /// inside one `IOleUndoManager`/`ITextUndoHistory` compound action rather
     /// than one `kubuno/applyEdit` call per op. `gesture` says which kind of
     /// drag produced them (`"move"` or `"resize"` on the wire).
@@ -185,13 +185,13 @@ pub enum SurfaceMessage {
     /// DSG-9's live toolbox-drop feedback (`crate::design::ToolboxController
     /// ::drag_over`'s own result, re-sent after every `dragOver`/on
     /// `dragLeave`): `None` when there is no current target (no active drag,
-    /// nothing under the pointer, or the drag just left) — the host clears
+    /// nothing under the pointer, or the drag just left) - the host clears
     /// its own drop-target adorner/cursor in that case.
     DropTargetChanged { target: Option<WireDropTarget> },
     /// A right-click (or Shift+F10 / the context-menu key) on the surface: the host shows its
     /// context menu at `(screenX, screenY)` (physical screen pixels). `(x, y)` is the same point
-    /// in surface-client DIP. `elementId` is the element the menu is for — already selected by the
-    /// surface, which sends the `selectionChanged` first — or `null` for the view itself (the
+    /// in surface-client DIP. `elementId` is the element the menu is for - already selected by the
+    /// surface, which sends the `selectionChanged` first - or `null` for the view itself (the
     /// canvas background or the frame's title bar).
     ContextMenu {
         x: f32,
@@ -222,9 +222,9 @@ pub enum SurfaceMessage {
         #[serde(rename = "elementId")]
         element_id: String,
     },
-    /// What the preview shows after a `setText` (or a reload by `projectComponents`) — `DESIGNER.md`
+    /// What the preview shows after a `setText` (or a reload by `projectComponents`) - `DESIGNER.md`
     /// §17: the view as written, its valid part with placeholders, the last good preview kept over a
-    /// malformed text, or nothing — and the diagnostics of the text, for the designer's error banner.
+    /// malformed text, or nothing - and the diagnostics of the text, for the designer's error banner.
     /// Sent once per reload, only when it differs from the previous one.
     RenderStatus {
         state: RenderState,
@@ -321,9 +321,9 @@ pub fn wire_diagnostics(text: &str, diagnostics: &[crate::syntax::Diagnostic]) -
         .collect()
 }
 
-/// The wire shape of [`crate::design::DropTarget`] — plain, fully
+/// The wire shape of [`crate::design::DropTarget`] - plain, fully
 /// serializable fields only (unlike that type, which embeds a [`Rect`] with
-/// no `serde` impl of its own), so this struct — not `DropTarget` itself —
+/// no `serde` impl of its own), so this struct - not `DropTarget` itself -
 /// is what travels on the wire; [`From<DropTarget>`] converts.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct WireDropTarget {
@@ -331,7 +331,7 @@ pub struct WireDropTarget {
     #[serde(rename = "parentId")]
     pub parent_id: String,
     pub index: usize,
-    /// The new element's placement `X`/`Y`, parent-local DIP — `None` for a
+    /// The new element's placement `X`/`Y`, parent-local DIP - `None` for a
     /// Flow/other parent (see [`DropTarget::xy`]'s own doc).
     pub xy: Option<(f32, f32)>,
     pub marker: WireRect,
@@ -344,7 +344,7 @@ impl From<DropTarget> for WireDropTarget {
 }
 
 /// [`kubuno_desktop_ui::Rect`] has no `Serialize`/`Deserialize` of its own (it is a
-/// plain geometry type reused by every control, not a wire type) — this is
+/// plain geometry type reused by every control, not a wire type) - this is
 /// the field-for-field wire shape, named distinctly so a reader of the
 /// protocol never confuses "a rect on the wire" with "a rect mid-layout".
 #[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
@@ -361,7 +361,7 @@ impl From<Rect> for WireRect {
     }
 }
 
-/// Parses one stdin line as a [`HostMessage`] — `None` for a blank line, one
+/// Parses one stdin line as a [`HostMessage`] - `None` for a blank line, one
 /// that fails to parse as JSON at all, or JSON that is well-formed but does
 /// not match any known `type` (an older/newer host talking to this surface,
 /// or a stray line on the pipe): a caller (`examples/view_embed.rs`) simply
@@ -370,7 +370,7 @@ impl From<Rect> for WireRect {
 ///
 /// Strips a leading U+FEFF (byte-order mark) before parsing, defence in
 /// depth against a host whose first write to this process's stdin prepends
-/// one — confirmed live during DSG-9's own visual check: some `.NET`
+/// one - confirmed live during DSG-9's own visual check: some `.NET`
 /// `StreamWriter` configurations emit a UTF-8 BOM preamble on the very FIRST
 /// write to a stream and never again, so the FIRST protocol line a freshly
 /// launched surface ever receives (typically `setText`) could otherwise be
@@ -389,8 +389,8 @@ pub fn parse_host_message(line: &str) -> Option<HostMessage> {
 /// Encodes one [`SurfaceMessage`] as a single JSON line, WITHOUT the
 /// trailing newline (the caller's `writeln!`/`println!` supplies that, so
 /// this function stays testable as a plain string comparison). A message
-/// that somehow fails to serialize (none of this module's own types can —
-/// every field is a plain string/bool/enum/float — this is defensive only)
+/// that somehow fails to serialize (none of this module's own types can -
+/// every field is a plain string/bool/enum/float - this is defensive only)
 /// degrades to `"{}"`, an empty JSON object the host's own line parser
 /// silently ignores, rather than panicking a whole design surface over one
 /// bad line out.

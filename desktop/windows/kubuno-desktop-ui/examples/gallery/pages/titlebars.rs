@@ -1,10 +1,10 @@
-//! Gallery page — **title bars**: the Kubuno window band in its two heights (decision of
+//! Gallery page - **title bars**: the Kubuno window band in its two heights (decision of
 //! 2026-10-04), drawn by the one shared painter every window uses
 //! ([`kubuno_desktop_controls::window_chrome`]):
 //!
-//! * `TitleBarStyle="Standard"`: 32 DIP, Windows 11's caption height — dialogs, tool windows,
+//! * `TitleBarStyle="Standard"`: 32 DIP, Windows 11's caption height - dialogs, tool windows,
 //!   secondary forms (the default);
-//! * `TitleBarStyle="Tall"`: 64 DIP, the web's module header — a main window showing the header's
+//! * `TitleBarStyle="Tall"`: 64 DIP, the web's module header - a main window showing the header's
 //!   menus (waffle, account, `HeaderActions`) left of the caption buttons.
 //!
 //! Each band is shown with both caption button styles (Kubuno's rounded boxes, Windows' wide
@@ -27,7 +27,7 @@ pub fn draw(c: &dyn Canvas, f: &Frame) {
     let width = (p.area.right - 2.0 * MARGIN).clamp(360.0, 760.0);
     let t = c.theme().clone();
 
-    p.section("Barres de titre — Standard (32 DIP) et Tall (64 DIP), boutons centrés");
+    p.section("Barres de titre - Standard (32 DIP) et Tall (64 DIP), boutons centrés");
     let samples = [
         ("Standard · boutons Kubuno · Fermer survolé (dialogue, fenêtre secondaire)", wc::TitleBarStyle::Standard, wc::ButtonStyle::Kubuno, false),
         ("Standard · boutons Windows · Fermer survolé", wc::TitleBarStyle::Standard, wc::ButtonStyle::Windows, true),
@@ -64,7 +64,7 @@ pub fn draw(c: &dyn Canvas, f: &Frame) {
             c.fill_rounded(&Rect::new(layout.left.left, cy - 12.0, layout.left.right, cy + 12.0), 6.0, &ghost);
         }
         let state = wc::ChromeState { hot: Some(wc::Part::Close), ..wc::ChromeState::default() };
-        let title = if tall { "" } else { "Propriétés — Rapport annuel.pdf" };
+        let title = if tall { "" } else { "Propriétés - Rapport annuel.pdf" };
         wc::paint_caption(c, &style, &layout, title, wc::ChromeIcon::Glyph("FileText"), state);
         // The band's middle, across it: what everything in the band is centred on.
         // In the band's own ink (the accent would vanish on an accent band), dashed so the glyphs stay readable.

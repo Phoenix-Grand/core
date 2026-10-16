@@ -1,7 +1,7 @@
 //! The header's menus and their parts: the user controls [`waffle_menu::WaffleMenu`] (the app
 //! launcher) and [`account_menu::AccountMenu`] (the account panel), the header buttons that open them
 //! in a popup of their own ([`waffle_button::WaffleButton`], [`account_button::AccountButton`], sharing
-//! [`header_popup`]), and the custom controls the menus place — [`app_tile_grid::AppTileGrid`],
+//! [`header_popup`]), and the custom controls the menus place - [`app_tile_grid::AppTileGrid`],
 //! [`panel_menu::PanelMenu`] and [`panel_menu::AccentPill`]. `design/` holds the designer's sample data.
 
 pub mod account_button;

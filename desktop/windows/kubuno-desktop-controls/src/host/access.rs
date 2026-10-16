@@ -1,5 +1,5 @@
 //! The window's accessibility tree, exposed to UI Automation (Narrator, NVDA, Accessibility
-//! Insights) through AccessKit — `vskubuno/docs/EVENTS.md` §16, `AccessibleName`/`Description`/
+//! Insights) through AccessKit - `vskubuno/docs/EVENTS.md` §16, `AccessibleName`/`Description`/
 //! `Role`.
 //!
 //! The controls are drawn, not windowed: Windows cannot see them. A page therefore describes them
@@ -174,7 +174,7 @@ pub fn publish(tree: AccessTree) {
     PUBLISHED.with(|p| *p.borrow_mut() = Some(tree));
 }
 
-/// The actions assistive technology asked for since the last call, oldest first — those of the
+/// The actions assistive technology asked for since the last call, oldest first - those of the
 /// window whose frame is running.
 pub fn take_actions() -> Vec<(u64, AccessAction)> {
     let window = crate::host::input::main_hwnd().map_or(0, |h| h.0 as isize);

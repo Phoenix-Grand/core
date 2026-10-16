@@ -1,4 +1,4 @@
-//! Component family `display` — declared with the `component!` table (see
+//! Component family `display` - declared with the `component!` table (see
 //! `../macros.rs`) plus, in this same file, the view nodes those components
 //! build. Compiled only with the `family-display` feature while the families
 //! are being written in parallel; the feature is on by default once
@@ -7,7 +7,7 @@
 //! Nine leaf primitives from `kubuno-desktop-ui/src/{display.rs,feedback.rs,range.rs}`:
 //! `Label`, `LinkLabel`, `Badge`, `Icon`, `Separator` (static text and
 //! decoration), `Spinner`, `ProgressBar` (feedback on ongoing work), `Callout`,
-//! `EmptyState` (feedback on a whole area). None of the nine take children —
+//! `EmptyState` (feedback on a whole area). None of the nine take children -
 //! every one wraps exactly one `kubuno_desktop_ui` widget and paints it directly, the
 //! same leaf shape `crate::node`'s `ButtonNode`/`SwitchNode` already use (see
 //! that module's doc on why a `ViewNode` is not simply `kubuno_desktop_ui::Widget`).
@@ -19,7 +19,7 @@
 //! does not know about this file's node types, and this family owns only this
 //! file (not `../macros.rs`). The `component!` macro expands to `pub mod
 //! $mod_name { … }` **inside this very module**, so `super` from inside a
-//! `build:` closure is `registry::families::display` — this file — and every
+//! `build:` closure is `registry::families::display` - this file - and every
 //! `build:` closure below names its node type as `super::WhateverNode`
 //! instead.
 //!
@@ -28,7 +28,7 @@
 //! The interactive nodes here (`LinkLabelNode`, `CalloutNode`,
 //! `EmptyStateNode`) call [`crate::node::PaintCx::fire`]/
 //! [`crate::node::InteractCx::fire`] and [`crate::node::press_release`]
-//! directly — both `pub(crate)`, shared by every component family instead of
+//! directly - both `pub(crate)`, shared by every component family instead of
 //! each re-deriving its own copy.
 
 #[allow(unused_imports)] // Used by the `component!` invocations below.
@@ -57,7 +57,7 @@ use kubuno_desktop_ui::{Canvas, ContentAlignment, FocusId, Rect, Size, Widget, W
 /// (16 ms, i.e. ~60 Hz), wrapping into `0.0..1.0`.
 ///
 /// Both [`Spinner`] and [`ProgressBar`]'s marquee document that they own no
-/// clock — the *host* advances `phase` between frames (see `feedback.rs`'s
+/// clock - the *host* advances `phase` between frames (see `feedback.rs`'s
 /// "Animation: the phase is a PARAMETER" note and `range.rs`'s matching one on
 /// `ProgressBar::phase`). [`crate::node::PaintCx`] carries no timestamp for a
 /// host to read (it was not designed for an animated leaf), so this is the
@@ -233,12 +233,12 @@ impl ViewNode for LabelNode {
 }
 
 // ─────────────────────────────────────────────────────────────────────────
-// LinkLabel — the one `display` leaf with a real click: whole-widget
+// LinkLabel - the one `display` leaf with a real click: whole-widget
 // press/release exactly like `ButtonNode`/`SwitchNode` (the spec's "the whole
 // text is one link when neither `links` nor `link_area` is set" resolution
 // makes that the common case; distinguishing which of several inline links
-// was hit would need `LinkLabel::link_at`, which — like `Callout`/
-// `EmptyState`'s sub-regions below — needs a `&dyn Canvas` this leaf's simple
+// was hit would need `LinkLabel::link_at`, which - like `Callout`/
+// `EmptyState`'s sub-regions below - needs a `&dyn Canvas` this leaf's simple
 // `InteractCx`-driven interact does not have).
 // ─────────────────────────────────────────────────────────────────────────
 
@@ -272,7 +272,7 @@ impl LinkLabelNode {
             .visited(self.visited.resolve(vm))
     }
 
-    /// The canvas-independent half of a frame — see `ButtonNode::interact`,
+    /// The canvas-independent half of a frame - see `ButtonNode::interact`,
     /// whose shape this mirrors: a whole-widget rectangle hit test (no
     /// `&dyn Canvas` needed) is enough for the "one implicit link" case.
     pub(crate) fn interact(&mut self, ix: &mut InteractCx<'_>, bounds: Rect) -> WidgetState {
@@ -314,7 +314,7 @@ pub struct BadgeNode {
     pub size: PropSource<String>,
     pub dot: PropSource<bool>,
     pub max_width: PropSource<f32>,
-    /// `Solid`: the saturated colour with white text — a counter pinned on a button (the web
+    /// `Solid`: the saturated colour with white text - a counter pinned on a button (the web
     /// header's unread bubble), rather than the tinted status pill.
     pub solid: PropSource<bool>,
 }
@@ -341,7 +341,7 @@ impl BadgeNode {
             .variant(parse_badge_variant(&self.variant.resolve(vm)))
             .size(parse_badge_size(&self.size.resolve(vm)))
             .dot(self.dot.resolve(vm));
-        // `0` (the declared default) reads as "no cap" — `Badge::max_width`
+        // `0` (the declared default) reads as "no cap" - `Badge::max_width`
         // itself has no such sentinel, so the mapping is made here.
         let max_width = self.max_width.resolve(vm);
         if max_width > 0.0 {
@@ -359,7 +359,7 @@ impl ViewNode for BadgeNode {
     /// `Badge::paint` (`kubuno_desktop_ui::display`) fills a rounded pill across
     /// WHATEVER `bounds` it is handed, by design (its own doc: "When the
     /// caller sized the badge from `measure` this is identical to laying it
-    /// out from the left") — a fixed-content-width pill, not a `w-full`
+    /// out from the left") - a fixed-content-width pill, not a `w-full`
     /// widget, so it needs [`ViewNode::intrinsic_width`] to keep a `<Stack>`
     /// column from stretching it edge to edge.
     fn intrinsic_width(&self, c: &dyn Canvas, vm: &dyn ViewModel) -> Option<f32> {
@@ -472,7 +472,7 @@ impl ViewNode for SeparatorNode {
 }
 
 // ─────────────────────────────────────────────────────────────────────────
-// Spinner — animates itself; see `advance_phase`'s doc for why the tick is
+// Spinner - animates itself; see `advance_phase`'s doc for why the tick is
 // an assumption rather than a read host clock.
 // ─────────────────────────────────────────────────────────────────────────
 
@@ -569,13 +569,13 @@ impl ViewNode for ProgressBarNode {
 }
 
 // ─────────────────────────────────────────────────────────────────────────
-// Callout — a single widget with two interactive sub-regions (the inline
+// Callout - a single widget with two interactive sub-regions (the inline
 // action, the dismiss button). Both `Callout::part_at` and
 // `EmptyState::action_rects` below need a `&dyn Canvas` to lay the parts out,
 // which `InteractCx` does not carry (see `crate::node::PaintCx::interact_cx`'s
 // own doc: it is the CANVAS-INDEPENDENT half of a frame, built for leaves like
-// `Button`/`Switch`/`LinkLabelNode` that do not need one). So — unlike every
-// other node in this file — the hit test happens directly in `paint`, against
+// `Button`/`Switch`/`LinkLabelNode` that do not need one). So - unlike every
+// other node in this file - the hit test happens directly in `paint`, against
 // `cx.canvas`, rather than through `interact_cx()`.
 // ─────────────────────────────────────────────────────────────────────────
 
@@ -646,12 +646,12 @@ impl ViewNode for CalloutNode {
 
     /// `Callout::measure` (`kubuno_desktop_ui::feedback`) is `w-full`: it has no
     /// intrinsic width of its own, so its UNCONSTRAINED [`Self::measure`]
-    /// wraps its body into the replica's own designer-default width — almost
+    /// wraps its body into the replica's own designer-default width - almost
     /// never what a `<Stack>` column is about to give it (every block is the
     /// full row wide), which is how a callout used to claim a wildly wrong
     /// height and swallow whatever came after it. `Callout::height_at`
     /// already exists for exactly this ("What a caller that knows its
-    /// column … should reserve") — this is that caller.
+    /// column … should reserve") - this is that caller.
     fn measure_for_width(&self, c: &dyn Canvas, vm: &dyn ViewModel, width: f32) -> Size {
         let callout = self.build(vm);
         Size::new(width, callout.height_at(c, width))
@@ -675,7 +675,7 @@ impl ViewNode for CalloutNode {
             cx.fire("OnDismiss", self.focus_id, self.on_dismiss.as_deref(), ViewEventKind::Clicked, &mut EmptyEventArgs);
         }
         // Re-resolved AFTER firing, so a handler's write-back shows up this
-        // same frame — the reasoning `ButtonNode::paint` documents.
+        // same frame - the reasoning `ButtonNode::paint` documents.
         let mut callout = self.build(cx.vm);
         callout.action_state = Some(crate::common::rest().hot(action_hot).pressed(action_down));
         callout.dismiss_state = Some(crate::common::rest().hot(dismiss_hot).pressed(dismiss_down));
@@ -684,12 +684,12 @@ impl ViewNode for CalloutNode {
 }
 
 // ─────────────────────────────────────────────────────────────────────────
-// EmptyState — same two-region-hit-testing shape as `CalloutNode` above, over
+// EmptyState - same two-region-hit-testing shape as `CalloutNode` above, over
 // `EmptyState::action_rects` instead of `Callout::part_at`. The web's third
 // interactive part (`doc_label`, a documentation link) is left display-only
-// here: it is pure sugar over the other two actions, and — with `Callout`'s
+// here: it is pure sugar over the other two actions, and - with `Callout`'s
 // dismiss/action pair already exercising the "hit-test inside `paint`" shape
-// once — adding a third geometrically distinct region was not worth the
+// once - adding a third geometrically distinct region was not worth the
 // duplication for this family's first pass. `EmptyState::with_doc` is simply
 // never called.
 // ─────────────────────────────────────────────────────────────────────────
@@ -1100,7 +1100,7 @@ component! {
         ).editor("icon").category("Icon"),
         PropertyMeta::new("Title", PropKind::String, "", "Title of the message."),
         PropertyMeta::new("Description", PropKind::String, "", "Secondary text shown under the title."),
-        // Note: Why the area is empty — only `FirstUse` gets a primary-styled main action.
+        // Note: Why the area is empty - only `FirstUse` gets a primary-styled main action.
         PropertyMeta::new("Variant",
             PropKind::Enum(&["FirstUse", "NoResults", "Error", "Unavailable"]),
             "FirstUse",
@@ -1144,7 +1144,7 @@ component! {
 component! {
     mod_name: paint_box,
     name: "PaintBox",
-    // Note: A surface drawn by its Paint handler with the Graphics API (EVT-8; the design note's `<Canvas>` — `Canvas` names the drawing trait).
+    // Note: A surface drawn by its Paint handler with the Graphics API (EVT-8; the design note's `<Canvas>` - `Canvas` names the drawing trait).
     doc: "A drawing surface: your Paint handler draws on it with e.graphics() (lines, shapes, gradients, text, images).",
     ctor: kubuno_desktop_ui::graphics::Graphics::recorder(),
     children: ChildrenModel::None,
@@ -1197,7 +1197,7 @@ mod tests {
 
     #[test]
     fn every_display_component_compiles_with_its_declared_defaults() {
-        // Each as the lone child of `<Stack>` — `Card`/`Stack` are the
+        // Each as the lone child of `<Stack>` - `Card`/`Stack` are the
         // unconditional phase-2a components, always in the registry, so this
         // exercises real nesting without depending on another feature-gated
         // family.
@@ -1384,7 +1384,7 @@ mod tests {
         assert!(events.is_empty());
     }
 
-    // ── Pure animation math (no live `Canvas` — see `compile::tests`' own
+    // ── Pure animation math (no live `Canvas` - see `compile::tests`' own
     // note on why every test here stays off one) ─────────────────────────
 
     #[test]

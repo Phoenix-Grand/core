@@ -1,4 +1,4 @@
-<!-- OAuthProvidersPanel — converted from OAuthProvidersPanel.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- OAuthProvidersPanel - converted from OAuthProvidersPanel.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl>
   <Panel Class="max-w-3xl">
     <Stack Direction="LeftToRight" Gap="0" CrossAlign="Center" Justify="SpaceBetween" Class="mb-4">

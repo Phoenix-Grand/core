@@ -31,7 +31,7 @@ export function Part1({ l, i, t }: { l: NonNullable<InheritanceChainWindow['rows
                         </span>
                       )}
                       {/* Tinted surface + neutral text, never amber text on the
-                          card's own background — see ProvenanceLine. */}
+                          card's own background - see ProvenanceLine. */}
                       {l.locked && (
                         <span className="inline-flex items-center gap-1 rounded bg-warning-light px-1.5 py-0.5 text-xs text-text-primary">
                           <Lock size={11} className="text-warning" />

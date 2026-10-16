@@ -1,4 +1,4 @@
-//! Alert centre — the queue of what demands the operator's attention.
+//! Alert centre - the queue of what demands the operator's attention.
 //!
 //! ## Why a third table, next to the audit trail and the event log
 //!
@@ -8,7 +8,7 @@
 //! still true and whether anybody dealt with it.
 //!
 //! An alert is a different object. It is **open until somebody closes it**, it
-//! has exactly one owner, it keeps a history of what was tried — and, above
+//! has exactly one owner, it keeps a history of what was tried - and, above
 //! everything else, it ships with **what to do about it**. That last point is
 //! the design rule of the whole feature, enforced by a test in [`catalog`]: an
 //! alert type that cannot recommend an action is not created, because a badge
@@ -24,16 +24,16 @@
 //!   crate::jobs (core.alerts.scan)└──► catalog::actions_for()  what to do
 //! ```
 //!
-//! * [`model`] — wire types, the lifecycle, the action shape;
-//! * [`catalog`] — the alert types and their recommended actions;
-//! * [`store`] — deduplicating upsert, queue reads, transitions;
-//! * [`producers`] — the detectors, each over something the core already records;
-//! * [`jobs`] — the recurring scan, as a type of the **existing** job runner.
+//! * [`model`] - wire types, the lifecycle, the action shape;
+//! * [`catalog`] - the alert types and their recommended actions;
+//! * [`store`] - deduplicating upsert, queue reads, transitions;
+//! * [`producers`] - the detectors, each over something the core already records;
+//! * [`jobs`] - the recurring scan, as a type of the **existing** job runner.
 //!
 //! ## Deduplication, in one sentence
 //!
 //! Raising an alert is an upsert on `dedup_key`, so a module down for a week is
-//! one row whose counter grows — see the header of migration `000056` for why
+//! one row whose counter grows - see the header of migration `000056` for why
 //! `ignored` absorbs recurrences and `resolved` does not.
 //!
 //! ## Authorisation
@@ -41,7 +41,7 @@
 //! Two privileges: `core.alerts.read` opens the queue, `core.alerts.manage`
 //! changes it. On top of that, each alert *type* declares the privilege its
 //! subject needs ([`catalog::read_privilege`]), so a delegated operator sees the
-//! alerts they could act on rather than a list of somebody else's problems —
+//! alerts they could act on rather than a list of somebody else's problems -
 //! the same rule [`crate::health`] applies to its report.
 
 pub mod catalog;

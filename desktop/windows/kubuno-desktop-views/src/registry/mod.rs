@@ -1,4 +1,4 @@
-//! The component metadata registry — `XML_VIEWS.md` §4.
+//! The component metadata registry - `XML_VIEWS.md` §4.
 //!
 //! "One table per family, in the new crate, entirely additive": the data
 //! here is what the loader will read to build widgets (phase 2c), what a
@@ -20,8 +20,8 @@
 //! becoming the second, drifting source of truth this note explicitly warns
 //! against (§4, §8's 2a risk note).
 //!
-//! So this registry keeps the setter *table* purely descriptive — name,
-//! [`PropKind`], default, doc — the same information §4 says the schema/LSP/
+//! So this registry keeps the setter *table* purely descriptive - name,
+//! [`PropKind`], default, doc - the same information §4 says the schema/LSP/
 //! property-grid consumers need, none of which requires calling into
 //! `kubuno-desktop-ui`. The link to the real API is kept anyway, just moved from
 //! "the registry calls it at runtime" to "the registry declaration calls it
@@ -29,13 +29,13 @@
 //! expression and a `smoke` closure that chains the same real setters the
 //! properties describe, compiled into a `#[test]` per component. A renamed
 //! or removed `kubuno-desktop-ui` builder method is therefore a `cargo build`/
-//! `cargo test` failure, not a silent drift — the exact mitigation §8's 2a
+//! `cargo test` failure, not a silent drift - the exact mitigation §8's 2a
 //! row asks for ("a small `cargo test` that at least calls every registered
 //! ctor/setter once"), just wired through the type system that is actually
 //! available today rather than one this phase would have had to invent.
 
 pub(crate) mod components;
-/// The JSON export of this registry — `vskubuno/docs/DESIGNER.md` §5/§8, work
+/// The JSON export of this registry - `vskubuno/docs/DESIGNER.md` §5/§8, work
 /// package DSG-1. See that module's own doc for the wire shape and where it
 /// deliberately follows the already-written C# consumer
 /// (`vskubuno/src/Kubuno.VisualStudio.Designer/Registry/ComponentRegistry.
@@ -209,13 +209,13 @@ pub fn is_gated(name: &str) -> bool {
 }
 
 /// Whether `name` is a non-visual component (EVT-7b): an element whose class is not a `Control`
-/// and that no parent gates — a `<Timer>`, an application's `#[kubuno(extends = Component)]` class.
+/// and that no parent gates - a `<Timer>`, an application's `#[kubuno(extends = Component)]` class.
 /// It paints nothing; the designer lists it in the component tray under the design surface.
 pub fn is_non_visual(name: &str) -> bool {
     lookup(name).is_some_and(|m| !m.base_chain().is_empty() && !m.is_a("Control")) && !is_gated(name)
 }
 
-/// The signature of [`ComponentMeta::build`] — named so the field itself
+/// The signature of [`ComponentMeta::build`] - named so the field itself
 /// stays legible (clippy's `type_complexity` lint, correctly, does not want
 /// the raw `fn(...) -> Result<...>` spelled out twice: here and at every call
 /// site that names it).
@@ -224,7 +224,7 @@ pub type BuildFn = fn(&crate::props::Props<'_>, &mut crate::props::BuildCx) -> R
 /// One entry of the registry: everything known about one XML element.
 #[derive(Clone, Copy)]
 pub struct ComponentMeta {
-    /// The element name, exactly as it appears in a `.kbview` file — the
+    /// The element name, exactly as it appears in a `.kbview` file - the
     /// real `kubuno_desktop_ui` builder's own name (§1: "one source of truth").
     pub name: &'static str,
     pub doc: &'static str,
@@ -237,17 +237,17 @@ pub struct ComponentMeta {
     pub layout: LayoutKind,
     /// `true` for a "free-form data record" element whose real fields are
     /// dynamically named by ITS PARENT rather than fixed on the component
-    /// itself — `<Item>`'s own doc is the worked example: a
+    /// itself - `<Item>`'s own doc is the worked example: a
     /// `<ListView>`/`<DataTable>` row's per-column value is read straight off
     /// an `<Item>` attribute named exactly like that column's own `Binding`
     /// field (`registry::families::data::static_item_rows`), which no closed
     /// `properties` list could enumerate (a `.kbview` file's own `<Column>`
     /// children decide the names). Defaults to `false` when a `component!`
-    /// declaration omits `open_attributes:` — [`crate::validate::validate`]'s
+    /// declaration omits `open_attributes:` - [`crate::validate::validate`]'s
     /// "unknown attribute" check is skipped entirely for an element with this
     /// set, same as it already skips the closed-enum/type check for a
     /// `{Binding …}` expression (§3: resolved at runtime, not statically
-    /// checkable) — an open-attributes element's *shape* is not statically
+    /// checkable) - an open-attributes element's *shape* is not statically
     /// checkable either, for the same reason.
     pub open_attributes: bool,
     /// The event a double-click on the element in the designer creates a handler for
@@ -256,7 +256,7 @@ pub struct ComponentMeta {
     pub default_event: Option<&'static str>,
     /// Phase 2c (the interpreter, `vskubuno/docs/XML_VIEWS.md` §8): builds
     /// the real `kubuno_desktop_ui` widget this element describes, reading every
-    /// property through [`crate::props::Props`]'s typed accessors — the
+    /// property through [`crate::props::Props`]'s typed accessors - the
     /// *same* table as `properties` above, not a second hand-written setter
     /// list (see `crate::props`' module doc). Generated by the `component!`
     /// macro's `build:` clause alongside `properties`/`events`/`children`,
@@ -266,7 +266,7 @@ pub struct ComponentMeta {
 
 // `ComponentMeta` no longer derives `Debug`: a `fn` item field prints as an
 // address, which is not useful, and `#[derive(Debug)]` would print it anyway
-// (function pointers ARE `Debug`) — this note exists only because dropping
+// (function pointers ARE `Debug`) - this note exists only because dropping
 // the derive is a visible change from phase 2a for anyone diffing this file.
 // It was never depended on: nothing in this crate or its tests formats a
 // `ComponentMeta` with `{:?}`.
@@ -331,7 +331,7 @@ impl ComponentMeta {
         self.property(name).filter(|p| p.name != name)
     }
 
-    /// The event whose attribute is `name` — the component's own (by name or alias) or,
+    /// The event whose attribute is `name` - the component's own (by name or alias) or,
     /// for a control, a [`COMMON_EVENTS`] one. View events ([`VIEW_EVENTS`]) are not
     /// included: they belong to the root element, which only the caller knows.
     pub fn event(&self, name: &str) -> Option<&'static EventMeta> {
@@ -345,7 +345,7 @@ impl ComponentMeta {
     }
 
     /// The element's class followed by its ancestors, `"Component"` last (EVT-7a):
-    /// `["Button", "ButtonBase", "Control", "Component"]` — what the export, the Toolbox and the
+    /// `["Button", "ButtonBase", "Control", "Component"]` - what the export, the Toolbox and the
     /// `is`-checks read. Empty for an element without a class.
     pub fn base_chain(&self) -> &'static [&'static str] {
         crate::controls::class_of(self.name).map(|c| c.chain).unwrap_or(&[])
@@ -362,7 +362,7 @@ impl ComponentMeta {
     }
 
     /// Whether the element raises [`COMMON_EVENTS`]: its class is a `Control` (every control;
-    /// not the structural child elements, which are non-visual components — see [`is_gated`]).
+    /// not the structural child elements, which are non-visual components - see [`is_gated`]).
     pub fn has_common_events(&self) -> bool {
         match crate::controls::class_of(self.name) {
             Some(_) => self.is_a("Control"),
@@ -405,7 +405,7 @@ impl ComponentMeta {
 }
 
 /// Every declared component, in declaration order. Kept as a flat slice
-/// (rather than a `HashMap`, built once with `OnceLock`) — five to a few
+/// (rather than a `HashMap`, built once with `OnceLock`) - five to a few
 /// dozen entries never justifies the extra machinery; [`lookup`] is a linear
 /// scan and is fast enough for a file that is parsed once per edit, not once
 /// per frame (§5's parse+compile / bind+paint split).
@@ -428,7 +428,7 @@ pub fn builtins() -> &'static [ComponentMeta] {
     })
 }
 
-/// Finds a component by its XML element name (case-sensitive — element names
+/// Finds a component by its XML element name (case-sensitive - element names
 /// are Rust type names, and `Button` vs `button` is exactly the kind of typo
 /// the validator (`crate::validate`) exists to catch).
 ///

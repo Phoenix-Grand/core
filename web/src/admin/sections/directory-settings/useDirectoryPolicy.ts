@@ -14,7 +14,7 @@ import type {
  * `settings/SettingsGroupPanel`. Two consequences, both wanted:
  *
  *   • the payload this page needs is usually already in the cache, and a write
- *     here refreshes the generic settings page and vice versa — the two can
+ *     here refreshes the generic settings page and vice versa - the two can
  *     never show contradictory values for the same key;
  *   • provenance, locking and reverting behave identically to every other
  *     settings screen, because they *are* the same calls. A bespoke write path
@@ -43,7 +43,7 @@ export function useDirectoryPolicy(scope: ActiveScope) {
   }
 
   /* The server's sentence, not a generic one. A write refused because a unit
-   * above holds a lock says which unit — replacing that with "échec de
+   * above holds a lock says which unit - replacing that with "échec de
    * l'enregistrement" would send the operator looking for a bug. */
   const reportError = (e: unknown) => {
     const detail = apiErrorDetail(e)

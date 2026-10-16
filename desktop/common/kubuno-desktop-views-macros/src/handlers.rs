@@ -56,7 +56,7 @@ pub fn expand(attr: TokenStream2, item: TokenStream2) -> TokenStream2 {
     }
 }
 
-/// Whether `item` is an `impl` block (attributes, `unsafe`, `default` aside) — one syn could not
+/// Whether `item` is an `impl` block (attributes, `unsafe`, `default` aside) - one syn could not
 /// parse because of a syntax error inside it, not something else the attribute was put on.
 fn looks_like_impl(item: &TokenStream2) -> bool {
     use proc_macro2::TokenTree;
@@ -145,8 +145,8 @@ fn is_handler_candidate(f: &ImplItemFn) -> bool {
 
 /// A handler's signature is fixed by its event, like a WinForms handler's `(object sender,
 /// EventArgs e)`: an unused `sender` or `e` is not a mistake and must not be flagged (by rustc or
-/// rust-analyzer). Rather than `#[allow(unused_variables)]` on the method — which would also hide
-/// a genuinely unused `let` in its body — each named parameter is touched once at the top of the
+/// rust-analyzer). Rather than `#[allow(unused_variables)]` on the method - which would also hide
+/// a genuinely unused `let` in its body - each named parameter is touched once at the top of the
 /// body (`let _ = &e;`, spanned at the parameter), so only the parameters are exempt. Called once
 /// per handler method, whether or not its signature is valid (a mistake in one handler must not
 /// also flag its parameters).

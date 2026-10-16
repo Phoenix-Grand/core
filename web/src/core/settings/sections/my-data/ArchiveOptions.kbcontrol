@@ -1,4 +1,4 @@
-<!-- ArchiveOptions — converted from ArchiveOptions.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- ArchiveOptions - converted from ArchiveOptions.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="ArchiveOptionsProps">
   <Panel Class="space-y-5">
     <Panel>

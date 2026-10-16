@@ -5,8 +5,8 @@
 //! (see [`crate::config::database_credentials`]). An administrator may point ONE
 //! module at a different engine or server by storing an override row in
 //! `core.module_databases`. This module resolves the credentials a module should
-//! be started with — the override when an enabled row exists, the inherited
-//! credentials otherwise — and seals/opens the override password at rest.
+//! be started with - the override when an enabled row exists, the inherited
+//! credentials otherwise - and seals/opens the override password at rest.
 //!
 //! The override password uses the same AES-GCM scheme as the OIDC and SMTP
 //! secrets, with a key derived from the data-encryption root under a dedicated
@@ -150,7 +150,7 @@ pub async fn resolve(
             tracing::warn!(
                 module_id,
                 error = %e,
-                "Lecture de l'override de base de données impossible — héritage du SGBD principal"
+                "Lecture de l'override de base de données impossible - héritage du SGBD principal"
             );
             inherited()
         }
@@ -165,7 +165,7 @@ mod tests {
 
     #[test]
     fn password_round_trips_and_empty_stays_empty() {
-        // Empty in, empty out — an override with no password stores no blob.
+        // Empty in, empty out - an override with no password stores no blob.
         assert_eq!(encrypt_password(JWT, "").unwrap(), "");
         assert_eq!(decrypt_password(JWT, "").unwrap(), "");
 

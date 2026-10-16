@@ -6,7 +6,7 @@
 //! registration route stores the list in `core.module_instances.subscribed_events`,
 //! and the administration console displays it. Nothing ever read it back to send
 //! anything: [`crate::handlers::modules::publish_event`] fed the in-process
-//! [`EventBus`] and `core.event_log`, and the bus had exactly three consumers —
+//! [`EventBus`] and `core.event_log`, and the bus had exactly three consumers -
 //! the WebSocket hub, the push worker and the rules engine. None of them is a
 //! module.
 //!
@@ -23,7 +23,7 @@
 //! ```
 //!
 //! The queue is in the middle on purpose. A direct POST from the bus consumer
-//! would lose every event a module was not running to receive — which is
+//! would lose every event a module was not running to receive - which is
 //! precisely the case that matters, since "the account was deleted while the
 //! module was restarting" must still erase the data. `core.jobs` already gives
 //! retry with backoff, crash recovery and a visible failure, and nothing here
@@ -31,7 +31,7 @@
 //!
 //! ## Which events, to which modules
 //!
-//! * The type is [`bus::event_type_name`] — the inner type for
+//! * The type is [`bus::event_type_name`] - the inner type for
 //!   [`AppEvent::Custom`], the variant name otherwise. That is the name the
 //!   manifests spell.
 //! * A module never receives its own event. Without that rule a module that
@@ -92,7 +92,7 @@ const FALLBACK_PATH: &str = "/events";
 /// The event travels in the payload rather than being re-read from
 /// `core.event_log`: not every event is logged, and an event is immutable, so
 /// there is nothing to re-read that could be fresher. `base_url` deliberately
-/// does **not** travel — it is resolved at delivery time, so a module that
+/// does **not** travel - it is resolved at delivery time, so a module that
 /// restarted on another port between the enqueue and the retry is still reached.
 #[derive(Debug, Serialize, Deserialize)]
 pub struct DeliveryPayload {
@@ -111,7 +111,7 @@ pub struct DeliveryPayload {
 ///
 /// Started next to the WebSocket and push workers (`main.rs`). Never returns
 /// while the bus is alive; a lagging receiver is logged and resumes rather than
-/// aborting, exactly as the push worker does — a worker that gave up on the
+/// aborting, exactly as the push worker does - a worker that gave up on the
 /// first burst would be worse than one that missed a few events.
 pub async fn fanout_worker(bus: Arc<EventBus>, db: DbPool) {
     let mut rx = bus.subscribe();
@@ -239,7 +239,7 @@ pub fn register(registry: &mut JobRegistry, server: Arc<ServerSettings>) {
             // the mechanism that lets it come back and still receive the event.
             let Some(base_url) = base_url else {
                 anyhow::bail!(
-                    "Module « {} » sans instance active — livraison différée",
+                    "Module « {} » sans instance active - livraison différée",
                     payload.module_id
                 );
             };
@@ -254,7 +254,7 @@ pub fn register(registry: &mut JobRegistry, server: Arc<ServerSettings>) {
 
             // The body is the event and nothing else. `AppEvent` serialises as
             // `{ "type": …, "payload": { … } }` (`#[serde(tag, content)]`), and
-            // that is exactly the shape the receivers already parse — they
+            // that is exactly the shape the receivers already parse - they
             // deserialise the whole body into their own mirror enum, declared
             // with the same attributes. Wrapping it in an envelope would break
             // every module that implements the contract today.
@@ -291,7 +291,7 @@ pub fn register(registry: &mut JobRegistry, server: Arc<ServerSettings>) {
                     if index > 0 {
                         tracing::warn!(
                             module_id = %payload.module_id,
-                            "events: récepteur trouvé sur « {FALLBACK_PATH} » — la convention est « {PRIMARY_PATH} »"
+                            "events: récepteur trouvé sur « {FALLBACK_PATH} » - la convention est « {PRIMARY_PATH} »"
                         );
                     }
                     return Ok(());
@@ -314,7 +314,7 @@ pub fn register(registry: &mut JobRegistry, server: Arc<ServerSettings>) {
                         module_id = %payload.module_id,
                         event_type = %payload.event_type,
                         "events: le module déclare s'abonner à cet événement mais n'expose aucun \
-                         récepteur ({PRIMARY_PATH}) — l'abonnement de son manifeste est sans effet"
+                         récepteur ({PRIMARY_PATH}) - l'abonnement de son manifeste est sans effet"
                     );
                     Ok(())
                 }

@@ -8,7 +8,7 @@
 //! real attack: credential stuffing is *distributed* (a few tries from each of
 //! thousands of addresses), and the in-memory counter is reset on restart and
 //! not shared between instances. What was missing is a ceiling **per account**,
-//! persistent and shared — the only thing that resists a targeted guess. This
+//! persistent and shared - the only thing that resists a targeted guess. This
 //! module is that ceiling.
 //!
 //! # Behaviour
@@ -16,7 +16,7 @@
 //! Modelled on OWASP (Credential Stuffing / Authentication cheat sheets), NIST
 //! SP 800-63B §5.2.2 and the ANSSI/CNIL password recommendations:
 //!
-//! * a temporising **exponential backoff**, never a hard permanent lock — a
+//! * a temporising **exponential backoff**, never a hard permanent lock - a
 //!   permanent lock would hand an attacker a denial of service on any account
 //!   whose e-mail they know;
 //! * the delay starts after [`SOFT_THRESHOLD`] failures and doubles each further
@@ -93,7 +93,7 @@ pub async fn is_locked(db: &DbPool, user_id: Uuid) -> bool {
 /// outcome; this only shapes future attempts).
 ///
 /// Returns `true` when this failure pushed the account into (or deeper into)
-/// backoff — the caller uses it as an audit signal.
+/// backoff - the caller uses it as an audit signal.
 pub async fn record_failure(db: &DbPool, user_id: Uuid) -> bool {
     let now = Utc::now();
     let window = Duration::hours(WINDOW_HOURS);

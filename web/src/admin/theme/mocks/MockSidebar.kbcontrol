@@ -1,4 +1,4 @@
-<!-- MockSidebar — converted from MockSidebar.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- MockSidebar - converted from MockSidebar.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl>
   <Panel Class="w-52 p-2 bg-white border border-border rounded-xl">
     <Panel AccessibleRole="PushButton"

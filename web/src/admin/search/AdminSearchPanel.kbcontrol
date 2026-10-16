@@ -1,4 +1,4 @@
-<!-- AdminSearchPanel — converted from AdminSearchPanel.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- AdminSearchPanel - converted from AdminSearchPanel.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="PanelProps">
   <Panel Class="contents">
     <!-- TODO(views-migrate): <ul id>: attribute(s) without a .kbview property -->

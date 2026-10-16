@@ -1,4 +1,4 @@
-//! `02-textboxbase` — TextBox, MaskedTextBox, RichTextBox.
+//! `02-textboxbase` - TextBox, MaskedTextBox, RichTextBox.
 
 use kubuno_desktop_controls::text::{MaskedTextBox, RichTextBox, StyledRun, TextBox};
 use kubuno_desktop_controls::{BorderStyle, ScrollBars};
@@ -22,7 +22,7 @@ fn borders() -> Group {
         kid(t).w(260.0)
     };
     group(
-        "TextBox — BorderStyle",
+        "TextBox - BorderStyle",
         320.0,
         vec![
             bordered("Fixed3D (default)", BorderStyle::Fixed3D),
@@ -48,7 +48,7 @@ fn states() -> Group {
     placeholder.placeholder_text = "PlaceholderText".to_string();
 
     group(
-        "TextBox — states",
+        "TextBox - states",
         320.0,
         vec![
             kid(read_only).w(260.0),
@@ -65,7 +65,7 @@ fn multiline() -> Group {
     );
     t.multiline = true;
     t.scroll_bars = ScrollBars::Vertical;
-    group("TextBox — Multiline / ScrollBars", 320.0, vec![kid(t).size(260.0, 80.0)])
+    group("TextBox - Multiline / ScrollBars", 320.0, vec![kid(t).size(260.0, 80.0)])
 }
 
 fn masked() -> Group {

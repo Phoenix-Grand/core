@@ -246,7 +246,7 @@ export class ReportDocument extends ViewBase {
       const largest = Math.max(1, ...this.model.breakdown.map(s => s.value))
       // A ranking's height grows with its ENTRIES, not with the paper: sixteen
       // modules make a chart taller than a landscape sheet, which then prints
-      // clipped. It is capped — and the cap is STATED, right under the chart,
+      // clipped. It is capped - and the cap is STATED, right under the chart,
       // with a pointer to the breakdown below, which stays exhaustive. A silent
       // truncation would read as "that is all there was".
       return (
@@ -347,7 +347,7 @@ export class ReportDocument extends ViewBase {
       ),
     }] : []),
     // ── The OTHER view ────────────────────────────────────────────────────
-    // A time series answers "when", a breakdown answers "who" — and a report
+    // A time series answers "when", a breakdown answers "who" - and a report
     // that only ever draws one of the two leaves the other as a wall of rows.
     // So whichever the panel's own chart is, the complementary one is drawn
     // beside it when the data for it exists. Nothing here is a new measurement:
@@ -400,7 +400,7 @@ export class ReportDocument extends ViewBase {
               </dt>
               <dd className="mt-0.5 tabular-nums text-text-primary" style={{ fontSize: 'var(--kb-text-body)' }}>
                 {/* No arrow and no colour here. On paper a red arrow is a grey
-                    one, and "worse" is a judgement the card makes for a glance —
+                    one, and "worse" is a judgement the card makes for a glance -
                     a document states the figure and lets the reader judge. */}
                 {this.model.snapshot
                   ? this.tr('admin.rep_no_variation_snapshot')

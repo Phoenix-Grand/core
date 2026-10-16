@@ -1,5 +1,5 @@
 //! The markup attributes of a view that are not properties of an element: `x:` (the view's own
-//! directives — `x:Name`, `x:Inherits`…) and `d:` (design-time only — `d:Visible`, `d:ItemsSource`;
+//! directives - `x:Name`, `x:Inherits`…) and `d:` (design-time only - `d:Visible`, `d:ItemsSource`;
 //! read by the designer, ignored when the app runs, `VIEWS-SPEC.md` §6.4). The `d:` attributes of the
 //! root element that are typed (`DesignWidth`, `DesignHeight`) are listed by
 //! `kubuno_desktop_views_model::DESIGN_TIME_ATTRIBUTES`.

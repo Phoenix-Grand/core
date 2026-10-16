@@ -24,7 +24,7 @@ use crate::xml::{self, Element, Node};
 use base64::Engine as _;
 use std::ops::Range;
 
-/// The kind of an entry — its element name, and the editor category it is listed under.
+/// The kind of an entry - its element name, and the editor category it is listed under.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub enum Kind {
     String,
@@ -212,7 +212,7 @@ impl ResourceFile {
         file
     }
 
-    /// The plural forms of `base` (`items_one`, `items_other`… — `String` entries, see [`crate::plural`]),
+    /// The plural forms of `base` (`items_one`, `items_other`… - `String` entries, see [`crate::plural`]),
     /// in CLDR category order.
     pub fn plural_forms(&self, base: &str) -> Vec<(crate::plural::PluralCategory, &Entry)> {
         let mut forms: Vec<_> = self
@@ -563,7 +563,7 @@ line 2</String>
             ("tabs", "\ta\tb\t", None),
             ("markup", "<1>Bold</1> & <2/> < > &amp; ]]> \"q\" 'a'", None),
             ("emoji", "📁 Fichiers 👍🏽", None),
-            ("rtl", "مرحبا بك في كوبونو — שלום", None),
+            ("rtl", "مرحبا بك في كوبونو - שלום", None),
             ("empty", "", None),
             ("ws", " ", None),
             ("nl", "\n", None),

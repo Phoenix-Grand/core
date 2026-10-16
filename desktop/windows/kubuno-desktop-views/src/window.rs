@@ -1,8 +1,8 @@
 //! What a view asks of the window that shows it (`vskubuno/docs/EVENTS.md` §16): its `Form`
 //! properties (the root element's `Title`, `Icon`, `StartPosition`, `FormBorderStyle`, caption
 //! buttons, `ShowInTaskbar`, `TopMost`, `Opacity`, `WindowState`, `MinimumSize`/`MaximumSize`,
-//! `AcceptButton`/`CancelButton`, `KeyPreview`), its `<ToolTip>` settings and its `<ContextMenu>`s —
-//! read once per compile — and the runtime state that shows them: the tooltip under the pointer
+//! `AcceptButton`/`CancelButton`, `KeyPreview`), its `<ToolTip>` settings and its `<ContextMenu>`s -
+//! read once per compile - and the runtime state that shows them: the tooltip under the pointer
 //! and the open context menu.
 
 use kubuno_desktop_controls::host::{self, FormBorderStyle, FormOptions, StartPosition, WindowState};
@@ -283,7 +283,7 @@ impl FormSpec {
     }
 
     /// The window's `Form` properties this frame (bindings resolved against `vm`), colours in the
-    /// light theme — see [`FormSpec::options_in`].
+    /// light theme - see [`FormSpec::options_in`].
     pub fn options(&self, vm: &dyn ViewModel) -> FormOptions {
         self.options_in(vm, None)
     }
@@ -589,7 +589,7 @@ impl HeaderSpec {
 
     /// The cluster's element: `<HeaderActions>` with the view's `Show…`, `UnreadCount` and handlers when the class
     /// is registered; in the designer, a placeholder saying what is missing; `None` otherwise (nothing asked, or the
-    /// class missing at run time — see [`header_class_missing_message`]).
+    /// class missing at run time - see [`header_class_missing_message`]).
     pub fn cluster_xml(&self, class_registered: bool, design: bool) -> Option<String> {
         if !self.has_cluster() {
             return None;
@@ -661,7 +661,7 @@ pub fn title_bar_style(root: &Element) -> kubuno_desktop_controls::window_chrome
 }
 
 /// Whether the view's title band is coloured rather than neutral: its own `TitleBarBackground` or `AccentColor`, or a
-/// `<Ribbon>` whose tab strip it continues (`TitleBarFollowsRibbon`, on by default — the Office-like title bar).
+/// `<Ribbon>` whose tab strip it continues (`TitleBarFollowsRibbon`, on by default - the Office-like title bar).
 pub fn coloured_band(root: &Element) -> bool {
     let set = |name: &str| root.attribute(name).and_then(|a| a.value()).is_some_and(|v| !v.trim().is_empty());
     let follows_ribbon = root.attribute("TitleBarFollowsRibbon").and_then(|a| a.value()).is_none_or(|v| v.trim() != "false")
@@ -702,7 +702,7 @@ fn escape_attribute(value: &str) -> String {
 
 /// The header's standard items of `root`, built: each node with its stable id (under
 /// [`crate::design::HEADER_ITEM_PREFIX`]: not an element of the document, never selected in the designer) and its
-/// size — the search button first, then the cluster. Empty when the view asks for none.
+/// size - the search button first, then the cluster. Empty when the view asks for none.
 pub(crate) fn build_header_items(root: &Element, cx: &mut crate::props::BuildCx) -> Vec<(Box<dyn crate::node::ViewNode>, (f32, f32))> {
     let spec = HeaderSpec::read(root);
     if spec.is_empty() {
@@ -1529,7 +1529,7 @@ impl OpenMenu {
     }
 
     /// A letter typed while the menu is open (WinForms): the command of the deepest level whose
-    /// mnemonic it is — else whose text starts with it — is chosen (its sub-menu opens) when it is the
+    /// mnemonic it is - else whose text starts with it - is chosen (its sub-menu opens) when it is the
     /// only one; with several, the next one becomes hot.
     pub fn mnemonic(&mut self, key: char) -> MenuAction {
         let key = key.to_lowercase().next().unwrap_or(key);

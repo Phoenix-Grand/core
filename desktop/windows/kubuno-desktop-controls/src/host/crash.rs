@@ -1,5 +1,5 @@
 //! The crash window of a Kubuno GUI application (see [`super::diagnostics`]): what the user sees
-//! when the UI thread panics — the Kubuno counterpart of Windows Forms' `ThreadExceptionDialog`.
+//! when the UI thread panics - the Kubuno counterpart of Windows Forms' `ThreadExceptionDialog`.
 //!
 //! A small host window with the Kubuno caption and the Kubuno theme: an error badge, "<App> ran
 //! into an unexpected error and has to close.", the panic message and its location, a *Show

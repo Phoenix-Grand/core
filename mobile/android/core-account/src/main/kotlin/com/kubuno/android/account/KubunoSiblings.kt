@@ -6,7 +6,7 @@ import android.os.Build
 import java.security.MessageDigest
 
 /**
- * The other Kubuno apps installed on this device — those signed with the same
+ * The other Kubuno apps installed on this device - those signed with the same
  * certificate as us.
  *
  * Used both to grant a shared account visibility to its siblings and to borrow

@@ -1,6 +1,6 @@
 //! `{Res key}` in views (`vskubuno/docs/RESOURCES.md`): completion of the project's resource keys
 //! (with their values, translations and comments), hover, go-to-definition into the `.kbres` file,
-//! and diagnostics — an unknown key (error), an image property naming a non-image resource
+//! and diagnostics - an unknown key (error), an image property naming a non-image resource
 //! (warning), a string not translated in one of the project's cultures (information).
 //!
 //! The index is the `.kbres` files of the view's package (the nearest `Cargo.toml` with a
@@ -178,7 +178,7 @@ fn value_text(e: &Entry) -> String {
 /// linked image, as a Markdown image).
 fn markdown(item: &Item) -> String {
     let e = &item.entry;
-    let mut md = format!("**{}** `{}` — *{}.kbres*\n\n", e.kind.element(), e.name, item.set);
+    let mut md = format!("**{}** `{}` - *{}.kbres*\n\n", e.kind.element(), e.name, item.set);
     match &e.value {
         Value::Linked { path } if matches!(e.kind, Kind::Image | Kind::Icon) => {
             let full = item.file.parent().map(|d| d.join(path.replace('/', std::path::MAIN_SEPARATOR_STR))).unwrap_or_default();
@@ -273,7 +273,7 @@ pub fn completion(doc: &Document, uri: &Uri, pos: Position) -> Option<Vec<Comple
 
 /// The documentation of a plural key: its forms, their values and translations.
 fn plural_markdown(base: &str, forms: &[&Item]) -> String {
-    let mut md = format!("**Plural** `{base}` — *{}.kbres*\n\n", forms.first().map(|i| i.set.as_str()).unwrap_or_default());
+    let mut md = format!("**Plural** `{base}` - *{}.kbres*\n\n", forms.first().map(|i| i.set.as_str()).unwrap_or_default());
     for item in forms {
         md.push_str(&format!("- `{}`: {}\n", item.entry.name, value_text(&item.entry).replace('\n', " ")));
         for (c, t) in &item.translations {

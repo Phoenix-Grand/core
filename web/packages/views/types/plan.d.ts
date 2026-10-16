@@ -1,5 +1,5 @@
 /**
- * The render plan of a `.kbview` view — the data `@kubuno/views` renders. Produced by the web compiler
+ * The render plan of a `.kbview` view - the data `@kubuno/views` renders. Produced by the web compiler
  * (`kubuno-views-web`, through `@kubuno/views-compiler`): as plain JSON in the designer (bindings walked by
  * path), or as a compiled module where components/icons are imported and every binding has a precompiled
  * getter `g` / setter `s` and every event a dispatcher `f`. Normative description: `vskubuno/docs/WEB-VIEWS.md`

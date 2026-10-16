@@ -77,7 +77,7 @@ export class QuotaPolicyCard extends ViewBase {
   }
 
   get span_text() {
-    return this.policy.instance_bytes != null ? formatBytes(this.policy.instance_bytes) : '—'
+    return this.policy.instance_bytes != null ? formatBytes(this.policy.instance_bytes) : '-'
   }
 
   get part1_props() {
@@ -105,7 +105,7 @@ export class QuotaPolicyCard extends ViewBase {
   /** The rows of the Repeater over `policy.units`. */
   get rows_units() {
     return this.memo('rows_units', [this.policy, this.canManage], () => this.policy.units.map((u) => {
-      return { u, span_text: u.bytes != null ? formatBytes(u.bytes) : '—', show_can_manage_u_unit: !!(this.canManage && u.unit_id), key: u.unit_id ?? u.unit_name }
+      return { u, span_text: u.bytes != null ? formatBytes(u.bytes) : '-', show_can_manage_u_unit: !!(this.canManage && u.unit_id), key: u.unit_id ?? u.unit_name }
     }))
   }
 

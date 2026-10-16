@@ -29,7 +29,7 @@ export function Part1({ size, setHi, r, stroke, total, data, hi, c, offset, acti
             {/* The hole of a ring is a fixed, small circle: a segment name never fits
                 in it, and truncating one there produced a clipped grey string lying
                 across the arc. The legend beside it already carries every name, and
-                the row of the hovered segment is highlighted — so the centre states
+                the row of the hovered segment is highlighted - so the centre states
                 the NUMBER, and on hover its share. Two facts that always fit. */}
             <div className="absolute inset-0 flex flex-col items-center justify-center px-[18%] text-center">
               <span className="font-semibold text-text-primary leading-none"

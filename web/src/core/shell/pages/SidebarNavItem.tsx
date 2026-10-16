@@ -5,7 +5,7 @@ import { themed, Tooltip } from '@ui'
 // Sidebar navigation item shared by every module.
 // Handles both the COLLAPSED state (icon only + tooltip) and the EXPANDED one
 // (icon + label), so a module's nav stays identical in both. Always rendered as
-// an <a> tag carrying a real href — `to` → <Link> (href = the route),
+// an <a> tag carrying a real href - `to` → <Link> (href = the route),
 // `onClick` → anchor-button with href '#'. Never a <button>.
 function SidebarNavItemBase({
   label, icon, active, collapsed = false, onClick, to, end, badge, href = '#',
@@ -24,7 +24,7 @@ function SidebarNavItemBase({
   // On calcule l'état actif NOUS-MÊMES (au lieu de la render-prop `className` de
   // NavLink). Raison : en mode replié, le nœud est enveloppé dans
   // <Tooltip.Trigger asChild> (Radix Slot), qui fusionne `className` en supposant
-  // une CHAÎNE — il sérialise donc une `className` fonction (« ({isActive})=>… »)
+  // une CHAÎNE - il sérialise donc une `className` fonction (« ({isActive})=>… »)
   // au lieu de l'appeler, et plus aucune classe Tailwind ne s'applique (icônes
   // écrasées à 16px). On passe donc toujours une `className` chaîne à un <Link>.
   const resolved = useResolvedPath(to ?? '.')
@@ -42,7 +42,7 @@ function SidebarNavItemBase({
   // Layout is CONSTANT (full width + px-2 + a fixed 32px icon box), so collapsing
   // ANIMATES instead of snapping: the item width follows the aside (which tweens its
   // own width), and only the label tweens (max-width/opacity/margin, see `content`).
-  // No `justify-center`/`w-10` switch — that would jerk the icon to the middle of the
+  // No `justify-center`/`w-10` switch - that would jerk the icon to the middle of the
   // still-wide row at the start of the tween.
   const base = `relative flex items-center h-10 w-full px-2 rounded-full text-sm text-left
     transition-colors cursor-pointer no-underline outline-none overflow-hidden
@@ -74,7 +74,7 @@ function SidebarNavItemBase({
   const content = (
     <>
       {/* Fixed 32px box so the icon keeps its place (and lands ~centred in the rail)
-          while the label tweens its width to zero — no icon jump on collapse.
+          while the label tweens its width to zero - no icon jump on collapse.
           `relative` so the collapsed badge dot anchors to the ICON: the row is a
           `rounded-full` + `overflow-hidden` pill, so a dot at the pill's own corner
           gets clipped by the rounded edge into a triangle sliver. The icon sits at
@@ -131,7 +131,7 @@ function SidebarNavItemBase({
     </a>
   )
 
-  // ALWAYS wrap in the tooltip (disabled while expanded) — it clones its child, so
+  // ALWAYS wrap in the tooltip (disabled while expanded) - it clones its child, so
   // the anchor keeps a stable identity across the collapse toggle and its label
   // tween actually plays. Wrapping only when collapsed would remount the node and
   // skip the animation. The bubble (label) only shows in the collapsed rail.

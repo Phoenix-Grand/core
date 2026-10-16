@@ -1,4 +1,4 @@
-//! [`ControlHost`]: controls built in Rust code, painted and driven outside any `.kbview` view —
+//! [`ControlHost`]: controls built in Rust code, painted and driven outside any `.kbview` view -
 //! what WinForms does for controls added with `form.Controls.Add(new RoundButton())`.
 //!
 //! Each frame the host routes the input to its controls with the same router as a view (EVT-2:
@@ -228,7 +228,7 @@ impl ControlHost {
             if h.dirty.replace(false) {
                 control.invalidate();
             }
-            // Background (unless OPAQUE), paint, the paint buffer — super::paint.
+            // Background (unless OPAQUE), paint, the paint buffer - super::paint.
             super::paint::paint_control(control, canvas, bounds, state, None, false);
             drop(c);
             if routed {

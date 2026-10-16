@@ -4,7 +4,7 @@
 //! ## The model in one paragraph
 //!
 //! A **privilege** (`<space>.<domain>.<verb>`) is a capability. A **role** is a
-//! named bag of privileges — nothing more; it knows no subject and no scope. An
+//! named bag of privileges - nothing more; it knows no subject and no scope. An
 //! **assignment** binds a subject (a user *or* a group, never both) to a role
 //! over a scope (the whole instance, or one organisational unit and its
 //! subtree), optionally until a date. Keeping the role and the assignment
@@ -26,17 +26,17 @@
 //! trail and groups (a group crosses units by construction) are not scopable.
 //! Without this rule an operator "restricted to Marketing" holding
 //! `core.settings.manage` would still reconfigure the entire instance, and the
-//! person who granted the role would believe the opposite — which is worse than
+//! person who granted the role would believe the opposite - which is worse than
 //! having no scope at all.
 //!
 //! ## Where each piece lives
 //!
-//! * [`model`] — types and the key grammar;
-//! * [`catalog`] — what a module may declare, and how orphans are kept;
-//! * [`context`] — resolution of the caller's effective privileges, one query;
-//! * [`cache`] — the short-lived memory cache and its invalidation;
-//! * [`guard`] — the `/admin/*` layer and the `AdminCtx` extractor;
-//! * [`guards`] — the five anti-escalation guards.
+//! * [`model`] - types and the key grammar;
+//! * [`catalog`] - what a module may declare, and how orphans are kept;
+//! * [`context`] - resolution of the caller's effective privileges, one query;
+//! * [`cache`] - the short-lived memory cache and its invalidation;
+//! * [`guard`] - the `/admin/*` layer and the `AdminCtx` extractor;
+//! * [`guards`] - the five anti-escalation guards.
 
 pub mod bootstrap;
 pub mod cache;
@@ -52,7 +52,7 @@ pub use model::{AssignmentScope, Privilege, Role};
 
 /// Privilege keys the core checks by name. Constants rather than string
 /// literals scattered through the handlers: a typo in a literal fails **open**
-/// on a `has()` that is never true only if the key is also never granted — and
+/// on a `has()` that is never true only if the key is also never granted - and
 /// silently closed otherwise. Here a typo does not compile at the call site.
 pub mod keys {
     pub const USERS_READ: &str = "core.users.read";
@@ -70,7 +70,7 @@ pub mod keys {
     /// Reading target audiences: the curated recipient lists an instance offers
     /// at share time, their members and where they are applied.
     pub const AUDIENCES_READ: &str = "core.audiences.read";
-    /// Composing an audience — creating it, renaming it, changing who is in it.
+    /// Composing an audience - creating it, renaming it, changing who is in it.
     pub const AUDIENCES_MANAGE: &str = "core.audiences.manage";
     /// Deciding where an audience is *offered*: which module, which unit, in
     /// what order.
@@ -92,7 +92,7 @@ pub mod keys {
     ///
     /// Held apart from [`RESOURCES_READ`] because the two are different powers:
     /// knowing where a room is and how many seats it has is what a delegated
-    /// operator — or a module rendering a booking list — needs, while changing it
+    /// operator - or a module rendering a booking list - needs, while changing it
     /// alters what the whole organisation is offered the next time they book
     /// something. Renaming a building's key or a feature rewrites the composed
     /// name of every resource that mentions it, which is a wide edit behind a
@@ -119,7 +119,7 @@ pub mod keys {
     /// Its own key rather than a reuse of [`STATS_READ`]: the page names accounts
     /// and the volume each of them carries, which is a narrower thing to be
     /// trusted with than an instance total. There is no `storage.manage`
-    /// counterpart — the page writes through [`USERS_UPDATE`] (one account's
+    /// counterpart - the page writes through [`USERS_UPDATE`] (one account's
     /// quota) and [`SETTINGS_MANAGE`] (the default policy), and a third key would
     /// name a power that is enforced elsewhere.
     pub const STORAGE_READ: &str = "core.storage.read";
@@ -144,7 +144,7 @@ pub mod keys {
     /// Triggering the production of an archive, cancelling one, deleting one.
     ///
     /// Held apart from every other administrative key, and granted by no seeded
-    /// role — the same treatment [`RULES_MANAGE`] gets, for the same kind of
+    /// role - the same treatment [`RULES_MANAGE`] gets, for the same kind of
     /// reason. One archive concentrates everything the instance holds about
     /// everyone, and it is meant to leave the server. "Can administer" must not
     /// imply "can walk out with all of it", and an operator who needs this must
@@ -187,7 +187,7 @@ pub mod keys {
     /// Declaring a domain, proving it, promoting the primary one, removing one.
     ///
     /// Held apart from [`SETTINGS_MANAGE`]: a domain says which addresses belong
-    /// to this instance and — where the registration policy is on — who may open
+    /// to this instance and - where the registration policy is on - who may open
     /// an account at all. That is a wider power than editing a setting.
     pub const DOMAINS_MANAGE: &str = "core.domains.manage";
     /// Opening the data-migration page: the campaigns, which source account is

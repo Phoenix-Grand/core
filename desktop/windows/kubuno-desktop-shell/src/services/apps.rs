@@ -1,6 +1,6 @@
 //! The launcher's contents: the connected instance and the modules it exposes.
 //!
-//! Same source as before — the core's `/api/v1/modules` — but the result feeds
+//! Same source as before - the core's `/api/v1/modules` - but the result feeds
 //! the waffle's tiles instead of a JSON payload crossing an IPC bridge. The
 //! fetch runs on a background thread and hands its result back to the window
 //! (its `UiDispatcher`), where the view state is only ever touched.
@@ -26,7 +26,7 @@ static RESOLVED: std::sync::Mutex<Vec<(String, std::path::PathBuf)>> = std::sync
 /// Module `module`'s brand logo as the web shows it, as an icon value the painters draw at any DPI
 /// (`Canvas::vector_icon` takes an image file: an SVG as vectors, a raster resampled): the logo the
 /// last refresh downloaded from the server, else the web's own file embedded at build time. `None`
-/// for a module that ships no logo — it falls back to its glyph, exactly like the web.
+/// for a module that ships no logo - it falls back to its glyph, exactly like the web.
 pub(crate) fn logo_for(module: &str) -> Option<&'static str> {
     let resolved = RESOLVED.lock().unwrap_or_else(|p| p.into_inner()).iter().find(|(id, _)| id == module).map(|(_, p)| p.clone());
     let path = resolved.or_else(|| logos::builtin_for_id(module))?;
@@ -46,7 +46,7 @@ pub fn active_instance() -> Option<kubuno_desktop_sync::Config> {
 pub struct Identity {
     pub initials: String,
     /// The display name and the address, for the account panel's greeting and
-    /// its header — the header itself only ever needed the initials.
+    /// its header - the header itself only ever needed the initials.
     pub name:     String,
     pub email:    String,
     pub used:     u64,
@@ -145,7 +145,7 @@ fn fetch(id: &str) -> (Vec<AppEntry>, Conn) {
 
 /// Gives each app its logo file, still on the background thread so the UI thread only decodes a
 /// local file: the server's logo (downloaded when `online`, else the copy last downloaded), else the
-/// web's own file embedded at build time — the logo the server names, or the one the core's lookup
+/// web's own file embedded at build time - the logo the server names, or the one the core's lookup
 /// rule finds for the app's id (a server that does not know a format yet, like Office's SVG). With
 /// none, `icon` stays in charge: the launcher never comes up empty-handed.
 fn resolve_logos(id: &str, apps: &mut [AppEntry], online: bool) {

@@ -1,5 +1,5 @@
 //! Building the typed Kubuno API client for a server. The transport is the desktop's `kubuno-desktop-api-client`
-//! (rustls, no OpenSSL — it cross-compiles to Android and iOS); here we only choose the user agent and wire the
+//! (rustls, no OpenSSL - it cross-compiles to Android and iOS); here we only choose the user agent and wire the
 //! device key and, for authenticated clients, the token owner.
 
 use std::sync::Arc;

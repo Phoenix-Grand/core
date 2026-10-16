@@ -1,4 +1,4 @@
-//! (mirror of BladeItem.cs) — PURE logic of a single blade: dimension
+//! (mirror of BladeItem.cs) - PURE logic of a single blade: dimension
 //! constants, width after resize (`BladeResizer_ManipulationDelta`), optimal
 //! width (`SetWidth`/`CalculateOptimalWidth`), and divider/handle geometry.
 //! WinUI machinery (OnApplyTemplate, VisualStateManager, cursors, visual tree
@@ -6,13 +6,13 @@
 
 use crate::geometry::Rect;
 
-/// `BladeItem.MINIMUM_WIDTH` — floor for a blade's resize.
+/// `BladeItem.MINIMUM_WIDTH` - floor for a blade's resize.
 pub const MINIMUM_WIDTH: f32 = 150.0;
-/// `BladeItem.DEFAULT_WIDTH` — default width (= the port's `COLUMN_PANE_WIDTH`).
+/// `BladeItem.DEFAULT_WIDTH` - default width (= the port's `COLUMN_PANE_WIDTH`).
 pub const DEFAULT_WIDTH: f32 = 200.0;
 /// `BladeResizer` handle on the right edge (`Width="4"`).
 pub const RESIZER_WIDTH: f32 = 4.0;
-/// `BladeItem.BorderThickness="1"` — vertical divider between two blades.
+/// `BladeItem.BorderThickness="1"` - vertical divider between two blades.
 pub const BORDER_THICKNESS: f32 = 1.0;
 /// `CalculateOptimalWidth`: padding added to the measured text width (icon 32
 /// + margins 24 + padding 24 + chevron/tags 40).

@@ -30,7 +30,7 @@ interface Props {
   onReport:  () => void
   /**
    * Spells one breakdown key, when the wording is not a translation key but a
-   * fact this build has to look up — a module's display name, say. Takes
+   * fact this build has to look up - a module's display name, say. Takes
    * precedence over `def.legendKey`.
    */
   labelSlice?: (key: string) => string
@@ -89,7 +89,7 @@ export class PanelCard extends ViewBase {
     )
     this.publish({ donut })
     const ranking = useMemo(() => {
-      // A slice with its OWN ceiling is drawn against it — "80 % of what that
+      // A slice with its OWN ceiling is drawn against it - "80 % of what that
       // account was promised" is the fact somebody acts on, and it is invisible on
       // a bar scaled to the biggest holder. Slices without one share the largest
       // value, which is what makes a top-N readable.

@@ -11,7 +11,7 @@ import * as __parts from './CategoryComposition.parts'
 
 export type CategoryCompositionProps = {
   reading:   CategoryReading
-  /** The server's own held total — the bar's denominator, not a re-derived sum. */
+  /** The server's own held total - the bar's denominator, not a re-derived sum. */
   heldBytes: number
   ariaLabel: string
   delegatedBytes:   number

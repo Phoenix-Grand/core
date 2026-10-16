@@ -1,4 +1,4 @@
-<!-- OverviewBar — converted from OverviewBar.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- OverviewBar - converted from OverviewBar.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="OverviewBarProps">
   <Stack Gap="12" Visible="{Binding show_main}">
     <Stack Direction="LeftToRight"

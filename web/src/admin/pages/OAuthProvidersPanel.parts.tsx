@@ -248,7 +248,7 @@ export function Part2({ providers, editing, toFormState, submit, setEditing, tes
 
 export function Part3({ p, r, r_authorization_endpoint, r_detail, r_hint }: { p: NonNullable<OAuthProvidersPanel['rows_items']>[number]['p']; r: NonNullable<OAuthProvidersPanel['rows_items']>[number]['r']; r_authorization_endpoint: string; r_detail: string; r_hint: string }) {
   return (
-    <Callout key={`probe-${p.id}`} variant={r.ok ? 'success' : 'danger'} title={`${p.display_name} — ${r.message}`}>
+    <Callout key={`probe-${p.id}`} variant={r.ok ? 'success' : 'danger'} title={`${p.display_name} - ${r.message}`}>
                     <p className="break-all">{r.issuer_url} · {r.elapsed_ms} ms</p>
                     {r.authorization_endpoint && (
                       <pre className="mt-2 max-w-full overflow-x-auto rounded-md border border-border bg-surface-1 px-2.5 py-2 font-mono text-text-primary"

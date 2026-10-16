@@ -6,7 +6,7 @@ import { create } from 'zustand'
  * Several sensitive requests can be refused at almost the same instant (a page
  * that saves three things on mount). Opening three dialogs would be absurd and
  * two of them would be answered by nobody, so the store keeps a single pending
- * challenge and resolves every waiter with the same proof — the same reasoning
+ * challenge and resolves every waiter with the same proof - the same reasoning
  * behind the anti-avalanche queue guarding the token refresh in `api/client.ts`.
  */
 interface ReauthStore {

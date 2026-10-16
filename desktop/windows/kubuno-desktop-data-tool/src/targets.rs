@@ -1,8 +1,8 @@
 //! Connection targets (`params.target`) and the sessions opened on them.
 //!
-//! A target names a connection three ways — a Data Explorer entry, a project's
+//! A target names a connection three ways - a Data Explorer entry, a project's
 //! `ConnectionStrings:<name>` (resolved through the kubuno-desktop-data secrets chain with the crate's
-//! `user-secrets-id`), or an inline string — and resolves to a plain connection string that only
+//! `user-secrets-id`), or an inline string - and resolves to a plain connection string that only
 //! ever lives in this process: it goes to kubuno-desktop-data through an in-memory secret source, is
 //! registered with the request's [`Redactor`](crate::error::Redactor), and is never logged.
 
@@ -207,7 +207,7 @@ pub struct OpenOptions {
     pub connect_timeout_secs: u32,
     pub command_timeout_secs: u32,
     /// Let SQLite create a missing database file (migrations); otherwise a missing file is an
-    /// error — a mistyped path must not silently create an empty database.
+    /// error - a mistyped path must not silently create an empty database.
     pub create_sqlite_file: bool,
 }
 

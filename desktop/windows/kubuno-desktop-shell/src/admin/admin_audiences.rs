@@ -48,7 +48,7 @@ pub fn load(id: &str) -> anyhow::Result<AudiencesData> {
         .map(|a| AudienceInfo {
             id: a.id,
             name: a.name,
-            description: a.description.filter(|d| !d.trim().is_empty()).unwrap_or_else(|| "—".into()),
+            description: a.description.filter(|d| !d.trim().is_empty()).unwrap_or_else(|| "-".into()),
             everyone: a.is_everyone,
             members: a.member_count,
             reach: a.reach,
@@ -84,7 +84,7 @@ pub fn rows(audiences: &[&AudienceInfo]) -> Rows {
                     .with("Name", Value::Str(a.name.clone()))
                     .with("Description", Value::Str(a.description.clone()))
                     // « everyone » has no member list: everybody is in it.
-                    .with("Members", Value::Str(if a.everyone { "—".into() } else { a.members.to_string() }))
+                    .with("Members", Value::Str(if a.everyone { "-".into() } else { a.members.to_string() }))
                     .with("Reach", Value::Str(a.reach.to_string()))
                     .with("Applied", Value::Str(applied_text(a.applied)))
             })
@@ -223,7 +223,7 @@ pub fn design_data() -> AudiencesData {
         audiences: vec![
             a("everyone", "Tout le monde", "Chaque compte actif de l'instance", true, 0, 231, 9),
             a("paris", "Équipe Paris", "Bureaux de Paris", false, 3, 64, 4),
-            a("direction", "Direction", "—", false, 1, 8, 2),
+            a("direction", "Direction", "-", false, 1, 8, 2),
             a("pilot", "Pilote Tableurs", "Testeurs de la nouvelle version", false, 6, 6, 0),
         ],
     }
@@ -240,7 +240,7 @@ mod tests {
         assert_eq!(filter(&d.audiences, "PARIS").len(), 1);
         assert_eq!(filter(&d.audiences, "testeurs").len(), 1);
         let r = rows(&filter(&d.audiences, ""));
-        assert_eq!(r.first().map(|row| row.text("Members")), Some("—".to_string()));
+        assert_eq!(r.first().map(|row| row.text("Members")), Some("-".to_string()));
         assert_eq!(applied_text(0), Resources::audiences_nowhere());
     }
 }

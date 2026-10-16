@@ -18,7 +18,7 @@ export function Part1({ geos, firstOrientation }: { geos: NonNullable<PagedPrevi
         @media print {
           /* The document STARTS in the first sheet's page context. Without this
              the root carries the unnamed page, the first sheet switches context,
-             and switching forces a break — a blank sheet ahead of page 1, in the
+             and switching forces a break - a blank sheet ahead of page 1, in the
              browser's default paper. Seen on a proof: five pages for four. */
           html, body { page: kb-${firstOrientation}; }
           [data-sheet][data-o="portrait"]  { page: kb-portrait; }
@@ -90,7 +90,7 @@ export function Part4({ frameRef, zoom, stackPx, stampVars, cover, orientation, 
                   return (
                     <div key={s} className="relative">
                       {/* ── The sheet's own controls, in a vertical gutter to its
-                          RIGHT — on the dark ground, never on the paper. A chip
+                          RIGHT - on the dark ground, never on the paper. A chip
                           floating above the sheet read as part of the document and
                           pushed the first sheet down; a gutter belongs to the
                           workspace, which is what it is. Icon-only, because a
@@ -103,7 +103,7 @@ export function Part4({ frameRef, zoom, stackPx, stampVars, cover, orientation, 
                             [s]: (f[s] ?? orientation) === 'portrait' ? 'landscape' : 'portrait',
                           }))}
                           className="rounded-lg p-2 text-white/60 transition-colors hover:bg-white/10 hover:text-white"
-                          title={`${t('admin.rep_sheet_orientation')} — ${t(o === 'portrait' ? 'admin.rep_landscape' : 'admin.rep_portrait')}`}
+                          title={`${t('admin.rep_sheet_orientation')} - ${t(o === 'portrait' ? 'admin.rep_landscape' : 'admin.rep_portrait')}`}
                           aria-label={t('admin.rep_sheet_orientation')}
                         >
                           <RotateCw size={16} aria-hidden />
@@ -146,7 +146,7 @@ export function Part5({ stampVars, bandHeight, t, cover, thumb, geos, orientatio
                   // Pinned exactly where it already sits: the band, plus the 16 px
                   // the toolbar leaves under itself, minus the panel's 24 px of top
                   // padding (a sticky top is measured from the padding box). Any
-                  // other value makes the rail jump the instant it sticks — the
+                  // other value makes the rail jump the instant it sticks - the
                   // same defect the band itself had.
                   top: bandHeight - 8,
                   // 64 px of application header, the band, the same 16 px, and a

@@ -1,4 +1,4 @@
-//! Gallery page — **feedback**.
+//! Gallery page - **feedback**.
 //!
 //! There is no desktop predecessor for any of these five, so nothing here is a
 //! side-by-side pair: it is a variant × state sheet against the web components
@@ -6,7 +6,7 @@
 //! EmptyState,Accordion}.tsx`).
 //!
 //! The spinner row paints the SAME spinner at four frozen phases, side by side,
-//! so one screenshot shows the whole turn — plus one cell driven by the host's
+//! so one screenshot shows the whole turn - plus one cell driven by the host's
 //! clock (`host::now_ms` + `request_repaint_after`), which is the real
 //! animation.
 //!
@@ -56,7 +56,7 @@ fn card_pad() -> f32 {
     (b.top - r.top) + (r.bottom - b.bottom)
 }
 
-/// Title and body per callout variant — four real sentences, because a banner
+/// Title and body per callout variant - four real sentences, because a banner
 /// sized against « Lorem ipsum » is sized against nothing.
 fn callout_text(v: CalloutVariant) -> (&'static str, &'static str) {
     match v {
@@ -86,10 +86,10 @@ pub fn draw(c: &dyn Canvas, f: &Frame) {
     let width = p.area.right - 2.0 * MARGIN;
 
     // ── Spinner ─────────────────────────────────────────────────────────────
-    p.section("Spinner — quatre tailles, quatre phases figées, puis animé");
-    let top = p.caption("xs 12 · sm 16 · md 24 · lg 32 — ¼ de tour par cellule · inactif · animé (1 tour/s)");
+    p.section("Spinner - quatre tailles, quatre phases figées, puis animé");
+    let top = p.caption("xs 12 · sm 16 · md 24 · lg 32 - ¼ de tour par cellule · inactif · animé (1 tour/s)");
     // A cell is as wide as the largest ring (lg, 32 DIP); cells are spaced so
-    // the lg rings never touch — at 32 DIP apart they sat rim to rim.
+    // the lg rings never touch - at 32 DIP apart they sat rim to rim.
     let cell = 32.0;
     let pitch = cell + 12.0;
     let group = 4.0 * pitch + 12.0;
@@ -109,7 +109,7 @@ pub fn draw(c: &dyn Canvas, f: &Frame) {
     // A disabled ring keeps turning, in grey: the work is still happening, it is
     // the surface that is inert.
     // The two live rings follow the groups on the same row when they fit, and
-    // wrap onto a row of their own when the pane is too narrow — never cut at
+    // wrap onto a row of their own when the pane is too narrow - never cut at
     // the pane's edge.
     let band = CAPTION_H + cell;
     let (mut x, mut top, mut height) = (MARGIN + 4.0 * group, top, band);
@@ -135,9 +135,9 @@ pub fn draw(c: &dyn Canvas, f: &Frame) {
     p.advance(height);
 
     // ── Callout ─────────────────────────────────────────────────────────────
-    p.section("Callout — sévérités, action survolée, anneau de focus clavier");
+    p.section("Callout - sévérités, action survolée, anneau de focus clavier");
     let top = p.caption(
-        "gauche : action survolée · droite : croix au focus clavier (Tab) — puis deux corps seuls",
+        "gauche : action survolée · droite : croix au focus clavier (Tab) - puis deux corps seuls",
     );
     let col_w = (width - GAP) / 2.0;
     let mut used = 0.0_f32;
@@ -169,9 +169,9 @@ pub fn draw(c: &dyn Canvas, f: &Frame) {
     p.advance(used);
 
     // ── Stepper ─────────────────────────────────────────────────────────────
-    p.section("Stepper — la troisième étape EN ERREUR, survol et focus");
+    p.section("Stepper - la troisième étape EN ERREUR, survol et focus");
     let top = p.caption(
-        "terminée · terminée · erreur · en cours · à venir (optionnelle) — survol sur « Stockage », \
+        "terminée · terminée · erreur · en cours · à venir (optionnelle) - survol sur « Stockage », \
          focus clavier sur « Compte »",
     );
     let mut stepper = Stepper::new()
@@ -191,7 +191,7 @@ pub fn draw(c: &dyn Canvas, f: &Frame) {
     p.advance(h);
 
     // ── Composition: narrow cards ───────────────────────────────────────────
-    p.section("Dans des cartes étroites — retour à la ligne, mot insécable, résumé compact");
+    p.section("Dans des cartes étroites - retour à la ligne, mot insécable, résumé compact");
     let top = p.caption(
         "EmptyState compact centré verticalement · Accordion (focus, désactivé, titre tronqué) · \
          Stepper < 560 → résumé · Callout avec un mot insécable",
@@ -199,7 +199,7 @@ pub fn draw(c: &dyn Canvas, f: &Frame) {
     let col = (width - 2.0 * GAP) / 3.0;
     let pad = card_pad();
 
-    // Column 1 — an empty state whose title and description both wrap, in a
+    // Column 1 - an empty state whose title and description both wrap, in a
     // card taller than it needs: `justify-center` centres it.
     let empty = EmptyState::new("Search", "Aucun résultat pour « Anticonstitutionnellement »")
         .with_variant(EmptyStateVariant::NoResults)
@@ -208,7 +208,7 @@ pub fn draw(c: &dyn Canvas, f: &Frame) {
         .with_action(Button::new("Effacer les filtres").size(ButtonSize::Sm))
         .with_doc("En savoir plus");
 
-    // Column 2 — an accordion: a focused header, a disabled one, a long title.
+    // Column 2 - an accordion: a focused header, a disabled one, a long title.
     let mut acc = Accordion::new()
         .with_size(AccordionSize::Sm)
         .section(AccordionSection::new("Partage de liens", 28.0).icon("Share2").badge("3").open(true))
@@ -221,7 +221,7 @@ pub fn draw(c: &dyn Canvas, f: &Frame) {
     acc.focused = Some(2);
     acc.hovered = Some(0);
 
-    // Column 3 — a stepper too narrow for its trail, then a callout carrying a
+    // Column 3 - a stepper too narrow for its trail, then a callout carrying a
     // word longer than its column.
     let mut wizard = Stepper::new()
         .step(Step::new("Source").description("dossier local"))
@@ -295,7 +295,7 @@ fn activated(live: &Live) -> bool {
     live.take_key(vk::ENTER, Modifiers::NONE) | live.take_key(vk::SPACE, Modifiers::NONE)
 }
 
-/// The right-hand column: the same feedback controls as the page, but live —
+/// The right-hand column: the same feedback controls as the page, but live -
 /// mouse AND keyboard. Tab walks every button in paint order; Enter / Space
 /// activate the focused one; ↑ ↓ Home End move between accordion headers.
 pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
@@ -307,8 +307,8 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
         let (left, mut y, right) = interact::panel(c, interact::panel_rect(f.size));
         let w = right - left;
 
-        // ── Spinner — driven by the host clock ──────────────────────────────
-        y = interact::caption(c, left, right, y, "Spinner — animé par l'horloge de l'hôte (1 tour/s)");
+        // ── Spinner - driven by the host clock ──────────────────────────────
+        y = interact::caption(c, left, right, y, "Spinner - animé par l'horloge de l'hôte (1 tour/s)");
         let ring = 24.0;
         for (i, size) in SPINNER_SIZES.iter().enumerate() {
             let x = left + i as f32 * (ring + 12.0);
@@ -321,8 +321,8 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
         host::request_repaint_after(Spinner::FRAME_MS);
         y += ring + 12.0;
 
-        // ── Callout — action and close are two buttons ───────────────────────
-        y = interact::caption(c, left, right, y, "Callout — Tab jusqu'à l'action ou la croix, Entrée");
+        // ── Callout - action and close are two buttons ───────────────────────
+        y = interact::caption(c, left, right, y, "Callout - Tab jusqu'à l'action ou la croix, Entrée");
         if ui.callout_dismissed {
             // Closed: a secondary button brings it back, so the interaction
             // stays testable rather than one-way.
@@ -370,8 +370,8 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
             y += h + 16.0;
         }
 
-        // ── Accordion — click or Enter/Space toggles, arrows move ───────────
-        y = interact::caption(c, left, right, y, "Accordion — clic / Entrée / Espace, ↑ ↓ Début Fin");
+        // ── Accordion - click or Enter/Space toggles, arrows move ───────────
+        y = interact::caption(c, left, right, y, "Accordion - clic / Entrée / Espace, ↑ ↓ Début Fin");
         let mut accordion = Accordion::new()
             .with_size(AccordionSize::Sm)
             .section(
@@ -443,8 +443,8 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
         }
         y += accordion.total_height() + 16.0;
 
-        // ── EmptyState — its buttons are real Tab stops ──────────────────────
-        y = interact::caption(c, left, right, y, "EmptyState — « Changer » (clic / Entrée) passe à la variante suivante");
+        // ── EmptyState - its buttons are real Tab stops ──────────────────────
+        y = interact::caption(c, left, right, y, "EmptyState - « Changer » (clic / Entrée) passe à la variante suivante");
         let variant = EMPTY_STATE_VARIANTS[ui.empty_variant % EMPTY_STATE_VARIANTS.len()];
         let mut empty = EmptyState::new("Inbox", "Aucun fichier partagé avec vous pour l'instant")
             .with_variant(variant)
@@ -466,8 +466,8 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
         empty.paint(c, erect, WidgetState::REST);
         y += eh + 12.0;
 
-        // ── Stepper — reachable steps are buttons ─────────────────────────────
-        y = interact::caption(c, left, right, y, "Stepper — clic / Entrée sur une étape atteinte, Précédent / Suivant");
+        // ── Stepper - reachable steps are buttons ─────────────────────────────
+        y = interact::caption(c, left, right, y, "Stepper - clic / Entrée sur une étape atteinte, Précédent / Suivant");
         let last = 2; // three steps, zero-based
         let mut stepper = Stepper::new()
             .step(Step::new("Compte").description("identité"))

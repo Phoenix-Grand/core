@@ -2,7 +2,7 @@
 //
 // Two cache entries: the list, and the sheet of whichever audience is open.
 // They are invalidated together on every mutation, because the list carries
-// figures the sheet can change — adding a member moves both the member count and
+// figures the sheet can change - adding a member moves both the member count and
 // the reach, and applying an audience moves the "offered in N places" column of
 // a row the caller was not looking at.
 
@@ -21,12 +21,12 @@ export interface Audience {
   description:  string | null
   /** The seeded "everyone" audience: no explicit members, never deletable. */
   is_everyone:  boolean
-  /** Entries added by hand — what the sheet edits. */
+  /** Entries added by hand - what the sheet edits. */
   member_count: number
   /**
    * Distinct **active accounts** those entries resolve to. Differs from
    * `member_count` as soon as a member is a group, which is the recommended
-   * case — so this is the figure that says how wide a proposal really is.
+   * case - so this is the figure that says how wide a proposal really is.
    */
   reach:        number
   /** How many (unit × module) pairs offer this audience. */
@@ -143,14 +143,14 @@ export interface PolicyEntry {
 /**
  * What a unit offers in a module.
  *
- * `applied` is what was written **on this unit** — what the form edits and what
+ * `applied` is what was written **on this unit** - what the form edits and what
  * a save replaces. `effective` is what is actually in force, which for a unit
  * with no rows of its own is inherited from the nearest ancestor that has some;
  * `inherited_from` then names that ancestor. The two are identical, and
  * `inherited_from` null, whenever the unit has its own policy.
  *
  * The same distinction the settings pages already draw between "inherited from
- * X" and "overridden here" — one tree must not carry two inheritance stories.
+ * X" and "overridden here" - one tree must not carry two inheritance stories.
  */
 export interface PolicyView {
   applied:        PolicyEntry[]

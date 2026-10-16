@@ -180,7 +180,7 @@ impl SpoolJob {
     }
 
     /// Ends the job: the pages go to the spooler. When printing into a file, waits (up to `timeout`)
-    /// until the spooler has written it — the file is complete when this returns.
+    /// until the spooler has written it - the file is complete when this returns.
     pub(crate) fn finish(self, timeout: Duration) -> Result<usize, PrintError> {
         // SAFETY: a plain call on the live print control.
         unsafe { self.control.Close() }.map_err(PrintError::com("ID2D1PrintControl::Close"))?;

@@ -12,7 +12,7 @@ import * as __parts from './ResetPasswordDialog.parts.tsx'
 
 export interface ResetPasswordDialogProps {
   userId:     string
-  /** Display name or username — shown in the dialog subtitle. */
+  /** Display name or username - shown in the dialog subtitle. */
   userLabel:  string
   /** Account address, used as the placeholder of the "send to" field. */
   userEmail?: string

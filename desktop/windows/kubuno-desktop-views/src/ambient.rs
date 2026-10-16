@@ -1,6 +1,6 @@
-//! The state a view's frame keeps in thread-locals while it runs — the clip of the container being
+//! The state a view's frame keeps in thread-locals while it runs - the clip of the container being
 //! painted, the disabled ancestors, the drawings deferred to the end of the frame, the menus shown,
-//! the `<Repeater>` item being handled… — and how a frame that runs INSIDE another one is kept apart
+//! the `<Repeater>` item being handled… - and how a frame that runs INSIDE another one is kept apart
 //! from it.
 //!
 //! A frame can start while another one is running on the same thread: a handler raised during the
@@ -14,7 +14,7 @@
 //! [`FrameScope::enter`] makes every frame of a [`crate::runtime::Runtime`] see only its own state:
 //! a frame that starts while another is running swaps the running frame's state out of the
 //! thread-locals and its own state (kept by its runtime between its frames) in, and swaps them back
-//! when it ends — even on a panic. A frame that runs alone (the common case) touches nothing: what
+//! when it ends - even on a panic. A frame that runs alone (the common case) touches nothing: what
 //! the caller set for it (the designer's window band) and what a view keeps from one frame to the
 //! next are read in place, exactly as before.
 

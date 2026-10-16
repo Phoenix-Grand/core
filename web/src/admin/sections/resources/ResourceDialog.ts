@@ -84,7 +84,7 @@ export class ResourceDialog extends ViewBase {
     const buildingOptions = useMemo(
       () => this.buildingList.map(b => ({
         value: b.id,
-        label: b.name ? `${b.building_key} — ${b.name}` : b.building_key,
+        label: b.name ? `${b.building_key} - ${b.name}` : b.building_key,
       })),
       [this.buildingList],
     )

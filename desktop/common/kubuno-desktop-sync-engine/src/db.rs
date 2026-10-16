@@ -1,15 +1,15 @@
 //! The local database of one app for one account (vskubuno `docs/DESKTOP-OFFLINE-SYNC.md` §6).
 //!
-//! - sqlx (SQLite) — the stack of `kubuno-desktop-data`, so the views and the engine can share one pool per database;
-//! - SQLCipher when a key is given (`PRAGMA key` is the first statement of every connection — sqlx puts it first —
+//! - sqlx (SQLite) - the stack of `kubuno-desktop-data`, so the views and the engine can share one pool per database;
+//! - SQLCipher when a key is given (`PRAGMA key` is the first statement of every connection - sqlx puts it first -
 //!   and statement logging is disabled so the key never reaches a log); opening with a key on a build without
 //!   SQLCipher **fails** instead of silently writing a clear database;
 //! - pragmas: WAL, `synchronous=NORMAL`, foreign keys, `busy_timeout=10000`, a 32 MB page cache (decrypted pages
 //!   stay cached: the SE-0 spike measured full scans +300 % with the default cache, +70 % with this one);
 //! - the engine's own tables (`_sync_*`) through versioned migrations kept in this crate (not in
 //!   `_sqlx_migrations`, so they never collide with the app's numbering);
-//! - the app's migrations through a `sqlx::migrate::Migrator` — the files of `kubuno-desktop-data`'s *Migrations* node,
-//!   embedded with `sqlx::migrate!` — forward only; a failure opens the database **read-only** with the error kept
+//! - the app's migrations through a `sqlx::migrate::Migrator` - the files of `kubuno-desktop-data`'s *Migrations* node,
+//!   embedded with `sqlx::migrate!` - forward only; a failure opens the database **read-only** with the error kept
 //!   (`LocalDb::degraded`), the outbox untouched, never a destructive fallback;
 //! - `_sync_meta.account_key` checked at every open: a database never syncs for another account.
 

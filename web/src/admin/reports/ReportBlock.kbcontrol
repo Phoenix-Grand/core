@@ -1,4 +1,4 @@
-<!-- ReportBlock — converted from ReportBlock.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- ReportBlock - converted from ReportBlock.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="ReportBlockProps">
   <Panel HtmlTag="Section"
          BackColor="Surface"

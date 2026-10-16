@@ -43,7 +43,7 @@ export class CoverSheet extends ViewBase {
   }
 
   get p_text() {
-    return this.memo('p_text', [this.props, this.tr], () => String(this.props.periodLabel) + " — " + this.tr('admin.rep_window_value', { from: this.props.model.from, to: this.props.model.to }))
+    return this.memo('p_text', [this.props, this.tr], () => String(this.props.periodLabel) + " - " + this.tr('admin.rep_window_value', { from: this.props.model.from, to: this.props.model.to }))
   }
 
   get part1_props() {

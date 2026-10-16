@@ -1,4 +1,4 @@
-<!-- ModuleBreakdownCard — converted from ModuleBreakdownCard.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- ModuleBreakdownCard - converted from ModuleBreakdownCard.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="ModuleBreakdownCardProps">
   <Card Title="{Res admin.sto_mod_title}" IconSize="16" Icon="PieChart" Subtitle="{Res admin.sto_mod_sub}">
     <Panel Class="contents">

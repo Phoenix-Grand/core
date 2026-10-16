@@ -1,5 +1,5 @@
 /**
- * `@kubuno/drive` — service plateforme d'accès aux fichiers (couche partagée).
+ * `@kubuno/drive` - service plateforme d'accès aux fichiers (couche partagée).
  *
  * Extrait du module `drive` car 6 modules (office, paintsharp, media, code, flow)
  * en dépendent au build. Chargé À LA DEMANDE (chunk `drive-shared`, non-eager) :

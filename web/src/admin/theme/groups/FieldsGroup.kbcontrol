@@ -1,4 +1,4 @@
-<!-- FieldsGroup — converted from FieldsGroup.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- FieldsGroup - converted from FieldsGroup.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="FieldsGroupProps">
   <Stack Direction="LeftToRight" Gap="16" CrossAlign="End" WrapContents="true">
     <Panel Class="w-36">

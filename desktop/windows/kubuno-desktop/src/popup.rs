@@ -1,4 +1,4 @@
-//! Popups: a control — typically a user control — shown in a floating panel window of its own,
+//! Popups: a control - typically a user control - shown in a floating panel window of its own,
 //! anchored to a control of another window, so it may extend beyond that window's edges (the web's
 //! popover, which is never clipped by its container).
 //!
@@ -83,7 +83,7 @@ pub fn place(anchor: Rect, size: (f32, f32), work: Rect, placement: Placement, g
     (clamp(x, work.left, work.right - w), clamp(y, work.top, work.bottom - h))
 }
 
-/// The room a popup placed below `anchor` (`gap` away) has down to the bottom of `work` — the
+/// The room a popup placed below `anchor` (`gap` away) has down to the bottom of `work` - the
 /// height a tall popup is capped at.
 pub fn room_below(anchor: Rect, work: Rect, gap: f32) -> f32 {
     (work.bottom - anchor.bottom - gap).max(0.0)
@@ -98,7 +98,7 @@ pub fn anchor_on_screen(owner: isize, anchor: Rect) -> Option<(Rect, Rect)> {
     Some((Rect::new(ox + anchor.left, oy + anchor.top, ox + anchor.right, oy + anchor.bottom), Rect::new(l, t, r, b)))
 }
 
-/// The window of the frame being handled — the window a control's event handler runs in — as a
+/// The window of the frame being handled - the window a control's event handler runs in - as a
 /// raw `HWND` value (`0` when there is none).
 pub fn current_window() -> isize {
     kubuno_desktop_controls::host::main_window().map_or(0, |h| h.0 as isize)

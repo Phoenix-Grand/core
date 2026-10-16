@@ -1,4 +1,4 @@
-//! Gallery page — text fields.
+//! Gallery page - text fields.
 //!
 //! The exposition (left) shows every state of the family at rest: the
 //! `@ui/Input` box in each state, overflow (an ellipsised field at rest, a
@@ -52,7 +52,7 @@ Une deuxième ligne, puis une troisième qui déborde : la barre de défilement 
 pub fn draw(c: &dyn Canvas, f: &Frame) {
     let content_w = f.size.0 - interact::PANEL_W();
     let mut page = Page::new(c, content_w, f.size.1);
-    page.section("Champs de saisie — @ui/Input, @ui/Textarea, barre de recherche");
+    page.section("Champs de saisie - @ui/Input, @ui/Textarea, barre de recherche");
     let top = page.y;
 
     let avail = content_w - 2.0 * sheet::MARGIN;
@@ -99,36 +99,36 @@ pub fn draw(c: &dyn Canvas, f: &Frame) {
     });
 
     let mut b = if two { Column { c, x: sheet::MARGIN + cell + GUTTER, y: top, w: cell } } else { a };
-    b.entry("TextArea — repli des lignes + barre de défilement", AREA_H, |r| {
+    b.entry("TextArea - repli des lignes + barre de défilement", AREA_H, |r| {
         let mut t = TextArea::new();
         t.set_text(PARAGRAPH);
         t.paint(c, r, WidgetState::REST);
     });
-    b.entry("MaskedField — 00/00/0000 (moteur de la réplique)", FIELD_H, |r| {
+    b.entry("MaskedField - 00/00/0000 (moteur de la réplique)", FIELD_H, |r| {
         let mut m = MaskedField::new();
         m.set_mask("00/00/0000");
         m.set_text("3112");
         m.paint(c, r, WidgetState::REST);
     });
-    b.entry("recherche — repos (search-bg, sans bordure)", FIELD_H, |r| {
+    b.entry("recherche - repos (search-bg, sans bordure)", FIELD_H, |r| {
         let mut s = SearchField::new();
         s.placeholder_text = "Rechercher dans Drive".into();
         s.paint(c, r, WidgetState::REST);
     });
-    b.entry("recherche — active (fond blanc + bordure, pas d'anneau)", FIELD_H, |r| {
+    b.entry("recherche - active (fond blanc + bordure, pas d'anneau)", FIELD_H, |r| {
         let mut s = SearchField::new();
         s.set_text("rapport");
         s.select(7, 0);
         s.paint(c, r, WidgetState::REST.focused(true));
     });
-    b.entry("recherche étroite — le ✕ ne recouvre jamais le texte", FIELD_H, |r| {
+    b.entry("recherche étroite - le ✕ ne recouvre jamais le texte", FIELD_H, |r| {
         let mut s = SearchField::new();
         s.set_text("rapport trimestriel");
         s.paint(c, Rect::new(r.left, r.top, (r.left + NARROW_SEARCH_W).min(r.right), r.bottom), WidgetState::REST);
     });
     // Composition: the family inside a group box, in one toolbar row.
     let group_h = 2.0 * FIELD_H + 3.0 * sheet::ROW_GAP;
-    b.entry("imbriqué — GroupBox, ligne d'outils alignée sur 36", group_h, |r| {
+    b.entry("imbriqué - GroupBox, ligne d'outils alignée sur 36", group_h, |r| {
         let g = GroupBox::titled("Barre d'outils");
         g.paint(c, r, WidgetState::REST);
         let inner = g.inner_rect(r);
@@ -178,7 +178,7 @@ impl Column<'_> {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Interactive column — the fields, really editable.
+// Interactive column - the fields, really editable.
 // ─────────────────────────────────────────────────────────────────────────────
 
 /// Which live field is which (focus ids, and who owns an open menu).
@@ -338,11 +338,11 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
             }};
         }
 
-        let out = live_field!(ui.name, Id::Name, "TextField — maxlength 40", FIELD_H);
+        let out = live_field!(ui.name, Id::Name, "TextField - maxlength 40", FIELD_H);
         let text = ui.name.text().to_string();
         report(&mut ui.status, "Nom", out, &text);
 
-        let out = live_field!(ui.password, Id::Password, "Mot de passe — copier / couper refusés", FIELD_H);
+        let out = live_field!(ui.password, Id::Password, "Mot de passe - copier / couper refusés", FIELD_H);
         let dots = "●".repeat(ui.password.text().chars().count());
         report(&mut ui.status, "Mot de passe", out, &dots);
 
@@ -352,17 +352,17 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
         let text = ui.email.text().to_string();
         report(&mut ui.status, "Courriel", out, &text);
 
-        let out = live_field!(ui.area, Id::Area, "TextArea — Entrée = saut de ligne, molette", LIVE_AREA_H);
+        let out = live_field!(ui.area, Id::Area, "TextArea - Entrée = saut de ligne, molette", LIVE_AREA_H);
         if out.changed {
             let n = ui.area.text().chars().count();
             ui.status = format!("Texte : {n} caractères");
         }
 
-        let out = live_field!(ui.search, Id::Search, "SearchField — ✕ ou Échap efface", FIELD_H);
+        let out = live_field!(ui.search, Id::Search, "SearchField - ✕ ou Échap efface", FIELD_H);
         let text = ui.search.text().to_string();
         report(&mut ui.status, "Recherche", out, &text);
 
-        let out = live_field!(ui.masked, Id::Masked, "MaskedField — 00/00/0000", FIELD_H);
+        let out = live_field!(ui.masked, Id::Masked, "MaskedField - 00/00/0000", FIELD_H);
         let text = ui.masked.display().to_string();
         report(&mut ui.status, "Date", out, &text);
 
@@ -371,7 +371,7 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
 
         // Disabled: not registered with the focus ring, no editing, and the
         // not-allowed pointer (`disabled:cursor-not-allowed`).
-        y = interact::caption(c, left, right, y, "Désactivé — ni focus ni édition");
+        y = interact::caption(c, left, right, y, "Désactivé - ni focus ni édition");
         let r = Rect::new(left, y, right, y + FIELD_H);
         let input = EditInput::new(f, FocusState::default());
         ui.disabled.update(c, r, &input);

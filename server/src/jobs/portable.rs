@@ -7,7 +7,7 @@
 //! # The two places PostgreSQL-only SQL had to go
 //!
 //! * **Claiming** used `FOR UPDATE SKIP LOCKED`, which SQLite has not got and
-//!   which — outside an explicit transaction — guarantees nothing. The portable
+//!   which - outside an explicit transaction - guarantees nothing. The portable
 //!   claim is a **conditional `UPDATE` checked by `rows_affected()`**: a worker
 //!   reads a few candidate ids, then races to flip one from `pending` to
 //!   `running`; the row is won only when its own `UPDATE` reports exactly one
@@ -78,7 +78,7 @@ pub async fn ensure_scheduled(db: &DbPool, job: NewJob) -> Result<Option<Uuid>, 
     ensure_scheduled_inner(db, job, None).await
 }
 
-/// Same, ignoring `current` in the duplicate check — the form a recurring
+/// Same, ignoring `current` in the duplicate check - the form a recurring
 /// handler uses to schedule its own next occurrence while its own row is still
 /// `running`.
 pub async fn reschedule_after(
@@ -256,7 +256,7 @@ pub async fn requeue_stalled(
     let now = Utc::now();
     let cutoff = now - chrono::Duration::from_std(stalled_after).unwrap_or_default();
     // Placeholders are strictly increasing and never reused (SqlSafeStr), so
-    // `now` is bound twice — once for `run_after` ($1), once for `done_at` ($2).
+    // `now` is bound twice - once for `run_after` ($1), once for `done_at` ($2).
     db.execute(
         "UPDATE core.jobs \
             SET status    = CASE WHEN attempts >= max_attempts THEN 'failed' ELSE 'pending' END, \

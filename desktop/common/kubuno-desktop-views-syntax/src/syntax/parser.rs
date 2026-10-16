@@ -1,13 +1,13 @@
 //! Recursive-descent, error-tolerant parser: token stream → lossless green
-//! tree. Never fails outright — see the module doc on `lexer` for why total
+//! tree. Never fails outright - see the module doc on `lexer` for why total
 //! coverage of the input is what makes that possible.
 //!
 //! Recovery strategy: on an unexpected token, the current construct is closed
 //! early, the offending token is wrapped in an [`SyntaxKind::ERROR_NODE`] (so
-//! it still ends up in the tree — losslessness holds even for garbage), a
+//! it still ends up in the tree - losslessness holds even for garbage), a
 //! [`Diagnostic`] is recorded, and parsing resumes at the next token. This is
 //! deliberately simple (no bracket-matching recovery, no skip-to-sync-token
-//! heuristics) — the grammar is small enough that "wrap one token and keep
+//! heuristics) - the grammar is small enough that "wrap one token and keep
 //! going" does not spiral into a diagnostic storm for the malformed inputs
 //! phase 2a's tests exercise (unterminated strings/tags, mismatched end tags,
 //! stray bytes).
@@ -48,14 +48,14 @@ impl<'a> Parser<'a> {
     }
 
     /// Tied to `'a` (the source text's own lifetime), not to `&self`'s
-    /// borrow — otherwise every `self.builder.token(_, self.token_text(t))`
+    /// borrow - otherwise every `self.builder.token(_, self.token_text(t))`
     /// call below would try to hold an immutable borrow of `self` across a
     /// mutable one (`self.builder`) in the same expression.
     fn token_text(&self, t: LexToken) -> &'a str {
         &self.text[t.range]
     }
 
-    /// The next non-trivia token's kind, without consuming anything —
+    /// The next non-trivia token's kind, without consuming anything -
     /// trivia gets bumped into the tree lazily, right before whatever node
     /// is open when the grammar next needs to look past it. This is what
     /// keeps trivia attached to its true parent (see the module doc).
@@ -65,7 +65,7 @@ impl<'a> Parser<'a> {
     }
 
     /// Whether the next non-trivia token is a whitespace-only [`SyntaxKind::TEXT`]
-    /// run — an ordinary blank line/indent outside the root element (before
+    /// run - an ordinary blank line/indent outside the root element (before
     /// the prolog, or trailing after `</Root>`), as opposed to stray real
     /// content, which stays an error.
     fn at_blank_text(&mut self) -> bool {
@@ -84,7 +84,7 @@ impl<'a> Parser<'a> {
     }
 
     /// Pushes the current raw token into the tree and advances, whatever its
-    /// kind — the only place tokens leave `self.tokens` and enter the tree.
+    /// kind - the only place tokens leave `self.tokens` and enter the tree.
     fn bump_raw(&mut self, t: LexToken) {
         self.builder.token(t.kind.into(), self.token_text(t));
         self.pos += 1;
@@ -100,7 +100,7 @@ impl<'a> Parser<'a> {
     }
 
     /// Consumes and returns the next non-trivia token only when it has
-    /// `kind` — the peek-then-bump combinator every "expected token X here"
+    /// `kind` - the peek-then-bump combinator every "expected token X here"
     /// grammar rule uses, so a mismatch is `None` rather than a `.expect()`
     /// panic on what "should" always match (`CLAUDE.md` §7).
     fn eat(&mut self, kind: SyntaxKind) -> Option<LexToken> {
@@ -145,7 +145,7 @@ impl<'a> Parser<'a> {
         }
 
         // Trailing whitespace/comments (a file's final newline, most often)
-        // are completely ordinary — only genuine leftover content is an
+        // are completely ordinary - only genuine leftover content is an
         // error. Keeps the tree total either way: whatever is left, drained
         // one token at a time.
         while matches!(self.peek(), Some(SyntaxKind::COMMENT)) || self.at_blank_text() {
@@ -221,7 +221,7 @@ impl<'a> Parser<'a> {
             _ => {
                 let range = name_range.unwrap_or_else(|| self.next_range_or_eof());
                 self.error_at(range, "unterminated tag, expected `>` or `/>`");
-                // Recovery: nothing sane left to consume as part of the tag —
+                // Recovery: nothing sane left to consume as part of the tag -
                 // treat it as self-closing so the caller does not go hunting
                 // for an end tag that will never come.
                 true
@@ -275,7 +275,7 @@ impl<'a> Parser<'a> {
                 Some(_) => {
                     self.recover_unexpected("expected an attribute or the tag's closing `>`");
                 }
-                None => break, // EOF — the caller reports the missing closer.
+                None => break, // EOF - the caller reports the missing closer.
             }
         }
     }
@@ -301,7 +301,7 @@ impl<'a> Parser<'a> {
     }
 
     /// A [`SyntaxKind::STRING`] token that does not end with the quote it
-    /// opened with ran off the end of the file — the lexer still emits it as
+    /// opened with ran off the end of the file - the lexer still emits it as
     /// one token (total coverage), the parser is what flags it.
     fn check_string_terminated(&mut self, t: LexToken) {
         let s = self.token_text(t);
@@ -338,7 +338,7 @@ impl<'a> Parser<'a> {
     }
 
     /// Wraps exactly one unexpected token in an [`SyntaxKind::ERROR_NODE`]
-    /// and records a diagnostic — the shared "don't get stuck" primitive
+    /// and records a diagnostic - the shared "don't get stuck" primitive
     /// every recovery path above falls back on.
     fn recover_unexpected(&mut self, message: &str) {
         self.skip_trivia();

@@ -46,7 +46,7 @@ export interface FileItem {
   updated_at: string
   /**
    * Revisions kept for this file, EXCLUDING the current content, and what they
-   * weigh. Only the listing and the file detail compute them — every other
+   * weigh. Only the listing and the file detail compute them - every other
    * endpoint leaves them out, hence optional. They are quota-billed, which is
    * why the explorer surfaces them (cf. `storage-explorer/VersionBadge`).
    */

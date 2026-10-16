@@ -11,7 +11,7 @@
 //! counts over a rolling window, that a simulation alert cannot reach a badge,
 //! and that the feedback guard cuts a chain rather than logging about it.
 //!
-//! Without `KUBUNO_TEST_DATABASE_URL` these print a notice and pass — see
+//! Without `KUBUNO_TEST_DATABASE_URL` these print a notice and pass - see
 //! `tests/common`.
 
 mod common;
@@ -133,7 +133,7 @@ async fn a_rolled_back_write_leaves_neither_a_rule_nor_a_version() {
         .await
         .expect("création");
     // The handler's `?` would do this. The rule and its version must vanish
-    // together — a version without its rule is what makes an execution log
+    // together - a version without its rule is what makes an execution log
     // unreadable.
     drop(tx);
 
@@ -174,7 +174,7 @@ async fn a_threshold_counts_over_a_rolling_window_and_per_subject() {
         assert_eq!(n, expected);
     }
 
-    // A different subject counts separately — otherwise "5 failures on one
+    // A different subject counts separately - otherwise "5 failures on one
     // account" would fire on five accounts failing once each.
     let n = store::hit_and_count(&db, rule.id, "user:bob", 600)
         .await
@@ -334,7 +334,7 @@ async fn the_feedback_guard_cuts_a_chain_before_the_conditions_are_even_read() {
     seed_trigger(&db, trigger, "TestLoop").await;
 
     // A rule whose condition can NEVER hold. If the guard did not fire first,
-    // the outcome would be `no_match` — so this also proves the ordering.
+    // the outcome would be `no_match` - so this also proves the ordering.
     let mut d = draft("boucle", trigger);
     d.conditions = Condition::Compare {
         field: "impossible".into(),
@@ -426,7 +426,7 @@ async fn a_scope_excludes_an_account_even_when_its_unit_is_included() {
         exclude: vec![ScopeRef::User { id: ids[1] }],
     };
 
-    // Resolved from the database — unit chain and group memberships — not from
+    // Resolved from the database - unit chain and group memberships - not from
     // a hand-built fixture.
     let inside = store::resolve_subject(&db, ids[0]).await.expect("sujet");
     let excepted = store::resolve_subject(&db, ids[1]).await.expect("sujet");

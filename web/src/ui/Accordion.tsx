@@ -32,7 +32,7 @@ export interface AccordionProps {
 // ── Component ─────────────────────────────────────────────────────────────────
 
 /**
- * Accordion — a stack of collapsible groups. Each item has a clickable header
+ * Accordion - a stack of collapsible groups. Each item has a clickable header
  * (title + chevron) and a panel that expands/collapses with a height animation.
  * Uncontrolled by default (start collapsed via `defaultOpen`); pass `open` +
  * `onOpenChange` to control it. Panels stay mounted so their inner state and any

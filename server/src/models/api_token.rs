@@ -42,7 +42,7 @@ pub struct CreateApiTokenDto {
     ///
     /// Mandatory, and validated against both the catalogue and what the creator
     /// holds. There is deliberately no default and no "all" value: the previous
-    /// behaviour — a token inheriting every privilege of its owner, for ever —
+    /// behaviour - a token inheriting every privilege of its owner, for ever -
     /// is exactly what this field exists to remove, so an omitted list must be a
     /// refusal rather than a fallback. `#[serde(default)]` makes a missing field
     /// arrive as an empty list, which `policy::validate_requested` then rejects

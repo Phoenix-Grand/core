@@ -1,7 +1,7 @@
 /**
  * The host runtime of module projects in the design page (`host-runtime.ts`): reading `@kubuno/host-runtime`'s
  * manifest, resolving the shared specifiers to its modules (exact specifiers only), keeping them out of dependency
- * pre-bundling, the setup modules and the entry / themes of the design route — unit by unit, then on a real Vite dev
+ * pre-bundling, the setup modules and the entry / themes of the design route - unit by unit, then on a real Vite dev
  * server over a temporary module project with a fake host runtime package.
  */
 import { mkdirSync, mkdtempSync, realpathSync, rmSync, writeFileSync } from 'node:fs'

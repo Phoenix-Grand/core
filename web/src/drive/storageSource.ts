@@ -1,5 +1,5 @@
 /**
- * `StorageSource` — abstraction d'un backend de stockage pour l'explorateur de
+ * `StorageSource` - abstraction d'un backend de stockage pour l'explorateur de
  * fichiers générique (`StorageExplorer`). UNE seule zone d'exploration (barre de
  * sélection, tri/type/affichage, dossiers/fichiers, menu contextuel) est partagée
  * par TOUS les types de stockage ; chaque source déclare ses **capacités** et la
@@ -77,7 +77,7 @@ export interface StorageSource {
   uploadFile(file: File, parentId: string | null, onProgress?: (pct: number) => void, overwrite?: boolean): Promise<{ id: string } | null>
 
   /** The folder's OWN record (the listing only returns its children). Absent on
-   *  sources that cannot fetch one — the trail then falls back to id + name. */
+   *  sources that cannot fetch one - the trail then falls back to id + name. */
   statFolder?(id: string): Promise<Folder | null>
 
   star?(item: ItemRef): Promise<void>

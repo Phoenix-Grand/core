@@ -1,6 +1,6 @@
 //! A control clips its children to its own box, as every Windows Forms control does: the elements of a user
-//! control's view never paint, nor take the pointer, outside the instance using it — on a page, in a `<Repeater>`
-//! item, inside another user control — and a container's children never leave it either.
+//! control's view never paint, nor take the pointer, outside the instance using it - on a page, in a `<Repeater>`
+//! item, inside another user control - and a container's children never leave it either.
 
 use kubuno_desktop_controls::host::{self, Frame, Modifiers};
 use kubuno_desktop_ui::graphics::testing::RecordingCanvas;

@@ -1,10 +1,10 @@
-//! Component family `media` — pictures: `<Avatar>` (a person's picture, or their initials on a
-//! tint, with a presence dot — the web's avatars) and `<PictureBox>` (WinForms `PictureBox`).
+//! Component family `media` - pictures: `<Avatar>` (a person's picture, or their initials on a
+//! tint, with a presence dot - the web's avatars) and `<PictureBox>` (WinForms `PictureBox`).
 //! Compiled with the `family-media` feature (on by default through `all-families`).
 //!
 //! An image comes from a file (`Image`, relative to the view, bindable) or from memory
 //! (`ImageData`, bound to the bytes of a PNG, JPEG, GIF, BMP… file handed as a `Shared<Vec<u8>>` /
-//! `Value::Object` — a picture downloaded by the application). Decoded once per content
+//! `Value::Object` - a picture downloaded by the application). Decoded once per content
 //! (`kubuno_desktop_controls::styled::load_image` / `load_image_bytes`).
 
 #[allow(unused_imports)] // Used by the `component!` invocations below.

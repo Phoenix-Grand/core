@@ -2,7 +2,7 @@
 //!
 //! Two triggers feed a single sync runner:
 //!   - a filesystem watcher (notify: inotify / FSEvents / ReadDirectoryChangesW)
-//!     fires on local changes — debounced so an editor's burst of writes maps to
+//!     fires on local changes - debounced so an editor's burst of writes maps to
 //!     one sync;
 //!   - a periodic timer polls the server for remote changes (the daemon is the
 //!     client; it pulls rather than being pushed to).
@@ -98,7 +98,7 @@ where
     watcher.watch(&cfg.sync_root, RecursiveMode::Recursive)?;
 
     // Real-time remote changes via the core WebSocket (poll below is the
-    // fallback). Skipped when a proxy is set — tungstenite can't tunnel through
+    // fallback). Skipped when a proxy is set - tungstenite can't tunnel through
     // a proxy, and the periodic poll already goes through it.
     if crate::config::proxy_url().is_none() {
         crate::ws::spawn_listener(id.to_string(), cfg.server_url.clone(), tx.clone());
@@ -107,7 +107,7 @@ where
     }
 
     println!(
-        "Surveillance de {} — temps réel (WebSocket) + poll serveur toutes les {interval_secs}s. Ctrl-C pour arrêter.",
+        "Surveillance de {} - temps réel (WebSocket) + poll serveur toutes les {interval_secs}s. Ctrl-C pour arrêter.",
         cfg.sync_root.display()
     );
 
@@ -133,7 +133,7 @@ where
 }
 
 /// One push+pull cycle. The config is reloaded each cycle so a sync-folder move
-/// (which updates `sync_root`) is picked up without restarting the daemon — and
+/// (which updates `sync_root`) is picked up without restarting the daemon - and
 /// we never re-download into a stale folder. Errors are logged, never fatal.
 fn run_once<F>(
     api: &mut Api,
@@ -176,7 +176,7 @@ where
                 on_event(id, SyncEvent {
                     kind:  "conflict".into(),
                     title: "Conflit de synchronisation".into(),
-                    body:  format!("{} fichier(s) en conflit — une copie a été conservée.", p.conflicts),
+                    body:  format!("{} fichier(s) en conflit - une copie a été conservée.", p.conflicts),
                 });
             }
             let sent = p.uploaded + p.modified + p.deleted;
@@ -236,7 +236,7 @@ where
         }
     } else if had_error {
         eprintln!(
-            "  (échec {}/{ERROR_NOTIFY_THRESHOLD} — notification différée)",
+            "  (échec {}/{ERROR_NOTIFY_THRESHOLD} - notification différée)",
             *consecutive_errors
         );
     }

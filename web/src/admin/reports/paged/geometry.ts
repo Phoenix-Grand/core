@@ -2,7 +2,7 @@
  * Paper, in the only unit that survives a printer: millimetres.
  *
  * The console lays reports out itself rather than handing a long page to the
- * browser and hoping. That is what makes a preview a PREVIEW — the sheets on
+ * browser and hoping. That is what makes a preview a PREVIEW - the sheets on
  * screen are the sheets that come out, cut at the same rows, with the same
  * running footer, and with a page count that can actually be printed on them
  * (`page 2 sur 4` is unobtainable from CSS in this engine, and trivial once the
@@ -24,7 +24,7 @@ export interface PaperFormat {
 
 /**
  * The two formats worth carrying: the world's, and North America's. Adding a
- * third is a line in this table — the rest of the pipeline reads millimetres.
+ * third is a line in this table - the rest of the pipeline reads millimetres.
  */
 export const PAPER: Record<string, PaperFormat> = {
   a4:     { id: 'a4',     widthMm: 210,   heightMm: 297   },
@@ -51,7 +51,7 @@ export const SHEET_GAP = 24
 export const SHEET_PAD = 24
 
 /**
- * Side gutters of the workspace, in pixels — where each sheet's own controls
+ * Side gutters of the workspace, in pixels - where each sheet's own controls
  * live, on the dark ground rather than on the paper.
  *
  * ⚠ Coupled to `index.css` (`[data-sheets] { padding: 24px 48px }`) AND to the
@@ -67,7 +67,7 @@ export interface PageGeometry {
   widthMm:   number
   heightMm:  number
   marginMm:  number
-  /** Usable box, in CSS pixels — what the paginator fills. */
+  /** Usable box, in CSS pixels - what the paginator fills. */
   contentWidthPx:  number
   contentHeightPx: number
 }

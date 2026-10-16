@@ -1,6 +1,6 @@
 import { useCallback, useRef, useState } from 'react'
 
-/** Below this a column is a sliver that can hold nothing — not even an ellipsis. */
+/** Below this a column is a sliver that can hold nothing - not even an ellipsis. */
 const MIN_WIDTH = 56
 
 /**
@@ -10,12 +10,12 @@ const MIN_WIDTH = 56
  *
  * 1. The table switches to `table-layout: fixed` as soon as ONE column has been
  *    resized, and every column's current width is snapshotted at that moment. In
- *    `auto` layout a width is only a hint — the browser re-solves the whole row
+ *    `auto` layout a width is only a hint - the browser re-solves the whole row
  *    from the content, so dragging one edge would shuffle the others. Snapshotting
  *    first is what makes a drag move a single boundary.
  *
  * 2. The pointer is captured on the handle, so the drag survives the cursor
- *    leaving the 5px strip — which it does immediately on any real gesture.
+ *    leaving the 5px strip - which it does immediately on any real gesture.
  */
 export function useColumnResize() {
   const [widths, setWidths] = useState<Record<string, number>>({})
@@ -60,7 +60,7 @@ export function useColumnResize() {
     drag.current = null
   }, [])
 
-  /** Keyboard equivalent — a mouse-only affordance is not an affordance. */
+  /** Keyboard equivalent - a mouse-only affordance is not an affordance. */
   const nudge = useCallback((colId: string, delta: number, handle: HTMLElement) => {
     setWidths(prev => {
       const base = Object.keys(prev).length ? prev : snapshot(handle)

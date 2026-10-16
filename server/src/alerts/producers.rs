@@ -9,20 +9,20 @@
 //! Two shapes, and the difference governs auto-closure:
 //!
 //! * **State producers** describe a condition that is either true or false right
-//!   now — a module that is not answering, a volume with 4 % left, a health
+//!   now - a module that is not answering, a volume with 4 % left, a health
 //!   check that is failing, a job type that has given up. They publish the
 //!   exhaustive set of live problems, and [`store::auto_resolve`] closes the
 //!   alerts that are no longer in it. Without that, the queue accumulates
 //!   findings that were fixed weeks ago and stops being read.
 //!
-//! * **Event producers** describe something that *happened* — a privilege was
+//! * **Event producers** describe something that *happened* - a privilege was
 //!   granted, a sensitive setting was changed. These never auto-close: the event
 //!   does not stop having happened, and only a human can say "yes, that was me".
 //!
 //! ## Never a credential
 //!
 //! A producer reads verdicts and counts. `security.sensitive_setting` records
-//! *which* key changed and *who* changed it, never the value — the audit trail
+//! *which* key changed and *who* changed it, never the value - the audit trail
 //! already redacts snapshots, and copying a redacted value here would be one
 //! more place to get it wrong.
 
@@ -189,7 +189,7 @@ pub async fn run_all(db: &DbPool, settings: &Settings) -> Result<ScanReport, App
     // The storage trend is sampled from the same pass rather than from a job of
     // its own: the producers already read the account table every few minutes,
     // and a second recurring job to read it again would be one more thing to
-    // supervise for one more row per day. A failure here never stops the scan —
+    // supervise for one more row per day. A failure here never stops the scan -
     // a missing point on a curve is not worth losing an alert over.
     if let Err(e) = crate::storage::samples::capture(db).await {
         tracing::error!(error = %e, "alerts: échantillon de stockage");
@@ -234,7 +234,7 @@ pub async fn last_scan_at(db: &DbPool) -> Result<Option<DateTime<Utc>>, AppError
 ///
 /// Only `critical`: the health page already lists warnings, in context, next to
 /// the ones that pass. Promoting all of them here would turn the queue into a
-/// second copy of that page — and a queue that repeats another screen is one an
+/// second copy of that page - and a queue that repeats another screen is one an
 /// operator stops opening.
 ///
 /// The alert reuses the check's **own** action rather than deriving one, so the
@@ -246,7 +246,7 @@ pub async fn last_scan_at(db: &DbPool) -> Result<Option<DateTime<Utc>>, AppError
 /// TLS terminates upstream, so the check learns it from the requests the process
 /// has served (`health::facts::note_probe`). A freshly restarted server has
 /// therefore seen no evidence and reports "unencrypted" until the first request
-/// arrives through the proxy — which would open an alert at every restart and
+/// arrives through the proxy - which would open an alert at every restart and
 /// close it ninety seconds later.
 ///
 /// The health page keeps reporting it, in context, where that caveat is part of
@@ -448,7 +448,7 @@ async fn dead_letter_jobs(db: &DbPool, report: &mut ScanReport) -> Result<(), Ap
             "job_type":     job_type,
             "failures":     failures,
             // The runner already truncates the message it stores, and it never
-            // carries a credential — handlers put the reason there, not the input.
+            // carries a credential - handlers put the reason there, not the input.
             "last_error":   last_error,
             "last_failure": last_failure,
         }))
@@ -470,7 +470,7 @@ async fn dead_letter_jobs(db: &DbPool, report: &mut ScanReport) -> Result<(), Ap
 ///
 /// A **state** producer over `core.backup_runs`: one alert while the last
 /// attempt is a failure, closed automatically by [`store::auto_resolve`] the
-/// moment a run succeeds. That auto-closure is what makes it readable — an
+/// moment a run succeeds. That auto-closure is what makes it readable - an
 /// operator who fixes the destination sees the alert clear on the next scan
 /// rather than having to remember to close it.
 ///
@@ -486,7 +486,7 @@ async fn backup_failures(db: &DbPool, report: &mut ScanReport) -> Result<(), App
 
     if failing {
         // One bad night is a warning; a run of them means the policy has stopped
-        // working and nobody has noticed — which is the whole failure mode.
+        // working and nobody has noticed - which is the whole failure mode.
         let severity = if stats.consecutive_failures >= 3 {
             Severity::Critical
         } else {
@@ -528,7 +528,7 @@ async fn backup_failures(db: &DbPool, report: &mut ScanReport) -> Result<(), App
 /// A run of failed sign-ins on one account.
 ///
 /// Reads `core.admin_audit`, which records `core.auth.login_failed` for
-/// administrator accounts — the ones whose compromise matters, and the reason
+/// administrator accounts - the ones whose compromise matters, and the reason
 /// the trail does not fill up with misses on names a stranger invented.
 /// One account's run of failed sign-ins in the window.
 #[derive(sqlx::FromRow)]
@@ -634,8 +634,8 @@ const EVENT_LOOKBACK_HOURS: i64 = 48;
 
 /// Highest audit entry already turned into an alert of this kind.
 ///
-/// Event producers deduplicate on the *problem* — the setting that keeps being
-/// changed, the account that keeps being promoted — not on the audit row. That
+/// Event producers deduplicate on the *problem* - the setting that keeps being
+/// changed, the account that keeps being promoted - not on the audit row. That
 /// is what makes four changes to one setting a single line with a counter of
 /// four instead of four lines saying the same thing. But it also means the
 /// deduplication key no longer stops a second pass from counting the same event
@@ -717,7 +717,7 @@ async fn privilege_grants(db: &DbPool, report: &mut ScanReport) -> Result<(), Ap
             .and_then(Value::as_str)
             .unwrap_or("instance")
             .to_string();
-        let target = target.unwrap_or_else(|| "—".to_string());
+        let target = target.unwrap_or_else(|| "-".to_string());
 
         let alert = NewAlert::new(
             catalog::PRIVILEGE_GRANTED,
@@ -831,7 +831,7 @@ async fn sensitive_settings(db: &DbPool, report: &mut ScanReport) -> Result<(), 
 ///
 /// A plain `statvfs` read of the same path the health report uses. It is its own
 /// alert rather than a promotion of the health check because that check is a
-/// `warning` — it says "keep an eye on this" — while an alert is a piece of work
+/// `warning` - it says "keep an eye on this" - while an alert is a piece of work
 /// with an owner and a deadline.
 async fn disk_pressure(
     db: &DbPool,
@@ -888,11 +888,11 @@ async fn disk_pressure(
 ///
 /// A **state** producer: an account that was emptied is no longer a problem, and
 /// `auto_resolve` closes its alert. One alert per account rather than one
-/// "several accounts are full" — the fix is per account (raise this ceiling, or
+/// "several accounts are full" - the fix is per account (raise this ceiling, or
 /// ask this person to clean up), and a grouped alert would have no owner.
 ///
 /// Deliberately bounded: an instance where three hundred accounts crossed the
-/// line at once has one problem — the default quota is wrong — and three hundred
+/// line at once has one problem - the default quota is wrong - and three hundred
 /// alerts about it is the failure mode the alert centre exists to avoid. Past
 /// the cap the producer stops naming individuals and the storage page is where
 /// the full list is read.

@@ -1,21 +1,21 @@
-// The installer's own lockup: the Kubuno mark, the wordmark, and "Setup" —
+// The installer's own lockup: the Kubuno mark, the wordmark, and "Setup" -
 // the flow's identity, shown once at the top of every step.
 //
 // The viewBox is wider than the artwork's own 86 units: the file was drawn with
 // Roboto Flex, and the shell's face (now really served, instead of falling back
-// to Arial) sets "Setup" wider — at 86 the word was clipped on the right.
+// to Arial) sets "Setup" wider - at 86 the word was clipped on the right.
 //
 // Inlined rather than loaded as a file: the wizard runs before anything is
 // installed, so there is no module, no font endpoint and no asset pipeline to
-// rely on — only what the binary already serves. The colours go through the
+// rely on - only what the binary already serves. The colours go through the
 // theme tokens (with the artwork's own values as fallbacks) so the mark stays
 // readable on a dark skin instead of turning into black on black.
 
 export function SetupWordmark({ height = 24 }: { height?: number }) {
   return (
     // A brand is not a sentence: it keeps its own direction whatever the page
-    // reads like. Under `dir="rtl"` the wordmark came out reordered — the mark
-    // landing in the middle of the letters — because the <text> runs inherited
+    // reads like. Under `dir="rtl"` the wordmark came out reordered - the mark
+    // landing in the middle of the letters - because the <text> runs inherited
     // the page's direction. The wrapper pins it to left-to-right and isolates
     // it from the surrounding bidi run.
     <span dir="ltr" style={{ direction: 'ltr', unicodeBidi: 'isolate', display: 'inline-flex' }}>

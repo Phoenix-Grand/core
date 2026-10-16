@@ -93,7 +93,7 @@ export class ExportSubjectsCard extends ViewBase {
             <Badge key={`ko-${s}`} variant="warning" size="sm">{s}</Badge>
           ))}
           {r.services_ok.length === 0 && r.services_ko.length === 0 && (
-            <span className="text-text-tertiary">—</span>
+            <span className="text-text-tertiary">-</span>
           )}
         </span>
       ),
@@ -104,7 +104,7 @@ export class ExportSubjectsCard extends ViewBase {
       align: 'right',
       minWidth: 100,
       sortValue: r => r.size_bytes ?? -1,
-      cell: r => (r.size_bytes == null ? '—' : formatBytes(r.size_bytes)),
+      cell: r => (r.size_bytes == null ? '-' : formatBytes(r.size_bytes)),
     },
     {
       id: 'error',
@@ -113,7 +113,7 @@ export class ExportSubjectsCard extends ViewBase {
       defaultHidden: true,
       cell: r => (
         <span className="min-w-0 break-words text-text-secondary" style={{ fontSize: 'var(--kb-text-meta)' }}>
-          {r.error ?? '—'}
+          {r.error ?? '-'}
         </span>
       ),
     },

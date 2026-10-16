@@ -1,12 +1,12 @@
-//! `kubuno/applyEdit`, `kubuno/elementAtOffset` and `kubuno/rangeOfElement` —
+//! `kubuno/applyEdit`, `kubuno/elementAtOffset` and `kubuno/rangeOfElement` -
 //! the three custom, non-`textDocument/*` methods the visual designer needs
 //! (`vskubuno/docs/DESIGNER.md`, work package DSG-2). See that document's
 //! "DSG-2 protocol" section (appended by this same change) for the wire
 //! shapes this module's types serialize to/from.
 //!
 //! Every element the designer names is addressed by its **stable id**
-//! ([`kubuno_desktop_views::ast::Element::stable_id`]) — a dot-separated path of
-//! child-ordinal indices from the document root, independent of `x:Name` —
+//! ([`kubuno_desktop_views::ast::Element::stable_id`]) - a dot-separated path of
+//! child-ordinal indices from the document root, independent of `x:Name` -
 //! rather than by a live tree reference: `DESIGNER.md`'s cross-cutting note
 //! asks DSG-2 to settle exactly this scheme so DSG-6 (a separate process,
 //! `kubuno-views-designer`, hit-testing its own copy of the same text) can
@@ -16,8 +16,8 @@
 //! currently-open document and turns [`kubuno_desktop_views::edit`]'s `Vec<Edit>`
 //! into the LSP-`Position`-shaped JSON the client speaks.
 //!
-//! An id that does not resolve (stale — computed against a since-edited
-//! document — or simply malformed) is never an error: every function here
+//! An id that does not resolve (stale - computed against a since-edited
+//! document - or simply malformed) is never an error: every function here
 //! degrades to "no edits"/`None`, exactly like [`kubuno_desktop_views::edit`]'s own
 //! out-of-range behavior, so a client racing its own debounced re-parse
 //! against a fresh user edit never gets a hard failure for it.
@@ -31,7 +31,7 @@ use crate::documents::Document;
 
 // ── wire types ─────────────────────────────────────────────────────────
 
-/// One minimal `{range, newText}` replacement, in the LSP `TextEdit` shape —
+/// One minimal `{range, newText}` replacement, in the LSP `TextEdit` shape -
 /// a plain struct rather than `lsp_types::TextEdit` itself, since
 /// `kubuno/applyEdit` is a custom method (not `textDocument/*`) and gains
 /// nothing from also carrying that type's `annotation_id` field.
@@ -52,7 +52,7 @@ pub struct ApplyEditParams {
 /// module doc). Tagged on `"kind"` in JSON (not `"op"`, to avoid a field
 /// named the same as its own containing object). `rename_all` on the enum
 /// itself only camel-cases the `"kind"` tag values (`SetAttribute` →
-/// `"setAttribute"`) — serde does not cascade it into a struct variant's own
+/// `"setAttribute"`) - serde does not cascade it into a struct variant's own
 /// fields, so every variant repeats it for its `snake_case` Rust field names
 /// to serialize/deserialize as `camelCase` JSON too.
 #[derive(Debug, Deserialize)]
@@ -62,7 +62,7 @@ pub enum EditOp {
     SetAttribute { element_id: String, name: String, value: String },
     #[serde(rename_all = "camelCase")]
     RemoveAttribute { element_id: String, name: String },
-    /// `xml` is a well-formed `.kbview` fragment, inserted byte-for-byte —
+    /// `xml` is a well-formed `.kbview` fragment, inserted byte-for-byte -
     /// see [`kubuno_desktop_views::edit::insert_child`]'s own doc. `parent_id`
     /// addresses the *container*, since the new element has no id of its own
     /// yet.
@@ -70,7 +70,7 @@ pub enum EditOp {
     InsertChild { parent_id: String, index: usize, xml: String },
     #[serde(rename_all = "camelCase")]
     RemoveElement { element_id: String },
-    /// Moves `element_id` to index `index` under `new_parent_id` — the same
+    /// Moves `element_id` to index `index` under `new_parent_id` - the same
     /// parent as today for a same-container reorder, a different one for a
     /// cross-container drop (`DESIGNER.md` §4's Dock/Flow drop targets).
     #[serde(rename_all = "camelCase")]
@@ -78,7 +78,7 @@ pub enum EditOp {
     #[serde(rename_all = "camelCase")]
     RenameElement { element_id: String, new_name: String },
     /// Inserts a copied fragment (the designer's Paste/Duplicate) as `parent_id`'s child at
-    /// `index`, laid out on its own indented line, colliding `x:Name`s renamed — see
+    /// `index`, laid out on its own indented line, colliding `x:Name`s renamed - see
     /// [`kubuno_desktop_views::edit::insert_fragment`]. Unlike `insertChild` (a verbatim splice).
     #[serde(rename_all = "camelCase")]
     InsertFragment { parent_id: String, index: usize, xml: String },
@@ -104,7 +104,7 @@ pub struct ApplyEditResult {
 #[derive(Debug, Deserialize)]
 pub struct ElementAtOffsetParams {
     pub uri: Uri,
-    /// Deliberately an LSP [`Position`] (0-based line, UTF-16 character) —
+    /// Deliberately an LSP [`Position`] (0-based line, UTF-16 character) -
     /// see the "DSG-2 protocol" section of `DESIGNER.md` for why this
     /// refines the design note's own "`{uri, offset}`" sketch: every other
     /// position this server accepts (`textDocument/hover`, `/completion`,
@@ -152,11 +152,11 @@ fn to_text_edit(doc: &Document, edit: Edit) -> TextEditJson {
     TextEditJson { range: to_range(doc, edit.range), new_text }
 }
 
-/// Splits a stable id into `(parent_id, index)` — a pure string operation,
+/// Splits a stable id into `(parent_id, index)` - a pure string operation,
 /// no tree walk needed, because [`kubuno_desktop_views::ast::Element::stable_id`]'s own construction
 /// *is* the ordinal path: `"2.0.3"` → `("2.0", 3)`; a top-level element's id
 /// (e.g. `"3"`) → `("", 3)`. The document root itself (`""`) has no parent,
-/// so `None` — removing/moving/renaming the root element is not a supported
+/// so `None` - removing/moving/renaming the root element is not a supported
 /// designer gesture (a `.kbview` file always has exactly one root).
 fn split_parent(element_id: &str) -> Option<(String, usize)> {
     if element_id.is_empty() {
@@ -182,7 +182,7 @@ fn apply_move_element(ast_doc: &AstDocument, element_id: &str, new_parent_id: &s
 }
 
 /// Computes the `Vec<Edit>` a [`ApplyEditParams::op`] intent produces against
-/// `doc`'s *current* text, still in `kubuno_desktop_views` coordinates — split out
+/// `doc`'s *current* text, still in `kubuno_desktop_views` coordinates - split out
 /// from [`apply_edit`] so tests can assert on ranges/text directly rather
 /// than through the JSON `Range` conversion.
 fn compute_edits(doc: &Document, op: &EditOp) -> Vec<Edit> {
@@ -222,7 +222,7 @@ fn compute_edits(doc: &Document, op: &EditOp) -> Vec<Edit> {
 }
 
 /// `kubuno/applyEdit`: turns one designer edit intent into the minimal
-/// `TextEdit`s the client applies to its `ITextBuffer` — never a whole-file
+/// `TextEdit`s the client applies to its `ITextBuffer` - never a whole-file
 /// replace. `doc` is `None` for a `uri` the server has no open document for,
 /// which yields an empty edit list (the same "degrade to no-op" rule as an
 /// unresolved element id).
@@ -429,7 +429,7 @@ mod tests {
     #[test]
     fn element_at_offset_finds_the_innermost_element() {
         let doc = open(r#"<Stack><Button Text="Ok"/></Stack>"#);
-        // Offset inside `Text="Ok"`'s value — still within `Button`, not `Stack`.
+        // Offset inside `Text="Ok"`'s value - still within `Button`, not `Stack`.
         let pos = Position { line: 0, character: 22 };
         let found = element_at_offset(&doc, pos).expect("an element under the cursor");
         assert_eq!(found.element_id, "0");

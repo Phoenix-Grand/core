@@ -1,6 +1,6 @@
 //! EVT-7b's shared golden test (`vskubuno/docs/EVENTS.md` §7): the metadata the derive macro
 //! compiles into a control's registration (read back from the registry export, as Visual Studio
-//! reads it) equals what the language server's `syn` scan of the same source produces — both go
+//! reads it) equals what the language server's `syn` scan of the same source produces - both go
 //! through `kubuno_desktop_views_meta`, and this checks the two ends agree field by field.
 
 use kubuno_desktop_views::prelude::*;

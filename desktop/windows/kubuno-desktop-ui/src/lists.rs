@@ -1,19 +1,19 @@
-//! Kubuno primitives — the list family: [`ListBox`], [`CheckedListBox`],
+//! Kubuno primitives - the list family: [`ListBox`], [`CheckedListBox`],
 //! [`ComboBox`] and [`Menu`].
 //!
 //! # Where the pixels come from
 //!
 //! None of these four has a hand-written predecessor in `kubuno-drive-desktop-app-controls`,
-//! so — as `docs/UI_BRIEF.md` requires — the reference is the **web** design
+//! so - as `docs/UI_BRIEF.md` requires - the reference is the **web** design
 //! system, read from the source (this machine cannot run the web app, so every
 //! number below was *read*, not measured):
 //!
 //! | primitive | web source |
 //! |---|---|
-//! | [`Menu`] | `core/frontend/src/ui/MenuDropdown.tsx` — the product's ONE context menu, per `CLAUDE.md` |
-//! | [`ComboBox`] field | `core/frontend/src/ui/Combobox.tsx:239` — its trigger, verbatim |
+//! | [`Menu`] | `core/frontend/src/ui/MenuDropdown.tsx` - the product's ONE context menu, per `CLAUDE.md` |
+//! | [`ComboBox`] field | `core/frontend/src/ui/Combobox.tsx:239` - its trigger, verbatim |
 //! | [`ComboBox`] popup | the same file's `role="listbox"` panel; `Dropdown.tsx` for the anchor offset and the height cap |
-//! | [`ListBox`] | that same `role="listbox"` panel — a list box and a select's list are one control in this system |
+//! | [`ListBox`] | that same `role="listbox"` panel - a list box and a select's list are one control in this system |
 //! | check well | `@ui/Checkbox`, already tokenised in [`crate::metrics::control`] |
 //!
 //! `kubuno-drive-desktop/src/user_controls/flyout.rs` already ported `MenuDropdown` to
@@ -27,7 +27,7 @@
 //! `selected_index` / `selected_indices`, `top_index`, `multi_column`,
 //! `column_width`, `item_height`, `sorted`, `drop_down_style`,
 //! `drop_down_height`, `max_drop_down_items`, `integral_height`, and the whole
-//! **selection state machine** — [`replica::ListBox::click`] with its four
+//! **selection state machine** - [`replica::ListBox::click`] with its four
 //! `SelectionMode` rules, [`replica::CheckedListBox::toggle_check`] with the
 //! two-way (not three-way) click cycle, the index shifting done by `add_item` /
 //! `remove_item`. It is checked against the real toolkit; re-deriving it here
@@ -42,19 +42,19 @@
 //! # What this layer adds
 //!
 //! Only concepts the replica genuinely does not model: the **hot row**
-//! (a `ToolStripItem` is a `Component`, not a `Control` — it cannot observe the
+//! (a `ToolStripItem` is a `Component`, not a `Control` - it cannot observe the
 //! pointer, which is exactly why [`kubuno_desktop_controls::toolstrip::ToolStrip::paint_items`]
 //! takes the hot index from its host), the combo's **open** flag and dropped
 //! list **scroll**, the menu's **open submenu**, and the **keyboard**: the
 //! active row (`aria-activedescendant`), type-ahead, and the ARIA listbox /
 //! select-only combobox / menu key maps ([`ListKey`], [`ComboKey`],
-//! [`MenuKey`]) — pure functions over the replica's selection machine.
+//! [`MenuKey`]) - pure functions over the replica's selection machine.
 //!
 //! # Floating parts
 //!
 //! A combo's list and a menu are floating surfaces. Each can report where it
 //! goes inside a viewport ([`ComboBox::drop_down_rect_in`],
-//! [`Menu::submenu_rect_in`] with [`Menu::viewport`] — flip above / flip left,
+//! [`Menu::submenu_rect_in`] with [`Menu::viewport`] - flip above / flip left,
 //! clamp to [`VIEWPORT_EDGE`]), what it paints including its shadow
 //! ([`ComboBox::drop_down_paint_bounds`], [`Menu::paint_bounds`],
 //! [`FLOAT_SHADOW_MARGIN`]), and paint itself alone
@@ -85,7 +85,7 @@ use crate::{Widget, WidgetState};
 //
 // `crate::metrics` is the crate's ONE table and everything it already answers is
 // taken from it (`height::MENU_ITEM` for a menu row, `control::COMBO_ROW` for a
-// list/popup row — they are different controls and the table says so —
+// list/popup row - they are different controls and the table says so -
 // `radius::MENU_ITEM`, `radius::FLOAT`, `control::COMBO_ARROW`, the check-box
 // geometry, the spacing scale). What is left below is the `MenuDropdown` and
 // `Combobox` grids themselves: the lengths those two files state literally and
@@ -98,10 +98,10 @@ pub mod menu_metrics {
     use crate::metrics::space;
 
     /// The panel's own `padding: 5` on the scrolling layer. It doubles as the
-    /// gutter the highlight pill is inset by — the file says so in as many
+    /// gutter the highlight pill is inset by - the file says so in as many
     /// words: « Side padding forms the gutter the highlight pill is inset by ».
     pub const PANEL_PAD: f32 = 5.0;
-    /// A row's `padding: '5px 12px 5px 10px'` — left, then right.
+    /// A row's `padding: '5px 12px 5px 10px'` - left, then right.
     pub const ROW_PAD_L: f32 = 10.0;
     pub const ROW_PAD_R: f32 = 12.0;
     /// The icon cell: `width: 20`.
@@ -143,7 +143,7 @@ pub mod menu_metrics {
     pub const SHORTCUT_GAP: f32 = COLUMN_GAP + SHORTCUT_INSET;
 }
 
-/// The list-panel grid, verbatim from `Combobox.tsx`'s `role="listbox"` — the
+/// The list-panel grid, verbatim from `Combobox.tsx`'s `role="listbox"` - the
 /// one panel both [`ListBox`] and a [`ComboBox`]'s popup are.
 pub mod list_metrics {
     use crate::metrics::{control, space};
@@ -158,12 +158,12 @@ pub mod list_metrics {
     /// (`<Check size={14} />`).
     pub const TICK_CELL: f32 = 16.0;
     pub const TICK_GLYPH: f32 = 14.0;
-    /// The panel's own outline: `border` — a rule, like every other hairline
+    /// The panel's own outline: `border` - a rule, like every other hairline
     /// in this system.
     pub const BORDER: f32 = control::SEPARATOR;
     /// `minWidth: 200` on the popup panel.
     pub const MIN_WIDTH: f32 = 200.0;
-    /// `maxHeight` on the select's popup — `Dropdown.tsx` bounds its own list
+    /// `maxHeight` on the select's popup - `Dropdown.tsx` bounds its own list
     /// at 280 before it scrolls.
     pub const DROP_DOWN_MAX: f32 = 280.0;
 }
@@ -172,7 +172,7 @@ pub mod list_metrics {
 /// destructive row.
 ///
 /// `MenuItem` in the web has a `danger?: boolean`; .NET has no such concept, and
-/// `Tag` is the toolkit's own general-purpose per-item payload — so the marker
+/// `Tag` is the toolkit's own general-purpose per-item payload - so the marker
 /// rides there rather than becoming a second, parallel item list here.
 pub const DANGER_TAG: &str = "kubuno:danger";
 
@@ -205,7 +205,7 @@ fn union(a: Rect, b: Rect) -> Rect {
     Rect::new(a.left.min(b.left), a.top.min(b.top), a.right.max(b.right), a.bottom.max(b.bottom))
 }
 
-/// The margin a floating surface keeps from the viewport edge — `const M = 8`
+/// The margin a floating surface keeps from the viewport edge - `const M = 8`
 /// in both `MenuDropdown.tsx`'s clamp and `Combobox.tsx`' `measure`.
 pub const VIEWPORT_EDGE: f32 = 8.0;
 
@@ -214,7 +214,7 @@ pub const VIEWPORT_EDGE: f32 = 8.0;
 /// DirectWrite trims a line whose layout box is even a fraction of a DIP
 /// narrower than the text, and the painter snaps boxes onto the physical pixel
 /// grid (which can take up to one device pixel off the right edge). A column
-/// sized to the RAW measure therefore ellipsizes its own widest label — the
+/// sized to the RAW measure therefore ellipsizes its own widest label - the
 /// « Réinitialiser le mot de pas… » defect. Rounding up and adding one DIP is
 /// what a browser's `auto` column does implicitly (it lays out at whole CSS px).
 fn text_width(c: &dyn Canvas, text: &str, format: &windows::Win32::Graphics::DirectWrite::IDWriteTextFormat) -> f32 {
@@ -230,7 +230,7 @@ fn text_width(c: &dyn Canvas, text: &str, format: &windows::Win32::Graphics::Dir
 const TEXT_SLACK: f32 = 1.0;
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Keyboard — the ARIA listbox / menu patterns, as pure functions
+// Keyboard - the ARIA listbox / menu patterns, as pure functions
 //
 // The replica owns the SELECTION; what the keyboard adds is an active row (the
 // web's `aria-activedescendant`) and the arithmetic that moves it. Everything
@@ -248,7 +248,7 @@ pub enum ListKey {
     PageDown,
 }
 
-/// Where the active row goes for `key` — the ARIA listbox rule: no wrap, Home /
+/// Where the active row goes for `key` - the ARIA listbox rule: no wrap, Home /
 /// End jump to the ends, PageUp / PageDown move by `page` rows (at least one).
 /// With no active row yet, a downward key lands on the first row and an upward
 /// one on the last. `None` for an empty list.
@@ -275,7 +275,7 @@ pub fn list_step(current: Option<usize>, len: usize, key: ListKey, page: usize) 
 }
 
 /// The next row `usable` accepts, walking from `from` in one direction and
-/// wrapping — `Combobox.tsx`' `firstEnabled`, which never lets the highlight
+/// wrapping - `Combobox.tsx`' `firstEnabled`, which never lets the highlight
 /// rest on a disabled option. `from = None` starts before the first row
 /// (forward) or after the last (backward). `None` when no row is usable.
 pub fn step_wrapping(
@@ -363,7 +363,7 @@ impl TypeAhead {
 /// Which label a type-ahead `prefix` lands on, from the active row `current`.
 ///
 /// A prefix of ONE repeated character (`d`, `dd`, `ddd`) cycles through the
-/// labels starting with it, from the row after `current` — the Windows and
+/// labels starting with it, from the row after `current` - the Windows and
 /// ARIA behaviour for tapping the same key. A longer prefix searches from
 /// `current` itself, so extending « do » to « doc » keeps the row it is on.
 /// Both wrap; matching is [`fold`]ed.
@@ -390,14 +390,14 @@ pub fn type_ahead_match<'a>(
 }
 
 /// Moves the active row of a replica list for `key` and applies the selection
-/// rule of its `SelectionMode` — the ARIA listbox keyboard model mapped onto
+/// rule of its `SelectionMode` - the ARIA listbox keyboard model mapped onto
 /// the toolkit's:
 ///
-/// * `One` — the selection follows the active row (single-select listbox);
-/// * `MultiExtended` — plain arrows select just the row, `Shift` extends from
+/// * `One` - the selection follows the active row (single-select listbox);
+/// * `MultiExtended` - plain arrows select just the row, `Shift` extends from
 ///   the anchor ([`replica::ListBox::click`] with shift), `Ctrl` moves the
 ///   active row without touching the selection;
-/// * `MultiSimple` / `None` — the active row moves alone (Space toggles).
+/// * `MultiSimple` / `None` - the active row moves alone (Space toggles).
 ///
 /// Returns whether anything moved.
 fn list_key(
@@ -457,7 +457,7 @@ fn top_to_show(top: usize, i: usize, per_page: usize) -> usize {
 }
 
 /// Paints the resting scroll indicator along the right edge of `content` when
-/// `len` rows do not fit in `per_page` — the list's `overflow-y-auto`, drawn
+/// `len` rows do not fit in `per_page` - the list's `overflow-y-auto`, drawn
 /// as the product's thin overlay bar ([`crate::range::ScrollBar`]) so a
 /// hidden row is never silently out of reach.
 /// `panel` is the list's rounded outline (`rounded-lg`): the bar stays inside it.
@@ -481,12 +481,12 @@ fn paint_row_scrollbar(c: &dyn Canvas, panel: Rect, content: Rect, len: usize, p
 /// Where the rows of a list go inside its panel.
 ///
 /// Pure geometry, split out so the two list boxes place, hit-test and measure
-/// through one implementation — and so it is unit-testable with no canvas.
+/// through one implementation - and so it is unit-testable with no canvas.
 #[derive(Debug, Clone, Copy)]
 struct Grid {
     /// How many items the list holds.
     len:       usize,
-    /// `TopIndex` — the first row scrolled into view (single column only).
+    /// `TopIndex` - the first row scrolled into view (single column only).
     top:       usize,
     row_h:     f32,
     /// `Some(width)` in `MultiColumn` mode.
@@ -506,7 +506,7 @@ impl Grid {
         )
     }
 
-    /// How many whole rows fit in `bounds` — WinForms' integral height, applied
+    /// How many whole rows fit in `bounds` - WinForms' integral height, applied
     /// to the Kubuno row rather than the toolkit's.
     fn rows_per_column(&self, bounds: Rect) -> usize {
         let inner = Self::content(bounds);
@@ -584,14 +584,14 @@ impl Grid {
 fn paint_list_panel(c: &dyn Canvas, bounds: Rect, disabled: bool) {
     let t = c.theme();
     // `Combobox.tsx`: the listbox panel is `rounded-lg border border-border
-    // bg-white` — surface-0, which is `layer_background` on the desktop. A dead
+    // bg-white` - surface-0, which is `layer_background` on the desktop. A dead
     // control takes the field's disabled face (`Input`: `disabled:bg-surface-2`).
     let face = if disabled { t.surface_2 } else { t.layer_background };
     c.fill_rounded(&bounds, radius::LG, &face);
     c.stroke_rounded(&bounds, radius::LG, &t.card_stroke);
 }
 
-/// The focus-visible ring of a focusable list panel — `.kb-field-focus`'s
+/// The focus-visible ring of a focusable list panel - `.kb-field-focus`'s
 /// `outline … var(--color-primary)`, drawn inward at the crate's field-ring
 /// width ([`FOCUS_RING`]) so it never leaves the control's bounds.
 fn paint_list_ring(c: &dyn Canvas, bounds: Rect) {
@@ -609,11 +609,11 @@ fn paint_list_row(c: &dyn Canvas, row: Rect, label: &str, st: RowState) {
     let f = c.formats();
 
     // `rounded-md` on the option, inset by the panel padding the panel already
-    // applied — so the fill stops short of the outline like the web's does.
+    // applied - so the fill stops short of the outline like the web's does.
     if st.selected {
         c.fill_rounded(&row, radius::SM, &t.list_selected);
     } else if st.hot || st.active {
-        // `isAct ? 'bg-surface-2'` — the keyboard's active option wears the
+        // `isAct ? 'bg-surface-2'` - the keyboard's active option wears the
         // hover fill, exactly as the web's listbox shares one `active` state
         // between the arrows and `onMouseEnter`.
         c.fill_rounded(&row, radius::SM, &t.row_hover);
@@ -640,7 +640,7 @@ struct RowState {
 // ListBox
 // ─────────────────────────────────────────────────────────────────────────────
 
-/// A scrolling list of strings — the replica, with Kubuno rows.
+/// A scrolling list of strings - the replica, with Kubuno rows.
 ///
 /// Everything about the list itself is [`replica::ListBox`]'s: the items, the
 /// four `SelectionMode` rules and the `Ctrl`/`Shift` arithmetic in
@@ -653,13 +653,13 @@ pub struct ListBox {
     /// The row under the pointer, which the model cannot know: `SelectedIndex`
     /// is a selection, not a hover, and the replica has no pointer.
     pub hot_index: Option<usize>,
-    /// The keyboard's active row — `aria-activedescendant`. Distinct from the
+    /// The keyboard's active row - `aria-activedescendant`. Distinct from the
     /// selection in the multi-modes (Ctrl+arrows move it alone); painted as the
     /// web's `bg-surface-2` active option while the list holds the focus.
     pub focus_index: Option<usize>,
     /// The type-ahead prefix buffer.
     pub type_ahead: TypeAhead,
-    /// `DrawMode.OwnerDrawVariable`: the height of each item, as `MeasureItem` answered — filled
+    /// `DrawMode.OwnerDrawVariable`: the height of each item, as `MeasureItem` answered - filled
     /// by [`ListBox::measure_items`]; used for painting, hit-testing and scrolling while it holds
     /// one height per item (single column only, as in WinForms).
     pub item_heights: Option<Vec<f32>>,
@@ -683,7 +683,7 @@ impl ListBox {
     }
 
     /// The Kubuno row height: [`control::COMBO_ROW`] (the web's `py-1.5` around a
-    /// 20 DIP line box = 32), unless `ItemHeight` was set explicitly — the
+    /// 20 DIP line box = 32), unless `ItemHeight` was set explicitly - the
     /// toolkit lets an explicit value win, and so does this.
     pub fn row_height(&self) -> f32 {
         kubuno_row_height(self.inner.item_height)
@@ -710,7 +710,7 @@ impl ListBox {
     }
 
     /// **Which item** `(x, y)` lands on, in the same space as the `bounds` it
-    /// was painted into — what a host needs before it can call
+    /// was painted into - what a host needs before it can call
     /// [`replica::ListBox::click`].
     ///
     /// Honours `TopIndex` and `MultiColumn`; returns `None` on the panel's
@@ -738,7 +738,7 @@ impl ListBox {
         self.grid().rows_per_column(bounds)
     }
 
-    /// The panel height that shows `rows` whole rows — the Kubuno counterpart of
+    /// The panel height that shows `rows` whole rows - the Kubuno counterpart of
     /// `IntegralHeight`.
     pub fn height_for_rows(&self, rows: usize) -> f32 {
         if let Some(h) = self.variable_heights() {
@@ -784,7 +784,7 @@ impl ListBox {
         changed
     }
 
-    /// Space on the active row — see [`ListKey`]. Returns whether it acted.
+    /// Space on the active row - see [`ListKey`]. Returns whether it acted.
     pub fn press_space(&mut self, ctrl: bool) -> bool {
         list_space(&mut self.inner, self.focus_index, ctrl)
     }
@@ -799,7 +799,7 @@ impl ListBox {
     }
 
     /// Type-ahead: appends `text` (typed at `now_ms`) to the prefix and moves
-    /// the active row — and, in a single-select list, the selection — to the
+    /// the active row - and, in a single-select list, the selection - to the
     /// matching item. Returns the row it landed on.
     pub fn type_to_select(&mut self, bounds: Rect, text: &str, now_ms: u64) -> Option<usize> {
         if text.is_empty() {
@@ -827,7 +827,7 @@ impl ListBox {
     }
 
     /// Scrolls by `rows` (positive = down), clamped so the last page stays
-    /// full — what a wheel notch does to a web list.
+    /// full - what a wheel notch does to a web list.
     pub fn scroll_rows(&mut self, bounds: Rect, rows: i32) {
         let top = (self.inner.top_index as i64 + rows as i64).max(0) as usize;
         self.set_top_index_clamped(bounds, top);
@@ -1018,7 +1018,7 @@ impl Widget for ListBox {
 /// The replica carries it usefully and this wrapper adds nothing to the model:
 /// the per-item `CheckState`, `CheckOnClick`, the `CheckedIndices` that include
 /// the indeterminate rows, the coercion of `SelectionMode` to `One`/`None`, and
-/// — the one that catches ports — [`replica::CheckedListBox::toggle_check`],
+/// - the one that catches ports - [`replica::CheckedListBox::toggle_check`],
 /// where a click on an `Indeterminate` row goes to `Unchecked`, **not** to
 /// `Checked`. All of it is reached through [`Deref`].
 ///
@@ -1027,9 +1027,9 @@ impl Widget for ListBox {
 #[derive(Clone, Default)]
 pub struct CheckedListBox {
     inner: replica::CheckedListBox,
-    /// The row under the pointer — see [`ListBox::hot_index`].
+    /// The row under the pointer - see [`ListBox::hot_index`].
     pub hot_index: Option<usize>,
-    /// The keyboard's active row — see [`ListBox::focus_index`].
+    /// The keyboard's active row - see [`ListBox::focus_index`].
     pub focus_index: Option<usize>,
     /// The type-ahead prefix buffer.
     pub type_ahead: TypeAhead,
@@ -1053,7 +1053,7 @@ impl CheckedListBox {
     }
 
     /// Same rule as [`ListBox::row_height`]. The Kubuno row is 32 and the check
-    /// well 18, so — unlike the toolkit, which had to grow a 15 DIP row to 18 —
+    /// well 18, so - unlike the toolkit, which had to grow a 15 DIP row to 18 -
     /// nothing needs adding for the box to fit.
     pub fn row_height(&self) -> f32 {
         kubuno_row_height(self.inner.item_height)
@@ -1068,7 +1068,7 @@ impl CheckedListBox {
         }
     }
 
-    /// Which item `(x, y)` lands on — see [`ListBox::item_at`].
+    /// Which item `(x, y)` lands on - see [`ListBox::item_at`].
     pub fn item_at(&self, bounds: Rect, x: f32, y: f32) -> Option<usize> {
         self.grid().at(bounds, x, y)
     }
@@ -1095,7 +1095,7 @@ impl CheckedListBox {
         self.grid().rows_per_column(bounds)
     }
 
-    /// Arrow / Home / End / PageUp / PageDown — see [`ListBox::handle_key`].
+    /// Arrow / Home / End / PageUp / PageDown - see [`ListBox::handle_key`].
     /// The selection of a checked list is single, so the selection follows the
     /// active row; the checks are left alone (Space toggles them).
     pub fn handle_key(&mut self, bounds: Rect, key: ListKey) -> bool {
@@ -1108,7 +1108,7 @@ impl CheckedListBox {
     }
 
     /// Space: toggles the active row's check with the toolkit's two-way cycle
-    /// ([`replica::CheckedListBox::toggle_check`]) and selects it — what a
+    /// ([`replica::CheckedListBox::toggle_check`]) and selects it - what a
     /// check box row does under the ARIA `checkbox` pattern.
     pub fn press_space(&mut self) -> bool {
         let Some(i) = self.focus_index.filter(|&i| i < self.inner.items.len()) else { return false };
@@ -1119,7 +1119,7 @@ impl CheckedListBox {
 
     /// A pointer press on row `i`. `on_well` says whether it hit the check
     /// well ([`CheckedListBox::check_at`]): the well always toggles, the label
-    /// only when `CheckOnClick` is set — the toolkit's rule.
+    /// only when `CheckOnClick` is set - the toolkit's rule.
     pub fn pointer_select(&mut self, i: usize, on_well: bool) {
         if i >= self.inner.items.len() {
             return;
@@ -1131,7 +1131,7 @@ impl CheckedListBox {
         }
     }
 
-    /// Type-ahead — see [`ListBox::type_to_select`].
+    /// Type-ahead - see [`ListBox::type_to_select`].
     pub fn type_to_select(&mut self, bounds: Rect, text: &str, now_ms: u64) -> Option<usize> {
         if text.is_empty() {
             return None;
@@ -1183,11 +1183,11 @@ fn paint_check(c: &dyn Canvas, well: Rect, state: CheckState, disabled: bool) {
     let t = c.theme();
     let on = state != CheckState::Unchecked;
     let accent = if disabled { faded(&t.accent, menu_metrics::DISABLED_ALPHA) } else { t.accent };
-    // `CHECKBOX_GEOMETRY = { size: 18, border: 2, radius: 4, tick: 11 }` —
+    // `CHECKBOX_GEOMETRY = { size: 18, border: 2, radius: 4, tick: 11 }` -
     // the very geometry the web's own canvas check box draws.
     if on {
         c.fill_rounded(&well, control::CHECK_RADIUS, &accent);
-        // `Indeterminate` is a bar, `Checked` a tick — the two the web's
+        // `Indeterminate` is a bar, `Checked` a tick - the two the web's
         // checkbox draws, and the states the replica models.
         let ink = t.accent_foreground;
         if state == CheckState::Indeterminate {
@@ -1277,7 +1277,7 @@ impl Widget for CheckedListBox {
 ///
 /// Both halves come from `Combobox.tsx`, and from nowhere else. The trigger is
 /// literally `flex h-9 w-full items-center gap-2 rounded-md border px-3
-/// text-left` (line 239) — an `Input`, so [`height::BUTTON_MD`], [`radius::SM`]
+/// text-left` (line 239) - an `Input`, so [`height::BUTTON_MD`], [`radius::SM`]
 /// and [`space::MD`], with a `w-4` chevron. The popup is that file's own
 /// `role="listbox"` panel, the same one a [`ListBox`] is: `rounded-lg border
 /// border-border bg-white`, `p-1` inside, `rounded-md` rows of
@@ -1286,10 +1286,10 @@ impl Widget for CheckedListBox {
 #[derive(Clone, Default)]
 pub struct ComboBox {
     inner: replica::ComboBox,
-    /// Whether the list is dropped — `ComboBox.DroppedDown` in .NET, which the
+    /// Whether the list is dropped - `ComboBox.DroppedDown` in .NET, which the
     /// replica does not model (it is runtime state, not a designer property).
     pub open:       bool,
-    /// The ACTIVE row of the open list — the web's `active`, which the arrows
+    /// The ACTIVE row of the open list - the web's `active`, which the arrows
     /// and `onMouseEnter` share (`aria-activedescendant`). Painted as the
     /// `bg-surface-2` highlight.
     pub hot_index:  Option<usize>,
@@ -1326,11 +1326,11 @@ pub enum ComboKey {
     Space,
     Escape,
     Tab,
-    /// `Alt+Down` — opens the list (Windows and ARIA).
+    /// `Alt+Down` - opens the list (Windows and ARIA).
     AltDown,
-    /// `Alt+Up` — commits the active row and closes (ARIA select-only).
+    /// `Alt+Up` - commits the active row and closes (ARIA select-only).
     AltUp,
-    /// `F4` — the Windows toggle.
+    /// `F4` - the Windows toggle.
     F4,
 }
 
@@ -1356,7 +1356,7 @@ impl ComboBox {
 
     /// Drops the list open. On the closed → open transition the active row
     /// starts on the current selection (or the first row) and is scrolled into
-    /// view — `Combobox.tsx`: « Reopening starts on the current selection ».
+    /// view - `Combobox.tsx`: « Reopening starts on the current selection ».
     /// Calling it again while open changes nothing, so a host may call it every
     /// frame.
     pub fn open(&mut self) {
@@ -1393,12 +1393,12 @@ impl ComboBox {
         self.open || self.inner.drop_down_style == replica::ComboBoxStyle::Simple
     }
 
-    /// The field's own height — an `Input`'s `h-9`.
+    /// The field's own height - an `Input`'s `h-9`.
     pub fn field_height(&self) -> f32 {
         height::BUTTON_MD
     }
 
-    /// A popup row: [`control::COMBO_ROW`] — `py-1.5` over a 20 DIP line, the
+    /// A popup row: [`control::COMBO_ROW`] - `py-1.5` over a 20 DIP line, the
     /// row `Combobox.tsx` gives its `role="option"`. A combo's popup is NOT a
     /// menu and does not take the 30 DIP menu row. An explicit `ItemHeight`
     /// still wins, as in the toolkit.
@@ -1436,7 +1436,7 @@ impl ComboBox {
         }
     }
 
-    /// Whether the dropped list holds more rows than it shows — it then
+    /// Whether the dropped list holds more rows than it shows - it then
     /// scrolls and paints its scroll indicator.
     pub fn drop_down_scrolls(&self) -> bool {
         self.inner.items.len() > self.visible_rows()
@@ -1482,7 +1482,7 @@ impl ComboBox {
     }
 
     /// Where the open list goes when it must stay inside `area` (the monitor
-    /// work area, in the same space as `bounds`) — `Combobox.tsx`' `measure`:
+    /// work area, in the same space as `bounds`) - `Combobox.tsx`' `measure`:
     /// below the trigger, flipped ABOVE it when it would cross the bottom edge,
     /// and pulled left to keep [`VIEWPORT_EDGE`] from the right edge.
     ///
@@ -1510,7 +1510,7 @@ impl ComboBox {
     }
 
     /// What painting the open list at [`ComboBox::drop_down_rect`] touches,
-    /// its shadow included — the rectangle to hand `host::popup`.
+    /// its shadow included - the rectangle to hand `host::popup`.
     pub fn drop_down_paint_bounds(&self, bounds: Rect) -> Rect {
         inflate(self.drop_down_rect(bounds), FLOAT_SHADOW_MARGIN)
     }
@@ -1534,7 +1534,7 @@ impl ComboBox {
         self.item_at_panel(self.drop_down_rect(bounds), x, y)
     }
 
-    /// Which item `(x, y)` lands on for a list painted into `panel` — for a
+    /// Which item `(x, y)` lands on for a list painted into `panel` - for a
     /// list placed with [`ComboBox::drop_down_rect_in`].
     pub fn item_at_panel(&self, panel: Rect, x: f32, y: f32) -> Option<usize> {
         if !panel.contains(x, y) {
@@ -1571,7 +1571,7 @@ impl ComboBox {
         self.inner.selected_item().unwrap_or(&self.inner.control().text)
     }
 
-    /// Makes row `i` the selection and closes the list — `commit` in
+    /// Makes row `i` the selection and closes the list - `commit` in
     /// `Combobox.tsx`.
     pub fn commit(&mut self, i: usize) {
         if i < self.inner.items.len() {
@@ -1686,7 +1686,7 @@ impl ComboBox {
         Some(i)
     }
 
-    /// Paints the field ALONE — the trigger — for a host that shows the open
+    /// Paints the field ALONE - the trigger - for a host that shows the open
     /// list in its own `host::popup` (see [`ComboBox::paint_drop_down_at`]).
     /// `bounds` is the control's; a `Simple` combo still paints only its field.
     pub fn paint_trigger(&self, canvas: &dyn Canvas, bounds: Rect, state: WidgetState) {
@@ -1728,7 +1728,7 @@ impl ComboBox {
             c.stroke_rounded(&field, radius::SM, &t.card_stroke);
         }
 
-        // `flex h-9 w-full items-center gap-2 rounded-md border px-3` — the
+        // `flex h-9 w-full items-center gap-2 rounded-md border px-3` - the
         // chevron sits one `px-3` in from the trailing edge, and the label
         // (`min-w-0 flex-1 truncate`) stops one `gap-2` before it.
         let cy = (field.top + field.bottom) / 2.0;
@@ -1767,7 +1767,7 @@ impl ComboBox {
     }
 
     /// Records the visible rows of the open list, laid out in `panel` (the popup's coordinates),
-    /// through the owner-draw `handler` — for a list painted later in its popup, which lends the
+    /// through the owner-draw `handler` - for a list painted later in its popup, which lends the
     /// recording ([`owner_draw::RecordedItems`]) around [`ComboBox::paint_drop_down_at`].
     pub fn record_drop_down_items(&self, panel: Rect, handler: &mut dyn owner_draw::OwnerDrawHandler) -> owner_draw::RecordedItems {
         let mut out = owner_draw::RecordedItems::new();
@@ -1784,7 +1784,7 @@ impl ComboBox {
         out
     }
 
-    /// Paints the open list into an explicit `panel` rectangle — the popup
+    /// Paints the open list into an explicit `panel` rectangle - the popup
     /// case, where the caller placed it with [`ComboBox::drop_down_rect_in`]
     /// and rebased it into the popup's local space. The shadow spills
     /// [`FLOAT_SHADOW_MARGIN`] outside `panel`.
@@ -1792,8 +1792,8 @@ impl ComboBox {
         let t = c.theme();
         let f = c.formats();
 
-        // A combo's popup IS the list panel of `Combobox.tsx` — `overflow-hidden
-        // rounded-lg border border-border bg-white`, `p-1` inside — lifted off
+        // A combo's popup IS the list panel of `Combobox.tsx` - `overflow-hidden
+        // rounded-lg border border-border bg-white`, `p-1` inside - lifted off
         // the page by the float shadow because, unlike a `ListBox`, it floats.
         drop_shadow(c, &panel);
         paint_list_panel(c, panel, false);
@@ -1827,7 +1827,7 @@ impl ComboBox {
                 c.fill_rounded(&row, radius::SM, &t.row_hover);
             }
             // `<span className="flex w-4 shrink-0 justify-center text-primary">`
-            // — the tick gutter, then `gap-2`, then the label.
+            // - the tick gutter, then `gap-2`, then the label.
             let tick = Rect::new(
                 row.left + list_metrics::ROW_PAD_H,
                 row.top,
@@ -1854,7 +1854,7 @@ impl ComboBox {
 
 /// `Dropdown.openDropdown` anchors the popup at `r.bottom + 2`.
 const DROP_DOWN_OFFSET: f32 = 2.0;
-/// `@ui/Input`: `focus:ring-2` — a 2 DIP ring in the accent, drawn inward;
+/// `@ui/Input`: `focus:ring-2` - a 2 DIP ring in the accent, drawn inward;
 /// the value every field of this crate uses (`text::FOCUS_RING`).
 const FOCUS_RING: f32 = 2.0;
 /// `Input`: `disabled:opacity-60`.
@@ -1893,7 +1893,7 @@ impl Widget for ComboBox {
         self.paint_drop_down(canvas, bounds, state);
     }
 
-    /// The field, plus the open list — a click in the dropped list is a click on
+    /// The field, plus the open list - a click in the dropped list is a click on
     /// the combo, not on whatever is painted behind it.
     fn hit_test(&self, bounds: Rect, x: f32, y: f32) -> bool {
         self.field_rect(bounds).contains(x, y)
@@ -1906,18 +1906,18 @@ impl Widget for ComboBox {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Menu — the product's `MenuDropdown`
+// Menu - the product's `MenuDropdown`
 // ─────────────────────────────────────────────────────────────────────────────
 
-/// A menu entry under construction — the web's `MenuItem` literal, spelled in
+/// A menu entry under construction - the web's `MenuItem` literal, spelled in
 /// Rust.
 ///
 /// It produces a [`ToolStripMenuItem`], so nothing about the item is stored
 /// twice: the label is `ToolStripItem::text`, the icon is `ToolStripItem::image`
-/// (« the key the host would resolve it with » — here, a geometry name from
+/// (« the key the host would resolve it with » - here, a geometry name from
 /// `assets/lucide-icons.txt`), the shortcut is `ShortcutKeys`, the tick is
-/// `Checked`, the submenu is `DropDownItems`, and `danger` — which .NET has no
-/// concept of — rides in `Tag` as [`DANGER_TAG`].
+/// `Checked`, the submenu is `DropDownItems`, and `danger` - which .NET has no
+/// concept of - rides in `Tag` as [`DANGER_TAG`].
 pub struct MenuEntry(ToolStripMenuItem);
 
 impl MenuEntry {
@@ -1931,19 +1931,19 @@ impl MenuEntry {
         self
     }
 
-    /// `ShortcutKeys` — the modifiers plus the key's display name.
+    /// `ShortcutKeys` - the modifiers plus the key's display name.
     pub fn shortcut(mut self, ctrl: bool, alt: bool, shift: bool, key: impl Into<String>) -> Self {
         self.0.shortcut_keys = Some(Shortcut::new(ctrl, alt, shift, key));
         self
     }
 
-    /// `ShortcutKeyDisplayString` — an explicit override of the text above.
+    /// `ShortcutKeyDisplayString` - an explicit override of the text above.
     pub fn shortcut_text(mut self, text: impl Into<String>) -> Self {
         self.0.shortcut_key_display_string = Some(text.into());
         self
     }
 
-    /// `Checked` — the row shows a tick in its icon cell.
+    /// `Checked` - the row shows a tick in its icon cell.
     pub fn checked(mut self, on: bool) -> Self {
         self.0.checked = on;
         self
@@ -1960,7 +1960,7 @@ impl MenuEntry {
         self
     }
 
-    /// `DropDownItems` — the cascaded submenu.
+    /// `DropDownItems` - the cascaded submenu.
     pub fn submenu(mut self, items: Vec<StripItem>) -> Self {
         self.0.base.drop_down_items = items;
         self
@@ -1981,12 +1981,12 @@ pub fn section(text: impl Into<String>) -> StripItem {
     StripItem::Label(ToolStripLabel::new(text))
 }
 
-/// **The** Kubuno context menu — `@ui/MenuDropdown`, which `CLAUDE.md` makes the
+/// **The** Kubuno context menu - `@ui/MenuDropdown`, which `CLAUDE.md` makes the
 /// product's only menu.
 ///
 /// The model is the replica's [`ContextMenuStrip`]: its `Items` are
 /// `StripItem`s, so the toolkit's own tree (menu item, separator, label,
-/// recursive `DropDownItems`) is what a caller builds — see [`MenuEntry`],
+/// recursive `DropDownItems`) is what a caller builds - see [`MenuEntry`],
 /// [`separator`] and [`section`]. The width rule is the replica's
 /// [`measure_menu_item`]. Only the pixels are new.
 #[derive(Clone, Default)]
@@ -2002,7 +2002,7 @@ pub struct Menu {
     /// The hot row INSIDE the open submenu (pointer or keyboard). While it is
     /// `Some`, the keyboard drives the submenu rather than this menu.
     pub submenu_hot:  Option<usize>,
-    /// The viewport the menu must stay inside (client DIP — the monitor work
+    /// The viewport the menu must stay inside (client DIP - the monitor work
     /// area a host gets from `Frame::screen_area`). With it, the cascaded
     /// submenu flips to the LEFT of its row when the right has no room and is
     /// pulled back inside the edges, and the menu's measured width is capped
@@ -2044,8 +2044,8 @@ pub enum MenuOutcome {
     SubmenuOpened,
     /// The open submenu closed; the parent row stays hot.
     SubmenuClosed,
-    /// Leaf `index` of the menu — or, with `sub = Some(j)`, row `j` of the
-    /// submenu opened from row `index` — was chosen. The host runs it and
+    /// Leaf `index` of the menu - or, with `sub = Some(j)`, row `j` of the
+    /// submenu opened from row `index` - was chosen. The host runs it and
     /// closes the menu.
     Chosen { index: usize, sub: Option<usize> },
     /// Escape at the top level: the host closes the menu.
@@ -2087,7 +2087,7 @@ impl Menu {
         Self::default()
     }
 
-    /// Builds a menu from its rows — the web's `items` array.
+    /// Builds a menu from its rows - the web's `items` array.
     pub fn with_items(items: Vec<StripItem>) -> Self {
         let mut m = Self::new();
         m.inner.items = items;
@@ -2105,7 +2105,7 @@ impl Menu {
 
     /// Whether the icon / check gutter is reserved. `ShowImageMargin` defaults
     /// to `true` in the toolkit, and the web reserves its `width: 20` cell
-    /// unconditionally — so the default reserves it, and turning both margins
+    /// unconditionally - so the default reserves it, and turning both margins
     /// off closes it up.
     fn has_gutter(&self) -> bool {
         self.inner.show_image_margin || self.inner.show_check_margin
@@ -2175,7 +2175,7 @@ impl Menu {
     /// Where the cascaded submenu of row `i` opens.
     ///
     /// `MenuDropdown.SubmenuItem`: `top: r.top - 4`, `left: r.right - 2`, and
-    /// `minWidth: SUB_W`. It does not clamp to a viewport here — that is the
+    /// `minWidth: SUB_W`. It does not clamp to a viewport here - that is the
     /// host's job, as it is the web's.
     pub fn submenu_rect(&self, bounds: Rect, i: usize) -> Option<Rect> {
         let row = self.item_rect(bounds, i)?;
@@ -2207,7 +2207,7 @@ impl Menu {
     }
 
     /// Where the submenu of row `i` really opens, measured and kept inside
-    /// the viewport — `SubmenuItem.openNow` plus `MenuDropdown`'s clamp:
+    /// the viewport - `SubmenuItem.openNow` plus `MenuDropdown`'s clamp:
     ///
     /// * the panel is `minWidth: SUB_W` and grows to its content;
     /// * it cascades RIGHT (`left: r.right - 2`), unless that crosses the
@@ -2225,7 +2225,7 @@ impl Menu {
     }
 
     /// Records the menu items laid out in `bounds` (the popup's coordinates) through the
-    /// owner-draw `handler`, when the menu is [`Menu::owner_draw`] — for a menu painted later in
+    /// owner-draw `handler`, when the menu is [`Menu::owner_draw`] - for a menu painted later in
     /// its popup, which lends the recording ([`owner_draw::RecordedItems`]).
     pub fn record_items(&self, bounds: Rect, handler: &mut dyn owner_draw::OwnerDrawHandler) -> owner_draw::RecordedItems {
         let mut out = owner_draw::RecordedItems::new();
@@ -2242,7 +2242,7 @@ impl Menu {
         out
     }
 
-    /// The rectangle this menu paints into when drawn at `bounds` — the panel,
+    /// The rectangle this menu paints into when drawn at `bounds` - the panel,
     /// the open submenu (where [`Menu::submenu_rect_in`] puts it), and the
     /// shadow around both. What a host sizes its `host::popup` to.
     pub fn paint_bounds(&self, c: &dyn Canvas, bounds: Rect) -> Rect {
@@ -2421,7 +2421,7 @@ impl Menu {
                     row.right - menu_metrics::CONTENT_RIGHT,
                     row.bottom,
                 );
-                // `--kb-text-meta`, `fontWeight: 600`, uppercased by CSS —
+                // `--kb-text-meta`, `fontWeight: 600`, uppercased by CSS -
                 // `caption_strong` is the 12 px semibold format, and the case is
                 // applied here because DirectWrite has no `text-transform`.
                 c.text_ellipsis(&l.item.text.to_uppercase(), &r, &f.caption_strong, &t.text_secondary);
@@ -2460,12 +2460,12 @@ impl Menu {
 
         let enabled = m.base.item.enabled && !dead;
         let danger = m.base.item.tag.as_deref() == Some(DANGER_TAG);
-        // The submenu keeps its parent row lit while it is open — what macOS
+        // The submenu keeps its parent row lit while it is open - what macOS
         // does, and what `SubmenuItem` reproduces with `pos !== null`.
         let hot = enabled && (self.hot_index == Some(index) || self.open_submenu == Some(index));
 
         // THE Kubuno hover: a FULL accent pill (`background: c.hover`), inset by
-        // the panel's own padding — which is why the label, icon and shortcut
+        // the panel's own padding - which is why the label, icon and shortcut
         // all flip to `hoverText` under it.
         let pill = Rect::new(
             row.left + menu_metrics::PANEL_PAD,
@@ -2502,7 +2502,7 @@ impl Menu {
             )
         };
 
-        // The icon cell: `{item.checked ? '✓' : item.icon}` — a tick REPLACES
+        // The icon cell: `{item.checked ? '✓' : item.icon}` - a tick REPLACES
         // the icon, it does not sit beside it.
         if self.has_gutter() {
             let cy = (row.top + row.bottom) / 2.0;
@@ -2540,7 +2540,7 @@ impl Menu {
         let shortcut = m.shortcut_text();
         if !shortcut.is_empty() && shortcut_col > 0.0 {
             // Left-aligned in its own `auto` column, so the shortcuts line up as
-            // a column of their own — the web says so in as many words.
+            // a column of their own - the web says so in as many words.
             let left = row.right - menu_metrics::CONTENT_RIGHT - shortcut_col;
             let r = Rect::new(left, row.top, row.right - menu_metrics::CONTENT_RIGHT, row.bottom);
             let ink = if hot {
@@ -2553,7 +2553,7 @@ impl Menu {
         }
 
         if has_caret {
-            // The caret shares the shortcut column, right-aligned in it — and it
+            // The caret shares the shortcut column, right-aligned in it - and it
             // is GEOMETRY (`ChevronRight`), never a « ▸ » character: the
             // embedded face does not carry one.
             let cy = (row.top + row.bottom) / 2.0;
@@ -2582,7 +2582,7 @@ const SUBMENU_RISE: f32 = 4.0;
 /// … and `left: r.right - 2`, so it overlaps its parent by two pixels.
 const SUBMENU_OVERLAP: f32 = 2.0;
 
-/// Places a `w × h` submenu beside its parent `row` — see
+/// Places a `w × h` submenu beside its parent `row` - see
 /// [`Menu::submenu_rect_in`]. Pure, so the flip is unit-testable.
 fn place_submenu(row: Rect, w: f32, h: f32, viewport: Option<Rect>) -> Rect {
     let mut left = row.right - SUBMENU_OVERLAP;
@@ -2615,14 +2615,14 @@ impl Widget for Menu {
     /// the panel padding.
     ///
     /// The rule is the replica's [`measure_menu_item`], applied **once** to the
-    /// widest label and the menu-wide shortcut column — not once per row.
+    /// widest label and the menu-wide shortcut column - not once per row.
     ///
     /// That is what the web's own layout does: the panel is a
     /// `grid-template-columns: auto 1fr auto` and every row re-uses those
     /// columns through `subgrid`, so the shortcut column is as wide as the
     /// longest shortcut **for every row**, including the rows that have none.
     /// Measuring row by row under-measures a menu whose longest label and
-    /// longest shortcut are on different rows — which is exactly the shape a
+    /// longest shortcut are on different rows - which is exactly the shape a
     /// real context menu has.
     fn measure(&self, canvas: &dyn Canvas) -> Size {
         let f = canvas.formats();
@@ -2630,8 +2630,8 @@ impl Widget for Menu {
         let gutter = self.label_left();
 
         let mut widest_label = 0.0_f32;
-        // A section label is not on the grid — it spans `1 / -1` and sits in the
-        // row's own padding — so it is measured against its own inset instead.
+        // A section label is not on the grid - it spans `1 / -1` and sits in the
+        // row's own padding - so it is measured against its own inset instead.
         let mut widest_span = 0.0_f32;
         let mut any_caret = false;
         for item in &self.inner.items {
@@ -2783,7 +2783,7 @@ mod tests {
     #[test]
     fn the_menu_width_rule_is_the_replicas() {
         // The menu is gutter + WIDEST label + the shared shortcut column +
-        // right padding, which is exactly what `measure_menu_item` composes —
+        // right padding, which is exactly what `measure_menu_item` composes -
         // `Menu::measure` calls it once, with the widest label and the widest
         // shortcut, because the web's `subgrid` gives every row the same
         // columns whether or not that row fills them.
@@ -2828,7 +2828,7 @@ mod tests {
         // The very first pixel of row 0, and the last of it.
         assert_eq!(l.item_at(b, 10.0, inset), Some(0));
         assert_eq!(l.item_at(b, 10.0, inset + 31.99), Some(0));
-        // The first pixel of row 1 — the boundary belongs to the LOWER row.
+        // The first pixel of row 1 - the boundary belongs to the LOWER row.
         assert_eq!(l.item_at(b, 10.0, inset + 32.0), Some(1));
         assert_eq!(l.item_at(b, 10.0, inset + 3.0 * 32.0), Some(3));
         // The panel's own padding is nobody's row.
@@ -2895,13 +2895,13 @@ mod tests {
         assert_eq!(l.item_at(b, 5.0 + 1.0, 5.0 + 2.0 * 32.0 + 1.0), Some(2));
         // Second column, first row.
         assert_eq!(l.item_at(b, 5.0 + 80.0 + 1.0, 5.0 + 1.0), Some(3));
-        // Third column, first row — the seventh item.
+        // Third column, first row - the seventh item.
         assert_eq!(l.item_at(b, 5.0 + 160.0 + 1.0, 5.0 + 1.0), Some(6));
         // The slot under it is empty, and an empty slot is nobody's row.
         assert_eq!(l.item_at(b, 5.0 + 160.0 + 1.0, 5.0 + 32.0 + 1.0), None);
     }
 
-    // ── Selection — the replica's machine, reached through Deref ─────────────
+    // ── Selection - the replica's machine, reached through Deref ─────────────
 
     #[test]
     fn the_selection_machine_is_the_replicas() {
@@ -3099,7 +3099,7 @@ mod tests {
 
         assert_eq!(m.item_at(b, 20.0, pad), Some(0));
         assert_eq!(m.item_at(b, 20.0, pad + 29.99), Some(0));
-        // The separator's own band answers None — it is never a target.
+        // The separator's own band answers None - it is never a target.
         assert_eq!(m.item_at(b, 20.0, pad + 30.0), None);
         assert_eq!(m.item_at(b, 20.0, pad + 40.0), None);
         assert_eq!(m.item_at(b, 20.0, pad + 41.0), Some(2));

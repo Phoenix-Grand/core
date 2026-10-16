@@ -15,7 +15,7 @@ use crate::errors::AppError;
 
 /// How much an alert costs if it is left alone.
 ///
-/// Ordered worst-first, so `sort()` puts the urgent work on top — the same
+/// Ordered worst-first, so `sort()` puts the urgent work on top - the same
 /// convention as [`crate::health::Severity`].
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
@@ -62,7 +62,7 @@ pub enum Status {
     /// same work twice.
     Acknowledged,
     /// Somebody states the problem is gone. A recurrence after this opens a
-    /// **new** alert — see the deduplication note in migration `000056`.
+    /// **new** alert - see the deduplication note in migration `000056`.
     Resolved,
     /// Does not apply here. Recurrences keep landing on it, silently.
     Ignored,
@@ -109,7 +109,7 @@ impl Status {
 
     /// May the lifecycle go from `self` to `next`?
     ///
-    /// Everything is reachable except a transition to itself — re-asserting the
+    /// Everything is reachable except a transition to itself - re-asserting the
     /// current state would write a timeline entry that says nothing. Reopening a
     /// closed alert is allowed on purpose: "resolved" is a claim, and claims are
     /// sometimes wrong.
@@ -124,7 +124,7 @@ impl Status {
 ///
 /// This is the whole point of the feature. An alert with no action is a log
 /// line, and the instance already has two logs. Every action is addressable with
-/// the console's deep-action convention — `/admin?tab=<tab>&action=<verb>` — so
+/// the console's deep-action convention - `/admin?tab=<tab>&action=<verb>` - so
 /// the operator lands on the surface that performs the task rather than on a
 /// page they then have to search.
 #[derive(Debug, Clone, Serialize)]
@@ -211,7 +211,7 @@ pub struct AlertRow {
     pub subject_label: Option<String>,
     pub org_unit_id: Option<Uuid>,
     /// Raised by a rule running in simulation. Quarantined out of every badge,
-    /// counter and notification — see [`super::store::raise`].
+    /// counter and notification - see [`super::store::raise`].
     pub is_simulation: bool,
     /// How many times the same problem was observed. `1` is the common case;
     /// anything higher is what deduplication saved the operator from reading.
@@ -224,7 +224,7 @@ pub struct AlertRow {
     pub closed_at: Option<DateTime<Utc>>,
     pub created_at: DateTime<Utc>,
     /// Computed per request from the catalogue, never stored: the wording of an
-    /// action changes with the code, and a stored one would rot. Not a column —
+    /// action changes with the code, and a stored one would rot. Not a column -
     /// filled in after the row is read.
     #[sqlx(skip)]
     pub actions: Vec<Action>,
@@ -243,7 +243,7 @@ pub struct AlertEventRow {
     pub occurred_at: DateTime<Utc>,
 }
 
-/// Aggregate counts for the badges — computed server-side so two readers cannot
+/// Aggregate counts for the badges - computed server-side so two readers cannot
 /// disagree about how many criticals are open.
 #[derive(Debug, Clone, Default, Serialize)]
 pub struct AlertSummary {
@@ -258,7 +258,7 @@ pub struct AlertSummary {
     /// Open alerts assigned to the caller.
     pub mine: i64,
     /// When the producers last completed a pass. `None` on an instance where
-    /// they have never run — the console says so rather than claiming "all
+    /// they have never run - the console says so rather than claiming "all
     /// clear" on the strength of an empty table.
     pub last_scan_at: Option<DateTime<Utc>>,
 }
@@ -344,7 +344,7 @@ impl NewAlert {
     }
 
     /// Sets the deduplication identity. Always `<kind>` plus whatever makes the
-    /// problem distinct — never a timestamp, which would defeat the whole point.
+    /// problem distinct - never a timestamp, which would defeat the whole point.
     pub fn dedup(mut self, discriminator: impl std::fmt::Display) -> Self {
         // The simulation namespace survives a later `dedup()` call, so the two
         // builders compose in either order. Order-dependent builders are how a
@@ -429,7 +429,7 @@ mod tests {
         assert!(Status::Acknowledged.is_open());
         assert!(Status::Resolved.is_closed() && !Status::Resolved.is_open());
         // "Ignored" is closed for the operator even though recurrences still
-        // land on it — that asymmetry is the whole meaning of the button.
+        // land on it - that asymmetry is the whole meaning of the button.
         assert!(Status::Ignored.is_closed() && !Status::Ignored.is_open());
     }
 

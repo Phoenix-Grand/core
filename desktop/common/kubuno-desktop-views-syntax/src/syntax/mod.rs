@@ -25,7 +25,7 @@ impl rowan::Language for KubunoViewLanguage {
         assert!(raw.0 <= SyntaxKind::__LAST as u16);
         // SAFETY-free: `SyntaxKind` is `#[repr(u16)]` and every value up to
         // `__LAST` is a declared variant, so this transmute-by-cast is total.
-        // (No `unsafe`: done through a match table instead — see
+        // (No `unsafe`: done through a match table instead - see
         // `kind::from_u16`.)
         kind::from_u16(raw.0)
     }
@@ -35,10 +35,10 @@ impl rowan::Language for KubunoViewLanguage {
     }
 }
 
-/// A position/range diagnostic — a parse error or a validator finding.
+/// A position/range diagnostic - a parse error or a validator finding.
 /// Carries a 1-based line/column (per the phase 2a brief) alongside the raw
 /// byte [`rowan::TextRange`], so a caller can either show it to a human or
-/// hand it to an LSP `Diagnostic` (which wants zero-based UTF-16 columns —
+/// hand it to an LSP `Diagnostic` (which wants zero-based UTF-16 columns -
 /// a §5-mentioned future consumer, not built here).
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Diagnostic {
@@ -58,7 +58,7 @@ pub type GreenNode = rowan::GreenNode;
 
 /// The result of parsing one `.kbview` file: a lossless tree plus whatever
 /// diagnostics the error-tolerant parser collected along the way. Parsing
-/// never fails outright — even garbage input produces a tree (full of
+/// never fails outright - even garbage input produces a tree (full of
 /// [`SyntaxKind::ERROR_NODE`]s) and a non-empty `diagnostics`.
 #[derive(Debug, Clone)]
 pub struct Parse {
@@ -83,7 +83,7 @@ impl Parse {
     }
 
     /// Round-trips: reconstructs the exact original text from the tree.
-    /// `parse(text).text() == text` for every input, malformed or not — this
+    /// `parse(text).text() == text` for every input, malformed or not - this
     /// is the property phase 2a's round-trip tests pin down.
     pub fn text(&self) -> String {
         self.syntax().text().to_string()

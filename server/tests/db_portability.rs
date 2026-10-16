@@ -1,10 +1,10 @@
 //! Portability of the two pieces a non-PostgreSQL deployment could not do
 //! before: the background-job queue and the event bus.
 //!
-//! * **Job queue** ([`kubuno_core::jobs::portable`]) — enqueue, the
+//! * **Job queue** ([`kubuno_core::jobs::portable`]) - enqueue, the
 //!   `rows_affected`-checked claim (the portable replacement for `FOR UPDATE
 //!   SKIP LOCKED`), dedup scheduling, retry/give-up and stalled recovery.
-//! * **Event bus** ([`kubuno_core::database::outbox`]) — an event written to
+//! * **Event bus** ([`kubuno_core::database::outbox`]) - an event written to
 //!   `core.kubuno_event_outbox` by `kubuno_db::events::notify` is drained by the
 //!   poller onto the in-process `EventBus`, exactly once.
 //!
@@ -61,7 +61,7 @@ async fn maybe_pool(engine: &str, env: &str) -> Option<DbPool> {
             }
         }
         None => {
-            eprintln!("{env} absent — {engine} ignoré");
+            eprintln!("{env} absent - {engine} ignoré");
             None
         }
     }
@@ -236,7 +236,7 @@ async fn schema_round_trips(pool: &DbPool) {
     .expect("insert refresh_token");
 
     // api_tokens: a JSON array column that the PostgreSQL CHECK
-    // (jsonb_array_length(scopes) > 0) validates — proof the JSON binds right.
+    // (jsonb_array_length(scopes) > 0) validates - proof the JSON binds right.
     let tid = Uuid::new_v4();
     pool.execute(
         "INSERT INTO core.api_tokens (id, user_id, name, token_hash, scopes) \
@@ -474,12 +474,12 @@ async fn exercise_outbox(pool: &DbPool) {
 }
 
 /// Asserts every catalog table the PostgreSQL migrations seed reaches the SAME
-/// row count on whichever engine the pool speaks — proof that the consolidated
+/// row count on whichever engine the pool speaks - proof that the consolidated
 /// MySQL/SQLite schema ships the same seed data, not just the same tables. The
 /// counts are the FINAL seeded state of PostgreSQL (after all migrations, some
 /// of which delete or rewrite earlier seed rows), captured from a live dump.
 async fn seed_counts(pool: &DbPool) {
-    // (table, expected rows) — the FINAL PostgreSQL catalog.
+    // (table, expected rows) - the FINAL PostgreSQL catalog.
     let expected: &[(&str, i64)] = &[
         ("settings", 158),
         ("privileges", 51),
@@ -1170,7 +1170,7 @@ async fn exercise_ported_paths(pool: &DbPool) {
         let backend = pool.backend();
         // Store a text value as a JSON string the way `security:rekey` writes the
         // SMTP password (`json_string`), then read it back unwrapped
-        // (`json_text`) — the two constructs that had no portable spelling.
+        // (`json_text`) - the two constructs that had no portable spelling.
         let key = format!("mail.smtp_password.probe.{}", Uuid::new_v4());
         let write = format!(
             "INSERT INTO core.settings (\"key\", value) VALUES ($1, {})",

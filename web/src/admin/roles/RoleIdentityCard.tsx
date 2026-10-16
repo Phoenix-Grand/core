@@ -13,8 +13,8 @@ import RoleIcon from './RoleIcon'
 /**
  * What the role is called and what it says it does.
  *
- * The wording shown is the operator's own — `useAuthzLabels` translates the
- * built-in roles — and that is exactly why only a touched field is sent: opening
+ * The wording shown is the operator's own - `useAuthzLabels` translates the
+ * built-in roles - and that is exactly why only a touched field is sent: opening
  * this card in English and saving a description must not freeze a system role's
  * name into English for every other reader. `useDraft` compares against the
  * label currently displayed, so an untouched name is simply absent from the

@@ -9,7 +9,7 @@ import type { CanFn } from './types'
  * ── Where the data comes from ────────────────────────────────────────────────
  * `GET /api/v1/me` carries a `privileges` block: the caller's effective
  * privileges with their scopes resolved, and the super-user flag. It is
- * information about oneself, so it demands no privilege — and it is narrowed to
+ * information about oneself, so it demands no privilege - and it is narrowed to
  * what the *presented credential* may exercise, so an interface driven by a
  * scoped API token offers exactly the actions the server will accept.
  *
@@ -79,7 +79,7 @@ export function usePrivileges(): PrivilegeApi {
       if (held.instance) return true
       // No unit asked for → "do they hold it anywhere?".
       if (unit === undefined) return true
-      // An account in no unit is reachable at instance scope only — the same
+      // An account in no unit is reachable at instance scope only - the same
       // default the server refuses to flip (see `PrivilegeScope::covers`).
       return unit !== null && held.units.has(unit)
     },

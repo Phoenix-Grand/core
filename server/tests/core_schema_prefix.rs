@@ -2,7 +2,7 @@
 //! core runs on `kubuno-db`. With `schema_prefix = "kub_"` the core's `core`
 //! namespace becomes `kub_core`: a table created with a literal `core.` name
 //! lands in `kub_core`, and a literal `core.` query is rewritten to `kub_core.`
-//! unchanged — exactly what core code (and its migrations) rely on. It is the
+//! unchanged - exactly what core code (and its migrations) rely on. It is the
 //! core-side counterpart to `kubuno-db`'s module-side `schema_prefix` test, and
 //! confirms the same `kubuno_db::connect(cfg, "core")` boot path the running
 //! instance and the installer's `to_db_settings()` now share.

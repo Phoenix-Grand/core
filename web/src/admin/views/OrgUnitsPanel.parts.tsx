@@ -31,7 +31,7 @@ function OrgUnitDialog({
   const [pickerOpen, setPickerOpen] = useState(false)
   const [error, setError]       = useState('')
 
-  const parentName = units.find(u => u.id === parent)?.name ?? '—'
+  const parentName = units.find(u => u.id === parent)?.name ?? '-'
   const isRootEdit = mode === 'edit' && unit?.parent_id === null
 
   const invalidate = () => {
@@ -43,7 +43,7 @@ function OrgUnitDialog({
       ? api.post('/admin/org-units', { name: name.trim(), description: desc.trim() || null, parent_id: parent })
       // The parent was offered by this dialog and then dropped on the way out:
       // one could pick a new one, save, and watch nothing happen. Sent only when
-      // it changed, and never for the root — which has no parent to move to.
+      // it changed, and never for the root - which has no parent to move to.
       : api.patch(`/admin/org-units/${unit!.id}`, {
           name: name.trim(),
           description: desc.trim() || null,
@@ -132,10 +132,10 @@ export function Part1({ t, can, rows, own, subtreeCount, setDialog, setMoveUnit,
                             {isRoot && <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-surface-2 text-text-tertiary">{t('admin.ou_root')}</span>}
                           </span>
                         </td>
-                        <td className="px-5 py-3 text-text-secondary">{u.description || '—'}</td>
+                        <td className="px-5 py-3 text-text-secondary">{u.description || '-'}</td>
                         {can(PRIV.USERS_READ) && (
                           <td className="px-5 py-3 whitespace-nowrap">
-                            {/* Own count first — it is the one an operator acts on. The
+                            {/* Own count first - it is the one an operator acts on. The
                                 subtree total only shows when it says something more. */}
                             <span className="text-text-primary">{own.get(u.id) ?? 0}</span>
                             {subtreeCount(u.id) !== (own.get(u.id) ?? 0) && (

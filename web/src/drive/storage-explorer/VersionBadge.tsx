@@ -1,5 +1,5 @@
 /**
- * Marks a file whose earlier revisions are still stored — and still charged to
+ * Marks a file whose earlier revisions are still stored - and still charged to
  * the owner's quota.
  *
  * Without it the accounting is invisible: somebody saves a document twenty
@@ -11,7 +11,7 @@
  *
  * Deliberately inert. A click handler here would swallow the `pointerdown` the
  * card needs to start a marquee selection, and `pointer-events: none` would
- * take away the tooltip that carries the weight — so the badge shows, and
+ * take away the tooltip that carries the weight - so the badge shows, and
  * reclaiming the space stays where it can be confirmed properly (context menu,
  * details panel).
  *

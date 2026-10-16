@@ -4,12 +4,12 @@ import { CaretDown } from './CaretDown'
 import { FontPicker, FONT_UI_THEME } from './FontPicker'
 
 export interface FontSizeFieldProps {
-  /** Current font family — empty string renders blank (mixed/undetermined selection). */
+  /** Current font family - empty string renders blank (mixed/undetermined selection). */
   font: string
   onFontChange: (font: string) => void
   fonts: readonly string[]
   recentFonts?: readonly string[]
-  /** Current font size as a string — empty string renders blank (mixed selection). */
+  /** Current font size as a string - empty string renders blank (mixed selection). */
   size: string
   onSizeChange: (size: string) => void
   /** Preset sizes offered in the size dropdown. */
@@ -24,7 +24,7 @@ export interface FontSizeFieldProps {
   fontSize?: number
   disabled?: boolean
   className?: string
-  /** Colour scheme — `dark` for dark toolbars/panels. */
+  /** Colour scheme - `dark` for dark toolbars/panels. */
   theme?: 'light' | 'dark'
 }
 

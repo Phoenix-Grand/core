@@ -1,6 +1,6 @@
 //! Device inventory: correlation, the tri-state rule, and revocation.
 //!
-//! Needs a throwaway database — see `tests/common/mod.rs`. Without
+//! Needs a throwaway database - see `tests/common/mod.rs`. Without
 //! `KUBUNO_TEST_DATABASE_URL` every test prints a notice and passes, so a CI
 //! without PostgreSQL does not turn red on a missing fixture.
 
@@ -216,8 +216,8 @@ async fn revocation_closes_sessions_and_forgetting_does_not() {
     };
     assert_eq!(again, 0);
 
-    // Forgetting removes the inventory row and NOTHING else: the sessions —
-    // even revoked ones — survive, because forgetting is not a sign-out and
+    // Forgetting removes the inventory row and NOTHING else: the sessions -
+    // even revoked ones - survive, because forgetting is not a sign-out and
     // certainly not an erasure on the machine.
     let before: i64 = db
         .fetch_scalar::<i64>(
@@ -245,7 +245,7 @@ async fn revocation_closes_sessions_and_forgetting_does_not() {
     //
     // The assertion is written against the FORGOTTEN id rather than "device_id
     // IS NULL", because the tests share one database and a concurrent
-    // `backfill` — which is instance-wide by design — may legitimately have
+    // `backfill` - which is instance-wide by design - may legitimately have
     // re-attached a detached session to a fresh fingerprint row in the
     // meantime. What must never happen is a session still pointing at a device
     // that no longer exists.

@@ -3,11 +3,11 @@
 //! renderer. Moved out of `kubuno-desktop-views`' `registry` module by WV-1 (`vskubuno/docs/WEB-VIEWS.md`),
 //! which still re-exports every item here under its old path (`kubuno_desktop_views::registry::PropKind`…);
 //! the tables themselves (the built-in families, the common events and levels) and
-//! `ComponentMeta` — whose `build` function and class chain are the desktop runtime's — stay there.
+//! `ComponentMeta` - whose `build` function and class chain are the desktop runtime's - stay there.
 
 
 /// The Rust type family a property's XML attribute is validated against.
-/// Deliberately small — exactly what `XML_VIEWS.md` §4 lists ("Rust type …
+/// Deliberately small - exactly what `XML_VIEWS.md` §4 lists ("Rust type …
 /// `enum` variants when the type is a closed enum") and what the five
 /// example components in `kubuno_desktop_views::registry::components` actually use.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -17,14 +17,14 @@ pub enum PropKind {
     /// the design note's worked-example attributes (`Padding="XL"`,
     /// `Gap="none"`) suggest a named-token sugar over these; no such closed
     /// enum exists in `kubuno-desktop-ui`/`kubuno-desktop-controls` today (`Padding` is a
-    /// plain `{f32 × 4}` box, a flow gap is a plain `f32` field) — inventing
+    /// plain `{f32 × 4}` box, a flow gap is a plain `f32` field) - inventing
     /// one here would be exactly the "restate, don't own" mistake
     /// `kubuno-desktop-ui/src/lib.rs`'s rule 1 warns against. Resolving a token name
     /// to a DIP number is left to the interpreter phase that actually reads
     /// `kubuno_desktop_controls`'s spacing scale.
     F32,
     String,
-    /// A closed set of attribute values, in declaration order — the source
+    /// A closed set of attribute values, in declaration order - the source
     /// for a completion dropdown and for the validator's "not a valid value
     /// for this enum" diagnostic.
     Enum(&'static [&'static str]),
@@ -36,7 +36,7 @@ pub struct PropertyMeta {
     pub name: &'static str,
     pub kind: PropKind,
     /// The value used when the attribute is absent, as literal text (what a
-    /// property-grid or a hover tooltip shows) — not parsed back into a
+    /// property-grid or a hover tooltip shows) - not parsed back into a
     /// typed value here; nothing in phase 2a needs to construct a live
     /// default, only to display one.
     pub default: &'static str,
@@ -62,7 +62,7 @@ pub struct PropertyMeta {
     /// `"Size"`, `"Color"`, `"Font"`, `"Opacity"`…).
     pub type_converter: Option<&'static str>,
     /// Older attribute names that still mean this property (`Max` for `Maximum`), never removed
-    /// within 1.x — read like the canonical name.
+    /// within 1.x - read like the canonical name.
     pub aliases: &'static [&'static str],
     /// Read by the designer only (`Locked`, `Modifiers`…); the running application ignores it.
     pub design_time: bool,
@@ -147,8 +147,8 @@ impl PropertyMeta {
     }
 
     /// The editor a property's value type asks for (`kubuno_desktop_views::component::PropertyValue::EDITOR`:
-    /// `"list"` for `Rows`, `"object"` for `Shared<T>` — set with a binding only, so also
-    /// bindable —, `"color"` for a colour, `"lines"` for a `Vec<String>`), unless one is already set.
+    /// `"list"` for `Rows`, `"object"` for `Shared<T>` - set with a binding only, so also
+    /// bindable -, `"color"` for a colour, `"lines"` for a `Vec<String>`), unless one is already set.
     pub const fn value_editor(mut self, editor: Option<&'static str>) -> Self {
         if let (Some(e), None) = (editor, self.editor) {
             self.editor = Some(e);
@@ -159,7 +159,7 @@ impl PropertyMeta {
         self
     }
 
-    /// An icon (`editor("icon")`): a name of the Kubuno icon set, an image file or a resource —
+    /// An icon (`editor("icon")`): a name of the Kubuno icon set, an image file or a resource -
     /// completed, checked and picked as such (`kubuno_desktop_views::icon`).
     pub fn is_icon(&self) -> bool {
         matches!(self.editor, Some("icon"))
@@ -213,7 +213,7 @@ pub enum Routing {
     Bubble,
 }
 
-/// One event an element can raise — the XML side of `OnClick="handler_name"` (§2), plus
+/// One event an element can raise - the XML side of `OnClick="handler_name"` (§2), plus
 /// the metadata of `vskubuno/docs/EVENTS.md` §5.1 (EVT-3): the ⚡ tab's category, the args
 /// type and its ancestor chain (handler compatibility), cancelable, routing, and the older
 /// attribute names still accepted for it (`OnToggled` for `OnCheckedChanged` on a
@@ -362,7 +362,7 @@ pub trait ArgsChain {
 }
 
 /// One level of the control hierarchy (EVT-7a, `kubuno_desktop_views::component`) as the registry sees it:
-/// the events it declares — which every element whose class derives from it inherits — and its
+/// the events it declares - which every element whose class derives from it inherits - and its
 /// default event (the designer double-click's, for an element that declares none).
 #[derive(Debug, Clone, Copy)]
 pub struct LevelMeta {
@@ -375,7 +375,7 @@ pub struct LevelMeta {
     pub properties: &'static [PropertyMeta],
 }
 
-/// How an element accepts children — §4's "the children model
+/// How an element accepts children - §4's "the children model
 /// (`none` / `single_widget` / `list<Item>`)".
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum ChildrenModel {
@@ -386,7 +386,7 @@ pub enum ChildrenModel {
     /// Any number of child elements, in document order (`<Stack>`'s blocks).
     ///
     /// The slice names the "gated" child element names this component
-    /// explicitly hosts — the structural, parent-only elements such as
+    /// explicitly hosts - the structural, parent-only elements such as
     /// `<TabItem>`/`<Item>`/`<Column>`/`<Option>`/`<Step>`/
     /// `<AccordionSection>`/`<BreadcrumbItem>`/`<ToolbarItem>`, each valid
     /// only directly inside the handful of parents that list it. Empty
@@ -396,17 +396,17 @@ pub enum ChildrenModel {
     /// `kubuno_desktop_views::validate::validate` is the sole authority on what this
     /// gates: a child element name that appears in *some* component's
     /// `allowed` list anywhere in the registry is "gated" everywhere, and
-    /// only valid directly under a parent whose own `allowed` names it —
+    /// only valid directly under a parent whose own `allowed` names it -
     /// this is what lets `<TabItem>` be rejected under `<Stack>` (whose own
     /// `allowed` is empty) exactly as it would be rejected under `<Accordion>`
     /// (whose `allowed` is `&["AccordionSection"]`, not `&["TabItem"]`),
-    /// with no separate "required parent" field to keep in sync by hand —
+    /// with no separate "required parent" field to keep in sync by hand -
     /// see that module's `gated_required_parents` helper.
     List(&'static [&'static str]),
 }
 
 /// A descriptive tag for which of `kubuno_desktop_controls::layout_panels`' engines a
-/// container drives — `vskubuno/docs/DESIGNER.md` §4/§6 (DSG-1): "the
+/// container drives - `vskubuno/docs/DESIGNER.md` §4/§6 (DSG-1): "the
 /// designer needs a `LayoutKind` (or equivalent) alongside `ChildrenModel`
 /// … before its drop visualization [can] pick the right cue". Metadata only
 /// (this phase does not build a designer): it does not change how
@@ -417,7 +417,7 @@ pub enum ChildrenModel {
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum LayoutKind {
     /// A leaf, or a `SingleWidget`/gated-`List` body with no layout engine of
-    /// its own to describe (most components — the default `layout:` value
+    /// its own to describe (most components - the default `layout:` value
     /// the `component!` macro fills in when a declaration omits the field).
     None,
     /// `<Stack>`'s flow engine (`kubuno_desktop_controls::layout_panels::flow_layout`):
@@ -430,14 +430,14 @@ pub enum LayoutKind {
     /// `<Splitter>`'s two-pane split (`kubuno_desktop_controls::layout_panels::
     /// SplitContainer`): exactly two children, `Distance` is the divider.
     Split,
-    /// `<Tabs>`'s paged layout: one `<TabItem>` visible at a time — not a
+    /// `<Tabs>`'s paged layout: one `<TabItem>` visible at a time - not a
     /// spatial arrangement of its children at all, which is why it is its
     /// own kind rather than reusing `List`'s generic shape.
     Tabs,
 }
 
 /// A design-time attribute: accepted on the view's ROOT element only, read by the visual designer
-/// and ignored at runtime (nothing builds or lays out from it) — the `.kbview` counterpart of
+/// and ignored at runtime (nothing builds or lays out from it) - the `.kbview` counterpart of
 /// XAML's `d:DesignWidth`/`d:DesignHeight`.
 #[derive(Debug, Clone, Copy)]
 pub struct DesignTimeAttribute {

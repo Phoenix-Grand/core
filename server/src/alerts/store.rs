@@ -51,7 +51,7 @@ macro_rules! select_columns {
 
 /// The clause that quarantines simulation alerts.
 ///
-/// A rule in simulation still raises what it *would* have raised — that is the
+/// A rule in simulation still raises what it *would* have raised - that is the
 /// point of the mode. But those alerts must never reach a badge, a counter or a
 /// notification, or "simulation" becomes a synonym for "enabled, loudly". This
 /// is applied to every default read; seeing them requires asking for them by
@@ -153,7 +153,7 @@ pub fn denied_kinds(ctx: &AdminContext) -> Vec<String> {
 ///
 /// A pre-existing alert whose problem is not `resolved` absorbs the observation
 /// (counter up, `last_seen_at` moved, wording refreshed); an **ignored** alert
-/// absorbs it silently — that is what the button promised; a **resolved** alert
+/// absorbs it silently - that is what the button promised; a **resolved** alert
 /// does not, because the problem came back and a regression hidden inside
 /// somebody else's counter is a regression nobody sees.
 pub async fn raise(db: &DbPool, alert: NewAlert) -> Result<RaiseOutcome, AppError> {
@@ -163,7 +163,7 @@ pub async fn raise(db: &DbPool, alert: NewAlert) -> Result<RaiseOutcome, AppErro
     })?;
 
     // The pre-existing open alert for this dedup key, read before the write so
-    // the severity the row had *before* this observation is known — it is what
+    // the severity the row had *before* this observation is known - it is what
     // decides whether the timeline records an escalation. PostgreSQL folded the
     // read and the upsert into a single CTE with `(xmax = 0)` to tell insert
     // from update; neither the partial-index `ON CONFLICT` nor `xmax` has an
@@ -253,7 +253,7 @@ pub async fn raise(db: &DbPool, alert: NewAlert) -> Result<RaiseOutcome, AppErro
         // No body: the summary is already the alert's own, rendered in the
         // reader's language two lines above the timeline. Copying the server's
         // English wording here would be the one untranslated sentence on the
-        // screen — and a stale one, since the alert's summary is refreshed on
+        // screen - and a stale one, since the alert's summary is refreshed on
         // every recurrence while a timeline entry never changes.
         record_event(
             &mut tx,
@@ -410,7 +410,7 @@ struct RawEvent {
 /// Appends one line to an alert's history.
 ///
 /// Takes a transaction rather than a pool so a transition and its timeline entry
-/// land in the same commit as the mutation — the same discipline as
+/// land in the same commit as the mutation - the same discipline as
 /// [`crate::audit::AuditTx`], for the same reason.
 #[allow(clippy::too_many_arguments)]
 pub async fn record_event(
@@ -483,7 +483,7 @@ pub async fn timeline(db: &DbPool, alert_id: Uuid) -> Result<Vec<AlertEventRow>,
 #[derive(Debug, Default, Clone, serde::Deserialize)]
 pub struct AlertQuery {
     /// Comma-separated statuses. Absent means the open queue (`new`,
-    /// `acknowledged`) — the state an operator actually wants on arrival.
+    /// `acknowledged`) - the state an operator actually wants on arrival.
     pub status: Option<String>,
     pub severity: Option<String>,
     pub kind: Option<String>,
@@ -695,8 +695,8 @@ pub async fn get(db: &DbPool, id: Uuid, ctx: &AdminContext) -> Result<AlertRow, 
 
 /// Alerts that share the same problem space: same kind, or same account.
 ///
-/// The point is the question an operator asks after opening one alert — "is this
-/// the only one?" — answered without going back to the queue and re-filtering.
+/// The point is the question an operator asks after opening one alert - "is this
+/// the only one?" - answered without going back to the queue and re-filtering.
 pub async fn related(db: &DbPool, alert: &AlertRow, ctx: &AdminContext) -> Result<Vec<AlertRow>, AppError> {
     let denied = denied_kinds(ctx);
     let mut qb = DbQueryBuilder::new(
@@ -757,7 +757,7 @@ pub async fn summary(db: &DbPool, ctx: &AdminContext) -> Result<AlertSummary, Ap
     let ignored = backend.sum_bigint("CASE WHEN status = 'ignored' THEN 1 ELSE 0 END");
     let resolved = backend.sum_bigint("CASE WHEN status = 'resolved' THEN 1 ELSE 0 END");
     // `$1` is the caller's id (see the params below); it appears in the SELECT
-    // list, so it must be the first placeholder — the denied list follows.
+    // list, so it must be the first placeholder - the denied list follows.
     let mine = backend
         .sum_bigint("CASE WHEN status IN ('new','acknowledged') AND assignee_id = $1 THEN 1 ELSE 0 END");
 
@@ -806,7 +806,7 @@ pub async fn summary(db: &DbPool, ctx: &AdminContext) -> Result<AlertSummary, Ap
 
 /// Applies a status transition inside an already-open transaction.
 ///
-/// Returns the previous status so the caller can put it in the audit entry —
+/// Returns the previous status so the caller can put it in the audit entry -
 /// "who closed this, and what it was before" is the pair that makes the trail
 /// worth keeping.
 pub async fn set_status(

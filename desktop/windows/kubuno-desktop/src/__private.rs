@@ -100,7 +100,7 @@ pub fn dispatch<V: View>(view: &mut V, handler: &str, sender: &ElementRef<'_>, a
     true
 }
 
-/// A method of a view that handles an event — implemented for the accepted signatures:
+/// A method of a view that handles an event - implemented for the accepted signatures:
 ///
 /// | Signature | |
 /// |---|---|
@@ -236,7 +236,7 @@ pub fn close_requested(form: &Form) -> bool {
 }
 
 /// The element of the typed handle named `name` (`kubuno_desktop::forms::Button` → `"Button"`), when this
-/// crate has one — what the `#[kubuno_desktop::view]` table `TYPED_CONTROLS` is checked against.
+/// crate has one - what the `#[kubuno_desktop::view]` table `TYPED_CONTROLS` is checked against.
 pub fn typed_handle_element(name: &str) -> Option<&'static str> {
     macro_rules! elements {
         ($($t:ident),*) => { [$(crate::forms::$t::ELEMENT),*] };

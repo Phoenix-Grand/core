@@ -1,4 +1,4 @@
-<!-- MailSettingsPanel — converted from MailSettingsPanel.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- MailSettingsPanel - converted from MailSettingsPanel.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <Panel Class="contents">
   <Label Text="{Res common.loading}"
          Overflow="Wrap"

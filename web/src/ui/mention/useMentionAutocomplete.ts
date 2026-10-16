@@ -28,7 +28,7 @@ export interface UseMentionAutocompleteOptions {
  * The caller feeds it the caret context on every change (`handleCaret`) and
  * forwards key events (`handleKeyDown`); the hook owns the trigger detection,
  * the debounced + abortable provider search (merged and deduped), and the
- * keyboard navigation. It renders nothing — pair it with `<MentionList>`.
+ * keyboard navigation. It renders nothing - pair it with `<MentionList>`.
  */
 export function useMentionAutocomplete(opts: UseMentionAutocompleteOptions) {
   const trigger = opts.trigger ?? '@'
@@ -45,7 +45,7 @@ export function useMentionAutocomplete(opts: UseMentionAutocompleteOptions) {
   const matchRef = useRef<MentionMatch | null>(null)
   // The query the current dropdown is showing. Re-detecting the SAME query (e.g.
   // on a keyup fired by an arrow-key navigation) must NOT restart the search nor
-  // reset the active index — otherwise every ↑/↓ would snap the highlight back.
+  // reset the active index - otherwise every ↑/↓ would snap the highlight back.
   const shownQuery = useRef<string | null>(null)
   // A query the user explicitly dismissed with Escape. We must NOT reopen the
   // dropdown for it (the keyup that follows Escape would otherwise re-detect the
@@ -138,7 +138,7 @@ export function useMentionAutocomplete(opts: UseMentionAutocompleteOptions) {
   /**
    * Handle a key event while the dropdown may be open. Returns `true` when the
    * key was consumed (the caller should `preventDefault`). ESCAPE closes and
-   * intentionally leaves the literal `@word` in place — that is how a user types
+   * intentionally leaves the literal `@word` in place - that is how a user types
    * a plain word starting with `@`.
    */
   const handleKeyDown = useCallback((e: { key: string }): boolean => {

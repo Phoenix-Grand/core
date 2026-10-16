@@ -64,7 +64,7 @@ interface FilesState {
   openRemotesPanel: () => void
   closeRemotesPanel: () => void
 
-  // Direct callbacks registered by FilesApp — called synchronously within user gesture
+  // Direct callbacks registered by FilesApp - called synchronously within user gesture
   _fileInputClick:   (() => void) | null
   _folderInputClick: (() => void) | null
   registerFileInput:   (fn: () => void) => void

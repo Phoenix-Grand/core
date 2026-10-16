@@ -1,4 +1,4 @@
-//! Kubuno primitives — navigation: [`Toolbar`], [`Sidebar`], [`Breadcrumb`],
+//! Kubuno primitives - navigation: [`Toolbar`], [`Sidebar`], [`Breadcrumb`],
 //! [`Tabs`] and [`StatusBar`].
 //!
 //! Four of these five have a **predecessor that ships today**
@@ -9,8 +9,8 @@
 //! are what makes this module short:
 //!
 //! * **The item model is the replica's.** A tool bar item is a
-//!   [`StripItem`] — a `ToolStripButton`, `ToolStripLabel`, `ToolStripSeparator`
-//!   or `ToolStripMenuItem` — so `text`, `image`, `enabled`, `visible`,
+//!   [`StripItem`] - a `ToolStripButton`, `ToolStripLabel`, `ToolStripSeparator`
+//!   or `ToolStripMenuItem` - so `text`, `image`, `enabled`, `visible`,
 //!   `checked`, `alignment` and `overflow` are the .NET fields, in one storage
 //!   location, and nothing here restates them. A sidebar row and a breadcrumb
 //!   segment are the same items on a **vertical** and a horizontal strip.
@@ -19,7 +19,7 @@
 //!   button », and [`layout_breadcrumbs`] already folds the head of a path
 //!   behind a `…`. Those two are pure functions with their own tests; this
 //!   module calls them. The sidebar's vertical stacking is
-//!   [`layout_items`] — the replica's own strip engine — and the tab strip's
+//!   [`layout_items`] - the replica's own strip engine - and the tab strip's
 //!   wrapping is [`tab_strip`] / [`tab_rows`] / [`tab_rects`], likewise.
 //! * **Only the paint is new**, and every number in it is either a token from
 //!   [`crate::metrics`] or a constant published by the predecessor. The
@@ -32,13 +32,13 @@
 //!    as Segoe Fluent codepoints through `formats().icon_small`; the brief for
 //!    this crate (rule 6) requires [`Canvas::vector_icon`] with a name from
 //!    `assets/lucide-icons.txt`. The rectangle, the size and the colour are
-//!    unchanged — only the outline is now the design system's own.
+//!    unchanged - only the outline is now the design system's own.
 //! 2. **The « New » button's plus is a `Plus` icon.** The predecessor builds it
 //!    from two rounded bars because « `Canvas` exposes no path API »; it does
 //!    expose `vector_icon`, and lucide's `Plus` *is* two rounded bars on a 24
 //!    grid. Same shape, one less hand-rolled primitive.
 //!
-//! Everything else — every fill, every offset, every token — is the
+//! Everything else - every fill, every offset, every token - is the
 //! predecessor's, and the unit tests at the bottom pin the geometry against it.
 
 use std::borrow::Cow;
@@ -85,12 +85,12 @@ use crate::{Widget, WidgetState};
 // ─────────────────────────────────────────────────────────────────────────────
 
 /// Opacity of a disabled command. `disabled:opacity-40` in the web, and the
-/// private `DISABLED_OPACITY` of `kubuno_drive_desktop_app_controls::toolbar` — a disabled
+/// private `DISABLED_OPACITY` of `kubuno_drive_desktop_app_controls::toolbar` - a disabled
 /// button keeps its hue and only fades, it is never recoloured.
 const DISABLED_OPACITY: f32 = 0.40;
 
 /// A tool bar separator's hit box: « a 1 DIP vertical line, 6 DIP margin on
-/// either side — its hit zone covers the 12 DIP » (`kubuno-drive-desktop/src/ui/layout.rs`,
+/// either side - its hit zone covers the 12 DIP » (`kubuno-drive-desktop/src/ui/layout.rs`,
 /// `Hot::CmdSeparator`).
 const SEPARATOR_WIDTH: f32 = 12.0;
 /// How far the separator's line is inset from the row's top and bottom
@@ -133,7 +133,7 @@ const SIDEBAR_CHEVRON_RIGHT: f32 = 4.0;
 /// (`sidebar_view::draw` passes 16 to every `RowIcon` arm).
 const SIDEBAR_ICON_GLYPH: f32 = 16.0;
 
-/// A breadcrumb segment's own padding, both sides together —
+/// A breadcrumb segment's own padding, both sides together -
 /// `BreadcrumbBarItemPadding = 8,0` (`kubuno-drive-desktop/src/ui/layout.rs`, `SEG_PAD`).
 const SEGMENT_PADDING: f32 = 16.0;
 /// Where a segment's label starts inside its box (`breadcrumb_bar::draw`).
@@ -146,7 +146,7 @@ const CHEVRON_OFFSET: f32 = 6.0;
 /// The `…` button on overflow (`BreadcrumbLayoutParams::ellipsis_width`).
 const ELLIPSIS_WIDTH: f32 = 24.0;
 
-/// The status bar's own text inset — `StatusBar.xaml`'s `Padding="8,0,0,0"`,
+/// The status bar's own text inset - `StatusBar.xaml`'s `Padding="8,0,0,0"`,
 /// which is `space::SM`. Kept named so the paint body reads as the XAML does.
 const STATUS_TEXT_INSET: f32 = space::SM;
 /// The git widget's icon column and label start (`kubuno-drive-desktop`'s
@@ -165,7 +165,7 @@ fn strip_is_vertical(alignment: TabAlignment) -> bool {
     matches!(alignment, TabAlignment::Left | TabAlignment::Right)
 }
 
-/// A colour at reduced opacity — how a disabled command fades.
+/// A colour at reduced opacity - how a disabled command fades.
 fn dimmed(color: &D2D1_COLOR_F) -> D2D1_COLOR_F {
     D2D1_COLOR_F { a: color.a * DISABLED_OPACITY, ..*color }
 }
@@ -187,10 +187,10 @@ const CHEVRON_DOWN: &str = "ChevronDown";
 const CHEVRON_RIGHT: &str = "ChevronRight";
 
 // The « More » / `…` buttons draw lucide's `MoreHorizontal` (« ellipsis »)
-// at 16 DIP — `<MoreHorizontal size={16} />` in `Breadcrumb.tsx` — rather than
+// at 16 DIP - `<MoreHorizontal size={16} />` in `Breadcrumb.tsx` - rather than
 // a typographic ellipsis, whose weight and baseline depend on the face.
 
-/// A tab's own vertical padding — `pt-2` for `md` and `pt-1.5` for `sm`
+/// A tab's own vertical padding - `pt-2` for `md` and `pt-1.5` for `sm`
 /// (`Tabs.tsx`). The horizontal one is `px-4` / `px-3`, i.e. `space::LG` and
 /// `space::MD`.
 const TAB_PAD_Y_MD: f32 = space::SM;
@@ -231,7 +231,7 @@ const FOCUS_RING: f32 = 2.0;
 /// that fits (« 12 élémen… » in a bar with room to spare).
 const TEXT_SLACK: f32 = 1.0;
 
-/// A caption's width as a box must be sized to hold it — the ceiled extent
+/// A caption's width as a box must be sized to hold it - the ceiled extent
 /// plus [`TEXT_SLACK`]. Empty text takes no room at all.
 fn text_width(c: &dyn Canvas, text: &str, format: &windows::Win32::Graphics::DirectWrite::IDWriteTextFormat) -> f32 {
     if text.is_empty() {
@@ -312,7 +312,7 @@ pub fn nav_key_of(code: u16, vertical: bool) -> Option<NavKey> {
     }
 }
 
-/// Consumes this frame's roving keys (the axis arrows, Home, End — without
+/// Consumes this frame's roving keys (the axis arrows, Home, End - without
 /// modifiers) from the host queue and returns them in order. Call it only
 /// while the strip holds the focus: a consumed key is invisible to the rest
 /// of the page.
@@ -332,7 +332,7 @@ pub fn take_nav_keys(vertical: bool) -> Vec<NavKey> {
         .collect()
 }
 
-/// Consumes Enter or Space (no modifiers) — « activate the focused item ».
+/// Consumes Enter or Space (no modifiers) - « activate the focused item ».
 pub fn take_activate() -> bool {
     let enter = host::take_key(vk::ENTER, Modifiers::NONE);
     let space = host::take_key(vk::SPACE, Modifiers::NONE);
@@ -351,7 +351,7 @@ pub struct StripPaint {
     pub pressed: Option<usize>,
     /// The item holding the keyboard focus (roving tab stop).
     pub focused: Option<usize>,
-    /// `:focus-visible` — paint the ring around [`StripPaint::focused`] (and
+    /// `:focus-visible` - paint the ring around [`StripPaint::focused`] (and
     /// around the overflow button when [`StripPaint::overflow_focused`]).
     pub focus_visible: bool,
     /// The overflow button (tool bar « More », breadcrumb `…`) under the pointer.
@@ -363,7 +363,7 @@ pub struct StripPaint {
 }
 
 impl StripPaint {
-    /// Only a hovered item — what the older `paint_*(…, hot, …)` entry points
+    /// Only a hovered item - what the older `paint_*(…, hot, …)` entry points
     /// could say.
     pub fn hot(hot: Option<usize>) -> Self {
         Self { hot, ..Self::default() }
@@ -385,7 +385,7 @@ fn paint_ring(c: &dyn Canvas, rect: Rect, corner: f32) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Overflow menus — floating surfaces
+// Overflow menus - floating surfaces
 //
 // A tool bar's « More » button and a breadcrumb's `…` open a `MenuDropdown`
 // (`Breadcrumb.tsx` renders `<MenuDropdown … pos={{ top: r.bottom + 4, left:
@@ -457,7 +457,7 @@ fn menu_label(item: &StripItem) -> String {
 
 /// One strip item as a menu row: separators stay separators, labels become
 /// section headers, commands become entries carrying the icon, the enabled
-/// flag and — for a toggle — the tick.
+/// flag and - for a toggle - the tick.
 fn menu_row_of(item: &StripItem) -> StripItem {
     match item {
         StripItem::Separator(_) => lists::separator(),
@@ -478,7 +478,7 @@ fn menu_row_of(item: &StripItem) -> StripItem {
     }
 }
 
-/// Sets an item's tooltip — the web's `title`, which an icon-only command
+/// Sets an item's tooltip - the web's `title`, which an icon-only command
 /// needs to be named at all (in its tooltip and in the overflow menu).
 pub fn with_tooltip(mut item: StripItem, tip: &str) -> StripItem {
     item_block_mut(&mut item).tool_tip_text = tip.to_string();
@@ -508,7 +508,7 @@ fn item_block_mut(item: &mut StripItem) -> &mut kubuno_desktop_controls::toolstr
 // `CheckOnClick` and `DropDownItems` selects which visual.
 // ─────────────────────────────────────────────────────────────────────────────
 
-/// An icon-only command — `ToolStripButton`, `DisplayStyle = Image`.
+/// An icon-only command - `ToolStripButton`, `DisplayStyle = Image`.
 pub fn icon_item(icon: &str) -> StripItem {
     let mut b = ToolStripButton::default();
     b.item.image = Some(icon.to_string());
@@ -516,7 +516,7 @@ pub fn icon_item(icon: &str) -> StripItem {
     StripItem::Button(b)
 }
 
-/// A command with an icon **and** a caption — `DisplayStyle = ImageAndText`.
+/// A command with an icon **and** a caption - `DisplayStyle = ImageAndText`.
 pub fn icon_label_item(icon: &str, text: &str) -> StripItem {
     let mut b = ToolStripButton::default();
     b.item.image = Some(icon.to_string());
@@ -524,7 +524,7 @@ pub fn icon_label_item(icon: &str, text: &str) -> StripItem {
     StripItem::Button(b)
 }
 
-/// A toggling command — `CheckOnClick = true`, so `Checked` drives the pill.
+/// A toggling command - `CheckOnClick = true`, so `Checked` drives the pill.
 pub fn toggle_item(icon: &str, on: bool) -> StripItem {
     let mut b = ToolStripButton::default();
     b.item.image = Some(icon.to_string());
@@ -534,7 +534,7 @@ pub fn toggle_item(icon: &str, on: bool) -> StripItem {
     StripItem::Button(b)
 }
 
-/// A command that opens a menu — `ToolStripMenuItem`. With `text` empty it is
+/// A command that opens a menu - `ToolStripMenuItem`. With `text` empty it is
 /// an icon plus a chevron; with a caption it is the « New ▾ » shape.
 pub fn menu_item(icon: &str, text: &str) -> StripItem {
     let mut m = ToolStripMenuItem::new(text);
@@ -550,12 +550,12 @@ pub fn separator_item() -> StripItem {
     StripItem::Separator(ToolStripSeparator::default())
 }
 
-/// Inert text — `ToolStripLabel`.
+/// Inert text - `ToolStripLabel`.
 pub fn label_item(text: &str) -> StripItem {
     StripItem::Label(ToolStripLabel::new(text))
 }
 
-/// A sidebar **section header** — inert text with the same icon column and
+/// A sidebar **section header** - inert text with the same icon column and
 /// indent an ordinary row has, so the two line up. A `ToolStripLabel`, because
 /// a header is not clickable and has no check state to carry.
 pub fn section_item(icon: &str, text: &str, indent: f32) -> StripItem {
@@ -567,7 +567,7 @@ pub fn section_item(icon: &str, text: &str, indent: f32) -> StripItem {
 
 /// A sidebar navigation row: an icon, a label, and `Checked` for « this is the
 /// current location ». The indent is carried in the item's own `Padding.Left`
-/// — the replica field that already means « space before my content » — and a
+/// - the replica field that already means « space before my content » - and a
 /// nesting level costs
 /// [`INDENT_PER_LEVEL`](kubuno_drive_desktop_app_controls::sidebar::INDENT_PER_LEVEL).
 pub fn nav_item(icon: &str, text: &str, active: bool, indent: f32) -> StripItem {
@@ -580,7 +580,7 @@ pub fn nav_item(icon: &str, text: &str, active: bool, indent: f32) -> StripItem 
     StripItem::Button(b)
 }
 
-/// A status-bar cell — `ToolStripStatusLabel`, whose `Spring` shares out the
+/// A status-bar cell - `ToolStripStatusLabel`, whose `Spring` shares out the
 /// leftover width exactly as a `StatusStrip` does.
 pub fn status_item(text: &str, spring: bool) -> StripItem {
     let mut l = ToolStripStatusLabel::new(text);
@@ -599,7 +599,7 @@ fn item_icon(item: &StripItem) -> Option<&'static str> {
 // Toolbar
 // ═════════════════════════════════════════════════════════════════════════════
 
-/// Which of the command bar's six shapes an item is. Derived from the replica —
+/// Which of the command bar's six shapes an item is. Derived from the replica -
 /// nothing here is stored twice.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 enum Visual {
@@ -638,9 +638,9 @@ fn visual_of(item: &StripItem) -> Visual {
 
 /// The Kubuno command bar.
 ///
-/// Owns a [`ToolStrip`] for the item model — the buttons, the separators, the
+/// Owns a [`ToolStrip`] for the item model - the buttons, the separators, the
 /// labels, the drop-downs, `Enabled`, `Checked` and the per-item overflow rule
-/// — and arranges them with [`toolbar::arrange`], the shipping predecessor's own
+/// - and arranges them with [`toolbar::arrange`], the shipping predecessor's own
 /// pure primitive. The paint is the Kubuno one: flat on the module panel, no
 /// card and no border, a full-pill hover, an `accent_light` pill under an active
 /// toggle.
@@ -718,7 +718,7 @@ impl Toolbar {
     }
 
     /// Whether item `i` can take the keyboard focus: a visible, enabled
-    /// command — never a separator nor inert text (`role="toolbar"` skips
+    /// command - never a separator nor inert text (`role="toolbar"` skips
     /// them).
     pub fn is_focusable(&self, i: usize) -> bool {
         self.inner.items.get(i).is_some_and(|it| {
@@ -728,7 +728,7 @@ impl Toolbar {
         })
     }
 
-    /// The bar's keyboard stops in visual order — the ARIA toolbar's roving
+    /// The bar's keyboard stops in visual order - the ARIA toolbar's roving
     /// tab stop walks these with the arrows, Home and End. Pure: it takes an
     /// arrangement already computed.
     pub fn focus_order(&self, a: &ToolbarArrangement) -> Vec<ToolbarTarget> {
@@ -746,7 +746,7 @@ impl Toolbar {
 
     /// The menu the « More » button opens: the overflowed items, in order,
     /// as `MenuDropdown` rows (an icon-only command reads as its tooltip).
-    /// Leading, trailing and doubled separators are dropped — a rule is only
+    /// Leading, trailing and doubled separators are dropped - a rule is only
     /// ever drawn between two groups.
     pub fn overflow_menu(&self, a: &ToolbarArrangement) -> Menu {
         let mut rows: Vec<StripItem> = Vec::new();
@@ -767,7 +767,7 @@ impl Toolbar {
         Menu::with_items(rows)
     }
 
-    /// Which item a row of [`Toolbar::overflow_menu`] stands for — the inverse
+    /// Which item a row of [`Toolbar::overflow_menu`] stands for - the inverse
     /// of the row mapping, so a chosen row activates the real command.
     pub fn overflow_item_for_row(&self, a: &ToolbarArrangement, row: usize) -> Option<usize> {
         let mut k = 0usize;
@@ -805,7 +805,7 @@ impl Toolbar {
 
     /// Arranges already-measured items into `bounds`.
     ///
-    /// Pure — no canvas — so the overflow behaviour is unit-testable, and it is
+    /// Pure - no canvas - so the overflow behaviour is unit-testable, and it is
     /// [`toolbar::arrange`] that decides it: the same « from last to first »
     /// walk, the same [`OVERFLOW_BUTTON_WIDTH`] reserve, the same per-item rule.
     /// The only thing added is the shift onto `bounds`, which `arrange` reports
@@ -871,8 +871,8 @@ impl Toolbar {
     /// « More » button, which belongs to no item.
     ///
     /// A `ToolStripItem` is a `Component`: it cannot observe the mouse, and
-    /// [`WidgetState`] says only that the *bar* is hot. So the host — which does
-    /// know, because it hit-tested — names the item, exactly as the replica's own
+    /// [`WidgetState`] says only that the *bar* is hot. So the host - which does
+    /// know, because it hit-tested - names the item, exactly as the replica's own
     /// `ToolStrip::paint_items` has it name one.
     pub fn paint_items(
         &self,
@@ -889,7 +889,7 @@ impl Toolbar {
     pub fn paint_with(&self, c: &dyn Canvas, bounds: Rect, s: &StripPaint) {
         let t = c.theme();
         // The web has no tool bar card: the command bar sits straight on the
-        // module panel. No border, no shadow, no radius — the content card just
+        // module panel. No border, no shadow, no radius - the content card just
         // below carries the separation. Drive's own band is opt-in.
         if self.band {
             c.fill_rounded(&bounds, 0.0, &t.layer_background);
@@ -904,7 +904,7 @@ impl Toolbar {
             let hot = s.hot == Some(*i) || s.pressed == Some(*i);
             self.paint_item(c, *rect, item, hot);
             if s.pressed == Some(*i) && item.item().enabled && !matches!(visual_of(item), Visual::Separator | Visual::Label) {
-                // `active:` — the pressed fill over the hover one.
+                // `active:` - the pressed fill over the hover one.
                 c.fill_rounded(rect, pill(rect.bottom - rect.top), &t.control_fill_pressed);
                 self.paint_item_ink(c, *rect, item);
             }
@@ -1111,8 +1111,8 @@ impl Widget for Toolbar {
 /// sidebar is not that: its rows are of two kinds (navigation rows and inert
 /// section headers), each carries an icon and an enabled state, each can be
 /// hidden, and a header folds the rows under it. Every one of those is already
-/// a field on `ToolStripItem` — `Image`, `Enabled`, `Visible`, and the item
-/// *chain* itself for the two kinds — whereas `ListBox` would need all of them
+/// a field on `ToolStripItem` - `Image`, `Enabled`, `Visible`, and the item
+/// *chain* itself for the two kinds - whereas `ListBox` would need all of them
 /// added on the Kubuno side, which is exactly the duplication the brief
 /// forbids. The stacking is the replica's too: [`layout_items`] on
 /// [`StripAxis::Vertical`] packs the rows, honours each item's `Margin`, and is
@@ -1125,7 +1125,7 @@ impl Widget for Toolbar {
 #[derive(Clone)]
 pub struct Sidebar {
     inner: ToolStrip,
-    /// Docked pane, icon rail, or floating overlay — the pane state
+    /// Docked pane, icon rail, or floating overlay - the pane state
     /// `SidebarDisplayMode` describes and .NET has no counterpart for.
     pub mode: SidebarMode,
     /// Horizontal content offset when the labels are wider than the pane
@@ -1163,7 +1163,7 @@ impl Sidebar {
         Self { inner, mode: SidebarMode::Expanded, dx: 0.0, expanded: Vec::new(), scroll_y: 0.0 }
     }
 
-    /// The rows' total height — what the pane would need to show them all.
+    /// The rows' total height - what the pane would need to show them all.
     pub fn content_height(&self) -> f32 {
         self.row_inputs().iter().filter(|i| i.visible).map(|i| i.size.height).sum()
     }
@@ -1183,7 +1183,7 @@ impl Sidebar {
     }
 
     /// The row the arrows move the focus to (Up / Down / Home / End, no
-    /// wrap — a tree does not wrap).
+    /// wrap - a tree does not wrap).
     pub fn step_focus(&self, from: Option<usize>, key: NavKey) -> Option<usize> {
         roving_step(self.inner.items.len(), from, key, false, |i| self.is_focusable(i))
     }
@@ -1224,11 +1224,11 @@ impl Sidebar {
 
     /// The margin one row reserves around itself.
     ///
-    /// * `space::SM` left and right — the shipping pane insets its rows by 8
+    /// * `space::SM` left and right - the shipping pane insets its rows by 8
     ///   from each wall (`kubuno-drive-desktop/src/ui/layout.rs`).
-    /// * `space::XXS` below — the 2 DIP the same code puts between two rows.
+    /// * `space::XXS` below - the 2 DIP the same code puts between two rows.
     /// * [`SIDEBAR_SECTION_GAP`] above a section header that follows another
-    ///   row — `FlatSidebarItem::SectionGapMargin`, the only reason a gap ever
+    ///   row - `FlatSidebarItem::SectionGapMargin`, the only reason a gap ever
     ///   grows.
     fn row_margin(&self, i: usize) -> Padding {
         let top = if i > 0 && Self::is_section(&self.inner.items[i]) {
@@ -1239,7 +1239,7 @@ impl Sidebar {
         Padding::new(space::SM, top, space::SM, space::XXS)
     }
 
-    /// The inputs [`layout_items`] packs — one per row, outer size (content
+    /// The inputs [`layout_items`] packs - one per row, outer size (content
     /// plus margin) on the stacking axis.
     fn row_inputs(&self) -> Vec<StripItemInput> {
         self.inner
@@ -1284,7 +1284,7 @@ impl Sidebar {
             .collect()
     }
 
-    /// The row under `(x, y)` — no canvas needed. A row scrolled out of the
+    /// The row under `(x, y)` - no canvas needed. A row scrolled out of the
     /// pane is not under anything.
     pub fn item_at(&self, bounds: Rect, x: f32, y: f32) -> Option<usize> {
         if !bounds.contains(x, y) {
@@ -1299,14 +1299,14 @@ impl Sidebar {
             .map(|(i, _)| i)
     }
 
-    /// The pane's width in its current mode — [`sidebar_pane_width`], with the
+    /// The pane's width in its current mode - [`sidebar_pane_width`], with the
     /// replica's own `Size.Width` as the stored Expanded preference.
     pub fn pane_width(&self) -> f32 {
         sidebar_pane_width(self.mode, self.inner.control().size().width)
     }
 
     /// The natural width of a row: `8 + indent + icon + gap + label + margin`,
-    /// the same sum `sidebar_row_width` reports — used to decide whether the
+    /// the same sum `sidebar_row_width` reports - used to decide whether the
     /// pane needs a horizontal scroll.
     pub fn row_width(&self, c: &dyn Canvas, i: usize) -> f32 {
         let Some(item) = self.inner.items.get(i) else { return 0.0 };
@@ -1349,7 +1349,7 @@ impl Sidebar {
 
             // A full pill (`rounded-full`), recomputed from the row's own height
             // so the Compact rail still reads as a centred stadium. The ACTIVE
-            // row keeps its pastille on hover — the two fills never stack.
+            // row keeps its pastille on hover - the two fills never stack.
             let corner = pill(rect.bottom - rect.top);
             let live = !section && it.enabled;
             if selected {
@@ -1465,9 +1465,9 @@ impl Widget for Sidebar {
 
 /// The Kubuno path trail.
 ///
-/// The hard part of a breadcrumb — deciding which head segments to fold behind
+/// The hard part of a breadcrumb - deciding which head segments to fold behind
 /// a `…` when the path no longer fits, always keeping the current folder
-/// visible — is [`layout_breadcrumbs`], ported from `BreadcrumbBarLayout` and
+/// visible - is [`layout_breadcrumbs`], ported from `BreadcrumbBarLayout` and
 /// tested there. This primitive **wraps** it: it measures the segments, hands
 /// them over, and paints what comes back. Nothing about the folding is
 /// re-derived here, which is the point.
@@ -1514,7 +1514,7 @@ impl Breadcrumb {
         })
     }
 
-    /// Each segment's total width — its label (`text-sm font-medium`, capped
+    /// Each segment's total width - its label (`text-sm font-medium`, capped
     /// at `maxSegmentWidth`, beyond which it truncates) plus
     /// `BreadcrumbBarItemPadding`.
     pub fn segment_widths(&self, c: &dyn Canvas) -> Vec<f32> {
@@ -1526,7 +1526,7 @@ impl Breadcrumb {
             .collect()
     }
 
-    /// Whether segment `i` is a link — every segment but the last: « the page
+    /// Whether segment `i` is a link - every segment but the last: « the page
     /// you are on is not a destination » (`Breadcrumb.tsx`).
     pub fn is_link(&self, i: usize) -> bool {
         i + 1 < self.inner.items.len() && self.inner.items[i].item().enabled
@@ -1542,7 +1542,7 @@ impl Breadcrumb {
         }
     }
 
-    /// The menu the `…` button opens: the folded segments, root first — the
+    /// The menu the `…` button opens: the folded segments, root first - the
     /// web's `hiddenItems` fed to `MenuDropdown`. Row `k` stands for segment
     /// `hidden_segments(l).start + k`.
     pub fn hidden_menu(&self, l: &BreadcrumbLayout) -> Menu {
@@ -1560,7 +1560,7 @@ impl Breadcrumb {
 
     /// The trail's keyboard stops, in visual order: the `…` button, then each
     /// drawn LINK segment (the current page is not a link and is not a stop).
-    /// Unlike a tool bar these are ordinary Tab stops — a trail is a list of
+    /// Unlike a tool bar these are ordinary Tab stops - a trail is a list of
     /// links, not a composite widget.
     pub fn focus_order(&self, l: &BreadcrumbLayout) -> Vec<Option<usize>> {
         let mut v = Vec::new();
@@ -1598,7 +1598,7 @@ impl Breadcrumb {
         self.layout_with(&self.segment_widths(c), bounds)
     }
 
-    /// The segment under `(x, y)`, as an index into [`ToolStrip::items`] — the
+    /// The segment under `(x, y)`, as an index into [`ToolStrip::items`] - the
     /// original collection, so a folded path still reports the real segment.
     pub fn item_at(&self, c: &dyn Canvas, bounds: Rect, x: f32, y: f32) -> Option<usize> {
         let l = self.layout(c, bounds);
@@ -1627,8 +1627,8 @@ impl Breadcrumb {
     /// Paints the trail with its full transient state.
     ///
     /// `Breadcrumb.tsx`: a link segment is `text-text-secondary
-    /// hover:text-primary` — the hover answers in the TEXT colour, there is no
-    /// fill — and the current page is `text-text-primary`, not a link, with no
+    /// hover:text-primary` - the hover answers in the TEXT colour, there is no
+    /// fill - and the current page is `text-text-primary`, not a link, with no
     /// hover at all. The keyboard ring is `focus-visible:ring-2 ring-primary
     /// rounded-sm`. Chevrons are drawn BETWEEN segments only (`index > 0`),
     /// in `text-text-tertiary`.
@@ -1754,12 +1754,12 @@ impl Widget for Breadcrumb {
 /// The product already draws tabs in two different shapes, and they are not
 /// interchangeable:
 ///
-/// * the Drive **title-bar** strip is chrome-like — top corners at 8, concave
+/// * the Drive **title-bar** strip is chrome-like - top corners at 8, concave
 ///   4 DIP feet, merged with the tool bar into one translucent surface. That
 ///   shape exists to weld the tab to the window chrome; it is a window
 ///   decoration, not a design-system primitive.
-/// * every **in-content** selector — the Drive info pane's « Détails / Aperçu »,
-///   which is a direct port of `@ui/Tabs.tsx` — is the web's `underline`
+/// * every **in-content** selector - the Drive info pane's « Détails / Aperçu »,
+///   which is a direct port of `@ui/Tabs.tsx` - is the web's `underline`
 ///   variant: a `divider` hairline under the whole strip, a 3 DIP accent band
 ///   under the active tab inset by 8 (`mx-2`, `rounded-t-[3px]`), accent text at
 ///   medium weight, `surface_2` on hover.
@@ -1767,11 +1767,11 @@ impl Widget for Breadcrumb {
 /// This primitive is the second one. It is the variant `Tabs.tsx` defaults to,
 /// it is the one the crate's own metric table already reserved
 /// ([`control::TAB_MD`], [`control::TAB_UNDERLINE`]), and it is the only one
-/// that makes sense inside a panel. The chrome strip stays where it belongs —
+/// that makes sense inside a panel. The chrome strip stays where it belongs -
 /// in the shell that owns the window frame.
 ///
 /// The model is [`TabControl`]: `SelectedIndex`, `Alignment`, `Multiline` and
-/// `SizeMode` are the replica's, and so is the wrapping — [`tab_strip`],
+/// `SizeMode` are the replica's, and so is the wrapping - [`tab_strip`],
 /// [`tab_rows`] and [`tab_rects`] place the tabs, including the row rotation
 /// that puts the selected tab's row against the page.
 #[derive(Clone)]
@@ -1779,7 +1779,7 @@ pub struct Tabs {
     inner: TabControl,
     /// Horizontal scroll of an overflowing single-row strip, in DIP.
     ///
-    /// `None` — the default, for a caller that keeps no state — scrolls just
+    /// `None` - the default, for a caller that keeps no state - scrolls just
     /// enough to keep the SELECTED tab in view (`revealActive`), so a strip
     /// too narrow for its tabs never hides the one the page below belongs to.
     /// `Some(x)` is a caller-driven offset (the scroll arrows, the wheel);
@@ -1792,7 +1792,7 @@ pub struct Tabs {
 pub struct TabScroll {
     /// The applied offset, clamped to `0 ..= max`.
     pub offset: f32,
-    /// The largest offset — content width minus the viewport's.
+    /// The largest offset - content width minus the viewport's.
     pub max: f32,
     /// The band the tabs are visible in: the strip minus the arrows.
     pub viewport: Rect,
@@ -1810,10 +1810,10 @@ pub struct TabsPaint {
     pub hot: Option<usize>,
     /// The tab the left button is held on.
     pub pressed: Option<usize>,
-    /// The tab holding the keyboard focus — in a tab list that is the
+    /// The tab holding the keyboard focus - in a tab list that is the
     /// selected one (the roving tab stop).
     pub focused: Option<usize>,
-    /// `:focus-visible` — paint the ring around [`TabsPaint::focused`].
+    /// `:focus-visible` - paint the ring around [`TabsPaint::focused`].
     pub focus_visible: bool,
     /// The scroll arrow under the pointer: `-1` left, `1` right.
     pub hot_arrow: Option<i32>,
@@ -1839,13 +1839,13 @@ pub fn ease_span(from: (f32, f32), to: (f32, f32), t: f32) -> (f32, f32) {
 /// An indicator slide: `(from, to, start_ms)`, content-space spans.
 type TabSlide = ((f32, f32), (f32, f32), u64);
 
-/// What a live tab strip keeps between frames — what `Tabs.tsx` keeps in its
+/// What a live tab strip keeps between frames - what `Tabs.tsx` keeps in its
 /// own hooks: the travelling indicator's slide, the scroll offset and the
 /// press edge.
 ///
 /// A caller keeps ONE per strip across frames and runs every frame through
-/// [`TabsController::frame`]. That is the point of it: every strip — an app's,
-/// a demo page's, the component gallery's own navigation — gets the
+/// [`TabsController::frame`]. That is the point of it: every strip - an app's,
+/// a demo page's, the component gallery's own navigation - gets the
 /// component's whole behaviour (sliding indicator, scroll arrows, wheel,
 /// keyboard, reveal of the selected tab) from the component itself, instead of
 /// each caller hand-copying the subset it remembered.
@@ -1860,7 +1860,7 @@ pub struct TabsController {
     last:      Option<i32>,
     prev_down: bool,
     /// One scrolled page area per tab, by index, so each page keeps its own
-    /// scroll position across switches — as the web keeps each panel's.
+    /// scroll position across switches - as the web keeps each panel's.
     pages:     Vec<crate::containers::ScrollArea>,
 }
 
@@ -1878,7 +1878,7 @@ impl TabsController {
         Self::default()
     }
 
-    /// Whether the indicator is still sliding — a caller that paints on demand
+    /// Whether the indicator is still sliding - a caller that paints on demand
     /// needs no more than this: the controller already asks the host for the
     /// next frame while it moves.
     pub fn is_animating(&self) -> bool {
@@ -1914,8 +1914,8 @@ impl TabsController {
     /// * the wheel over the strip scrolls it (horizontal wheel, or vertical
     ///   with Shift);
     /// * while `focus` says the strip holds the keyboard focus, the axis arrows,
-    ///   Home and End move the selection — activation follows focus, as in the
-    ///   web's tab list — and the ring shows on `:focus-visible`;
+    ///   Home and End move the selection - activation follows focus, as in the
+    ///   web's tab list - and the ring shows on `:focus-visible`;
     /// * a selection change scrolls the new tab into view and slides the
     ///   indicator to it (`TAB_SLIDE_MS`, eased out), from wherever it is,
     ///   mid-slide included, repainting until it lands.
@@ -2030,7 +2030,7 @@ impl Tabs {
     }
 
     /// The web's `sm` size: `px-3 pt-1.5 pb-[9px]`. There is no Kubuno field
-    /// for it — the size *is* the replica's `Padding`, which is what both axes
+    /// for it - the size *is* the replica's `Padding`, which is what both axes
     /// are measured from, so the two can never disagree.
     pub fn small(mut self) -> Self {
         self.inner.padding = Size::new(space::MD, TAB_PAD_Y_SM);
@@ -2043,7 +2043,7 @@ impl Tabs {
         self
     }
 
-    /// Whether the strip runs down a side (Left / Right alignment) — which
+    /// Whether the strip runs down a side (Left / Right alignment) - which
     /// also says which arrows move between its tabs.
     pub fn is_vertical(&self) -> bool {
         strip_is_vertical(self.inner.alignment)
@@ -2058,11 +2058,11 @@ impl Tabs {
 
     /// One tab row's thickness.
     ///
-    /// `ItemSize.Height` still wins when the model sets it — that is the
+    /// `ItemSize.Height` still wins when the model sets it - that is the
     /// replica's property and it must keep meaning what it means. Left auto,
     /// the `md` row is the web's stated `h-12` and the `sm` row is what its
     /// paddings build: `pt-1.5`, the 20 DIP line, `pb-[9px]` (the 6 again
-    /// plus the 3 the indicator takes back) — [`control::TAB_SM`].
+    /// plus the 3 the indicator takes back) - [`control::TAB_SM`].
     pub fn row_thickness(&self) -> f32 {
         if self.inner.item_size.height > 0.0 {
             self.inner.item_size.height
@@ -2073,7 +2073,7 @@ impl Tabs {
         }
     }
 
-    /// Each tab's along-axis extent, before wrapping — the replica's
+    /// Each tab's along-axis extent, before wrapping - the replica's
     /// [`tab_strip`], fed the measured captions.
     pub fn extents_with(&self, labels: &[f32], bounds: Rect) -> Vec<f32> {
         tab_strip(
@@ -2109,7 +2109,7 @@ impl Tabs {
         }
     }
 
-    /// Each tab's `(left, right)` in CONTENT space — from the start of the
+    /// Each tab's `(left, right)` in CONTENT space - from the start of the
     /// unscrolled row, gaps included.
     fn spans(&self, extents: &[f32]) -> Vec<(f32, f32)> {
         let gap = self.gap();
@@ -2211,7 +2211,7 @@ impl Tabs {
     /// Every tab's rectangle inside `bounds`, from already-measured captions.
     /// Pure, so the wrapping, the selected-row rotation and the scroll are
     /// unit-testable. A scrolled strip's rectangles may lie outside its
-    /// viewport — the paint clips them and [`Tabs::item_at`] ignores them.
+    /// viewport - the paint clips them and [`Tabs::item_at`] ignores them.
     pub fn tab_rects_with(&self, labels: &[f32], bounds: Rect) -> Vec<Rect> {
         let extents = self.grid_extents_with(labels, bounds);
         let rows = self.row_map(&extents, bounds);
@@ -2228,7 +2228,7 @@ impl Tabs {
             return base;
         }
         // One row: the replica answers for the cross axis (the 2 DIP strip
-        // inset, the page-facing edge); the along axis is the web grid's —
+        // inset, the page-facing edge); the along axis is the web grid's -
         // equal tracks, `gap-1`, shifted by the scroll.
         let (origin, offset) = match self.scroll_with(labels, bounds) {
             Some(s) => (s.viewport.left, s.offset),
@@ -2242,7 +2242,7 @@ impl Tabs {
 
     fn labels(&self, c: &dyn Canvas) -> Vec<f32> {
         let f = c.formats();
-        // `text-sm font-medium` on EVERY tab, active or not — the weight does
+        // `text-sm font-medium` on EVERY tab, active or not - the weight does
         // not change with the selection, so neither does the width.
         self.inner.tab_pages.iter().map(|p| text_width(c, &p.control().text, &f.body_strong)).collect()
     }
@@ -2257,7 +2257,7 @@ impl Tabs {
         self.scroll_with(&self.labels(c), bounds)
     }
 
-    /// Tab `i`'s CONTENT-space span — what [`TabsPaint::indicator`] animates
+    /// Tab `i`'s CONTENT-space span - what [`TabsPaint::indicator`] animates
     /// between.
     pub fn content_span(&self, c: &dyn Canvas, bounds: Rect, i: usize) -> Option<(f32, f32)> {
         let labels = self.labels(c);
@@ -2275,7 +2275,7 @@ impl Tabs {
     }
 
     /// The offset that brings the selected tab into view from the current
-    /// one — what a stateful caller stores in [`Tabs::scroll`] after the
+    /// one - what a stateful caller stores in [`Tabs::scroll`] after the
     /// selection changed (`useEffect(() => revealActive(true), [value])`).
     pub fn reveal_offset(&self, c: &dyn Canvas, bounds: Rect) -> f32 {
         let labels = self.labels(c);
@@ -2313,7 +2313,7 @@ impl Tabs {
         self.inner.tab_pages.get(i).is_some_and(|p| p.control().enabled)
     }
 
-    /// The tab the arrows / Home / End select from the current one — the
+    /// The tab the arrows / Home / End select from the current one - the
     /// ARIA tab list with automatic activation, wrapping at both ends.
     pub fn step_selection(&self, key: NavKey) -> Option<usize> {
         let from = usize::try_from(self.inner.selected_index).ok();
@@ -2328,7 +2328,7 @@ impl Tabs {
         tab_strip_thickness(self.row_thickness(), n)
     }
 
-    /// The rectangle the selected page is given — the replica's
+    /// The rectangle the selected page is given - the replica's
     /// `DisplayRectangle`, taken against the `bounds` argument rather than the
     /// model's own rectangle.
     pub fn page_rect(&self, c: &dyn Canvas, bounds: Rect) -> Rect {
@@ -2337,7 +2337,7 @@ impl Tabs {
     }
 
     /// The tab under `(x, y)`. In a scrolled strip only the part inside the
-    /// viewport counts — a tab hidden under an arrow is not under the pointer.
+    /// viewport counts - a tab hidden under an arrow is not under the pointer.
     pub fn item_at(&self, c: &dyn Canvas, bounds: Rect, x: f32, y: f32) -> Option<usize> {
         let labels = self.labels(c);
         if let Some(s) = self.scroll_with(&labels, bounds) {
@@ -2374,7 +2374,7 @@ impl Tabs {
 
     /// One tab's indicator band and its hover fill, both on the page-facing
     /// edge. The band is inset by [`control::TAB_UNDERLINE_INSET`] (`INSET =
-    /// 8`) — it deliberately does **not** run wall to wall — and the hover
+    /// 8`) - it deliberately does **not** run wall to wall - and the hover
     /// stops one DIP short of the rule so the two never overlap.
     /// The indicator band and the hover wash of a tab whose rectangle already
     /// reaches the rule (see [`Tabs::reach_rule`]): the wash is the whole tab,
@@ -2394,7 +2394,7 @@ impl Tabs {
     /// A tab's rectangle with its page-facing edge moved onto the rule's near
     /// edge. The replica insets its tabs inside the strip; the web's tab fills
     /// the strip down to the container's `border-b`, and its indicator is
-    /// `absolute bottom-0` — so the hover wash and the blue bar sit ON the grey
+    /// `absolute bottom-0` - so the hover wash and the blue bar sit ON the grey
     /// rule, touching it, never floating a few pixels above it.
     fn reach_rule(&self, r: Rect, rule: Rect) -> Rect {
         match self.inner.alignment {
@@ -2456,7 +2456,7 @@ impl Tabs {
 
             // `.kb-tab:hover` tints the whole tab, active or not: the other
             // tabs in `surface-2`, the active one in its OWN blue (`#eaeffa`,
-            // the `primary-light` family) — « a grey wash under blue text
+            // the `primary-light` family) - « a grey wash under blue text
             // reads as the tab going quiet ».
             if hot {
                 let wash = if active { t.accent_light } else { t.surface_2 };
@@ -2523,7 +2523,7 @@ impl Tabs {
     fn paint_indicator(&self, c: &dyn Canvas, rect: Rect) {
         let t = c.theme();
         let (indicator, _) = self.tab_edges(rect);
-        // `rounded-t-[3px]` — only a top-aligned strip has a « top » for that
+        // `rounded-t-[3px]` - only a top-aligned strip has a « top » for that
         // radius to mean anything; the other three draw the same band square.
         if self.inner.alignment == TabAlignment::Top {
             c.fill_top_rounded(&indicator, control::TAB_UNDERLINE, &t.accent);
@@ -2534,13 +2534,13 @@ impl Tabs {
 }
 
 /// The scroll offset that brings `span` (content space) into a viewport of
-/// width `vw` currently at `offset` — `revealActive`'s arithmetic: scroll
+/// width `vw` currently at `offset` - `revealActive`'s arithmetic: scroll
 /// back to the tab's left edge, or forward until its right edge shows, and
 /// otherwise stay put.
 fn reveal(offset: f32, span: (f32, f32), vw: f32) -> f32 {
     // A tab wider than the viewport shows its START, where its label begins:
     // `Tabs.tsx` would align its end (`right - clientWidth`) and cut the head
-    // of the caption — the CSSOM `nearest` rule aligns the leading edge of an
+    // of the caption - the CSSOM `nearest` rule aligns the leading edge of an
     // element larger than its scroller, and so do we.
     if span.1 - span.0 > vw {
         return span.0;
@@ -2607,14 +2607,14 @@ impl Widget for Tabs {
 ///
 /// Owns a [`StatusStrip`], which is a `ToolStrip` that already docks to the
 /// bottom, hides the grip, disables overflow and lays its items out with
-/// `Table` — the layout style whose whole purpose is `Spring`, the « share the
+/// `Table` - the layout style whose whole purpose is `Spring`, the « share the
 /// leftover width » flag a status label carries. That sharing is
 /// [`layout_items`]' own arithmetic (whole-unit share plus a remainder handed
 /// out one cell at a time), so this primitive does none of it.
 ///
 /// The paint is the shipping bar's: no background of its own, 12 px meta text
-/// in `text_secondary` at `space::SM` from the edge, and — for the cells that
-/// are buttons — a `radius::SM` hover pill with a 16 DIP icon, exactly as
+/// in `text_secondary` at `space::SM` from the edge, and - for the cells that
+/// are buttons - a `radius::SM` hover pill with a 16 DIP icon, exactly as
 /// `kubuno-drive-desktop`'s git widgets draw.
 #[derive(Clone)]
 pub struct StatusBar {
@@ -2644,7 +2644,7 @@ impl StatusBar {
         match item {
             StripItem::Separator(_) => SEPARATOR_WIDTH,
             // Measured with the very format the paint uses, ceiled, plus the
-            // cell's own insets — so a cell that has room never truncates.
+            // cell's own insets - so a cell that has room never truncates.
             StripItem::Button(_) => {
                 STATUS_LABEL_LEFT + text_width(c, &item.item().text, &f.caption) + STATUS_TEXT_INSET
             }
@@ -2652,7 +2652,7 @@ impl StatusBar {
         }
     }
 
-    /// Whether cell `i` can take the keyboard focus — the button cells (the
+    /// Whether cell `i` can take the keyboard focus - the button cells (the
     /// git widgets); text cells are information, not controls.
     pub fn is_focusable(&self, i: usize) -> bool {
         self.inner.items.get(i).is_some_and(|it| {
@@ -2671,7 +2671,7 @@ impl StatusBar {
     ///
     /// Only the `Spring` cells give: they absorb the leftover width when there
     /// is some, and when the bar is too narrow they SHRINK first (down to
-    /// nothing), so the fixed cells — counts, widgets — keep their full text
+    /// nothing), so the fixed cells - counts, widgets - keep their full text
     /// for as long as possible.
     pub fn item_rects_with(&self, widths: &[f32], bounds: Rect) -> StripLayout {
         let widths = shrink_springs(
@@ -2873,7 +2873,7 @@ impl Widget for StatusBar {
 }
 
 // ═════════════════════════════════════════════════════════════════════════════
-// Tests — the geometry, without a window
+// Tests - the geometry, without a window
 //
 // Every one of these is canvas-free: the primitives split measurement (which
 // needs DirectWrite) from arrangement (which does not), precisely so the part
@@ -2978,7 +2978,7 @@ mod tests {
         let a = t.arrange_widths(&widths(&t, 40.0), bounds);
         let first = a.visible[0].1;
         let second = a.visible[1].1;
-        // Left edge belongs to the item, right edge does not — `Rect::contains`.
+        // Left edge belongs to the item, right edge does not - `Rect::contains`.
         assert!(first.contains(first.left, first.top));
         assert!(!first.contains(first.right, first.top));
         assert!(!first.contains(first.left, first.bottom));
@@ -3050,7 +3050,7 @@ mod tests {
             (s.pane_width() - kubuno_drive_desktop_app_controls::sidebar::SIDEBAR_COMPACT_WIDTH).abs() < EPS
         );
 
-        // The rail's rows are the pane less the two 8 DIP insets — the 40 × 36
+        // The rail's rows are the pane less the two 8 DIP insets - the 40 × 36
         // stadium the predecessor documents.
         let bounds = Rect::new(0.0, 0.0, s.pane_width(), 400.0);
         let r = s.row_rects(bounds);
@@ -3058,7 +3058,7 @@ mod tests {
         assert!((r[0].bottom - r[0].top - SIDEBAR_ROW_HEIGHT).abs() < EPS);
 
         // Minimal is the floating 300 DIP pane; Expanded clamps the stored
-        // preference — both are `sidebar_pane_width`, unchanged.
+        // preference - both are `sidebar_pane_width`, unchanged.
         s.mode = SidebarMode::Minimal;
         assert!(
             (s.pane_width() - kubuno_drive_desktop_app_controls::sidebar::SIDEBAR_OPEN_PANE_LENGTH).abs() < EPS
@@ -3201,7 +3201,7 @@ mod tests {
         assert!((t.row_thickness() - TAB_HEIGHT_MD).abs() < EPS);
         assert!((strip().small().row_thickness() - control::TAB_SM).abs() < EPS);
 
-        // The replica's own property still wins — it is a .NET property, and it
+        // The replica's own property still wins - it is a .NET property, and it
         // must keep meaning what it means.
         let mut t = t;
         t.item_size = Size::new(0.0, 28.0);
@@ -3247,7 +3247,7 @@ mod tests {
             - tab_strip_thickness(TAB_HEIGHT_MD, 3))
         .abs()
             < EPS);
-        // Tab 1 is selected, so its row is the one against the page — the
+        // Tab 1 is selected, so its row is the one against the page - the
         // bottom-most row of a top-aligned strip.
         let rects = t.tab_rects_with(&labels, bounds);
         assert!(rects[1].top > rects[0].top);
@@ -3473,7 +3473,7 @@ mod tests {
             overflow_button: Some(Rect::new(40.0, 0.0, 80.0, 36.0)),
         };
         let m = t.overflow_menu(&a);
-        // Copier, separator, Partager — the trailing rule is dropped.
+        // Copier, separator, Partager - the trailing rule is dropped.
         assert_eq!(m.items().len(), 3);
         assert_eq!(m.items()[0].item().text, "Copier", "an icon command reads as its tooltip");
         assert!(matches!(m.items()[1], StripItem::Separator(_)));

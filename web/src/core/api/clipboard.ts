@@ -3,7 +3,7 @@
  *
  * The browser clipboard holds one item, is not shared between tabs and is lost
  * on reload. This history keeps the recent clips server-side, per user, as the
- * same `KubunoDataEnvelope` the `core.data-card` renderers already understand —
+ * same `KubunoDataEnvelope` the `core.data-card` renderers already understand -
  * so a copy made in the spreadsheet can be pasted from the chat, from another
  * tab, or from another device.
  *
@@ -22,7 +22,7 @@ export interface ClipboardItem {
   title: string | null
   /** Human-readable summary shown in the pane. */
   preview: string | null
-  /** The envelope itself — rendered through the producer's data-card renderer. */
+  /** The envelope itself - rendered through the producer's data-card renderer. */
   payload: KubunoDataEnvelope
   href: string | null
   /** Pinned entries survive the trim and « Effacer l'historique ». */

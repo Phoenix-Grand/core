@@ -42,7 +42,7 @@ describe('kbview-migrate on a sample screen', () => {
   })
 
   it('writes the markup with the registry elements, HTML tags, roles and colours', () => {
-    expect(view).toMatch(/^<!-- Sample — converted from Sample\.tsx/)
+    expect(view).toMatch(/^<!-- Sample - converted from Sample\.tsx/)
     expect(view).toContain('<Panel x:Props="SampleProps" Class="max-w-md space-y-4">')
     // A heading keeps its level; text-lg stays a class, font-medium and the colour become properties.
     expect(view).toMatch(/<Label HtmlTag="H2"[^>]*Text="\{Binding props\.title\}"[^>]*FontWeight="Medium"[^>]*ForeColor="TextPrimary"[^>]*Class="text-lg"/s)

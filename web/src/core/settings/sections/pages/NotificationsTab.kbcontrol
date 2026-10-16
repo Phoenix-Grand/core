@@ -1,4 +1,4 @@
-<!-- NotificationsTab — converted from NotificationsTab.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- NotificationsTab - converted from NotificationsTab.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl>
   <Panel Class="max-w-3xl space-y-8">
     <Panel HtmlTag="Section">

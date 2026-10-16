@@ -37,7 +37,7 @@ import kotlinx.coroutines.withContext
 import java.io.File
 
 /**
- * PDF rendered with Android's built-in [PdfRenderer] — pages rasterised to
+ * PDF rendered with Android's built-in [PdfRenderer] - pages rasterised to
  * bitmaps in a scrolling column, with pinch-to-zoom over the whole document.
  *
  * The web used pdf.js with a selectable text layer, search and anchored

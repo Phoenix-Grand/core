@@ -1,5 +1,5 @@
 //! [`Application`]: runs a form in a window (Windows Forms' `Application.Run`), and the per-window
-//! driver shared by `run`, `show` and `show_dialog` — plus the windows a form draws INSIDE its own
+//! driver shared by `run`, `show` and `show_dialog` - plus the windows a form draws INSIDE its own
 //! (MDI documents, in-window dialogs), which reuse the same driver.
 
 use std::cell::RefCell;
@@ -72,7 +72,7 @@ pub(crate) struct InnerRequest {
     on_closed: Option<Box<dyn FnOnce(DialogResult)>>,
 }
 
-/// Runs a Kubuno application — Windows Forms' `Application` class.
+/// Runs a Kubuno application - Windows Forms' `Application` class.
 ///
 /// ```no_run
 /// # use kubuno_desktop::prelude::*;
@@ -84,7 +84,7 @@ pub(crate) struct InnerRequest {
 pub struct Application;
 
 impl Application {
-    /// Opens `view` in the application's main window and runs until that window is closed — Windows
+    /// Opens `view` in the application's main window and runs until that window is closed - Windows
     /// Forms' `Application.Run(form)`. The window opens at the view's designed size (`DesignWidth` ×
     /// `DesignHeight` of the `.kbview`, or [`Form::client_size`]) with the view's window properties
     /// (`Title`, `StartPosition`, `FormBorderStyle`, `WindowKind`, the title bar's…), in Kubuno's
@@ -102,7 +102,7 @@ impl Application {
             .map_err(|e| crate::Error::new(format!("the window could not be created: {e}")))
     }
 
-    /// Uses `theme` for every window: the windows opened from now on, and — live — the ones
+    /// Uses `theme` for every window: the windows opened from now on, and - live - the ones
     /// already open (their title bars, pages, dialogs and tool windows repaint in it).
     pub fn set_theme(theme: Theme) {
         // The print preview dialog is drawn by `kubuno-desktop-print` in the application's theme too.
@@ -122,8 +122,8 @@ impl Application {
         SETTINGS.with(|s| s.borrow_mut().chrome = chrome);
     }
 
-    /// Windows Forms' `EnableVisualStyles()`: Kubuno's look — its title bar and the theme's
-    /// colours — which is the default; kept for familiarity.
+    /// Windows Forms' `EnableVisualStyles()`: Kubuno's look - its title bar and the theme's
+    /// colours - which is the default; kept for familiarity.
     pub fn enable_visual_styles() {
         Self::set_chrome(Chrome::Kubuno);
     }
@@ -156,7 +156,7 @@ impl Application {
         OPEN.with(|o| o.borrow().clone())
     }
 
-    /// Closes every window (each form's `FormClosing` may cancel its own) — Windows Forms'
+    /// Closes every window (each form's `FormClosing` may cancel its own) - Windows Forms'
     /// `Application.Exit()`.
     pub fn exit() {
         for form in Self::open_forms() {
@@ -768,7 +768,7 @@ fn inner_layout(c: &Inner, _band: f32) -> wc::ChromeLayout {
     wc::layout(&inner_style(c), c.rect, icon, inner_buttons(c), wc::SlotWidths::default())
 }
 
-/// `View::show`: a modeless window on the running loop — or, for a form with an MDI parent, a
+/// `View::show`: a modeless window on the running loop - or, for a form with an MDI parent, a
 /// document inside the parent's window.
 pub(crate) fn show<V: View>(mut view: V) {
     let settings = settings();

@@ -27,7 +27,7 @@ export function BarChart({
    *  keep them from touching. Off by default: where the categories are a series
    *  of days whose exact date adds nothing, the hover tooltip already names the
    *  bar and a row of dates is noise. Turn it on when the reader has to be able
-   *  to point at a bar and say *which* one it is — an hour of the day, above
+   *  to point at a bar and say *which* one it is - an hour of the day, above
    *  all, is unreadable without it. */
   xLabels?: boolean
 }) {

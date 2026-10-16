@@ -1,4 +1,4 @@
-<!-- AboutPage — converted from AboutPage.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- AboutPage - converted from AboutPage.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <Panel Class="max-w-2xl">
   <Label HtmlTag="H1" Text="{Res about.title}" FontWeight="Medium" Overflow="Wrap" ForeColor="TextPrimary" Class="text-xl mb-6"/>
   <Stack Gap="16" CrossAlign="Center" Class="bg-white rounded-2xl border border-border p-8 mb-6 text-center">

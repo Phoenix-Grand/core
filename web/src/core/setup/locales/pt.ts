@@ -20,7 +20,7 @@ export default {
     alreadyInitialised: 'Esta base de dados já contém um esquema Kubuno. A instalação irá reutilizá-lo sem apagar os dados existentes e manterá o administrador já registado.',
   },
   admin: {
-    title: 'A sua conta de administrador', lead: 'Esta conta administra a instância — é a mais privilegiada.',
+    title: 'A sua conta de administrador', lead: 'Esta conta administra a instância - é a mais privilegiada.',
     pitchTitle: 'As chaves são suas',
     pitch: 'Nenhuma conta existe antes desta e mais ninguém a pode criar: a palavra-passe que escolher é conhecida apenas por si.',
     username: 'Nome de utilizador', email: 'Endereço de e-mail', password: 'Palavra-passe', confirm: 'Confirmação',
@@ -33,9 +33,9 @@ export default {
     name: 'Nome da instância', optional: 'opcional', logo: 'Logótipo', theme: 'Tema',
     logoDrop: 'Arraste uma imagem para aqui ou clique para a escolher', logoChosen: 'Logótipo escolhido',
     logoHint: 'PNG, JPEG, WebP ou SVG · 200 KB no máximo',
-    logoTypes: 'Apenas PNG, JPEG, WebP ou SVG.', logoTooBig: 'Ficheiro demasiado pesado — 200 KB no máximo.',
+    logoTypes: 'Apenas PNG, JPEG, WebP ou SVG.', logoTooBig: 'Ficheiro demasiado pesado - 200 KB no máximo.',
     logoUnreadable: 'Não foi possível ler o ficheiro.', remove: 'Remover', light: 'claro', dark: 'escuro',
-    footnote: 'O logótipo e o tema são opcionais — poderá alterá-los a qualquer momento na consola de administração.',
+    footnote: 'O logótipo e o tema são opcionais - poderá alterá-los a qualquer momento na consola de administração.',
   },
   install: {
     title: 'Pronto a instalar', lead: 'Verifique o resumo e inicie a instalação.',

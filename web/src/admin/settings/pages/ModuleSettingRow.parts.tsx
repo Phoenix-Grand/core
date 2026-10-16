@@ -81,7 +81,7 @@ function Control({ item, value, invalid, readOnly, onChange }: ControlProps) {
         <p className="mt-1 text-text-tertiary" style={{ fontSize: 'var(--kb-text-micro)' }}>
           {t('admin.m_entries_count', {
             count: entries,
-            defaultValue: `${entries} entrée(s) — une par ligne`,
+            defaultValue: `${entries} entrée(s) - une par ligne`,
           })}
         </p>
       </div>

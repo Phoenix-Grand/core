@@ -1,6 +1,6 @@
 //! The synchronous portal: "may this operation proceed?"
 //!
-//! Everything else in this directory reacts *after* the fact — an event happens,
+//! Everything else in this directory reacts *after* the fact - an event happens,
 //! a rule notices, an action follows. Data protection cannot work that way: a
 //! message whose account numbers have already been sent is not saved by an alert
 //! raised a second later. So a module asks **before** it commits, and waits for
@@ -21,7 +21,7 @@
 //! ## Failing open, on purpose, by default
 //!
 //! A gate that refuses when it is unwell converts a hiccup in the rule engine
-//! into an outage of every module that asks it a question — nobody can send a
+//! into an outage of every module that asks it a question - nobody can send a
 //! message because the *policy* service is slow. That trade is almost never the
 //! right one, so the default is **open**: a timeout or an internal error lets the
 //! operation through and is logged loudly. Regulated deployments set
@@ -39,7 +39,7 @@
 //!
 //! "This content carries sensitive data", and a reference. Never the rule, never
 //! the detector, never the matched value, never the count. Anybody with a text
-//! box and a blocking gate can otherwise map the entire policy by bisection —
+//! box and a blocking gate can otherwise map the entire policy by bisection -
 //! type a candidate, observe block or allow, repeat. The reference is the whole
 //! bridge back to somebody who *can* look: it is indexed on
 //! `core.rule_executions`, so a compliance officer pastes it and lands on the
@@ -49,7 +49,7 @@
 //!
 //! An execution row: which rule, which version, which mode, which outcome, how
 //! many matches, how many distinct values, how long it took. **Not the content,
-//! not a value, not an offset, not an excerpt** — in the row, in the response,
+//! not a value, not an offset, not an excerpt** - in the row, in the response,
 //! in the audit trail, or in a log line. The content exists for the length of
 //! one function call and is dropped with the request.
 
@@ -73,7 +73,7 @@ use super::store::{self, NewExecution};
 ///
 /// They are declared through the ordinary catalogue path ([`super::declare`]),
 /// so the rule editor offers them like any other action and the console renders
-/// them like any other action — but they are read rather than dispatched. The
+/// them like any other action - but they are read rather than dispatched. The
 /// asymmetry is stated here rather than hidden: an action that changes nothing
 /// and is consumed synchronously is a different animal from one the job runner
 /// carries out, and pretending otherwise would mean a rule in `enforce` mode
@@ -189,7 +189,7 @@ pub struct GateResponse {
     pub elapsed_ms: u64,
 }
 
-/// Machine codes. Deliberately coarse — a finer taxonomy would be the policy,
+/// Machine codes. Deliberately coarse - a finer taxonomy would be the policy,
 /// spelled differently.
 pub const CODE_OK: &str = "ok";
 pub const CODE_SENSITIVE: &str = "sensitive_content";
@@ -224,7 +224,7 @@ fn message_for(decision: Decision, degraded: bool) -> String {
 const ALPHABET: &[u8] = b"0123456789ABCDEFGHJKMNPQRSTVWXYZ";
 const REFERENCE_LEN: usize = 8;
 
-/// A fresh reference. 32^8 ≈ 1.1×10^12 — collisions do not matter for lookup
+/// A fresh reference. 32^8 ≈ 1.1×10^12 - collisions do not matter for lookup
 /// (the run log is queried by reference *and* time) and the value carries no
 /// information about what was found, which is the property that counts.
 pub fn new_reference() -> String {
@@ -238,7 +238,7 @@ pub fn new_reference() -> String {
 
 /// Answers a gate request, applying the fail policy to its own deadline.
 ///
-/// The deadline covers the whole evaluation — every scan, every rule, every
+/// The deadline covers the whole evaluation - every scan, every rule, every
 /// write. A module applies the same policy to the HTTP call itself; between the
 /// two, neither a slow core nor an unreachable one can hold a user's send button
 /// hostage.
@@ -288,7 +288,7 @@ pub async fn decide(db: &DbPool, request: GateRequest) -> GateResponse {
 /// The log line is the "journaliser" half of "laisser passer et journaliser":
 /// failing open silently would mean an instance whose data protection has been
 /// off for a month and nobody knows. It carries the trigger, the reason and the
-/// reference — never the content, and never what would have been found.
+/// reference - never the content, and never what would have been found.
 fn degraded(
     started: Instant,
     fail_mode: FailMode,
@@ -399,7 +399,7 @@ async fn evaluate(db: &DbPool, request: &GateRequest) -> Result<GateOutcome, App
         }
 
         // Only `enforce` applies a verdict. `simulate` and `monitor` evaluate
-        // and log what they *would* have done and let the operation through —
+        // and log what they *would* have done and let the operation through -
         // which is the whole point of having them: an administrator arms a
         // blocking rule after watching it, not before.
         let would = rule_verdict(rule);

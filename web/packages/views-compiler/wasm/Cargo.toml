@@ -9,7 +9,7 @@
 #
 # The built `kubuno-views-web.wasm` is committed next to this file and shipped in the npm package: module
 # builds (offline `.kbpkg` builds included) never need a Rust toolchain. Rebuild with
-# `npm run build:wasm` (packages/views-compiler) — see scripts/build-wasm.mjs for the local-checkout override.
+# `npm run build:wasm` (packages/views-compiler) - see scripts/build-wasm.mjs for the local-checkout override.
 [package]
 name    = "kubuno-views-compiler-wasm"
 version = "0.1.0"

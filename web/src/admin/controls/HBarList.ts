@@ -6,7 +6,7 @@ import { ViewBase } from './HBarList.kbcontrol'
 import * as __parts from './HBarList.parts.tsx'
 
 export type HBarListProps = {
-  /** `color` per item overrides the list's own — a printed report ties each bar
+  /** `color` per item overrides the list's own - a printed report ties each bar
       to the slice and to the table row that carry the same entry. */
   items: { label: string; value: number; max: number; sub?: string; color?: string }[]
   color?: string

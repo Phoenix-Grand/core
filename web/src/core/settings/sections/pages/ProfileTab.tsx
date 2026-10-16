@@ -217,8 +217,8 @@ export class ProfileTab extends ViewBase {
       this.saved = true; setTimeout(() => this.saved = false, 2200)
     } catch (err) {
       // A refusal by the organisation's policy arrives as a 403 carrying its own
-      // sentence, which names the field. Swallowing it — what this form did
-      // before — left somebody pressing Save forever on a field an administrator
+      // sentence, which names the field. Swallowing it - what this form did
+      // before - left somebody pressing Save forever on a field an administrator
       // had closed.
       const e2 = err as { message?: string; response?: { data?: { message?: string } } }
       this.toast.error(e2?.response?.data?.message ?? e2?.message ?? this.tr('settings.profile_save_failed', { defaultValue: 'Enregistrement impossible' }))

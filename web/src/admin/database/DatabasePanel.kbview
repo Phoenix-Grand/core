@@ -1,4 +1,4 @@
-<!-- DatabasePanel — converted from DatabasePanel.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- DatabasePanel - converted from DatabasePanel.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <Panel Class="contents">
   <Callout Body="{Res admin.db_superuser_only}" Visible="{Binding show_case_1}"/>
   <Panel Visible="{Binding show_main}">

@@ -2,7 +2,7 @@
 //!
 //! An LDAP configuration has a dozen fields and eleven of them can be wrong in
 //! a way that produces the same symptom: nobody can sign in. These two probes
-//! exist so an operator finds out *which* one, in seconds, from the console —
+//! exist so an operator finds out *which* one, in seconds, from the console -
 //! rather than from a log line that says "invalid credentials" an hour after
 //! somebody complained.
 //!
@@ -40,7 +40,7 @@ pub struct ConnectionProbe {
     /// The DN of the first match, so an operator can see the shape of the tree.
     pub sample_dn: Option<String>,
     /// Attributes actually returned for that first entry, mapped through the
-    /// configuration — the fastest way to see that `uid` was the wrong choice.
+    /// configuration - the fastest way to see that `uid` was the wrong choice.
     pub sample_mapping: Option<SampleMapping>,
     pub elapsed_ms: u64,
 }
@@ -50,7 +50,7 @@ pub struct SampleMapping {
     pub username: Option<String>,
     pub email: Option<String>,
     pub display_name: Option<String>,
-    /// Present or absent only — the value is an opaque identifier and printing
+    /// Present or absent only - the value is an opaque identifier and printing
     /// it teaches nobody anything.
     pub has_unique_id: bool,
     pub groups: usize,
@@ -82,7 +82,7 @@ fn failure_fields(e: &DirectoryError) -> (String, Option<String>, Option<String>
 }
 
 /// Connects, binds the service account, and runs the configured filter widened
-/// to everybody — the exact sequence a synchronisation performs.
+/// to everybody - the exact sequence a synchronisation performs.
 pub async fn probe_connection(jwt_secret: &str, dir: &LdapDirectory) -> ConnectionProbe {
     let started = std::time::Instant::now();
     let unverified_tls = dir.security() != super::model::Security::None && !dir.verify_certificate;
@@ -161,7 +161,7 @@ pub async fn probe_connection(jwt_secret: &str, dir: &LdapDirectory) -> Connecti
 
     probe.ok = true;
     probe.message = if entries.is_empty() {
-        // Connected, bound, searched — and matched nobody. Worth its own
+        // Connected, bound, searched - and matched nobody. Worth its own
         // wording: the connection is fine and the mapping is not.
         probe.hint = Some(
             "La connexion et la liaison fonctionnent, mais le filtre ne trouve personne. \
@@ -224,7 +224,7 @@ pub async fn probe_authentication(
                 ),
                 Ok(Some(u)) => format!("Le compte « {} » est gouverné par cet annuaire.", u.username),
                 Ok(None) if dir.allow_signup => {
-                    "Aucun compte local — une connexion réelle en créerait un.".into()
+                    "Aucun compte local - une connexion réelle en créerait un.".into()
                 }
                 Ok(None) => {
                     "Aucun compte local, et la création est désactivée sur cet annuaire : la connexion \

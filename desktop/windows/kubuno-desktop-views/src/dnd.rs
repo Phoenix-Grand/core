@@ -3,7 +3,7 @@
 //! The target side is routed by the view runtime: an element with `AllowDrop="true"` receives
 //! `DragEnter` → `DragOver`* → `DragDrop` or `DragLeave` ([`crate::events::DragEventArgs`]; its
 //! handler sets `effect` to accept), whether the data comes from this window, another Kubuno window,
-//! the Explorer (files) or any other application (text, registered formats) — OLE underneath.
+//! the Explorer (files) or any other application (text, registered formats) - OLE underneath.
 //!
 //! The source side is [`do_drag_drop`] (WinForms `Control.DoDragDrop`): the drag starts right after
 //! the current frame, and the returned [`DragOperation`] completes with the effect the target chose.

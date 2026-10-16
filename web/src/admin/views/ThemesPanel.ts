@@ -63,7 +63,7 @@ export class ThemesPanel extends ViewBase {
     useEffect(() => {
       if (this.selected) loadThemePreview(this.selected)
       return () => clearThemePreview()
-      // Reload when the previewed theme — or its trust state — changes.
+      // Reload when the previewed theme - or its trust state - changes.
     }, [this.selected?.id, this.selected?.scripts_enabled])
     const importMut = useMutation({
       mutationFn: (theme: ThemeDef) => api.post('/admin/themes', theme),

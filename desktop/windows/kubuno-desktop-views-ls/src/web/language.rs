@@ -135,7 +135,7 @@ pub fn diagnostics(doc: &Document, view: &WebView) -> Vec<Diagnostic> {
     })
 }
 
-/// Module isolation at the elements (`VIEWS-SPEC.md` "Module isolation", rule 1 — the compiler's own predicate).
+/// Module isolation at the elements (`VIEWS-SPEC.md` "Module isolation", rule 1 - the compiler's own predicate).
 fn isolation(registry: &WebRegistry, doc: &Document) -> Vec<Diagnostic> {
     let mut out = Vec::new();
     for el in elements(doc) {
@@ -517,7 +517,7 @@ fn attribute_items(registry: &WebRegistry, element: &Element) -> Vec<CompletionI
             label: p.name.clone(),
             kind: Some(CompletionItemKind::PROPERTY),
             detail: p.category.clone(),
-            documentation: Some(markdown(format!("{}\n\n*{kind}* — default `{}`{from}", doc_of(&p.doc, &p.doc_fr), p.default))),
+            documentation: Some(markdown(format!("{}\n\n*{kind}* - default `{}`{from}", doc_of(&p.doc, &p.doc_fr), p.default))),
             ..Default::default()
         });
     }
@@ -663,7 +663,7 @@ fn res_items(project: &WebProject, right_after_prefix: bool) -> Vec<CompletionIt
 
 /// The documentation of a plural key: each form with its translations.
 fn plural_markdown(base: &str, forms: &[&res::WebResource]) -> String {
-    let mut md = format!("**{base}** — plural, `{}`\n\n", forms.first().map(|f| f.set.as_str()).unwrap_or_default());
+    let mut md = format!("**{base}** - plural, `{}`\n\n", forms.first().map(|f| f.set.as_str()).unwrap_or_default());
     for f in forms {
         md.push_str(&format!("- `{}`: {}\n", f.key, f.value.replace('\n', " ")));
         for (lang, v) in &f.translations {
@@ -676,7 +676,7 @@ fn plural_markdown(base: &str, forms: &[&res::WebResource]) -> String {
 
 fn res_markdown(item: &res::WebResource) -> String {
     let file = item.file.file_name().map(|f| f.to_string_lossy().into_owned()).unwrap_or_default();
-    let mut md = format!("**{}** — `{}` ({file})\n\n{}\n\n", item.key, item.set, item.value.replace('\n', "  \n"));
+    let mut md = format!("**{}** - `{}` ({file})\n\n{}\n\n", item.key, item.set, item.value.replace('\n', "  \n"));
     for (lang, v) in &item.translations {
         md.push_str(&format!("- `{lang}`: {}\n", v.replace('\n', " ")));
     }
@@ -699,7 +699,7 @@ pub fn hover(doc: &Document, view: &WebView, pos: Position) -> Option<Hover> {
                     Origin::Project => format!("project control `{}` (`{}`)", meta.web.export.clone().unwrap_or_default(), meta.web.module.clone().unwrap_or_default()),
                     Origin::UserControl => format!("user control (`{}`)", meta.web.module.clone().unwrap_or_default()),
                 };
-                Some(format!("**{}** — {} · {source}\n\n{}", e.name, e.family, doc_of(&e.doc, &e.doc_fr)))
+                Some(format!("**{}** - {} · {source}\n\n{}", e.name, e.family, doc_of(&e.doc, &e.doc_fr)))
             }
             At::AttributeName(el, attr) => {
                 let meta = registry.get(&el.name()?)?;
@@ -707,7 +707,7 @@ pub fn hover(doc: &Document, view: &WebView, pos: Position) -> Option<Hover> {
                 if let Some(ev) = meta.entry.event(&name) {
                     let handle = handlers::handle_of(registry, &meta.entry.name);
                     return Some(format!(
-                        "**{}** — event ({})\n\n{}\n\n```ts\nhandler(sender: {handle}, e: {}): void | Promise<void>\n```",
+                        "**{}** - event ({})\n\n{}\n\n```ts\nhandler(sender: {handle}, e: {}): void | Promise<void>\n```",
                         ev.name,
                         ev.category,
                         doc_of(&ev.doc, &ev.doc_fr),
@@ -723,7 +723,7 @@ pub fn hover(doc: &Document, view: &WebView, pos: Position) -> Option<Hover> {
                     Some(t) => t.prop.clone().map(|pr| format!("React prop `{pr}`")).or_else(|| t.runtime.clone().map(|r| format!("runtime `{r}`"))).unwrap_or_default(),
                     None => "not available on the web".into(),
                 };
-                Some(format!("**{}** — {kind} (default `{}`)\n\n{}\n\n*{web}*", p.name, p.default, doc_of(&p.doc, &p.doc_fr)))
+                Some(format!("**{}** - {kind} (default `{}`)\n\n{}\n\n*{web}*", p.name, p.default, doc_of(&p.doc, &p.doc_fr)))
             }
             At::Value(el, attr, inside) => {
                 let name = attr.name()?;
@@ -733,7 +733,7 @@ pub fn hover(doc: &Document, view: &WebView, pos: Position) -> Option<Hover> {
                     let code = CodeBehind::load(view)?;
                     let class = code.class()?;
                     return Some(match class.member(&handler) {
-                        Some(m) => format!("```ts\n{}\n```\n\n`{}` — {}", m.signature(), class.name, code.path().file_name()?.to_string_lossy()),
+                        Some(m) => format!("```ts\n{}\n```\n\n`{}` - {}", m.signature(), class.name, code.path().file_name()?.to_string_lossy()),
                         None => format!("`{handler}`: no such method in `{}`", class.name),
                     });
                 }

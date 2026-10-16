@@ -7,7 +7,7 @@
 
 /// The color role of a `ThemedIconLayer` (the `Files.App.Controls`
 /// multi-layer system). `Base` takes the foreground; `Alt` takes the
-/// INVERSE color at 40% (the cutouts/notches — `ThemedIconAltColor`);
+/// INVERSE color at 40% (the cutouts/notches - `ThemedIconAltColor`);
 /// `Accent` takes the accent color; `AccentContrast` the color that
 /// contrasts with the accent (white on the blue badge, e.g.).
 #[derive(Clone, Copy, PartialEq, Eq)]

@@ -1,4 +1,4 @@
-<!-- AddDomainDialog — converted from AddDomainDialog.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- AddDomainDialog - converted from AddDomainDialog.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <Panel x:Props="AddDomainDialogProps" OnMouseDown="panel_mouse_down">
   <FloatingWindow ConfirmText="{Res admin.dom_add_and_verify}"
                   ConfirmEnabled="{Binding enabled_unless_add_is_pending_name}"

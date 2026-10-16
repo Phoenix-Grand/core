@@ -4,13 +4,13 @@
 //! (« do not re-implement what a base carries »), because it has **two** parallel
 //! inheritance chains, and each one is a base carrying almost everything:
 //!
-//! * **The control chain** — `ToolStrip` is a `Control` (via `ScrollableControl`),
+//! * **The control chain** - `ToolStrip` is a `Control` (via `ScrollableControl`),
 //!   and `MenuStrip`, `StatusStrip`, `ToolStripDropDown` → `ToolStripDropDownMenu`
 //!   → `ContextMenuStrip` are `ToolStrip`s that mostly just change four defaults
 //!   (`LayoutStyle`, `GripStyle`, `Dock`, `CanOverflow`/`Stretch`). It is mirrored
 //!   here with composition + `Deref`, exactly like `ButtonBase`.
 //!
-//! * **The item chain** — the things *inside* a strip are **not** `Control`s.
+//! * **The item chain** - the things *inside* a strip are **not** `Control`s.
 //!   `ToolStripItem` is a `Component`, so it never appears in the reflection
 //!   catalogue's control tree; its surface comes from the docs. `ToolStripItem`
 //!   declares the whole shared item surface (`Text`, `Image`, `DisplayStyle`,
@@ -23,14 +23,14 @@
 //! As with `layout::layout`, everything a test can check without a window is a
 //! free function: [`measure_item_content`] sizes one item from its
 //! `DisplayStyle`/`TextImageRelation`, and [`layout_items`] lays a measured list
-//! along the strip — honouring `Alignment`, the grip reserve, overflow into the
+//! along the strip - honouring `Alignment`, the grip reserve, overflow into the
 //! overflow button, and `StatusStrip`'s `Spring` sizing. The canvas-bound
 //! `preferred_size`/`paint` only supply the one thing a test cannot: the text
 //! width DirectWrite reports.
 //!
 //! ## What it paints with
 //!
-//! Every colour, metric and font below comes from [`crate::system`] — the
+//! Every colour, metric and font below comes from [`crate::system`] - the
 //! surface answers for them through [`ControlCanvas::visuals`]. Nothing here
 //! reads the Kubuno theme or the embedded face: the oracle for this family is
 //! the reference sheet painted by the real `System.Windows.Forms`, and a strip
@@ -38,7 +38,7 @@
 //! Concretely: the strip face is `Control` (`MenuBar` for a menu bar), item ink
 //! is `ControlText`/`MenuText`, a disabled item is `GrayText`, a selected one is
 //! `HighlightText` over `Highlight`, and the two decorations that are neither
-//! text nor face — the separator and the move handle — are the toolkit's
+//! text nor face - the separator and the move handle - are the toolkit's
 //! **two-tone** pair of `ControlDark` and `ControlLightLight`, drawn through
 //! [`ControlCanvas::draw_edge`] wherever the shape is a real 3-D edge.
 
@@ -77,7 +77,7 @@ pub enum ToolStripLayoutStyle {
     Table,
 }
 
-/// The two axes a stack can run along. Not a WinForms type — it is what
+/// The two axes a stack can run along. Not a WinForms type - it is what
 /// [`ToolStripLayoutStyle::resolve`] turns the orientation-dependent
 /// `StackWithOverflow` into, so [`layout_items`] never has to look at a dock.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -91,7 +91,7 @@ impl ToolStripLayoutStyle {
     /// from whether the strip is docked to a horizontal edge, mirroring how the
     /// toolkit derives `Orientation`. `Table` is treated as a single springing
     /// row (what a `StatusStrip` uses it for) and `Flow` as a vertical column
-    /// (what a drop-down menu uses it for) — the two uses this port needs; other
+    /// (what a drop-down menu uses it for) - the two uses this port needs; other
     /// grid/wrapping behaviours of `Table`/`Flow` are not yet honoured.
     pub fn resolve(self, horizontal_dock: bool) -> (StripAxis, bool) {
         match self {
@@ -229,7 +229,7 @@ impl ToolStripStatusLabelBorderSides {
 }
 
 impl Default for ToolStripStatusLabelBorderSides {
-    /// `ToolStripStatusLabelBorderSides.None` — the property's default.
+    /// `ToolStripStatusLabelBorderSides.None` - the property's default.
     fn default() -> Self {
         Self::NONE
     }
@@ -241,7 +241,7 @@ impl Default for ToolStripStatusLabelBorderSides {
 /// primitive's enum: this one is the property `ToolStripStatusLabel` declares,
 /// with the default the toolkit gives it (`Flat`, where the system enum defaults
 /// to `Raised`), and it is mapped onto the primitive at paint time. Every member
-/// is honoured — `Flat` comes out as the single `ControlDark` ring it is, and the
+/// is honoured - `Flat` comes out as the single `ControlDark` ring it is, and the
 /// bevels as the real two-tone `DrawEdge`.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum Border3DStyle {
@@ -287,7 +287,7 @@ pub enum ComboBoxStyle {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Keyboard shortcut — the payload of `ToolStripMenuItem.ShortcutKeys`
+// Keyboard shortcut - the payload of `ToolStripMenuItem.ShortcutKeys`
 // ─────────────────────────────────────────────────────────────────────────────
 
 /// A `ToolStripMenuItem` shortcut. WinForms stores a `Keys` value (a large flags
@@ -338,8 +338,8 @@ impl Shortcut {
 // ─────────────────────────────────────────────────────────────────────────────
 
 /// The gap between an image and text when an item shows both, and the internal
-/// padding a text item reserves on each side. Kept as DIP constants — the device
-/// context is already set to the window's DPI — because the toolkit's own values
+/// padding a text item reserves on each side. Kept as DIP constants - the device
+/// context is already set to the window's DPI - because the toolkit's own values
 /// are not exposed by reflection; they only affect spacing, never which member of
 /// an enum is honoured.
 pub const IMAGE_TEXT_GAP: f32 = 4.0;
@@ -347,7 +347,7 @@ pub const IMAGE_TEXT_GAP: f32 = 4.0;
 pub const TEXT_PADDING_H: f32 = 6.0;
 
 /// The content size of one item, given its already-measured `text` and `image`
-/// sizes — the pure core of `GetPreferredSize`. Honours `DisplayStyle` (which of
+/// sizes - the pure core of `GetPreferredSize`. Honours `DisplayStyle` (which of
 /// text/image show at all) and, when both show, `TextImageRelation` (side by side
 /// vs stacked vs overlaid). `Overlay` returns the larger of the two on each axis.
 ///
@@ -388,7 +388,7 @@ pub fn measure_item_content(
 /// The content width of a drop-down menu item: a left gutter for the check mark
 /// and image, the text, then a right column for the shortcut and the submenu
 /// arrow. Pure, so the « shortcut widens the item » rule is testable without a
-/// canvas — the caller passes the DirectWrite widths of the text and the
+/// canvas - the caller passes the DirectWrite widths of the text and the
 /// shortcut string.
 pub fn measure_menu_item(
     text_width: f32,
@@ -450,11 +450,11 @@ pub struct StripLayout {
 /// * the `grip` reserve at the leading edge,
 /// * `Alignment` (left items pack from the lead, right items from the trailing
 ///   end, both keeping collection order),
-/// * overflow — when `can_overflow` and the content is too long, trailing
+/// * overflow - when `can_overflow` and the content is too long, trailing
 ///   `AsNeeded` left-aligned items move into the overflow menu (reserving
 ///   `overflow_size` for its button); `Always` items always overflow and `Never`
 ///   items never do,
-/// * `spring` — when `spring_enabled`, the leftover main-axis space is shared
+/// * `spring` - when `spring_enabled`, the leftover main-axis space is shared
 ///   equally among the springing items, the indivisible remainder going one unit
 ///   at a time to the earliest of them (what a `StatusStrip` does).
 ///
@@ -597,10 +597,10 @@ pub fn layout_items(
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// The item hierarchy — `ToolStripItem` and its leaves
+// The item hierarchy - `ToolStripItem` and its leaves
 // ─────────────────────────────────────────────────────────────────────────────
 
-/// The surface `System.Windows.Forms.ToolStripItem` declares — every item's
+/// The surface `System.Windows.Forms.ToolStripItem` declares - every item's
 /// shared block, the counterpart of `ControlBase` for the (non-`Control`) item
 /// tree. Colours and font are ambient (`None` = take the owner's), exactly as on
 /// a control.
@@ -608,7 +608,7 @@ pub fn layout_items(
 pub struct ToolStripItem {
     pub name: String,
     pub text: String,
-    /// `Image` — the port has no image object, so an image is modelled by the key
+    /// `Image` - the port has no image object, so an image is modelled by the key
     /// the host would resolve it with; `None` means « no image ». Presence is
     /// what layout and paint need.
     pub image: Option<String>,
@@ -628,7 +628,7 @@ pub struct ToolStripItem {
     pub padding:   Padding,
 
     pub enabled:      bool,
-    /// `Visible`/`Available` — the item's own visibility (distinct from whether
+    /// `Visible`/`Available` - the item's own visibility (distinct from whether
     /// it currently fits, which is an overflow decision made at layout time).
     pub visible:      bool,
     pub auto_tooltip: bool,
@@ -686,7 +686,7 @@ impl ToolStripItem {
     }
 }
 
-/// `ToolStripButton` — a clickable, optionally-toggling item. Over its base it
+/// `ToolStripButton` - a clickable, optionally-toggling item. Over its base it
 /// declares only the check state (and overrides `AutoToolTip` to default `true`,
 /// applied in `Default`).
 #[derive(Debug, Clone)]
@@ -728,14 +728,14 @@ impl std::ops::DerefMut for ToolStripButton {
     }
 }
 
-/// `ToolStripLabel` — non-interactive text, optionally a hyperlink. Adds the link
+/// `ToolStripLabel` - non-interactive text, optionally a hyperlink. Adds the link
 /// properties. A link is drawn in `HotTrack`, the system's own hyperlink colour;
-/// `LinkVisited` and `LinkBehavior` are still not honoured — the canvas offers no
+/// `LinkVisited` and `LinkBehavior` are still not honoured - the canvas offers no
 /// underline, so the three underlining behaviours cannot be told apart, and the
 /// visited colour has no `SystemColors` counterpart to take.
 // Every field's WinForms default is its Rust default (`IsLink = false`,
 // `LinkVisited = false`, `LinkBehavior = SystemDefault`), so the derive states
-// that faithfully — a hand-written impl would only be a second place to drift.
+// that faithfully - a hand-written impl would only be a second place to drift.
 #[derive(Debug, Clone, Default)]
 pub struct ToolStripLabel {
     pub item:          ToolStripItem,
@@ -762,7 +762,7 @@ impl std::ops::DerefMut for ToolStripLabel {
     }
 }
 
-/// `ToolStripStatusLabel` — a `StatusStrip`'s label. Adds `Spring` (share the
+/// `ToolStripStatusLabel` - a `StatusStrip`'s label. Adds `Spring` (share the
 /// leftover width), a border-sides flag and a 3-D border style, and overrides the
 /// base `DefaultMargin` to `(0, 3, 0, 2)`.
 #[derive(Debug, Clone)]
@@ -804,7 +804,7 @@ impl std::ops::DerefMut for ToolStripStatusLabel {
     }
 }
 
-/// `ToolStripSeparator` — a divider. Declares no property of its own; its whole
+/// `ToolStripSeparator` - a divider. Declares no property of its own; its whole
 /// behaviour is a fixed thickness and a hairline.
 #[derive(Debug, Clone, Default)]
 pub struct ToolStripSeparator {
@@ -823,7 +823,7 @@ impl std::ops::DerefMut for ToolStripSeparator {
     }
 }
 
-/// `ToolStripDropDownItem` — the base of every item that opens a drop-down. It
+/// `ToolStripDropDownItem` - the base of every item that opens a drop-down. It
 /// declares `DropDownDirection` and owns the child items; `ToolStripMenuItem`
 /// builds on it. Modelled as a struct so the menu item can compose it, mirroring
 /// the .NET base/leaf split.
@@ -831,7 +831,7 @@ impl std::ops::DerefMut for ToolStripSeparator {
 pub struct ToolStripDropDownItem {
     pub item:                ToolStripItem,
     pub drop_down_direction: ToolStripDropDownDirection,
-    /// `DropDownItems` — the child menu; a leaf is included by boxing so the
+    /// `DropDownItems` - the child menu; a leaf is included by boxing so the
     /// (recursive) menu tree stays a plain owned value.
     pub drop_down_items:     Vec<StripItem>,
 }
@@ -848,7 +848,7 @@ impl std::ops::DerefMut for ToolStripDropDownItem {
     }
 }
 
-/// `ToolStripMenuItem` — a menu entry. Over `ToolStripDropDownItem` it declares
+/// `ToolStripMenuItem` - a menu entry. Over `ToolStripDropDownItem` it declares
 /// the shortcut trio and the check state.
 #[derive(Debug, Clone)]
 pub struct ToolStripMenuItem {
@@ -862,7 +862,7 @@ pub struct ToolStripMenuItem {
 }
 
 impl Default for ToolStripMenuItem {
-    /// `ShowShortcutKeys = true`, no shortcut, unchecked — the toolkit's defaults.
+    /// `ShowShortcutKeys = true`, no shortcut, unchecked - the toolkit's defaults.
     fn default() -> Self {
         Self {
             base: ToolStripDropDownItem::default(),
@@ -883,7 +883,7 @@ impl ToolStripMenuItem {
         m
     }
 
-    /// The shortcut text a menu draws on the right — the explicit
+    /// The shortcut text a menu draws on the right - the explicit
     /// `ShortcutKeyDisplayString` if set, otherwise the shortcut's own string,
     /// and nothing at all when `ShowShortcutKeys` is off or there is no shortcut.
     pub fn shortcut_text(&self) -> String {
@@ -916,7 +916,7 @@ impl std::ops::DerefMut for ToolStripMenuItem {
     }
 }
 
-/// `ToolStripControlHost` — the base that hosts a real control inside a strip.
+/// `ToolStripControlHost` - the base that hosts a real control inside a strip.
 /// Declares `ControlAlign` and overrides `DisplayStyle` to `None` (the hosted
 /// control is the content). The hosted control itself is out of scope for the
 /// item tree; the concrete hosts below model the properties they surface.
@@ -950,7 +950,7 @@ impl std::ops::DerefMut for ToolStripControlHost {
     }
 }
 
-/// `ToolStripComboBox` — a combo box hosted in a strip. Models the combo surface
+/// `ToolStripComboBox` - a combo box hosted in a strip. Models the combo surface
 /// it declares (`DropDownStyle`, `Items`, `SelectedIndex`, …); the full
 /// auto-complete and data-binding surface is not yet honoured.
 #[derive(Debug, Clone)]
@@ -979,7 +979,7 @@ impl Default for ToolStripComboBox {
 }
 
 impl ToolStripComboBox {
-    /// The text currently shown in the closed combo — the selected item, or the
+    /// The text currently shown in the closed combo - the selected item, or the
     /// host's own text when nothing is selected.
     pub fn display_text(&self) -> &str {
         if self.selected_index >= 0 && (self.selected_index as usize) < self.items.len() {
@@ -1002,7 +1002,7 @@ impl std::ops::DerefMut for ToolStripComboBox {
     }
 }
 
-/// `ToolStripTextBox` — a text box hosted in a strip. Models the edit surface it
+/// `ToolStripTextBox` - a text box hosted in a strip. Models the edit surface it
 /// declares; the full `TextBoxBase` surface stays with the `text` family.
 #[derive(Debug, Clone)]
 pub struct ToolStripTextBox {
@@ -1035,7 +1035,7 @@ impl std::ops::DerefMut for ToolStripTextBox {
     }
 }
 
-/// `ToolStripProgressBar` — a progress bar hosted in a strip. Its `Value` obeys
+/// `ToolStripProgressBar` - a progress bar hosted in a strip. Its `Value` obeys
 /// the same range trap as `ProgressBar`/`NumericUpDown`: it is clamped into
 /// `[Minimum, Maximum]`, so callers set the range before the value.
 #[derive(Debug, Clone)]
@@ -1051,7 +1051,7 @@ pub struct ToolStripProgressBar {
 }
 
 impl Default for ToolStripProgressBar {
-    /// `Minimum = 0`, `Maximum = 100`, `Value = 0`, `Step = 10` — as declared.
+    /// `Minimum = 0`, `Maximum = 100`, `Value = 0`, `Step = 10` - as declared.
     fn default() -> Self {
         Self {
             host: ToolStripControlHost::default(),
@@ -1102,7 +1102,7 @@ impl std::ops::DerefMut for ToolStripProgressBar {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// `StripItem` — one owned value for the heterogeneous item collection
+// `StripItem` - one owned value for the heterogeneous item collection
 // ─────────────────────────────────────────────────────────────────────────────
 
 /// A single entry in a strip's `Items` (or a menu's `DropDownItems`). WinForms
@@ -1121,14 +1121,14 @@ pub enum StripItem {
     ProgressBar(ToolStripProgressBar),
 }
 
-/// The default host width for a combo/text/progress item before auto-sizing —
+/// The default host width for a combo/text/progress item before auto-sizing -
 /// the toolkit's `DefaultSize.Width` for those hosts.
 const HOST_DEFAULT_WIDTH: f32 = 100.0;
 /// Fixed thickness of a separator across the strip's main axis.
 const SEPARATOR_THICKNESS: f32 = 6.0;
 
 impl StripItem {
-    /// The shared item block, whatever the kind — the one accessor every generic
+    /// The shared item block, whatever the kind - the one accessor every generic
     /// operation (visibility, alignment, tooltip) goes through.
     pub fn item(&self) -> &ToolStripItem {
         match self {
@@ -1153,7 +1153,7 @@ impl StripItem {
     ///
     /// Everything here is in DIP. The device context is already set to the
     /// window's DPI, so a DIP constant reaches the screen at the right physical
-    /// size on its own — multiplying by `Canvas::scale` would apply the factor a
+    /// size on its own - multiplying by `Canvas::scale` would apply the factor a
     /// second time and, because it inflates the measured widths, would change
     /// *behaviour*: oversized items stop fitting and fall into the overflow menu.
     fn measure(&self, m: &Measurer, image_side: f32, row_height: f32) -> StripItemInput {
@@ -1222,7 +1222,7 @@ impl StripItem {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// The control hierarchy — `ToolStrip` and its descendants
+// The control hierarchy - `ToolStrip` and its descendants
 // ─────────────────────────────────────────────────────────────────────────────
 
 /// The surface `System.Windows.Forms.ToolStrip` declares on top of a control,
@@ -1230,18 +1230,18 @@ impl StripItem {
 ///
 /// # Three declared properties that deliberately have no field here
 ///
-/// * **`AutoScroll`** — the toolkit re-declares it only to hide it from the
+/// * **`AutoScroll`** - the toolkit re-declares it only to hide it from the
 ///   designer: a strip *overflows*, it does not scroll. The state itself belongs
 ///   to the composed `ScrollableControl`/`ControlBase` base and is reached
 ///   through `Deref`, so restating it here would create a second copy that could
 ///   drift from the one the layout actually reads.
-/// * **`Controls`** — the `Control` collection, which is NOT the same thing as
+/// * **`Controls`** - the `Control` collection, which is NOT the same thing as
 ///   [`ToolStrip::items`]. A strip's children are `ToolStripItem`s (Components,
 ///   not Controls); a real control only ever enters a strip wrapped in a
 ///   [`ToolStripControlHost`], which is what puts it in `Controls`. Modelling a
 ///   second collection would invent a relationship the toolkit does not have, so
 ///   the hosted-control path is the one this port exposes.
-/// * **`ImageList`** — not modelled, because the port has no `ImageList` type at
+/// * **`ImageList`** - not modelled, because the port has no `ImageList` type at
 ///   all: images are carried per item as a key the host resolves
 ///   ([`ToolStripItem::image`]), and `ImageIndex`/`ImageKey` lookups have nothing
 ///   to resolve against. `TabControl` has the same gap for the same reason, and
@@ -1250,7 +1250,7 @@ impl StripItem {
 pub struct ToolStrip {
     control: ControlBase,
 
-    /// `AllowClickThrough` — whether a click that activates the owning form is
+    /// `AllowClickThrough` - whether a click that activates the owning form is
     /// also delivered to the item under the pointer, instead of being swallowed
     /// by the activation. **Not yet honoured**: the port has no focus or
     /// activation model, so nothing consumes it; it is kept as declared state so
@@ -1306,13 +1306,13 @@ impl ToolStrip {
         Self::default()
     }
 
-    /// Whether this strip is oriented horizontally, from its dock — what
+    /// Whether this strip is oriented horizontally, from its dock - what
     /// `StackWithOverflow` needs to pick an axis.
     fn horizontal(&self) -> bool {
         !matches!(self.control.dock, DockStyle::Left | DockStyle::Right)
     }
 
-    /// The main-axis space the move handle takes, in DIP — zero when hidden.
+    /// The main-axis space the move handle takes, in DIP - zero when hidden.
     fn grip_reserve(&self) -> f32 {
         if self.grip_style == ToolStripGripStyle::Visible {
             GRIP_WIDTH + self.grip_margin.horizontal()
@@ -1350,7 +1350,7 @@ impl ToolStrip {
         )
     }
 
-    /// `GetPreferredSize` from a surface that offers only a bare [`Canvas`] —
+    /// `GetPreferredSize` from a surface that offers only a bare [`Canvas`] -
     /// what [`Control::preferred_size`] receives. It reads the system UI font
     /// for itself (see [`system_ui_font`]) so an item is sized against the very
     /// face it will be painted in.
@@ -1360,7 +1360,7 @@ impl ToolStrip {
     }
 
     /// The content size the strip would like along the main axis, plus the row
-    /// height across it — `GetPreferredSize`, honouring `Padding`.
+    /// height across it - `GetPreferredSize`, honouring `Padding`.
     fn preferred(&self, m: &Measurer) -> Size {
         let inputs = self.measured_inputs(m);
         let pad = self.control.padding;
@@ -1376,14 +1376,14 @@ impl ToolStrip {
         }
     }
 
-    /// Paints the strip with one item drawn **selected** — `HighlightText` over
+    /// Paints the strip with one item drawn **selected** - `HighlightText` over
     /// `Highlight`, which is what the toolkit does to the item under the
     /// pointer.
     ///
     /// A `ToolStripItem` is a `Component`, not a `Control`: it cannot observe
     /// the mouse, and [`crate::ControlState`] says only that the *strip* is hot,
-    /// never which of its items is. So the host — which does know, because it
-    /// hit-tested the layout — names the item here. [`Control::paint`] paints
+    /// never which of its items is. So the host - which does know, because it
+    /// hit-tested the layout - names the item here. [`Control::paint`] paints
     /// with no hot item, which is what a resting strip looks like.
     pub fn paint_items(
         &self,
@@ -1443,12 +1443,12 @@ impl ToolStrip {
     }
 }
 
-/// `MenuStrip` — a horizontal menu bar. Over `ToolStrip` it hides the grip,
+/// `MenuStrip` - a horizontal menu bar. Over `ToolStrip` it hides the grip,
 /// turns off overflow, stretches, and turns off item tooltips.
 #[derive(Clone)]
 pub struct MenuStrip {
     pub base: ToolStrip,
-    /// `MdiWindowListItem` — the item MDI window entries append to. Modelled as an
+    /// `MdiWindowListItem` - the item MDI window entries append to. Modelled as an
     /// index into `Items`; MDI child tracking itself is not in scope.
     pub mdi_window_list_item: Option<usize>,
 }
@@ -1488,7 +1488,7 @@ impl std::ops::DerefMut for MenuStrip {
     }
 }
 
-/// `StatusStrip` — the bottom status bar. Over `ToolStrip` it docks to the
+/// `StatusStrip` - the bottom status bar. Over `ToolStrip` it docks to the
 /// bottom, hides the grip, uses `Table` layout (springing), disables overflow,
 /// and shows a sizing grip.
 #[derive(Clone)]
@@ -1528,7 +1528,7 @@ impl std::ops::DerefMut for StatusStrip {
     }
 }
 
-/// `ToolStripDropDown` — a free-floating strip (not docked, initially hidden).
+/// `ToolStripDropDown` - a free-floating strip (not docked, initially hidden).
 /// Over `ToolStrip` it declares auto-close, opacity and the drop shadow.
 #[derive(Clone)]
 pub struct ToolStripDropDown {
@@ -1560,7 +1560,7 @@ impl std::ops::DerefMut for ToolStripDropDown {
     }
 }
 
-/// `ToolStripDropDownMenu` — a drop-down laid out as a vertical `Flow` of menu
+/// `ToolStripDropDownMenu` - a drop-down laid out as a vertical `Flow` of menu
 /// items, with margins for a check column and an image column.
 #[derive(Clone)]
 pub struct ToolStripDropDownMenu {
@@ -1600,7 +1600,7 @@ impl std::ops::DerefMut for ToolStripDropDownMenu {
     }
 }
 
-/// `ContextMenuStrip` — a `ToolStripDropDownMenu` shown on right-click. Declares
+/// `ContextMenuStrip` - a `ToolStripDropDownMenu` shown on right-click. Declares
 /// no property of its own; it exists to be a distinct type the host raises.
 #[derive(Clone, Default)]
 pub struct ContextMenuStrip {
@@ -1739,7 +1739,7 @@ impl Control for ContextMenuStrip {
 // Every metric below is a plain DIP constant or a `SystemMetrics` field, used
 // as-is. The renderer calls `SetDpi` on the device context, so the Direct2D
 // coordinate space IS the DIP space: a rect at y = 10.0 lands at 10 DIP, which
-// is 17.5 physical pixels at 175 %, with no arithmetic here — and `SystemMetrics`
+// is 17.5 physical pixels at 175 %, with no arithmetic here - and `SystemMetrics`
 // is already converted to DIP on the way in. Multiplying by `Canvas::scale` would
 // apply the factor twice. `scale` is only ever right for picking a
 // *physical-pixel* thickness, where one divides by it, which is what a hairline
@@ -1755,7 +1755,7 @@ const OVERFLOW_WIDTH: f32 = 16.0;
 const GLYPH_HEIGHT: f32 = 15.0;
 /// The side of a chevron glyph drawn through `Canvas::vector_icon`.
 const CHEVRON_SIZE: f32 = 12.0;
-/// The side of a grip dot, in **physical pixels** — the toolkit's move handle
+/// The side of a grip dot, in **physical pixels** - the toolkit's move handle
 /// and sizing grip are both built from this one 2×2 square, drawn twice in two
 /// tones. See [`paint_grip_dot`] for why this one decoration is measured in
 /// pixels rather than DIP.
@@ -1775,7 +1775,7 @@ const GRIP_PITCH_PX: f32 = 4.0;
 pub enum StripKind {
     /// A tool bar: the `Control` face under `ControlText` ink.
     Tool,
-    /// A menu bar: the `MenuBar` face under `MenuText` ink — the toolkit reads
+    /// A menu bar: the `MenuBar` face under `MenuText` ink - the toolkit reads
     /// `COLOR_MENUBAR` here, which is a different colour from `COLOR_BTNFACE` on
     /// a machine that themes its menus.
     Menu,
@@ -1783,16 +1783,16 @@ pub enum StripKind {
     /// asks for one.
     Status,
     /// A floating drop-down: the menu palette, the raised frame a popup has, and
-    /// a left gutter of `margins` check-mark columns — the check margin and the
+    /// a left gutter of `margins` check-mark columns - the check margin and the
     /// image margin, each `SM_CXMENUCHECK` wide.
     DropDown { margins: u32 },
 }
 
 impl StripKind {
-    /// `(face, ink)` — the strip's background and its resting text colour.
+    /// `(face, ink)` - the strip's background and its resting text colour.
     fn palette(self, colors: &SystemColors) -> (D2D1_COLOR_F, D2D1_COLOR_F) {
         match self {
-            // `COLOR_MENU` — the drop-down's own background — is not among the
+            // `COLOR_MENU` - the drop-down's own background - is not among the
             // colours `SystemColors` reads, so a popup takes the menu BAR colour.
             // The two are the same grey on a default Windows 11; on a machine
             // where they differ, this is the seam.
@@ -1815,7 +1815,7 @@ impl StripKind {
 ///
 /// The strip's *face* is deliberately absent: an item paints no background of
 /// its own unless it is selected or carries a `BackColor`, so the band the strip
-/// already filled shows through — which is what makes a resting tool bar one
+/// already filled shows through - which is what makes a resting tool bar one
 /// flat surface rather than a row of cells.
 #[derive(Debug, Clone, Copy)]
 struct ItemPaint {
@@ -1823,7 +1823,7 @@ struct ItemPaint {
     ink:    D2D1_COLOR_F,
     axis:   StripAxis,
     gutter: f32,
-    /// `ToolStripItem.Selected` — the item under the pointer, which the toolkit
+    /// `ToolStripItem.Selected` - the item under the pointer, which the toolkit
     /// paints in `HighlightText` over `Highlight`.
     hot:    bool,
 }
@@ -1855,7 +1855,7 @@ impl Measurer<'_> {
 /// The system UI font, read for a surface that offers only a bare [`Canvas`].
 ///
 /// [`Control::preferred_size`] takes a `&dyn Canvas`, which cannot answer for
-/// the system's visuals — but measuring a strip in any other face would size
+/// the system's visuals - but measuring a strip in any other face would size
 /// every item against a font it is not painted in, and the items would then be
 /// laid out to the wrong widths (the very failure the DIP regression test
 /// pins, in a different disguise). So the font is read from the system here, at
@@ -1873,7 +1873,7 @@ fn system_ui_font(c: &dyn Canvas) -> Option<SystemFonts> {
 ///
 /// WinForms carries a real `Font` per item; the port carries a role, and the
 /// system publishes one family in three faces. The strong roles take the bold
-/// face and everything else the message font — so a control still never names a
+/// face and everything else the message font - so a control still never names a
 /// family or a size, and the family it does not name is the one the toolkit
 /// measured its own reference sheets with.
 fn font_for(fonts: &SystemFonts, role: Option<FontRole>) -> &IDWriteTextFormat {
@@ -1899,7 +1899,7 @@ fn inset_margin(r: Rect, m: Padding) -> Rect {
     )
 }
 
-/// `r` narrowed by `pad` on both sides, never inverted — the breathing room a
+/// `r` narrowed by `pad` on both sides, never inverted - the breathing room a
 /// left- or right-aligned label has inside its cell, and the same
 /// [`TEXT_PADDING_H`] the measurement reserved for it.
 fn inset_h(r: Rect, pad: f32) -> Rect {
@@ -1928,7 +1928,7 @@ fn edge_style(style: Border3DStyle) -> EdgeStyle {
 /// `ToolStripStatusLabelBorderSides` as `Border3DSide`. The two bit sets are the
 /// same four bits in the same order (`Left = 1`, `Top = 2`, `Right = 4`,
 /// `Bottom = 8`), but they are converted member by member rather than by casting
-/// the payload — a cast would keep compiling if either enum ever renumbered.
+/// the payload - a cast would keep compiling if either enum ever renumbered.
 fn edge_sides(sides: ToolStripStatusLabelBorderSides) -> Border3DSide {
     let mut out = 0u8;
     for (from, to) in [
@@ -1947,7 +1947,7 @@ fn edge_sides(sides: ToolStripStatusLabelBorderSides) -> Border3DSide {
 /// One handle dot: a 2×2 highlight square with a 2×2 shadow square one pixel up
 /// and to the left of it.
 ///
-/// That pair is the whole trick of the toolkit's grip — the dot reads as
+/// That pair is the whole trick of the toolkit's grip - the dot reads as
 /// engraved because it has a shaded side and a lit one, `ControlDark` above
 /// `ControlLightLight`. A single tinted square (which is what a themed palette
 /// invites) reads as a grey speck instead, at any size. The shadow goes down
@@ -1956,7 +1956,7 @@ fn edge_sides(sides: ToolStripStatusLabelBorderSides) -> Border3DSide {
 ///
 /// This is the one decoration in the file measured in **physical pixels**: the
 /// toolkit draws these dots into a pixel `Graphics` and they come out 2 px
-/// whatever the scale — a grip that grew with the DPI would be a fat dotted
+/// whatever the scale - a grip that grew with the DPI would be a fat dotted
 /// ribbon at 175 %, which is not what the reference shows. Dividing by
 /// `Canvas::scale` is the legitimate direction, the same one `draw_edge` uses
 /// for a hairline.
@@ -1982,7 +1982,7 @@ fn paint_grip(c: &dyn ControlCanvas, bounds: Rect, margin: Padding) {
     }
 }
 
-/// `ToolStripSeparator` — one **etched** line across the strip's cross axis.
+/// `ToolStripSeparator` - one **etched** line across the strip's cross axis.
 ///
 /// The toolkit draws it with `ControlPaint.DrawBorder3D(…, Border3DStyle.Etched,
 /// side)`, whose lit half is `ControlDark` with `ControlLightLight` one pixel
@@ -2006,7 +2006,7 @@ fn paint_separator(c: &dyn ControlCanvas, rect: Rect, p: ItemPaint) {
 }
 
 /// The face under an item: the selection when the pointer is on it, else its own
-/// `BackColor` when it has one, else nothing at all — the strip's face shows
+/// `BackColor` when it has one, else nothing at all - the strip's face shows
 /// through, which is what makes a resting tool bar one flat band.
 fn paint_item_face(c: &dyn ControlCanvas, rect: &Rect, item: &ToolStripItem, p: ItemPaint) {
     if p.hot && item.enabled {
@@ -2032,7 +2032,7 @@ fn item_ink(c: &dyn ControlCanvas, item: &ToolStripItem, p: ItemPaint) -> D2D1_C
 /// Draws `text` in `rect` under the item's `TextAlign`, in the system UI font.
 ///
 /// Only the horizontal half of `TextAlign` is honoured: every primitive here
-/// centres vertically, which is what an item does in a strip row — the toolkit's
+/// centres vertically, which is what an item does in a strip row - the toolkit's
 /// own `ToolStripItem` ignores the vertical half for the same reason unless the
 /// item is taller than its content.
 fn draw_text(c: &dyn ControlCanvas, rect: Rect, text: &str, item: &ToolStripItem, ink: D2D1_COLOR_F) {
@@ -2050,7 +2050,7 @@ fn draw_text(c: &dyn ControlCanvas, rect: Rect, text: &str, item: &ToolStripItem
     draw_aligned(c, r, text, item.font, ink, align);
 }
 
-/// Text in the system UI font at an explicit alignment — the one call every
+/// Text in the system UI font at an explicit alignment - the one call every
 /// helper above funnels into, so the font resolution happens in one place.
 fn draw_aligned(
     c: &dyn ControlCanvas,
@@ -2063,7 +2063,7 @@ fn draw_aligned(
     c.text_aligned(text, &rect, font_for(&c.visuals().fonts, role), &ink, align);
 }
 
-/// A pressed cell — what the toolkit paints under a **checked** button and a
+/// A pressed cell - what the toolkit paints under a **checked** button and a
 /// checked menu item: a single sunken ring over a face one shade darker than the
 /// strip's.
 ///
@@ -2113,7 +2113,7 @@ fn paint_status_label(c: &dyn ControlCanvas, rect: Rect, s: &ToolStripStatusLabe
 }
 
 /// A menu entry. On a menu **bar** it is centred text; in a drop-down it is the
-/// toolkit's three columns — the check/image gutter, the text, then the shortcut
+/// toolkit's three columns - the check/image gutter, the text, then the shortcut
 /// and the submenu arrow.
 fn paint_menu_item(c: &dyn ControlCanvas, rect: Rect, m: &ToolStripMenuItem, p: ItemPaint) {
     let item = &m.base.item;
@@ -2191,7 +2191,7 @@ fn paint_combo(c: &dyn ControlCanvas, rect: Rect, cb: &ToolStripComboBox) {
     c.vector_icon("ChevronDown", &gutter, CHEVRON_SIZE, &colors.control_text);
 }
 
-/// A hosted `TextBox`, framed by whatever `BorderStyle` it carries — `Fixed3D`
+/// A hosted `TextBox`, framed by whatever `BorderStyle` it carries - `Fixed3D`
 /// is the sunken well, `FixedSingle` the flat `WindowFrame` line, `None`
 /// nothing at all.
 fn paint_textbox(c: &dyn ControlCanvas, rect: Rect, t: &ToolStripTextBox) {
@@ -2213,7 +2213,7 @@ fn paint_textbox(c: &dyn ControlCanvas, rect: Rect, t: &ToolStripTextBox) {
 
 /// A hosted `ProgressBar`: a sunken well filled from the leading edge in
 /// `Highlight`, which is the colour a non-themed progress bar has always used.
-/// `Blocks` and `Marquee` are still drawn as one continuous fill — the segmented
+/// `Blocks` and `Marquee` are still drawn as one continuous fill - the segmented
 /// chunks and the animation both need state this family does not carry.
 fn paint_progress(c: &dyn ControlCanvas, rect: Rect, pb: &ToolStripProgressBar) {
     let colors = &c.visuals().colors;
@@ -2227,7 +2227,7 @@ fn paint_progress(c: &dyn ControlCanvas, rect: Rect, pb: &ToolStripProgressBar) 
     }
 }
 
-/// The overflow button — the same downward chevron the toolkit shows to mean
+/// The overflow button - the same downward chevron the toolkit shows to mean
 /// « the rest of the items are in here ».
 fn paint_overflow_button(c: &dyn ControlCanvas, rect: Rect, ink: &D2D1_COLOR_F) {
     c.vector_icon("ChevronDown", &rect, CHEVRON_SIZE, ink);
@@ -2236,7 +2236,7 @@ fn paint_overflow_button(c: &dyn ControlCanvas, rect: Rect, ink: &D2D1_COLOR_F) 
 /// The `StatusStrip` sizing grip: three short diagonal rows of two-tone dots in
 /// the bottom-right corner.
 ///
-/// Hand-drawn rather than a glyph — the icon set has no sizing-grip shape — but
+/// Hand-drawn rather than a glyph - the icon set has no sizing-grip shape - but
 /// out of the same shadow/highlight dot the move handle is made of, so the two
 /// grips are one decoration at two sizes instead of two inventions.
 fn paint_sizing_grip(c: &dyn ControlCanvas, bounds: Rect) {
@@ -2251,7 +2251,7 @@ fn paint_sizing_grip(c: &dyn ControlCanvas, bounds: Rect) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Tests — pure geometry and declared defaults, no window needed
+// Tests - pure geometry and declared defaults, no window needed
 // ─────────────────────────────────────────────────────────────────────────────
 
 #[cfg(test)]
@@ -2387,7 +2387,7 @@ mod tests {
     /// The regression that the demo caught at 175 %: the device context is
     /// already set to the window's DPI, so multiplying a metric by
     /// `Canvas::scale` applied the factor twice. It inflated the measured items
-    /// by 1.75× and pushed the last one into the overflow menu — a *behaviour*
+    /// by 1.75× and pushed the last one into the overflow menu - a *behaviour*
     /// change, not just a cosmetic one. These two metrics need no canvas at all,
     /// which is precisely the proof that no DPI arithmetic is left in them.
     #[test]
@@ -2404,7 +2404,7 @@ mod tests {
 
     /// The demo strip's real proportions: grip + « Enregistrer » + separator +
     /// « Étiquette » + combo + « Activé » inside its group box. At true DIP they
-    /// fit with room to spare, so nothing may overflow — the 1.75× inflation was
+    /// fit with room to spare, so nothing may overflow - the 1.75× inflation was
     /// the only reason « Activé » ever moved into the overflow button.
     #[test]
     fn the_demo_toolstrip_fits_without_overflowing_at_dip_sizes() {
@@ -2413,7 +2413,7 @@ mod tests {
         let out = layout_items(StripAxis::Horizontal, strip, 11.0, OVERFLOW_WIDTH, true, false, &items);
         assert_eq!(out.on_overflow, vec![false; 5], "every item fits at DIP sizes");
         assert!(out.overflow_button.is_none(), "so no overflow button is shown");
-        // The same content inflated by 1.75 no longer fits — the old bug.
+        // The same content inflated by 1.75 no longer fits - the old bug.
         let inflated: Vec<StripItemInput> = items.iter().map(|i| input(i.size.width * 1.75)).collect();
         let bad = layout_items(StripAxis::Horizontal, strip, 11.0 * 1.75, OVERFLOW_WIDTH, true, false, &inflated);
         assert!(bad.on_overflow.iter().any(|&o| o), "double-scaling forced an overflow");
@@ -2518,7 +2518,7 @@ mod tests {
     /// The whole point of carrying a [`StripKind`]: a menu bar is painted from
     /// the MENU colours and a tool bar from the CONTROL ones. Reading
     /// `COLOR_BTNFACE` for both compiles, and looks right on a machine where the
-    /// two happen to be the same grey — which is most of them, and is exactly
+    /// two happen to be the same grey - which is most of them, and is exactly
     /// why this is asserted rather than eyeballed.
     #[test]
     fn a_menu_bar_paints_from_the_menu_palette_and_a_tool_bar_from_the_control_one() {
@@ -2534,7 +2534,7 @@ mod tests {
         assert_eq!(StripKind::Tool.palette(&colors), (colors.control, colors.control_text));
         assert_eq!(StripKind::Status.palette(&colors), (colors.control, colors.control_text));
         assert_eq!(StripKind::Menu.palette(&colors), (colors.menu_bar, colors.menu_text));
-        // A popup is menu-coloured too — `COLOR_MENU` itself is not among the
+        // A popup is menu-coloured too - `COLOR_MENU` itself is not among the
         // colours `SystemColors` reads, so `MenuBar` stands in for it.
         assert_eq!(
             StripKind::DropDown { margins: 1 }.palette(&colors),
@@ -2542,7 +2542,7 @@ mod tests {
         );
     }
 
-    /// The drop-down gutter is `SM_CXMENUCHECK` per margin shown — never a
+    /// The drop-down gutter is `SM_CXMENUCHECK` per margin shown - never a
     /// hand-picked number, and never scaled.
     #[test]
     fn a_drop_down_reserves_one_check_column_per_margin() {
@@ -2573,7 +2573,7 @@ mod tests {
         assert_eq!(edge_style(Border3DStyle::Sunken), Edge::Sunken);
         assert_eq!(edge_style(Border3DStyle::Etched), Edge::Etched);
         assert_eq!(edge_style(Border3DStyle::RaisedOuter), Edge::RaisedOuter);
-        // The declared default is `Flat`, which is one `ControlDark` ring — the
+        // The declared default is `Flat`, which is one `ControlDark` ring - the
         // divider a status label shows, now drawn by `DrawEdge` like every other
         // border in the library.
         assert_eq!(edge_style(ToolStripStatusLabel::default().border_style), Edge::Flat);

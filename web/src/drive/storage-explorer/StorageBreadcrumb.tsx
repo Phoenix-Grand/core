@@ -5,7 +5,7 @@
  *
  * Depuis l'extraction de la primitive `Breadcrumb` de `@ui`, ce composant ne
  * dessine plus rien lui-même : il traduit un chemin de dossiers en segments et
- * ajoute le seul élément qui lui est propre — le saut vers un enfant. Le rendu,
+ * ajoute le seul élément qui lui est propre - le saut vers un enfant. Le rendu,
  * les chevrons, la troncature et l'accessibilité viennent du composant partagé,
  * si bien que la console d'administration et l'explorateur affichent exactement
  * le même fil. Reste la base thémable de la clé `drive.breadcrumb`.

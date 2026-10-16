@@ -1,4 +1,4 @@
-# Kubuno mobile — iOS
+# Kubuno mobile - iOS
 
 Reserved for what iOS does differently in the shared mobile libraries: the Keychain session store, the Darwin HTTP
 engine, the native viewers (AVKit, PDFKit), the push registration.

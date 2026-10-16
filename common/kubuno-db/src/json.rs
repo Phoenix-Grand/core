@@ -11,7 +11,7 @@
 //! **wrong** here: on PostgreSQL `Vec<String>` means the array type `TEXT[]`, not
 //! a JSON array, and on SQLite the column is `TEXT` that must be parsed. sqlx's
 //! own answer is the `#[sqlx(json)]` field attribute, which decodes the column
-//! through [`sqlx::types::Json`] — portable across all three drivers:
+//! through [`sqlx::types::Json`] - portable across all three drivers:
 //!
 //! ```ignore
 //! #[derive(sqlx::FromRow)]
@@ -23,7 +23,7 @@
 //!
 //! That covers the *derive* path. It does **not** cover the hand-mapped path,
 //! [`crate::DbRow::try_get`], which needs a type that is `Decode + Type` on all
-//! three engines — and `Vec<String>` is not (it is the array type on Postgres).
+//! three engines - and `Vec<String>` is not (it is the array type on Postgres).
 //! [`JsonVec`] is that type: usable both as a `FromRow` field
 //! (`tags: JsonVec<String>`) and as `row.try_get::<JsonVec<String>>("tags")`.
 //!
@@ -168,7 +168,7 @@ mod exec_tests {
     }
 
     /// The same row read with the sqlx-native `#[sqlx(json)]` attribute instead
-    /// of the `JsonVec` wrapper — the derive path modules will most often use.
+    /// of the `JsonVec` wrapper - the derive path modules will most often use.
     #[derive(Debug, sqlx::FromRow, PartialEq)]
     struct TaggedPlain {
         id: i64,
@@ -192,7 +192,7 @@ mod exec_tests {
         let uuid_a = Uuid::from_u128(0x1111_1111_1111_1111_1111_1111_1111_1111);
         let uuid_b = Uuid::from_u128(0x2222_2222_2222_2222_2222_2222_2222_2222);
 
-        // Row 1: two tags, two ids — bound as Vec<String> / Vec<Uuid>, which the
+        // Row 1: two tags, two ids - bound as Vec<String> / Vec<Uuid>, which the
         // `From` impls turn into JSON arrays via DbValue::Json.
         pool.execute(
             &format!("INSERT INTO {table} (id, tags, ids) VALUES ($1, $2, $3)"),
@@ -201,7 +201,7 @@ mod exec_tests {
         .await
         .expect("insert row 1");
 
-        // Row 2: one tag, an empty id list — the empty array must round-trip too.
+        // Row 2: one tag, an empty id list - the empty array must round-trip too.
         pool.execute(
             &format!("INSERT INTO {table} (id, tags, ids) VALUES ($1, $2, $3)"),
             crate::params![2i64, vec!["blue".to_string()], Vec::<Uuid>::new()],
@@ -289,7 +289,7 @@ mod exec_tests {
     #[tokio::test]
     async fn json_array_roundtrip_on_mysql_when_configured() {
         let Ok(url) = std::env::var("KUBUNO_QB_MYSQL_URL") else {
-            eprintln!("KUBUNO_QB_MYSQL_URL unset — skipping the MySQL/MariaDB round-trip");
+            eprintln!("KUBUNO_QB_MYSQL_URL unset - skipping the MySQL/MariaDB round-trip");
             return;
         };
         let settings = DbSettings {

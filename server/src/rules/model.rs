@@ -21,7 +21,7 @@ use super::condition::Condition;
 /// | `enforce`  | yes       | yes  | **yes** | yes, real      |
 /// | `backtest` | yes       | yes  | no   | no                |
 ///
-/// `Backtest` is not a state a rule sits in — it is the mode an execution row
+/// `Backtest` is not a state a rule sits in - it is the mode an execution row
 /// carries when it came from a retrospective replay. Keeping it in the same
 /// enum is what stops the replay path from quietly growing a second evaluator.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -100,7 +100,7 @@ impl Mode {
     /// Does this mode persist non-matches?
     ///
     /// Simulation only. In `enforce`, every event of the trigger's type would
-    /// write a row saying "nothing happened" — a table nobody can keep and
+    /// write a row saying "nothing happened" - a table nobody can keep and
     /// nobody reads.
     pub const fn logs_non_matches(self) -> bool {
         matches!(self, Mode::Simulate)
@@ -171,7 +171,7 @@ fn default_true() -> bool {
 
 /// Who a rule applies to.
 ///
-/// An empty `include` means the whole instance. `exclude` always wins — the
+/// An empty `include` means the whole instance. `exclude` always wins - the
 /// exception an operator writes ("everyone in Support except the on-call
 /// account") must never be overridable by a broader inclusion added later.
 #[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]

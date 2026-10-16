@@ -1,7 +1,7 @@
 //! Module registry HTTP surface, split by responsibility:
-//! - `assets`          — frontend asset serving (entry alias, logos, static)
-//! - `settings_schema` — declared settings groups/fields, validation, read-back
-//! - `registration`    — register/heartbeat/unregister lifecycle + guards
+//! - `assets`          - frontend asset serving (entry alias, logos, static)
+//! - `settings_schema` - declared settings groups/fields, validation, read-back
+//! - `registration`    - register/heartbeat/unregister lifecycle + guards
 //!
 //! This file keeps the module listing, the icon helpers, event/log endpoints,
 //! and the tests, and re-exports the sub-modules so callers keep using
@@ -37,12 +37,12 @@ pub use settings_schema::*;
 /// Stays **public on purpose**: the frontend loads module bundles before any
 /// sign-in, because a module can serve anonymous routes (a form respondent
 /// answering by link needs `forms`' bundle imported before the first render).
-/// Requiring a token here would break that, so the fix is not authentication —
+/// Requiring a token here would break that, so the fix is not authentication -
 /// it is not leaking.
 ///
 /// What used to leak: `base_url`, the module's **internal listening address**
 /// (`http://127.0.0.1:3108`). Served to the whole internet, that is a free map
-/// of the deployment's internal surface — ports, count of running modules, and
+/// of the deployment's internal surface - ports, count of running modules, and
 /// which of them are behind the reverse proxy. It is now emitted only to a
 /// caller holding `core.modules.read`; everyone else gets the discovery fields
 /// and nothing more.
@@ -68,7 +68,7 @@ pub async fn list_modules(
                 .join("entry.js");
             // Cache-busting du point d'entrée UI du module : le hash du CONTENU
             // est mis DANS le nom (`entry-<hash>.js`), comme les chunks partagés
-            // du core (`/shared/kubuno-shared-<hash>.js`) — pas de `?v=`. Sur
+            // du core (`/shared/kubuno-shared-<hash>.js`) - pas de `?v=`. Sur
             // disque le fichier reste `entry.js` (le module l'émet à nom fixe,
             // sans connaître de hash) : `serve_module_asset` réécrit l'alias
             // hashé vers le vrai fichier. URL content-addressed → servie
@@ -201,7 +201,7 @@ mod tests {
     }
 
     /// A manifest written before the presentation fields existed must still
-    /// deserialise — that is the whole compatibility promise.
+    /// deserialise - that is the whole compatibility promise.
     #[test]
     fn legacy_manifest_deserialises_with_defaults() {
         let raw = serde_json::json!({
@@ -228,7 +228,7 @@ mod tests {
         }
     }
 
-    /// Every module but `mail` declares no group at all — that has to keep
+    /// Every module but `mail` declares no group at all - that has to keep
     /// registering exactly as before.
     #[test]
     fn a_manifest_without_groups_is_valid() {
@@ -314,7 +314,7 @@ mod tests {
     }
 
     /// The manifest shape the modules actually send, and the shape the console
-    /// reads back — both go through serde, so both are pinned here.
+    /// reads back - both go through serde, so both are pinned here.
     #[test]
     fn group_round_trips_through_json() {
         let raw = serde_json::json!({

@@ -1,13 +1,13 @@
 //! The in-process event bus, and the two defects of `publish_and_log` that made
 //! `core.event_log` unusable for anything but eyeballing.
 //!
-//! ## Defect 1 — `source_module` was never written
+//! ## Defect 1 - `source_module` was never written
 //!
 //! The column has existed since migration `000003`. The insert never bound it,
 //! so every row on every instance carried `NULL`. "Which module emitted this"
 //! was unanswerable from the table that exists to answer it.
 //!
-//! ## Defect 2 — the stored type was the name of an internal enum variant
+//! ## Defect 2 - the stored type was the name of an internal enum variant
 //!
 //! Modules publish through [`AppEvent::Custom`], whose `event_type` field
 //! carries the real type (`office.document_shared`). The logger stored the
@@ -22,7 +22,7 @@
 //! ## The envelope
 //!
 //! Subscribers receive an [`EventEnvelope`]: the event plus the metadata the
-//! event itself cannot carry — where it came from, and **how deep in a chain of
+//! event itself cannot carry - where it came from, and **how deep in a chain of
 //! rule actions it is**. A rule action that changes a setting emits an event
 //! that is itself a trigger; without a counter travelling alongside, the loop is
 //! invisible until it has run a few thousand times. See
@@ -55,7 +55,7 @@ pub struct EventMeta {
     /// The bus has always been a broadcast to every connected client, which is
     /// fine for "a file was uploaded" and catastrophic for "an administrator's
     /// sign-in was refused". Facts that exist so the **server** can react to
-    /// them — the audit bridge in [`crate::audit`] — carry this flag, and the
+    /// them - the audit bridge in [`crate::audit`] - carry this flag, and the
     /// WebSocket and push workers drop them before they leave the process.
     #[serde(default)]
     pub internal: bool,
@@ -140,7 +140,7 @@ impl EventBus {
 ///
 /// Split out of [`EventBus::publish_and_log_with`] because the audit bridge
 /// ([`crate::audit`]) has a pool but no bus, and an event that reaches the
-/// engine without reaching the log cannot be replayed by a backtest — the two
+/// engine without reaching the log cannot be replayed by a backtest - the two
 /// must not drift apart.
 ///
 /// Best-effort: an unavailable database must not silence the bus, which several
@@ -217,7 +217,7 @@ pub fn variant_name(event: &AppEvent) -> &'static str {
 /// Which module emitted the event.
 ///
 /// Prefers the explicit metadata, then the `module_id` the payload already
-/// carries for most variants, and falls back to `None` — the core.
+/// carries for most variants, and falls back to `None` - the core.
 fn source_module_of(event: &AppEvent, meta: &EventMeta) -> Option<String> {
     if let Some(m) = &meta.source_module {
         return Some(m.clone());

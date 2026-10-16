@@ -6,13 +6,13 @@
 //! A pattern is written by an administrator. It is executed against text written
 //! by users, on a request path a module is waiting on. Those two facts together
 //! are the classic regular-expression denial of service: somebody with console
-//! access — or somebody who talked an operator into pasting a pattern — makes
+//! access - or somebody who talked an operator into pasting a pattern - makes
 //! every message sent on the instance cost a second of CPU.
 //!
 //! ## Four bounds, three of them independent
 //!
 //! 1. **The engine cannot backtrack.** Rust's `regex` is a finite automaton with
-//!    linear-time matching guarantees. `(a+)+$` — the textbook catastrophe — is
+//!    linear-time matching guarantees. `(a+)+$` - the textbook catastrophe - is
 //!    linear here. This is a structural answer rather than a mitigation, and it
 //!    is why no amount of pattern review would have been a substitute: reviewing
 //!    is a process, and processes are what fail at 3am. The cost is that
@@ -39,7 +39,7 @@
 //! ## Why chunks overlap
 //!
 //! A match straddling a chunk boundary would be missed, which is a detector
-//! silently failing — the worst failure mode a data-protection control has.
+//! silently failing - the worst failure mode a data-protection control has.
 //! Chunks therefore overlap by [`CHUNK_OVERLAP`] and matches are de-duplicated
 //! by their absolute offset. A match longer than the overlap can still be cut;
 //! the overlap is sized well past the longest identifier any seeded detector
@@ -70,7 +70,7 @@ pub const MAX_PATTERN_LEN: usize = 2_000;
 pub const MAX_COMPILED_BYTES: usize = 256 * 1024;
 
 /// Ceiling on the lazy DFA cache, in bytes. Exceeding it does not fail the
-/// match — the engine falls back to a slower strategy — so this bounds memory
+/// match - the engine falls back to a slower strategy - so this bounds memory
 /// rather than correctness.
 pub const MAX_DFA_BYTES: usize = 1024 * 1024;
 
@@ -201,7 +201,7 @@ pub fn compile(source: &str) -> Result<Regex, AppError> {
     build_regex(source, false)
 }
 
-/// Same, case-insensitively — for word lists and proximity keywords, which are
+/// Same, case-insensitively - for word lists and proximity keywords, which are
 /// words rather than shapes.
 pub fn compile_ci(source: &str) -> Result<Regex, AppError> {
     build_regex(source, true)
@@ -253,7 +253,7 @@ fn wordlist_pattern(terms: &[String]) -> Result<String, AppError> {
     // The boundary is applied **per term and per side**, and only where the term
     // actually ends in a word character. A blanket `\b(?:…)\b` around the whole
     // alternation looks tidier and is wrong: a term like `c++` ends on a symbol,
-    // where a trailing `\b` demands a word character next — so the one term an
+    // where a trailing `\b` demands a word character next - so the one term an
     // administrator most expects to be tricky is the one that silently never
     // matches. Getting this wrong is a detector that reports nothing, which is
     // the failure mode this feature can least afford.
@@ -296,7 +296,7 @@ pub struct Hit {
     ///
     /// A hash rather than the value: distinctness is the only question asked of
     /// it, a hash answers that question exactly, and it means no inspected value
-    /// exists anywhere in the engine's own state — not even in memory beyond the
+    /// exists anywhere in the engine's own state - not even in memory beyond the
     /// scan itself.
     pub fingerprint: u64,
 }
@@ -460,7 +460,7 @@ fn judge(
 
 /// A stable, non-reversible identity for "the same value seen twice".
 ///
-/// Normalised first — case folded, separators removed — so `FR76 3000 6…` and
+/// Normalised first - case folded, separators removed - so `FR76 3000 6…` and
 /// `fr7630006…` are one value rather than two. That normalisation is what makes
 /// the distinct-value threshold resistant to the obvious evasion of retyping the
 /// same number with different spacing.
@@ -479,7 +479,7 @@ fn fingerprint(value: &str) -> u64 {
 /// Largest index at or below `index` that lands on a character boundary.
 ///
 /// `str::floor_char_boundary` is unstable, and slicing a `&str` at a byte that
-/// is not one panics — inside a scan of user content, which is the one place a
+/// is not one panics - inside a scan of user content, which is the one place a
 /// panic must not be possible.
 fn floor_boundary(text: &str, index: usize) -> usize {
     let mut i = index.min(text.len());

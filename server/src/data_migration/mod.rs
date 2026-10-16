@@ -4,7 +4,7 @@
 //!
 //! The rule this whole feature is shaped by: the core writes the `core` schema
 //! and nothing else. A mailbox lives in the `mail` schema, an address book in
-//! `contacts` — so the core cannot copy a single message, and pretending
+//! `contacts` - so the core cannot copy a single message, and pretending
 //! otherwise would mean a second writer on tables it does not own.
 //!
 //! What it *can* own is the plan and the ledger: which service, which source
@@ -17,15 +17,15 @@
 //!
 //! Two internal routes, presented with `X-Internal-Secret`:
 //!
-//! * `POST /internal/migration/probe` — open a session on the source and answer
+//! * `POST /internal/migration/probe` - open a session on the source and answer
 //!   with the folders it holds. Used to compose the campaign, never during it.
-//! * `POST /internal/migration/run` — copy for at most `budget_secs`, then stop
+//! * `POST /internal/migration/run` - copy for at most `budget_secs`, then stop
 //!   and hand back an **opaque cursor**. The core stores that cursor and passes
 //!   it to the next chunk.
 //!
 //! The cursor is what makes this work without the core understanding anything
 //! about the service. Folder names, IMAP UIDs, special-use flags, modified
-//! UTF-7 — all of it stays inside the module that knows what they mean. The
+//! UTF-7 - all of it stays inside the module that knows what they mean. The
 //! core reads exactly three fields of the answer: how many items were copied,
 //! how many there are in total, and whether it is finished.
 //!

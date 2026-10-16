@@ -1,4 +1,4 @@
-//! # `kubuno-web-views-compiler-core` — the web target's `.kbview` compiler
+//! # `kubuno-web-views-compiler-core` - the web target's `.kbview` compiler
 //!
 //! Lot WV-2 of `vskubuno/docs/WEB-VIEWS.md`. Given a view's text and the web element registry (the host's
 //! `kbview-registry.web.json` from `@kubuno/ui`, the project's own control registries and its `.kbcontrol`
@@ -6,7 +6,7 @@
 //!
 //! - parses with the shared grammar (`kubuno-desktop-views-syntax`: the desktop's own lossless parser) and validates
 //!   against the registry (elements, properties, events, values, children models, `x:Name`, handlers,
-//!   bindings, module isolation) — [`compile`];
+//!   bindings, module isolation) - [`compile`];
 //! - produces the **render plan** (`plan`) that the `@kubuno/views` runtime renders, as data;
 //! - produces the generated declarations of the view (`X.kbview.d.ts`: `plan`, the abstract `ViewBase` with a
 //!   typed handle per `x:Name` and an abstract method per handler) and its **check file** (`X.kbview.check.ts`:

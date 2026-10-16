@@ -1,20 +1,20 @@
-//! `Label` → `LinkLabel`; `PictureBox`; `ProgressBar` — the display family.
+//! `Label` → `LinkLabel`; `PictureBox`; `ProgressBar` - the display family.
 //!
 //! ## What ties these three together
 //!
-//! None of them is interactive in the way a button is: they *show* something —
-//! text, a bitmap, a fraction — and the toolkit measures and paints them from a
+//! None of them is interactive in the way a button is: they *show* something -
+//! text, a bitmap, a fraction - and the toolkit measures and paints them from a
 //! handful of properties. They live in one module because the reference sheet
 //! (`05-labels.png`) groups them, and because they share the same discipline:
 //! all geometry is a pure function that a test can check without a window, and
 //! every pixel is drawn through [`ControlCanvas`] in the **system's** own
-//! colours and UI font — never the Kubuno palette or the embedded face, which
+//! colours and UI font - never the Kubuno palette or the embedded face, which
 //! would answer a different question than the one the sheet asks.
 //!
 //! ## The chain, mirrored with composition
 //!
 //! `Label` declares its own block on top of `ControlBase`; `LinkLabel` *is* a
-//! `Label` plus a link model, so it composes `Label` and derefs to it — it never
+//! `Label` plus a link model, so it composes `Label` and derefs to it - it never
 //! restates `AutoSize`, `TextAlign`, `Text`… which are already there.
 //! `PictureBox` and `ProgressBar` each sit directly on `ControlBase`.
 //!
@@ -29,8 +29,8 @@
 //!
 //! * **Text height.** [`Canvas`] measures text *width* only ([`Canvas::measure`]).
 //!   WinForms' `GetPreferredSize` needs the line height too, so it is derived
-//!   from the **real** UI font — [`SystemFonts::size_dip`], read from
-//!   `lfMessageFont` — times the face's own design line spacing
+//!   from the **real** UI font - [`SystemFonts::size_dip`], read from
+//!   `lfMessageFont` - times the face's own design line spacing
 //!   ([`UI_LINE_SPACING`]). That is no longer an invented number: at the
 //!   reference sheet's scale it reproduces the toolkit's `Font.Height` exactly
 //!   (see the constant). The *arithmetic that adds padding and the border* is a
@@ -62,7 +62,7 @@ use crate::{Canvas, Rect};
 /// An sRGB byte triple as a Direct2D colour. Opaque, like every system colour.
 ///
 /// Used ONLY for the handful of values below, each of which is a colour the
-/// toolkit paints that `GetSysColor` cannot answer for — never as a shortcut
+/// toolkit paints that `GetSysColor` cannot answer for - never as a shortcut
 /// around [`SystemColors`].
 const fn rgb(r: u8, g: u8, b: u8) -> D2D1_COLOR_F {
     D2D1_COLOR_F {
@@ -73,32 +73,32 @@ const fn rgb(r: u8, g: u8, b: u8) -> D2D1_COLOR_F {
     }
 }
 
-/// `LinkLabel.LinkColor`'s shipped default — **pure blue**.
+/// `LinkLabel.LinkColor`'s shipped default - **pure blue**.
 ///
 /// TRAP: this is *not* `SystemColors.HotTrack`. `LinkLabel` resolves its three
 /// link colours through `LinkUtilities`, which reads Internet Explorer's
-/// « Anchor Color » settings and falls back to IE's own shipped defaults — blue,
+/// « Anchor Color » settings and falls back to IE's own shipped defaults - blue,
 /// purple, red. `COLOR_HOTLIGHT` reads `#0066CC` on a default Windows 11, while
 /// the reference sheet's links are `#0000FF` (sampled at 376,128 in
 /// `05-labels.png`): the two are visibly different blues, and only this one
 /// matches the toolkit.
 ///
-/// The registry value itself is not read — a control does no I/O (see the crate
-/// rules) — so the port resolves to IE's shipped default, exactly as
+/// The registry value itself is not read - a control does no I/O (see the crate
+/// rules) - so the port resolves to IE's shipped default, exactly as
 /// [`LinkBehavior::underlined`] resolves `SystemDefault` without reading
 /// *Underline links*.
 const IE_LINK_COLOR: D2D1_COLOR_F = rgb(0, 0, 255);
 
-/// `VisitedLinkColor`'s shipped default — IE's purple, `#800080`. Sampled at
+/// `VisitedLinkColor`'s shipped default - IE's purple, `#800080`. Sampled at
 /// (382,198) in the reference sheet; no `COLOR_*` index carries it.
 const IE_VISITED_LINK_COLOR: D2D1_COLOR_F = rgb(128, 0, 128);
 
-/// `ActiveLinkColor`'s shipped default — IE's red, `#FF0000`. The sheet has
+/// `ActiveLinkColor`'s shipped default - IE's red, `#FF0000`. The sheet has
 /// nothing mid-click to confirm it, so it comes from the toolkit itself:
 /// `new LinkLabel().ActiveLinkColor` answers `#FF0000` on this machine.
 const IE_ACTIVE_LINK_COLOR: D2D1_COLOR_F = rgb(255, 0, 0);
 
-/// `DisabledLinkColor`'s shipped default — `#858585`, which is
+/// `DisabledLinkColor`'s shipped default - `#858585`, which is
 /// `ControlPaint.Dark(SystemColors.Control)`, again read back from a real
 /// `LinkLabel`.
 ///
@@ -108,18 +108,18 @@ const IE_ACTIVE_LINK_COLOR: D2D1_COLOR_F = rgb(255, 0, 0);
 /// the other.
 const DISABLED_LINK_COLOR: D2D1_COLOR_F = rgb(0x85, 0x85, 0x85);
 
-/// The themed progress-bar frame, `#BCBCBC` — sampled at (1100,114) in
+/// The themed progress-bar frame, `#BCBCBC` - sampled at (1100,114) in
 /// `05-labels.png`. No `COLOR_*` index carries it: it belongs to the visual
 /// style's `PP_BAR` part, which Windows publishes through UxTheme rather than
 /// through `GetSysColor`.
 const BAR_FRAME: D2D1_COLOR_F = rgb(0xBC, 0xBC, 0xBC);
 
-/// The progress-bar well, `#E6E6E6` — sampled at (1100,125). Close to
+/// The progress-bar well, `#E6E6E6` - sampled at (1100,125). Close to
 /// `COLOR_3DLIGHT` (`#E3E3E3` here) but not equal to it, which is exactly why
 /// it is not taken from [`SystemColors`].
 const BAR_TROUGH: D2D1_COLOR_F = rgb(0xE6, 0xE6, 0xE6);
 
-/// The progress-bar fill, `#0F7B0F` — sampled at (1009,125), the green the
+/// The progress-bar fill, `#0F7B0F` - sampled at (1009,125), the green the
 /// reference sheet's `PP_CHUNK` is painted in. It is a theme colour, not a
 /// system colour and not an accent: no `SystemColors` entry is green.
 const BAR_FILL: D2D1_COLOR_F = rgb(0x0F, 0x7B, 0x0F);
@@ -134,12 +134,12 @@ const BAR_FILL: D2D1_COLOR_F = rgb(0x0F, 0x7B, 0x0F);
 /// This is the ratio GDI+ turns into `Font.Height`, and the port ceils it the
 /// same way. Cross-checked against the reference sheet, which was captured at
 /// 175 % (a 21 px em): `ceil(21 × 1.33008) = 28`, and the `Fixed3D` label there
-/// measures **32 px** tall — 28 for the line plus the 2 px the border reserves
+/// measures **32 px** tall - 28 for the line plus the 2 px the border reserves
 /// on each side, which is exactly what [`label_preferred`] computes. At 96 DPI
 /// the same arithmetic gives 16 DIP.
 const UI_LINE_SPACING: f32 = 2724.0 / 2048.0;
 
-/// The default `lfMessageFont` size in DIP — Segoe UI 9 pt. Used only when the
+/// The default `lfMessageFont` size in DIP - Segoe UI 9 pt. Used only when the
 /// font cannot be read from Windows at all, so that a failed read degrades to
 /// the documented default instead of a zero-height line.
 const DEFAULT_UI_SIZE_DIP: f32 = 12.0;
@@ -153,7 +153,7 @@ fn line_height(size_dip: f32) -> f32 {
 /// Resolves a [`FontRole`] against the **system** UI font.
 ///
 /// Windows publishes one UI font (`lfMessageFont`) and the toolkit paints every
-/// one of these controls with it, so the roles cannot change the *size* — only
+/// one of these controls with it, so the roles cannot change the *size* - only
 /// the weight, which is a real distinction the system font set carries. A role
 /// that asks for a bigger face therefore comes out at the message size in bold;
 /// that is a deliberate collapse, not an oversight, and it keeps a control from
@@ -170,15 +170,15 @@ fn font_format(fonts: &SystemFonts, role: FontRole) -> &IDWriteTextFormat {
 thread_local! {
     /// The system UI font, cached per DPI for the *measuring* path.
     ///
-    /// `preferred_size` and `link_at_point` receive a bare [`Canvas`], which —
-    /// unlike the [`ControlCanvas`] `paint` receives — cannot answer for the
+    /// `preferred_size` and `link_at_point` receive a bare [`Canvas`], which -
+    /// unlike the [`ControlCanvas`] `paint` receives - cannot answer for the
     /// system's visuals, and their signatures are fixed by the `Control` trait.
     /// They must still measure with the toolkit's font: measuring with the
     /// embedded face would size every label to a font it is not painted in.
     ///
     /// So the font is read from Windows here, through the same
     /// `SPI_GETNONCLIENTMETRICS` call the host makes, and kept per thread and
-    /// per DPI — the read is cheap but not free, and a control may be measured
+    /// per DPI - the read is cheap but not free, and a control may be measured
     /// once per frame. Thread-local rather than a global: DirectWrite objects
     /// are agile, but a per-thread cache needs no lock and cannot be a shared
     /// mutable surface between windows.
@@ -188,7 +188,7 @@ thread_local! {
 /// The system UI font at the canvas's DPI, or `None` if Windows cannot be asked.
 ///
 /// `Canvas::scale` is `dpi / 96` (the host sets it from `GetDpiForWindow`), so
-/// the DPI is recoverable from the surface — which matters, because the font
+/// the DPI is recoverable from the surface - which matters, because the font
 /// must be read at the DPI it will be measured at.
 fn ui_fonts(c: &dyn Canvas) -> Option<SystemFonts> {
     let dpi = (c.scale().max(0.01) * 96.0).round();
@@ -212,7 +212,7 @@ fn ui_fonts(c: &dyn Canvas) -> Option<SystemFonts> {
 ///
 /// TRAP: a disabled label is **not** `GrayText`. .NET draws disabled label text
 /// through `ControlPaint.Dark(BackColor)`, which special-cases
-/// `SystemColors.Control` to `SystemColors.ControlDark` — so the sheet's
+/// `SystemColors.Control` to `SystemColors.ControlDark` - so the sheet's
 /// « Disabled » caption is `#A0A0A0` (`COLOR_BTNSHADOW`, sampled at 68,240) and
 /// not the `#6D6D6D` `COLOR_GRAYTEXT` reads on the same machine. Painting
 /// `gray_text` here would be a visibly darker grey than the toolkit's.
@@ -231,11 +231,11 @@ fn text_color(
 /// The border a `Label` or a `PictureBox` draws for its `BorderStyle`.
 ///
 /// Both are `WS_EX_STATICEDGE` controls: `FixedSingle` is `WS_BORDER`, a single
-/// flat ring in `COLOR_WINDOWFRAME`, and `Fixed3D` is the static edge — **one**
+/// flat ring in `COLOR_WINDOWFRAME`, and `Fixed3D` is the static edge - **one**
 /// sunken ring, `COLOR_BTNSHADOW` on top and left, `COLOR_BTNHIGHLIGHT` on
 /// bottom and right, i.e. [`Border3DStyle::SunkenOuter`]. Both are read straight
 /// off the reference sheet: `#646464` at (46,208) for the flat frame, and
-/// `#A0A0A0` at (120,152) over `#FFFFFF` at (120,183) for the bevel — which is
+/// `#A0A0A0` at (120,152) over `#FFFFFF` at (120,183) for the bevel - which is
 /// precisely what `system.rs`' `sunken_outer` recipe produces, so the inferred
 /// `DrawEdge` table is confirmed for this ring.
 ///
@@ -267,7 +267,7 @@ fn h_alignment(a: ContentAlignment) -> DWRITE_TEXT_ALIGNMENT {
 /// Resolves the text WinForms would actually *display* given `UseMnemonic`.
 ///
 /// With mnemonics on, `&&` collapses to a literal `&` and a lone `&` marks the
-/// following character as the access key — which is removed from the drawn
+/// following character as the access key - which is removed from the drawn
 /// string (the port does not yet paint the mnemonic underline; there is no
 /// underline primitive on [`Canvas`], so it is dropped from the glyph run, not
 /// silently kept). With mnemonics off, the text is shown verbatim.
@@ -280,7 +280,7 @@ fn display_text(text: &str, use_mnemonic: bool) -> String {
     while let Some(ch) = chars.next() {
         if ch == '&' {
             // `&&` collapses to a literal `&`; a lone `&` is the mnemonic marker
-            // — consumed, with the next character kept as the (would-be
+            // - consumed, with the next character kept as the (would-be
             // underlined) access key.
             if chars.peek() == Some(&'&') {
                 out.push('&');
@@ -294,8 +294,8 @@ fn display_text(text: &str, use_mnemonic: bool) -> String {
 }
 
 /// Places a one-line text band vertically inside `content` for a given content
-/// alignment, so the canvas — which centres within whatever rectangle it is
-/// given — lands the glyphs at the top/middle/bottom third. Kept separate from
+/// alignment, so the canvas - which centres within whatever rectangle it is
+/// given - lands the glyphs at the top/middle/bottom third. Kept separate from
 /// paint because it is the whole of the vertical-alignment geometry.
 fn text_band(content: Rect, alignment: ContentAlignment, line_h: f32) -> Rect {
     let avail = (content.bottom - content.top).max(line_h);
@@ -323,50 +323,50 @@ pub enum LiveSetting {
 // Label
 // ─────────────────────────────────────────────────────────────────────────────
 
-/// `System.Windows.Forms.Label` — the 13 properties it declares on top of
+/// `System.Windows.Forms.Label` - the 13 properties it declares on top of
 /// `Control`, plus its `AutoSize` measurement and border/alignment painting.
 ///
 /// The properties `AutoSize`, `BackgroundImageLayout` and `Text` are inherited
 /// from `ControlBase` (WinForms merely re-declares them on `Label` to change
-/// their designer metadata), so they are *not* restated here — reach them
+/// their designer metadata), so they are *not* restated here - reach them
 /// through the deref. `PreferredWidth`/`PreferredHeight` are read-only views and
 /// are exposed as methods, not fields.
 #[derive(Clone)]
 pub struct Label {
     pub control: ControlBase,
 
-    /// `AutoEllipsis` — trim overflowing text with « … » instead of clipping.
+    /// `AutoEllipsis` - trim overflowing text with « … » instead of clipping.
     /// Honoured in paint via [`Canvas::text_ellipsis`].
     pub auto_ellipsis: bool,
-    /// `BackgroundImage` — the host supplies the pixels; the port keeps only the
+    /// `BackgroundImage` - the host supplies the pixels; the port keeps only the
     /// natural size it would tile/stretch (laid out per `BackgroundImageLayout`,
     /// which lives on `ControlBase`). Not yet blitted.
     pub background_image: Option<Size>,
-    /// `BorderStyle` — `None` by default for a label (unlike the enum's own
+    /// `BorderStyle` - `None` by default for a label (unlike the enum's own
     /// `Fixed3D` default, which is the *TextBox* default).
     pub border_style: BorderStyle,
-    /// `FlatStyle` — only changes how the border is drawn; the text is the same.
+    /// `FlatStyle` - only changes how the border is drawn; the text is the same.
     pub flat_style: FlatStyle,
-    /// `Image` — natural size of the foreground image; pixels host-supplied.
+    /// `Image` - natural size of the foreground image; pixels host-supplied.
     pub image: Option<Size>,
     pub image_align: ContentAlignment,
     /// `ImageIndex` into `ImageList`; `-1` means « none ».
     pub image_index: i32,
     /// `ImageKey` into `ImageList`; empty means « none ».
     pub image_key: String,
-    /// `ImageList` — modelled by its uniform `ImageSize` (every image in a list
+    /// `ImageList` - modelled by its uniform `ImageSize` (every image in a list
     /// shares one size); the bitmaps themselves are host-supplied. `None` = unset.
     pub image_list: Option<Size>,
-    /// `LiveSetting` — stored, not yet surfaced to UI Automation.
+    /// `LiveSetting` - stored, not yet surfaced to UI Automation.
     pub live_setting: LiveSetting,
-    /// `TextAlign` — one of the nine cells. Default `TopLeft` (a label's default,
+    /// `TextAlign` - one of the nine cells. Default `TopLeft` (a label's default,
     /// which differs from most controls' `MiddleCenter`).
     pub text_align: ContentAlignment,
-    /// `UseCompatibleTextRendering` — GDI+ vs GDI text. The port has one text
+    /// `UseCompatibleTextRendering` - GDI+ vs GDI text. The port has one text
     /// path, so this only affects measurement compatibility, which it does not
     /// model; stored for fidelity.
     pub use_compatible_text_rendering: bool,
-    /// `UseMnemonic` — treat `&` as an access-key marker (see [`display_text`]).
+    /// `UseMnemonic` - treat `&` as an access-key marker (see [`display_text`]).
     pub use_mnemonic: bool,
 }
 
@@ -408,7 +408,7 @@ impl std::ops::DerefMut for Label {
 
 /// How much a border eats on each side, in DIP. `Fixed3D` is the static edge:
 /// the toolkit reserves two pixels for it and paints a single sunken ring in the
-/// outer one — see [`paint_border`], and the sheet's 32 px `Fixed3D` box around
+/// outer one - see [`paint_border`], and the sheet's 32 px `Fixed3D` box around
 /// a 28 px line.
 fn border_inset(style: BorderStyle) -> f32 {
     match style {
@@ -434,7 +434,7 @@ impl Label {
         Self::default()
     }
 
-    /// The font role the label paints with — its own, else the body default.
+    /// The font role the label paints with - its own, else the body default.
     fn role(&self) -> FontRole {
         self.control.font.unwrap_or_default()
     }
@@ -444,12 +444,12 @@ impl Label {
         display_text(&self.control.text, self.use_mnemonic)
     }
 
-    /// `PreferredWidth` — the read-only view WinForms exposes.
+    /// `PreferredWidth` - the read-only view WinForms exposes.
     pub fn preferred_width(&self, c: &dyn Canvas) -> f32 {
         self.preferred_size(c).width
     }
 
-    /// `PreferredHeight` — the read-only view WinForms exposes.
+    /// `PreferredHeight` - the read-only view WinForms exposes.
     pub fn preferred_height(&self, c: &dyn Canvas) -> f32 {
         self.preferred_size(c).height
     }
@@ -458,8 +458,8 @@ impl Label {
     /// the border and then by padding.
     ///
     /// TRAP: `bounds` is a **parameter**, never `self.control.bounds`. The two
-    /// live in different coordinate spaces — the rectangle handed to `paint` is
-    /// in *canvas* space, while `control.bounds` is *parent-relative* — and they
+    /// live in different coordinate spaces - the rectangle handed to `paint` is
+    /// in *canvas* space, while `control.bounds` is *parent-relative* - and they
     /// coincide only for a top-level control. Reading the field here made a
     /// container child paint its border in the right place and its text near the
     /// window origin, where the parent's clip swallowed it.
@@ -475,7 +475,7 @@ impl Label {
         )
     }
 
-    /// Paints the border, if any — the shared [`paint_border`], so a `Label` and
+    /// Paints the border, if any - the shared [`paint_border`], so a `Label` and
     /// a `PictureBox` cannot drift into two different frames.
     ///
     /// `FlatStyle` does not reach it: on a label the toolkit's flat styles
@@ -496,7 +496,7 @@ impl Control for Label {
     fn preferred_size(&self, c: &dyn Canvas) -> Size {
         let role = self.role();
         let shown = self.shown_text();
-        // Measured in the SYSTEM's UI font — the one it is painted in. See
+        // Measured in the SYSTEM's UI font - the one it is painted in. See
         // `UI_FONT`: a bare `Canvas` cannot answer for the system visuals, so
         // the font is read (and cached) here.
         let fonts = ui_fonts(c);
@@ -514,7 +514,7 @@ impl Control for Label {
         let v = c.visuals();
 
         // Background: only when the label carries an explicit colour. An unset
-        // (ambient) back colour means « the parent already painted here » — a
+        // (ambient) back colour means « the parent already painted here » - a
         // label is transparent in the toolkit, which is why the sheet's labels
         // sit on the form's own face rather than on a repainted one.
         if let Some(bg) = self.control.back_color {
@@ -560,7 +560,7 @@ impl Control for Label {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum LinkBehavior {
     /// The default. Per the docs, « the behavior of this setting depends on the
-    /// options set using the Internet Options dialog box in Control Panel » —
+    /// options set using the Internet Options dialog box in Control Panel » -
     /// i.e. the *Underline links* option, whose shipped Windows value is
     /// **Always**. See [`LinkBehavior::underlined`] for how the port resolves it.
     #[default]
@@ -590,7 +590,7 @@ impl LinkBehavior {
     }
 }
 
-/// `LinkArea` — the character span, into `Text`, of the label's *first* link.
+/// `LinkArea` - the character span, into `Text`, of the label's *first* link.
 /// A length of zero means « unset »: the whole text becomes one link.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub struct LinkArea {
@@ -602,23 +602,23 @@ impl LinkArea {
     pub const fn new(start: i32, length: i32) -> Self {
         Self { start, length }
     }
-    /// `LinkArea.IsEmpty` — start and length both zero.
+    /// `LinkArea.IsEmpty` - start and length both zero.
     pub const fn is_empty(self) -> bool {
         self.start == 0 && self.length == 0
     }
 }
 
-/// One entry of `LinkLabel.Links` — a span of the text plus its per-link state.
+/// One entry of `LinkLabel.Links` - a span of the text plus its per-link state.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Link {
     pub start: i32,
     pub length: i32,
-    /// `Link.Enabled` — a disabled link paints in `DisabledLinkColor` and does
+    /// `Link.Enabled` - a disabled link paints in `DisabledLinkColor` and does
     /// not hit-test.
     pub enabled: bool,
-    /// `Link.Visited` — paints in `VisitedLinkColor` once followed.
+    /// `Link.Visited` - paints in `VisitedLinkColor` once followed.
     pub visited: bool,
-    /// `Link.LinkData` — the arbitrary payload the host routes on click.
+    /// `Link.LinkData` - the arbitrary payload the host routes on click.
     pub link_data: Option<String>,
 }
 
@@ -633,23 +633,23 @@ impl Link {
     }
 }
 
-/// `System.Windows.Forms.LinkLabel` — a `Label` plus a link model. It composes
+/// `System.Windows.Forms.LinkLabel` - a `Label` plus a link model. It composes
 /// `Label` and derefs to it, so `Text`, `TextAlign`, `AutoSize`, `Padding`,
 /// `TabStop` and `UseCompatibleTextRendering` are reached through the label /
-/// control beneath — WinForms only re-declares those to tweak their metadata,
+/// control beneath - WinForms only re-declares those to tweak their metadata,
 /// so they are not restated here.
 #[derive(Clone)]
 pub struct LinkLabel {
     pub label: Label,
 
-    /// `ActiveLinkColor` — the colour while a link is pressed. Honoured from
+    /// `ActiveLinkColor` - the colour while a link is pressed. Honoured from
     /// [`ControlState::pressed`]. `None` = ambient.
     pub active_link_color: Option<D2D1_COLOR_F>,
-    /// `DisabledLinkColor` — a disabled link's colour. `None` = ambient (grey).
+    /// `DisabledLinkColor` - a disabled link's colour. `None` = ambient (grey).
     pub disabled_link_color: Option<D2D1_COLOR_F>,
-    /// `LinkArea` — the first link's span; see [`LinkArea`].
+    /// `LinkArea` - the first link's span; see [`LinkArea`].
     pub link_area: LinkArea,
-    /// `LinkBehavior` — honoured in [`Control::paint_with_state`], including
+    /// `LinkBehavior` - honoured in [`Control::paint_with_state`], including
     /// `HoverUnderline`.
     ///
     /// Hover and press are **whole-control**, not per-link: [`ControlState`]
@@ -658,16 +658,16 @@ pub struct LinkLabel {
     /// pointer position; [`LinkLabel::link_at_point`] already does that half, so
     /// the day `ControlState` carries coordinates this becomes a one-line change.
     pub link_behavior: LinkBehavior,
-    /// `LinkColor` — an unvisited link's colour. `None` = ambient, which
+    /// `LinkColor` - an unvisited link's colour. `None` = ambient, which
     /// resolves to [`IE_LINK_COLOR`] and *not* to `SystemColors.HotTrack`.
     pub link_color: Option<D2D1_COLOR_F>,
-    /// `LinkVisited` — a convenience that marks the *first* link visited.
+    /// `LinkVisited` - a convenience that marks the *first* link visited.
     pub link_visited: bool,
-    /// `VisitedLinkColor` — a followed link's colour. `None` falls back to the
+    /// `VisitedLinkColor` - a followed link's colour. `None` falls back to the
     /// toolkit's own purple; see [`Self::resolved_visited`].
     pub visited_link_color: Option<D2D1_COLOR_F>,
 
-    /// `LinkLabel.Links` — explicit links. When empty, `LinkArea` (or, when that
+    /// `LinkLabel.Links` - explicit links. When empty, `LinkArea` (or, when that
     /// is empty too, the whole text) defines a single implicit link.
     pub links: Vec<Link>,
 }
@@ -709,8 +709,8 @@ impl LinkLabel {
     }
 
     /// The links as WinForms would resolve them for painting and hit-testing:
-    /// the explicit `Links` if any, else the `LinkArea`, else — when neither is
-    /// set — the entire text as one link. `LinkVisited` marks the first.
+    /// the explicit `Links` if any, else the `LinkArea`, else - when neither is
+    /// set - the entire text as one link. `LinkVisited` marks the first.
     pub fn resolved_links(&self) -> Vec<Link> {
         let mut links = if !self.links.is_empty() {
             self.links.clone()
@@ -746,7 +746,7 @@ impl LinkLabel {
     /// canvas; the character→link step is the pure [`Self::link_index_at_char`].
     ///
     /// The point is **parent-relative**, the space [`Control::hit_test`] works
-    /// in — so this one resolves its content rectangle against `control.bounds`
+    /// in - so this one resolves its content rectangle against `control.bounds`
     /// on purpose, unlike the paint path, which must use the canvas-space
     /// rectangle it is handed. Hit-testing and painting genuinely differ here;
     /// the field read below is the correct one, not the bug's twin.
@@ -774,7 +774,7 @@ impl LinkLabel {
     }
 
     /// The unvisited-link colour. Ambient falls back to [`IE_LINK_COLOR`], the
-    /// toolkit's own default — *not* `SystemColors.HotTrack`; see the constant.
+    /// toolkit's own default - *not* `SystemColors.HotTrack`; see the constant.
     pub fn resolved_link(&self, _c: &dyn ControlCanvas) -> D2D1_COLOR_F {
         self.link_color.unwrap_or(IE_LINK_COLOR)
     }
@@ -792,12 +792,12 @@ impl LinkLabel {
     }
 
     /// The disabled-link colour; ambient is [`DISABLED_LINK_COLOR`], the grey
-    /// the toolkit itself answers with — not `COLOR_GRAYTEXT`.
+    /// the toolkit itself answers with - not `COLOR_GRAYTEXT`.
     pub fn resolved_disabled(&self, _c: &dyn ControlCanvas) -> D2D1_COLOR_F {
         self.disabled_link_color.unwrap_or(DISABLED_LINK_COLOR)
     }
 
-    /// Which of the four link colours applies to `link` under `state` — the
+    /// Which of the four link colours applies to `link` under `state` - the
     /// *decision*, separated from the canvas that turns it into a colour so the
     /// precedence is unit-tested without a device.
     ///
@@ -819,7 +819,7 @@ impl LinkLabel {
     /// Whether `link` is underlined under `state`. Pure: it is the whole
     /// interaction of `LinkBehavior`, the pointer and the link's own `Enabled`.
     ///
-    /// A disabled link is never underlined — the toolkit paints it as inert
+    /// A disabled link is never underlined - the toolkit paints it as inert
     /// text, and a rule under it would advertise a click it refuses.
     pub fn underlines_link(&self, link: &Link, state: ControlState) -> bool {
         let enabled = self.label.control.enabled && link.enabled;
@@ -844,7 +844,7 @@ impl LinkLabel {
 pub enum LinkPaint {
     /// `DisabledLinkColor`.
     Disabled,
-    /// `ActiveLinkColor` — while pressed.
+    /// `ActiveLinkColor` - while pressed.
     Active,
     /// `VisitedLinkColor`.
     Visited,
@@ -865,7 +865,7 @@ impl Control for LinkLabel {
         self.label.preferred_size(c)
     }
 
-    /// The resting paint — delegates to [`Control::paint_with_state`] with a
+    /// The resting paint - delegates to [`Control::paint_with_state`] with a
     /// default (cold, unpressed) state.
     ///
     /// The delegation runs in *this* direction on purpose: the trait's provided
@@ -970,12 +970,12 @@ pub struct PictureBox {
     /// `Image` natural size; the pixels are blitted by the host into the
     /// rectangle [`Self::image_rect`] computes.
     pub image: Option<Size>,
-    /// `ImageLocation` — a path/URL the host loads from. The control does no I/O.
+    /// `ImageLocation` - a path/URL the host loads from. The control does no I/O.
     pub image_location: Option<String>,
     /// `InitialImage` natural size; shown while an async load runs.
     pub initial_image: Option<Size>,
     pub size_mode: PictureBoxSizeMode,
-    /// `WaitOnLoad` — load synchronously before painting. A host-side flag here.
+    /// `WaitOnLoad` - load synchronously before painting. A host-side flag here.
     pub wait_on_load: bool,
 }
 
@@ -1008,7 +1008,7 @@ impl std::ops::DerefMut for PictureBox {
     }
 }
 
-/// Where the image lands inside `client` for a given size mode — the whole of
+/// Where the image lands inside `client` for a given size mode - the whole of
 /// the `PictureBox` geometry, pure so every mode is unit-tested. `client` is the
 /// content rectangle (bounds minus border); `image` is the picture's native size.
 pub fn image_rect(mode: PictureBoxSizeMode, client: Rect, image: Size) -> Rect {
@@ -1017,7 +1017,7 @@ pub fn image_rect(mode: PictureBoxSizeMode, client: Rect, image: Size) -> Rect {
     match mode {
         PictureBoxSizeMode::StretchImage => client,
         // Normal and AutoSize both draw at native size, top-left. (AutoSize
-        // additionally resizes the control — see `preferred_size`.)
+        // additionally resizes the control - see `preferred_size`.)
         PictureBoxSizeMode::Normal | PictureBoxSizeMode::AutoSize => {
             Rect::new(client.left, client.top, client.left + iw, client.top + ih)
         }
@@ -1058,7 +1058,7 @@ impl PictureBox {
     /// mode. `None` when there is no image.
     ///
     /// Takes the same `bounds` the control is painted into, and returns a
-    /// rectangle in that space — a caller positioning a bitmap needs the two to
+    /// rectangle in that space - a caller positioning a bitmap needs the two to
     /// agree, which they do not if this reads `control.bounds` instead.
     pub fn resolved_image_rect(&self, bounds: Rect) -> Option<Rect> {
         self.image
@@ -1094,7 +1094,7 @@ impl Control for PictureBox {
     }
 
     fn paint(&self, c: &dyn ControlCanvas, bounds: Rect) {
-        // A `PictureBox` is an OPAQUE control — unlike a label, it grounds its
+        // A `PictureBox` is an OPAQUE control - unlike a label, it grounds its
         // box in its own back colour, `SystemColors.Control` when ambient, and
         // that ground is what shows wherever the image does not reach (the
         // letter-box bands of `Zoom`, the margins of `CenterImage`).
@@ -1119,7 +1119,7 @@ impl Control for PictureBox {
 /// How a `ProgressBar` renders progress (`ProgressBarStyle`).
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum ProgressBarStyle {
-    /// Discrete segments filling left-to-right — the classic default.
+    /// Discrete segments filling left-to-right - the classic default.
     #[default]
     Blocks,
     /// A single solid fill.
@@ -1135,16 +1135,16 @@ pub enum ProgressBarStyle {
 pub struct ProgressBar {
     pub control: ControlBase,
 
-    /// `MarqueeAnimationSpeed` — ms between marquee repaints. The control owns no
+    /// `MarqueeAnimationSpeed` - ms between marquee repaints. The control owns no
     /// timer (see the crate rules); the host ticks it and calls paint.
     pub marquee_animation_speed: i32,
     pub maximum: i32,
     pub minimum: i32,
-    /// `RightToLeftLayout` — mirror the fill origin to the right edge.
+    /// `RightToLeftLayout` - mirror the fill origin to the right edge.
     pub right_to_left_layout: bool,
     pub step: i32,
     pub style: ProgressBarStyle,
-    /// `Value` — kept within `[minimum, maximum]` by every mutator.
+    /// `Value` - kept within `[minimum, maximum]` by every mutator.
     value: i32,
 }
 
@@ -1182,7 +1182,7 @@ impl ProgressBar {
         Self::default()
     }
 
-    /// `Value` — always inside the current range.
+    /// `Value` - always inside the current range.
     pub fn value(&self) -> i32 {
         self.value
     }
@@ -1194,7 +1194,7 @@ impl ProgressBar {
         self.value = v.clamp(self.minimum, self.maximum);
     }
 
-    /// Sets `Minimum`, keeping `Maximum >= Minimum` and re-clamping `Value` — the
+    /// Sets `Minimum`, keeping `Maximum >= Minimum` and re-clamping `Value` - the
     /// same invariant the toolkit maintains when the range moves under the value.
     pub fn set_minimum(&mut self, min: i32) {
         self.minimum = min;
@@ -1213,15 +1213,15 @@ impl ProgressBar {
         self.value = self.value.clamp(self.minimum, self.maximum);
     }
 
-    /// `Increment(delta)` — advances `Value` by `delta`, clamped to the range.
+    /// `Increment(delta)` - advances `Value` by `delta`, clamped to the range.
     pub fn increment(&mut self, delta: i32) {
         self.set_value(self.value.saturating_add(delta));
     }
 
-    /// `PerformStep()` — advances `Value` by `Step`.
+    /// `PerformStep()` - advances `Value` by `Step`.
     ///
     /// TRAP: despite what one might expect of a "step", this does **not** wrap.
-    /// Microsoft's docs are explicit — once `Value` would exceed `Maximum` it
+    /// Microsoft's docs are explicit - once `Value` would exceed `Maximum` it
     /// *stays at* `Maximum` (and at `Minimum` for a negative `Step`). The port
     /// mirrors that clamp, so a stepped bar fills up and stops, never restarts.
     pub fn perform_step(&mut self) {
@@ -1265,7 +1265,7 @@ impl Control for ProgressBar {
         // NOT a `DrawEdge` bevel. A `ProgressBar` is a comctl32 v6 control, so
         // on Windows 11 it is drawn by the *theme* (`PP_BAR` / `PP_CHUNK`) and
         // not by the classic 3-D recipe: the reference sheet shows one even
-        // `#BCBCBC` ring on all four sides, over a `#E6E6E6` well — where a
+        // `#BCBCBC` ring on all four sides, over a `#E6E6E6` well - where a
         // sunken edge would put `COLOR_BTNHIGHLIGHT` (white) along the bottom
         // and right. Asking `draw_edge` for a sunken frame here would look
         // *more* like WinForms 1.0 and *less* like the toolkit on this machine.
@@ -1303,7 +1303,7 @@ impl Control for ProgressBar {
             }
             ProgressBarStyle::Marquee => {
                 // Indeterminate: one scrolling block. With no timer the control
-                // paints a single frame — a block of ~1/3 the width parked at the
+                // paints a single frame - a block of ~1/3 the width parked at the
                 // left; the host advances it using `marquee_animation_speed`.
                 let w = iw / 3.0;
                 let r = Rect::new(inner.left, inner.top, inner.left + w, inner.bottom);
@@ -1340,7 +1340,7 @@ mod tests {
         assert!(l.use_mnemonic);
         assert!(!l.use_compatible_text_rendering);
         assert_eq!(l.live_setting, LiveSetting::Off);
-        // AutoSize is inherited, and false by default — the label surprise.
+        // AutoSize is inherited, and false by default - the label surprise.
         assert!(!l.control.auto_size);
     }
 
@@ -1442,7 +1442,7 @@ mod tests {
         assert_eq!(pb.value(), 60);
     }
 
-    /// TRAP: PerformStep CLAMPS at Maximum — it does not wrap back to Minimum.
+    /// TRAP: PerformStep CLAMPS at Maximum - it does not wrap back to Minimum.
     #[test]
     fn perform_step_clamps_at_maximum_it_does_not_wrap() {
         let mut pb = ProgressBar::new();
@@ -1541,7 +1541,7 @@ mod tests {
     }
 
     /// The same invariant for `PictureBox`, where it also reaches the public
-    /// `resolved_image_rect` — a caller blitting a bitmap gets this rectangle.
+    /// `resolved_image_rect` - a caller blitting a bitmap gets this rectangle.
     #[test]
     fn picturebox_image_rect_follows_the_argument_not_the_field() {
         let mut p = PictureBox::new();
@@ -1564,7 +1564,7 @@ mod tests {
         pb.control.set_bounds(Rect::new(9.0, 9.0, 59.0, 29.0)); // deliberately unrelated
         pb.set_value(50);
         // The only geometry a ProgressBar derives is the filled fraction, which
-        // is a pure function of the value and the range — no coordinates at all.
+        // is a pure function of the value and the range - no coordinates at all.
         assert!((pb.fraction() - 0.5).abs() < 1e-6);
     }
 
@@ -1697,7 +1697,7 @@ mod tests {
         assert_eq!(ll.link_paint(&plain, COLD), LinkPaint::Normal);
         assert_eq!(ll.link_paint(&visited, COLD), LinkPaint::Visited);
         // ActiveLinkColor is exactly what `pressed` is for, and it outranks
-        // Visited — a followed link still flashes active while held down.
+        // Visited - a followed link still flashes active while held down.
         assert_eq!(ll.link_paint(&plain, DOWN), LinkPaint::Active);
         assert_eq!(ll.link_paint(&visited, DOWN), LinkPaint::Active);
         // Disabled outranks everything, pressed included.

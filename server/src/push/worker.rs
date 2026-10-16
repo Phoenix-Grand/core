@@ -69,7 +69,7 @@ async fn deliver(
                 "unifiedpush" => unifiedpush.send(client, &token, notif).await,
                 // APNs/FCM acceptés à l'enregistrement, livraison ajoutée plus tard.
                 other => {
-                    tracing::debug!(provider = %other, "Provider push non encore implémenté — device ignoré");
+                    tracing::debug!(provider = %other, "Provider push non encore implémenté - device ignoré");
                     continue;
                 }
             };

@@ -117,7 +117,7 @@ describe('.kbres ↔ i18next bundles', () => {
       c: '',
       d: '   ',
       e: 'emoji 🎉 · RTL العربية · עברית',
-      f: '{{count}} élément(s) — {{name, uppercase}}',
+      f: '{{count}} élément(s) - {{name, uppercase}}',
       g: '\ttab',
       h: ']]> <![CDATA[ x',
     }

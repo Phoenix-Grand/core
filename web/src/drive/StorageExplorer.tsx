@@ -1,5 +1,5 @@
 /**
- * StorageExplorer — LA zone d'exploration de fichiers, générique et partagée par
+ * StorageExplorer - LA zone d'exploration de fichiers, générique et partagée par
  * TOUS les types de stockage (local + montages distants). Pilotée par une
  * `StorageSource` ; chaque source déclare ses capacités → on masque les fonctions
  * non supportées. Calqué visuellement sur « Mon Drive » (barre de sélection, tri/
@@ -131,7 +131,7 @@ export default function StorageExplorer({
   // ── Sélection ──────────────────────────────────────────────────────────────────
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
   const lastSelectedIdxRef = useRef<number>(-1)
-  // Curseur clavier (flèches) — id de l'item focalisé dans la grille/liste.
+  // Curseur clavier (flèches) - id de l'item focalisé dans la grille/liste.
   const [cursorId, setCursorId] = useState<string | null>(null)
   const clearSelection = useCallback(() => setSelectedIds(new Set()), [])
 
@@ -146,7 +146,7 @@ export default function StorageExplorer({
 
   // ── Tri / filtres / affichage ───────────────────────────────────────────────
   // Mobile n'expose que deux vues (grille 2 colonnes / liste) : les 8 modes du
-  // menu « Afficher » n'ont pas de place — ni d'intérêt — sur un téléphone.
+  // menu « Afficher » n'ont pas de place - ni d'intérêt - sur un téléphone.
   const isMobile = useIsMobile()
   const [mobileGrid, setMobileGrid] = useState(true)
   const [showHidden, setShowHidden] = useState(false)
@@ -168,7 +168,7 @@ export default function StorageExplorer({
     useExplorerData({ src, caps, currentFolderId, acceptedMimeTypes, fileTypeModuleId })
   const { viewMode, changeViewMode, details, persistDetails } = useViewPrefs(dirKey, isMobile)
   const view: ViewMode = isMobile ? (mobileGrid ? 'lg' : 'details') : viewMode
-  // The listing returns a folder's children, never the folder itself — fetch its
+  // The listing returns a folder's children, never the folder itself - fetch its
   // record so the trail's menu can offer the real actions (a folder whose
   // protection is unknown must not be offered to the bin).
   const { data: currentFolder } = useQuery({
@@ -213,7 +213,7 @@ export default function StorageExplorer({
 
 
   // Touch multi-selection: on a phone, having ≥1 item selected puts the explorer
-  // in "pick" mode — the header turns into a selection bar and a tap toggles
+  // in "pick" mode - the header turns into a selection bar and a tap toggles
   // instead of opening. Desktop keeps click-to-select / double-click-to-open.
   const mobileSelecting = isMobile && selectedIds.size > 0
   const isMenuItemPlaying = useMemo(() => menu?.type === 'file' && playingFileIds.has((menu.item as FileItem).id), [menu, playingFileIds])
@@ -300,7 +300,7 @@ export default function StorageExplorer({
     // Right-clicking an item that isn't part of the current selection makes it
     // the sole selection; right-clicking within a multi-selection keeps it (so
     // the menu still acts on the whole group). On touch the kebab (⋮) is a
-    // single-item affordance — selecting the item there would flip the header
+    // single-item affordance - selecting the item there would flip the header
     // into selection mode behind the action sheet, so we skip it.
     if (!selectedIds.has(item.id) && !(isMobile && isCoarsePointer())) {
       setSelectedIds(new Set([item.id]))
@@ -359,7 +359,7 @@ export default function StorageExplorer({
   const hideType = (!!acceptedMimeTypes && acceptedMimeTypes.length > 0) || !!fileTypeModuleId
   const { detailsView, headerMenuItems } = useDetailsColumns({ details, persistDetails, sortedFolders, filteredFiles, t, lng: i18n.language })
 
-  // Shared row props — the SAME operations (selection/checkbox/marquee/drag/
+  // Shared row props - the SAME operations (selection/checkbox/marquee/drag/
   // menu/open/cursor) in every view, including the details table.
   const folderRowProps = (folder: Folder) => ({
     folder, isDragTarget: dragOverFolderId === folder.id,
@@ -512,7 +512,7 @@ export default function StorageExplorer({
               />
             )}
             </>)}
-            {/* Progressive-loading sentinel: entering view grows the window — first
+            {/* Progressive-loading sentinel: entering view grows the window - first
                 to fill the visible area, then as the user scrolls. The ring spins
                 while more items remain to be mounted. */}
             {hasMore && (

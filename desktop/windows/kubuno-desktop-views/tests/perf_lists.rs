@@ -3,7 +3,7 @@
 //! `cargo test -p kubuno-desktop-views --release --test perf_lists -- --ignored --nocapture`.
 //!
 //! The canvas is a `RecordingCanvas` (no GPU), so the numbers are the binding, layout and paint
-//! logic of the runtime alone — what the `ItemsSource` change detection is about.
+//! logic of the runtime alone - what the `ItemsSource` change detection is about.
 
 use std::time::Instant;
 

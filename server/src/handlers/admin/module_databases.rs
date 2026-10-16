@@ -125,7 +125,7 @@ async fn module_exists(db: &DbPool, module_id: &str) -> Result<bool, AppError> {
     Ok(found.is_some())
 }
 
-/// GET — the module's current override (no secret) plus what it inherits.
+/// GET - the module's current override (no secret) plus what it inherits.
 pub async fn get_module_database(
     State(state): State<AppState>,
     _admin: AdminUser,
@@ -146,7 +146,7 @@ pub async fn get_module_database(
             "host":          r.host,
             "port":          if r.port <= 0 { Value::Null } else { json!(r.port) },
             "user":          r.db_user,
-            // Never the secret — only whether one is stored.
+            // Never the secret - only whether one is stored.
             "has_password":  !r.password_enc.is_empty(),
             "database":      r.db_name,
             "path":          r.db_path,
@@ -231,7 +231,7 @@ async fn ensure_target(
                 .await
                 .map_err(|e| format!("Connexion impossible : {e}"))?;
             // `eff` is a validated bare identifier (see `is_bare_ident`), so the
-            // interpolation is safe — attested to the sqlx guard with
+            // interpolation is safe - attested to the sqlx guard with
             // `AssertSqlSafe`. CREATE SCHEMA takes no bind parameters.
             let res = if is_bare_ident(&eff) {
                 sqlx::query(sqlx::AssertSqlSafe(format!("CREATE SCHEMA IF NOT EXISTS \"{eff}\"")))
@@ -288,7 +288,7 @@ async fn ensure_target(
     }
 }
 
-/// POST /test — engine-aware connection probe, reusing the install wizard's
+/// POST /test - engine-aware connection probe, reusing the install wizard's
 /// logic. Returns its JSON verbatim (version / database_missing / can_create…).
 pub async fn test_module_database(
     State(state): State<AppState>,
@@ -332,7 +332,7 @@ pub async fn test_module_database(
     Ok(crate::setup::handlers::run_db_test(db_form).await)
 }
 
-/// PUT — store (or update) the override, verify the target, and restart the
+/// PUT - store (or update) the override, verify the target, and restart the
 /// module so it reconnects on it.
 pub async fn put_module_database(
     State(state): State<AppState>,
@@ -472,7 +472,7 @@ fn target_descriptor(dto: &ModuleDbDto) -> String {
     }
 }
 
-/// DELETE — drop the override; the module reverts to the inherited database on
+/// DELETE - drop the override; the module reverts to the inherited database on
 /// its next start, which is triggered here.
 pub async fn delete_module_database(
     State(state): State<AppState>,
@@ -503,7 +503,7 @@ pub async fn delete_module_database(
             .map_err(AppError::Database)?;
 
         let restarted = crate::modules::manager::restart_module(state.settings.clone(), state.db.clone(), &id).await;
-        tracing::warn!(module_id = %id, restarted, "Override DB du module supprimé — retour au SGBD principal");
+        tracing::warn!(module_id = %id, restarted, "Override DB du module supprimé - retour au SGBD principal");
 
         Ok(Json(json!({ "ok": true, "restarted": restarted })))
     }
@@ -516,7 +516,7 @@ pub async fn delete_module_database(
         .target(audit_target::DATABASE, &id, format!("Base du module {id}"));
     let entry = match &outcome {
         Ok(_) => entry.detail(format!(
-            "override de base retiré pour le module {id} — retour au SGBD principal"
+            "override de base retiré pour le module {id} - retour au SGBD principal"
         )),
         Err(e) => entry.failed(format!(
             "retrait de l'override de base du module {id} échoué : {e}"

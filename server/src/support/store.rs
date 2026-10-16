@@ -16,7 +16,7 @@ use crate::errors::AppError;
 #[derive(Debug, Clone)]
 pub struct InstanceIdentity {
     /// Minted locally at migration time. Opaque, and never transmitted anywhere
-    /// by the product itself — see the module preamble.
+    /// by the product itself - see the module preamble.
     pub instance_id: Uuid,
     pub installed_at: DateTime<Utc>,
 }
@@ -70,7 +70,7 @@ pub async fn identity(db: &DbPool) -> Result<InstanceIdentity, AppError> {
     })
 }
 
-/// The registered contract, or `None` — the normal state of an instance.
+/// The registered contract, or `None` - the normal state of an instance.
 pub async fn contract(db: &DbPool) -> Result<Option<StoredContract>, AppError> {
     let row = db
         .fetch_optional_row(
@@ -193,7 +193,7 @@ pub async fn register(
     Ok(())
 }
 
-/// Removes the contract. `false` when there was none — the caller turns that
+/// Removes the contract. `false` when there was none - the caller turns that
 /// into a 404 rather than an audited no-op.
 pub async fn remove(conn: &mut DbTx) -> Result<bool, AppError> {
     let affected = conn

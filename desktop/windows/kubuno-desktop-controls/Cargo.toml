@@ -31,7 +31,7 @@ features = [
     "Win32_Graphics_Direct2D",
     "Win32_Graphics_Direct2D_Common",
     "Win32_Graphics_DirectWrite",
-    # `DXGI_FORMAT_B8G8R8A8_UNORM` — the pixel format a themed part is uploaded
+    # `DXGI_FORMAT_B8G8R8A8_UNORM` - the pixel format a themed part is uploaded
     # in (`src/theme.rs`); it is the DIB's own byte order, so no swizzle.
     "Win32_Graphics_Dxgi_Common",
     # The host: a window class, its message loop, per-monitor DPI, and the
@@ -40,7 +40,7 @@ features = [
     "Win32_Graphics_Gdi",
     # UxTheme: `OpenThemeData`, `DrawThemeBackground`, `IsAppThemed` and the
     # `BP_*`/`EP_*`/`PBS_*` part and state ids. This is what makes the library
-    # match a machine with visual styles ON — see `src/theme.rs`.
+    # match a machine with visual styles ON - see `src/theme.rs`.
     "Win32_UI_Controls",
     "Win32_System_LibraryLoader",
     # WIC (the renderer's bitmaps) is a COM object, so the host thread needs an
@@ -52,12 +52,12 @@ features = [
     # DirectWrite wants the locale a text format shapes for; the user's own is
     # what the toolkit measures with, so it is read rather than assumed.
     "Win32_Globalization",
-    # `GetSystemMetricsForDpi` and `SystemParametersInfoForDpi` — the system
+    # `GetSystemMetricsForDpi` and `SystemParametersInfoForDpi` - the system
     # metrics and the UI font, asked for at the window's real DPI.
     "Win32_UI_HiDpi",
     "Win32_UI_WindowsAndMessaging",
     "Win32_UI_Input_KeyboardAndMouse",
-    # DWM caption tint (Windows 11+) — the host paints the system title bar
+    # DWM caption tint (Windows 11+) - the host paints the system title bar
     # in the theme accent so a window reads as Kubuno without a full custom frame.
     "Win32_Graphics_Dwm",
     # High contrast (`styled::high_contrast`) and UI Automation (the accessibility tree the view

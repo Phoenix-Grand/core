@@ -1,4 +1,4 @@
-//! Kubuno's shape and size tokens — **re-exported, not restated**.
+//! Kubuno's shape and size tokens - **re-exported, not restated**.
 //!
 //! The design system's tokens already live in
 //! [`kubuno_drive_desktop_app_controls::themes::shape`] (radii, control heights, the six text
@@ -9,7 +9,7 @@
 //! give a name.
 //!
 //! Every value is a DIP. Nothing here is multiplied by
-//! [`Canvas::scale`](crate::Canvas::scale) — the renderer sets the D2D dpi, so
+//! [`Canvas::scale`](crate::Canvas::scale) - the renderer sets the D2D dpi, so
 //! these are already device-independent.
 //!
 //! **Every constant below cites where it came from.** The first draft of this
@@ -27,7 +27,7 @@ pub use kubuno_drive_desktop_app_controls::themes::shape::{
 /// Sources, in the order of preference the brief sets out:
 ///
 /// 1. a **named geometry** the web exports (`CHECKBOX_GEOMETRY`,
-///    `RADIO_GEOMETRY`) — the strongest, since the web itself draws these on a
+///    `RADIO_GEOMETRY`) - the strongest, since the web itself draws these on a
 ///    canvas and had to write the numbers down;
 /// 2. the **Tailwind utilities** on the web component, converted (`h-1.5` = 6,
 ///    `py-2` = 8, `w-4` = 16);
@@ -35,8 +35,8 @@ pub use kubuno_drive_desktop_app_controls::themes::shape::{
 ///    the port must match it pixel for pixel.
 ///
 /// Where none of the three answers, the constant either goes away or says so
-/// out loud. Exactly one is in the second case — [`control::GROUP_LABEL_INSET`],
-/// for a control the web never had — and its documentation names it as a
+/// out loud. Exactly one is in the second case - [`control::GROUP_LABEL_INSET`],
+/// for a control the web never had - and its documentation names it as a
 /// decision rather than a measurement.
 pub mod control {
     /// The check box, from `core/frontend/src/ui/checkboxCanvas.ts`:
@@ -55,22 +55,22 @@ pub mod control {
     pub const RADIO_RING: f32 = 2.0;
     pub const RADIO_DOT: f32 = 10.0;
 
-    /// `gap-2` between the box and its label — `Checkbox.tsx` and `Radio.tsx`
+    /// `gap-2` between the box and its label - `Checkbox.tsx` and `Radio.tsx`
     /// both open with `inline-flex items-start gap-2`.
     pub const CHECK_GAP: f32 = 8.0;
 
     /// The combo's chevron column: `w-4` on the indicator span
-    /// (`Combobox.tsx`). The field itself is an input — take its height from
+    /// (`Combobox.tsx`). The field itself is an input - take its height from
     /// [`height::BUTTON_MD`](super::height::BUTTON_MD) and its inset from [`space::MD`](super::space::MD) (`h-9`, `px-3`),
     /// which is why neither is restated here.
     pub const COMBO_ARROW: f32 = 16.0;
 
     /// A row in a combo's popup: `py-1.5` over a 20 DIP line (`Combobox.tsx`).
     /// A **menu** row is a different control and already has its own token,
-    /// [`height::MENU_ITEM`](super::height::MENU_ITEM) — do not use this one for menus.
+    /// [`height::MENU_ITEM`](super::height::MENU_ITEM) - do not use this one for menus.
     pub const COMBO_ROW: f32 = 32.0;
 
-    /// The scroll bar — **re-exported from the shipping predecessor**, not
+    /// The scroll bar - **re-exported from the shipping predecessor**, not
     /// copied. `kubuno-drive-desktop-app-controls/src/scrollbar/mod.rs` already publishes the
     /// whole set, sourced there against `::-webkit-scrollbar` in
     /// `core/frontend/src/index.css` and against WinUI's `ScrollBarSize`. A
@@ -94,8 +94,8 @@ pub mod control {
     ///
     /// This one has **no external source, and says so**: the web design system
     /// has no group box at all, and the WinForms replica's own caption metrics
-    /// are private to that crate. It is therefore a Kubuno decision — one step
-    /// of the spacing scale ([`space::MD`](super::space::MD)) — rather than a measurement, and
+    /// are private to that crate. It is therefore a Kubuno decision - one step
+    /// of the spacing scale ([`space::MD`](super::space::MD)) - rather than a measurement, and
     /// it is written here so that the decision is visible instead of hiding as
     /// a literal in a paint body.
     pub const GROUP_LABEL_INSET: f32 = super::space::MD;
@@ -110,13 +110,13 @@ pub mod control {
 
     /// The progress bar, from `core/frontend/src/ui/ProgressBar.tsx`:
     /// `TRACK = { sm: 'h-1.5', md: 'h-2' }`. There is no 4 DIP progress bar in
-    /// this design system — the first draft of this file invented one.
+    /// this design system - the first draft of this file invented one.
     pub const PROGRESS_SM: f32 = 6.0;
     pub const PROGRESS_MD: f32 = 8.0;
 
     /// Tabs, from `core/frontend/src/ui/Tabs.tsx`. The underline is
     /// `before:h-[3px] before:mx-2 before:rounded-t-[3px]`; the tab's own
-    /// height is its padding plus a 20 DIP line — `pt-2 pb-[11px]` for `md`
+    /// height is its padding plus a 20 DIP line - `pt-2 pb-[11px]` for `md`
     /// and `pt-1.5 pb-[9px]` for `sm`. Note that neither lands on 40: the
     /// asymmetric bottom padding is what leaves room for the indicator.
     pub const TAB_UNDERLINE: f32 = 3.0;
@@ -125,7 +125,7 @@ pub mod control {
     pub const TAB_SM: f32 = 35.0;
 
     /// A rule: `h-px` / `w-px` on `Separator.tsx`. One DIP, which
-    /// `Canvas::stroke_rounded` already snaps to one physical pixel — do not
+    /// `Canvas::stroke_rounded` already snaps to one physical pixel - do not
     /// try to out-clever it.
     pub const SEPARATOR: f32 = 1.0;
 }

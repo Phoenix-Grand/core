@@ -26,7 +26,7 @@ struct ModuleState {
     is_enabled: bool,
 }
 
-/// `GET /api/v1/admin/marketplace` — catalogue distant + état d'installation local.
+/// `GET /api/v1/admin/marketplace` - catalogue distant + état d'installation local.
 pub async fn list_marketplace(
     State(state): State<AppState>,
     _admin: AdminUser,
@@ -77,7 +77,7 @@ pub async fn list_marketplace(
     Ok(Json(json!({ "modules": modules })))
 }
 
-/// `POST /api/v1/admin/marketplace/:id/install` — lance l'installation en tâche de
+/// `POST /api/v1/admin/marketplace/:id/install` - lance l'installation en tâche de
 /// fond et répond immédiatement `202 Accepted`. Le frontend suit l'avancement via
 /// `GET /api/v1/admin/marketplace/:id/status`.
 pub async fn install_marketplace(
@@ -97,8 +97,8 @@ pub async fn install_marketplace(
     tracing::info!(module_id = %id, "Marketplace : installation demandée par un admin");
 
     // The request is audited, then the outcome of the detached install is
-    // audited too. Installation runs in the background — there is no
-    // transaction to ride along with — so both entries go through the
+    // audited too. Installation runs in the background - there is no
+    // transaction to ride along with - so both entries go through the
     // standalone path, carrying the requesting operator's context.
     audit
         .record(
@@ -135,7 +135,7 @@ pub async fn install_marketplace(
     Ok((StatusCode::ACCEPTED, Json(json!({ "status": "started", "id": id }))))
 }
 
-/// `GET /api/v1/admin/marketplace/:id/status` — état d'avancement d'une installation.
+/// `GET /api/v1/admin/marketplace/:id/status` - état d'avancement d'une installation.
 pub async fn install_status(
     State(_state): State<AppState>,
     _admin: AdminUser,
@@ -146,7 +146,7 @@ pub async fn install_status(
     Ok(Json(json!({ "id": id, "progress": marketplace::get_progress(&id) })))
 }
 
-/// `DELETE /api/v1/admin/marketplace/:id` — désinstalle un module de la marketplace.
+/// `DELETE /api/v1/admin/marketplace/:id` - désinstalle un module de la marketplace.
 pub async fn uninstall_marketplace(
     State(state): State<AppState>,
     audit: AdminAudit,

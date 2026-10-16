@@ -57,7 +57,7 @@ data class UiAccount(
  * account, the other accounts on the device to switch to, adding one, and the
  * system's own account settings.
  *
- * Every action beyond switching is optional — an app hides what it does not
+ * Every action beyond switching is optional - an app hides what it does not
  * offer (a consumer app with no sign-in of its own passes null for
  * [onManageAccount] and [onSignOut]). The account model is generic so both the
  * owner app (drive) and consumer apps (mail) feed the same panel.

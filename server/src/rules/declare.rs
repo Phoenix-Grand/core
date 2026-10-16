@@ -2,7 +2,7 @@
 //!
 //! This file is the core acting as one more module. Everything here goes
 //! through [`super::catalog::register_core`], which is
-//! [`super::catalog::register_module`] with one different argument — the same
+//! [`super::catalog::register_module`] with one different argument - the same
 //! validation, the same forced prefixing, the same two tables, the same orphan
 //! handling. If this file were deleted the engine would still work; it would
 //! simply have nothing of the core's own to offer.
@@ -21,7 +21,7 @@ use super::condition::Operator;
 /// Event types the core publishes purely so a rule can react to them.
 ///
 /// They travel as [`crate::events::AppEvent::Custom`], which is the same vehicle
-/// a module uses — the engine cannot tell the difference, and that is the point.
+/// a module uses - the engine cannot tell the difference, and that is the point.
 ///
 /// The first two are produced by the **audit bridge** (see
 /// [`crate::audit::AuditContext::record`]): whatever the trail records outside a
@@ -36,7 +36,7 @@ pub mod events {
     /// Published by the role-assignment handler after it commits.
     pub const PRIVILEGE_GRANTED: &str = "core.authz.privilege_granted";
     /// Emitted by the `core.notify` action. A rule may react to it like any
-    /// other event — which is precisely how a feedback loop gets built, and why
+    /// other event - which is precisely how a feedback loop gets built, and why
     /// the depth guard exists.
     pub const NOTIFICATION_SENT: &str = "core.rules.notification";
 }
@@ -108,7 +108,7 @@ fn ambient_fields() -> Vec<FieldDef> {
 
 /// A **content part**: text the synchronous gate submits for inspection.
 ///
-/// No operator, deliberately — see [`catalog::CONTENT_TYPE`]. A part is
+/// No operator, deliberately - see [`catalog::CONTENT_TYPE`]. A part is
 /// something a detector reads, never something a comparison touches.
 fn content_part(name: &str, label: &str) -> FieldDef {
     FieldDef {
@@ -206,7 +206,7 @@ pub fn triggers() -> Vec<TriggerDef> {
         // Declared by the core through the ordinary path, like everything else
         // here. Its `event_type` names no bus event on purpose: nothing
         // publishes `core.rules.gate`, so a rule attached to it is reachable
-        // **only** through `POST /internal/rules/gate` — which is what makes
+        // **only** through `POST /internal/rules/gate` - which is what makes
         // "this rule can stop an operation" a property of the rule rather than
         // a mode of the engine.
         //
@@ -232,7 +232,7 @@ pub fn triggers() -> Vec<TriggerDef> {
                     field("mime_type", "string", "Type de contenu", STRING_OPS),
                     field("size", "number", "Taille en octets", NUMBER_OPS),
                     // Content parts. They declare NO operator, which is what
-                    // makes a comparison against them refused at write time —
+                    // makes a comparison against them refused at write time -
                     // and content never enters the facts, so there would be
                     // nothing to compare even if one slipped through. The only
                     // thing a rule may say about them is a detector leaf.
@@ -370,7 +370,7 @@ pub fn actions() -> Vec<ActionDef> {
         },
         // ── The two verdicts of the synchronous gate ─────────────────────────
         // Declared through the same path as every other action so the editor
-        // offers them without a special case — but *read* rather than
+        // offers them without a special case - but *read* rather than
         // dispatched: the gate computes the strongest verdict its matched rules
         // express and answers with it, in the same request. Nothing is
         // enqueued, which is why both are reversible: they change nothing.

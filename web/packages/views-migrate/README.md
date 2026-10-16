@@ -14,7 +14,7 @@ npx kbview-migrate --relayout --project . --app-root src --components --write   
 
 **Views and user controls.** Every screen is classified first, from how the project uses it (vskubuno
 `docs/VIEWS-SPEC.md` §1.1–1.2): a page a route renders, a window or a dialog becomes a **view** (`X.kbview`); a
-component other components place — a pane, a section, a tab, a row, a card, a panel given to a host slot — becomes a
+component other components place - a pane, a section, a tab, a row, a card, a panel given to a host slot - becomes a
 **user control** (`X.kbcontrol`, its markup inside `<UserControl x:Props="XProps">`: its props are its properties, its
 callbacks its events). With `--layout` (conversion) or `--relayout` (a project already converted), the files go to the
 folder of their role under each `--app-root`:
@@ -35,7 +35,7 @@ renames it (files and class).
 
 For every file the report says **converted** (everything became view elements), **partial** (some parts stay React,
 rendered by `<ReactHost>` elements marked `TODO(views-migrate)` in the view, each with its reason) or **skipped** (the
-file could not be converted: the reason says why — several exported components, an unsupported statement…).
+file could not be converted: the reason says why - several exported components, an unsupported statement…).
 
 What the codemod does, and what it leaves:
 

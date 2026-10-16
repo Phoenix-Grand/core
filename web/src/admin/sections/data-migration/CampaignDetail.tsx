@@ -103,7 +103,7 @@ export class CampaignDetail extends ViewBase {
       sortValue: r => r.target_email ?? '',
       cell: r => (
         <span className="flex min-w-0 flex-col">
-          <span className="truncate text-text-primary">{r.target_name || r.target_email || '—'}</span>
+          <span className="truncate text-text-primary">{r.target_name || r.target_email || '-'}</span>
           {r.target_name && r.target_email && (
             <span className="truncate text-text-tertiary" style={{ fontSize: 'var(--kb-text-meta)' }}>
               {r.target_email}
@@ -138,7 +138,7 @@ export class CampaignDetail extends ViewBase {
         <span className="text-text-secondary">
           {r.items_total > 0
             ? this.tr('admin.migr_items_of', { copied: r.items_copied, total: r.items_total })
-            : r.items_copied || '—'}
+            : r.items_copied || '-'}
         </span>
       ),
     },

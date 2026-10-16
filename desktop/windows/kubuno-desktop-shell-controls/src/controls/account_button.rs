@@ -1,9 +1,9 @@
 //! Code-behind of the user control `AccountButton` (`account_button.kbcontrol`, see its comment): the
 //! header's avatar, which opens the account panel ([`crate::AccountMenu`]) in a
-//! [`kubuno_desktop::popup::Popup`] — a floating window of its own, so the panel may extend beyond a small
+//! [`kubuno_desktop::popup::Popup`] - a floating window of its own, so the panel may extend beyond a small
 //! app window.
 //!
-//! Drop it in a view's header and give it the app's [`AccountService`] — once for every button of the
+//! Drop it in a view's header and give it the app's [`AccountService`] - once for every button of the
 //! thread with [`set_default_accounts`], or per button with [`AccountButton::set_service`]. The service
 //! says who is signed in, lists the other accounts, and hears what the user picks
 //! ([`AccountService::act`]); the panel then closes, as it does on Escape, on its close button and on a

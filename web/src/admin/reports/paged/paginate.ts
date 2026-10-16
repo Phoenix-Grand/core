@@ -5,7 +5,7 @@ import type { FlowItem, Placement, Sheet } from './types'
  * Cutting a document into sheets.
  *
  * A pure function of heights: it never touches the DOM, which is what makes it
- * testable and what makes the preview and the printout agree — both are drawn
+ * testable and what makes the preview and the printout agree - both are drawn
  * from the same array of `Sheet`.
  *
  * ## The three rules it enforces
@@ -14,7 +14,7 @@ import type { FlowItem, Placement, Sheet } from './types'
  *     next sheet.
  *  2. **A table is cut between rows, never through one**, its column heading is
  *     repeated on every fragment, and its total row travels with the LAST
- *     fragment — a total restated at the foot of each sheet reads as a subtotal
+ *     fragment - a total restated at the foot of each sheet reads as a subtotal
  *     and is a lie about the figure above it.
  *  3. **No orphan start.** A table that can only fit its heading and one row at
  *     the bottom of a sheet starts on the next one instead: two lines under a
@@ -25,7 +25,7 @@ import type { FlowItem, Placement, Sheet } from './types'
  * Space between two blocks.
  *
  * ⚠ Coupled to `index.css`: `[data-admin-report] [data-report-card]` sets
- * `margin: 4mm 0 0 0`. The two must agree — the paginator adds this to its
+ * `margin: 4mm 0 0 0`. The two must agree - the paginator adds this to its
  * running total, the browser adds it to the sheet, and a millimetre of
  * disagreement per block becomes a centimetre by the tenth one.
  */
@@ -70,7 +70,7 @@ export interface SheetSpec {
  *
  * The indirection is what makes ORIENTATION PER SHEET possible: sheet 3 can be
  * landscape while its neighbours are portrait, and it is not merely drawn wider
- * — it is filled with the row heights the document actually has at that width,
+ * - it is filled with the row heights the document actually has at that width,
  * which are not the portrait ones. A single set of measurements would put the
  * portrait cut on a landscape sheet and leave it either short or overflowing.
  */

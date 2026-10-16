@@ -1,5 +1,5 @@
 # Completeness audit: every property the toolkit DECLARES, checked against the
-# port — mechanically, so "nothing was forgotten" is a measurement and not a
+# port - mechanically, so "nothing was forgotten" is a measurement and not a
 # claim.
 #
 # For each control type we implement, each declared property is classified:
@@ -52,7 +52,7 @@ $OWNER = @{
 # `UseWaitCursor` -> `use_wait_cursor`, `MdiWindowListItem` -> `mdi_window_list_item`.
 function ConvertTo-SnakeCase([string]$name) {
     # One rule: a separator before every capital that is not the first letter.
-    # Two chained rules produced `back__color` for `BackColor` — a silent double
+    # Two chained rules produced `back__color` for `BackColor` - a silent double
     # underscore that made every such property look missing.
     (($name -creplace '(?<!^)([A-Z])', '_$1') -replace '_+', '_').ToLower()
 }
@@ -78,7 +78,7 @@ foreach ($type in $json) {
         $isMentioned = $text -match ('\b' + [regex]::Escape($p.name) + '\b')
 
         # A subclass that merely re-declares a base property must NOT restate it
-        # — the value lives on the base and is reached through `Deref`. So
+        # - the value lives on the base and is reached through `Deref`. So
         # before calling anything missing, look for the field on `ControlBase`,
         # which is what every chain bottoms out at.
         if (-not $cache.ContainsKey('control.rs')) {

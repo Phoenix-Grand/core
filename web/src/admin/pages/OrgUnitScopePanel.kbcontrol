@@ -1,4 +1,4 @@
-<!-- OrgUnitScopePanel — converted from OrgUnitScopePanel.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- OrgUnitScopePanel - converted from OrgUnitScopePanel.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="Props">
   <Panel Class="contents">
     <Stack CrossAlign="Center"

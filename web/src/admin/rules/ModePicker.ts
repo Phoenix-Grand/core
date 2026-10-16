@@ -22,7 +22,7 @@ interface Props {
   onChange: (mode: Mode) => void
   /** Modes the catalogue says are settable. Anything else is not offered. */
   modes:    Mode[]
-  /** `enforce` needs at least one action — the server refuses it otherwise. */
+  /** `enforce` needs at least one action - the server refuses it otherwise. */
   hasActions: boolean
   disabled?: boolean
 }

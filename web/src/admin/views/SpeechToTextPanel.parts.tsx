@@ -186,7 +186,7 @@ function AdvancedOptions({ cfg, onPatch }: { cfg: LangCfg; onPatch: (p: Partial<
             placeholder={t('admin.stt_grammar_ph', { defaultValue: 'Mots attendus, séparés par des virgules. Vide = reconnaissance libre.' })}
           />
           <p className="text-sm text-text-tertiary mt-1">
-            {t('admin.stt_grammar_hint', { defaultValue: 'Restreint Vosk à ces mots — précision maximale pour des commandes courtes.' })}
+            {t('admin.stt_grammar_hint', { defaultValue: 'Restreint Vosk à ces mots - précision maximale pour des commandes courtes.' })}
           </p>
         </div>
       )}

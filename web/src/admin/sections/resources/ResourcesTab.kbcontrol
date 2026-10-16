@@ -1,4 +1,4 @@
-<!-- ResourcesTab — converted from ResourcesTab.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- ResourcesTab - converted from ResourcesTab.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="ResourcesTabProps">
   <Panel Class="min-w-0">
     <Label Text="{Binding error}"

@@ -1,4 +1,4 @@
-<!-- Section — converted from Section.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- Section - converted from Section.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="SectionProps">
   <Panel HtmlTag="Section" Class="rounded-xl border border-border overflow-hidden">
     <Panel BackColor="Surface1" Class="px-5 py-3 border-b border-border">

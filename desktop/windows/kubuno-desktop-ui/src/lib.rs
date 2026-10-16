@@ -1,8 +1,8 @@
-//! # `kubuno-desktop-ui` — the Kubuno desktop design system
+//! # `kubuno-desktop-ui` - the Kubuno desktop design system
 //!
 //! Two layers already exist under this one, and this crate is what joins them:
 //!
-//! * [`kubuno_desktop_controls`] reproduces the **WinForms control surface** — every
+//! * [`kubuno_desktop_controls`] reproduces the **WinForms control surface** - every
 //!   property .NET declares, the defaults it ships, the state machines it
 //!   implements (three-state check cycling, scrollbar arithmetic, tab
 //!   selection, date grids) and the layout engines (Dock/Anchor, Flow, Table,
@@ -11,8 +11,8 @@
 //!   already draws through: a [`Canvas`] carrying the resolved theme, the
 //!   shared DirectWrite formats and the vector-icon geometries.
 //!
-//! A Kubuno primitive is therefore **not a new control**. It is a replica —
-//! kept whole, for its model and its geometry — with the *pixels* replaced by
+//! A Kubuno primitive is therefore **not a new control**. It is a replica -
+//! kept whole, for its model and its geometry - with the *pixels* replaced by
 //! the Kubuno look.
 //!
 //! ```text
@@ -28,7 +28,7 @@
 //! 1. **Own a replica, never restate it.** A primitive holds its .NET
 //!    counterpart and [`Deref`](std::ops::Deref)s to it, so
 //!    `button.text`, `button.enabled`, `button.padding` are the replica's
-//!    fields — one storage location, no drift. A field is added here *only*
+//!    fields - one storage location, no drift. A field is added here *only*
 //!    when Kubuno adds a concept .NET does not have (`variant`, `size`).
 //! 2. **Take geometry and state from the replica.** Checkbox cycling,
 //!    scrollbar thumb arithmetic, flow wrapping, anchor resolution: all of it
@@ -37,13 +37,13 @@
 //! 3. **Paint through [`Canvas`] only.** Colours come from
 //!    [`Canvas::theme`], type from [`Canvas::formats`], glyphs from
 //!    `vector_icon`. No `Visuals`, no `uxtheme`, and no colour literal in a
-//!    paint body — the replica layer owns the system look, this one owns the
+//!    paint body - the replica layer owns the system look, this one owns the
 //!    Kubuno look, and the two must not leak into each other.
 //! 4. **Never multiply by [`Canvas::scale`].** The renderer sets the D2D dpi,
 //!    so every coordinate here is already a DIP. Scaling again is the single
 //!    most expensive mistake this codebase has made.
 //! 5. **One metric table.** Heights, radii, paddings and gaps live in
-//!    [`metrics`], never as literals in a paint body — a design change must be
+//!    [`metrics`], never as literals in a paint body - a design change must be
 //!    one edit, not a search.
 //!
 //! ## Not regressing what ships
@@ -59,7 +59,7 @@
 
 pub mod focus; // FocusRing: Tab order, click-to-focus, :focus-visible
 /// The WinForms-`Graphics`-like drawing API (paths, gradients, pens, text layout, clip,
-/// transforms) and owner-draw (`DrawItem`/`MeasureItem`) — see the module doc.
+/// transforms) and owner-draw (`DrawItem`/`MeasureItem`) - see the module doc.
 pub mod graphics;
 pub mod metrics;
 pub mod mnemonic; // the underlined shortcut letter of a `&Save` text
@@ -77,7 +77,7 @@ pub mod text; // TextField, TextArea, SearchField
 pub mod views; // TreeView, ListView
 
 // Second wave: the families the first pass left out. The inventory that found
-// them is worth keeping in mind — the first eight were chosen from the WinForms
+// them is worth keeping in mind - the first eight were chosen from the WinForms
 // replica list, which is why `datetime` was missed despite its replica already
 // existing, and why everything the *web* has and WinForms does not (colour
 // pickers, the data table, dialogs, toasts) was missed entirely.

@@ -1,5 +1,5 @@
 /**
- * MediaViewer — generic image/video/audio/pdf/text full-screen preview.
+ * MediaViewer - generic image/video/audio/pdf/text full-screen preview.
  * For IMAGES it browses the other images of the same folder as a gallery
  * (on-screen arrows + ←/→ keys). Other types open alone.
  */
@@ -89,7 +89,7 @@ export function MediaViewer({ files, start, contentOf, onClose }: {
         ) : m === 'application/pdf' ? (
           <iframe src={src} title={file.name} className="w-full h-full bg-white rounded-lg" />
         ) : (
-          <p className="text-white/80 text-sm">Aperçu non disponible — téléchargez le fichier.</p>
+          <p className="text-white/80 text-sm">Aperçu non disponible - téléchargez le fichier.</p>
         )}
         {canNav && (
           <button onClick={() => go(1)} aria-label="Suivant"

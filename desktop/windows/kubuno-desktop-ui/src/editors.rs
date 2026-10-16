@@ -1,4 +1,4 @@
-//! Kubuno primitives — **editors**: the controls that pick or edit a piece of
+//! Kubuno primitives - **editors**: the controls that pick or edit a piece of
 //! text's *form* rather than a value in a form.
 //!
 //! [`Dropdown`], [`Editable`], [`FontPicker`], [`FontSizeField`] and
@@ -24,16 +24,16 @@
 //! # What is NOT ported: the rich-text editing area
 //!
 //! `core/frontend/src/ui/RichText.tsx` is a `contenteditable` div driven by
-//! `document.execCommand`. Everything that makes it work — an inline formatting
+//! `document.execCommand`. Everything that makes it work - an inline formatting
 //! model (a tree of spans, not a string), a selection that spans elements,
-//! `queryCommandState`, `createLink`, `removeFormat`, undo — is the browser's,
+//! `queryCommandState`, `createLink`, `removeFormat`, undo - is the browser's,
 //! and nothing under this crate has any of it: [`EditView`] is a **single-line,
 //! single-run** view (`crate::text` already records that a multi-row selection
 //! is out of its reach), and the [`Canvas`] draws one run in one
 //! `IDWriteTextFormat` at a time.
 //!
 //! So the editing area is deliberately absent. What ships is its **toolbar**
-//! ([`RichTextToolbar`]) — a real primitive, reusable by any editor, whose
+//! ([`RichTextToolbar`]) - a real primitive, reusable by any editor, whose
 //! active states are the replica's `ToolStripButton::Checked`.
 //!
 //! [`EditView`]: kubuno_drive_desktop_app_controls::edit_box::EditView
@@ -41,7 +41,7 @@
 //! # Where the numbers come from
 //!
 //! None of these five has a hand-written predecessor in `kubuno-drive-desktop-app-controls`,
-//! so — as `docs/UI_BRIEF.md` requires — the reference is the **web** design
+//! so - as `docs/UI_BRIEF.md` requires - the reference is the **web** design
 //! system, *read* from the source (this machine cannot run the web app, so no
 //! number below was measured):
 //!
@@ -53,7 +53,7 @@
 //! | [`FontSizeField`] | `core/frontend/src/ui/FontSizeField.tsx` (its `SizeCombo`) |
 //! | [`RichTextToolbar`] | `core/frontend/src/ui/RichText.tsx` (its toolbar row) |
 //!
-//! # `Dropdown` vs `ComboBox` — why both ship
+//! # `Dropdown` vs `ComboBox` - why both ship
 //!
 //! [`crate::lists::ComboBox`] is already delivered, and the first question this
 //! family had to answer was whether [`Dropdown`] is the same control under a
@@ -62,10 +62,10 @@
 //! | | `@ui/Combobox` → [`crate::lists::ComboBox`] | `@ui/Dropdown` → [`Dropdown`] |
 //! |---|---|---|
 //! | trigger | `h-9 … rounded-md border px-3 gap-2`, fixed | `height` **prop** (36 default, 28 in toolbars), `padding: '0 4px 0 8px'`, `gap-1` |
-//! | indicator | lucide `ChevronDown`, `w-4` | `@ui/CaretDown` — a **solid** triangle, whose own doc says « not lucide's `ChevronDown` … and not the `▼` character » |
+//! | indicator | lucide `ChevronDown`, `w-4` | `@ui/CaretDown` - a **solid** triangle, whose own doc says « not lucide's `ChevronDown` … and not the `▼` character » |
 //! | variants | one | `default` / `ghost` (borderless toolbar selector) / `dark` |
 //! | options | label only | label **plus an optional icon**, with one shared gutter for the whole list |
-//! | popup | the `role="listbox"` panel: `rounded-lg border bg-white`, `p-1`, 32 DIP rows with a `w-4` tick gutter | the **frosted float** panel: `padding: 5`, `5px 10px` rows at `borderRadius: 6`, a `width: 14` check gutter — i.e. the `MenuDropdown` grid |
+//! | popup | the `role="listbox"` panel: `rounded-lg border bg-white`, `p-1`, 32 DIP rows with a `w-4` tick gutter | the **frosted float** panel: `padding: 5`, `5px 10px` rows at `borderRadius: 6`, a `width: 14` check gutter - i.e. the `MenuDropdown` grid |
 //! | selected row | accent-coloured label + a `Check` glyph | tinted ground + `fontWeight: 600` + a check |
 //!
 //! Different trigger, different indicator, different popup grid, an extra
@@ -76,7 +76,7 @@
 //! replica, so `Items`, `SelectedIndex`, `Sorted`, `DropDownWidth` and
 //! `MaxDropDownItems` are stored once, in the toolkit's own state machine, and
 //! the two primitives cannot disagree about what is selected. It also borrows
-//! [`crate::lists`]' already-sourced grids rather than restating them —
+//! [`crate::lists`]' already-sourced grids rather than restating them -
 //! `DROP_DOWN_MAX`, `PANEL_PAD`, `ICON_GLYPH` and the anchor offset are that
 //! module's constants, imported.
 //!
@@ -84,7 +84,7 @@
 //! than an omission: it is a hard-coded palette (`#cccccc`, `#3c3c3c`,
 //! `rgb(37 37 38 / 72%)`) for a page whose surrounding app is light. The
 //! desktop resolves light and dark through [`Canvas::theme`], so a `ghost`
-//! dropdown in a dark theme already paints dark — and a colour literal in a
+//! dropdown in a dark theme already paints dark - and a colour literal in a
 //! paint body is forbidden here.
 
 use std::cell::{Cell, RefCell};
@@ -118,7 +118,7 @@ use crate::widget::{Widget, WidgetState};
 // `height::MENU_ITEM` for a `5px + 20px line + 5px` row, `height::BUTTON_MD`
 // for `h-9`, and the whole spacing scale. `crate::lists` publishes the two
 // floating grids this family reuses. What is left below is what the five web
-// files state literally and nothing names — each constant quotes its line, and
+// files state literally and nothing names - each constant quotes its line, and
 // the three that have NO source say so in as many words.
 // ═════════════════════════════════════════════════════════════════════════════
 
@@ -126,7 +126,7 @@ use crate::widget::{Widget, WidgetState};
 pub mod dropdown_metrics {
     use crate::metrics::{height, radius, space};
 
-    /// `height = 36` — the prop's default. Toolbar call sites pass 28; the
+    /// `height = 36` - the prop's default. Toolbar call sites pass 28; the
     /// height is a field here for that reason ([`super::Dropdown::height`]).
     pub const HEIGHT: f32 = height::BUTTON_MD;
     /// `padding: '0 4px 0 8px'` on the trigger.
@@ -139,7 +139,7 @@ pub mod dropdown_metrics {
     pub const CARET_GAP: f32 = 4.0;
     /// `borderRadius: 'var(--radius-md)'`, which this system resolves to 4.
     pub const RADIUS: f32 = radius::SM;
-    /// `boxShadow: 0 0 0 2px PRIMARY` on an open or focused trigger — the same
+    /// `boxShadow: 0 0 0 2px PRIMARY` on an open or focused trigger - the same
     /// 2 DIP ring `@ui/Input` wears (`focus:ring-2`).
     pub const FOCUS_RING: f32 = 2.0;
     /// `opacity: disabled ? 0.5 : 1`. Note this is **0.5**, not the 0.6
@@ -155,7 +155,7 @@ pub mod dropdown_metrics {
     pub const ICON_CELL: f32 = 18.0;
     /// `gap-2` between the gutters and the label.
     pub const CELL_GAP: f32 = space::SM;
-    /// `borderRadius: 6` on an option — [`radius::MENU_ITEM`], the same 6 a
+    /// `borderRadius: 6` on an option - [`radius::MENU_ITEM`], the same 6 a
     /// `MenuDropdown` row is rounded by.
     pub const ROW_RADIUS: f32 = radius::MENU_ITEM;
 }
@@ -164,7 +164,7 @@ pub mod dropdown_metrics {
 pub mod font_metrics {
     use crate::metrics::{height, radius, space};
 
-    /// `height = 36`, `width = 150` — the props' defaults.
+    /// `height = 36`, `width = 150` - the props' defaults.
     pub const HEIGHT: f32 = height::BUTTON_MD;
     pub const WIDTH: f32 = 150.0;
     /// `padding: '0 6px 0 10px'` on the trigger.
@@ -174,13 +174,13 @@ pub mod font_metrics {
     pub const CARET: f32 = 11.0;
     pub const CARET_GAP: f32 = 4.0;
 
-    /// `top: r.bottom + 4` — the popup's anchor offset. NOT the 2 a
+    /// `top: r.bottom + 4` - the popup's anchor offset. NOT the 2 a
     /// `Dropdown` uses; the two files differ.
     pub const OFFSET: f32 = 4.0;
     /// `minWidth: Math.max(248, r.width)` and `maxWidth: 360`.
     pub const MIN_WIDTH: f32 = 248.0;
     pub const MAX_WIDTH: f32 = 360.0;
-    /// `borderRadius: 10` on the panel — [`radius::FLOAT`].
+    /// `borderRadius: 10` on the panel - [`radius::FLOAT`].
     pub const RADIUS: f32 = radius::FLOAT;
 
     /// The search row: `height: 40`, `px-2.5`, `gap-2`, `<Search size={15} />`.
@@ -196,7 +196,7 @@ pub mod font_metrics {
     /// A category header: `padding: '8px 12px 4px'` at `fontSize: 11`.
     /// The 11 px face does not exist in `TextFormats`, so the row is measured
     /// with the **meta** line box (16) the way [`crate::display::Role::Micro`]
-    /// already collapses — 8 + 16 + 4 = 28.
+    /// already collapses - 8 + 16 + 4 = 28.
     pub const HEADER_PAD_T: f32 = space::SM;
     pub const HEADER_PAD_B: f32 = space::XS;
     pub const HEADER_PAD_L: f32 = space::MD;
@@ -235,7 +235,7 @@ pub mod font_metrics {
 pub mod size_metrics {
     use crate::metrics::{height, radius, space};
 
-    /// `height = 30`, `sizeWidth = 62` — the props' defaults. The 30 is the
+    /// `height = 30`, `sizeWidth = 62` - the props' defaults. The 30 is the
     /// toolbar height the whole `FontSizeField` is glued at, not `h-9`.
     pub const HEIGHT: f32 = 30.0;
     pub const WIDTH: f32 = 62.0;
@@ -245,7 +245,7 @@ pub mod size_metrics {
     /// The caret button: `width: 18`, `<CaretDown size={10} />`.
     pub const CARET_CELL: f32 = 18.0;
     pub const CARET: f32 = 10.0;
-    /// `minSize = 1`, `maxSize = 999` — the props' defaults.
+    /// `minSize = 1`, `maxSize = 999` - the props' defaults.
     pub const MIN: f64 = 1.0;
     pub const MAX: f64 = 999.0;
 
@@ -255,7 +255,7 @@ pub mod size_metrics {
     pub const MIN_WIDTH: f32 = 56.0;
     pub const RADIUS: f32 = radius::XL;
     pub const LIST_PAD_V: f32 = space::XS;
-    /// A preset row: `padding: '5px 12px'` over a 20 DIP line — the same
+    /// A preset row: `padding: '5px 12px'` over a 20 DIP line - the same
     /// arithmetic [`height::MENU_ITEM`] is documented with.
     pub const ROW_H: f32 = height::MENU_ITEM;
     pub const ROW_PAD_L: f32 = space::MD;
@@ -273,7 +273,7 @@ pub mod rich_metrics {
     pub const GAP: f32 = space::XXS;
     /// `rounded` on a button, which this system resolves to 4.
     pub const RADIUS: f32 = radius::SM;
-    /// `<Bold size={15} />` — every glyph in the bar is 15.
+    /// `<Bold size={15} />` - every glyph in the bar is 15.
     pub const GLYPH: f32 = 15.0;
     /// `<span className="w-px h-5 bg-border mx-1" />`: a 1 DIP rule, 20 tall,
     /// with 4 of margin on each side.
@@ -292,7 +292,7 @@ pub mod rich_metrics {
 // Shared helpers
 // ─────────────────────────────────────────────────────────────────────────────
 
-/// The same colour at a fraction of its alpha — how this design system dims.
+/// The same colour at a fraction of its alpha - how this design system dims.
 ///
 /// The web fades with CSS `opacity`, for which there is no token; alpha over
 /// the surface composites the same way. The hue still comes from the theme, so
@@ -301,7 +301,7 @@ fn faded(colour: &D2D1_COLOR_F, alpha: f32) -> D2D1_COLOR_F {
     D2D1_COLOR_F { a: colour.a * alpha, ..*colour }
 }
 
-/// The layered shadow under a floating panel — [`crate::lists`]' own, so a
+/// The layered shadow under a floating panel - [`crate::lists`]' own, so a
 /// dropdown and a menu are lifted off the page by the same recipe. It follows
 /// the panel's own corner, so a 8-rounded size list does not wear the shadow
 /// of a 10-rounded one.
@@ -314,7 +314,7 @@ fn drop_shadow(c: &dyn Canvas, panel: &Rect, corner: f32) {
 /// `layer_background`, **not** `flyout_background`: that token is half-opaque
 /// because the web's float lives over a `backdrop-filter` and the desktop's
 /// over a compositor blur. A primitive painted INSIDE a window has neither, and
-/// the half-opaque colour would let the page read straight through it — the
+/// the half-opaque colour would let the page read straight through it - the
 /// finding [`crate::lists::Menu`] already recorded, reused here so the two
 /// floats agree.
 fn paint_float_panel(c: &dyn Canvas, panel: Rect, corner: f32) {
@@ -356,7 +356,7 @@ pub fn inflate(r: Rect, by: f32) -> Rect {
     Rect::new(r.left - by, r.top - by, r.right + by, r.bottom + by)
 }
 
-/// `r` expressed relative to `origin`'s top-left corner — how a rectangle in
+/// `r` expressed relative to `origin`'s top-left corner - how a rectangle in
 /// client coordinates is handed to a `host::popup` paint closure, whose canvas
 /// starts at the popup's own top-left.
 pub fn rebase(r: Rect, origin: Rect) -> Rect {
@@ -366,11 +366,11 @@ pub fn rebase(r: Rect, origin: Rect) -> Rect {
 /// What a popup does when it does not fit under its anchor.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Overflow {
-    /// Open ABOVE the anchor instead — `Dropdown.tsx`
+    /// Open ABOVE the anchor instead - `Dropdown.tsx`
     /// (`tr.top - 2 - r.height`) and `FontSizeField.tsx`
     /// (`pos.top - r.height - height - 8`, i.e. 4 above the field).
     Flip,
-    /// Slide up just enough to fit — `FontPicker.tsx`
+    /// Slide up just enough to fit - `FontPicker.tsx`
     /// (`innerHeight - M - r.height`).
     Slide,
 }
@@ -399,7 +399,7 @@ pub fn place_floating(anchor: Rect, width: f32, height: f32, gap: f32, area: Rec
 
 /// A thin scroll thumb on the right edge of `track`: `first` of `total`
 /// content units scrolled away, `visible` of them on screen. Painted only when
-/// the content overflows — the web's `overflowY: auto`, which shows no bar
+/// the content overflows - the web's `overflowY: auto`, which shows no bar
 /// when everything fits. The width is the web's `::-webkit-scrollbar` (8), the
 /// minimum length the shared scroll bar's.
 ///
@@ -427,8 +427,8 @@ fn paint_scroll_thumb(c: &dyn Canvas, panel: Rect, corner: f32, track: Rect, fir
 }
 
 /// The web's type-ahead (`Dropdown.tsx`, `typeAhead`): letters typed in quick
-/// succession are matched against the START of the labels — « b », « bo »,
-/// « boo » — and forgotten after [`float_metrics::TYPEAHEAD_MS`]. A single
+/// succession are matched against the START of the labels - « b », « bo »,
+/// « boo » - and forgotten after [`float_metrics::TYPEAHEAD_MS`]. A single
 /// letter repeated (« b », « b », « b ») walks through the matches instead of
 /// looking for « bbb ».
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
@@ -465,7 +465,7 @@ impl TypeAhead {
         let single = count > 1 && q.chars().all(|c| c == first);
         let needle: String = if single { first.to_string() } else { q.clone() };
         // `from + 1` for a fresh letter or a repeat, `from` while a word grows
-        // — so « bo » stays on the « bo… » row the « b » found.
+        // - so « bo » stays on the « bo… » row the « b » found.
         let from = from.map_or(-1, |f| f as i64);
         let start = if single || count == 1 { from + 1 } else { from.max(0) };
         (0..n as i64)
@@ -480,7 +480,7 @@ impl TypeAhead {
 }
 
 /// Which edge of a selector is squared off so it can be glued to a neighbour
-/// — `FontSizeField.tsx`'s `buttonStyle` / `boxStyle`: « the joined edge is
+/// - `FontSizeField.tsx`'s `buttonStyle` / `boxStyle`: « the joined edge is
 /// squared (only the outer corners stay rounded) and the middle borders
 /// overlap into one divider line ».
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
@@ -531,7 +531,7 @@ fn paint_box(
 }
 
 /// The accent focus ring every selector of the family wears on
-/// `:focus-visible` — the same 2 DIP ring `@ui/Input` draws
+/// `:focus-visible` - the same 2 DIP ring `@ui/Input` draws
 /// ([`crate::text::FOCUS_RING`]).
 fn paint_focus_ring(c: &dyn Canvas, r: Rect, corner: f32) {
     c.stroke_rounded_w(&r, corner, &c.theme().accent, FOCUS_RING);
@@ -540,7 +540,7 @@ fn paint_focus_ring(c: &dyn Canvas, r: Rect, corner: f32) {
 /// What a keystroke did to a selector with a dropped list.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum ListKey {
-    /// Not a key this control uses — leave it for someone else.
+    /// Not a key this control uses - leave it for someone else.
     Ignored,
     /// The list opened.
     Opened,
@@ -559,7 +559,7 @@ impl ListKey {
     }
 }
 
-/// Clamps `i + delta` into `0 .. n` — the web's `clamp`.
+/// Clamps `i + delta` into `0 .. n` - the web's `clamp`.
 fn step_index(i: Option<usize>, delta: i64, n: usize) -> Option<usize> {
     if n == 0 {
         return None;
@@ -571,7 +571,7 @@ fn step_index(i: Option<usize>, delta: i64, n: usize) -> Option<usize> {
 /// The solid drop-down caret every list-style selector in this family wears,
 /// centred in `cell`.
 ///
-/// `@ui/CaretDown` is a **geometry**, not a character — its own doc comment
+/// `@ui/CaretDown` is a **geometry**, not a character - its own doc comment
 /// rejects the `▼` character « whose shape and baseline change from one font to
 /// the next », which is rule 6 of the brief stated in the web's own words. The
 /// path lives in `assets/lucide-icons.txt` under `CaretDown`.
@@ -581,15 +581,15 @@ fn paint_caret(c: &dyn Canvas, cell: Rect, size: f32, colour: &D2D1_COLOR_F) {
 
 /// The installed font families, enumerated **once** per process.
 ///
-/// This is [`kubuno_drive_desktop_app_controls::Renderer::system_font_families`] — the very
-/// function the shell's appearance settings already list fonts with — reached
+/// This is [`kubuno_drive_desktop_app_controls::Renderer::system_font_families`] - the very
+/// function the shell's appearance settings already list fonts with - reached
 /// through a detached renderer, because that method needs a `Renderer` and a
 /// [`Canvas`] does not expose one. The renderer is dropped as soon as the names
 /// are read; the `OnceLock` is what keeps a paint body from building a D3D
 /// device per frame.
 ///
 /// An empty slice means the enumeration failed (no device, no font
-/// collection). Callers show what they are given — a picker with no families is
+/// collection). Callers show what they are given - a picker with no families is
 /// visibly empty, which is the truth, rather than a plausible invented list.
 pub fn system_font_families() -> &'static [String] {
     static FAMILIES: OnceLock<Vec<String>> = OnceLock::new();
@@ -615,23 +615,23 @@ pub fn system_font_families() -> &'static [String] {
 
 /// Which of `Dropdown.tsx`'s looks a selector wears.
 ///
-/// `dark` is absent on purpose — see the module documentation.
+/// `dark` is absent on purpose - see the module documentation.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
 pub enum DropdownVariant {
     /// `default`: a bordered field that takes the accent ring when open.
     #[default]
     Default,
-    /// `ghost`: `border: transparent` — the toolbar selector, which must not
+    /// `ghost`: `border: transparent` - the toolbar selector, which must not
     /// draw a box inside a bar that is already a box.
     Ghost,
 }
 
-/// A selector with optional per-option icons — `@ui/Dropdown`.
+/// A selector with optional per-option icons - `@ui/Dropdown`.
 ///
 /// The **model is the toolkit's**: `Items`, `SelectedIndex`, `Sorted`,
 /// `DropDownWidth` and `MaxDropDownItems` all live in the
 /// [`kubuno_desktop_controls::lists::ComboBox`] this owns and are reached through
-/// [`Deref`] — the same replica [`crate::lists::ComboBox`] owns, so the two
+/// [`Deref`] - the same replica [`crate::lists::ComboBox`] owns, so the two
 /// primitives cannot hold two different ideas of what is selected. What this
 /// type adds is what .NET has no concept of: a [`DropdownVariant`], a free
 /// trigger [`height`](Dropdown::height), a `placeholder`, the per-option icon
@@ -648,23 +648,23 @@ pub enum DropdownVariant {
 #[derive(Clone, Default)]
 pub struct Dropdown {
     inner: replica::ComboBox,
-    /// One entry per item — the web's `DropdownOption.icon`, as a geometry name
+    /// One entry per item - the web's `DropdownOption.icon`, as a geometry name
     /// from `assets/lucide-icons.txt`.
     ///
     /// It is a **parallel** vector rather than a field on the item because the
     /// item IS the replica's `String`: giving options a struct of their own here
     /// would put the label in two places, which rule 1 forbids. It is kept in
     /// step by [`Dropdown::add_option`], and read through [`Dropdown::icon_of`],
-    /// which answers `None` for anything it does not cover — so a caller that
+    /// which answers `None` for anything it does not cover - so a caller that
     /// pushes into `items` directly gets an icon-less option, never a panic.
     pub icons: Vec<Option<String>>,
     pub variant: DropdownVariant,
-    /// `height` — 36 by default, 28 in a toolbar.
+    /// `height` - 36 by default, 28 in a toolbar.
     pub height: f32,
     /// The greyed text shown when nothing is selected. .NET's `ComboBox` has no
     /// `PlaceholderText` (only `TextBox` does), so it lives here.
     pub placeholder: String,
-    /// `DroppedDown` — runtime state the replica does not model.
+    /// `DroppedDown` - runtime state the replica does not model.
     pub open: bool,
     /// The row under the pointer inside the open list.
     pub hot_index: Option<usize>,
@@ -672,14 +672,14 @@ pub struct Dropdown {
     /// web, which is what turns the border accent even while closed).
     pub focused: bool,
     /// The first option row shown when the list is longer than
-    /// `maxHeight: 280` — the list's scroll position, in rows. Kept in range by
+    /// `maxHeight: 280` - the list's scroll position, in rows. Kept in range by
     /// [`Dropdown::scroll_by`] and [`Dropdown::ensure_visible`].
     pub scroll: usize,
     /// The type-ahead buffer (`typed` in the web).
     pub type_ahead: TypeAhead,
     /// Squares one edge to glue the trigger to a neighbour (`buttonStyle`).
     pub joined: SquaredEdge,
-    /// Where [`Dropdown::place_drop_down`] put the open list — `None` means
+    /// Where [`Dropdown::place_drop_down`] put the open list - `None` means
     /// « under the trigger », the historical behaviour.
     placed: Option<Rect>,
 }
@@ -701,7 +701,7 @@ impl Dropdown {
         Self { height: dropdown_metrics::HEIGHT, ..Self::default() }
     }
 
-    /// Adds an option and its icon in one call — the only mutator that keeps
+    /// Adds an option and its icon in one call - the only mutator that keeps
     /// [`Dropdown::icons`] aligned with the replica's `Items`.
     ///
     /// Returns the index the replica stored it at, which is **not** necessarily
@@ -723,14 +723,14 @@ impl Dropdown {
         self.icons.get(i).and_then(Option::as_deref)
     }
 
-    /// Whether ANY option carries an icon — the web's `anyIcon`, which reserves
+    /// Whether ANY option carries an icon - the web's `anyIcon`, which reserves
     /// one gutter for the whole list « so their labels stay in one column ».
     pub fn has_icon_gutter(&self) -> bool {
         self.icons.iter().any(Option::is_some)
     }
 
     /// The text the trigger shows: the selected label, else the placeholder,
-    /// else the control's own `Text` — `selected?.label ?? placeholder ?? value`.
+    /// else the control's own `Text` - `selected?.label ?? placeholder ?? value`.
     pub fn display_text(&self) -> &str {
         match self.inner.selected_item() {
             Some(s) => s,
@@ -802,7 +802,7 @@ impl Dropdown {
         &self.inner.items
     }
 
-    /// `onTriggerKeyDown`, key by key — what a native `<select>` does. The
+    /// `onTriggerKeyDown`, key by key - what a native `<select>` does. The
     /// trigger keeps the focus and the list follows it; `Escape` closes.
     ///
     /// Closed: `↓` `↑` `Enter` `Space` (and `Alt+↓`) open on the selected row,
@@ -850,7 +850,7 @@ impl Dropdown {
         ListKey::Moved
     }
 
-    /// Typed characters — the type-ahead. Closed, a match opens the list on
+    /// Typed characters - the type-ahead. Closed, a match opens the list on
     /// it; open, it moves the highlight. A space is never part of a search:
     /// the web's `switch` takes `' '` first (it opens or commits).
     pub fn type_text(&mut self, text: &str, now_ms: u64) -> ListKey {
@@ -876,7 +876,7 @@ impl Dropdown {
     }
 
     /// Reads this frame's keys and typed text from the host queue and applies
-    /// them — for a caller whose trigger holds the focus. Keys this control
+    /// them - for a caller whose trigger holds the focus. Keys this control
     /// does not use are left in the queue for the next reader. Escape is taken
     /// only while the list is open (the web's capture listener), so a closed
     /// dropdown never swallows the Escape a dialog is waiting for.
@@ -911,7 +911,7 @@ impl Dropdown {
         result
     }
 
-    /// The trigger's rectangle inside `bounds` — the first [`Dropdown::height`]
+    /// The trigger's rectangle inside `bounds` - the first [`Dropdown::height`]
     /// DIP of it, so a caller can hand the whole control one rectangle and the
     /// list still drops below the button rather than below the rectangle.
     pub fn trigger_rect(&self, bounds: Rect) -> Rect {
@@ -932,7 +932,7 @@ impl Dropdown {
             .min(self.inner.max_drop_down_items.max(1) as usize)
     }
 
-    /// Whether the list is longer than its window — `overflowY: 'auto'` then
+    /// Whether the list is longer than its window - `overflowY: 'auto'` then
     /// shows a bar, and the rows give up its width.
     pub fn scrolls(&self) -> bool {
         self.inner.items.len() > self.visible_rows()
@@ -979,7 +979,7 @@ impl Dropdown {
     /// Where the open list is drawn.
     ///
     /// `openDropdown`: `top: r.bottom + 2`, `left: r.left`,
-    /// `minWidth: Math.max(dropdownMinWidth ?? 0, r.width)` — `DropDownWidth` is
+    /// `minWidth: Math.max(dropdownMinWidth ?? 0, r.width)` - `DropDownWidth` is
     /// the replica's spelling of `dropdownMinWidth`, and its `0` default means
     /// « match the control », exactly as the web's `?? 0` does. Once
     /// [`Dropdown::place_drop_down`] has run, the placed rectangle instead.
@@ -1008,8 +1008,8 @@ impl Dropdown {
 
     /// The web's `placeAt` + `reposition`: sizes the list to its content
     /// (never narrower than the trigger or `DropDownWidth`, never wider than
-    /// the work area), then places it under the trigger — or ABOVE it when the
-    /// monitor has no room below — inside `area` (the monitor work area, in
+    /// the work area), then places it under the trigger - or ABOVE it when the
+    /// monitor has no room below - inside `area` (the monitor work area, in
     /// the same space as `bounds`: `Frame::screen_area`). Every later geometry
     /// call ([`Dropdown::drop_down_rect`], [`Dropdown::row_rect`],
     /// [`Dropdown::item_at`]) follows the placement.
@@ -1030,7 +1030,7 @@ impl Dropdown {
     }
 
     /// The rectangle a `host::popup` hosting the open list must cover: the
-    /// panel plus its shadow ([`shadow_margin`]). Only the list — the trigger
+    /// panel plus its shadow ([`shadow_margin`]). Only the list - the trigger
     /// stays painted in the owner window ([`Dropdown::paint_field`]).
     pub fn drop_down_paint_bounds(&self, bounds: Rect) -> Rect {
         inflate(self.drop_down_rect(bounds), shadow_margin())
@@ -1048,7 +1048,7 @@ impl Dropdown {
         )
     }
 
-    /// Where option `i` is drawn inside the panel `panel` — `None` when it is
+    /// Where option `i` is drawn inside the panel `panel` - `None` when it is
     /// scrolled out of the window.
     pub fn row_rect_in(&self, panel: Rect, i: usize) -> Option<Rect> {
         if i < self.scroll || i >= (self.scroll + self.visible_rows()).min(self.inner.items.len()) {
@@ -1080,7 +1080,7 @@ impl Dropdown {
     }
 
     /// Where the label starts inside a popup row: the row's `padding-left`, the
-    /// check gutter, the gap, and — when the list has any icon — the icon
+    /// check gutter, the gap, and - when the list has any icon - the icon
     /// gutter and a second gap.
     pub fn label_inset(&self) -> f32 {
         let m = dropdown_metrics::ROW_PAD;
@@ -1093,7 +1093,7 @@ impl Dropdown {
     }
 
     /// Paints the trigger alone, in its open / focused / hovered / disabled
-    /// look — what the owner window draws while the list floats in a popup.
+    /// look - what the owner window draws while the list floats in a popup.
     pub fn paint_field(&self, canvas: &dyn Canvas, bounds: Rect, state: WidgetState) {
         canvas.fill_rounded(&bounds, 0.0, &canvas.current_bg());
         let dead = state.disabled || !self.inner.control().enabled;
@@ -1106,9 +1106,9 @@ impl Dropdown {
         let m = dropdown_metrics::RADIUS;
 
         // `focusBorder = variant === 'default' && (open || focused)`, where
-        // `focused` is `:focus-visible` — a trigger clicked with the mouse must
+        // `focused` is `:focus-visible` - a trigger clicked with the mouse must
         // not stay lit once its list is closed. A ghost trigger never rings: it
-        // must not draw a box in a bar — it shows the keyboard focus with the
+        // must not draw a box in a bar - it shows the keyboard focus with the
         // shared ring instead, like any other button.
         let keyboard = self.focused || state.show_focus_ring();
         let ringed = self.variant == DropdownVariant::Default && (self.open || keyboard) && !dead;
@@ -1177,7 +1177,7 @@ impl Dropdown {
     }
 
     /// Records the visible rows of the open list, laid out in `panel` (the popup's coordinates),
-    /// through the owner-draw `handler` — for a list painted later in its popup, which lends the
+    /// through the owner-draw `handler` - for a list painted later in its popup, which lends the
     /// recording ([`owner_draw::RecordedItems`]) around [`Dropdown::paint_drop_down_at`].
     pub fn record_drop_down_items(&self, panel: Rect, handler: &mut dyn owner_draw::OwnerDrawHandler) -> owner_draw::RecordedItems {
         let mut out = owner_draw::RecordedItems::new();
@@ -1194,7 +1194,7 @@ impl Dropdown {
         out
     }
 
-    /// Paints the open list into the panel `panel` — `drop_down_rect` in the
+    /// Paints the open list into the panel `panel` - `drop_down_rect` in the
     /// owner's space, or that rectangle [`rebase`]d into a popup's. The
     /// shadow reaches [`shadow_margin`] past `panel`.
     pub fn paint_drop_down_at(&self, c: &dyn Canvas, panel: Rect) {
@@ -1223,7 +1223,7 @@ impl Dropdown {
                 }
             }
             // `background: isHi ? (isSel ? selHoverBg : itemHover) : isSel ?
-            // selBg : undefined` — the selection is an ACCENT tint
+            // selBg : undefined` - the selection is an ACCENT tint
             // (`rgba(26,115,232,0.12)` = `--color-primary-light`), and a
             // highlighted selected row darkens it rather than swapping colour,
             // which two token fills compose exactly as the web's two rgba do.
@@ -1236,7 +1236,7 @@ impl Dropdown {
 
             // The fixed gutters, « always the same width whether the check and
             // the icon are there or not: labels of the same level must line up »
-            // — the file's own comment, recording a bug where a negative margin
+            // - the file's own comment, recording a bug where a negative margin
             // shifted the selected row out of column.
             let check = Rect::new(
                 row.left + dropdown_metrics::ROW_PAD,
@@ -1325,7 +1325,7 @@ impl Widget for Dropdown {
         Size::new((widest + chrome).ceil(), self.height)
     }
 
-    /// The trigger, and — while `open` — the list too, INLINE, under it: the
+    /// The trigger, and - while `open` - the list too, INLINE, under it: the
     /// historical one-call paint, still right for a static exposition or a
     /// caller that draws the whole control inside a popup of its own. A live
     /// caller floats the list instead: [`Dropdown::paint_field`] in the
@@ -1339,7 +1339,7 @@ impl Widget for Dropdown {
         }
     }
 
-    /// The trigger, plus the open list — a click in the dropped list is a click
+    /// The trigger, plus the open list - a click in the dropped list is a click
     /// on the dropdown, not on whatever is painted behind it.
     fn hit_test(&self, bounds: Rect, x: f32, y: f32) -> bool {
         self.trigger_rect(bounds).contains(x, y)
@@ -1355,7 +1355,7 @@ impl Widget for Dropdown {
 // Editable
 // ═════════════════════════════════════════════════════════════════════════════
 
-/// A label that becomes a field — `@ui/Editable`.
+/// A label that becomes a field - `@ui/Editable`.
 ///
 /// It is an **assembly**, not a third editor: at rest it is a
 /// [`crate::display::Label`], in edit it is a [`crate::text::TextField`], and
@@ -1367,8 +1367,8 @@ impl Widget for Dropdown {
 ///
 /// The [`TextField`] is the **only** storage: the rest-state label is built from
 /// it at paint time (see [`Editable::label`]) rather than kept beside it, which
-/// is why the two can never show different strings. Everything a caller sets —
-/// `set_text`, `placeholder_text`, `read_only`, `max_length`, `select` — reaches
+/// is why the two can never show different strings. Everything a caller sets -
+/// `set_text`, `placeholder_text`, `read_only`, `max_length`, `select` - reaches
 /// the field and then the `TextBox` replica behind it, through [`Deref`].
 ///
 /// # Why the text does not jump
@@ -1383,7 +1383,7 @@ impl Widget for Dropdown {
 /// # Divergence from the web, stated
 ///
 /// `@ui/Editable` is a `contenteditable` div that carries `border border-border`
-/// **at all times** — it always looks like an input. The desktop's affordance is
+/// **at all times** - it always looks like an input. The desktop's affordance is
 /// the click-to-rename one (a row's name that turns into a box), so the resting
 /// state here is a bare label and the frame appears on hover. Set
 /// [`Editable::always_framed`] to get the web's permanent box back; that is the
@@ -1398,7 +1398,7 @@ pub struct Editable {
     /// Wear `@ui/Editable`'s permanent `<Input>` frame instead of showing it on
     /// hover only.
     pub always_framed: bool,
-    /// The text as it was when the edit began — what `Escape` restores.
+    /// The text as it was when the edit began - what `Escape` restores.
     original: String,
     /// The selection's fixed end, in characters. The replica stores a
     /// selection as `start + length` and cannot say which end the caret is
@@ -1438,7 +1438,7 @@ fn char_count(s: &str) -> i32 {
     s.chars().count() as i32
 }
 
-/// The character index of the start of the word before `at` — `Ctrl+←`:
+/// The character index of the start of the word before `at` - `Ctrl+←`:
 /// skip the spaces, then the word.
 fn word_start_before(s: &str, at: i32) -> i32 {
     let chars: Vec<char> = s.chars().collect();
@@ -1452,7 +1452,7 @@ fn word_start_before(s: &str, at: i32) -> i32 {
     i as i32
 }
 
-/// The character index of the end of the word after `at` — `Ctrl+→`: skip
+/// The character index of the end of the word after `at` - `Ctrl+→`: skip
 /// the word, then the spaces (Windows lands on the next word's start).
 fn word_end_after(s: &str, at: i32) -> i32 {
     let chars: Vec<char> = s.chars().collect();
@@ -1494,7 +1494,7 @@ impl Editable {
     }
 
     /// The rest-state label, configured so its band is the field's content
-    /// rectangle. Built on demand — it holds no text of its own between calls.
+    /// rectangle. Built on demand - it holds no text of its own between calls.
     ///
     /// `px-3` / `py-2` ride in the **replica's** `Padding`, which is what
     /// [`crate::display::content_rect`] already deflates by, so this layer adds
@@ -1520,7 +1520,7 @@ impl Editable {
     }
 
     /// The state handed to the inner field while editing: the caret is only
-    /// live on a focused field, so `editing` implies focus — and a text field
+    /// live on a focused field, so `editing` implies focus - and a text field
     /// always shows its ring (`FocusOpts::TEXT`).
     fn edit_state(&self, state: WidgetState) -> WidgetState {
         state.focused(true).focus_visible(true)
@@ -1528,7 +1528,7 @@ impl Editable {
 
     // ── Editing ────────────────────────────────────────────────────────────
 
-    /// Enters edit mode with the whole text selected — the rename idiom (the
+    /// Enters edit mode with the whole text selected - the rename idiom (the
     /// web seeds the box once and lets the user type over it).
     pub fn begin_edit(&mut self) {
         if !self.field.enabled {
@@ -1719,7 +1719,7 @@ impl Editable {
         }
     }
 
-    /// Reads this frame's keys and typed text from the host queue — for a
+    /// Reads this frame's keys and typed text from the host queue - for a
     /// caller whose field holds the focus. Keys the field does not use stay in
     /// the queue (Tab, Ctrl+Tab…).
     pub fn take_input(&mut self) -> EditKey {
@@ -1760,7 +1760,7 @@ impl Editable {
         result
     }
 
-    /// The character boundary nearest to `x` in a field painted at `bounds` —
+    /// The character boundary nearest to `x` in a field painted at `bounds` -
     /// where a click puts the caret. Measured against the text as the field
     /// lays it out (from the content edge); a string wider than the box is
     /// scrolled by the editing view, which this does not model, so a click
@@ -1825,7 +1825,7 @@ impl Widget for Editable {
         self.field.model()
     }
 
-    /// The field's measurement, unchanged — so a caller laying out an
+    /// The field's measurement, unchanged - so a caller laying out an
     /// `Editable` reserves the same box whichever state it is in.
     fn measure(&self, canvas: &dyn Canvas) -> Size {
         self.field.measure(canvas)
@@ -1848,7 +1848,7 @@ impl Widget for Editable {
         let t = canvas.theme();
         if self.shows_frame(state) || dead {
             // `@ui/Editable`: the same surface, border and radius as `<Input>`
-            // — `bg-white` (`disabled:bg-surface-2`) and `border-border`.
+            // - `bg-white` (`disabled:bg-surface-2`) and `border-border`.
             let face = if dead { t.surface_2 } else { t.layer_background };
             canvas.fill_rounded(&bounds, radius::SM, &face);
             canvas.stroke_rounded(&bounds, radius::SM, &t.card_stroke);
@@ -1879,7 +1879,7 @@ impl Widget for Editable {
 // FontPicker
 // ═════════════════════════════════════════════════════════════════════════════
 
-/// The visual family a font name is filed under — `FontPicker.tsx`'s
+/// The visual family a font name is filed under - `FontPicker.tsx`'s
 /// `classifyFont`, which groups « the way pro pickers (Figma / Google Fonts) do ».
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum FontCategory {
@@ -1895,7 +1895,7 @@ impl FontCategory {
     pub const ORDER: [FontCategory; 5] =
         [Self::Sans, Self::Serif, Self::Mono, Self::Script, Self::Display];
 
-    /// `CAT_LABEL`, verbatim — and in French, as the web writes it.
+    /// `CAT_LABEL`, verbatim - and in French, as the web writes it.
     pub const fn label(self) -> &'static str {
         match self {
             Self::Sans => "Sans Serif",
@@ -1907,7 +1907,7 @@ impl FontCategory {
     }
 }
 
-/// `RE_MONO`, `RE_SCRIPT`, `RE_DISPLAY`, `RE_SERIF` — each web regex is a plain
+/// `RE_MONO`, `RE_SCRIPT`, `RE_DISPLAY`, `RE_SERIF` - each web regex is a plain
 /// alternation of literals, so it is spelled here as the list it is rather than
 /// pulling a regex engine into a paint-time classifier.
 const MONO_WORDS: [&str; 18] = [
@@ -1931,7 +1931,7 @@ const SERIF_WORDS: [&str; 24] = [
     "spectral", "slab", "rockwell", "century", "sylfaen", "cardo", "vollkorn", "headline",
 ];
 
-/// Whether `needle` occurs in `haystack` as a whole word — the `\b…\b` of
+/// Whether `needle` occurs in `haystack` as a whole word - the `\b…\b` of
 /// `/\bsans\b/` and `/\bcode\b/`, which is why « Cascadia Code » is monospace
 /// and « Bookman » is not « book antiqua ».
 fn contains_word(haystack: &str, needle: &str) -> bool {
@@ -1952,7 +1952,7 @@ fn contains_word(haystack: &str, needle: &str) -> bool {
     false
 }
 
-/// `classifyFont`, move for move — including the order, where monospace,
+/// `classifyFont`, move for move - including the order, where monospace,
 /// script and display win over the broad serif test, and `\bsans\b` is asked
 /// before it.
 /// Which category a family belongs to.
@@ -1960,7 +1960,7 @@ fn contains_word(haystack: &str, needle: &str) -> bool {
 /// Memoised per thread: the classification of a family is a pure function of its
 /// name (it never changes while the process runs), and it is otherwise recomputed
 /// for every one of the ~260 installed families every time the open list is
-/// built — dozens of times per paint. The UI is single-threaded, so a
+/// built - dozens of times per paint. The UI is single-threaded, so a
 /// `thread_local` map needs no lock.
 pub fn classify_font(name: &str) -> FontCategory {
     thread_local! {
@@ -2004,7 +2004,7 @@ fn classify_font_uncached(name: &str) -> FontCategory {
 /// family count and the recent list, joined). See [`FontPicker::rows_cache`].
 type RowsCache = RefCell<Option<(String, Vec<FontRow>)>>;
 
-/// One line of an open [`FontPicker`] — the web's `Row`.
+/// One line of an open [`FontPicker`] - the web's `Row`.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum FontRow {
     /// A category (or « Récentes ») header. Never a target.
@@ -2025,7 +2025,7 @@ impl FontRow {
     }
 }
 
-/// A font-family selector with a search box and category headers —
+/// A font-family selector with a search box and category headers -
 /// `@ui/FontPicker`.
 ///
 /// The **model is the toolkit's**: the families are the
@@ -2035,7 +2035,7 @@ impl FontRow {
 /// the glyph `sample`, and `open` / `hot_index`.
 ///
 /// The families themselves come from [`system_font_families`], i.e. from
-/// [`kubuno_drive_desktop_app_controls::Renderer::system_font_families`] — the installed
+/// [`kubuno_drive_desktop_app_controls::Renderer::system_font_families`] - the installed
 /// families, not a curated list.
 ///
 /// # The preview, and what a [`Canvas`] cannot do
@@ -2049,7 +2049,7 @@ impl FontRow {
 /// a method is a change to `canvas.rs`, which this family does not own.
 ///
 /// What ships instead: every family name is drawn in the **UI face**, and the
-/// sample column is laid out and reserved exactly as the web lays it out — so
+/// sample column is laid out and reserved exactly as the web lays it out - so
 /// [`FontPicker::sample_rect`] hands a host that *does* hold a DirectWrite
 /// factory the precise rectangle to overpaint the preview into, and the popup
 /// needs no relayout when it does. The trigger is unaffected: the web already
@@ -2065,7 +2065,7 @@ pub struct FontPicker {
     pub query: String,
     /// `sampleText = 'AaBbCc'`; empty hides the column.
     pub sample: String,
-    /// Shown greyed when nothing is selected — « e.g. a mixed-font selection ».
+    /// Shown greyed when nothing is selected - « e.g. a mixed-font selection ».
     pub placeholder: String,
     pub variant: DropdownVariant,
     pub height: f32,
@@ -2075,7 +2075,7 @@ pub struct FontPicker {
     pub hot_index: Option<usize>,
     /// The list's scroll offset, in DIP (`maxHeight: 340; overflowY: auto`).
     pub scroll_y: f32,
-    /// Whether the search box draws its caret this frame — the host's blink
+    /// Whether the search box draws its caret this frame - the host's blink
     /// phase ([`crate::focus::caret_visible`]); the search box holds the
     /// keyboard while the popup is open (`searchRef.current?.focus()`).
     pub search_caret: bool,
@@ -2086,7 +2086,7 @@ pub struct FontPicker {
     /// installed family (~260 of them) against three word lists, and a single
     /// paint asks for the rows dozens of times (measure, hit-test, and once per
     /// visible row). Recomputing each time made the open picker take ~1 s per
-    /// frame in a debug build — a frozen window, since the host repaints on
+    /// frame in a debug build - a frozen window, since the host repaints on
     /// every pointer move. The cache is keyed on what the rows depend on
     /// (`query`, the families and the recent list), so it is rebuilt exactly
     /// when the list would actually differ.
@@ -2113,7 +2113,7 @@ impl DerefMut for FontPicker {
 /// The empty row list a cache miss borrows.
 static NO_ROWS: Vec<FontRow> = Vec::new();
 
-/// One editable line of text — the search box and the size field. The text is
+/// One editable line of text - the search box and the size field. The text is
 /// left-aligned at `rect.left` and scrolled left just enough to keep the caret
 /// in view, clipped to `rect`; the selection `(a, b)` (character indices) is
 /// the browser's highlight, `--color-primary` at 35 % like
@@ -2155,7 +2155,7 @@ fn paint_edit_line(
     c.pop_clip();
 }
 
-/// The browser's selection highlight over an input — `--color-primary` at
+/// The browser's selection highlight over an input - `--color-primary` at
 /// 35 %, the value `edit_box::draw_text` already paints.
 const EDIT_SELECTION_ALPHA: f32 = 0.35;
 
@@ -2174,7 +2174,7 @@ impl FontPicker {
         Self::with_fonts(system_font_families().iter().map(String::as_str))
     }
 
-    /// A picker over a caller-supplied list — what a test and a fixed toolbar
+    /// A picker over a caller-supplied list - what a test and a fixed toolbar
     /// want.
     pub fn with_fonts<'a>(fonts: impl IntoIterator<Item = &'a str>) -> Self {
         let mut p = Self::new();
@@ -2194,7 +2194,7 @@ impl FontPicker {
         format!("{}\u{1}{}\u{1}{}", self.query, self.inner.items.len(), self.recent.join("\u{2}"))
     }
 
-    /// The memoised rows, borrowed — no clone of ~260 names per call.
+    /// The memoised rows, borrowed - no clone of ~260 names per call.
     fn rows_ref(&self) -> std::cell::Ref<'_, Vec<FontRow>> {
         let key = self.rows_key();
         let fresh = matches!(&*self.rows_cache.borrow(), Some((k, _)) if *k == key);
@@ -2205,9 +2205,9 @@ impl FontPicker {
         std::cell::Ref::map(self.rows_cache.borrow(), |c| c.as_ref().map_or(&NO_ROWS, |(_, r)| r))
     }
 
-    /// The rows of the open popup — headers and options, in the web's order:
+    /// The rows of the open popup - headers and options, in the web's order:
     /// « Récentes » first, then the five categories, each sorted; or, while
-    /// searching, one flat list with prefix matches first. Memoised — see
+    /// searching, one flat list with prefix matches first. Memoised - see
     /// [`FontPicker::rows_cache`].
     ///
     /// `dedupeFontFamilies` is the web's own de-duplication of the list it is
@@ -2238,7 +2238,7 @@ impl FontPicker {
         if !q.is_empty() {
             let mut hits: Vec<&String> =
                 self.inner.items.iter().filter(|f| f.to_lowercase().contains(&q)).collect();
-            // `sort` on `startsWith` — a stable sort, so ties keep their order.
+            // `sort` on `startsWith` - a stable sort, so ties keep their order.
             hits.sort_by_key(|f| !f.to_lowercase().starts_with(&q));
             for f in hits {
                 push(&mut rows, &mut seen, f);
@@ -2273,7 +2273,7 @@ impl FontPicker {
         rows
     }
 
-    /// The flat list of selectable families, in row order — what `hot_index`
+    /// The flat list of selectable families, in row order - what `hot_index`
     /// and the arrow keys move over.
     pub fn options(&self) -> Vec<String> {
         self.rows_ref()
@@ -2294,7 +2294,7 @@ impl FontPicker {
         Rect::new(bounds.left, bounds.top, bounds.right, bounds.top + self.height)
     }
 
-    /// The whole list's height — every row plus `padding: '4px 0'` — or the
+    /// The whole list's height - every row plus `padding: '4px 0'` - or the
     /// empty state's.
     pub fn content_height(&self) -> f32 {
         let rows = self.rows_ref();
@@ -2358,7 +2358,7 @@ impl FontPicker {
         self.scroll_y = self.scroll_y.clamp(0.0, max);
     }
 
-    /// `scrollIntoView({ block: 'center' })` for option `flat` — what opening
+    /// `scrollIntoView({ block: 'center' })` for option `flat` - what opening
     /// does with the current font.
     pub fn center_on(&mut self, flat: usize) {
         let Some((y, h)) = self.option_offset(flat) else { return };
@@ -2367,7 +2367,7 @@ impl FontPicker {
 
     /// The popup's `width: max-content`: the check gutter, the widest name,
     /// the sample and the paddings (and the bar when the list scrolls). The
-    /// names are measured once per family count — a system list is ~260 of
+    /// names are measured once per family count - a system list is ~260 of
     /// them.
     pub fn natural_popup_width(&self, canvas: &dyn Canvas) -> f32 {
         let n = self.inner.items.len();
@@ -2398,7 +2398,7 @@ impl FontPicker {
     /// The popup: the search row on top of the list.
     ///
     /// `top: r.bottom + 4`, `left: r.left`,
-    /// `minWidth: Math.max(248, r.width)`, `maxWidth: 360` — or, after
+    /// `minWidth: Math.max(248, r.width)`, `maxWidth: 360` - or, after
     /// [`FontPicker::place_popup`], the placed rectangle.
     pub fn popup_rect(&self, bounds: Rect) -> Rect {
         if let Some(p) = self.placed {
@@ -2419,7 +2419,7 @@ impl FontPicker {
     /// The web's `useLayoutEffect` placement: `width: max-content` between
     /// `max(248, trigger)` and 360, under the trigger at +4, pulled back
     /// inside `area` (the monitor work area, in the same space as `bounds`) and
-    /// SLID up — not flipped — when it would run off the bottom.
+    /// SLID up - not flipped - when it would run off the bottom.
     pub fn place_popup(&mut self, canvas: &dyn Canvas, bounds: Rect, area: Rect) {
         let trigger = self.trigger_rect(bounds);
         let min = font_metrics::MIN_WIDTH.max(trigger.right - trigger.left);
@@ -2451,7 +2451,7 @@ impl FontPicker {
         Rect::new(panel.left, panel.top + font_metrics::SEARCH_H, panel.right, panel.bottom)
     }
 
-    /// The « Effacer » button of the search row — only while a query is typed
+    /// The « Effacer » button of the search row - only while a query is typed
     /// (`text-xs px-1.5 py-0.5 rounded`, at the row's right padding).
     pub fn clear_rect_in(&self, canvas: &dyn Canvas, panel: Rect) -> Option<Rect> {
         if self.query.is_empty() {
@@ -2465,7 +2465,7 @@ impl FontPicker {
     }
 
     /// Where row `k` of [`FontPicker::rows`] is drawn inside the panel `panel`
-    /// — `None` when it is scrolled wholly out of the list's window.
+    /// - `None` when it is scrolled wholly out of the list's window.
     pub fn row_rect_in(&self, panel: Rect, k: usize) -> Option<Rect> {
         let list = self.list_rect_in(panel);
         let bar = if self.scrolls() { control::SCROLLBAR_THUMB } else { 0.0 };
@@ -2491,7 +2491,7 @@ impl FontPicker {
     }
 
     /// Which **option** `(x, y)` lands on inside the panel `panel`, as a flat
-    /// option index — headers answer `None`, being labels rather than targets.
+    /// option index - headers answer `None`, being labels rather than targets.
     pub fn item_at_in(&self, panel: Rect, x: f32, y: f32) -> Option<usize> {
         if !self.open || !self.list_rect_in(panel).contains(x, y) {
             return None;
@@ -2511,7 +2511,7 @@ impl FontPicker {
     /// Where the **glyph sample** of the row drawn at `row` goes.
     ///
     /// Published so a host holding a DirectWrite factory can paint the preview
-    /// in the family's own face — the one thing a [`Canvas`] cannot do (see the
+    /// in the family's own face - the one thing a [`Canvas`] cannot do (see the
     /// type's documentation). `None` when the sample column is switched off.
     pub fn sample_rect(&self, row: Rect) -> Option<Rect> {
         if self.sample.is_empty() {
@@ -2594,7 +2594,7 @@ impl FontPicker {
         self.hot_index = (self.option_count() > 0).then_some(0);
     }
 
-    /// One keystroke. Closed: the trigger is a button — `Enter` / `Space`
+    /// One keystroke. Closed: the trigger is a button - `Enter` / `Space`
     /// (and `Alt+↓`) open it. Open, the search box has the focus and `onKey`
     /// runs: `↑` `↓` `Home` `End` `PageUp` `PageDown` (±8) move the highlight,
     /// `Enter` chooses, `Escape` closes; `Backspace` edits the query
@@ -2661,7 +2661,7 @@ impl FontPicker {
         ListKey::Moved
     }
 
-    /// Reads this frame's keys and typed text from the host queue — for a
+    /// Reads this frame's keys and typed text from the host queue - for a
     /// caller whose trigger holds the focus. While closed only the opening
     /// keys are taken; while open the search box takes the typing too.
     pub fn take_input(&mut self) -> ListKey {
@@ -2707,7 +2707,7 @@ impl FontPicker {
 
     // ── Paint ──────────────────────────────────────────────────────────────
 
-    /// Paints the trigger alone — what the owner window draws while the popup
+    /// Paints the trigger alone - what the owner window draws while the popup
     /// floats.
     pub fn paint_field(&self, canvas: &dyn Canvas, bounds: Rect, state: WidgetState) {
         canvas.fill_rounded(&bounds, 0.0, &canvas.current_bg());
@@ -2795,7 +2795,7 @@ impl FontPicker {
         );
     }
 
-    /// A family name with the query's first match emphasised — the web's
+    /// A family name with the query's first match emphasised - the web's
     /// `highlightMatch` (`color: primary, fontWeight: 600`). When the name does
     /// not fit, the plain ellipsised name is drawn instead: the emphasis must
     /// never push text out of its cell.
@@ -2850,7 +2850,7 @@ impl FontPicker {
             match row {
                 FontRow::Header(label) => {
                     // `fontSize: 11, fontWeight: 600, textTransform: uppercase`
-                    // — the caption_strong face, uppercased here because
+                    // - the caption_strong face, uppercased here because
                     // DirectWrite has no `text-transform`.
                     let r = Rect::new(
                         rect.left + font_metrics::HEADER_PAD_L,
@@ -2863,7 +2863,7 @@ impl FontPicker {
                 FontRow::Option { font, index } => {
                     let selected = self.inner.selected_item() == Some(font.as_str());
                     // `background: row.i === hi ? P.sel : row.font === value ?
-                    // P.hover : undefined` — `--color-primary-light` for the
+                    // P.hover : undefined` - `--color-primary-light` for the
                     // highlight, `--color-surface-1` for the current value.
                     if self.hot_index == Some(*index) {
                         c.fill_rounded(&rect, 0.0, &t.accent_light);
@@ -2880,7 +2880,7 @@ impl FontPicker {
                         c.vector_icon("Check", &check, font_metrics::CHECK_GLYPH, &t.accent);
                     }
                     self.paint_name(c, self.name_rect(rect), font);
-                    // The sample — in the UI face, not the family's own; see
+                    // The sample - in the UI face, not the family's own; see
                     // the type's documentation, and `sample_rect` for the way
                     // out.
                     if let Some(sample) = self.sample_rect(rect) {
@@ -2909,7 +2909,7 @@ impl FontPicker {
         );
     }
 
-    /// Paints the open popup into the panel `panel` — `popup_rect` in the
+    /// Paints the open popup into the panel `panel` - `popup_rect` in the
     /// owner's space, or that rectangle [`rebase`]d into a popup's.
     pub fn paint_popup_at(&self, c: &dyn Canvas, panel: Rect) {
         paint_float_panel(c, panel, font_metrics::RADIUS);
@@ -2950,7 +2950,7 @@ impl Widget for FontPicker {
         Size::new((text + chrome).max(font_metrics::WIDTH).ceil(), self.height)
     }
 
-    /// The trigger, and — while `open` — the popup INLINE under it (the
+    /// The trigger, and - while `open` - the popup INLINE under it (the
     /// historical one-call paint). A live caller floats the popup instead:
     /// [`FontPicker::paint_field`] in the window and
     /// [`FontPicker::paint_popup_at`] in a `host::popup` covering
@@ -2977,14 +2977,14 @@ impl Widget for FontPicker {
 // FontSizeField
 // ═════════════════════════════════════════════════════════════════════════════
 
-/// A type-or-pick font size — `@ui/FontSizeField`'s `SizeCombo`.
+/// A type-or-pick font size - `@ui/FontSizeField`'s `SizeCombo`.
 ///
 /// # What is wrapped, and why that is the whole point
 ///
 /// The **model is [`crate::range::NumericField`]**, and with it the ordering
 /// trap that type exists to remove: `NumericUpDown.Value` *throws* outside
 /// `[Minimum, Maximum]` and `Maximum` defaults to **100**, so the obvious
-/// « set the value, then widen the range » is wrong for every size above 100 —
+/// « set the value, then widen the range » is wrong for every size above 100 -
 /// which is most of a font-size list. [`FontSizeField::new`] goes through
 /// [`NumericField::set_range_and_value`], applying `1 … 999` (the web's own
 /// `minSize` / `maxSize` defaults) *before* the value, atomically. The clamp a
@@ -3006,7 +3006,7 @@ impl Widget for FontPicker {
 /// the range and the clamp are not.
 pub struct FontSizeField {
     inner: NumericField,
-    /// The presets the caret offers — `sizes`. Any value may still be typed.
+    /// The presets the caret offers - `sizes`. Any value may still be typed.
     pub presets: Vec<f64>,
     /// The trigger's height: 30 in the web's glued toolbar field.
     pub height: f32,
@@ -3015,10 +3015,10 @@ pub struct FontSizeField {
     /// The input is being typed into (`focused` in the web): the field shows
     /// [`FontSizeField::edit_text`] instead of the value.
     pub editing: bool,
-    /// The input's own text while editing (`text` in the web — « mirror the
+    /// The input's own text while editing (`text` in the web - « mirror the
     /// external value unless the user is mid-edit »).
     pub edit_text: String,
-    /// The whole text is selected — `inputRef.current?.select()` on focus —
+    /// The whole text is selected - `inputRef.current?.select()` on focus -
     /// so the first key typed replaces it.
     pub all_selected: bool,
     /// Whether the caret is drawn this frame (the host's blink phase).
@@ -3063,7 +3063,7 @@ impl SizeKey {
 #[derive(Debug, Clone, Default, PartialEq)]
 pub struct SizePresetList {
     pub presets: Vec<f64>,
-    /// The value shown — its preset row is the selected one.
+    /// The value shown - its preset row is the selected one.
     pub value: f64,
     pub hot_index: Option<usize>,
     pub scroll: usize,
@@ -3155,7 +3155,7 @@ impl DerefMut for FontSizeField {
 }
 
 impl FontSizeField {
-    /// `minSize = 1`, `maxSize = 999`, and no value yet — the range is applied
+    /// `minSize = 1`, `maxSize = 999`, and no value yet - the range is applied
     /// first, so any later size in it is accepted.
     pub fn new() -> Self {
         let mut inner = NumericField::new();
@@ -3178,7 +3178,7 @@ impl FontSizeField {
 
     /// A field over `presets`, showing `value`.
     ///
-    /// Fails only if `value` is outside `1 … 999` — the two the web accepts —
+    /// Fails only if `value` is outside `1 … 999` - the two the web accepts -
     /// and leaves the field untouched when it does, because
     /// [`NumericField::set_range_and_value`] validates before it assigns.
     pub fn with_presets(presets: &[f64], value: f64) -> Result<Self, OutOfRange> {
@@ -3188,7 +3188,7 @@ impl FontSizeField {
         Ok(f)
     }
 
-    /// The presets `FontSizeField.tsx`'s call sites pass — the classic word
+    /// The presets `FontSizeField.tsx`'s call sites pass - the classic word
     /// processor ladder. Offered as a constant because every caller wants it
     /// and none should retype it.
     pub const DEFAULT_PRESETS: [f64; 16] = [
@@ -3197,7 +3197,7 @@ impl FontSizeField {
     ];
 
     /// `commit(raw)`: parse (accepting a comma as the decimal point), round,
-    /// then clamp into `[min, max]` — and revert on anything unparseable, which
+    /// then clamp into `[min, max]` - and revert on anything unparseable, which
     /// is what keeps a mixed selection mixed.
     ///
     /// Returns the value now shown.
@@ -3214,7 +3214,7 @@ impl FontSizeField {
         self.inner.clamped(self.inner.value() + delta)
     }
 
-    /// The text the field shows — the replica's own formatting
+    /// The text the field shows - the replica's own formatting
     /// (`NumericUpDown::display_text`), so `DecimalPlaces` and the thousands
     /// separator behave as the toolkit says.
     pub fn display_text(&self) -> String {
@@ -3253,7 +3253,7 @@ impl FontSizeField {
         v
     }
 
-    /// Characters typed into the input — over the selection when all of it
+    /// Characters typed into the input - over the selection when all of it
     /// is selected.
     pub fn type_text(&mut self, text: &str) -> bool {
         let text: String = text.chars().filter(|c| !c.is_control()).collect();
@@ -3268,7 +3268,7 @@ impl FontSizeField {
         true
     }
 
-    /// Picks preset `i` — `onChange(sv); setText(sv); setOpen(false)`.
+    /// Picks preset `i` - `onChange(sv); setText(sv); setOpen(false)`.
     pub fn choose_preset(&mut self, i: usize) -> Option<f64> {
         let v = *self.presets.get(i)?;
         let shown = self.inner.clamped(v);
@@ -3301,8 +3301,8 @@ impl FontSizeField {
 
     /// The input's `onKeyDown`: `Enter` commits, `↑` / `↓` step by one,
     /// `Escape` reverts (or, with the list open, only closes the list),
-    /// `Backspace` edits, and — the combobox convention the web leaves to the
-    /// mouse — `Alt+↓` / `Alt+↑` open and close the preset list.
+    /// `Backspace` edits, and - the combobox convention the web leaves to the
+    /// mouse - `Alt+↓` / `Alt+↑` open and close the preset list.
     pub fn key_down(&mut self, key: u16, mods: Modifiers) -> SizeKey {
         if !self.inner.model().control().enabled {
             return SizeKey::Ignored;
@@ -3365,7 +3365,7 @@ impl FontSizeField {
         }
     }
 
-    /// Reads this frame's keys and typed text from the host queue — for a
+    /// Reads this frame's keys and typed text from the host queue - for a
     /// caller whose input holds the focus.
     pub fn take_input(&mut self) -> SizeKey {
         let mut keys: Vec<(u16, Modifiers)> = Vec::new();
@@ -3405,7 +3405,7 @@ impl FontSizeField {
         Rect::new(f.right - size_metrics::CARET_CELL, f.top, f.right, f.bottom)
     }
 
-    /// The strip the number is typed in — `padding: '0 2px 0 8px'` inside
+    /// The strip the number is typed in - `padding: '0 2px 0 8px'` inside
     /// whatever the caret button leaves.
     pub fn text_rect(&self, bounds: Rect) -> Rect {
         let f = self.field_rect(bounds);
@@ -3431,7 +3431,7 @@ impl FontSizeField {
     }
 
     /// The preset list: `top: r.bottom + 4`, `minWidth: Math.max(56, r.width)`,
-    /// `maxHeight: 280`, `padding: '4px 0'` — or, after
+    /// `maxHeight: 280`, `padding: '4px 0'` - or, after
     /// [`FontSizeField::place_drop_down`], the placed rectangle.
     pub fn drop_down_rect(&self, bounds: Rect) -> Rect {
         if let Some(p) = self.placed {
@@ -3493,7 +3493,7 @@ impl FontSizeField {
         }
     }
 
-    /// The open list as a free-standing snapshot — what a `host::popup`
+    /// The open list as a free-standing snapshot - what a `host::popup`
     /// closure captures.
     pub fn list_view(&self) -> SizePresetList {
         SizePresetList {
@@ -3518,7 +3518,7 @@ impl FontSizeField {
 
     // ── Paint ──────────────────────────────────────────────────────────────
 
-    /// Paints the field alone — what the owner window draws while the list
+    /// Paints the field alone - what the owner window draws while the list
     /// floats. The web gives the box no focus ring (`outline-none` on the
     /// input): the caret and the selected text ARE the focus indication.
     pub fn paint_field(&self, canvas: &dyn Canvas, bounds: Rect, state: WidgetState) {
@@ -3579,7 +3579,7 @@ impl Widget for FontSizeField {
         Size::new((text + chrome).max(size_metrics::WIDTH).ceil(), self.height)
     }
 
-    /// The field, and — while `open` — the list INLINE under it (the
+    /// The field, and - while `open` - the list INLINE under it (the
     /// historical one-call paint). A live caller floats the list:
     /// [`FontSizeField::paint_field`] in the window, and
     /// [`SizePresetList::paint_at`] in a `host::popup` covering
@@ -3602,7 +3602,7 @@ impl Widget for FontSizeField {
     }
 }
 
-/// A preset as the list prints it — `String(s)`, i.e. no trailing `.0` on a
+/// A preset as the list prints it - `String(s)`, i.e. no trailing `.0` on a
 /// whole number.
 fn format_preset(v: f64) -> String {
     if v.fract() == 0.0 {
@@ -3621,8 +3621,8 @@ fn format_preset(v: f64) -> String {
 /// The first seven are `@ui/RichText`'s bar, in its order, with its labels and
 /// its lucide icons. The four alignments are **not** in that file: an editor's
 /// alignment group is what every host that adopted this toolbar asked for next,
-/// and they are declared here so the geometry exists — with lucide's own
-/// `align-*` icons — rather than each host inventing a glyph.
+/// and they are declared here so the geometry exists - with lucide's own
+/// `align-*` icons - rather than each host inventing a glyph.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum RichTextCommand {
     Bold,
@@ -3639,7 +3639,7 @@ pub enum RichTextCommand {
 }
 
 impl RichTextCommand {
-    /// The geometry name in `assets/lucide-icons.txt` — the very icon
+    /// The geometry name in `assets/lucide-icons.txt` - the very icon
     /// `RichText.tsx` imports from `lucide-react`.
     pub const fn icon(self) -> &'static str {
         match self {
@@ -3690,7 +3690,7 @@ impl RichTextCommand {
         Self::AlignJustify,
     ];
 
-    /// The command a geometry name stands for — the inverse of
+    /// The command a geometry name stands for - the inverse of
     /// [`RichTextCommand::icon`].
     pub fn from_icon(icon: &str) -> Option<Self> {
         Self::ALL.into_iter().find(|c| c.icon() == icon)
@@ -3726,20 +3726,20 @@ pub enum ToolbarKey {
     Activated(usize),
 }
 
-/// The formatting bar of a rich-text editor — `@ui/RichText`'s toolbar row.
+/// The formatting bar of a rich-text editor - `@ui/RichText`'s toolbar row.
 ///
 /// **The editing area is not ported**; see the module documentation for why.
 /// This is the half that *is* a primitive, and it is reusable on its own: a
 /// strip of `w-8 h-8` icon buttons with `w-px h-5` rules between the groups.
 ///
 /// The model is the toolkit's [`ToolStrip`], and the active state is
-/// [`ToolStripButton::checked`] — the replica field that already means « this
+/// [`ToolStripButton::checked`] - the replica field that already means « this
 /// command is on », the same one [`crate::navigation::Toolbar`] lights its
 /// toggles from. There is therefore no `active: Vec<bool>` here; a host reads
 /// `queryCommandState` (or its own document model) and sets `checked`.
 ///
 /// The active pixels are `crate::navigation`'s, deliberately: `accent_light`
-/// ground with an `accent` glyph — « the web's `bg-primary-light text-primary`
+/// ground with an `accent` glyph - « the web's `bg-primary-light text-primary`
 /// pill, NOT a solid accent block with a white glyph ». `@ui/RichText`'s own
 /// buttons have **no** active state at all (they only hover), which is a
 /// finding rather than an omission: the web bar never reflects the caret's
@@ -3755,7 +3755,7 @@ pub struct RichTextToolbar {
     /// Whether the bar draws the editor's `rounded-md border` box and the
     /// `border-b` under itself. A bar hosted inside another chrome turns it off.
     pub framed: bool,
-    /// The cell that holds the bar's roving focus — the WAI-ARIA toolbar
+    /// The cell that holds the bar's roving focus - the WAI-ARIA toolbar
     /// pattern: the bar is ONE Tab stop, and `←` / `→` / `Home` / `End` move
     /// between its buttons. It is ringed when the bar is painted with a
     /// focus-visible state.
@@ -3776,7 +3776,7 @@ impl DerefMut for RichTextToolbar {
     }
 }
 
-/// A command cell — a `ToolStripButton` whose `Image` is the geometry name and
+/// A command cell - a `ToolStripButton` whose `Image` is the geometry name and
 /// whose `Text` is the tooltip the web puts in `title`.
 pub fn command_item(cmd: RichTextCommand, active: bool) -> StripItem {
     let mut b = ToolStripButton::new(cmd.label());
@@ -3816,7 +3816,7 @@ impl RichTextToolbar {
         bar
     }
 
-    /// [`RichTextToolbar::standard`] plus the alignment group — see
+    /// [`RichTextToolbar::standard`] plus the alignment group - see
     /// [`RichTextCommand`] for why those four are an extension.
     pub fn with_alignments() -> Self {
         use RichTextCommand::*;
@@ -3832,7 +3832,7 @@ impl RichTextToolbar {
         self.inner.items.push(item);
     }
 
-    /// Turns a command on or off — i.e. writes the replica's `Checked`.
+    /// Turns a command on or off - i.e. writes the replica's `Checked`.
     /// Returns whether a matching button was found.
     pub fn set_active(&mut self, cmd: RichTextCommand, on: bool) -> bool {
         let mut found = false;
@@ -3847,7 +3847,7 @@ impl RichTextToolbar {
         found
     }
 
-    /// Whether a command is currently on — read straight off the replica.
+    /// Whether a command is currently on - read straight off the replica.
     pub fn is_active(&self, cmd: RichTextCommand) -> bool {
         self.inner.items.iter().any(|item| {
             matches!(item, StripItem::Button(b)
@@ -3882,8 +3882,8 @@ impl RichTextToolbar {
 
     /// **Which command** `(x, y)` lands on.
     ///
-    /// A separator answers `None` — it is a cell geometrically and never a
-    /// target — and so does the `gap-0.5` between two buttons, which belongs to
+    /// A separator answers `None` - it is a cell geometrically and never a
+    /// target - and so does the `gap-0.5` between two buttons, which belongs to
     /// neither: a bar whose gaps answered would fire the wrong command from a
     /// pixel that is visibly between the two.
     pub fn item_at(&self, bounds: Rect, x: f32, y: f32) -> Option<usize> {
@@ -3908,7 +3908,7 @@ impl RichTextToolbar {
         }
     }
 
-    /// The tooltip of cell `i` — the web's `title`.
+    /// The tooltip of cell `i` - the web's `title`.
     pub fn tooltip_of(&self, i: usize) -> Option<&str> {
         match self.inner.items.get(i)? {
             StripItem::Separator(_) => None,
@@ -3968,7 +3968,7 @@ impl RichTextToolbar {
         before != after
     }
 
-    /// Presses cell `i` — a click or `Enter` / `Space` on the focused cell:
+    /// Presses cell `i` - a click or `Enter` / `Space` on the focused cell:
     /// moves the roving focus there, applies the command and returns it.
     /// `None` for a rule, a disabled button or a foreign item.
     pub fn activate(&mut self, i: usize) -> Option<RichTextCommand> {
@@ -3987,7 +3987,7 @@ impl RichTextToolbar {
         self.focus_index.filter(|&i| self.is_target(i)).or_else(|| self.targets().first().copied())
     }
 
-    /// One keystroke on the focused bar — the WAI-ARIA toolbar: `→` / `←`
+    /// One keystroke on the focused bar - the WAI-ARIA toolbar: `→` / `←`
     /// move to the next / previous enabled button (wrapping), `Home` / `End`
     /// to the first / last, `Enter` / `Space` press the focused one.
     pub fn key_down(&mut self, key: u16, mods: Modifiers) -> ToolbarKey {
@@ -4016,7 +4016,7 @@ impl RichTextToolbar {
         ToolbarKey::Moved(to)
     }
 
-    /// Reads this frame's navigation keys from the host queue — for a caller
+    /// Reads this frame's navigation keys from the host queue - for a caller
     /// whose bar holds the focus.
     pub fn take_input(&mut self) -> ToolbarKey {
         let mut keys: Vec<u16> = Vec::new();
@@ -4088,7 +4088,7 @@ impl Widget for RichTextToolbar {
             let Some(cell) = self.item_rect(bounds, i) else { continue };
             match item {
                 StripItem::Separator(_) => {
-                    // `w-px h-5 bg-border mx-1` — the rule inside its margins.
+                    // `w-px h-5 bg-border mx-1` - the rule inside its margins.
                     let mid = (cell.left + cell.right) / 2.0;
                     canvas.fill_rounded(
                         &Rect::new(mid, cell.top, mid + rich_metrics::RULE, cell.bottom),
@@ -4152,8 +4152,8 @@ mod tests {
 
     // ── The Dropdown / ComboBox decision, materialised ────────────────────
 
-    /// The two selectors share ONE model — the same replica, so a selection
-    /// cannot mean two things — and differ in every measurement the two web
+    /// The two selectors share ONE model - the same replica, so a selection
+    /// cannot mean two things - and differ in every measurement the two web
     /// files state differently. This is the argument of the module doc, pinned:
     /// if a future edit made the two agree everywhere, the alias the brief asks
     /// about would be the right answer and this test would say so by failing.
@@ -4248,7 +4248,7 @@ mod tests {
         assert!(!d.hit_test(b, cx, cy));
     }
 
-    /// `maxHeight: 280` caps the list, and `MaxDropDownItems` — the replica's —
+    /// `maxHeight: 280` caps the list, and `MaxDropDownItems` - the replica's -
     /// caps it further.
     #[test]
     fn the_list_is_capped_by_the_web_height_and_by_the_replica() {
@@ -4321,7 +4321,7 @@ mod tests {
 
     /// The classifier is `classifyFont`, order included: monospace, script and
     /// display are tested before the broad serif rule, and `\bsans\b` before it
-    /// too — which is what keeps « PT Sans » out of the serif bucket.
+    /// too - which is what keeps « PT Sans » out of the serif bucket.
     #[test]
     fn fonts_are_filed_the_way_the_web_files_them() {
         assert_eq!(classify_font("Cascadia Code"), FontCategory::Mono);
@@ -4332,13 +4332,13 @@ mod tests {
         assert_eq!(classify_font("Times New Roman"), FontCategory::Serif);
         assert_eq!(classify_font("Georgia"), FontCategory::Serif);
         assert_eq!(classify_font("Inconnue"), FontCategory::Sans, "the fallback");
-        // `\bcode\b`: a word, not a substring — « Codex » is not monospace.
+        // `\bcode\b`: a word, not a substring - « Codex » is not monospace.
         assert!(contains_word("cascadia code", "code"));
         assert!(!contains_word("codex pro", "code"));
     }
 
     /// A list of families measures as headers + rows, in `CAT_ORDER`, with the
-    /// recent ones pinned on top — and the popup's height follows from it.
+    /// recent ones pinned on top - and the popup's height follows from it.
     #[test]
     fn a_font_list_measures_as_its_rows() {
         let mut p = FontPicker::with_fonts(["Times New Roman", "Arial", "Consolas", "Verdana"]);
@@ -4423,7 +4423,7 @@ mod tests {
 
     // ── FontSizeField ─────────────────────────────────────────────────────
 
-    /// The ordering trap, and the clamp — both the replica's, neither rewritten
+    /// The ordering trap, and the clamp - both the replica's, neither rewritten
     /// here. A field built the naive way (`set_value` then `set_maximum`) would
     /// refuse every size above 100.
     #[test]
@@ -4476,7 +4476,7 @@ mod tests {
 
     // ── RichTextToolbar ───────────────────────────────────────────────────
 
-    /// Every button's active state is the replica's `Checked` — one storage
+    /// Every button's active state is the replica's `Checked` - one storage
     /// location, written and read through it.
     #[test]
     fn each_command_carries_its_own_active_state() {
@@ -4547,7 +4547,7 @@ mod tests {
         assert_eq!(rich_metrics::HEIGHT, 41.0, "py-1 twice around h-8, plus border-b");
     }
 
-    /// Every command names a geometry the design system actually carries — a
+    /// Every command names a geometry the design system actually carries - a
     /// missing icon is a missing asset, and this is where it is caught rather
     /// than on screen.
     #[test]

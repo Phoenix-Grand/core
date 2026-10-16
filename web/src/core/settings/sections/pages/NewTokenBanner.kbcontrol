@@ -1,4 +1,4 @@
-<!-- NewTokenBanner — converted from NewTokenBanner.tsx by @kubuno/views-migrate. -->
+<!-- NewTokenBanner - converted from NewTokenBanner.tsx by @kubuno/views-migrate. -->
 <UserControl x:Props="NewTokenBannerProps">
   <Panel BackColor="SuccessLight" Class="mb-6 rounded-lg border border-success p-4">
     <Stack Direction="LeftToRight" Gap="12" CrossAlign="Start" Justify="SpaceBetween">

@@ -1,4 +1,4 @@
-//! Component family `overlays` — `<Popover>`, a floating panel anchored to a control of the view
+//! Component family `overlays` - `<Popover>`, a floating panel anchored to a control of the view
 //! (the web's `AnchoredPopover`, `kubuno_desktop_ui::dialogs::Popover`): a picker, a small form, a
 //! user card. Compiled with the `family-overlays` feature (on by default through
 //! `all-families`).

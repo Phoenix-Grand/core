@@ -3,7 +3,7 @@ import type { TFunction } from 'i18next'
 import { Plus, Pipette } from 'lucide-react'
 import { ColorPicker, useAppPickerTheme, type PickerTheme } from './ColorPicker'
 
-// Couleurs « Personnalisé » ajoutées par l'utilisateur — persistées localement
+// Couleurs « Personnalisé » ajoutées par l'utilisateur - persistées localement
 // pour qu'elles réapparaissent à la réouverture (comme dans Google Docs).
 const CUSTOM_KEY = 'kubuno:picker:custom-swatches'
 function loadCustom(): string[] {

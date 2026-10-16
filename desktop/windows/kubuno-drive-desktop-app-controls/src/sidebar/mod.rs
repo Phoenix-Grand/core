@@ -1,6 +1,6 @@
 //! The PURE core of `Files.App.Controls`'s `SidebarView`: display mode,
 //! width thresholds and row dimensions. Stateless, with no dependency on the
-//! domain model — `SidebarEntry`, `sidebar_visual` and `draw_sidebar`
+//! domain model - `SidebarEntry`, `sidebar_visual` and `draw_sidebar`
 //! (coupled to `HomeModel`) stay in `kubuno-drive-desktop`.
 //!
 //! Mirrors the FLAT `Files.App.Controls/Sidebar` folder (13 files, no

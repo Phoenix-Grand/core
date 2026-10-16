@@ -4,13 +4,13 @@
  * ## The trap this exists to close
  *
  * The response interceptor in `client.ts` rejects with `{ message, code }` **at
- * the root** — not with the original `AxiosError`. So the reflex,
+ * the root** - not with the original `AxiosError`. So the reflex,
  * `err.response.data.message`, silently yields `undefined`, and the screen shows
  * its own fallback instead of what the server took the trouble to explain.
  *
  * Lived through on the building sheet: the server answered "L'adresse est
  * obligatoire : c'est la seule question que se pose quelqu'un qui a rendez-vous
- * là-bas", and the console printed "Enregistrement impossible." — leaving the
+ * là-bas", and the console printed "Enregistrement impossible." - leaving the
  * operator to guess which of eight fields was wrong.
  *
  * The axios shape is read FIRST because a caller that bypasses the interceptor
@@ -21,7 +21,7 @@
 /**
  * The server's own sentence, or `undefined` when it said nothing useful.
  *
- * For callers that already pick their fallback at the point of use — a toast, a
+ * For callers that already pick their fallback at the point of use - a toast, a
  * banner with its own wording. Same reading rules as {@link apiErrorMessage}.
  */
 export function apiErrorDetail(err: unknown): string | undefined {

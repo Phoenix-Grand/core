@@ -57,7 +57,7 @@ impl HeaderSnapshot {
     }
 
     /// The offline sample: the shell controls' design data (`controls/design/apps.json`, twelve apps;
-    /// `controls/design/accounts.json`, Camille Martin and two other accounts) — what the Visual Studio
+    /// `controls/design/accounts.json`, Camille Martin and two other accounts) - what the Visual Studio
     /// designer shows too. Nothing is read or written.
     pub fn sample() -> Self {
         use kubuno_desktop_shell_controls::controls::{account_menu, app_tile_grid};
@@ -105,7 +105,7 @@ pub fn me_is_admin(me: &serde_json::Value) -> bool {
     flag("is_admin") || flag("is_superuser")
 }
 
-/// The display name of a `/api/v1/me` user: `display_name`, else `username`, else `email` — the shell's rule.
+/// The display name of a `/api/v1/me` user: `display_name`, else `username`, else `email` - the shell's rule.
 pub fn me_name(user: &serde_json::Value) -> String {
     let field = |k: &str| user.get(k).and_then(|v| v.as_str()).map(str::trim).filter(|v| !v.is_empty()).map(str::to_string);
     field("display_name").or_else(|| field("username")).or_else(|| field("email")).unwrap_or_default()

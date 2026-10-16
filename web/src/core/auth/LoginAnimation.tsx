@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 
-// "Ondes de lumière" — a continuous Canvas 2D aurora used as the background of
+// "Ondes de lumière" - a continuous Canvas 2D aurora used as the background of
 // the login branding panel. Parallel sinusoidal strands tighten and spread; with
 // additive blending ('lighter') the dense zones build luminous nodes, and a blurred
 // copy adds bloom. Sized to its container (not the viewport) and paused for users
@@ -29,7 +29,7 @@ export type LoginAnimationPreset = 'A' | 'B' | 'C' | 'D'
 
 // Coordinates normalised: x ∈ [0,1] over width, y ∈ [0,1] over height. Colours 0–255.
 const PRESETS: Record<LoginAnimationPreset, Preset> = {
-  // A — Aurora: dynamic ribbon, white-cyan crests (closest to the reference).
+  // A - Aurora: dynamic ribbon, white-cyan crests (closest to the reference).
   A: {
     bgTop: [8, 23, 77], bgBottom: [3, 9, 26],
     glows: [{ x: 0.70, y: 0.58, r: 0.40, col: [51, 140, 255], s: 0.45 }],
@@ -45,7 +45,7 @@ const PRESETS: Record<LoginAnimationPreset, Preset> = {
         slope: 0.0, jitter: 0.05, valMul: 0.8 },
     ],
   },
-  // B — Deep Current: calmer, bluer, silky visible strands.
+  // B - Deep Current: calmer, bluer, silky visible strands.
   B: {
     bgTop: [10, 28, 87], bgBottom: [5, 11, 33],
     glows: [{ x: 0.50, y: 0.55, r: 0.55, col: [51, 128, 242], s: 0.30 }],
@@ -61,7 +61,7 @@ const PRESETS: Record<LoginAnimationPreset, Preset> = {
         slope: 0.0, jitter: 0.04, valMul: 0.8 },
     ],
   },
-  // C — Crosscurrents: two diagonal currents crossing into a central node.
+  // C - Crosscurrents: two diagonal currents crossing into a central node.
   C: {
     bgTop: [8, 20, 71], bgBottom: [3, 8, 23],
     glows: [{ x: 0.50, y: 0.50, r: 0.34, col: [64, 153, 255], s: 0.55 }],
@@ -77,7 +77,7 @@ const PRESETS: Record<LoginAnimationPreset, Preset> = {
         slope: -0.16, jitter: 0.04, valMul: 1.0 },
     ],
   },
-  // D — Twilight Helix: spectacular sweep with a hint of violet in the halo.
+  // D - Twilight Helix: spectacular sweep with a hint of violet in the halo.
   D: {
     bgTop: [15, 20, 77], bgBottom: [10, 9, 31],
     glows: [{ x: 0.30, y: 0.42, r: 0.45, col: [77, 140, 255], s: 0.40 },
@@ -107,7 +107,7 @@ function mulberry32(a: number): () => number {
 }
 
 // `yShift` (normalised 0–1) pushes the luminous wave and its halo downward while
-// leaving the full-height background gradient intact — keeps the upper area clear
+// leaving the full-height background gradient intact - keeps the upper area clear
 // for the branding text.
 function buildRuntime(key: LoginAnimationPreset, yShift: number): Preset {
   const r: Preset = JSON.parse(JSON.stringify(PRESETS[key]))

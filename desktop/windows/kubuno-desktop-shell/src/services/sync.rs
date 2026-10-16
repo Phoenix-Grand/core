@@ -26,7 +26,7 @@ fn on_event(hwnd: isize, id: &str, ev: kubuno_desktop_sync::daemon::SyncEvent) {
     }
     // Files the daemon just pulled are full on disk: turn the tree back into
     // placeholders and make the new ones online-only, so they do not pile up
-    // locally — the on-demand model Explorer shows in its Status column.
+    // locally - the on-demand model Explorer shows in its Status column.
     if kind == "synced" && kubuno_desktop_account::paths::system_integration_allowed() {
         let id = id.to_string();
         std::thread::spawn(move || {
@@ -36,7 +36,7 @@ fn on_event(hwnd: isize, id: &str, ev: kubuno_desktop_sync::daemon::SyncEvent) {
             }
         });
     }
-    crate::post_sync_done(hwnd, format!("{} — {}", ev.title, ev.body));
+    crate::post_sync_done(hwnd, format!("{} - {}", ev.title, ev.body));
 }
 
 /// How long the same notification stays silent after being shown once.
@@ -49,7 +49,7 @@ static SHOWN: std::sync::Mutex<Option<Vec<(String, std::time::Instant)>>> =
 /// A Windows toast under our own AUMID, so it reads "Kubuno".
 ///
 /// Deduplicated: a failing sync retries every few seconds, and a persistent
-/// error would otherwise raise a toast each time — one unwritable file was
+/// error would otherwise raise a toast each time - one unwritable file was
 /// enough to pop a notification every two seconds. The same message is shown
 /// once, then stays quiet for [`REPEAT_AFTER`]; a DIFFERENT message still comes
 /// through at once, so nothing new is ever hidden.
@@ -70,7 +70,7 @@ pub fn toast(title: &str, body: &str) {
         .show();
 }
 
-/// Every file known to an instance, as `(local path, server id)` — what the
+/// Every file known to an instance, as `(local path, server id)` - what the
 /// placeholder conversion needs.
 fn instance_files(id: &str) -> Vec<(PathBuf, String)> {
     kubuno_desktop_sync::db_path(id)
@@ -88,7 +88,7 @@ fn instance_files(id: &str) -> Vec<(PathBuf, String)> {
 ///   * a network folder → a plain shell-namespace entry (CfApi cannot take it).
 ///
 /// Registrations outlive the app, so leftovers from instances that no longer
-/// exist are dropped first — otherwise the navigation pane slowly fills with
+/// exist are dropped first - otherwise the navigation pane slowly fills with
 /// identical-looking dead entries.
 pub fn refresh_explorer_nav() {
     // A sandboxed profile (`KUBUNO_SANDBOX_DIR`) registers nothing with Explorer: it must neither add entries
@@ -119,16 +119,16 @@ pub fn refresh_explorer_nav() {
         // tells them apart.
         let ambiguous = instances.iter().filter(|o| host_of(o) == host).count() > 1;
         let name = match (&c.label, ambiguous) {
-            (Some(label), _) if !label.trim().is_empty() => format!("Kubuno — {label}"),
+            (Some(label), _) if !label.trim().is_empty() => format!("Kubuno - {label}"),
             (_, true) => {
                 let folder = c
                     .sync_root
                     .file_name()
                     .map(|n| n.to_string_lossy().into_owned())
                     .unwrap_or_else(|| c.sync_root.to_string_lossy().into_owned());
-                format!("Kubuno — {host} ({folder})")
+                format!("Kubuno - {host} ({folder})")
             }
-            _ => format!("Kubuno — {host}"),
+            _ => format!("Kubuno - {host}"),
         };
         if cloudfiles::register(&c.id, &name, &c.sync_root) {
             local_to_mark.push((c.id.clone(), c.sync_root.clone()));

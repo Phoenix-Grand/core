@@ -1,12 +1,12 @@
-//! Signals a native application **states** about itself — and the discipline
+//! Signals a native application **states** about itself - and the discipline
 //! that keeps them from being read as facts.
 //!
 //! ## Why this is off by default
 //!
 //! A declaration is a sentence the client chose to send. A hostile or merely
 //! buggy application can say "disk encrypted: yes" as easily as the truth. That
-//! is not a reason to refuse the feature — an honest fleet of honest
-//! applications makes an operator's life considerably easier — but it is a
+//! is not a reason to refuse the feature - an honest fleet of honest
+//! applications makes an operator's life considerably easier - but it is a
 //! reason to (a) require the operator to switch it on deliberately, and (b)
 //! label every value it produces "declared by the device", never "verified".
 //!
@@ -16,7 +16,7 @@
 //!
 //! ## What is refused
 //!
-//! * Declarations at all, when the setting is off — a 403 that says why.
+//! * Declarations at all, when the setting is off - a 403 that says why.
 //! * A declaration about somebody else's device: the route only ever writes the
 //!   device the caller's own session belongs to.
 //! * `attested`. Nothing in the core produces it; the enum value exists so the
@@ -147,7 +147,7 @@ pub async fn apply(
         return Err(AppError::NotFound("Appareil introuvable".into()));
     }
 
-    // The timeline records that a declaration arrived and what it claimed — the
+    // The timeline records that a declaration arrived and what it claimed - the
     // wording says "déclaré" so a reader of the history cannot mistake it for a
     // measurement either.
     let detail = format!(

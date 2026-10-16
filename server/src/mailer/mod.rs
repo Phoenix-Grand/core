@@ -25,7 +25,7 @@
 //!   runner's exponential backoff. Only the relay *test* is synchronous, because
 //!   its entire purpose is to hand the operator the raw SMTP answer.
 //! * **Rendering** is a fixed table of translated sentences, not a template
-//!   engine — see [`templates`].
+//!   engine - see [`templates`].
 //!
 //! ## What never happens here
 //!
@@ -75,7 +75,7 @@ pub async fn instance_name(db: &DbPool) -> String {
 
 /// Base URL of the instance as seen from outside, used to build links.
 ///
-/// `mail.public_url` wins when the operator pinned one — behind a reverse proxy
+/// `mail.public_url` wins when the operator pinned one - behind a reverse proxy
 /// that rewrites nothing, the request headers are not trustworthy enough to
 /// build a link a user will click. Otherwise the request's own origin is used,
 /// with the same header precedence as the OIDC redirect builder.
@@ -143,7 +143,7 @@ pub struct Recipient {
 ///
 /// Resolved in the order that matters: an account that *chose* a language keeps
 /// it, and an account that never did is written to in the language its
-/// organisational unit — failing that, the instance — declares. The time zone
+/// organisational unit - failing that, the instance - declares. The time zone
 /// has no per-account equivalent in the core, so it comes straight from the
 /// chain.
 ///
@@ -166,7 +166,7 @@ impl Audience {
 /// Resolves the audience of a message.
 ///
 /// `user_id` is the recipient's account when there is one. `preferences` is that
-/// account's `preferences` document — pass `&Value::Null` when writing to an
+/// account's `preferences` document - pass `&Value::Null` when writing to an
 /// address that belongs to no account.
 pub async fn audience(
     db: &DbPool,
@@ -249,7 +249,7 @@ pub async fn queue_invite(
 /// The new password travels in the body because that is what the operator asked
 /// for by ticking the box; the message says so plainly and tells the recipient
 /// to change it. The password is *never* written to a log or to the audit trail
-/// on this path — only the fact that a notice was queued.
+/// on this path - only the fact that a notice was queued.
 pub async fn queue_admin_password_reset(
     db: &DbPool,
     cfg: &MailConfig,

@@ -5,7 +5,7 @@ import { create } from 'zustand'
  *
  * `sdk-mismatch`  the bundle declares an SDK version the host does not speak
  *                 (the explicit version handshake caught it).
- * `import-error`  importing the bundle threw — most often an ES link error
+ * `import-error`  importing the bundle threw - most often an ES link error
  *                 ("does not provide an export named 'X'") when the module was
  *                 built against a newer SDK surface than the host serves, but
  *                 also any error thrown while the module's top level evaluates.

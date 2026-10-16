@@ -18,7 +18,7 @@ export type InheritanceChainWindowProps = {
   /**
    * The name the control above used. Passed in rather than taken from the
    * server response so the window and the row it was opened from say the same
-   * thing — the catalogue translates a key the database only stores once.
+   * thing - the catalogue translates a key the database only stores once.
    */
   title?:     string
 }

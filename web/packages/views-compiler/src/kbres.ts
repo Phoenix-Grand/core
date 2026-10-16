@@ -3,7 +3,7 @@
  *
  * A `.kbres` set is a neutral file (`strings.kbres`, its language named by `<Resources Culture="en">`, English when
  * absent) and its satellites in the same folder (`strings.fr.kbres`, `strings.ar.kbres`…), the desktop's format
- * (`kubuno-desktop-resources-model`, read and written here through the same Rust code compiled to WebAssembly —
+ * (`kubuno-desktop-resources-model`, read and written here through the same Rust code compiled to WebAssembly -
  * one grammar, never a second parser). On the web a set becomes **i18next bundles**: one object per language, the
  * entries' names split on `.` into nested keys (`header.settings` → `{ header: { settings } }`), plural forms kept as
  * i18next names them (`files_one`, `files_other`). `import strings from './strings.kbres'` gives
@@ -35,7 +35,7 @@ export interface KbresDiagnostic {
   message: string
 }
 
-/** The strings of one `.kbres` file (its other entries — images, colours… — are not i18n strings). */
+/** The strings of one `.kbres` file (its other entries - images, colours… - are not i18n strings). */
 export interface KbresDocument {
   /** `Culture` of a neutral file: the language of its strings. */
   culture?: string

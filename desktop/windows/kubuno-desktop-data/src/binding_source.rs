@@ -1,5 +1,5 @@
 //! `<BindingSource>` (`vskubuno/docs/DATA.md` §5): the currency manager between a [`Table`] and the
-//! controls bound to it — a view of the table (filter, sort, deleted rows hidden, a detail list's
+//! controls bound to it - a view of the table (filter, sort, deleted rows hidden, a detail list's
 //! relation to its master), a position and its current row, an edit buffer (begin/end/cancel edit,
 //! a new row being added), paging, and the WinForms events (`ListChanged`, `CurrentChanged`,
 //! `PositionChanged`, `CurrentItemChanged`, `AddingNew`, `RowValidating`, `DataError`), raised on the
@@ -11,7 +11,7 @@
 //!
 //! Bindings write through [`BindingSource::set_field`] on every keystroke: a value that converts to
 //! the column's type is stored at once; one that does not (`"abc"` in an integer column) is kept as
-//! the field's *proposed text* — the bound text box keeps showing it — and becomes a column error.
+//! the field's *proposed text* - the bound text box keeps showing it - and becomes a column error.
 //! Validation of the row (`NOT NULL`, lengths, `RowValidating`) runs when the edit ends.
 //!
 //! **Master/detail** (DATA-3): `<BindingSource x:Name="orders" DataSource="customers"
@@ -89,7 +89,7 @@ pub struct FillRequest {
 #[default_property("DataSource")]
 pub struct BindingSource {
     base: ComponentCore,
-    /// The x:Name of the TableAdapter that fills this binding source and saves its changes — or, for a detail list, of its master BindingSource.
+    /// The x:Name of the TableAdapter that fills this binding source and saves its changes - or, for a detail list, of its master BindingSource.
     #[property]
     #[category("Data")]
     pub data_source: String,
@@ -1067,7 +1067,7 @@ impl BindingSource {
             _ => {
                 let column = path.strip_prefix("Current.").unwrap_or(path);
                 // `<Column>.Error`: the column's error on the current row, `""` without one (what
-                // a DataTable shows as the error glyph of the cell — WinForms `ErrorText`).
+                // a DataTable shows as the error glyph of the cell - WinForms `ErrorText`).
                 if let Some(field) = column.strip_suffix(".Error").filter(|f| self.table.column_index(f).is_some()) {
                     return Some(Value::Str(self.column_error(field).unwrap_or_default().to_string()));
                 }

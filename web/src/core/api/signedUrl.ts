@@ -57,7 +57,7 @@ const queues = new Map<string, Pending[]>()
 let generation = 0
 let warnedUnsupported = false
 
-/** Forget every cached ticket — on sign-out and on account switch, so a URL
+/** Forget every cached ticket - on sign-out and on account switch, so a URL
  *  minted for one account is never handed to another. */
 export function clearSignedUrlCache(): void {
   cache.clear()
@@ -118,7 +118,7 @@ function flush(bucket: string): void {
 
 function request(path: string, purpose: TicketPurpose, once: boolean): Promise<Issued> {
   // Anonymous page (public form, published app, share link): there is no
-  // session to mint a ticket from. Hand the bare URL back, as before — a
+  // session to mint a ticket from. Hand the bare URL back, as before - a
   // public route serves it, a private one refuses it either way.
   if (!hasAccessToken()) return Promise.resolve({ url: path, expires_at: nowS() + 60 })
   const key = `${purpose}|${path}`
@@ -151,7 +151,7 @@ export function signedUrls(urls: string[], opts: SignedUrlOptions = {}): Promise
   return Promise.all(urls.map(u => signedUrl(u, opts)))
 }
 
-/** `ws(s)://host/<path>?kt=…` for a WebSocket on `url` — a path (`/ws`,
+/** `ws(s)://host/<path>?kt=…` for a WebSocket on `url` - a path (`/ws`,
  *  `/api/v1/<module>/…`, `/collab/<room>/sync`) or a full same-host `ws(s)://`
  *  URL. A `token=` parameter (the access token older code put there) is
  *  removed. Fetch a new one on every (re)connect: a socket ticket lives one
@@ -200,7 +200,7 @@ export async function openSignedUrl(url: string, opts: SignedUrlOptions = {}): P
  * React hook: the ticketed form of `url`, `undefined` while it is being
  * fetched (render a placeholder rather than an `<img>` with a bare URL).
  * Re-issued before expiry while mounted (except for `stream`, where swapping
- * the `src` would restart playback — a stream ticket lives for hours).
+ * the `src` would restart playback - a stream ticket lives for hours).
  */
 export function useSignedUrl(url: string | null | undefined, opts: SignedUrlOptions = {}): string | undefined {
   const purpose = opts.purpose ?? 'view'

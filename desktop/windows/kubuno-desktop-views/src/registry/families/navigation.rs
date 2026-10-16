@@ -1,17 +1,17 @@
-//! Component family `navigation` — the navigation pane and the status bar of an application
+//! Component family `navigation` - the navigation pane and the status bar of an application
 //! window, over `kubuno_desktop_ui::navigation::Sidebar` and `kubuno_desktop_ui::navigation::StatusBar` (the
 //! web shell's sidebar and the drive's status bar). Compiled with the `family-navigation` feature
 //! (on by default through `all-families`).
 //!
 //! ## Elements
 //!
-//! * `<Sidebar>` — WinUI's `NavigationView` pane: `<SidebarItem>` rows (an icon and a label; a
+//! * `<Sidebar>` - WinUI's `NavigationView` pane: `<SidebarItem>` rows (an icon and a label; a
 //!   row with `<SidebarItem>` children is a tree group with a chevron), `<SidebarSection>`
 //!   headers, or rows bound from `ItemsSource` (fields `Text`, `Icon`, `Key`, `Level`, and
 //!   `Kind="Section"` for a header). `SelectedItem` (two-way) is the `Key` (else the `x:Name`,
 //!   else the `Text`) of the active row; `OnItemInvoked` reports a click or Enter on a row.
 //!   `DisplayMode="Compact"` shows the icon rail.
-//! * `<StatusBar>` — WinForms' `StatusStrip`: `<StatusLabel>` cells, a `Spring` cell sharing
+//! * `<StatusBar>` - WinForms' `StatusStrip`: `<StatusLabel>` cells, a `Spring` cell sharing
 //!   the leftover width, a `Text="-"` cell drawn as a separator, a `Clickable` cell drawn as a
 //!   ghost button raising its `OnClick`.
 

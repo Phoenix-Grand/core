@@ -1,5 +1,5 @@
 /**
- * Roaming clipboard history — imperative entry points, like `openLabelPicker`.
+ * Roaming clipboard history - imperative entry points, like `openLabelPicker`.
  *
  * `openClipboardPane()` shows the history (rendered once by
  * `<ClipboardPaneHost />` in App.tsx) and resolves with the envelope the user

@@ -5,7 +5,7 @@
 //!
 //! The 38 administrative routes were guarded only by convention: each handler
 //! took an `AdminUser` extractor, and a signature written tomorrow that forgot
-//! it would compile and serve. A layer makes the floor structural — every route
+//! it would compile and serve. A layer makes the floor structural - every route
 //! mounted under the sub-router is guarded whether or not anyone remembered.
 //!
 //! The extractors stay. Defence in depth, with a clean division: the **layer**
@@ -87,7 +87,7 @@ pub async fn context_for(
         .cloned()
         .unwrap_or_else(AuthSource::session);
 
-    // What the *subject* holds — cacheable, because it is a property of the
+    // What the *subject* holds - cacheable, because it is a property of the
     // account and not of the request.
     let subject = match super::cache::get(user_id) {
         // The authentication origin belongs to this request and is refreshed
@@ -110,7 +110,7 @@ pub async fn context_for(
     // the cache, never inside it. That ordering is what makes the guarantee real:
     // the cache holds "what this account holds", the narrowing holds "what this
     // key may exercise", and the second is recomputed on every single request. A
-    // privilege withdrawn from the owner is gone from the token on the next call —
+    // privilege withdrawn from the owner is gone from the token on the next call -
     // intersection, never a copy frozen when the token was minted.
     Ok(crate::auth::token_scope::narrow(subject, source.grant()))
 }
@@ -134,7 +134,7 @@ pub async fn admin_layer(
 
     // Structural, and ahead of any privilege reasoning: an API token issued
     // before scopes existed may read this surface until its deadline, and may
-    // never write to it. No grace — see `auth::token_scope`.
+    // never write to it. No grace - see `auth::token_scope`.
     let grant = parts.extensions.get::<AuthSource>().and_then(|s| s.grant.clone());
     if let Err(e) = crate::auth::token_scope::deny_legacy_admin_write(grant.as_deref(), &parts.method)
     {
@@ -149,7 +149,7 @@ pub async fn admin_layer(
 
     // `users.role = 'admin'` is kept in step with "holds an instance-scoped
     // superuser role", so in practice the two agree; the disjunction is what
-    // lets a delegated administrator — who is `role = 'user'` on purpose —
+    // lets a delegated administrator - who is `role = 'user'` on purpose -
     // through the door.
     if user.role != "admin" && !ctx.is_admin() {
         crate::audit::record_refusal(&state, &parts, &user, "no_admin_privilege").await;
@@ -165,7 +165,7 @@ pub async fn admin_layer(
 
 /// Extractor giving a handler the caller's resolved privileges.
 ///
-/// Inside `/admin/*` this is a pure extension read — the layer already did the
+/// Inside `/admin/*` this is a pure extension read - the layer already did the
 /// work. Outside it (the handful of privileged surfaces that live elsewhere) it
 /// resolves on demand.
 pub struct AdminCtx(pub AdminContext);

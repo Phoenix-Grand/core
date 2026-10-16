@@ -26,7 +26,7 @@ enum class KubunoEmptyTone { FIRST_USE, NO_RESULTS, ERROR, UNAVAILABLE }
 
 /**
  * An empty state (EmptyState.tsx): a tinted icon circle, a title, an optional
- * description, and an optional action row — centred.
+ * description, and an optional action row - centred.
  */
 @Composable
 fun KubunoEmptyState(

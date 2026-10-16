@@ -1,12 +1,12 @@
-//! What an icon attribute names, resolved for the painters — shared by every node that lets an XML
+//! What an icon attribute names, resolved for the painters - shared by every node that lets an XML
 //! attribute name an icon (`Button`'s `Icon`, `IconButton`'s `Icon`, `<Icon Name="…">`,
 //! `EmptyState`'s `Icon`, a menu item's, the ribbon's `SmallIcon`/`LargeIcon`…).
 //!
 //! An icon value (`vskubuno/docs/ICONS.md`) is one of:
 //!
-//! * a glyph of the embedded Kubuno icon set — Lucide's icons (`Save`, `ChevronsUpDown`), the
+//! * a glyph of the embedded Kubuno icon set - Lucide's icons (`Save`, `ChevronsUpDown`), the
 //!   Kubuno themed icons and the module logos, exactly as `kubuno_drive_desktop_app_controls`' embedded data
-//!   spells them — or one of the short lower-case [`alias`]es (`close`, `trash`);
+//!   spells them - or one of the short lower-case [`alias`]es (`close`, `trash`);
 //! * an image file, relative to the view like `BackgroundImage` (`resources/save.svg`): SVG, PNG,
 //!   JPEG, BMP, GIF, ICO, TIFF or WebP, drawn by `kubuno_desktop_controls::icon_image`;
 //! * a resource of the project, `{Res key}`, whose value is one of the above (resolved by the
@@ -102,7 +102,7 @@ pub(crate) fn default_base_dir() -> Option<PathBuf> {
 }
 
 /// The folder of the view this thread loads, when known (the design surface and the file watcher set it): where a
-/// component that reads a file of its project starts from — the storage components' `.kbsettings` in the designer
+/// component that reads a file of its project starts from - the storage components' `.kbsettings` in the designer
 /// (vskubuno docs/STORAGE-COMPONENTS.md).
 pub fn view_folder() -> Option<PathBuf> {
     default_base_dir()
@@ -132,7 +132,7 @@ fn absolute(path: &str) -> String {
 static RESOURCE_RESOLVER: OnceLock<fn(&str) -> Option<String>> = OnceLock::new();
 
 /// Installs how `{Res key}` finds the icon a resource of the project holds (its value: a glyph
-/// name, or the absolute path of an image file) — the resources runtime installs it. The first
+/// name, or the absolute path of an image file) - the resources runtime installs it. The first
 /// call wins.
 pub fn set_resource_resolver(resolver: fn(&str) -> Option<String>) {
     let _ = RESOURCE_RESOLVER.set(resolver);
@@ -167,8 +167,8 @@ pub fn glyph(name: &str) -> Option<&'static str> {
 
 /// Resolves an icon value (see the module doc) to the `&'static str` the painters take
 /// (`Canvas::vector_icon`): a glyph name, or an image file made absolute against the view's folder,
-/// with its drawing options. `None` when it names nothing — the caller decides what "no such icon"
-/// means for it (skip the glyph, or paint the set's own missing-glyph placeholder — see
+/// with its drawing options. `None` when it names nothing - the caller decides what "no such icon"
+/// means for it (skip the glyph, or paint the set's own missing-glyph placeholder - see
 /// [`resolve_or`]). A missing image file still resolves: it simply draws nothing.
 pub fn resolve(value: &str) -> Option<&'static str> {
     resolve_depth(value, 0)
@@ -232,7 +232,7 @@ pub fn with_options(value: &str, attribute: impl Fn(&str) -> Option<String>) -> 
 }
 
 /// An element's icon attribute `name` as the painters take it ([`with_options`] then [`resolve`]),
-/// `None` when absent or naming nothing — for a family that reads its elements directly.
+/// `None` when absent or naming nothing - for a family that reads its elements directly.
 pub fn attribute(element: &crate::ast::Element, name: &str) -> Option<&'static str> {
     let read = |n: &str| element.attribute(n).and_then(|a| a.value());
     resolve(&with_options(&read(name)?, read))
@@ -282,7 +282,7 @@ pub fn keywords(name: &str, comment: &str) -> Vec<String> {
 
 /// The whole icon set for a tool that draws it itself: `{"icons": [{name, set, aliasOf, keywords,
 /// viewBox, layers: [{d, stroke, role, opacity, color, transform}]}], "aliases": {alias: glyph},
-/// "sizes": {Small: 16…}}` — the Visual Studio icon picker's gallery (`kubuno/icons`).
+/// "sizes": {Small: 16…}}` - the Visual Studio icon picker's gallery (`kubuno/icons`).
 pub fn catalog_json() -> serde_json::Value {
     use kubuno_drive_desktop_app_controls::LayerRole;
     let catalog = kubuno_drive_desktop_app_controls::themed_icon::catalog();
@@ -329,7 +329,7 @@ pub fn catalog_json() -> serde_json::Value {
 
 /// Renders icon `value` (anything an icon attribute takes, relative files against `base_dir`) at
 /// `size` × `size` pixels in `color` (`#rrggbb`, the colour of a glyph and an SVG's
-/// `currentColor`): `{"width", "height", "bgra"}` — straight-alpha BGRA rows, base64 — or
+/// `currentColor`): `{"width", "height", "bgra"}` - straight-alpha BGRA rows, base64 - or
 /// `{"error"}`. What the Visual Studio icon picker previews an image file with, so it shows exactly
 /// what the application will (`kubuno/renderIcon`).
 pub fn render_json(value: &str, base_dir: Option<&Path>, size: u32, color: &str) -> serde_json::Value {

@@ -1,8 +1,8 @@
-//! Embeds a `.kbview` preview INSIDE another process's window — the DSG-7
+//! Embeds a `.kbview` preview INSIDE another process's window - the DSG-7
 //! spike of `vskubuno/docs/DESIGNER.md` (the Visual Studio designer surface,
 //! hosted by a WPF `HwndHost`), extended by DSG-6 with the actual **design
 //! mode** (§6): a frame-local layout map + hit-testing, selection/hover
-//! adorners, and Esc/Delete/arrow request generation — all implemented in
+//! adorners, and Esc/Delete/arrow request generation - all implemented in
 //! [`kubuno_desktop_views::design`], this file only wires it to real input and to
 //! the DSG-6 IPC protocol ([`kubuno_desktop_views::protocol`]) on this process's own
 //! stdin/stdout. See `vskubuno/docs/DESIGNER.md`'s "DSG-6 protocol" section
@@ -26,7 +26,7 @@
 //!
 //! `<file.kbview>` is now OPTIONAL: `kubuno/setText` on stdin (DSG-6) pushes
 //! the buffer's live text directly, exactly `vskubuno/docs/DESIGNER.md` §2's
-//! "the buffer, not the file on disk, is authoritative" — the file argument
+//! "the buffer, not the file on disk, is authoritative" - the file argument
 //! remains for standalone/manual testing (no host attached) and, when both
 //! are used, a `setText` simply reloads on top of whatever the file watcher
 //! last loaded.
@@ -35,22 +35,22 @@
 //! caption, sized to the parent's client area, resized by the parent. On top
 //! of the view it paints a one-line probe (parent, DPI, focus, last key) and a
 //! "Menu" button opening an interactive popup that deliberately overflows the
-//! child's bottom-right corner — the floating-surface case (dropdowns) the
+//! child's bottom-right corner - the floating-surface case (dropdowns) the
 //! spike has to prove. Every focus/key/size/DPI message is also traced on
 //! stderr (`[embed] …`) so a test harness can assert on it; the DSG-6
 //! protocol traffic itself is traced too (`[embed] proto …`), on stderr, same
-//! as everything else — stdout is reserved for the protocol's own JSON lines
+//! as everything else - stdout is reserved for the protocol's own JSON lines
 //! (`vskubuno`'s `RustDesignSurfaceHost` already captures stderr as plain
 //! trace text; see that class's own doc).
 //!
-//! It also owns a tiny [`FocusRing`] of its own (`save_btn`, `menu_btn` — NOT
+//! It also owns a tiny [`FocusRing`] of its own (`save_btn`, `menu_btn` - NOT
 //! the compiled `.kbview` content's, which is `Runtime`'s internal one and out
 //! of reach from here per this task's scope) to exercise DSG-7's "tabOut"
 //! keyboard protocol end to end: Tab/Shift+Tab past the last/first of these
 //! two demo buttons calls [`host::notify_tab_out`] instead of wrapping in
 //! place, so `vskubuno`'s `RustDesignSurfaceHost` can move the WPF focus back
 //! out (see `docs/DESIGNER.md` §7). This demo ring, and the Save/Menu buttons
-//! it drives, are host CHROME, not the compiled view's own content — design
+//! it drives, are host CHROME, not the compiled view's own content - design
 //! mode (below) never touches them; it only ever suppresses/redirects input
 //! for `runtime`'s own tree.
 //!
@@ -61,7 +61,7 @@
 //! [`Frame`] ([`neutralize_frame`]): the pointer is parked off-canvas and no
 //! button/wheel state survives, so no leaf can become "hot", start a press,
 //! complete a click, or take keyboard focus (a `TextField` only reads typed
-//! input once it has focus) — "user input does NOT reach widgets" without
+//! input once it has focus) - "user input does NOT reach widgets" without
 //! this file needing to touch `kubuno_desktop_controls::host` itself (out of scope:
 //! another agent owns its keyboard-forwarding code). The REAL [`Frame`]
 //! drives design mode's OWN click/hover/keyboard handling instead
@@ -261,11 +261,11 @@ fn parse_hwnd(s: &str) -> Option<isize> {
 
 /// Spawns the stdin reader (DSG-6 protocol, host → surface): one thread
 /// blocked in `stdin().lock().lines()`, forwarding each line to the frame
-/// loop over an `mpsc` channel — reading a pipe is blocking, the Win32
+/// loop over an `mpsc` channel - reading a pipe is blocking, the Win32
 /// message pump inside [`host::run_with_options`] is not, so this cannot run
 /// on the main thread. The sender end is dropped (and the receiver starts
 /// yielding `Err`, harmlessly ignored by [`drain_host_messages`]) when stdin
-/// closes — e.g. the host process exited without closing this one first;
+/// closes - e.g. the host process exited without closing this one first;
 /// [`host::on_message`]'s own parent-watchdog timer (`docs/DESIGNER.md` §7)
 /// is what actually ends the run in that case, not this channel.
 fn spawn_stdin_reader(waker: host::UiWaker) -> mpsc::Receiver<String> {
@@ -291,7 +291,7 @@ fn spawn_stdin_reader(waker: host::UiWaker) -> mpsc::Receiver<String> {
     rx
 }
 
-/// One [`SurfaceMessage`] line to stdout, flushed immediately — the host is
+/// One [`SurfaceMessage`] line to stdout, flushed immediately - the host is
 /// waiting on it (`RustDesignSurfaceHost.Protocol.cs`'s own
 /// `BeginOutputReadLine`), and a design surface's protocol traffic is rare
 /// enough (one line per click/nudge/delete, never per frame) that buffering
@@ -308,13 +308,13 @@ fn send(msg: &SurfaceMessage) {
 
 /// While design mode is on, the compiled view must not see real
 /// mouse/keyboard interaction (`DESIGNER.md` §6 scope item 2: "user input
-/// does NOT reach widgets") — a copy of the frame with the pointer parked
+/// does NOT reach widgets") - a copy of the frame with the pointer parked
 /// off-canvas and no button/wheel/dismiss state achieves that with no change
 /// to `kubuno_desktop_controls::host` at all: every leaf's own `interact`
 /// (`crate::node::ButtonNode::interact` et al.) gates everything behind
 /// `hot = bounds.contains(mouse)` / `mouse_down`, so a pointer that can never
 /// be "hot" and a button that is never "down" can never start a press,
-/// complete a click, or take keyboard focus — a `kubuno_desktop_ui::text::TextField`
+/// complete a click, or take keyboard focus - a `kubuno_desktop_ui::text::TextField`
 /// only starts reading typed characters once IT has focus, which a click
 /// alone grants. Design mode's own click/hover/keyboard handling
 /// (`DesignController`) reads the REAL frame directly, never this one.
@@ -331,7 +331,7 @@ fn neutralize_frame(f: &Frame) -> Frame {
 }
 
 /// Checks whether `code` was pressed this frame, with or without Shift held
-/// — consumes whichever matched ([`host::take_key`]), so a key held down
+/// - consumes whichever matched ([`host::take_key`]), so a key held down
 /// does not keep re-triggering every single frame. `(pressed, shift_held)`.
 fn take_arrow(code: u16) -> (bool, bool) {
     if host::take_key(code, Modifiers::SHIFT) > 0 {
@@ -344,7 +344,7 @@ fn take_arrow(code: u16) -> (bool, bool) {
 }
 
 /// This frame's design-mode key input, read from the host's own global key
-/// queue (`host::take_key`) — the one place in this file that bridges
+/// queue (`host::take_key`) - the one place in this file that bridges
 /// `kubuno_desktop_controls::host`'s global state into [`DesignController`]'s
 /// host-agnostic [`DesignKeyInput`] (see that type's own doc for why
 /// `kubuno-desktop-views` itself never reads the global state directly).
@@ -492,7 +492,7 @@ fn send_surface_info() {
 
 pub fn main() -> ExitCode {
     // `--export-registry`: the registry this surface knows (the built-in elements and, for a design
-    // build that links the project, its own controls), as `kubuno/registry` exports it — what
+    // build that links the project, its own controls), as `kubuno/registry` exports it - what
     // Visual Studio reads after a build for the Toolbox's project tab (EVT-7b). Nothing else runs.
     if env::args().any(|a| a == "--export-registry") {
         let mut out = std::io::stdout();
@@ -537,7 +537,7 @@ pub fn main() -> ExitCode {
     let mut watcher = path.map(FileWatcher::new);
     let mut runtime = Runtime::new();
     // `current_text` mirrors whatever the surface last loaded (`setText`, or
-    // the file watcher) — design mode's own nudge logic needs to re-parse it
+    // the file watcher) - design mode's own nudge logic needs to re-parse it
     // on demand to read an element's CURRENT literal `X`/`Y` before offsetting
     // it (see `kubuno_desktop_views::design::DesignController::handle_keys`'s own
     // doc); nothing else in this file needs a second copy of the text.
@@ -565,7 +565,7 @@ pub fn main() -> ExitCode {
     // DragOver, Drop, DragLeave}`). `dragOver`/`drop` carry a position that
     // must be resolved against THIS frame's freshly-painted `layout_map`, not
     // the (possibly stale) one from whenever the stdin line actually arrived
-    // — so, like the arrow-nudge `doc` parse below, they are only STORED here
+    // - so, like the arrow-nudge `doc` parse below, they are only STORED here
     // and processed after this frame's paint pass.
     let mut toolbox = ToolboxController::new();
     let mut pending_drag_over: Option<(f32, f32)> = None;
@@ -698,9 +698,9 @@ pub fn main() -> ExitCode {
         }
 
         // DSG-6 protocol: drain whatever the host sent since the last frame.
-        // Never more than a handful of lines even under a fast typist —
+        // Never more than a handful of lines even under a fast typist -
         // `RustDesignSurfaceHost` debounces its own `setText` pushes
-        // (`DESIGNER.md` §2) — so draining the whole backlog every frame
+        // (`DESIGNER.md` §2) - so draining the whole backlog every frame
         // costs nothing measurable.
         let mut incoming: Vec<HostMessage> = Vec::new();
         while let Ok(line) = stdin_rx.try_recv() {
@@ -755,7 +755,7 @@ pub fn main() -> ExitCode {
                     toolbox.drag_enter(component);
                 }
                 HostMessage::DragOver { x, y } => {
-                    // Resolved after this frame's paint — see this
+                    // Resolved after this frame's paint - see this
                     // function's own comment on `pending_drag_over`.
                     pending_drag_over = Some((x, y));
                 }
@@ -818,7 +818,7 @@ pub fn main() -> ExitCode {
         // DSG-7 "tabOut" protocol: a Tab/Shift+Tab that would run this tiny
         // demo ring past its last/first control is consumed HERE, before
         // `ring.begin_frame` gets to it, and turned into
-        // `host::notify_tab_out` instead of wrapping around — see the module
+        // `host::notify_tab_out` instead of wrapping around - see the module
         // doc for why this ring (not the compiled view's own) is what proves
         // the protocol out.
         // The in-place menu editor's Tab (into the new item's sub-menu) is its own, not the focus ring's.
@@ -873,7 +873,7 @@ pub fn main() -> ExitCode {
             );
 
             // "Save" button: the FIRST control of the demo focus ring (Shift+Tab
-            // off it is a tab-out backward) — purely a keyboard-protocol prop, its
+            // off it is a tab-out backward) - purely a keyboard-protocol prop, its
             // click does nothing on its own.
             let save = Rect::new(f.size.0 - 176.0, 2.0, f.size.0 - 96.0, 26.0);
             let save_state = ring.register(save_id, save);
@@ -1267,7 +1267,7 @@ pub fn main() -> ExitCode {
             // A pointer that left the surface (`pointer_outside`) moves nothing: the drag keeps its last
             // position (a stray "away" position would otherwise drop the element at the far edge).
             if design.is_dragging() && !f.pointer_outside() {
-                // Shift suppresses snapping (`DESIGNER.md` §4) — `f.mods` is
+                // Shift suppresses snapping (`DESIGNER.md` §4) - `f.mods` is
                 // the REAL frame's modifier snapshot (the neutered copy fed
                 // to `frame_with_design` above never reaches here).
                 design.update_drag(&layout_map, mouse.0, mouse.1, f.mods.shift);
@@ -1343,7 +1343,7 @@ pub fn main() -> ExitCode {
             let keys = read_design_keys();
             // Re-parsed once per frame when ANY of the consumers below
             // actually needs it (an arrow nudge, a drag ending, or an active
-            // toolbox drag) — `.kbview` files are hand-sized UI
+            // toolbox drag) - `.kbview` files are hand-sized UI
             // descriptions, not megabyte documents (`kubuno_desktop_views::edit`'s own
             // module doc), so re-parsing here is not the frame's bottleneck;
             // still skipped entirely on an ordinary frame with none of these.
@@ -1457,7 +1457,7 @@ pub fn main() -> ExitCode {
                 context_menu = Some(SurfaceMessage::ContextMenu { x, y, screen_x, screen_y, element_id: target, menu: None });
             }
 
-            // DSG-9 toolbox drag/drop — resolved against THIS frame's fresh
+            // DSG-9 toolbox drag/drop - resolved against THIS frame's fresh
             // `layout_map`/`doc` (see `pending_drag_over`/`pending_drop`'s
             // own comment at their declaration).
             if toolbox.is_active() {

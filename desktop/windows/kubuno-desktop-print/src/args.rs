@@ -17,7 +17,7 @@ pub struct PrintEventArgs {
 }
 
 /// `QueryPageSettings` args (WinForms `QueryPageSettingsEventArgs`): the settings of the page about
-/// to be printed — change them for this page only (orientation, paper, margins). `cancel` ends the
+/// to be printed - change them for this page only (orientation, paper, margins). `cancel` ends the
 /// job.
 #[derive(EventArgs, Debug, Clone, Default, PartialEq)]
 #[args(extends = CancelEventArgs, cancel)]

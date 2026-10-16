@@ -4,7 +4,7 @@ import { uiT } from '../uiText'
 
 export interface PaginationProps {
   /** 0-based. The two hand-rolled admin paginations disagreed on this (one was
-   *  0-based, the other 1-based); the component settles it — 0-based in the API,
+   *  0-based, the other 1-based); the component settles it - 0-based in the API,
    *  1-based in what the user reads. */
   page:      number
   pageCount: number
@@ -23,7 +23,7 @@ const NAV_BTN =
   'hover:bg-surface-2 hover:text-text-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-primary ' +
   'disabled:pointer-events-none disabled:opacity-40'
 
-/** The single pagination bar — always inside the table's own footer band. */
+/** The single pagination bar - always inside the table's own footer band. */
 export function Pagination({
   page, pageCount, total, pageSize, pageSizeOptions,
   onPageChange, onPageSizeChange, compact = false, t,
@@ -35,13 +35,13 @@ export function Pagination({
   return (
     <div
       className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2"
-      // Body size, like the header and the cells — the footer carries controls
+      // Body size, like the header and the cells - the footer carries controls
       // (page size, navigation), not a caption.
       style={{ fontSize: 'var(--kb-text-body)' }}
     >
       <div className="flex items-center gap-3 text-text-secondary">
         {/* Page size as a radio GROUP, not a select. Three or four values do not
-            justify a popup — one click instead of two — and, decisively, it is
+            justify a popup - one click instead of two - and, decisively, it is
             fully token-driven: `@ui`'s Dropdown paints its trigger text with a
             hard-coded `#202124`, which vanishes on a dark theme's surface.
             Hidden when the container is narrow (the count alone is enough). */}

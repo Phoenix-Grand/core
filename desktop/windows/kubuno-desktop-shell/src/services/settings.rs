@@ -210,7 +210,7 @@ pub fn notifications_enabled() -> bool {
     get().notifications
 }
 
-/// Start with Windows, through the per-user `Run` key — no admin rights, and
+/// Start with Windows, through the per-user `Run` key - no admin rights, and
 /// nothing left behind when it is turned off.
 pub fn autostart_enabled() -> bool {
     if crate::services::backend::is_sample() || !kubuno_desktop_account::paths::system_integration_allowed() {

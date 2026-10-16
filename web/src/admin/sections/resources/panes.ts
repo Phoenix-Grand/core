@@ -2,7 +2,7 @@
  * The five screens of the section, and the query-string value each one carries.
  *
  * A module of its own so that a child screen can link to a sibling without
- * importing the parent that renders it — `OverviewTab` sends the operator to the
+ * importing the parent that renders it - `OverviewTab` sends the operator to the
  * buildings list, and a cycle there would be a bundling accident waiting to
  * happen.
  */

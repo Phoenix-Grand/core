@@ -3,12 +3,12 @@
 //!
 //! **Two paths** ([`plan`]):
 //!
-//! * **DWM** — on Windows 11 (build 22000+), a radius equal to one of DWM's presets (8 DIP:
+//! * **DWM** - on Windows 11 (build 22000+), a radius equal to one of DWM's presets (8 DIP:
 //!   `DWMWCP_ROUND`, 4 DIP: `DWMWCP_ROUNDSMALL`) or 0 (`DWMWCP_DONOTROUND`) is handed to DWM
 //!   (`DWMWA_WINDOW_CORNER_PREFERENCE`): its own shadow, its own 1 px border, the system materials
 //!   (Mica, Acrylic) clipped to the curve, and DWM squares a maximised or snapped window itself.
 //!   This is the default window's path (8 DIP), and the fastest.
-//! * **Host** — any other radius, and every radius on Windows 10 (where DWM rounds nothing), is
+//! * **Host** - any other radius, and every radius on Windows 10 (where DWM rounds nothing), is
 //!   drawn by the host: the window is created `WS_EX_NOREDIRECTIONBITMAP` (its pixels come from its
 //!   DirectComposition swap chain only, transparent where nothing is painted), DWM's non-client
 //!   rendering is turned off (no square shadow or border behind the curve), and the window is the
@@ -22,7 +22,7 @@
 //! path, the host on its own (the margin goes, so the frame fills the snapped area exactly).
 //!
 //! **What the host path cannot do**, and where the corners then come from (the nearest DWM preset
-//! on Windows 11, square on Windows 10 — said in the docs, never silent):
+//! on Windows 11, square on Windows 10 - said in the docs, never silent):
 //!
 //! * a system material (Mica, Mica Alt, Acrylic) where the system draws one ([`system_backdrops`],
 //!   Windows 11 22H2+): only DWM can clip its material to a curve;
@@ -43,7 +43,7 @@
 use windows::Win32::Foundation::{HWND, RECT};
 use windows::Win32::UI::WindowsAndMessaging::*;
 
-/// The room around a host-rounded window's frame for its shadow, in DIP — the width of Windows'
+/// The room around a host-rounded window's frame for its shadow, in DIP - the width of Windows'
 /// own resize border (`SM_CXSIZEFRAME + SM_CXPADDEDBORDER`, 8 DIP), which takes the clicks there
 /// as Windows' invisible borders do. Not wider: a window region cuts what a DirectComposition
 /// window draws (measured: a 16 DIP shadow came out cut at the region's edge), so everything the
@@ -52,7 +52,7 @@ use windows::Win32::UI::WindowsAndMessaging::*;
 pub const SHADOW_MARGIN: f32 = 8.0;
 
 /// The shadow of a host-rounded window: the web window's (`--kb-shadow-window`, `0 6px 18px` at
-/// 24 %) tightened to fit [`SHADOW_MARGIN`] — `blur / 2 + dy` = 8 DIP below the frame, 4 above —
+/// 24 %) tightened to fit [`SHADOW_MARGIN`] - `blur / 2 + dy` = 8 DIP below the frame, 4 above -
 /// plus a contact shadow along the edge, close to Windows 11's own.
 pub const FRAME_SHADOW: [kubuno_drive_desktop_app_controls::themes::shape::ShadowLayer; 2] = [
     kubuno_drive_desktop_app_controls::themes::shape::ShadowLayer { dy: 2.0, blur: 12.0, spread: 0.0, opacity: 0.22 },
@@ -268,7 +268,7 @@ pub fn dwm_rounds() -> bool {
     windows_build() >= 22000
 }
 
-/// The system draws backdrop materials (`DWMWA_SYSTEMBACKDROP_TYPE`: Mica, Mica Alt, Acrylic —
+/// The system draws backdrop materials (`DWMWA_SYSTEMBACKDROP_TYPE`: Mica, Mica Alt, Acrylic -
 /// Windows 11 22H2, build 22621+). Before, a `Backdrop` is a no-op and does not keep the host
 /// from rounding the window itself.
 pub fn system_backdrops() -> bool {
@@ -363,11 +363,11 @@ pub fn set_dwm_frame(hwnd: HWND, on: bool) {
 }
 
 /// The window region of a host-rounded window `w × h` physical pixels: its frame (one `margin`
-/// in), rounded at `radius`, grown by `band` (all in physical pixels) — what takes the clicks and
+/// in), rounded at `radius`, grown by `band` (all in physical pixels) - what takes the clicks and
 /// what shows (the region also cuts the drawing); the window rectangle's corners beyond it let
 /// the clicks through. A window without a margin (squared) gets its whole rectangle, never no
 /// region at all: a window without DWM's frame (`set_dwm_frame`) that has no region of its own
-/// is given one by the system — the classic theme's, with rounded top corners (measured: a
+/// is given one by the system - the classic theme's, with rounded top corners (measured: a
 /// snapped window showed them).
 pub fn set_hit_region(hwnd: HWND, w: i32, h: i32, margin: i32, radius: i32, band: i32) {
     use windows::Win32::Graphics::Gdi::{CreateRoundRectRgn, SetWindowRgn};

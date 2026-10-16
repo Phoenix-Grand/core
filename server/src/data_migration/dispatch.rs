@@ -11,7 +11,7 @@
 //! on purpose: a call that ran until a mailbox was finished would be a request
 //! held open for hours, unkillable, invisible while it worked, and lost whole
 //! on a restart. Bounded chunks make "pause", "resume", "retry" and "the
-//! process was killed" the same operation — call again with the cursor you
+//! process was killed" the same operation - call again with the cursor you
 //! have.
 //!
 //! ## The credential travels, and is never kept
@@ -38,7 +38,7 @@ use uuid::Uuid;
 use crate::config::settings::ServerSettings;
 use crate::errors::AppError;
 
-/// Probing opens a session and lists folders — a couple of round trips.
+/// Probing opens a session and lists folders - a couple of round trips.
 const PROBE_TIMEOUT: Duration = Duration::from_secs(45);
 
 /// A chunk's own budget plus room for the copy to finish the batch it is in.

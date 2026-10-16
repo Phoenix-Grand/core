@@ -1,4 +1,4 @@
-//! The language and the time zone of the instance — and the readers that make
+//! The language and the time zone of the instance - and the readers that make
 //! them mean something.
 //!
 //! ## Why the readers come first
@@ -7,7 +7,7 @@
 //! reports back. An operator who picks `Europe/Paris` and sees the value stick
 //! has been told, by the interface itself, that dates are now stated in Paris
 //! time. If no code path reads the key, that is simply false, and nothing on the
-//! screen says so. So this module is written as *readers* — everything below
+//! screen says so. So this module is written as *readers* - everything below
 //! answers "what language / what zone applies **here**", and the two settings
 //! exist to feed those answers.
 //!
@@ -20,8 +20,8 @@
 //! ```
 //!
 //! which is what lets a multilingual organisation give one unit a different
-//! language without touching a single account. When no subject is known — the
-//! sign-in page, a message to an address that matches no account — the chain
+//! language without touching a single account. When no subject is known - the
+//! sign-in page, a message to an address that matches no account - the chain
 //! starts at the instance, which is exactly the level meant to answer for
 //! "somebody we know nothing about".
 //!
@@ -61,7 +61,7 @@ pub const LOCALES: [&str; 13] = [
 ];
 
 /// Normalises to a locale the product ships, accepting regional forms
-/// (`fr-CA` → `fr`). `None` for anything else — the caller decides whether an
+/// (`fr-CA` → `fr`). `None` for anything else - the caller decides whether an
 /// unusable value falls back or is reported as a misconfiguration, and those are
 /// not the same answer.
 pub fn normalise_locale(raw: &str) -> Option<&'static str> {
@@ -80,7 +80,7 @@ pub fn parse_timezone(raw: &str) -> Option<Tz> {
 ///
 /// Deliberately numeric and locale-independent: `2026-08-04 15:32 (Europe/Paris)`
 /// reads the same in all thirteen languages and needs no thirteenth translation
-/// to be unambiguous. The zone is named in full rather than abbreviated — `CEST`
+/// to be unambiguous. The zone is named in full rather than abbreviated - `CEST`
 /// and `EST` are not unique identifiers, `Europe/Paris` is.
 pub fn format_stamp(at: DateTime<Utc>, tz: Tz) -> String {
     format!("{} ({})", at.with_timezone(&tz).format("%Y-%m-%d %H:%M"), tz.name())
@@ -112,7 +112,7 @@ async fn resolved_string(db: &DbPool, key: &str, user_id: Option<Uuid>) -> Optio
         .map(str::to_string)
 }
 
-/// The language that applies to `user_id` — or to the instance when nothing is
+/// The language that applies to `user_id` - or to the instance when nothing is
 /// known about the reader.
 ///
 /// Falls back to English, which is the factory value: an instance whose locale
@@ -133,7 +133,7 @@ pub async fn locale_for(db: &DbPool, user_id: Option<Uuid>) -> &'static str {
     }
 }
 
-/// The time zone that applies to `user_id` — or to the instance.
+/// The time zone that applies to `user_id` - or to the instance.
 ///
 /// Falls back to UTC *and says so in the log*: silently dating messages in the
 /// wrong zone is precisely the failure the health check exists to surface.
@@ -196,13 +196,13 @@ mod tests {
 
     #[test]
     fn an_instant_is_stated_in_the_zone_that_was_chosen() {
-        // 2026-08-04 13:32 UTC — summer time, so Paris is UTC+2 and Tokyo UTC+9.
+        // 2026-08-04 13:32 UTC - summer time, so Paris is UTC+2 and Tokyo UTC+9.
         let at = Utc.with_ymd_and_hms(2026, 8, 4, 13, 32, 0).single().expect("instant valide");
 
         assert_eq!(format_stamp(at, Tz::UTC), "2026-08-04 13:32 (UTC)");
         assert_eq!(format_stamp(at, Tz::Europe__Paris), "2026-08-04 15:32 (Europe/Paris)");
         assert_eq!(format_stamp(at, Tz::Asia__Tokyo), "2026-08-04 22:32 (Asia/Tokyo)");
-        // Across the date line the DAY changes too — the case a naive "add an
+        // Across the date line the DAY changes too - the case a naive "add an
         // offset to the hour" implementation gets wrong.
         assert_eq!(
             format_stamp(at, Tz::America__Los_Angeles),
@@ -223,7 +223,7 @@ mod tests {
     #[test]
     fn a_zone_whose_offset_is_not_a_whole_hour_is_handled() {
         let at = Utc.with_ymd_and_hms(2026, 8, 4, 13, 32, 0).single().expect("instant valide");
-        // UTC+05:45 — the case that catches an implementation storing hours.
+        // UTC+05:45 - the case that catches an implementation storing hours.
         assert_eq!(format_stamp(at, Tz::Asia__Kathmandu), "2026-08-04 19:17 (Asia/Kathmandu)");
     }
 }

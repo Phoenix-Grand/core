@@ -15,7 +15,7 @@ import { LANGUAGES } from '../../core/i18n'
  * after its technical namespace. The retention of the audit log belongs above
  * the audit log; the detector scan budget belongs with the detectors; the alert
  * thresholds belong in the alert centre. An operator who is looking at the thing
- * is the operator who wants to tune it — and one who has just changed a
+ * is the operator who wants to tune it - and one who has just changed a
  * threshold can see, on the same screen, what it did.
  *
  * The instance profile keeps only what identifies the instance. Everything that
@@ -31,7 +31,7 @@ import { LANGUAGES } from '../../core/i18n'
  * NOTHING IS EVER SHOWN TWICE. `DEDICATED_EDITOR` lists the keys that already
  * have a purpose-built control somewhere (the theme gallery, the login-animation
  * tuner, the "set as default" action of the module list). They are routed to
- * that page — so the search still lands in the right place — but never painted
+ * that page - so the search still lands in the right place - but never painted
  * as a raw control: a JSON blob in a text field is not an editor.
  *
  * ONE GROUP, ONE SENTENCE. Every group carries an i18n title AND a description
@@ -55,7 +55,7 @@ export interface SettingsPageSpec {
   groups: SettingGroup[]
 }
 
-/** Where an unclaimed key is painted — the page of last resort. */
+/** Where an unclaimed key is painted - the page of last resort. */
 export const FALLBACK_TAB = 'settings'
 
 export const SETTINGS_PAGES: SettingsPageSpec[] = [
@@ -66,7 +66,7 @@ export const SETTINGS_PAGES: SettingsPageSpec[] = [
     tab: 'settings',
     groups: [
       // Language and time zone sit here rather than under "Customization":
-      // they are not a matter of taste, they are what the instance IS — the
+      // they are not a matter of taste, they are what the instance IS - the
       // language it greets a stranger in and the clock it dates its messages by.
       { id: 'identity', keys: [
         'instance.name',
@@ -103,8 +103,8 @@ export const SETTINGS_PAGES: SettingsPageSpec[] = [
       ] },
       // What a local password must satisfy, and how long it stays valid
       // (migration 000115). Here rather than on a page of its own because it is
-      // the second half of the same question the two blocks above ask — what an
-      // account must present to sign in — and because every key is scoped, so
+      // the second half of the same question the two blocks above ask - what an
+      // account must present to sign in - and because every key is scoped, so
       // the scope bar of this page already governs it.
       { id: 'password_policy', keys: [
         'security.password_min_length',
@@ -119,7 +119,7 @@ export const SETTINGS_PAGES: SettingsPageSpec[] = [
       // a detail of the policy above, it is the escape hatch from it.
       { id: 'account_recovery', keys: ['auth.self_service_recovery'] },
       // Brute-force gate: a CAPTCHA after N failures on an account. Its own
-      // group — it is not a password rule, it is what stands between a guesser
+      // group - it is not a password rule, it is what stands between a guesser
       // and the password field.
       { id: 'login_captcha', keys: [
         'security.login_captcha_after_failures',
@@ -165,7 +165,7 @@ export const SETTINGS_PAGES: SettingsPageSpec[] = [
   // the scope bar belongs on the page that shows what it governs.
   //
   // The leaf sits next to Identity, where the language and the time zone live:
-  // the three answer the same question — where this organisation is — and the
+  // the three answer the same question - where this organisation is - and the
   // time zone is what the holidays fall back on when nobody said.
   {
     tab: 'holidays',
@@ -314,7 +314,7 @@ export const SETTINGS_PAGES: SettingsPageSpec[] = [
     groups: [
       { id: 'audit_retention', keys: ['security.audit_retention_days'] },
       // The dashboard's attendance counters are the most personal thing the
-      // console keeps — who used which application, by day. Their window is
+      // console keeps - who used which application, by day. Their window is
       // settable HERE, beside the other journal retentions, rather than on the
       // dashboard: an operator shortening what is kept about people should meet
       // every such decision on one screen.
@@ -340,13 +340,13 @@ export const SETTINGS_PAGES: SettingsPageSpec[] = [
   // opérateur se pose les questions : qui a le droit de déclencher, combien de
   // temps l'archive est retenue puis conservée, où et comment elle est écrite,
   // et enfin ce que chacun peut faire de SES propres données. Les prérequis
-  // viennent en PREMIER délibérément — ce sont eux qui décident si le bouton
+  // viennent en PREMIER délibérément - ce sont eux qui décident si le bouton
   // existe, et les enterrer sous un chemin de fichier ferait d'un contrôle de
   // sécurité une option d'apparence.
   //
   // Le libre-service vient en DERNIER et forme son propre groupe : c'est le seul
   // réglage de cette page qui se règle par unité organisationnelle (déclaré
-  // `overridable`), et le mélanger aux six autres — tous d'instance — laisserait
+  // `overridable`), et le mélanger aux six autres - tous d'instance - laisserait
   // croire que la portée s'applique à eux aussi.
   {
     tab: 'data-export',
@@ -366,12 +366,12 @@ export const SETTINGS_PAGES: SettingsPageSpec[] = [
  *
  * They are routed (the search must land on the page that edits them) but never
  * rendered as a generic control: `appearance.login_animation` is a tuning object
- * whose editor is a live preview, and painting it as a JSON text field — which
- * is what the old single page did — is an invitation to corrupt it.
+ * whose editor is a live preview, and painting it as a JSON text field - which
+ * is what the old single page did - is an invitation to corrupt it.
  */
 export const DEDICATED_EDITOR: Record<string, string> = {
   // Which authentication methods a scope accepts is a LIST, and the generic
-  // control would paint it as a JSON text field — an invitation to lock the
+  // control would paint it as a JSON text field - an invitation to lock the
   // instance out by typo. `AuthMethodsPanel` owns it: three switches, a
   // confirmation that states the cost before the click, and the console recovery
   // path printed next to the switch that can close the door.
@@ -404,14 +404,14 @@ export const DEDICATED_EDITOR: Record<string, string> = {
   'alerts.quota_percent':        'storage',
   // A declaration, not a preference: it is written by the "I have tested a
   // restore" button, which records WHO said so. A date field would let anyone
-  // back-date the one value whose entire worth is that somebody vouched for it —
+  // back-date the one value whose entire worth is that somebody vouched for it -
   // and the server refuses the write anyway.
   'backup.last_restore_test_at': 'background-jobs',
 }
 
 /**
  * Settings whose change has a consequence worth stating BEFORE it is made.
- * Rendered as an inline caution inside the card, above the control — a warning
+ * Rendered as an inline caution inside the card, above the control - a warning
  * that only appears after the click has already happened is an apology.
  * i18n: `admin.setwarn_<flatKey>`.
  */
@@ -432,7 +432,7 @@ export const CAUTION_KEYS = new Set([
   'auth.directory_login_enabled',
   'security.admin_2fa_required',
   // Existing accounts count their password's age from their creation date, so
-  // switching expiry on renews the oldest passwords of the instance at once —
+  // switching expiry on renews the oldest passwords of the instance at once -
   // which is what it is for, and exactly the sort of thing to say beforehand.
   'security.password_expiry_days',
   'security.ddos_enabled',
@@ -442,8 +442,8 @@ export const CAUTION_KEYS = new Set([
 
 /**
  * Descriptions the database never carried. `core.settings.description` is NULL
- * for the oldest keys — exactly the ones the reorganisation promotes onto small,
- * curated pages — and a page that shows "Nom de l'instance" over an empty field
+ * for the oldest keys - exactly the ones the reorganisation promotes onto small,
+ * curated pages - and a page that shows "Nom de l'instance" over an empty field
  * has explained nothing. Supplied here so they are translated like any other
  * string; the database value still wins when it exists.
  * i18n: `admin.setdesc_<flatKey>`.
@@ -466,7 +466,7 @@ export const I18N_DESCRIPTIONS = new Set([
 
 /**
  * Closed value sets. `Dropdown` is not used anywhere here on purpose: it does
- * not follow the dark theme. `Combobox` does, and it filters — which the IANA
+ * not follow the dark theme. `Combobox` does, and it filters - which the IANA
  * timezone list of the calendar module makes mandatory rather than pleasant.
  */
 export const ENUM_OPTIONS: Record<string, ComboboxOption[]> = {
@@ -482,7 +482,7 @@ export const ENUM_OPTIONS: Record<string, ComboboxOption[]> = {
   /* Built from the language picker's own list rather than retyped: the two must
      name the same thirteen locales, and a hand-written copy is a list that goes
      stale the day a fourteenth is added. Autonyms, so a reader recognises their
-     language whatever the console is currently displaying — which is precisely
+     language whatever the console is currently displaying - which is precisely
      the situation an operator fixing a wrong instance language is in. */
   'instance.locale': LANGUAGES.map(l => ({ value: l.code, label: `${l.flag}  ${l.label}` })),
   'rules.gate.fail_mode': [
@@ -535,7 +535,7 @@ export const ENUM_OPTIONS: Record<string, ComboboxOption[]> = {
  *
  * Keyed by the controlled setting; the value names the controller and the set of
  * its values that reveal the field. A controller absent from this instance
- * hides nothing (fail open — better a field too many than a field the operator
+ * hides nothing (fail open - better a field too many than a field the operator
  * can never reach).
  */
 export const VISIBLE_WHEN: Record<string, { key: string; in: string[] }> = {
@@ -573,7 +573,7 @@ for (const [key, tab] of Object.entries(DEDICATED_EDITOR)) TAB_BY_KEY.set(key, t
 export const specForTab = (tab: string): SettingsPageSpec | undefined => PAGE_BY_TAB.get(tab)
 
 /**
- * Which page shows this key — the answer the admin search needs to deep-link a
+ * Which page shows this key - the answer the admin search needs to deep-link a
  * setting. Unclaimed keys resolve to the fallback page, where they really are.
  */
 export const tabForSetting = (key: string): string => TAB_BY_KEY.get(key) ?? FALLBACK_TAB

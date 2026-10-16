@@ -1,7 +1,7 @@
 //! Reading the trail: filters, keyset pagination and CSV export.
 //!
 //! Pagination is **keyset**, never `OFFSET`. The trail grows while it is being
-//! read — a busy instance writes entries between two pages — and an offset would
+//! read - a busy instance writes entries between two pages - and an offset would
 //! then shift every subsequent page, showing some rows twice and skipping
 //! others. The cursor is the `(occurred_at, id)` pair of the last row returned,
 //! and `id` breaks the tie for entries sharing a timestamp, which happens

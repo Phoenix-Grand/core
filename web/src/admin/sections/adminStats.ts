@@ -3,7 +3,7 @@ import { api } from '../../core/api/client'
 import { PRIV } from '../../core/authz/types'
 import { usePrivileges } from '../../core/authz/usePrivileges'
 
-// Shape of GET /admin/stats — shared by the home landing and the dashboard.
+// Shape of GET /admin/stats - shared by the home landing and the dashboard.
 export interface KV { key: string; count: number }
 export interface Series { date: string; count: number }
 export interface TopStorage { name: string; used: number; quota: number }

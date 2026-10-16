@@ -13,20 +13,20 @@
  * They used to be imported from the drive module's endpoint. That made the
  * product's typography depend on another process being installed and running:
  * before the first installation, and on any instance where drive is stopped,
- * the import failed and everything fell back to Arial — the sign-in page and
+ * the import failed and everything fell back to Arial - the sign-in page and
  * the installation wizard included. A platform cannot borrow its own typeface
  * from one of its modules.
  *
  * Both faces are VARIABLE fonts, so one file covers a whole weight range where
  * a static family would need one file per weight. Drive keeps its font library
- * and its css2 endpoint for the fonts USERS pick in documents — a different job.
+ * and its css2 endpoint for the fonts USERS pick in documents - a different job.
  *
  * Plus Jakarta Sans is the platform's face; it ships its own drawn ITALIC, so
  * emphasis is a real cut rather than a slant the browser fakes. Outfit stays
  * available (documents and pickers already offer it).
  *
  * Licence: SIL Open Font License 1.1 for both (`/fonts/*-OFL.txt`), which allows
- * redistribution inside this product — a condition the platform's own typeface
+ * redistribution inside this product - a condition the platform's own typeface
  * has to meet, since it is packaged and published with every release. */
 @font-face { font-family: "Plus Jakarta Sans"; font-style: normal; font-weight: 200 800;
   src: url("/fonts/PlusJakartaSans.woff2") format("woff2"); font-display: swap; }
@@ -46,7 +46,7 @@
  * each bundle (host + every runtime-loaded module) re-declares
  * `--font-weight-medium: 500` at :root. Since the utility resolves the variable
  * at the use-site, this single `!important` override wins over ALL of those
- * re-declarations regardless of load order — no per-module rebuild needed.
+ * re-declarations regardless of load order - no per-module rebuild needed.
  * `font-semibold` (600) and `font-bold` (700) are untouched. */
 :root {
   --font-weight-medium: 600 !important;
@@ -57,7 +57,7 @@
  * `text-sm` is the project's body class (~570 files across the host and the 18
  * modules) and Tailwind resolves it to `var(--text-sm)`. Every module bundle
  * re-declares that variable at :root with Tailwind's own value, and loads
- * AFTER the host — so only `!important` moves all of them at once, and only a
+ * AFTER the host - so only `!important` moves all of them at once, and only a
  * variable avoids rewriting hundreds of files with an arbitrary `text-[15px]`.
  *
  * Expressed in px, not rem: the scale is a fixed design step here, not something
@@ -67,8 +67,8 @@
 }
 
 /* The secondary text step, same mechanism and same reason as `--text-sm` above.
- * `text-xs` carries the deliberately smaller text — metadata lines, table
- * headers, hints, pills — and each module bundle re-declares it at :root with
+ * `text-xs` carries the deliberately smaller text - metadata lines, table
+ * headers, hints, pills - and each module bundle re-declares it at :root with
  * Tailwind's own value. Kept in step with `--kb-text-meta`.
  * NOT to be confused with `--kb-text-micro` (10.5px): counters and badges stay
  * where they are. */
@@ -79,23 +79,23 @@
 /* Body font, same mechanism as the weight override above: each module bundle
  * re-declares `--font-family-sans` at :root and loads AFTER the host, so only
  * `!important` reaches all 18 of them without a rebuild.
- * Plus Jakarta Sans is the platform's own face — an openly licensed family this
+ * Plus Jakarta Sans is the platform's own face - an openly licensed family this
  * product may actually ship, rather than a vendor's product typeface. Outfit
  * follows as the second choice, then Roboto for the glyphs neither covers. */
 :root {
   --font-family-sans: "Plus Jakarta Sans", Outfit, Roboto, Arial, sans-serif !important;
 }
 
-/* Buttons are NEVER bold — project-wide rule. Colour and fill carry the
+/* Buttons are NEVER bold - project-wide rule. Colour and fill carry the
  * hierarchy of an action; weight does not. Applied here rather than only in
  * `@ui`'s Button because the 18 module bundles ship their own hand-rolled
  * buttons (chips, toolbars, tabs) with `font-medium`/`font-semibold` baked in,
- * and their CSS loads AFTER the host's — only `!important` reaches them all
+ * and their CSS loads AFTER the host's - only `!important` reaches them all
  * without a rebuild.
  * Scoped to the button element itself: a child element that is deliberately
  * bold (a badge, a count) keeps its own weight.
  * The value tracks `body`'s weight: the rule forbids a button from being BOLDER
- * than running text, not from matching it — a button lighter than the sentence
+ * than running text, not from matching it - a button lighter than the sentence
  * next to it would read as disabled. */
 button {
   font-weight: 500 !important;
@@ -103,7 +103,7 @@ button {
 
 /* Corner-radius scale, same mechanism as the weight override above: every
  * module bundle ships its own copy of theme.css and re-declares these at :root,
- * and module CSS is loaded AFTER the host's — so a plain declaration here would
+ * and module CSS is loaded AFTER the host's - so a plain declaration here would
  * lose. `!important` wins whatever the load order, without rebuilding the 18
  * modules. Values aligned on the design reference (cards at 8px, not 16px). */
 :root {
@@ -123,7 +123,7 @@ button {
 .no-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
 .no-scrollbar::-webkit-scrollbar { display: none; }
 
-/* La sidebar gauche ne montre JAMAIS de scrollbar horizontale — y compris de façon
+/* La sidebar gauche ne montre JAMAIS de scrollbar horizontale - y compris de façon
  * fugace pendant l'animation du hamburger. Un conteneur de module en `overflow-y-auto`
  * hérite d'un `overflow-x: auto` calculé : quand la sidebar se replie, son contenu
  * (largeur figée) déborde la boîte qui rétrécit et une barre horizontale clignote.
@@ -133,7 +133,7 @@ button {
 /* Left-sidebar rows: ONE hover colour for the whole product. The generic
  * SidebarLink, the shared SidebarNavItem AND the bespoke sidebars of the
  * modules (drive tree, mail labels, calendar, chat, assistant, maps) all read
- * this token — inline styles resolve it live, so retuning it here restyles
+ * this token - inline styles resolve it live, so retuning it here restyles
  * every module without a rebuild. Active rows keep their own background. */
 :root { --kb-sidebar-hover: #e8eaed; }
 
@@ -144,19 +144,19 @@ button {
 
 /* Mode recherche des éditeurs à ruban : quand la barre de recherche est affichée
  * (`data-ws-search="open"` posé par WorkspaceShell), on rend la bande d'onglets du ruban
- * (`[data-ribbon-tabs]`) INVISIBLE — mais on PRÉSERVE la hauteur qu'elle occupe
+ * (`[data-ribbon-tabs]`) INVISIBLE - mais on PRÉSERVE la hauteur qu'elle occupe
  * (`visibility:hidden`, pas `display:none`) pour ne pas faire remonter le contenu du ruban.
  * Règle globale (le ruban vit dans le bundle du module, ce marqueur dans le host). */
 [data-ws-search="open"] [data-ribbon-tabs] { visibility: hidden; }
 
-/* Barre de recherche principale — la taille du champ appartient au CORE.
+/* Barre de recherche principale - la taille du champ appartient au CORE.
  * Un module peut remplacer tout le composant de recherche (SearchConfig.SearchComponent) ;
  * il ne doit pas pour autant en changer la taille. Cette règle est NON-LAYERED, donc elle
  * bat un `text-sm`/`text-xs` posé par un module, dont les utilitaires vivent dans une
  * couche de cascade. `input` ET les calques superposés (fantôme de complétion du mail)
  * héritent, sans quoi la suggestion se décalerait d'un pixel à l'autre.
  * 16px a un effet de bord bienvenu : à partir de cette taille, iOS ne zoome plus à la
- * prise de focus — cf. le garde-fou `@media (pointer: coarse)` plus bas. */
+ * prise de focus - cf. le garde-fou `@media (pointer: coarse)` plus bas. */
 .kb-search { font-size: 16px; }
 .kb-search input,
 .kb-search textarea { font-size: inherit; }
@@ -176,7 +176,7 @@ button {
 .kb-inset-scroll::-webkit-scrollbar-thumb:hover { background: rgb(0 0 0 / 34%); }
 
 /* ─────────────────────────────────────────────────────────────────────────────
- * `.kb-frosted` — frosted-glass floating surface (menus, popovers, select panels).
+ * `.kb-frosted` - frosted-glass floating surface (menus, popovers, select panels).
  * Unlayered on purpose, and a CSS class rather than a JS helper: every module can
  * use it immediately, with no `@kubuno/ui` release and no version bump.
  *
@@ -192,7 +192,7 @@ button {
  *
  * NO `position` here. This rule is unlayered, so it would beat the panel's own
  * `fixed`/`absolute` Tailwind utility (utilities live in a cascade layer) and drop the
- * menu back into normal flow — it then renders off-screen.
+ * menu back into normal flow - it then renders off-screen.
  *
  * The surface MUST stay translucent: an opaque colour silently disables the blur.
  *
@@ -208,14 +208,14 @@ button {
   border-radius: var(--kb-float-radius);
   box-shadow: var(--kb-shadow-float);
 }
-/* `.kb-window` — floating window surface (dialogs, tool panels). Unlayered, so
+/* `.kb-window` - floating window surface (dialogs, tool panels). Unlayered, so
  * module bundles pick it up with no republish. Declares NO `position`: the
  * window carries its own.
  *
  * The frosted-glass frame it used to carry was removed on 2026-08-09: a window
  * now reads as a solid card whose HEADER is a full accent band, the way the
  * reference console draws its dialogs. The blur survives only where it says
- * something — menus (`.kb-frosted`) and the backdrop. */
+ * something - menus (`.kb-frosted`) and the backdrop. */
 .kb-window {
   padding: var(--kb-window-inset);
   background-color: var(--kb-window-surface);
@@ -235,7 +235,7 @@ button {
   /* The band draws its own top corners. The window root deliberately does NOT
      clip its children (no overflow:hidden + radius): on some GPUs Chromium
      applies that rounded clip as an antialiased MASK over the WHOLE path,
-     straight sides included — the masked band then loses its outermost pixel
+     straight sides included - the masked band then loses its outermost pixel
      column and the white surface behind shows through as 1px vertical lines
      (observed on the user's machine; the lines vanish with the radius). Each
      region rounding itself keeps every edge crisp with no mask at all. */
@@ -243,14 +243,14 @@ button {
 }
 /* Title actions were written for a light bar and carry their own dark utility
  * colours; on an accent band those are unreadable. Two class selectors beat a
- * single utility class, so the inherited white wins without `!important` — and
+ * single utility class, so the inherited white wins without `!important` - and
  * a caller that really wants another colour can still say so with two classes. */
 .kb-window-titlebar .kb-window-actions button,
 .kb-window-titlebar .kb-window-actions a,
 .kb-window-titlebar .kb-window-actions svg,
 .kb-window-titlebar .kb-window-actions span { color: inherit; }
 /* Caption buttons: every title action gets the close button's EXACT geometry
- * and hover (30x30, 5px radius, white veil) — same two-class specificity trick,
+ * and hover (30x30, 5px radius, white veil) - same two-class specificity trick,
  * so whatever utility classes a module wrote can no longer drift. */
 .kb-window-titlebar .kb-window-actions button {
   display: grid;
@@ -272,12 +272,12 @@ button {
  * A form is mostly white fields. On a white canvas the fields have nothing to
  * stand on and the eye reads one continuous sheet with lines drawn on it; on a
  * faint tint each field is an object again. Worn on the window ROOT, so the
- * variable reaches the content area and the footer together — one surface, one
+ * variable reaches the content area and the footer together - one surface, one
  * colour, no rule repeating the value.
  *
  * Opt-in: a window that shows a document, an image or a canvas keeps white. */
-/* The two colours of a form, in one place. A form is not always a window — it
- * is also a panel, a popover, a card hanging off a click — and all of them have
+/* The two colours of a form, in one place. A form is not always a window - it
+ * is also a panel, a popover, a card hanging off a click - and all of them have
  * to be the same surface, or "the same form" stops meaning anything. Read at
  * the point of use with a fallback, never resolved on `:root` into another
  * token. */
@@ -297,7 +297,7 @@ button {
   --kb-field-bg:     var(--kb-form-field, #eaedf7);
   --kb-field-border: var(--kb-form-field, #eaedf7);
 }
-/* The same form OUTSIDE a window — a quick-create card, a side panel, anything
+/* The same form OUTSIDE a window - a quick-create card, a side panel, anything
  * that is a form without a title band. There is no window content area to carry
  * the tint, so this element paints it and scopes the field rules itself. */
 .kb-form-surface {
@@ -314,7 +314,7 @@ button {
   box-shadow: 0 1px 2px rgb(0 0 0 / 6%), 0 1px 6px rgb(0 0 0 / 5%);
 }
 
-/* The form's FIELDS only. A title line is not a field — it wears
+/* The form's FIELDS only. A title line is not a field - it wears
    `.kb-form-title-field` above and deliberately keeps no fill and no frame, so
    the heading of a form never reads as one more thing to fill in.
    `.kb-field-focus` is the marker every field-shaped control already wears
@@ -325,7 +325,7 @@ button {
 .kb-form-surface .kb-field-focus {
   background-color: var(--kb-field-bg);
 }
-/* Resting only — the focus rules above own the focused border, and a plain
+/* Resting only - the focus rules above own the focused border, and a plain
    descendant selector here would outrank them and swallow the focus stroke. */
 .kb-window-form-canvas .kb-window-content
   .kb-field-focus:not(:focus-visible):not(:has(:focus-visible)):not(.kb-field-focus--on),
@@ -343,7 +343,7 @@ button {
 
 /* The subject of a form, named at the TOP of the form rather than in the window
  * band. A heading line, not a boxed field: one stroke under the text, three
- * pixels — the thickness the focus mark has on every other field — and the
+ * pixels - the thickness the focus mark has on every other field - and the
  * stroke reserved transparent at rest so taking focus never nudges the text.
  *
  * Written in plain CSS rather than utilities on purpose. A module's utilities
@@ -379,7 +379,7 @@ button {
   border-radius: 0 0 var(--kb-window-inner-radius) var(--kb-window-inner-radius);
 }
 
-/* Resize grip — two rounded oblique strokes, drawn in SVG like the reference. */
+/* Resize grip - two rounded oblique strokes, drawn in SVG like the reference. */
 .kb-window-grip {
   background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14'%3E%3Cpath d='M12 6 6 12 M12 10 10 12' stroke='%232c2c3a' stroke-width='1.8' stroke-linecap='round' fill='none'/%3E%3C/svg%3E") no-repeat center;
   opacity: 0.35;
@@ -404,7 +404,7 @@ body {
   margin: 0;
   font-family: var(--font-family-sans);
   /* Project-wide default text size. Anything without an explicit text-* utility
-   * inherits it — Dropdown, MenuDropdown, Tooltip and most module markup do.
+   * inherits it - Dropdown, MenuDropdown, Tooltip and most module markup do.
    * Kept in step with `--text-sm` above: the two are the same body step, one for
    * inherited text and one for the utility class. */
   font-size: 13.5px;
@@ -420,12 +420,12 @@ body {
  *
  * Les primitives dessinent leur propre indication de focus (`focus:ring-*` &
  * co : bordure `--color-primary` + anneau plein de 2 px). Certains navigateurs
- * ajoutent la leur PAR-DESSUS, décalée de quelques pixels — Firefox notamment,
+ * ajoutent la leur PAR-DESSUS, décalée de quelques pixels - Firefox notamment,
  * dont l'anneau est séparé de l'élément par un `outline-offset`. Le résultat
  * lu à l'écran est une DOUBLE bordure : bleu, blanc, bleu. Signalé sur la
  * console d'administration, Firefox 14x.
  *
- * La règle ne vise que les éléments qui portent déjà un anneau à eux — le
+ * La règle ne vise que les éléments qui portent déjà un anneau à eux - le
  * sélecteur teste littéralement la présence de la classe. Un élément sans
  * anneau propre garde donc celui du navigateur : supprimer `outline` partout
  * priverait le clavier de tout repère, ce qui serait un défaut d'accessibilité
@@ -445,11 +445,11 @@ body {
  *
  * L'anneau Tailwind se compose de deux ombres : la nôtre, et un « ring-offset »
  * de la couleur du fond (#fff) intercalé entre la bordure et elle. Sa largeur
- * vaut 0 par défaut — mais ce défaut tient à `@property { inherits: false }`,
+ * vaut 0 par défaut - mais ce défaut tient à `@property { inherits: false }`,
  * que seuls les moteurs récents connaissent (Firefox 128+). Ailleurs, les
  * variables s'HÉRITENT : il suffit qu'un ancêtre porte `ring-offset-1|2` (nos
  * boutons, cases à cocher et rails en ont) pour que tout champ situé dessous
- * peigne bordure bleue / bande blanche / anneau bleu — la « double bordure ».
+ * peigne bordure bleue / bande blanche / anneau bleu - la « double bordure ».
  *
  * On remet donc l'écart à zéro sur tout ce qui porte un anneau, SAUF là où il
  * est réclamé explicitement : `:not([class*="ring-offset-"])` laisse intacts
@@ -471,8 +471,8 @@ body {
  *
  * `outline` n'a pas ce défaut : une seule déclaration, une seule peinture, et
  * un décalage NÉGATIF qui la fait chevaucher la bordure au lieu de s'y coller.
- * L'empreinte visuelle est celle d'avant — 1 px par-dessus la bordure, 2 px au
- * dehors — mais rien ne peut plus s'intercaler. C'est aussi ce que fait la
+ * L'empreinte visuelle est celle d'avant - 1 px par-dessus la bordure, 2 px au
+ * dehors - mais rien ne peut plus s'intercaler. C'est aussi ce que fait la
  * référence du domaine : son champ ne porte AUCUN chrome, tout le cadre est
  * peint d'un bloc par un élément dédié.
  *
@@ -482,7 +482,7 @@ body {
 /* ⚠️ `:focus-visible`, jamais `:focus`.
  *
  * Un déclencheur de champ est un `<button>` : cliqué à la souris il GARDE le
- * focus du DOM, et avec `:focus` il gardait donc le trait — un sélecteur
+ * focus du DOM, et avec `:focus` il gardait donc le trait - un sélecteur
  * d'heure qu'on a refermé restait allumé jusqu'à ce qu'on clique un autre
  * élément focusable. Pire sous Firefox, qui ne rend pas le focus au document
  * quand on clique sur une zone non focusable : le trait ne partait jamais.
@@ -490,7 +490,7 @@ body {
  * `:focus-visible` est exactement la question qu'on veut poser : « ce focus
  * mérite-t-il d'être montré ? » Le navigateur répond oui au clavier et pour
  * toute saisie de texte (un champ texte cliqué le porte donc encore), et non
- * pour un bouton cliqué à la souris — où le panneau ouvert dit déjà ce qu'il
+ * pour un bouton cliqué à la souris - où le panneau ouvert dit déjà ce qu'il
  * faut savoir. */
 .kb-field-focus:focus-visible,
 /* Un champ composite (texte enrichi, mention) : c'est un descendant qui prend
@@ -513,13 +513,13 @@ body {
 
 /* Page-level overscroll lock. The shell chrome is full-viewport and scrolling
  * only happens inside inner panes. Without this, mobile browsers (iOS Safari)
- * let the user drag the WHOLE page around — the rubber-band effect that reveals
+ * let the user drag the WHOLE page around - the rubber-band effect that reveals
  * an empty layer behind the header, vertically and horizontally. We disable
  * overscroll chaining on the viewport and forbid any horizontal page scroll,
  * WITHOUT a `position: fixed` body lock (which would break long public pages
  * like forms that rely on document scroll). The shell itself uses `100dvh`
  * (see Shell.tsx) so it matches the visible viewport even when the browser
- * address bar is shown — that removes the residual vertical document scroll. */
+ * address bar is shown - that removes the residual vertical document scroll. */
 html {
   overscroll-behavior: none;
   overflow-x: hidden;
@@ -528,20 +528,20 @@ html {
 /* NOT on `body`: `overflow-x: hidden` there makes the browser compute
  * `overflow-y: auto`, turning the body into a scroll container that has
  * nothing to scroll. With `overscroll-behavior: none` on top, it swallowed the
- * wheel instead of chaining to the document — public form pages, which rely on
+ * wheel instead of chaining to the document - public form pages, which rely on
  * document scroll, would not scroll at all. `html` alone blocks the rubber-band
  * and the horizontal drag just as well. */
 
 /* The app shell is a fixed-viewport UI: the top bar must NEVER leave the
- * screen. Yet any element poking below the viewport — a positioned portal, a
- * toast, a dropdown opened near the bottom edge — makes the DOCUMENT
+ * screen. Yet any element poking below the viewport - a positioned portal, a
+ * toast, a dropdown opened near the bottom edge - makes the DOCUMENT
  * scrollable, and a wheel gesture that exhausts an inner pane's scroll then
  * chains to it: the whole shell, header included, slides off with no scrollbar
  * to bring it back. Forbid user scrolling of the page while the shell is
  * mounted. Scoped with `:has` so public pages (forms, share links), which DO
  * rely on document scroll, keep it; @media print above restores `visible`.
  * CSS cannot stop PROGRAMMATIC scrolls of the root (scrollIntoView, keyboard
- * focus, find-in-page still displace it) — Shell.tsx carries the second half
+ * focus, find-in-page still displace it) - Shell.tsx carries the second half
  * of the guard and snaps the document back to 0. */
 html:has([data-app-shell]) {
   overflow: hidden;
@@ -567,7 +567,7 @@ html:has([data-app-shell]) {
     font-size: 16px;
   }
   /* Comfortable tap target for icon-only overflow-menu buttons ("⋮"/"⋯"),
-   * which are otherwise ~22px — too small for a finger. Targets any button
+   * which are otherwise ~22px - too small for a finger. Targets any button
    * directly wrapping a lucide ellipsis icon, app-wide, without per-module
    * edits. Coarse pointers only → desktop density unchanged. */
   button:has(> svg.lucide-ellipsis-vertical),
@@ -580,7 +580,7 @@ html:has([data-app-shell]) {
   }
   /* Expand the tap area of small selection checkboxes (the ~20px circular
    * FloatCheckbox on file/photo cards) without changing their visual size or
-   * position — a transparent ::after extends the clickable region. */
+   * position - a transparent ::after extends the clickable region. */
   [role="checkbox"] {
     position: relative;
   }
@@ -600,7 +600,7 @@ html:has([data-app-shell]) {
   [class*="group-hover"][class*="opacity-100"] {
     opacity: 1 !important;
   }
-  /* Long-press on a file item opens our context menu (useLongPress) — suppress
+  /* Long-press on a file item opens our context menu (useLongPress) - suppress
    * the iOS native callout ("Save image"/selection) that would compete with it. */
   [data-selectable-id] {
     -webkit-touch-callout: none;
@@ -612,7 +612,7 @@ html:has([data-app-shell]) {
  *    mobile fixe, sa hauteur PLUS l'inset bas ; la MobileNav elle-même est
  *    rembourrée du même inset (cf. MobileNav.tsx). CONDITIONNEL : le Shell pose
  *    `data-has-bottom-nav` seulement quand une barre est réellement rendue
- *    (module avec mobileTabs, portrait, pas d'éditeur immersif) — sinon aucune
+ *    (module avec mobileTabs, portrait, pas d'éditeur immersif) - sinon aucune
  *    bande vide n'est réservée (plus de barre générique ; les éditeurs
  *    immersifs gèrent leur propre dégagement). */
 @media (max-width: 1023px) {
@@ -622,14 +622,14 @@ html:has([data-app-shell]) {
 }
 
 /* Dictée vocale mobile active : le panneau de dictée REMPLACE la chrome du bas
- * (ruban de l'éditeur, waffle FAB…, tous marqués [data-app-chrome]) — façon Word.
+ * (ruban de l'éditeur, waffle FAB…, tous marqués [data-app-chrome]) - façon Word.
  * Hors @layer → priorité sur les z-index/portails des modules. */
 body[data-kb-dictating] [data-app-chrome] { display: none !important; }
 /* Espace réservé sous le document pour que le texte dicté reste visible au-dessus
  * du panneau (≈ hauteur du panneau + poignée). */
 body[data-kb-dictating] [data-doc-scroll] { padding-bottom: 15rem !important; }
 /* ⚠️ iOS Safari : neutralise le calque composité permanent du contenu (pincement)
- * pendant la dictée — sinon il passe DEVANT le panneau `position: fixed` et le
+ * pendant la dictée - sinon il passe DEVANT le panneau `position: fixed` et le
  * blanc du document bave par-dessus. Le pincement n'a pas lieu pendant la dictée. */
 body[data-kb-dictating] [data-doc-scroll] > * { will-change: auto !important; }
 
@@ -666,7 +666,7 @@ body[data-kb-dictating] [data-doc-scroll] > * { will-change: auto !important; }
 /* Le document d'un rapport vit dans une TABLE, dont le `tfoot` devient le pied
  * de page répété à l'impression (cf. `[data-report-sheet]` plus bas). À l'écran
  * cette table ne doit rien faire : tout repasse en `block`, ce qui redonne
- * exactement la mise en page d'avant l'enveloppe — largeur pleine, marges des
+ * exactement la mise en page d'avant l'enveloppe - largeur pleine, marges des
  * blocs conservées, aucune cellule à dimensionner. */
 [data-report-sheet],
 [data-report-sheet] > tbody,
@@ -707,7 +707,7 @@ body[data-kb-dictating] [data-doc-scroll] > * { will-change: auto !important; }
   * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
 
   /* ───────────────────────────────────────────────────────────────────────────
-   * MARGES DE PAGE — et pourquoi le bas est plus grand que les trois autres.
+   * MARGES DE PAGE - et pourquoi le bas est plus grand que les trois autres.
    *
    * Marges égales sur les quatre bords : AUCUNE bande n'est réservée ici pour
    * le pied de page des rapports. C'est le `tfoot` de la table qui enveloppe le
@@ -728,16 +728,16 @@ body[data-kb-dictating] [data-doc-scroll] > * { will-change: auto !important; }
      ⚠ La pile redevient un BLOC : en `flex`, le moteur fragmente le conteneur
      avant ses enfants et intercale des pages blanches (constaté : 4 feuilles →
      6 pages, dont 2 vides). L'espacement d'écran (`gap`) disparaît avec, ce qui
-     est correct — sur papier, l'espace entre deux feuilles s'appelle une page
+     est correct - sur papier, l'espace entre deux feuilles s'appelle une page
      suivante. */
   /* ⚠ LE DÉCALAGE QUI COÛTE UNE PAGE. Le panneau d'administration défile dans
      un conteneur rembourré de 24 px. Sur papier ce rembourrage subsiste : la
      première feuille commence à 24 px du bord, dépasse donc du bas et réclame
-     une deuxième page — d'où une page blanche en tête et un décompte faux (4
+     une deuxième page - d'où une page blanche en tête et un décompte faux (4
      feuilles sortaient sur 5 pages, en paysage où la marge de manœuvre est la
      plus faible). Une feuille doit commencer à l'ORIGINE de la page.
      Mesuré, pas deviné : `Emulation.setEmulatedMedia` puis lecture des boîtes
-     — la première feuille était à `top: 24px`. */
+     - la première feuille était à `top: 24px`. */
   /* TOUS les ancêtres d'une feuille, pas une liste de classes : le rembourrage
      se trouvait sur le conteneur défilant du panneau, deux niveaux au-dessus de
      `.kb-admin`, et une liste nommée l'aurait raté (elle l'a raté). `:has()`
@@ -757,7 +757,7 @@ body[data-kb-dictating] [data-doc-scroll] > * { will-change: auto !important; }
   }
   [data-sheets] {
     /* L'aperçu réduit la pile pour la faire tenir dans le panneau ; sur papier,
-       la feuille EST le papier — aucune mise à l'échelle. */
+       la feuille EST le papier - aucune mise à l'échelle. */
     transform: none !important;
     display: block !important;
     gap: 0 !important;
@@ -772,12 +772,12 @@ body[data-kb-dictating] [data-doc-scroll] > * { will-change: auto !important; }
 }
 
 /* ═════════════════════════════════════════════════════════════════════════════
- * RAPPORTS D'ADMINISTRATION — LE PAPIER (`admin/reports/paged/`)
+ * RAPPORTS D'ADMINISTRATION - LE PAPIER (`admin/reports/paged/`)
  *
  * Ces règles ne sont PAS dans `@media print`, et c'est le point : la page d'un
  * rapport n'affiche plus un document long qu'on imprimera plus tard, elle
  * affiche la PILE DE FEUILLES telle qu'elle sortira. Le même CSS habille donc
- * l'écran et le papier — sans quoi l'aperçu mentirait sur ce qu'il montre.
+ * l'écran et le papier - sans quoi l'aperçu mentirait sur ce qu'il montre.
  *
  * La pagination elle-même n'est pas ici : le CSS ne sait pas couper un tableau
  * ailleurs qu'où le moteur le décide, et ne sait pas compter les pages. C'est
@@ -822,7 +822,7 @@ body[data-kb-dictating] [data-doc-scroll] > * { will-change: auto !important; }
 
 /* Le FILIGRANE n'est pas un élément : c'est le FOND de la feuille, un SVG en
    `data:` (cf. `paged/watermark.ts`). Un `<div>` hors flux avait l'air correct à
-   l'écran et cassait l'impression — 22 feuilles sortaient sur 17 pages. Un fond
+   l'écran et cassait l'impression - 22 feuilles sortaient sur 17 pages. Un fond
    ne participe à aucune mise en page, il ne peut donc pas déplacer une coupure,
    et il se peint derrière le texte sans avoir à trier des `z-index`.
    L'URL vit dans une variable posée UNE fois sur la pile (et sur le rail), pas
@@ -866,14 +866,14 @@ body[data-kb-dictating] [data-doc-scroll] > * { will-change: auto !important; }
 }
 
 /* La passe de mesure est rendue à la largeur exacte de la zone de contenu du
-   papier — c'est ce qui fait que les hauteurs relevées sont celles qu'auront
+   papier - c'est ce qui fait que les hauteurs relevées sont celles qu'auront
    les blocs sur la feuille. Elle ne doit rien coûter visuellement. */
 [data-paged-measure] { position: absolute; visibility: hidden; pointer-events: none; }
 /* La marge haute des blocs est comptée par le paginateur (constante `GAP`), pas
    mesurée : on la neutralise ici pour que `getBoundingClientRect` ne rende que
    la boîte. */
 /* ⚠ Spécificité : la règle « papier » `[data-admin-report] [data-report-card]`
-   pose `margin: 4mm 0 0 0 !important` et est déclarée plus bas — à spécificité
+   pose `margin: 4mm 0 0 0 !important` et est déclarée plus bas - à spécificité
    égale, elle gagnait, et chaque bloc était mesuré 15 px (4 mm) trop haut. Le
    sélecteur ci-dessous est doublé sur l'attribut pour passer devant. */
 [data-admin-report][data-paged-measure] [data-m] > * { margin-top: 0 !important; }
@@ -881,13 +881,13 @@ body[data-kb-dictating] [data-doc-scroll] > * { will-change: auto !important; }
 /* ── L'aspect du document, écran et papier confondus ────────────────────────
  * Le thème ne s'applique pas au papier : en thème sombre, `text-text-primary`
  * vaut un gris très clair, invisible sur blanc. On repeint donc explicitement,
- * quel que soit le thème affiché — sans toucher aux `background` des pastilles
+ * quel que soit le thème affiché - sans toucher aux `background` des pastilles
  * de légende, qui portent la seule information de couleur du document.
  * `:where()` n'ajoute aucune spécificité : c'est `!important` qui l'emporte sur
  * les utilitaires Tailwind, pas une course aux sélecteurs. */
 /* `background-COLOR`, jamais le raccourci `background` : celui-ci remettrait
    `background-image` à zéro, et le filigrane EST une image de fond posée en
-   style inline par `PagedPreview` — un `!important` sur le raccourci l'effaçait
+   style inline par `PagedPreview` - un `!important` sur le raccourci l'effaçait
    sans bruit (visible à l'écran, absent du papier). */
 [data-admin-report] { background-color: #fff !important; color: #000 !important; }
 [data-admin-report] :where(h1, h2, h3, h4, p, span, li, dt, dd, th, td, a, strong, code, text, svg) {
@@ -929,7 +929,7 @@ body[data-kb-dictating] [data-doc-scroll] > * { will-change: auto !important; }
    bruit, et la hiérarchie des titres suffit à séparer les blocs. */
 [data-admin-report] [data-report-card] {
   /* TRANSPARENT, pas blanc : la feuille est déjà blanche, et un fond opaque
-     recouvrait le filigrane — on ne le voyait que dans les interstices entre
+     recouvrait le filigrane - on ne le voyait que dans les interstices entre
      deux blocs, ce qui donnait des fragments de lettres au milieu de la page. */
   background-color: transparent !important;
   border: 0 !important;
@@ -954,19 +954,19 @@ body[data-kb-dictating] [data-doc-scroll] > * { will-change: auto !important; }
 [data-admin-report] [data-report-table] th { background: #f0f0f0 !important; }
 /* Une feuille n'a pas de bord droit négociable : une colonne qui refuse de se
    rétrécir sort du papier et se fait rogner. On autorise donc la coupure à
-   l'intérieur d'un mot — une adresse repliée sur deux lignes reste lisible, une
+   l'intérieur d'un mot - une adresse repliée sur deux lignes reste lisible, une
    adresse tronquée ne l'est plus. */
 [data-admin-report] [data-report-table] :is(th, td) { overflow-wrap: anywhere; }
 /* Pas de barre de défilement à faire glisser sur une feuille de papier. */
 [data-admin-report] .overflow-x-auto { overflow: visible !important; }
 
-/* Bottom sheet (@ui MobileSheet) — slide-up + scrim fade. Declared here rather
+/* Bottom sheet (@ui MobileSheet) - slide-up + scrim fade. Declared here rather
    than inline so both the host and runtime-loaded modules share one definition. */
 @keyframes kb-sheet-up   { from { transform: translateY(100%); } to { transform: translateY(0); } }
 @keyframes kb-sheet-fade { from { opacity: 0; }                 to { opacity: 1; } }
 
 /* iOS Safari auto-zooms the whole page when a focused editable renders under
-   16px — and never zooms back out on blur, leaving the layout wider than the
+   16px - and never zooms back out on blur, leaving the layout wider than the
    screen (reported on iPhone XR via the mail reply composer, whose quote body
    autofocuses). Clamp editable font sizes to 16px on iOS phones only:
    `-webkit-touch-callout` is implemented by iOS WebKit alone, so desktop and
@@ -979,17 +979,17 @@ body[data-kb-dictating] [data-doc-scroll] > * { will-change: auto !important; }
     }
   }
 }
-/* ── « Nouveau » button — Google Drive's "New" button, per the user's paste ───
+/* ── « Nouveau » button - Google Drive's "New" button, per the user's paste ───
    Faithful values from Drive's computed styles:
    · surface #fff (--dt-surface-bright), ink/fill #1f1f1f (--dt-on-surface)
    · radius 16px (user's adjustment over Drive's 6.25rem FAB pill)
    · resting shadow --dt-shadow-elevation-1, hover --dt-shadow-elevation-2
-     (transition box-shadow — the element's own 200ms `transition-all` covers it,
+     (transition box-shadow - the element's own 200ms `transition-all` covers it,
      it also drives the collapse morph)
    · NO pressed/menu-open style change (explicit user choice)
    · label: Google label-large → 0.875rem, weight 500
    No focus ring (explicit user choice, kept from the previous design).
-   Geometry (height 56↔48, right padding) stays inline — it morphs on collapse. */
+   Geometry (height 56↔48, right padding) stays inline - it morphs on collapse. */
 .kb-neo-btn {
   border: none;
   background-color: #fff;
@@ -1009,7 +1009,7 @@ body[data-kb-dictating] [data-doc-scroll] > * { will-change: auto !important; }
 }
 .kb-neo-btn:focus,
 .kb-neo-btn:focus-visible {
-  /* No visible focus ring on this button — explicit user choice. */
+  /* No visible focus ring on this button - explicit user choice. */
   outline: none;
 }
 
@@ -1018,7 +1018,7 @@ body[data-kb-dictating] [data-doc-scroll] > * { will-change: auto !important; }
  *
  * Written here, unlayered, rather than as `hover:bg-*` on the component. A
  * utility written anywhere ends up in a cascade layer, and the layer order is
- * settled by whichever stylesheet first names each layer — with a dozen module
+ * settled by whichever stylesheet first names each layer - with a dozen module
  * stylesheets loading after the host's, `base` can end up outranking
  * `utilities`, and the browsers' own `button { background-color: transparent }`
  * then wins. Measured on a live page: the rule was generated, the class was on

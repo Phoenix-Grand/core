@@ -1,8 +1,8 @@
-// Shared @ui primitive: a split date field, Google-Contacts style — a leading
+// Shared @ui primitive: a split date field, Google-Contacts style - a leading
 // icon, then Day / Month (dropdown) / Year(optional), and an optional editable
 // "Libellé" combobox. Used both for a birthday (cake icon) and a generic date
 // (calendar icon). The month is stored 1–12; day and year are free numeric
-// strings; the year is optional. Nothing here parses into a real Date — the
+// strings; the year is optional. Nothing here parses into a real Date - the
 // consumer decides how to interpret a partial date.
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { Calendar, ChevronDown, ChevronUp } from 'lucide-react'

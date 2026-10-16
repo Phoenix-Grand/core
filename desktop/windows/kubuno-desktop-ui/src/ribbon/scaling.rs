@@ -4,7 +4,7 @@
 //! a tab shrinks its groups when it does not fit ([`ScalingPolicy`]).
 //!
 //! Everything here is pure (the model in, the model out) and unit-tested; the ribbon measures the
-//! result with its ordinary layout functions. The default — no policy, every group `Auto` — is
+//! result with its ordinary layout functions. The default - no policy, every group `Auto` - is
 //! exactly the web port's behaviour: groups stay `Large`, and the right-most ones fold, one by one,
 //! into their chip ([`plan`] reproduces that loop, see its tests).
 
@@ -163,7 +163,7 @@ impl Template {
         }
     }
 
-    /// Why `items` do not match the template (a count or a kind), `None` when they do — the
+    /// Why `items` do not match the template (a count or a kind), `None` when they do - the
     /// language server's and the designer's diagnostic.
     pub fn check(self, items: &[RibbonItem]) -> Option<String> {
         let controls: Vec<&RibbonItem> = items.iter().filter(|i| i.kind != ItemKind::Separator).collect();
@@ -249,8 +249,8 @@ pub fn policy_diagnostics(groups: &[&str], policy: &ScalingPolicy) -> Vec<String
 }
 
 /// The sizes of the groups of a tab: the ideal sizes, then the policy's steps in order, then (so a
-/// tab always ends up fitting) the automatic tail — the right-most group not yet collapsed folds,
-/// one by one — until `fits` accepts the sizes. A step never makes a group larger.
+/// tab always ends up fitting) the automatic tail - the right-most group not yet collapsed folds,
+/// one by one - until `fits` accepts the sizes. A step never makes a group larger.
 pub fn plan(groups: &[RibbonGroup], policy: &ScalingPolicy, fits: impl Fn(&[GroupSize]) -> bool) -> Vec<GroupSize> {
     let mut sizes = vec![GroupSize::Large; groups.len()];
     for s in &policy.ideal {
@@ -281,7 +281,7 @@ pub fn plan(groups: &[RibbonGroup], policy: &ScalingPolicy, fits: impl Fn(&[Grou
     sizes
 }
 
-/// The group's items as they look at `size` — borrowed unchanged when nothing changes (`Large`
+/// The group's items as they look at `size` - borrowed unchanged when nothing changes (`Large`
 /// with the `Auto` definition, the look every ribbon had before size levels existed). A
 /// `Collapsed` group is its chip; its popover shows the `Large` look.
 pub fn items_at(group: &RibbonGroup, size: GroupSize) -> Cow<'_, [RibbonItem]> {

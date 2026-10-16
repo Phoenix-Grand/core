@@ -1,7 +1,7 @@
 // The installer's language selector.
 //
 // Labelled rather than an icon: on this screen the choice is not a personal
-// preference tucked away in a corner, it is one of the questions being asked —
+// preference tucked away in a corner, it is one of the questions being asked -
 // the answer becomes the instance's default language.
 //
 // It cannot reuse the shell's picker, which persists the choice on the signed-in

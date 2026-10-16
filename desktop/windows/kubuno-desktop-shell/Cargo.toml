@@ -1,6 +1,6 @@
 [package]
 name        = "kubuno-desktop-shell"
-description = "Kubuno desktop shell — launcher, sync client and settings, written like a Windows Forms application (.kbview views)"
+description = "Kubuno desktop shell - launcher, sync client and settings, written like a Windows Forms application (.kbview views)"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
@@ -90,7 +90,7 @@ features = [
 winreg = "0.52"
 uuid   = { version = "1", features = ["v5"] }
 # Toasts under our own AUMID, so they read "Kubuno" and not "PowerShell".
-# Despite its name this is a standalone WinRT notification crate — it pulls in
+# Despite its name this is a standalone WinRT notification crate - it pulls in
 # no part of the Tauri framework, which this shell replaced.
 # 0.7.3 is the floor on purpose: up to 0.7.2 this crate built its toast XML with
 # `quick-xml` 0.37, which carries RUSTSEC-2026-0194 and RUSTSEC-2026-0195

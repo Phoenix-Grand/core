@@ -6,7 +6,7 @@ import { resolve } from 'node:path'
  * Builds the publishable `@kubuno/ui` bundle (src/ui/dist/index.js).
  *
  * It used to be produced ad hoc, so the committed bundle drifted from the
- * source — a Button fix landed in the host but not in the published package.
+ * source - a Button fix landed in the host but not in the published package.
  * This config makes the artefact reproducible:
  *
  *   npx vite build --config vite.uilib.config.ts

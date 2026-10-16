@@ -1,4 +1,4 @@
-<!-- ProvenanceLine — converted from ProvenanceLine.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- ProvenanceLine - converted from ProvenanceLine.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="ProvenanceLineProps">
   <Stack Direction="LeftToRight" CrossAlign="Start" Class="mt-2">
     <Panel HtmlTag="P" ForeColor="TextTertiary" Class="min-w-0 flex-1 text-xs leading-5">

@@ -1,4 +1,4 @@
-<!-- PanelCard — converted from PanelCard.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- PanelCard - converted from PanelCard.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="Props">
   <Panel HtmlTag="Section" BackColor="Surface" Class="flex min-w-0 flex-col rounded-xl border border-border p-4">
     <Panel HtmlTag="Header" Class="mb-2 flex items-start gap-2">

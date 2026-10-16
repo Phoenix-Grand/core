@@ -1,4 +1,4 @@
-<!-- RequestStatus — converted from RequestStatus.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- RequestStatus - converted from RequestStatus.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="RequestStatusProps">
   <Panel Class="space-y-4">
     <Panel BackColor="Surface1" Visible="{Binding show_active}" Class="rounded-lg border border-border p-4">

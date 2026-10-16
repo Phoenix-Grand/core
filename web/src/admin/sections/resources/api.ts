@@ -3,7 +3,7 @@
 // Four cache entries, one per thing the page reads: the overview counters, the
 // buildings (floors included), the resources and the features. They are kept
 // apart rather than folded into one call because they are edited independently
-// and refetched independently — but every mutation invalidates *all* of them,
+// and refetched independently - but every mutation invalidates *all* of them,
 // for a reason specific to this model: the composed name of a resource contains
 // its building's key and its features' names, so renaming either rewrites rows
 // the caller never touched.
@@ -75,7 +75,7 @@ export interface ResourceOverview {
   features:        number
   rooms:           number
   room_seats:      number
-  /** The three gaps — what makes the inventory unfinished rather than absent. */
+  /** The three gaps - what makes the inventory unfinished rather than absent. */
   empty_buildings: number
   undescribed:     number
   unused_features: number
@@ -239,7 +239,7 @@ export interface RoomStats {
   released_hours:  number
   rooms:           number
   available_hours: number
-  /** `null` when there is no room at all — a rate over nothing is not zero. */
+  /** `null` when there is no room at all - a rate over nothing is not zero. */
   booking_rate:    number | null
   per_day:  { date: string; hours: number; bookings: number }[]
   /** `hour` is read on a clock in the zone the request named, not in UTC. */
@@ -252,7 +252,7 @@ export interface RoomStats {
  *
  *  The browser's own zone travels with the window. "Nine o'clock" and "Monday"
  *  are what a clock somewhere says about an instant, so the buckets have to be
- *  cut where the person reading them lives — bucketed in UTC, a Paris morning
+ *  cut where the person reading them lives - bucketed in UTC, a Paris morning
  *  meeting would show up an hour early. */
 export function useRoomStats(from: string, to: string, enabled: boolean) {
   const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC'

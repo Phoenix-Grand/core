@@ -6,9 +6,9 @@
 //! `UpdateControl` are WinUI machinery, not ported. The calculation logic
 //! lives in [`super::storage_bar`].
 
-/// `StorageBar.PercentCaution` — default amber threshold.
+/// `StorageBar.PercentCaution` - default amber threshold.
 pub const PERCENT_CAUTION: f64 = 75.1;
-/// `StorageBar.PercentCritical` — default red threshold.
+/// `StorageBar.PercentCritical` - default red threshold.
 pub const PERCENT_CRITICAL: f64 = 89.9;
 /// Default height of the "value" bar (`ValueBarHeight`).
 pub const VALUE_BAR_HEIGHT: f64 = 6.0;

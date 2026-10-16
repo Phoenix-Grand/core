@@ -16,7 +16,7 @@ import ForcePasswordChange from './core/auth/ForcePasswordChange'
 import HomePage from './core/views/HomePage'
 
 // Pages lourdes ou peu fréquentes : chargées à la demande (React.lazy) pour les
-// sortir du chunk eager kubuno-shared et alléger la RAM du host — la console
+// sortir du chunk eager kubuno-shared et alléger la RAM du host - la console
 // d'admin pèse à elle seule ~2,5 Mo de source, inutile pour un non-admin. Le
 // carve-out correspondant est dans vite.config.ts (manualChunks).
 const AdminPage = lazy(() => import('./admin/views/AdminPage'))
@@ -98,7 +98,7 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
   if (!user) {
     // L'URL courante pourrait être une route PUBLIQUE de module pas encore
     // enregistrée (bundles chargés à l'exécution). Tant que le premier chargement
-    // des modules n'est pas terminé, patienter au lieu de rediriger vers /login —
+    // des modules n'est pas terminé, patienter au lieu de rediriger vers /login -
     // sinon un répondant anonyme d'un formulaire public serait expulsé.
     if (!modulesReady) return <LoadingSplash />
     const from = location.pathname + location.search
@@ -106,12 +106,12 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
   }
   // Account still carrying the seeded default password: the WHOLE shell is
   // replaced by the change screen, whatever route was asked for. Nothing to
-  // dismiss and no page behind it — typing /admin or /settings lands here too.
+  // dismiss and no page behind it - typing /admin or /settings lands here too.
   if (user.must_change_password) return <ForcePasswordChange />
   return <>{children}</>
 }
 
-// Pages publiques (login, register…) : rediriger vers l'accueil si déjà connecté —
+// Pages publiques (login, register…) : rediriger vers l'accueil si déjà connecté -
 // ou vers la page d'origine si on a été redirigé ici par une déconnexion.
 function PublicOnlyRoute({ children }: { children: React.ReactNode }) {
   const { user, isInitialized } = useAuthStore()
@@ -155,7 +155,7 @@ export default function App() {
   useAdminConsoleApp()
   return (
     // Mounted ABOVE <Routes>: the toast host must survive a route change and
-    // cover the whole application — the authentication screens and the admin
+    // cover the whole application - the authentication screens and the admin
     // console included, neither of which lives inside <Shell>. It portals to
     // <body> (no PortalHostContext here), so a toast is never clipped by a
     // scroll container, and it is the single stack every `useToast()` in the
@@ -163,8 +163,8 @@ export default function App() {
     <ToastProvider t={t}>
     <DocumentTitle />
     <Routes>
-      {/* Pages publiques core — redirigent vers l'accueil si déjà connecté */}
-      {/* Installation initiale — servie AVANT toute authentification : sur une
+      {/* Pages publiques core - redirigent vers l'accueil si déjà connecté */}
+      {/* Installation initiale - servie AVANT toute authentification : sur une
           instance neuve, il n'existe aucun compte. */}
       <Route path="/setup" element={<Suspense fallback={<LoadingSplash />}><SetupWizard /></Suspense>} />
       <Route path="/setup/:step" element={<Suspense fallback={<LoadingSplash />}><SetupWizard /></Suspense>} />
@@ -189,8 +189,8 @@ export default function App() {
         <Route index         element={<HomePage />} />
         <Route path="modules"  element={<ModulesPage />} />
         <Route path="settings" element={<Suspense fallback={null}><SettingsPage /></Suspense>} />
-        {/* La console d'administration met le LIEU dans le chemin —
-            `/admin/<section>[/<fiche>[/<volet>]]` — et le reste (filtres,
+        {/* La console d'administration met le LIEU dans le chemin -
+            `/admin/<section>[/<fiche>[/<volet>]]` - et le reste (filtres,
             recherche, verbe d'action) en query string. AdminPage lit lui-même
             location.pathname : la forme de chaque section est déclarée dans
             adminNav.ts et interprétée par adminRoute.ts, qui redirige aussi
@@ -202,7 +202,7 @@ export default function App() {
         <Route path="about"    element={<AboutPage />} />
         <Route path="labels"   element={<LabelsPage />} />
 
-        {/* Routes des modules — enregistrées dynamiquement dans register.ts */}
+        {/* Routes des modules - enregistrées dynamiquement dans register.ts */}
         {RouteRegistry.getShellRoutes().map(({ path, Component, props = {} }) => (
           <Route key={path} path={path} element={
             <Suspense fallback={null}><Component {...props} /></Suspense>

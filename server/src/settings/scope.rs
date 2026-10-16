@@ -7,7 +7,7 @@ use crate::errors::AppError;
 
 /// Sentinel used as `scope_id` for the instance scope. A nullable component in a
 /// primary key is not a key (NULL never equals NULL), so the database stores
-/// this value instead — see migration `000060`.
+/// this value instead - see migration `000060`.
 pub const INSTANCE_SCOPE_ID: Uuid = Uuid::nil();
 
 /// Where a value lives, from the most general to the most specific.

@@ -1,5 +1,5 @@
-//! The menus of a Kubuno header — the app launcher (the web's `WaffleMenu`) and the account panel
-//! (the web's `AccountMenu`), which every module's header shows — as user controls any Kubuno desktop
+//! The menus of a Kubuno header - the app launcher (the web's `WaffleMenu`) and the account panel
+//! (the web's `AccountMenu`), which every module's header shows - as user controls any Kubuno desktop
 //! app can place in its views. Names, properties, events and data shapes are shared with the web
 //! (vskubuno `docs/SHELL-CONTROLS.md`).
 //!
@@ -36,7 +36,7 @@ pub use model::account::{AccountAction, AccountEntry, AccountService, AccountUse
 pub use model::favorites::Draft;
 pub use model::launcher::LauncherService;
 
-// `ShellControlsResources::launcher_title()`, `ShellControlsResources::account_manage()`… — the strings of
+// `ShellControlsResources::launcher_title()`, `ShellControlsResources::account_manage()`… - the strings of
 // `resources/shell_controls.kbres` (neutral English) and `resources/shell_controls.fr.kbres`, in the current UI culture;
 // `{Res launcher_…}` / `{Res account_…}` in the views.
 kubuno_desktop::resources!(pub ShellControlsResources, "resources/shell_controls.kbres");

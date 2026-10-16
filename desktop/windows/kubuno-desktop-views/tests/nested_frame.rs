@@ -1,5 +1,5 @@
-//! A handler that runs another view's frames before it returns — a modal dialog's nested loop
-//! (`ShowDialog`) opened from a click — paints that view as if no other frame were running: nothing
+//! A handler that runs another view's frames before it returns - a modal dialog's nested loop
+//! (`ShowDialog`) opened from a click - paints that view as if no other frame were running: nothing
 //! of the owner's frame in progress (the clip of the container the clicked control sits in, a
 //! disabled ancestor, the drawings deferred to the end of the frame) reaches the dialog, and the
 //! owner's frame finds its own state again when the handler returns.

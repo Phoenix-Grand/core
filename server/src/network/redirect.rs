@@ -17,7 +17,7 @@
 //!     working.
 //!
 //!   * **The destination is not taken from the client.** A redirect built from
-//!     the request's `Host` header sends whatever the client asked for — a
+//!     the request's `Host` header sends whatever the client asked for - a
 //!     request carrying `Host: elsewhere.example` gets
 //!     `Location: https://elsewhere.example/…`, turning the instance into an
 //!     open redirector for phishing and scanners. When the instance knows which

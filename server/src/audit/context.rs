@@ -38,8 +38,8 @@ fn label_of(user: &User) -> String {
 
 /// Builds the context from an already-authenticated user and the request parts.
 ///
-/// The address comes from [`crate::auth::client_ip`] — the trusted-proxy aware
-/// resolver — and never from reading `X-Forwarded-For` here.
+/// The address comes from [`crate::auth::client_ip`] - the trusted-proxy aware
+/// resolver - and never from reading `X-Forwarded-For` here.
 pub fn context_from(parts: &Parts, user: &User) -> AuditContext {
     let source = parts
         .extensions

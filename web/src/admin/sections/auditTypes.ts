@@ -29,7 +29,7 @@ export interface AuditEntry {
 
 export interface AuditDiffRow { field: string; before: unknown; after: unknown }
 
-/** Badge skin per outcome — token-backed so both themes remap it. */
+/** Badge skin per outcome - token-backed so both themes remap it. */
 export const AUDIT_OUTCOME_STYLE: Record<AuditEntry['outcome'], string> = {
   success: 'bg-success-light text-success',
   denied:  'bg-danger-light text-danger',

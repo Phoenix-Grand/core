@@ -1,4 +1,4 @@
-<!-- ModuleDatabaseCard — converted from ModuleDatabaseCard.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- ModuleDatabaseCard - converted from ModuleDatabaseCard.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="ModuleDatabaseCardProps">
   <Card Title="{Res admin.mdb_title}"
         IconSize="16"

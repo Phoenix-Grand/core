@@ -21,7 +21,7 @@ export interface SidebarConfig {
   moduleId:        string
   // Préfixe de route qui active cette config (most-specific wins)
   routePrefix:     string
-  // Label du bouton "Nouveau" — ex: "Créer"
+  // Label du bouton "Nouveau" - ex: "Créer"
   newButtonLabel?: string
   // Clé i18n (ex: 'agenda:create') résolue réactivement par AppSidebar.
   // Prioritaire sur `newButtonLabel` ; permet la traduction au changement de langue.
@@ -34,7 +34,7 @@ export interface SidebarConfig {
    *  Le champ reste déclaré pour ne pas casser le typecheck des modules pas encore
    *  migrés ; il ne rend plus rien. Idem pour le slot `sidebar-new-actions`. */
   NewActions?:     React.ComponentType
-  // Corps entier de la sidebar (nav + footer) — remplace la nav par défaut.
+  // Corps entier de la sidebar (nav + footer) - remplace la nav par défaut.
   // Reçoit `collapsed` : le module rend sa nav en icônes seules quand replié,
   // pour que la navigation soit IDENTIQUE en mode replié et déplié.
   SidebarBody?:    React.ComponentType<{ collapsed?: boolean }>

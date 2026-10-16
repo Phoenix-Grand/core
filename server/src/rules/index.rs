@@ -13,7 +13,7 @@
 //! A rule write ends with `pg_notify('kubuno_rules', …)`
 //! ([`super::store::notify_reload`]). Every core process listens on that
 //! channel and rebuilds. The listener also rebuilds on reconnect, because a
-//! `NOTIFY` sent while the listener was reconnecting is lost — the same failure
+//! `NOTIFY` sent while the listener was reconnecting is lost - the same failure
 //! mode the job runner handles by polling, answered here by the fact that a
 //! rebuild is cheap and idempotent.
 

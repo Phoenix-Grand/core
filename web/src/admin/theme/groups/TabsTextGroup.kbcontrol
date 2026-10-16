@@ -1,4 +1,4 @@
-<!-- TabsTextGroup — converted from TabsTextGroup.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- TabsTextGroup - converted from TabsTextGroup.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl>
   <Panel Class="space-y-3">
     <!-- TODO(views-migrate): <Tabs> tabs: no .kbview property -->

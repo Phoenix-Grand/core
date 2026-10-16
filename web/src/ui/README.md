@@ -9,7 +9,7 @@
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://github.com/kubuno/core/blob/main/LICENSE)
 [![Docs](https://img.shields.io/badge/docs-kubuno%2Fcore-4D38DB.svg)](https://github.com/kubuno/core)
 
-**Shared UI primitives for [Kubuno](https://github.com/kubuno/core) apps and modules — the `@ui` design layer.**
+**Shared UI primitives for [Kubuno](https://github.com/kubuno/core) apps and modules - the `@ui` design layer.**
 
 A set of pure, framework-level React components (no Kubuno business logic) used by the host shell and by every module: buttons, inputs, dialogs, pickers, popovers, menus, date pickers and more. Styling is utility-class based (Tailwind CSS v4), so components inherit the consuming app's theme.
 
@@ -17,9 +17,9 @@ A set of pure, framework-level React components (no Kubuno business logic) used 
 
 This package provides three kinds of building blocks:
 
-- **Form & input controls** — `Button`, `Input`, `NumberInput`, `Textarea`, `Checkbox`, `Radio`, `Toggle`, `FloatCheckbox`.
-- **Overlays & navigation** — `MenuDropdown`, `Dropdown`, `AnchoredPopover`, `FloatingWindow`, `ConfirmDialog`, `PromptDialog`, `Tabs`, `Separator`, `ResizeHandle`.
-- **Pickers & misc** — `ColorPicker`, `ColorField`, `GradientPicker`, `DatePicker`, `Spinner`, `Badge`, `RichText`, `StartPage`, `KubunoLogo`.
+- **Form & input controls** - `Button`, `Input`, `NumberInput`, `Textarea`, `Checkbox`, `Radio`, `Toggle`, `FloatCheckbox`.
+- **Overlays & navigation** - `MenuDropdown`, `Dropdown`, `AnchoredPopover`, `FloatingWindow`, `ConfirmDialog`, `PromptDialog`, `Tabs`, `Separator`, `ResizeHandle`.
+- **Pickers & misc** - `ColorPicker`, `ColorField`, `GradientPicker`, `DatePicker`, `Spinner`, `Badge`, `RichText`, `StartPage`, `KubunoLogo`.
 
 ## Compatibility
 
@@ -33,7 +33,7 @@ This package provides three kinds of building blocks:
 npm install @kubuno/ui
 ```
 
-`react`, `react-dom`, `lucide-react`, `clsx`, `tailwind-merge`, `date-fns`, `i18next`, `react-i18next` and `zustand` are peer dependencies — provide them in your app (Kubuno modules get them from the host at runtime).
+`react`, `react-dom`, `lucide-react`, `clsx`, `tailwind-merge`, `date-fns`, `i18next`, `react-i18next` and `zustand` are peer dependencies - provide them in your app (Kubuno modules get them from the host at runtime).
 
 ## Usage
 

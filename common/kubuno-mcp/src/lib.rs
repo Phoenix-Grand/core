@@ -1,4 +1,4 @@
-//! Serveur MCP (Model Context Protocol) — cœur protocolaire réutilisable par le core.
+//! Serveur MCP (Model Context Protocol) - cœur protocolaire réutilisable par le core.
 //!
 //! Implémente le sous-ensemble JSON-RPC 2.0 nécessaire : `initialize`,
 //! `notifications/initialized`, `ping`, `tools/list`, `tools/call`.
@@ -21,7 +21,7 @@ pub struct Tool {
     /// JSON Schema des arguments d'entrée.
     #[serde(rename = "inputSchema")]
     pub input_schema: Value,
-    /// Annotations facultatives (spec MCP) — transmises telles quelles. Kubuno
+    /// Annotations facultatives (spec MCP) - transmises telles quelles. Kubuno
     /// y place p.ex. `confirm`/`destructiveHint` ou `kubuno_ui` (outil à
     /// dispatcher dans le client plutôt qu'exécuté côté serveur).
     #[serde(default, skip_serializing_if = "Option::is_none")]

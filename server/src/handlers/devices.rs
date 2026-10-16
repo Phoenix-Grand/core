@@ -1,16 +1,16 @@
-//! `/me/devices` — what a person sees about their own machines.
+//! `/me/devices` - what a person sees about their own machines.
 //!
 //! ## Strict symmetry
 //!
 //! This screen shows **exactly** what an administrator sees of the same
 //! devices: the same rows, from the same queries in [`crate::devices::store`],
 //! with the same fields. Not a summary, not a friendlier subset. On a
-//! self-hosted platform that symmetry is the whole trust contract — the reason
+//! self-hosted platform that symmetry is the whole trust contract - the reason
 //! to run your own instance is that nobody holds a view of you that you cannot
 //! hold of yourself.
 //!
 //! The only asymmetry is in the *verbs*, and it runs the other way: a user can
-//! do something to their own devices that no operator can do on their behalf —
+//! do something to their own devices that no operator can do on their behalf -
 //! say "this was not me".
 //!
 //! ## "Ce n'est pas moi"
@@ -18,7 +18,7 @@
 //! One button, three consequences, all of them immediate:
 //!
 //! 1. every session of the account is revoked, including the one pressing the
-//!    button — a half-measure that spares the current session is exactly the
+//!    button - a half-measure that spares the current session is exactly the
 //!    hole an attacker sitting in it would use;
 //! 2. the next sign-in must set a new password (`must_change_password`);
 //! 3. an alert is raised for the operator ([`crate::alerts`]), because the
@@ -49,7 +49,7 @@ use crate::state::AppState;
 
 /// The device the caller is holding right now, resolved from the correlation
 /// cookie. `None` when the browser has none yet (a session that predates the
-/// inventory), and the screen then simply marks nothing — which is honest.
+/// inventory), and the screen then simply marks nothing - which is honest.
 async fn current_device(state: &AppState, headers: &HeaderMap, user_id: Uuid) -> Option<Uuid> {
     let cookies = headers.get(header::COOKIE).and_then(|v| v.to_str().ok());
     let header_key = headers
@@ -73,7 +73,7 @@ async fn current_device(state: &AppState, headers: &HeaderMap, user_id: Uuid) ->
     };
 
     // Strong path: the opaque cookie or a native client's key.
-    // `accepts_cookie = false` — this is a read, nothing may be minted here.
+    // `accepts_cookie = false` - this is a read, nothing may be minted here.
     if cookies.is_some() || header_key.is_some() {
         let key = correlate::resolve(
             header_key,
@@ -92,7 +92,7 @@ async fn current_device(state: &AppState, headers: &HeaderMap, user_id: Uuid) ->
 
     // Fallback: the fingerprint. It is what attached the sessions that predate
     // this feature, so without it a browser signed in before the inventory
-    // shipped would never see "this device" marked — and the marker is the
+    // shipped would never see "this device" marked - and the marker is the
     // whole point of the screen. Weaker, and never used to *write* anything.
     let raw_ua = headers
         .get(header::USER_AGENT)
@@ -105,7 +105,7 @@ async fn current_device(state: &AppState, headers: &HeaderMap, user_id: Uuid) ->
     lookup(correlate::fingerprint_key(user_id, "web", &normalised).hash()).await
 }
 
-/// `GET /api/v1/me/devices` — my devices, my sessions, grouped.
+/// `GET /api/v1/me/devices` - my devices, my sessions, grouped.
 pub async fn list_my_devices(
     State(state): State<AppState>,
     AuthUser(user): AuthUser,
@@ -126,7 +126,7 @@ pub async fn list_my_devices(
     })))
 }
 
-/// `GET /api/v1/me/devices/:id` — one of my devices, with its timeline.
+/// `GET /api/v1/me/devices/:id` - one of my devices, with its timeline.
 pub async fn get_my_device(
     State(state): State<AppState>,
     AuthUser(user): AuthUser,
@@ -151,7 +151,7 @@ pub struct RenameDto {
     pub label: Option<String>,
 }
 
-/// `PATCH /api/v1/me/devices/:id` — name a device.
+/// `PATCH /api/v1/me/devices/:id` - name a device.
 pub async fn rename_my_device(
     State(state): State<AppState>,
     AuthUser(user): AuthUser,
@@ -181,7 +181,7 @@ pub async fn rename_my_device(
     Ok(Json(json!({ "label": label })))
 }
 
-/// `POST /api/v1/me/devices/:id/sign-out` — close this device's sessions.
+/// `POST /api/v1/me/devices/:id/sign-out` - close this device's sessions.
 pub async fn sign_out_my_device(
     State(state): State<AppState>,
     AuthUser(user): AuthUser,
@@ -375,12 +375,12 @@ pub async fn disown_my_device(
     })))
 }
 
-/// `POST /api/v1/me/devices/declare` — a native application states what it
+/// `POST /api/v1/me/devices/declare` - a native application states what it
 /// knows about itself.
 ///
 /// Refused with a 403 that says why when the operator has not switched
 /// declarations on. The values it writes are shown as "declared by the device"
-/// everywhere they appear, and never as verified — see
+/// everywhere they appear, and never as verified - see
 /// [`crate::devices::declared`].
 pub async fn declare(
     State(state): State<AppState>,

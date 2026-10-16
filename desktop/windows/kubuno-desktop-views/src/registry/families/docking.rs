@@ -1,21 +1,21 @@
-//! Component family `docking` — the dock and the workspace chrome of the
+//! Component family `docking` - the dock and the workspace chrome of the
 //! advanced editors (`kubuno_desktop_ui::dock`, `kubuno_desktop_ui::workspace`, ports of the
 //! web's `core/frontend/src/core/shell/workspace/`). Compiled with the
 //! `family-docking` feature (on by default through `all-families`).
 //!
 //! ## Elements
 //!
-//! * `<DockArea>` — a viewport surrounded by dockable panels. Its children are
+//! * `<DockArea>` - a viewport surrounded by dockable panels. Its children are
 //!   `<DockPanel>`s plus AT MOST ONE other element: the viewport's content
 //!   (the web's `children`). The panels' `Side` / `Group` / `Active` describe
 //!   the DEFAULT arrangement (the web's `defaultArrangement`); the user then
 //!   re-docks, merges, splits, floats, resizes, closes and reopens them, and the
 //!   resulting layout is persisted under `StorageKey` and exposed, as the web's
 //!   JSON, through the bindable `Layout` property.
-//! * `<DockPanel>` — one panel: a title (its tab), an optional icon and one
+//! * `<DockPanel>` - one panel: a title (its tab), an optional icon and one
 //!   child element (its body; a `<Panel>` to host several controls). Valid only
 //!   directly inside `<DockArea>`. Its id is its `x:Name` (else `panel<N>`).
-//! * `<WorkspaceShell>` — the chrome around a dock: topbar (back · title ·
+//! * `<WorkspaceShell>` - the chrome around a dock: topbar (back · title ·
 //!   editor name · document info · search · delete), optional status bar, and
 //!   one child element, the body.
 //!
@@ -23,7 +23,7 @@
 //!
 //! In the designer (`PaintCx::design` set) the dock shows the DEFAULT
 //! arrangement (the saved layout is ignored), takes no input, and paints each
-//! group's active panel through its `<DockPanel>`'s design slot — so a click on
+//! group's active panel through its `<DockPanel>`'s design slot - so a click on
 //! a panel body selects that `<DockPanel>` (or the control inside it), and a
 //! control dropped on an empty panel becomes its body. `Active="true"` picks
 //! the panel shown in its group.
@@ -42,7 +42,7 @@ use kubuno_desktop_ui::dock::{DockArea, DockArrangement, DockEvent, DockPanel, D
 use kubuno_desktop_ui::workspace::WorkspaceShell;
 use kubuno_desktop_ui::{Canvas, FocusId, Rect, Size};
 
-/// A literal attribute, or a build error for a `{Binding …}` — the panels'
+/// A literal attribute, or a build error for a `{Binding …}` - the panels'
 /// arrangement is structure, read once (like `<Tabs>`' `Header`s).
 fn literal(props: &Props<'_>, name: &str, default: &str) -> Result<String, BuildError> {
     match props.str(name, default)? {

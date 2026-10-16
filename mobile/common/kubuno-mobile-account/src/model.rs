@@ -8,7 +8,7 @@ use serde::{Deserialize, Serialize};
 pub struct NativeTokens {
     pub access_token: String,
     pub refresh_token: String,
-    /// When the refresh token expires (RFC 3339, server clock); kept as text — only the access token's own `exp`
+    /// When the refresh token expires (RFC 3339, server clock); kept as text - only the access token's own `exp`
     /// drives refresh scheduling.
     #[serde(default)]
     pub refresh_expires_at: Option<String>,
@@ -39,7 +39,7 @@ impl User {
 }
 
 /// An account signed in on this device: which server, who, and the stable device key sent on every request
-/// (`X-Kubuno-Device-Key`). The refresh token is **not** here — it lives only in the OS secret store.
+/// (`X-Kubuno-Device-Key`). The refresh token is **not** here - it lives only in the OS secret store.
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct Account {
     pub server: String,

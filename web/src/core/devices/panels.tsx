@@ -22,7 +22,7 @@ import type { Device, DeviceEvent, DeviceSession } from './types'
  * ── The labelling rule ───────────────────────────────────────────────────────
  * {@link DeviceFacts} renders what the SERVER OBSERVED. {@link DeclaredSignals}
  * renders what the DEVICE STATED, under a banner that says so, and its
- * tri-states show "unknown" as a neutral chip — because "nobody asked" is not a
+ * tri-states show "unknown" as a neutral chip - because "nobody asked" is not a
  * finding, and must never be rendered like a passing check.
  */
 
@@ -111,7 +111,7 @@ export function DeclaredSignals({ device }: { device: Device }) {
             {device.declared_app_version ?? t('devices.unknown_value')}
           </Row>
           <Row label={t('devices.field_declared_at')}>
-            {device.declared_at ? formatWhen(device.declared_at, i18n.language) : '—'}
+            {device.declared_at ? formatWhen(device.declared_at, i18n.language) : '-'}
           </Row>
         </div>
       )}
@@ -186,7 +186,7 @@ export function DeviceTimeline({ events }: { events: DeviceEvent[] }) {
           <div className="min-w-0">
             <p className="break-words text-text-primary" style={{ fontSize: 'var(--kb-text-meta)' }}>
               {eventKindLabel(t, event.kind)}
-              {event.actor_label ? ` — ${event.actor_label}` : ''}
+              {event.actor_label ? ` - ${event.actor_label}` : ''}
             </p>
             {event.detail && (
               <p className="break-words text-text-secondary" style={{ fontSize: 'var(--kb-text-micro)' }}>

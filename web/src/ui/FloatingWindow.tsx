@@ -32,20 +32,20 @@ export interface WindowAction {
   loading?:  boolean
   /** Destructive: the label turns red. Still a text button, never a filled one. */
   danger?:   boolean
-  /** Focused on open — what makes Entrée confirm without a click. */
+  /** Focused on open - what makes Entrée confirm without a click. */
   autoFocus?: boolean
 }
 
 /**
  * What the window puts in its footer.
  *
- * Described, not drawn: the ORDER is decided here and nowhere else — action on
+ * Described, not drawn: the ORDER is decided here and nowhere else - action on
  * the LEFT, cancel on the RIGHT, both the same width. That order is a project
  * rule (the one Word uses), and the only way a rule like it survives a hundred
  * dialogs is if no dialog gets to spell it out.
  *
- * Omitting `actions` renders **no footer at all**: a tool panel — a colour
- * picker, a canvas palette — confirms nothing and must not grow a bar with a
+ * Omitting `actions` renders **no footer at all**: a tool panel - a colour
+ * picker, a canvas palette - confirms nothing and must not grow a bar with a
  * lonely "Close" in it.
  */
 export interface WindowActions {
@@ -53,7 +53,7 @@ export interface WindowActions {
   confirm?: WindowAction
   /** `false` removes it; otherwise defaults to "Annuler", which calls `onClose`. */
   cancel?:  Partial<WindowAction> | false
-  /** Free content pinned to the LEFT edge — a checkbox, a help link, a hint. */
+  /** Free content pinned to the LEFT edge - a checkbox, a help link, a hint. */
   extra?:   React.ReactNode
 }
 
@@ -65,7 +65,7 @@ interface FloatingWindowProps {
   titleActions?: React.ReactNode   // boutons à droite du titre (avant le ×)
 
   /**
-   * What the window has to say about ITSELF — a refused save, a caveat that
+   * What the window has to say about ITSELF - a refused save, a caveat that
    * applies to the whole form.
    *
    * Rendered BETWEEN the title bar and the content, therefore **outside the
@@ -96,17 +96,17 @@ interface FloatingWindowProps {
   resizable?:    boolean           // défaut : false
   /** `false` hides the title bar's close button (Escape and `onClose` still close the window). Default `true`. */
   showClose?:    boolean
-  backdrop?:     boolean           // défaut : false — overlay semi-transparent
+  backdrop?:     boolean           // défaut : false - overlay semi-transparent
   className?:    string            // classes CSS additionnelles sur la fenêtre
   /**
-   * Marge intérieure du contenu, en px. **Défaut : 0** — le contenu affleure les bords
+   * Marge intérieure du contenu, en px. **Défaut : 0** - le contenu affleure les bords
    * de la zone opaque, à chaque fenêtre de gérer sa propre respiration. Passer
    * `padding={WINDOW_PADDING}` pour retrouver l'ancienne marge de 20 px.
    */
   padding?:      number
 
   /**
-   * The window's own footer. See [`WindowActions`] — absent means no footer.
+   * The window's own footer. See [`WindowActions`] - absent means no footer.
    */
   actions?:      WindowActions
   /** Host translator, for the default cancel label (`@ui` never imports i18n). */
@@ -114,7 +114,7 @@ interface FloatingWindowProps {
 }
 
 /**
- * The open windows, oldest first. Only the last one answers Escape — see the
+ * The open windows, oldest first. Only the last one answers Escape - see the
  * effect that uses it. An opaque token per window is enough; nothing reads
  * anything off it.
  */
@@ -160,7 +160,7 @@ export function FloatingWindow({
   // ── Carrying the module's scope through the portal ─────────────────────────
   //
   // A window is portaled onto `<body>`, which puts it OUTSIDE the
-  // `[data-module="calendar"]` container the host wraps a module in — and that
+  // `[data-module="calendar"]` container the host wraps a module in - and that
   // container is where the module's accent, appearance and density live. Without
   // this, every window came out in the core's blue no matter which module opened
   // it, and a module in dark mode opened a light dialog.
@@ -168,8 +168,8 @@ export function FloatingWindow({
   // The scope id comes from the context the host already provides for theming;
   // the presentation attributes are read off the live container, which is the
   // only place that knows the user's current choice for that module.
-  // The context covers windows opened from the module's own area. A sidebar —
-  // where "Importer un agenda" lives — sits OUTSIDE that provider, so the first
+  // The context covers windows opened from the module's own area. A sidebar -
+  // where "Importer un agenda" lives - sits OUTSIDE that provider, so the first
   // URL segment is the fallback: it is the very rule the host uses to decide
   // which module a screen belongs to.
   const contextScope = useContext(ThemeScopeContext)
@@ -209,7 +209,7 @@ export function FloatingWindow({
    * Raise this window, and let no one else read the same press.
    *
    * A window opened BY another window is a React child of it, and a portal
-   * carries events up the REACT tree, not the DOM one — so a press inside the
+   * carries events up the REACT tree, not the DOM one - so a press inside the
    * inner window reached the outer window's own handler a moment later, which
    * raised the outer one on top of the window the reader had just clicked.
    * (Lived through: the meeting options disappeared behind the event editor
@@ -343,7 +343,7 @@ export function FloatingWindow({
   /**
    * Escape closes the TOP window, and only it.
    *
-   * Every open window used to listen for itself, so one press closed the lot —
+   * Every open window used to listen for itself, so one press closed the lot -
    * a settings window and the window that opened it went together, and the
    * reader lost work they never meant to leave. The windows keep a stack: the
    * last one opened is the one that answers, and it consumes the key so the
@@ -356,7 +356,7 @@ export function FloatingWindow({
       if (e.key !== 'Escape') return
       if (escapeStack[escapeStack.length - 1] !== me) return
       // An open menu or list owns Escape: it closes itself, not the window
-      // around it. Asked of the page rather than left to listener order —
+      // around it. Asked of the page rather than left to listener order -
       // both listen in the capture phase, and whichever registered first would
       // otherwise win, which is whichever mounted first. (Lived through: a
       // dropdown's Escape closed the whole editor behind it.)
@@ -378,7 +378,7 @@ export function FloatingWindow({
 
   // ── Hauteur stable des fenêtres à onglets ──────────────────────────────────
   // Quand la fenêtre contient des onglets (`[role="tablist"]`, posé par le composant
-  // `Tabs` — ou `[data-fw-tabs]` pour un bandeau d'onglets maison) ET que sa hauteur
+  // `Tabs` - ou `[data-fw-tabs]` pour un bandeau d'onglets maison) ET que sa hauteur
   // est libre (pilotée par le contenu), on mémorise la hauteur MAXIMALE observée et
   // on l'impose en `minHeight` : changer d'onglet ne fait plus « sauter » la fenêtre,
   // elle reste calée sur l'onglet le plus haut. Les fenêtres SANS onglets continuent
@@ -429,7 +429,7 @@ export function FloatingWindow({
 
   // ── Render ─────────────────────────────────────────────────────────────────
 
-  // Auto-popout: the OS window is opening — render nothing in-page.
+  // Auto-popout: the OS window is opening - render nothing in-page.
   if (shouldAutoPopout) return null
 
   // Standalone/full-bleed: we ARE the detached OS window (on `popout.route`).
@@ -449,7 +449,7 @@ export function FloatingWindow({
   // keep their card so they stay inside their box.
   const isMobile = useIsMobile()
   const fullBleed = isStandalone || (isMobile && !scoped)
-  // Plain function (not a hook) — declared after the conditional return above.
+  // Plain function (not a hook) - declared after the conditional return above.
   const closeWindow = () => {
     if (isStandalone && typeof window !== 'undefined') {
       try { window.close() } catch { /* best-effort */ }
@@ -464,7 +464,7 @@ export function FloatingWindow({
   // (the order Word uses, and the project's rule), both at the same minimum
   // width so the pair never jitters from one window to the next.
   //
-  // Text buttons, not filled ones — the hierarchy is carried by colour, exactly
+  // Text buttons, not filled ones - the hierarchy is carried by colour, exactly
   // as the reference dialog does it, and buttons are never bold anywhere in this
   // product.
   const tr = uiT(t)
@@ -506,7 +506,7 @@ export function FloatingWindow({
   const resizeHandles = resizable ? (
     <>
       {/* Bords */}
-      {/* 5px grab strips along the edges — the frame they used to sit on is gone,
+      {/* 5px grab strips along the edges - the frame they used to sit on is gone,
           but the affordance stays where the hand expects it. */}
       <div data-edge="n"  onMouseDown={onResizeMouseDown} className="absolute top-0    left-2  right-2  h-[5px] cursor-n-resize  z-10" />
       <div data-edge="s"  onMouseDown={onResizeMouseDown} className="absolute bottom-0 left-2  right-2  h-[5px] cursor-s-resize  z-10" />
@@ -530,13 +530,13 @@ export function FloatingWindow({
           className={`${posCls} inset-0 ${scoped ? 'bg-black/15' : 'bg-black/30'} backdrop-blur-[1px] no-print`}
           style={{ zIndex: zIndex - 1 }}
           // The veil belongs to THIS window, and a press on it is addressed to
-          // this window — not to whichever component rendered it.
+          // this window - not to whichever component rendered it.
           //
           // Without this, a press on the veil of a window opened by another one
           // travelled up the React tree (a portal carries events there, not
           // along the DOM) and raised the OUTER window instead. Two things then
           // went wrong at once: the inner window sank out of reach, and the
-          // click never closed it — the outer window's own veil had slid on top
+          // click never closed it - the outer window's own veil had slid on top
           // between the press and the release, so the press and the release
           // landed on different elements and no click was ever formed. Both
           // symptoms, one cause. (Reported: "it goes behind and I cannot bring
@@ -593,7 +593,7 @@ export function FloatingWindow({
             téléphone) : une seule fenêtre à reconnaître, pas deux. */}
         <div
           // Min-height rather than a fixed height: a title that wraps onto two
-          // lines — "Réinitialiser le mot de passe de Marie Dupont" — must push
+          // lines - "Réinitialiser le mot de passe de Marie Dupont" - must push
           // the band down instead of being clipped by it.
           className={`kb-window-titlebar flex items-center gap-2.5 px-4 py-2.5 min-h-11 flex-shrink-0 select-none ${
             fullBleed ? '' : 'cursor-grab active:cursor-grabbing'}`}
@@ -649,7 +649,7 @@ export function FloatingWindow({
             stays in sight. `shrink-0` keeps a long form from squeezing it. */}
         {banner && <div className="flex-shrink-0 px-4 pt-3">{banner}</div>}
 
-        {/* Contenu — aucune marge par défaut : le contenu affleure la zone opaque.
+        {/* Contenu - aucune marge par défaut : le contenu affleure la zone opaque.
             Une fenêtre qui veut de la respiration passe `padding`. */}
         <div
           className={`flex-1 flex flex-col min-h-0 overflow-auto ${

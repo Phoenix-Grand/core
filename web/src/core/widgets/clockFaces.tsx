@@ -85,7 +85,7 @@ const drawDigital: FaceDraw = (ctx, W, H, _date, ex) => {
   label(ctx, time, W / 2, H / 2, `300 ${fs}px 'DM Sans', system-ui, sans-serif`, T.text)
 }
 
-// ── Analog — "radio controlled" wall clock (Helvetica dial, Kubuno brand) ─────────
+// ── Analog - "radio controlled" wall clock (Helvetica dial, Kubuno brand) ─────────
 // Kubuno mark (six aperture blades around a plate holding a cube), vectorised from
 // public/kubuno-logo.png in its own 512x567 space. Drawn via Path2D so it scales crisply,
 // in a single colour: blades and plate solid, the cube cut out of the plate and its faces
@@ -131,7 +131,7 @@ const drawAnalog: Draw100 = (ctx, date) => {
     const [x, y] = P(i * 6, 43.5); const s = five ? 1.5 : 0.8
     ctx.save(); ctx.translate(x, y); ctx.rotate(rad(i * 6)); ctx.fillStyle = '#141414'; ctx.fillRect(-s / 2, -s / 2, s, s); ctx.restore()
   }
-  // Numerals — Helvetica, light weight.
+  // Numerals - Helvetica, light weight.
   for (let i = 1; i <= 12; i++) { const [x, y] = P(i * 30, 36); label(ctx, String(i), x, y, `300 9.5px ${HELV}`, '#1a1a1a') }
   // Brand mark: the Kubuno mark in grey, below the 12.
   drawKubunoLogo(ctx, 50, 34, 8, '#9aa0a6')
@@ -150,7 +150,7 @@ const drawAnalog: Draw100 = (ctx, date) => {
 const SANS7 = "Arial, 'Liberation Sans', 'Helvetica Neue', system-ui, sans-serif"
 const drawStyle7: Draw100 = (ctx, date, ex) => {
   const PINK = '#ff0d8c', BLACK = '#1a1a1a'
-  // Shrink the dial so a pink margin remains around it — the year arc lives there.
+  // Shrink the dial so a pink margin remains around it - the year arc lives there.
   ctx.save(); ctx.translate(50, 50); ctx.scale(0.86, 0.86); ctx.translate(-50, -50)
   disc(ctx, 50, 50, 49, '#333333'); disc(ctx, 50, 50, 46, '#ffffff')
   for (let i = 0; i < 60; i++) {
@@ -220,7 +220,7 @@ function veinedLeaf(ctx: Ctx, cx: number, cy: number, ang: number, len: number, 
   }
   ctx.restore()
 }
-// Dial motif: 6 sprays of large, full holly leaves radiating from the centre —
+// Dial motif: 6 sprays of large, full holly leaves radiating from the centre -
 // a big central leaf flanked by two side leaves, plus a small inner rosette.
 function drawHollyMandala(ctx: Ctx) {
   const spray = (a: number) => {

@@ -1,4 +1,4 @@
-//! Code-behind of Kubuno Desktop's window (`shell_window.kbview`) — Windows Forms' `Form1.cs`.
+//! Code-behind of Kubuno Desktop's window (`shell_window.kbview`) - Windows Forms' `Form1.cs`.
 //!
 //! The window owns the data ([`ShellState`]) and fills its pages (user controls) through typed
 //! access (`self.launcher_page.with(…)`) from what `view_model` computes. The background work
@@ -244,7 +244,7 @@ impl ShellWindow {
         window.state.unread = crate::services::activity::count();
         window.state.offline = backend::is_offline();
         window.state.accounts = accounts();
-        // With no account configured there is nothing to launch, so sign-in IS the first screen —
+        // With no account configured there is nothing to launch, so sign-in IS the first screen -
         // and it cannot be cancelled, having nowhere to go back to.
         let start = if window.state.accounts.is_empty() { Some(StartPage::Page(Page::Login)) } else { None };
         let requested = window.options.page.clone();
@@ -677,8 +677,8 @@ impl ShellWindow {
         }
     }
 
-    /// Drops an account's credentials and local sync state — the files already downloaded stay on
-    /// disk, which is what « disconnect » means — and forgets it as the chosen account. Changes not
+    /// Drops an account's credentials and local sync state - the files already downloaded stay on
+    /// disk, which is what « disconnect » means - and forgets it as the chosen account. Changes not
     /// sent yet are asked about first (« Envoyer d'abord » / « Exporter » / « Supprimer quand même »).
     fn disconnect(&mut self, id: &str) {
         self.begin_sign_out(id.to_string(), false);
@@ -1357,7 +1357,7 @@ impl ShellWindow {
 /// The configured instances, the current one marked.
 fn accounts() -> Vec<AccountInfo> {
     let list = backend::list_instances();
-    // With nothing chosen yet, the first instance is the current one — the same rule the
+    // With nothing chosen yet, the first instance is the current one - the same rule the
     // launcher applies.
     let stored = settings::get().active_instance;
     let current = if list.iter().any(|c| c.id == stored) { stored } else { list.first().map(|c| c.id.clone()).unwrap_or_default() };

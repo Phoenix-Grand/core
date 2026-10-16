@@ -1,11 +1,11 @@
-//! `TextBoxBase` — the edit-control base — and its three concrete descendants
+//! `TextBoxBase` - the edit-control base - and its three concrete descendants
 //! `TextBox`, `MaskedTextBox` and `RichTextBox`.
 //!
 //! ## Why this shape
 //!
 //! In WinForms `TextBoxBase` is an abstract control that declares the whole
-//! editing surface shared by every text box — the text and selection state,
-//! `MaxLength`, `ReadOnly`, `Multiline`, `WordWrap`, `BorderStyle` — and the
+//! editing surface shared by every text box - the text and selection state,
+//! `MaxLength`, `ReadOnly`, `Multiline`, `WordWrap`, `BorderStyle` - and the
 //! three concrete controls add only what is specific to them. The port mirrors
 //! that with composition + `Deref`, exactly as `ButtonBase`/`Button` do:
 //!
@@ -17,7 +17,7 @@
 //! ```
 //!
 //! A property `TextBoxBase` declares lives here once; a subclass that *re*-declares
-//! one of them in .NET (`new`/`override`, almost always to change a default —
+//! one of them in .NET (`new`/`override`, almost always to change a default -
 //! `RichTextBox.Multiline` defaults to `true`, `RichTextBox.MaxLength` to
 //! `int.MaxValue`, `TextBoxBase.AutoSize` to `true`) does not get a second copy of
 //! the field: its `Default` impl sets the overriding value on the inherited field.
@@ -30,13 +30,13 @@
 //!   `SelectionStart`, `SelectionLength`, `MaxLength`, `ReadOnly`, `Modified`).
 //!   Selection arithmetic clamps against the current text length and is tested.
 //! * **The mask engine** (`MaskedTextBox`) is implemented honestly for a
-//!   documented subset of the WinForms mask language — see [`MaskChar`]. Every
+//!   documented subset of the WinForms mask language - see [`MaskChar`]. Every
 //!   mask character we accept, we honour; we never silently ignore one.
 //! * **RTF is out of scope** for this wave. `RichTextBox` models the *styled-run*
 //!   structure (bold / italic / underline / colour spans) so its painting and its
 //!   text can be exercised, but there is no RTF parser and no `Rtf` property.
 //!   Bold, **italic**, underline and colour are all painted, each from the
-//!   system's own UI font — see [`StyledRun::italic`].
+//!   system's own UI font - see [`StyledRun::italic`].
 //!
 //! ## What it paints with
 //!
@@ -53,16 +53,16 @@
 //! the one the reference sheets were painted by.
 //!
 //! `BorderStyle::Fixed3D` is the one place the system colours alone cannot get
-//! there, and it is now drawn both ways. With visual styles ON — how
-//! `02-textboxbase.png` was rendered — the toolkit frames the field with a FLAT
+//! there, and it is now drawn both ways. With visual styles ON - how
+//! `02-textboxbase.png` was rendered - the toolkit frames the field with a FLAT
 //! theme line (`#ABADB3` on a default Windows 11) over a one-pixel `Window` pad,
 //! and that colour is no `COLOR_*` on the same machine. With visual styles OFF
 //! the same control is the classic two-ring `DrawEdge` sunken well.
 //! [`paint_fixed3d_border`] asks [`crate::theme`] for the real part and falls
 //! back to the bevel, so the library matches whichever machine it runs on.
-//! Everything else on that sheet — the `FixedSingle` `#646464` `WindowFrame`
+//! Everything else on that sheet - the `FixedSingle` `#646464` `WindowFrame`
 //! line, the `#F0F0F0` ground of a read-only or disabled field, its `#6D6D6D`
-//! `GrayText` ink, the `#0078D7` selection — was already exact from the system
+//! `GrayText` ink, the `#0078D7` selection - was already exact from the system
 //! colours alone.
 
 use kubuno_drive_desktop_app_controls::{Canvas, Rect};
@@ -80,8 +80,8 @@ use crate::theme::state::{ETS_DISABLED, ETS_NORMAL, ETS_READONLY};
 // All in DIP: the `Canvas` primitives already fold in the DPI scale, so a control
 // never multiplies by `c.scale()` itself. These are the field's own paddings and
 // line box, taken from the reference sheet's single-line field (≈23 DIP tall at
-// the default font); everything that the SYSTEM publishes — border thickness,
-// scroll-bar width, caret width, the font — is read from `Visuals` instead and
+// the default font); everything that the SYSTEM publishes - border thickness,
+// scroll-bar width, caret width, the font - is read from `Visuals` instead and
 // never written down here.
 
 /// The text line box a single glyph row occupies, at the system UI font size.
@@ -99,8 +99,8 @@ const PASSWORD_GLYPH: char = '\u{25CF}';
 // These describe property types that ONLY this family declares, so they live
 // here rather than in the shared `enums.rs`. The rule is the one `enums.rs`
 // states: a type moves there as soon as a second family declares a property of
-// it. `HorizontalAlignment` (the type of `TextBox.TextAlign`) did exactly that —
-// four families had grown their own copy — so it is now imported from `enums`,
+// it. `HorizontalAlignment` (the type of `TextBox.TextAlign`) did exactly that -
+// four families had grown their own copy - so it is now imported from `enums`,
 // along with its `dwrite()` mapping.
 
 /// Whether typed characters are forced to a case (`CharacterCasing`).
@@ -158,7 +158,7 @@ pub enum InsertKeyMode {
 }
 
 /// Auto-completion behaviour of a `TextBox` (`AutoCompleteMode`). We store the
-/// value but do not drive a completion popup, so it is not-yet-honoured — see the
+/// value but do not drive a completion popup, so it is not-yet-honoured - see the
 /// field's doc comment.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum AutoCompleteMode {
@@ -185,7 +185,7 @@ pub enum AutoCompleteSource {
     None,
 }
 
-/// `RichTextBox.ScrollBars` (`RichTextBoxScrollBars`) — a richer set than the
+/// `RichTextBox.ScrollBars` (`RichTextBoxScrollBars`) - a richer set than the
 /// plain `ScrollBars` a single-line/multiline `TextBox` uses, hence its own type.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum RichTextBoxScrollBars {
@@ -224,7 +224,7 @@ pub enum RichTextBoxSelectionTypes {
 
 // ── Pure string helpers ────────────────────────────────────────────────────────
 // Selection and mask arithmetic is defined on CHARACTER counts, matching the
-// toolkit's UTF-16 indices, not on Rust's UTF-8 byte offsets — so a multi-byte
+// toolkit's UTF-16 indices, not on Rust's UTF-8 byte offsets - so a multi-byte
 // character counts as one, as it does in the designer.
 
 /// Number of characters in `s` (`Text.Length` semantics).
@@ -252,7 +252,7 @@ fn slice_chars(s: &str, start: i32, len: i32) -> String {
 // TextBoxBase
 // ═══════════════════════════════════════════════════════════════════════════════
 
-/// The properties `System.Windows.Forms.TextBoxBase` declares — the editing
+/// The properties `System.Windows.Forms.TextBoxBase` declares - the editing
 /// surface every text box inherits.
 ///
 /// `Text` is `ControlBase::text` (re-declared by `TextBoxBase` in .NET, same
@@ -265,40 +265,40 @@ pub struct TextBoxBase {
     control: ControlBase,
 
     // ── Behaviour ────────────────────────────────────────────────────────
-    /// `AcceptsTab` — whether Tab inserts a tab in a multiline box instead of
+    /// `AcceptsTab` - whether Tab inserts a tab in a multiline box instead of
     /// moving focus. State only (the port has no focus traversal yet).
     pub accepts_tab: bool,
-    /// `BorderStyle` — how the field's edge is painted; honoured in `paint`.
+    /// `BorderStyle` - how the field's edge is painted; honoured in `paint`.
     pub border_style: BorderStyle,
-    /// `HideSelection` — hide the selection when the control loses focus. Stored;
+    /// `HideSelection` - hide the selection when the control loses focus. Stored;
     /// the port has no focus model, so the selection is always shown (documented).
     pub hide_selection: bool,
-    /// `MaxLength` — the maximum number of characters `Text` may hold. `0` means
+    /// `MaxLength` - the maximum number of characters `Text` may hold. `0` means
     /// "unbounded" (WinForms' "limited only by memory"). Honoured by `set_text`.
     pub max_length: i32,
-    /// `Modified` — set once the user edits the text; cleared when `Text` is set
+    /// `Modified` - set once the user edits the text; cleared when `Text` is set
     /// programmatically. The port has no keystrokes, so callers set it via the API.
     pub modified: bool,
-    /// `Multiline` — whether the text may span several lines; honoured in `paint`
+    /// `Multiline` - whether the text may span several lines; honoured in `paint`
     /// and `preferred_size`.
     pub multiline: bool,
-    /// `ReadOnly` — whether the text can be edited; honoured (no caret painted).
+    /// `ReadOnly` - whether the text can be edited; honoured (no caret painted).
     pub read_only: bool,
-    /// `ShortcutsEnabled` — whether Ctrl-C/V/X etc. are active. State only (no
+    /// `ShortcutsEnabled` - whether Ctrl-C/V/X etc. are active. State only (no
     /// live keyboard).
     pub shortcuts_enabled: bool,
-    /// `WordWrap` — whether long lines wrap in a multiline box. Stored; the port's
+    /// `WordWrap` - whether long lines wrap in a multiline box. Stored; the port's
     /// painter wraps on explicit newlines only, so soft-wrap is not-yet-honoured.
     pub word_wrap: bool,
 
     // ── Selection state (character indices) ──────────────────────────────
-    /// `SelectionStart` — the caret / selection anchor, in characters.
+    /// `SelectionStart` - the caret / selection anchor, in characters.
     selection_start: i32,
-    /// `SelectionLength` — the selection length, in characters.
+    /// `SelectionLength` - the selection length, in characters.
     selection_length: i32,
 
     // ── Appearance the toolkit re-surfaces on TextBoxBase ─────────────────
-    /// `BackgroundImage` — WinForms re-declares (and hides) `Control.BackgroundImage`
+    /// `BackgroundImage` - WinForms re-declares (and hides) `Control.BackgroundImage`
     /// here. `ControlBase` does not model an image, so it is carried as an opaque
     /// resource key and is not painted (documented, and reported as a shared gap).
     pub background_image: Option<String>,
@@ -307,7 +307,7 @@ pub struct TextBoxBase {
 impl Default for TextBoxBase {
     fn default() -> Self {
         let mut control = ControlBase::new();
-        // TRAP: `TextBoxBase` overrides `Control.AutoSize` (false) to `true` — a
+        // TRAP: `TextBoxBase` overrides `Control.AutoSize` (false) to `true` - a
         // single-line box sizes its height to the font. Descendants that want the
         // Control default back (RichTextBox) must set it to false explicitly.
         control.auto_size = true;
@@ -336,13 +336,13 @@ impl TextBoxBase {
 
     // ── Text (`ControlBase::text`) with the toolkit's setter semantics ────
 
-    /// `Text` getter — the raw stored text.
+    /// `Text` getter - the raw stored text.
     pub fn text(&self) -> &str {
         &self.control.text
     }
 
     /// `Text` setter. Truncates to `MaxLength`, resets the caret to 0 and clears
-    /// `Modified` — the behaviour of a programmatic assignment in WinForms (only a
+    /// `Modified` - the behaviour of a programmatic assignment in WinForms (only a
     /// USER edit sets `Modified`).
     pub fn set_text(&mut self, value: &str) {
         self.control.text = self.truncate(value);
@@ -383,7 +383,7 @@ impl TextBoxBase {
         self.clamp_selection();
     }
 
-    /// `Select(start, length)` — set both at once, then clamp.
+    /// `Select(start, length)` - set both at once, then clamp.
     pub fn select(&mut self, start: i32, length: i32) {
         self.selection_start = start.max(0);
         self.selection_length = length.max(0);
@@ -398,7 +398,7 @@ impl TextBoxBase {
 
     /// Re-clamps the selection against the current text length. Called whenever
     /// the text may have shrunk, so `SelectionStart`/`SelectionLength` can never
-    /// point past the end — the correctness rule the toolkit guarantees.
+    /// point past the end - the correctness rule the toolkit guarantees.
     fn clamp_selection(&mut self) {
         let n = char_len(&self.control.text);
         self.selection_start = self.selection_start.clamp(0, n);
@@ -406,12 +406,12 @@ impl TextBoxBase {
         self.selection_length = self.selection_length.clamp(0, room);
     }
 
-    /// `SelectedText` getter — the characters currently selected.
+    /// `SelectedText` getter - the characters currently selected.
     pub fn selected_text(&self) -> String {
         slice_chars(&self.control.text, self.selection_start, self.selection_length)
     }
 
-    /// `SelectedText` setter — replace the selection with `value`, honouring
+    /// `SelectedText` setter - replace the selection with `value`, honouring
     /// `MaxLength`, then place the caret after the inserted text. This *is* a user
     /// edit, so `Modified` becomes true.
     pub fn set_selected_text(&mut self, value: &str) {
@@ -430,7 +430,7 @@ impl TextBoxBase {
 
     // ── Derived read-only members ────────────────────────────────────────
 
-    /// `Lines` — the text split into rows. WinForms splits on newlines; we accept
+    /// `Lines` - the text split into rows. WinForms splits on newlines; we accept
     /// both `\r\n` and `\n`.
     pub fn lines(&self) -> Vec<String> {
         self.control
@@ -440,19 +440,19 @@ impl TextBoxBase {
             .collect()
     }
 
-    /// `Lines = value` — join with `\n`.
+    /// `Lines = value` - join with `\n`.
     pub fn set_lines(&mut self, lines: &[String]) {
         let joined = lines.join("\n");
         self.set_text(&joined);
     }
 
-    /// `CanUndo` — the port keeps no undo buffer, so it is always false
+    /// `CanUndo` - the port keeps no undo buffer, so it is always false
     /// (documented; a real editor would track an edit stack).
     pub fn can_undo(&self) -> bool {
         false
     }
 
-    /// `PreferredHeight` — the height a single-line field wants for the current
+    /// `PreferredHeight` - the height a single-line field wants for the current
     /// border. Pure (no `Canvas`): the row height is a fixed DIP at the shared
     /// font, so it can be measured without a device.
     pub fn preferred_height(&self) -> f32 {
@@ -473,11 +473,11 @@ impl std::ops::DerefMut for TextBoxBase {
     }
 }
 
-/// Border inset per style, in DIP — the **measurement** side of the border.
+/// Border inset per style, in DIP - the **measurement** side of the border.
 ///
 /// `None` takes nothing; `FixedSingle` is one line; `Fixed3D` is the two-ring
 /// `DrawEdge` bevel, which is two *device* pixels and therefore under 2 DIP on
-/// any scaled display — a single DIP is what `PreferredHeight` has always
+/// any scaled display - a single DIP is what `PreferredHeight` has always
 /// budgeted for it and what the reference sheet's 3-D field measures at.
 ///
 /// The **painting** side does not use this number: it takes the interior
@@ -492,20 +492,20 @@ fn border_thickness(style: BorderStyle) -> f32 {
 
 // ── Shared painting ────────────────────────────────────────────────────────────
 
-/// The one text format a bare [`Canvas`] can reach — **the measuring gap**.
+/// The one text format a bare [`Canvas`] can reach - **the measuring gap**.
 ///
 /// Painting sees a [`ControlCanvas`] and therefore the system UI font, which is
 /// what every glyph in this file is drawn with. `GetPreferredSize` does not:
 /// [`Control::preferred_size`] takes a `&dyn Canvas`, whose only fonts are the
 /// shared design-system formats. So a width computed from a measurement is taken
-/// against the design-system body face while the text is *painted* in Segoe UI —
+/// against the design-system body face while the text is *painted* in Segoe UI -
 /// the two can disagree by a few DIP on a long string.
 ///
 /// The alternatives were both worse: widening `preferred_size` to
 /// `&dyn ControlCanvas` is a change to the foundation this repaint is not allowed
 /// to make, and estimating a width without DirectWrite would change the control's
 /// resolved size. The gap is therefore named, isolated in this one function, and
-/// reported — the fix belongs in `control.rs`, not here.
+/// reported - the fix belongs in `control.rs`, not here.
 fn measuring_format(c: &dyn Canvas) -> &IDWriteTextFormat {
     &c.formats().body
 }
@@ -515,7 +515,7 @@ fn measuring_format(c: &dyn Canvas) -> &IDWriteTextFormat {
 ///
 /// It no longer describes what this family paints: since the repaint, a styled
 /// run takes `SystemFonts::message_bold`, which exists whatever
-/// [`FontRole`] the control carries — so as far as `RichTextBox` is concerned the
+/// [`FontRole`] the control carries - so as far as `RichTextBox` is concerned the
 /// answer is now always yes. The predicate is kept because it is public API and
 /// because `ControlBase::font` still names a role; it answers about the format
 /// set, not about this control.
@@ -547,7 +547,7 @@ struct FieldPaint<'a> {
 /// Every colour is a system colour and every thickness a system metric; the
 /// border is drawn first because [`ControlCanvas::draw_edge`] reports the
 /// **interior** it leaves behind, which is exactly where the ground and the text
-/// go — the caller never re-derives the bevel's thickness.
+/// go - the caller never re-derives the bevel's thickness.
 fn paint_field(
     c: &dyn ControlCanvas,
     bounds: Rect,
@@ -558,10 +558,10 @@ fn paint_field(
     let v = c.visuals();
 
     // The three `BorderStyle` values, each as the toolkit paints it:
-    //   Fixed3D     — the themed `EDIT` frame, or the classic `DrawEdge`
+    //   Fixed3D     - the themed `EDIT` frame, or the classic `DrawEdge`
     //                 (EDGE_SUNKEN) well when visual styles are off,
-    //   FixedSingle — one flat `WindowFrame` line,
-    //   None        — nothing at all.
+    //   FixedSingle - one flat `WindowFrame` line,
+    //   None        - nothing at all.
     let interior = match base.border_style {
         BorderStyle::None => bounds,
         BorderStyle::FixedSingle => {
@@ -572,7 +572,7 @@ fn paint_field(
     };
 
     // An editable field's ground is `Window`; a read-only or disabled one is
-    // `Control` — the toolkit swaps `BackColor` for `SystemColors.Control` when
+    // `Control` - the toolkit swaps `BackColor` for `SystemColors.Control` when
     // `ReadOnly` is set, so the two cases share one branch.
     let ground = if base.enabled && !base.read_only { v.colors.window } else { v.colors.control };
     c.fill_rect(&interior, &ground);
@@ -603,23 +603,23 @@ fn paint_field(
     }
 }
 
-/// `BorderStyle::Fixed3D` — the themed `EDIT` frame, falling back to the
+/// `BorderStyle::Fixed3D` - the themed `EDIT` frame, falling back to the
 /// classic `DrawEdge` well. Returns the **interior**, as `draw_edge` does.
 ///
 /// ## Two renderings, both correct
 ///
-/// With visual styles ON — how the reference sheets were captured — a `Fixed3D`
+/// With visual styles ON - how the reference sheets were captured - a `Fixed3D`
 /// field is framed by a flat theme line, `#ABADB3` on a default Windows 11, with
 /// the frame's inner pixel in `Window`; there is no bevel at all. With them OFF
 /// it is the classic two-ring sunken well built from `COLOR_3DDKSHADOW` and
 /// friends. Neither approximates the other, and no `GetSysColor` index can
-/// produce the first — which is what [`crate::theme`] exists for.
+/// produce the first - which is what [`crate::theme`] exists for.
 ///
 /// ## Why the pad is repainted
 ///
 /// The part is `EP_EDITTEXT`, not `EP_EDITBORDER_NOSCROLL`: measured against the
 /// sheet, the second draws Windows 11's modern rounded frame and the first draws
-/// the toolkit's — see the `theme` module docs. `EP_EDITTEXT` paints a frame AND
+/// the toolkit's - see the `theme` module docs. `EP_EDITTEXT` paints a frame AND
 /// a fill, and its fill under `ETS_DISABLED` is the theme's own tint, whereas
 /// the toolkit shows `Window` there because its client area covers everything
 /// but the frame's two rings. So the inner ring is put back explicitly, and the
@@ -682,7 +682,7 @@ fn paint_single_line(
     // string in the foreground colour would leave dark ink on a dark blue ground,
     // so the run is drawn in three pieces, each measured from the same format.
     //
-    // Left-aligned fields only — measuring a centred/right run's offset needs the
+    // Left-aligned fields only - measuring a centred/right run's offset needs the
     // field width the reference does not vary.
     let selected =
         !fp.is_password && base.selection_length > 0 && fp.align == HorizontalAlignment::Left;
@@ -713,7 +713,7 @@ fn paint_single_line(
     }
 
     // Caret at the selection start, when the field could take input. One system
-    // border wide — a caret is a hairline at every scale, never a 1 DIP slab.
+    // border wide - a caret is a hairline at every scale, never a 1 DIP slab.
     if !base.read_only && base.enabled && fp.align == HorizontalAlignment::Left {
         let caret_x = inner.left + c.measure(&take_chars(fp.display, base.selection_start), fmt);
         let w = v.metrics.border_width.max(1.0 / c.scale());
@@ -748,7 +748,7 @@ fn paint_multiline(
 /// `italic` its italic face, `underline` draws a rule under the run and `color`
 /// overrides the ink. The system publishes **no bold-italic** face
 /// (`SystemFonts` builds `message`, `message_bold` and `message_italic` and no
-/// fourth), so a run that is both renders bold — the heavier signal — rather than
+/// fourth), so a run that is both renders bold - the heavier signal - rather than
 /// silently dropping one of the two.
 fn paint_runs(c: &dyn ControlCanvas, inner: &Rect, runs: &[StyledRun], default_col: &D2D1_COLOR_F) {
     let v = c.visuals();
@@ -790,7 +790,7 @@ fn paint_runs(c: &dyn ControlCanvas, inner: &Rect, runs: &[StyledRun], default_c
 /// The vertical scroll bar of a multiline field: a `Control`-coloured track with
 /// a raised thumb, at the system's own `SM_CXVSCROLL` width.
 ///
-/// The thumb is the classic Win32 one — a `Control`-coloured face under a raised
+/// The thumb is the classic Win32 one - a `Control`-coloured face under a raised
 /// `DrawEdge`, which is what gives it its relief. The port has no scroll offset
 /// to size it from, so it shows the presence of the bar, not a live position, and
 /// the arrow buttons are the scroll-bar family's business, not this one's.
@@ -817,7 +817,7 @@ fn paint_vscrollbar(c: &dyn ControlCanvas, interior: &Rect) {
 // TextBox
 // ═══════════════════════════════════════════════════════════════════════════════
 
-/// `System.Windows.Forms.TextBox` — the single-line/multiline plain editor.
+/// `System.Windows.Forms.TextBox` - the single-line/multiline plain editor.
 ///
 /// It adds password display, a placeholder, horizontal alignment, scrollbars,
 /// character casing and the (state-only) auto-complete surface. `Multiline` and
@@ -826,30 +826,30 @@ fn paint_vscrollbar(c: &dyn ControlCanvas, interior: &Rect) {
 pub struct TextBox {
     base: TextBoxBase,
 
-    /// `AcceptsReturn` — whether Enter inserts a newline in a multiline box.
+    /// `AcceptsReturn` - whether Enter inserts a newline in a multiline box.
     /// State only (no live keyboard).
     pub accepts_return: bool,
-    /// `AutoCompleteCustomSource` — the candidate strings for `CustomSource`.
+    /// `AutoCompleteCustomSource` - the candidate strings for `CustomSource`.
     /// Stored; not honoured (no completion popup).
     pub auto_complete_custom_source: Vec<String>,
-    /// `AutoCompleteMode` — stored; not honoured.
+    /// `AutoCompleteMode` - stored; not honoured.
     pub auto_complete_mode: AutoCompleteMode,
-    /// `AutoCompleteSource` — stored; not honoured.
+    /// `AutoCompleteSource` - stored; not honoured.
     pub auto_complete_source: AutoCompleteSource,
-    /// `CharacterCasing` — forces typed characters to a case. Applied by
+    /// `CharacterCasing` - forces typed characters to a case. Applied by
     /// [`TextBox::set_text`].
     pub character_casing: CharacterCasing,
-    /// `PasswordChar` — the glyph shown instead of each character (single-line
+    /// `PasswordChar` - the glyph shown instead of each character (single-line
     /// only). `None` = show the real text. Honoured in `paint`.
     pub password_char: Option<char>,
-    /// `PlaceholderText` — hint shown when `Text` is empty. Honoured in `paint`.
+    /// `PlaceholderText` - hint shown when `Text` is empty. Honoured in `paint`.
     pub placeholder_text: String,
-    /// `ScrollBars` — which bars a multiline box shows. The vertical one is
+    /// `ScrollBars` - which bars a multiline box shows. The vertical one is
     /// painted; horizontal is not-yet-honoured (no horizontal scroll offset).
     pub scroll_bars: ScrollBars,
-    /// `TextAlign` — horizontal alignment of the text. Honoured in `paint`.
+    /// `TextAlign` - horizontal alignment of the text. Honoured in `paint`.
     pub text_align: HorizontalAlignment,
-    /// `UseSystemPasswordChar` — force the system password glyph, overriding
+    /// `UseSystemPasswordChar` - force the system password glyph, overriding
     /// `PasswordChar`. Honoured in `paint`.
     pub use_system_password_char: bool,
 }
@@ -877,7 +877,7 @@ impl TextBox {
         Self::default()
     }
 
-    /// `Text` setter with `CharacterCasing` applied — the single-line/casing
+    /// `Text` setter with `CharacterCasing` applied - the single-line/casing
     /// specialisation of the base setter.
     pub fn set_text(&mut self, value: &str) {
         let cased: String = value.chars().map(|c| self.character_casing.apply(c)).collect();
@@ -994,13 +994,13 @@ fn preferred_text_size(base: &TextBoxBase, c: &dyn Canvas, content: &str) -> Siz
 /// | `C`  | any non-control character | no |
 /// | `A`  | letter or digit | yes |
 /// | `a`  | letter or digit | no |
-/// | `<`  | force following input to lower case | — |
-/// | `>`  | force following input to upper case | — |
-/// | `\|` | stop a previous case shift | — |
-/// | `\\` | escape: treat the next character as a literal | — |
+/// | `<`  | force following input to lower case | - |
+/// | `>`  | force following input to upper case | - |
+/// | `\|` | stop a previous case shift | - |
+/// | `\\` | escape: treat the next character as a literal | - |
 ///
 /// The localisable separators (`. , : / $`) are treated as **literals of that
-/// exact character** — the port does not apply a `Culture`, so they render as
+/// exact character** - the port does not apply a `Culture`, so they render as
 /// written (documented on `MaskedTextBox::culture`). Every other character is a
 /// literal. No mask character is accepted and then ignored.
 #[derive(Clone, Copy)]
@@ -1064,7 +1064,7 @@ fn parse_mask(mask: &str) -> Vec<MaskChar> {
     out
 }
 
-/// `System.Windows.Forms.MaskedTextBox` — a text box governed by a `Mask`.
+/// `System.Windows.Forms.MaskedTextBox` - a text box governed by a `Mask`.
 ///
 /// The mask engine keeps a buffer of one `Option<char>` per editable position;
 /// literals are fixed. `Text` returns the buffer formatted per `TextMaskFormat`.
@@ -1074,51 +1074,51 @@ pub struct MaskedTextBox {
     base: TextBoxBase,
 
     /// Parsed `Mask`; kept beside the raw string so painting and formatting do not
-    /// re-parse. Not public — `mask()` / `set_mask()` guard the invariant that the
+    /// re-parse. Not public - `mask()` / `set_mask()` guard the invariant that the
     /// buffer length matches the edit-position count.
     parsed: Vec<MaskChar>,
     mask: String,
     /// One slot per editable position (`None` = still showing the prompt).
     buffer: Vec<Option<char>>,
 
-    /// `AllowPromptAsInput` — whether the prompt char may itself be typed as input.
+    /// `AllowPromptAsInput` - whether the prompt char may itself be typed as input.
     pub allow_prompt_as_input: bool,
-    /// `AsciiOnly` — restrict letters to A–Z/a–z. Honoured by [`Self::set_text`].
+    /// `AsciiOnly` - restrict letters to A–Z/a–z. Honoured by [`Self::set_text`].
     pub ascii_only: bool,
-    /// `BeepOnError` — beep on an invalid keystroke. State only (no audio here).
+    /// `BeepOnError` - beep on an invalid keystroke. State only (no audio here).
     pub beep_on_error: bool,
-    /// `Culture` — the culture whose separators the mask uses. Stored as its name;
+    /// `Culture` - the culture whose separators the mask uses. Stored as its name;
     /// the port renders separators literally, so it is not-yet-honoured.
     pub culture: String,
-    /// `CutCopyMaskFormat` — what a clipboard copy includes. Stored; drives
+    /// `CutCopyMaskFormat` - what a clipboard copy includes. Stored; drives
     /// [`Self::clipboard_text`].
     pub cut_copy_mask_format: MaskFormat,
-    /// `HidePromptOnLeave` — hide the prompt when unfocused. Stored; the port has
+    /// `HidePromptOnLeave` - hide the prompt when unfocused. Stored; the port has
     /// no focus, so the prompt is always shown (documented).
     pub hide_prompt_on_leave: bool,
-    /// `InsertKeyMode` — insert vs. overwrite. State only.
+    /// `InsertKeyMode` - insert vs. overwrite. State only.
     pub insert_key_mode: InsertKeyMode,
-    /// `PasswordChar` — glyph shown for entered characters. Honoured in `paint`.
+    /// `PasswordChar` - glyph shown for entered characters. Honoured in `paint`.
     pub password_char: Option<char>,
-    /// `PromptChar` — the placeholder glyph for empty positions. Honoured.
+    /// `PromptChar` - the placeholder glyph for empty positions. Honoured.
     pub prompt_char: char,
-    /// `RejectInputOnFirstFailure` — stop feeding input at the first character that
+    /// `RejectInputOnFirstFailure` - stop feeding input at the first character that
     /// does not fit. Honoured by [`Self::set_text`].
     pub reject_input_on_first_failure: bool,
-    /// `ResetOnPrompt` — treat a typed prompt char as "skip this position".
+    /// `ResetOnPrompt` - treat a typed prompt char as "skip this position".
     /// Stored; affects live typing, which the port does not drive (documented).
     pub reset_on_prompt: bool,
-    /// `ResetOnSpace` — treat a typed space as "skip". Same status as above.
+    /// `ResetOnSpace` - treat a typed space as "skip". Same status as above.
     pub reset_on_space: bool,
-    /// `SkipLiterals` — let a typed literal that matches the mask advance past it.
+    /// `SkipLiterals` - let a typed literal that matches the mask advance past it.
     /// Same status as above.
     pub skip_literals: bool,
-    /// `TextAlign` — honoured in `paint`.
+    /// `TextAlign` - honoured in `paint`.
     pub text_align: HorizontalAlignment,
-    /// `TextMaskFormat` — what the `Text` property returns. Honoured by
+    /// `TextMaskFormat` - what the `Text` property returns. Honoured by
     /// [`Self::text`].
     pub text_mask_format: MaskFormat,
-    /// `UseSystemPasswordChar` — force the system glyph. Honoured in `paint`.
+    /// `UseSystemPasswordChar` - force the system glyph. Honoured in `paint`.
     pub use_system_password_char: bool,
 }
 
@@ -1158,7 +1158,7 @@ impl MaskedTextBox {
         &self.mask
     }
 
-    /// `Mask = value` — re-parse and clear the buffer to one empty slot per
+    /// `Mask = value` - re-parse and clear the buffer to one empty slot per
     /// editable position, exactly as assigning a new mask resets the toolkit's
     /// provider.
     pub fn set_mask(&mut self, mask: &str) {
@@ -1205,7 +1205,7 @@ impl MaskedTextBox {
         self.base.control.text = d;
     }
 
-    /// Formats the buffer under a [`MaskFormat`] — the arithmetic behind both
+    /// Formats the buffer under a [`MaskFormat`] - the arithmetic behind both
     /// `Text` and the clipboard, matching `MaskedTextProvider.ToString`.
     fn formatted(&self, fmt: MaskFormat) -> String {
         let (ip, il) = (fmt.include_prompt(), fmt.include_literals());
@@ -1232,7 +1232,7 @@ impl MaskedTextBox {
         out
     }
 
-    /// `Text` getter — the buffer formatted per `TextMaskFormat`. With no mask set,
+    /// `Text` getter - the buffer formatted per `TextMaskFormat`. With no mask set,
     /// it is just the raw text, like the toolkit.
     pub fn text(&self) -> String {
         if self.parsed.is_empty() {
@@ -1247,7 +1247,7 @@ impl MaskedTextBox {
         self.formatted(self.cut_copy_mask_format)
     }
 
-    /// `Text = value` — feed the characters through the mask, filling editable
+    /// `Text = value` - feed the characters through the mask, filling editable
     /// positions in order. A character that does not fit its position is skipped;
     /// with `RejectInputOnFirstFailure`, feeding stops at that character (the
     /// toolkit's documented behaviour). With no mask, falls back to the base setter.
@@ -1352,16 +1352,16 @@ impl Control for MaskedTextBox {
 // ═══════════════════════════════════════════════════════════════════════════════
 
 /// One styled span of a [`RichTextBox`]. The port models the *structure* RTF would
-/// carry — weight, slant, underline, colour — but does not parse or emit RTF.
+/// carry - weight, slant, underline, colour - but does not parse or emit RTF.
 #[derive(Clone)]
 pub struct StyledRun {
     pub text: String,
-    /// **Honoured** — the run is drawn in the system UI font's bold face
+    /// **Honoured** - the run is drawn in the system UI font's bold face
     /// (`SystemFonts::message_bold`, i.e. `lfMessageFont` at
     /// `DWRITE_FONT_WEIGHT_BOLD`), which is the same face and size as the plain
     /// text, only heavier.
     pub bold: bool,
-    /// **Honoured** — the run is drawn in the system UI font's italic face
+    /// **Honoured** - the run is drawn in the system UI font's italic face
     /// (`SystemFonts::message_italic`).
     ///
     /// It was not, for as long as this family painted with the shared
@@ -1372,11 +1372,11 @@ pub struct StyledRun {
     /// value carried for round-tripping.
     ///
     /// A run that is **both** bold and italic renders **bold**: the system
-    /// publishes no bold-italic face — `SystemFonts` builds three formats, not
-    /// four — and choosing the heavier of the two is visible where dropping both
+    /// publishes no bold-italic face - `SystemFonts` builds three formats, not
+    /// four - and choosing the heavier of the two is visible where dropping both
     /// would not be.
     pub italic: bool,
-    /// **Honoured** — drawn as a one-border-thick rule under the run, in the
+    /// **Honoured** - drawn as a one-border-thick rule under the run, in the
     /// run's colour.
     pub underline: bool,
     /// `None` = the control's foreground colour. **Honoured.**
@@ -1384,13 +1384,13 @@ pub struct StyledRun {
 }
 
 impl StyledRun {
-    /// A plain, unstyled run — the common case.
+    /// A plain, unstyled run - the common case.
     pub fn plain(text: impl Into<String>) -> Self {
         Self { text: text.into(), bold: false, italic: false, underline: false, color: None }
     }
 }
 
-/// `System.Windows.Forms.RichTextBox` — a multiline editor over styled runs.
+/// `System.Windows.Forms.RichTextBox` - a multiline editor over styled runs.
 ///
 /// It overrides several base defaults (`Multiline = true`, `AutoSize = false`,
 /// `MaxLength = int.MaxValue`) and adds its own scrollbar type, zoom, margins and
@@ -1402,22 +1402,22 @@ pub struct RichTextBox {
     /// The styled content. `Text` is the concatenation of these runs' text.
     pub runs: Vec<StyledRun>,
 
-    /// `AutoWordSelection` — auto-extend selection to whole words. State only.
+    /// `AutoWordSelection` - auto-extend selection to whole words. State only.
     pub auto_word_selection: bool,
-    /// `BulletIndent` — indent applied to bulleted paragraphs. Stored; paragraph
+    /// `BulletIndent` - indent applied to bulleted paragraphs. Stored; paragraph
     /// bullets are not modelled, so not-yet-honoured.
     pub bullet_indent: i32,
-    /// `DetectUrls` — auto-format URLs as links. Stored; not honoured (no link run).
+    /// `DetectUrls` - auto-format URLs as links. Stored; not honoured (no link run).
     pub detect_urls: bool,
-    /// `EnableAutoDragDrop` — drag/drop of rich content. State only.
+    /// `EnableAutoDragDrop` - drag/drop of rich content. State only.
     pub enable_auto_drag_drop: bool,
-    /// `RightMargin` — the right text margin in DIP. Stored; not-yet-honoured.
+    /// `RightMargin` - the right text margin in DIP. Stored; not-yet-honoured.
     pub right_margin: i32,
-    /// `ScrollBars` — the rich scrollbar set. Vertical is painted.
+    /// `ScrollBars` - the rich scrollbar set. Vertical is painted.
     pub scroll_bars: RichTextBoxScrollBars,
-    /// `ShowSelectionMargin` — a clickable margin on the left. Stored; not painted.
+    /// `ShowSelectionMargin` - a clickable margin on the left. Stored; not painted.
     pub show_selection_margin: bool,
-    /// `ZoomFactor` — display scale, `1.0` = normal. Stored; the port renders at
+    /// `ZoomFactor` - display scale, `1.0` = normal. Stored; the port renders at
     /// the shared font size, so zoom is not-yet-honoured (documented).
     pub zoom_factor: f32,
 }
@@ -1450,7 +1450,7 @@ impl RichTextBox {
         Self::default()
     }
 
-    /// `Text` getter — the runs concatenated. (Setting plain `Text` would replace
+    /// `Text` getter - the runs concatenated. (Setting plain `Text` would replace
     /// the runs with one plain run; provided as `set_plain_text`.)
     pub fn text(&self) -> String {
         self.runs.iter().map(|r| r.text.as_str()).collect()
@@ -1469,17 +1469,17 @@ impl RichTextBox {
         self.base.control.text = self.text();
     }
 
-    /// `RedoActionName` — no undo/redo stack is modelled, so this is empty.
+    /// `RedoActionName` - no undo/redo stack is modelled, so this is empty.
     pub fn redo_action_name(&self) -> &'static str {
         ""
     }
 
-    /// `UndoActionName` — see [`Self::redo_action_name`].
+    /// `UndoActionName` - see [`Self::redo_action_name`].
     pub fn undo_action_name(&self) -> &'static str {
         ""
     }
 
-    /// `SelectionType` — the port carries no embedded objects, so a non-empty
+    /// `SelectionType` - the port carries no embedded objects, so a non-empty
     /// selection is always `Text`.
     pub fn selection_type(&self) -> RichTextBoxSelectionTypes {
         if self.base.selection_length() > 0 {
@@ -1797,7 +1797,7 @@ mod tests {
     }
 
     /// `italic` is now painted (`SystemFonts::message_italic`), and it must still
-    /// survive a round-trip through the model — the pixels are checked against the
+    /// survive a round-trip through the model - the pixels are checked against the
     /// reference sheet, the storage here.
     #[test]
     fn italic_is_preserved_in_the_model() {

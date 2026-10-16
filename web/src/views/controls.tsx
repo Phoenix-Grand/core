@@ -147,7 +147,7 @@ function mount(render: (close: (r: DialogResult) => void) => ReactNode): Promise
   })
 }
 
-/** `await MessageBox.show(text, caption, buttons, icon)` — rendered with the host's `ConfirmDialog`. */
+/** `await MessageBox.show(text, caption, buttons, icon)` - rendered with the host's `ConfirmDialog`. */
 export const MessageBox = {
   show(text: string, caption = '', buttons: MessageBoxButtons = 'OK', icon: MessageBoxIcon = 'None'): Promise<DialogResult> {
     const Confirm = resolveComponent('@ui', 'ConfirmDialog')

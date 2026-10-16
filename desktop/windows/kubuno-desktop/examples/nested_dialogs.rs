@@ -1,6 +1,6 @@
 //! Modal dialogs opened from inside a frame: a ribbon command, a button in a dock panel, a button
 //! of the page. Each opens a tall dialog (a first control at its top, an action bar at its bottom)
-//! that must paint whole wherever it was opened from — a nested frame never inherits the clip of
+//! that must paint whole wherever it was opened from - a nested frame never inherits the clip of
 //! the container the command came from. A named `<DockPanel>` keeps its literal title, and its
 //! title can be changed from code.
 //!
@@ -54,7 +54,7 @@ impl BigDialog {
     fn ask(owner: &dyn AsForm, from: &str) -> DialogResult {
         let mut d = Self::default();
         d.initialize_component();
-        d.set_text(format!("Grande boîte — {from}"));
+        d.set_text(format!("Grande boîte - {from}"));
         d.show_dialog(owner)
     }
 

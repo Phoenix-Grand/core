@@ -1,6 +1,6 @@
 /**
  * Global host of the cross-module label picker (mounted once in App.tsx, like
- * PromptHost). Opens when `openLabelPicker(envelope)` is called from anywhere —
+ * PromptHost). Opens when `openLabelPicker(envelope)` is called from anywhere -
  * core pages or modules through the `core` service. Lets the user attach or
  * detach labels on the element, creating new labels inline.
  */
@@ -151,7 +151,7 @@ export default function LabelPickerHost() {
               )}
               {!filtered.length && !query.trim() && (
                 <p className="px-3 py-6 text-center text-xs text-text-tertiary">
-                  Aucune étiquette pour l'instant — tapez un nom pour en créer une.
+                  Aucune étiquette pour l'instant - tapez un nom pour en créer une.
                 </p>
               )}
             </>
@@ -159,7 +159,7 @@ export default function LabelPickerHost() {
         </div>
 
         {/* Attaching a SHARED label exposes this element to that label's managers
-            (its owner and any co-owner) — say so rather than let it surprise. */}
+            (its owner and any co-owner) - say so rather than let it surprise. */}
         {sharedChecked.length > 0 && (
           <p className="mx-5 mb-2 flex items-start gap-1.5 rounded-lg bg-warning-light px-2.5 py-2 text-[11px] text-text-secondary">
             <Info size={12} className="mt-0.5 flex-shrink-0" />

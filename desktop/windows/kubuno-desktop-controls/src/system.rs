@@ -1,4 +1,4 @@
-//! The **system** visuals — the colours, metrics and UI font Windows itself
+//! The **system** visuals - the colours, metrics and UI font Windows itself
 //! publishes, and the 3-D edge recipe that turns them into a WinForms border.
 //!
 //! ## Why this file exists
@@ -8,7 +8,7 @@
 //! `tools/winforms-ref/shots/` are painted by the real `System.Windows.Forms`
 //! on *this* machine. A replica that paints with the Kubuno palette and the
 //! embedded Outfit face can never match those sheets, however good it
-//! looks — it is answering a different question.
+//! looks - it is answering a different question.
 //!
 //! So every visual fact a control needs is **read from the system**, never
 //! written down here:
@@ -19,11 +19,11 @@
 //!   `SystemInformation` reads.
 //! * [`SystemFonts`] ← `SystemParametersInfoForDpi(SPI_GETNONCLIENTMETRICS)`,
 //!   whose `lfMessageFont` is what .NET Core's `Control.DefaultFont`
-//!   (`SystemFonts.MessageBoxFont`) resolves to — Segoe UI 9 pt on a default
+//!   (`SystemFonts.MessageBoxFont`) resolves to - Segoe UI 9 pt on a default
 //!   Windows 11, and whatever the user configured on a machine that is not.
 //!
 //! Hard-coding any of them would make the port right on one machine and wrong
-//! on every other, and — worse — would make it *silently* wrong, since the
+//! on every other, and - worse - would make it *silently* wrong, since the
 //! comparison would still be run against the local toolkit.
 //!
 //! ## Two unit systems meet here
@@ -31,7 +31,7 @@
 //! Win32 answers in **physical pixels**; the canvas draws in **DIP** (the
 //! `Renderer` calls `SetDpi`, so a rectangle at `y = 10.0` lands at 10 DIP).
 //! Every metric is therefore converted on the way in ([`metric_to_dip`]) and
-//! every field of [`SystemMetrics`] is already in DIP — a family never scales
+//! every field of [`SystemMetrics`] is already in DIP - a family never scales
 //! anything, exactly as `docs/AGENT_BRIEF.md` requires.
 
 use kubuno_drive_desktop_app_controls::geometry::Rect;
@@ -60,19 +60,19 @@ use windows::Win32::UI::WindowsAndMessaging::{
 // Colours
 // ─────────────────────────────────────────────────────────────────────────────
 
-/// A `COLORREF` — what `GetSysColor` returns — as a Direct2D colour.
+/// A `COLORREF` - what `GetSysColor` returns - as a Direct2D colour.
 ///
 /// **The byte order is the classic bug.** A `COLORREF` is `0x00BBGGRR`: the
 /// LOW byte is RED, not blue, which is the reverse of the `0x00RRGGBB` literal
 /// everyone writes by hand. Reading it as `0x00RRGGBB` compiles, runs, and
-/// silently swaps every colour's red and blue channels — a `ControlDark` grey
+/// silently swaps every colour's red and blue channels - a `ControlDark` grey
 /// still looks grey (its channels are equal), so the mistake hides until the
 /// first coloured system colour (`Highlight`, `HotTrack`) comes out orange
 /// instead of blue.
 ///
 /// The alpha byte of a `COLORREF` is *not* an alpha channel (it carries flags
 /// for `PALETTEINDEX`/`PALETTERGB`), so it is discarded and the result is fully
-/// opaque — which is what every system colour is.
+/// opaque - which is what every system colour is.
 pub fn colorref_to_d2d(colorref: u32) -> D2D1_COLOR_F {
     D2D1_COLOR_F {
         r: (colorref & 0xFF) as f32 / 255.0,
@@ -86,43 +86,43 @@ pub fn colorref_to_d2d(colorref: u32) -> D2D1_COLOR_F {
 ///
 /// The names are .NET's (`System.Drawing.SystemColors`), not Win32's, because
 /// that is the vocabulary the catalogue and the toolkit's own painting code
-/// use — `ControlDark` rather than `COLOR_BTNSHADOW`. The Win32 index each one
+/// use - `ControlDark` rather than `COLOR_BTNSHADOW`. The Win32 index each one
 /// reads is named in its doc comment so the mapping stays checkable.
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct SystemColors {
-    /// `COLOR_BTNFACE` — the face of every button, panel and dialog.
+    /// `COLOR_BTNFACE` - the face of every button, panel and dialog.
     pub control:             D2D1_COLOR_F,
-    /// `COLOR_BTNTEXT` — text on a `Control`-coloured surface.
+    /// `COLOR_BTNTEXT` - text on a `Control`-coloured surface.
     pub control_text:        D2D1_COLOR_F,
-    /// `COLOR_BTNSHADOW` — the inner half of a sunken/raised bevel.
+    /// `COLOR_BTNSHADOW` - the inner half of a sunken/raised bevel.
     pub control_dark:        D2D1_COLOR_F,
-    /// `COLOR_3DDKSHADOW` — the outer, darkest ring of a bevel.
+    /// `COLOR_3DDKSHADOW` - the outer, darkest ring of a bevel.
     pub control_dark_dark:   D2D1_COLOR_F,
-    /// `COLOR_3DLIGHT` — the lighter of the two highlights.
+    /// `COLOR_3DLIGHT` - the lighter of the two highlights.
     pub control_light:       D2D1_COLOR_F,
-    /// `COLOR_BTNHIGHLIGHT` — the brightest highlight (white by default).
+    /// `COLOR_BTNHIGHLIGHT` - the brightest highlight (white by default).
     pub control_light_light: D2D1_COLOR_F,
-    /// `COLOR_WINDOW` — the field background of a text box, list or tree.
+    /// `COLOR_WINDOW` - the field background of a text box, list or tree.
     pub window:              D2D1_COLOR_F,
-    /// `COLOR_WINDOWTEXT` — text on a `Window`-coloured surface.
+    /// `COLOR_WINDOWTEXT` - text on a `Window`-coloured surface.
     pub window_text:         D2D1_COLOR_F,
-    /// `COLOR_WINDOWFRAME` — the flat 1 px frame of `BorderStyle::FixedSingle`.
+    /// `COLOR_WINDOWFRAME` - the flat 1 px frame of `BorderStyle::FixedSingle`.
     pub window_frame:        D2D1_COLOR_F,
-    /// `COLOR_HIGHLIGHT` — selection background.
+    /// `COLOR_HIGHLIGHT` - selection background.
     pub highlight:           D2D1_COLOR_F,
-    /// `COLOR_HIGHLIGHTTEXT` — text over a selection.
+    /// `COLOR_HIGHLIGHTTEXT` - text over a selection.
     pub highlight_text:      D2D1_COLOR_F,
-    /// `COLOR_GRAYTEXT` — the one colour a disabled control paints its text in.
+    /// `COLOR_GRAYTEXT` - the one colour a disabled control paints its text in.
     pub gray_text:           D2D1_COLOR_F,
     /// `COLOR_INACTIVEBORDER`.
     pub inactive_border:     D2D1_COLOR_F,
-    /// `COLOR_APPWORKSPACE` — the MDI client area behind child forms.
+    /// `COLOR_APPWORKSPACE` - the MDI client area behind child forms.
     pub app_workspace:       D2D1_COLOR_F,
-    /// `COLOR_INFOBK` — tooltip background.
+    /// `COLOR_INFOBK` - tooltip background.
     pub info_background:     D2D1_COLOR_F,
-    /// `COLOR_INFOTEXT` — tooltip text.
+    /// `COLOR_INFOTEXT` - tooltip text.
     pub info_text:           D2D1_COLOR_F,
-    /// `COLOR_MENUBAR` — the `MenuStrip` band (distinct from `COLOR_MENU`,
+    /// `COLOR_MENUBAR` - the `MenuStrip` band (distinct from `COLOR_MENU`,
     /// which is the drop-down's background).
     pub menu_bar:            D2D1_COLOR_F,
     /// `COLOR_MENUTEXT`.
@@ -131,16 +131,16 @@ pub struct SystemColors {
     /// field because the toolkit exposes both and a family should be free to
     /// name the one it means.
     pub button_shadow:       D2D1_COLOR_F,
-    /// `COLOR_BTNHIGHLIGHT` again — see [`SystemColors::button_shadow`].
+    /// `COLOR_BTNHIGHLIGHT` again - see [`SystemColors::button_shadow`].
     pub button_highlight:    D2D1_COLOR_F,
-    /// `COLOR_HOTLIGHT` — the hyperlink / hot-tracked colour.
+    /// `COLOR_HOTLIGHT` - the hyperlink / hot-tracked colour.
     pub hot_track:           D2D1_COLOR_F,
 }
 
 impl SystemColors {
     /// Reads the whole set from Windows.
     ///
-    /// Not DPI-dependent — colours are the same at every scale — so this is
+    /// Not DPI-dependent - colours are the same at every scale - so this is
     /// read once per [`Visuals`] and never per frame.
     pub fn read() -> Self {
         let c = |index: SYS_COLOR_INDEX| colorref_to_d2d(unsafe { GetSysColor(index) });
@@ -177,7 +177,7 @@ impl SystemColors {
 /// A `GetSystemMetricsForDpi` answer, in **physical pixels**, converted to the
 /// **DIP** the canvas draws in.
 ///
-/// `GetSystemMetricsForDpi(SM_CXVSCROLL, 120)` returns 21 — twenty-one *device*
+/// `GetSystemMetricsForDpi(SM_CXVSCROLL, 120)` returns 21 - twenty-one *device*
 /// pixels. The Direct2D space is already scaled, so drawing `21.0` there would
 /// produce 26 device pixels at 125 %. The honest value is `21 * 96 / 120 =
 /// 16.8` DIP, which lands back on 21 device pixels.
@@ -198,37 +198,37 @@ pub fn metric_to_dip(px: i32, dpi: f32) -> f32 {
 /// values whatever monitor the window is on.
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct SystemMetrics {
-    /// The DPI these metrics were read at — [`Visuals`] compares it to decide
+    /// The DPI these metrics were read at - [`Visuals`] compares it to decide
     /// whether it must be rebuilt.
     pub dpi: f32,
 
-    /// `SM_CXVSCROLL` — the width of a vertical scroll bar (17 DIP at 96).
+    /// `SM_CXVSCROLL` - the width of a vertical scroll bar (17 DIP at 96).
     pub vertical_scroll_width:    f32,
-    /// `SM_CYHSCROLL` — the height of a horizontal scroll bar.
+    /// `SM_CYHSCROLL` - the height of a horizontal scroll bar.
     pub horizontal_scroll_height: f32,
-    /// `SM_CXHSCROLL` — the width of a horizontal scroll bar's **arrow
+    /// `SM_CXHSCROLL` - the width of a horizontal scroll bar's **arrow
     /// button**. Deliberately not the bar's own width: the X/Y pairing is
     /// inverted for the arrow metrics, which is why both are carried.
     pub horizontal_arrow_width:   f32,
-    /// `SM_CYVSCROLL` — the height of a vertical scroll bar's arrow button.
+    /// `SM_CYVSCROLL` - the height of a vertical scroll bar's arrow button.
     pub vertical_arrow_height:    f32,
 
-    /// `SM_CXBORDER` — one window border, the thinnest line the system draws.
+    /// `SM_CXBORDER` - one window border, the thinnest line the system draws.
     pub border_width:       f32,
     /// `SM_CYBORDER`.
     pub border_height:      f32,
-    /// `SM_CXEDGE` — a 3-D edge, i.e. two `SM_CXBORDER` rings.
+    /// `SM_CXEDGE` - a 3-D edge, i.e. two `SM_CXBORDER` rings.
     pub edge_width:         f32,
     /// `SM_CYEDGE`.
     pub edge_height:        f32,
-    /// `SM_CXFOCUSBORDER` — the focus-rectangle line width.
+    /// `SM_CXFOCUSBORDER` - the focus-rectangle line width.
     pub focus_border_width: f32,
     /// `SM_CYFOCUSBORDER`.
     pub focus_border_height: f32,
 
-    /// `SM_CYMENU` — the height of a single-line menu bar.
+    /// `SM_CYMENU` - the height of a single-line menu bar.
     pub menu_height:      f32,
-    /// `SM_CXMENUCHECK` — the check-mark cell in a menu item.
+    /// `SM_CXMENUCHECK` - the check-mark cell in a menu item.
     pub menu_check_width: f32,
     /// `SM_CYMENUCHECK`.
     pub menu_check_height: f32,
@@ -270,7 +270,7 @@ impl SystemMetrics {
 /// height (the em size), which is what both `CreateFont` and DirectWrite mean by
 /// « font size ». A positive value would be the *cell* height, em size plus
 /// internal leading, which cannot be converted back without the face's own
-/// metrics — see [`logfont_height_to_dip`] for what is done in that case.
+/// metrics - see [`logfont_height_to_dip`] for what is done in that case.
 ///
 /// The magnitude is in logical units at the DPI of the query, so
 /// `points = -lfHeight * 72 / dpi`. The default Windows 11 message font is
@@ -283,7 +283,7 @@ pub fn logfont_height_to_points(lf_height: i32, dpi: f32) -> f32 {
 ///
 /// `dip = -lfHeight * 96 / dpi`, i.e. the point size times 96/72. The default
 /// Windows 11 message font (`lfHeight = -12` at 96 DPI, Segoe UI 9 pt) gives
-/// `12 * 96 / 96 = 12.0` DIP — the number WinForms measures every control
+/// `12 * 96 / 96 = 12.0` DIP - the number WinForms measures every control
 /// against, and the one the unit test below pins.
 ///
 /// A **positive** `lfHeight` is treated as if it were negative. It is a cell
@@ -299,7 +299,7 @@ pub fn logfont_height_to_dip(lf_height: i32, dpi: f32) -> f32 {
 /// formats.
 ///
 /// On .NET Core / .NET 5+, `Control.DefaultFont` is `SystemFonts.MessageBoxFont`
-/// — `NONCLIENTMETRICS.lfMessageFont`. That is what every reference sheet was
+/// - `NONCLIENTMETRICS.lfMessageFont`. That is what every reference sheet was
 /// rendered with, so it is what the port measures and paints with.
 #[derive(Clone, Debug)]
 pub struct SystemFonts {
@@ -310,14 +310,14 @@ pub struct SystemFonts {
     /// The resolved size in **points** (`9.0` on a default Windows 11), for the
     /// same reason.
     pub point_size: f32,
-    /// The same size in DIP — `point_size * 96 / 72`, `12.0` by default.
+    /// The same size in DIP - `point_size * 96 / 72`, `12.0` by default.
     pub size_dip:   f32,
     /// `lfWeight` as read (400 = normal).
     pub weight:     i32,
 
     /// The message font: what a control paints its `Text` with.
     pub message:        IDWriteTextFormat,
-    /// The message font at bold weight — `MonthCalendar`'s bolded days, a
+    /// The message font at bold weight - `MonthCalendar`'s bolded days, a
     /// `ToolStripStatusLabel` marked so, a `TabPage` header.
     pub message_bold:   IDWriteTextFormat,
     /// The message font in italic, for the few controls that offer it.
@@ -330,7 +330,7 @@ impl SystemFonts {
     /// `SystemParametersInfoForDpi` rather than `SystemParametersInfoW`: the
     /// non-DPI form answers for the system DPI, so on a 168 DPI monitor the font
     /// would come back sized for 96 while [`SystemMetrics`] came back sized for
-    /// 168 — text and metrics disagreeing is exactly the failure this crate
+    /// 168 - text and metrics disagreeing is exactly the failure this crate
     /// exists to avoid.
     pub fn read(dwrite: &IDWriteFactory, dpi: f32) -> Result<Self> {
         let dpi = dpi.max(1.0);
@@ -372,7 +372,7 @@ impl SystemFonts {
 /// query fails (which [`SystemFonts::read`] turns into the documented default).
 fn message_logfont(dpi: f32) -> LOGFONTW {
     let mut ncm = NONCLIENTMETRICSW {
-        // Windows validates `cbSize` and refuses the call without it — the
+        // Windows validates `cbSize` and refuses the call without it - the
         // struct grew a field (`iPaddedBorderWidth`) in Vista and the size is
         // how the kernel knows which shape it is filling.
         cbSize: std::mem::size_of::<NONCLIENTMETRICSW>() as u32,
@@ -400,7 +400,7 @@ fn face_name(lf: &LOGFONTW) -> String {
 }
 
 /// The user's locale, which DirectWrite uses for font fallback and shaping.
-/// Falls back to `en-us` — the value every DirectWrite sample passes — rather
+/// Falls back to `en-us` - the value every DirectWrite sample passes - rather
 /// than an empty string, which the API rejects.
 fn user_locale() -> String {
     use windows::Win32::Globalization::GetUserDefaultLocaleName;
@@ -470,7 +470,7 @@ impl Visuals {
     }
 
     /// Whether they are still valid for `dpi`. The host asks this every frame
-    /// rather than trusting `WM_DPICHANGED` alone — a paint can arrive before
+    /// rather than trusting `WM_DPICHANGED` alone - a paint can arrive before
     /// the message does, and stale metrics are invisible until something is
     /// measured a pixel wrong.
     pub fn matches_dpi(&self, dpi: f32) -> bool {
@@ -482,7 +482,7 @@ impl Visuals {
 // 3-D edges
 // ─────────────────────────────────────────────────────────────────────────────
 
-/// `System.Windows.Forms.Border3DStyle` — the shapes `ControlPaint.DrawBorder3D`
+/// `System.Windows.Forms.Border3DStyle` - the shapes `ControlPaint.DrawBorder3D`
 /// (and, under it, Win32's `DrawEdge`) can draw.
 ///
 /// A WinForms border is not a stroke: it is **two concentric one-pixel rings**,
@@ -491,33 +491,33 @@ impl Visuals {
 /// it is why the rounded strokes this library already had could not express it.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum Border3DStyle {
-    /// `BF_ADJUST` — draws nothing. Kept because it is a real member of the
+    /// `BF_ADJUST` - draws nothing. Kept because it is a real member of the
     /// enum: a caller passes it to ask for the geometry without the paint.
     Adjust,
-    /// `EDGE_BUMP` — raised outer, sunken inner: a ridge.
+    /// `EDGE_BUMP` - raised outer, sunken inner: a ridge.
     Bump,
-    /// `EDGE_ETCHED` — sunken outer, raised inner: the engraved line a
+    /// `EDGE_ETCHED` - sunken outer, raised inner: the engraved line a
     /// `GroupBox` frames itself with.
     Etched,
-    /// `BF_FLAT` — a single flat ring, no bevel.
+    /// `BF_FLAT` - a single flat ring, no bevel.
     Flat,
-    /// `EDGE_RAISED` — raised outer *and* inner: a resting `Button`.
+    /// `EDGE_RAISED` - raised outer *and* inner: a resting `Button`.
     #[default]
     Raised,
     /// `BDR_RAISEDINNER` alone.
     RaisedInner,
     /// `BDR_RAISEDOUTER` alone.
     RaisedOuter,
-    /// `EDGE_SUNKEN` — sunken outer *and* inner: a `TextBox`'s `Fixed3D` well,
+    /// `EDGE_SUNKEN` - sunken outer *and* inner: a `TextBox`'s `Fixed3D` well,
     /// and a pressed `Button`.
     Sunken,
     /// `BDR_SUNKENINNER` alone.
     SunkenInner,
-    /// `BDR_SUNKENOUTER` alone — the single-ring inset of a `ComboBox` button.
+    /// `BDR_SUNKENOUTER` alone - the single-ring inset of a `ComboBox` button.
     SunkenOuter,
 }
 
-/// `System.Windows.Forms.Border3DSide` — which sides of the box the edge is
+/// `System.Windows.Forms.Border3DSide` - which sides of the box the edge is
 /// drawn on. `ALL` is what a framed control wants; the single sides exist for
 /// separators, which are one etched line rather than a box.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -541,7 +541,7 @@ impl Default for Border3DSide {
     }
 }
 
-/// The four colours a 3-D edge is painted with — outer and inner ring, each
+/// The four colours a 3-D edge is painted with - outer and inner ring, each
 /// split into its light side (top + left) and its dark side (bottom + right).
 ///
 /// `None` means « this ring is not drawn », which is how a single-ring style
@@ -555,7 +555,7 @@ pub struct Edge3D {
 }
 
 impl Edge3D {
-    /// How many one-pixel rings this edge actually paints — 0, 1 or 2. The
+    /// How many one-pixel rings this edge actually paints - 0, 1 or 2. The
     /// caller deflates by this many pixels to find the interior.
     pub fn rings(&self) -> u32 {
         u32::from(self.outer_light.is_some() || self.outer_dark.is_some())
@@ -566,7 +566,7 @@ impl Edge3D {
 /// The two-tone recipe for each style, from the system colours.
 ///
 /// The mapping is the classic (non-themed) `DrawEdge` one, stated per `BDR_*`
-/// flag rather than per composite style — which is how the four composite
+/// flag rather than per composite style - which is how the four composite
 /// `EDGE_*` styles stay consistent with the four single-ring ones:
 ///
 /// | flag | top + left | bottom + right |
@@ -578,7 +578,7 @@ impl Edge3D {
 ///
 /// Cross-checked against the two edges whose appearance is unmistakable:
 /// `Etched` (sunken outer + raised inner) comes out as a dark line with a white
-/// line under it — the `GroupBox` groove — and `Sunken` comes out as the
+/// line under it - the `GroupBox` groove - and `Sunken` comes out as the
 /// dark-then-darker inset of a `Fixed3D` text box.
 pub fn edge_colors(colors: &SystemColors, style: Border3DStyle) -> Edge3D {
     let raised_outer = (colors.control_light, colors.control_dark_dark);
@@ -615,7 +615,7 @@ pub fn edge_colors(colors: &SystemColors, style: Border3DStyle) -> Edge3D {
     }
 }
 
-/// `rect` shrunk by `rings` one-physical-pixel rings — the interior a 3-D edge
+/// `rect` shrunk by `rings` one-physical-pixel rings - the interior a 3-D edge
 /// leaves behind, which is what `DrawEdge` reports under `BF_ADJUST`.
 ///
 /// `scale` is the canvas's, so the inset is one *device* pixel per ring however
@@ -652,7 +652,7 @@ mod tests {
         assert_eq!(mixed.b, 0x56 as f32 / 255.0);
     }
 
-    /// Reading it as `0x00RRGGBB` — the literal form everyone types — must give
+    /// Reading it as `0x00RRGGBB` - the literal form everyone types - must give
     /// a DIFFERENT answer, or the test above proves nothing.
     #[test]
     fn reading_a_colorref_as_rgb_would_swap_red_and_blue() {
@@ -666,7 +666,7 @@ mod tests {
         // 96 DPI: the two units coincide.
         assert_eq!(metric_to_dip(17, 96.0), 17.0);
         // 120 DPI (125 %): the system reports 21 px for SM_CXVSCROLL, which is
-        // 16.8 DIP — drawing 21.0 there would give 26 device pixels.
+        // 16.8 DIP - drawing 21.0 there would give 26 device pixels.
         assert!((metric_to_dip(21, 120.0) - 16.8).abs() < 1e-4);
         // 168 DPI (175 %): 30 px is 17.142… DIP.
         assert!((metric_to_dip(30, 168.0) - 30.0 * 96.0 / 168.0).abs() < 1e-4);
@@ -689,7 +689,7 @@ mod tests {
 
     /// The same 9 pt font read at a higher DPI comes back with a bigger
     /// `lfHeight`, and must convert back to the SAME point size and the same
-    /// DIP size — that is what makes text and metrics agree at any scale.
+    /// DIP size - that is what makes text and metrics agree at any scale.
     #[test]
     fn the_logfont_height_is_dpi_relative() {
         // 9 pt at 120 DPI: -MulDiv(9, 120, 72) = -15.
@@ -768,9 +768,9 @@ mod tests {
 
     /// The one test that talks to Windows.
     ///
-    /// It needs no device, no window and no COM apartment — a DirectWrite
+    /// It needs no device, no window and no COM apartment - a DirectWrite
     /// factory, `GetSysColor` and `SystemParametersInfoForDpi` are all
-    /// available to a bare test binary — so it belongs here rather than in a
+    /// available to a bare test binary - so it belongs here rather than in a
     /// harness. It asserts INVARIANTS rather than values: the point is that the
     /// read wired up correctly, not that this machine is configured like any
     /// other. `cargo test -- --nocapture` prints what it actually found.
@@ -807,7 +807,7 @@ mod tests {
         assert!(v.matches_dpi(96.0) && !v.matches_dpi(120.0));
 
         // The same read at 168 DPI must give the SAME point size (the font is a
-        // user preference, not a scale) and LARGER physical metrics — expressed
+        // user preference, not a scale) and LARGER physical metrics - expressed
         // in DIP they stay within a pixel of the 96 DPI answer.
         let hi = Visuals::read(&dwrite, 168.0).expect("system visuals at 168 dpi");
         assert!((hi.fonts.point_size - v.fonts.point_size).abs() < 0.5);

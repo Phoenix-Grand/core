@@ -1,7 +1,7 @@
 //! Parse errors + validator findings → LSP `Diagnostic`s.
 //!
-//! `XML_VIEWS.md` §5: "The same diagnostic — file + `TextRange` from the
-//! lossless parser — is handed to the language server as an LSP
+//! `XML_VIEWS.md` §5: "The same diagnostic - file + `TextRange` from the
+//! lossless parser - is handed to the language server as an LSP
 //! `Diagnostic`, so the in-app overlay and VS's Error List report the exact
 //! same error from one computation, never two." This module is that single
 //! conversion point: [`kubuno_desktop_views::syntax::Parse::diagnostics`] (recovered
@@ -16,12 +16,12 @@ use lsp_types::{Diagnostic, DiagnosticSeverity, NumberOrString, Position, Range}
 
 use crate::documents::Document;
 
-/// The LSP diagnostic "source" field — what shows up in an editor's problem
+/// The LSP diagnostic "source" field - what shows up in an editor's problem
 /// list next to the message (`"kubuno-desktop-views (rust-analyzer)"`-style tagging).
 const SOURCE: &str = "kubuno-desktop-views";
 
 /// Converts one document's parse + validation diagnostics to LSP form, in
-/// the order the parser/validator produced them (parse errors first — a
+/// the order the parser/validator produced them (parse errors first - a
 /// validator finding on a badly parsed element is still useful context, so
 /// neither list gates the other, matching `XML_VIEWS.md` §5's "must not
 /// blank the screen" framing carried over to diagnostics: show everything
@@ -60,7 +60,7 @@ fn to_lsp(doc: &Document, d: &KvDiagnostic, severity: DiagnosticSeverity) -> Dia
     let start = doc.position_index.offset_to_position(&doc.text, d.range.start());
     let end = doc.position_index.offset_to_position(&doc.text, d.range.end());
     // A parser/validator range is occasionally empty (an EOF diagnostic with
-    // nothing left to underline, or a malformed value's degenerate range) —
+    // nothing left to underline, or a malformed value's degenerate range) -
     // widen it by one UTF-16 unit so an editor still renders a visible
     // squiggle rather than an invisible zero-width one, without touching the
     // range the `kubuno-desktop-views` diagnostic itself carries (only the LSP
@@ -83,7 +83,7 @@ fn to_lsp(doc: &Document, d: &KvDiagnostic, severity: DiagnosticSeverity) -> Dia
 /// so a diagnostic at true end-of-file never produces an out-of-range range.
 fn widen_by_one(text: &str, pos: Position) -> Position {
     if pos.character < u32::MAX {
-        // The exact character count of this line is not recomputed here —
+        // The exact character count of this line is not recomputed here -
         // clients treat a `character` past the line's actual end as "end of
         // line" per the LSP spec, so simply incrementing is safe and avoids
         // re-deriving line length from `text` (kept `text`-parametrised only
@@ -133,7 +133,7 @@ mod tests {
     #[test]
     fn parse_error_and_validator_finding_can_both_be_reported() {
         // Mismatched end tag (parser accepts it, walks it as an ordinary
-        // element per `ast`'s own test) combined with an unknown attribute —
+        // element per `ast`'s own test) combined with an unknown attribute -
         // both diagnostic sources fire on the same small file.
         let d = doc(r#"<Button Colour="red"></Switch>"#);
         let diags = document_diagnostics(&d);
@@ -144,7 +144,7 @@ mod tests {
     #[test]
     fn range_uses_utf16_positions_past_multibyte_text() {
         // `Placeholder` value contains multibyte text before the typo'd
-        // enum value — this test would fail with a byte-based column.
+        // enum value - this test would fail with a byte-based column.
         let d = doc(r#"<Button Text="héllo" Variant="Primmary"/>"#);
         let diags = document_diagnostics(&d);
         assert_eq!(diags.len(), 1);

@@ -4,7 +4,7 @@
 //!
 //! Every other trend in the console is counted from an events table: sign-ups
 //! are rows of `core.users` grouped by `created_at`. Consumption has no such
-//! table — `core.users.used_bytes` is a **level**, overwritten in place by
+//! table - `core.users.used_bytes` is a **level**, overwritten in place by
 //! whichever module stored the bytes. A level that is only ever overwritten has
 //! no past to reconstruct, so the past has to be written down as it happens.
 //!
@@ -15,7 +15,7 @@
 //! five times in an afternoon still leaves exactly one point on the curve, and
 //! two core processes sampling at once settle on the same row instead of
 //! racing. The value kept for a day is therefore its **last** reading, which is
-//! the honest one — a curve of daily maxima would report peaks the instance was
+//! the honest one - a curve of daily maxima would report peaks the instance was
 //! never at when somebody looked.
 //!
 //! ## Gaps are left as gaps

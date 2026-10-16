@@ -1,4 +1,4 @@
-<!-- ReportDocument — converted from ReportDocument.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- ReportDocument - converted from ReportDocument.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="ReportDocumentProps">
   <Panel>
     <!-- TODO(views-migrate): <div ref>: attribute(s) without a .kbview property -->

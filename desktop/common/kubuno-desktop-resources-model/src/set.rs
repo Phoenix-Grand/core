@@ -1,5 +1,5 @@
 //! A resource set: a neutral file (`resources.kbres`) and its satellites (`resources.fr.kbres`,
-//! `resources.de-DE.kbres`) in the same folder — what one `resources!` call embeds, and what the
+//! `resources.de-DE.kbres`) in the same folder - what one `resources!` call embeds, and what the
 //! designer and the language server load. Also the cross-file checks (missing translations,
 //! satellite entries the neutral file does not have, kind mismatches).
 
@@ -24,7 +24,7 @@ pub struct SetFiles {
     pub satellites: Vec<Satellite>,
 }
 
-/// The set a `.kbres` file belongs to — `path` may be the neutral file or one of its satellites.
+/// The set a `.kbres` file belongs to - `path` may be the neutral file or one of its satellites.
 /// `None` when the name is not a `.kbres` name.
 pub fn discover(path: &Path) -> Option<SetFiles> {
     let file_name = path.file_name()?.to_str()?;

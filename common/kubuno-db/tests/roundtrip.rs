@@ -1,5 +1,5 @@
 //! Exercises the foundation itself against a real server of each engine, from
-//! a single compiled binary — the proof that the engine is a run-time choice.
+//! a single compiled binary - the proof that the engine is a run-time choice.
 //!
 //! * SQLite always runs (a temp file, no server).
 //! * PostgreSQL runs when `KUBUNO_PG_TEST_URL` points at a throwaway database.

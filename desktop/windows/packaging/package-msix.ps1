@@ -1,5 +1,5 @@
 <#
-  package-msix.ps1 — builds a Microsoft Store-ready MSIX for Kubuno Desktop.
+  package-msix.ps1 - builds a Microsoft Store-ready MSIX for Kubuno Desktop.
 
   Run on Windows (MSIX tooling is Windows-only). Requires the Windows 10/11 SDK
   (provides makeappx.exe + signtool.exe).

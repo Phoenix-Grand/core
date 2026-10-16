@@ -1,4 +1,4 @@
-<!-- RulesSection — converted from RulesSection.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- RulesSection - converted from RulesSection.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <Panel x:Props="AdminSectionProps" Class="contents">
   <RuleEditor RuleId="{Binding ruleEditorRuleId}" InitialPane="{Binding pane}" CanWrite="{Binding canWrite}" OnClose="rule_editor_close" Visible="{Binding show_case_1}"/>
   <Panel Visible="{Binding show_main}" Class="min-w-0">

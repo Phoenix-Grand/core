@@ -1,7 +1,7 @@
 //! The extractor a sensitive handler takes instead of [`AuthUser`].
 //!
 //! It authenticates exactly like `AuthUser` and then adds one condition: the
-//! caller must have proved presence recently — either by presenting a re-auth
+//! caller must have proved presence recently - either by presenting a re-auth
 //! token in `X-Reauth-Token`, or by being inside the grace window opened by an
 //! earlier proof.
 //!
@@ -27,8 +27,8 @@ pub const REAUTH_HEADER: &str = "x-reauth-token";
 /// An authenticated caller that is a **person**, not a program.
 ///
 /// Used by the challenge routes themselves. Letting a personal API token mint a
-/// re-auth proof would hand every sensitive action to whoever holds the token —
-/// the exact outcome step-up exists to prevent — so the refusal is enforced at
+/// re-auth proof would hand every sensitive action to whoever holds the token -
+/// the exact outcome step-up exists to prevent - so the refusal is enforced at
 /// the door rather than checked again in each handler.
 pub struct HumanUser(pub User);
 
@@ -132,7 +132,7 @@ async fn presented_proof(
 }
 
 /// Records the refusal. A sensitive action attempted without a fresh proof is a
-/// signal in its own right — the same reasoning that puts refused administrative
+/// signal in its own right - the same reasoning that puts refused administrative
 /// calls in the trail.
 async fn record(state: &AppState, parts: &Parts, user: &User, reason: &str) {
     let ctx = context_from(parts, user);

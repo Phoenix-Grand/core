@@ -1,6 +1,6 @@
 <!--
   One label of the labels page (the item template of its Repeater): its colour, its name, how many items
-  carry it, and — when it is someone else's — who shared it. A label the user may manage has a delete
+  carry it, and - when it is someone else's - who shared it. A label the user may manage has a delete
   button, and its palette before the count while the row is selected (the current colour ringed). The
   swatches and the button raise ColourRequested / DeleteRequested, which the page handles with the item.
 -->

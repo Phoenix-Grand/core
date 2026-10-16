@@ -1,6 +1,6 @@
 /**
  * The data of the shell's user controls `WaffleMenu` and `AccountMenu`, and the services a host may hand
- * them — the web side of the shared contract (vskubuno `docs/SHELL-CONTROLS.md`): the same names and shapes
+ * them - the web side of the shared contract (vskubuno `docs/SHELL-CONTROLS.md`): the same names and shapes
  * as the desktop's `kubuno-header` crate, plus the web-only fields marked below.
  */
 import type { ComponentType } from 'react'

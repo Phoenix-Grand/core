@@ -6,12 +6,12 @@ import Nothing from './Nothing'
 import ReportBlock from './ReportBlock'
 
 /**
- * The records behind the figure — who, when, what.
+ * The records behind the figure - who, when, what.
  *
  * ## Why a total and a curve are not a report
  *
- * "47 échecs de connexion" is a counter. The question it provokes — *which
- * accounts* — is the one an operator actually has to answer, and until this
+ * "47 échecs de connexion" is a counter. The question it provokes - *which
+ * accounts* - is the one an operator actually has to answer, and until this
  * section existed the document could not. A chart shows a shape, a breakdown
  * shows proportions; only a list of the underlying records lets somebody act,
  * and a report is written for somebody who was not in the room and cannot ask.
@@ -20,7 +20,7 @@ import ReportBlock from './ReportBlock'
  *
  * The columns are the server's, not this file's: it declares them per SOURCE
  * TABLE (`handlers/admin/detail.rs`) and this component renders whatever it is
- * handed. That is deliberate — a console inventing headings would eventually
+ * handed. That is deliberate - a console inventing headings would eventually
  * name a column the server never meant to publish. No password, no token, no
  * hash and no fingerprint reaches this table, by construction on that side.
  *
@@ -95,7 +95,7 @@ export function useDetailItem(model: ReportModel, total: number): FlowItem | nul
       </tr>
     ),
     rows: detail.rows.map((row, r) => (
-      // No stable key exists — the server sends facts, not identities, and it
+      // No stable key exists - the server sends facts, not identities, and it
       // is right not to publish a row id nobody would use. The index is honest
       // here: the list is read-only, never reordered and never filtered.
       <tr key={r}>
@@ -105,7 +105,7 @@ export function useDetailItem(model: ReportModel, total: number): FlowItem | nul
             className={
               // A timestamp is read as one thing and never broken across two
               // lines. An identifier is typed rather than read, so its digits
-              // line up down the column — but it MAY wrap: a column that
+              // line up down the column - but it MAY wrap: a column that
               // refuses to narrow pushes the table off the edge of the sheet,
               // and a clipped address is worse than a wrapped one.
               detail.kinds[c] === 'instant'
@@ -115,7 +115,7 @@ export function useDetailItem(model: ReportModel, total: number): FlowItem | nul
                   : CELL
             }
           >
-            {cell ?? '—'}
+            {cell ?? '-'}
           </td>
         ))}
       </tr>

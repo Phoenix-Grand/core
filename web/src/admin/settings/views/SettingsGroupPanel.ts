@@ -24,9 +24,9 @@ interface Props {
   tab: string
   /**
    * How the block sits in its page.
-   *   • `standalone` — the block IS the page (a pure-settings leaf). One
+   *   • `standalone` - the block IS the page (a pure-settings leaf). One
    *     readable column, whatever the count.
-   *   • `tab` — the block is the "Réglages" tab beside a subsystem's content.
+   *   • `tab` - the block is the "Réglages" tab beside a subsystem's content.
    *     It takes the full width the content established, and flows its
    *     categories into two columns once there are enough to fill them.
    * The block never wears a heading of its own: the page title or the tab
@@ -141,7 +141,7 @@ export class SettingsGroupPanel extends ViewBase {
         }
       }
     
-      // The page of last resort collects whatever no page claims — a key added to
+      // The page of last resort collects whatever no page claims - a key added to
       // the core, or declared by a module, without an entry in the cartography.
       // Grouped by its declared category, which is all that is known about it.
       if (this.props.tab === FALLBACK_TAB) {
@@ -310,7 +310,7 @@ export class SettingsGroupPanel extends ViewBase {
     await this.queryClient.invalidateQueries({ queryKey: ['admin-settings-resolved'] })
     await this.queryClient.invalidateQueries({ queryKey: ['setting-chain'] })
     // The CAPTCHA preview reads the SAVED configuration; refresh it once a write
-    // has landed, so switching the type — or tuning it — updates the example.
+    // has landed, so switching the type - or tuning it - updates the example.
     await this.queryClient.invalidateQueries({ queryKey: ['captcha-preview'] })
     this.edits = {}
   }

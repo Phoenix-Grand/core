@@ -5,7 +5,7 @@ import { usePrivileges } from '../../core/authz/usePrivileges'
 import type { DashboardPanel, PanelBucket, PanelPeriod, PanelPoint, PanelSlice } from '../panels/types'
 
 /**
- * The security dashboard's data layer — one read, no writes.
+ * The security dashboard's data layer - one read, no writes.
  *
  * The page performs no action of its own: every panel links to the report that
  * owns the records behind it (the audit trail, the alert queue, the rule log,
@@ -15,8 +15,8 @@ import type { DashboardPanel, PanelBucket, PanelPeriod, PanelPoint, PanelSlice }
  * ## Nothing on this page is estimated
  *
  * Every figure the endpoint returns is a `COUNT(*)` over a table the core itself
- * writes. Families the reference console also charts — message authentication,
- * transport encryption, spam filtering, external file shares — are absent rather
+ * writes. Families the reference console also charts - message authentication,
+ * transport encryption, spam filtering, external file shares - are absent rather
  * than approximated: they live in module schemas the core never reads, and a
  * plausible-looking curve over data nobody measured is the one thing a security
  * overview must never draw.
@@ -36,7 +36,7 @@ export type SecuritySlice = PanelSlice
  * One panel, as the server computed it.
  *
  * `previous_total` covers the window of identical length immediately before the
- * reading — including for a period still running, which is read up to now on
+ * reading - including for a period still running, which is read up to now on
  * both sides so three days of a month are never compared against a whole one.
  * This endpoint always states it: every security panel counts events, and events
  * have a past.

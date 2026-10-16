@@ -1,4 +1,4 @@
-//! Kubuno primitives — the colour family.
+//! Kubuno primitives - the colour family.
 //!
 //! [`ColorField`], [`ColorPicker`], [`SwatchPicker`] and [`GradientPicker`]:
 //! everything that names a colour.
@@ -10,10 +10,10 @@
 //! `ColorDialog`, a modal window put up by the common-dialog API, whose only
 //! property is the chosen `Color`. There is nothing to inherit a model from.
 //!
-//! So the reference here is the **web only** —
+//! So the reference here is the **web only** -
 //! `core/frontend/src/ui/ColorPicker.tsx`, `ColorField.tsx`,
 //! `ColorSwatchPicker.tsx`, `GradientPicker.tsx`, and the two pure modules
-//! `color.ts` and `gradient.ts` — and the rule the brief actually cares about
+//! `color.ts` and `gradient.ts` - and the rule the brief actually cares about
 //! (never restate a model that already exists) is honoured by **wrapping what
 //! can be wrapped**:
 //!
@@ -27,10 +27,10 @@
 //! What is left had to be **written new**, and is called out as such where it
 //! appears:
 //!
-//! * the **saturation/value area** — a two-dimensional range. No toolkit in
+//! * the **saturation/value area** - a two-dimensional range. No toolkit in
 //!   this codebase has one, so its mapping, its handle and its hit-testing are
 //!   new code, ported term for term from `SvArea` in `ColorPicker.tsx`;
-//! * the **colour-space arithmetic** — [`rgb_to_hsv`], [`hsv_to_rgb`],
+//! * the **colour-space arithmetic** - [`rgb_to_hsv`], [`hsv_to_rgb`],
 //!   [`rgb_to_hsl`], [`hsl_to_rgb`], [`rgb_to_cmyk`], [`cmyk_to_rgb`], the
 //!   notation parser and the hex/`rgba()` serialisers. These are ports of
 //!   `core/frontend/src/ui/color.ts` and `gradient.ts`, **rounding included**:
@@ -41,7 +41,7 @@
 //!
 //! ## How the ramps are painted
 //!
-//! The picker (`picker.rs`) is the web's panel part for part — hue ring,
+//! The picker (`picker.rs`) is the web's panel part for part - hue ring,
 //! square / triangle / circle saturation-value area, harmony schemes, five
 //! channel models, eyedropper. Its ring and SV area are per-pixel rasters
 //! (`raster.rs`, the web's own `<canvas>` recipe, supersampled ×3), its
@@ -52,7 +52,7 @@
 //! ## What the web does NOT do, and is therefore absent here
 //!
 //! * **No contrast check.** Nothing in `core/frontend/src/ui` computes a
-//!   relative luminance or a contrast ratio — the two files that mention
+//!   relative luminance or a contrast ratio - the two files that mention
 //!   contrast (`Callout.tsx`, `ProvenanceLine.tsx`) discuss it in prose. None
 //!   is invented here.
 //! * **No alpha in the picker.** The web's colour is always
@@ -100,7 +100,7 @@ pub mod m {
 
     // ── ColorField (`ColorField.tsx`) ────────────────────────────────────────
 
-    /// `width = 32`, `height = 24` — the swatch button's defaults.
+    /// `width = 32`, `height = 24` - the swatch button's defaults.
     pub const FIELD_W: f32 = 32.0;
     pub const FIELD_H: f32 = 24.0;
     /// `borderRadius: 4`.
@@ -113,19 +113,19 @@ pub mod m {
     /// `borderRadius: 4` (`ColorPicker`, `GradientPicker`).
     pub const PANEL_RADIUS: f32 = 4.0;
 
-    /// `mt-2` / `mb-2` — the gap between two blocks of a panel.
+    /// `mt-2` / `mb-2` - the gap between two blocks of a panel.
     pub const ROW_GAP: f32 = 8.0;
-    /// `mt-2.5` — the wider gap before a new group of controls.
+    /// `mt-2.5` - the wider gap before a new group of controls.
     pub const SECTION_GAP: f32 = 10.0;
-    /// `mb-1.5` — a group label to its content.
+    /// `mb-1.5` - a group label to its content.
     pub const LABEL_GAP: f32 = 6.0;
-    /// `mb-3` — under the gradient's preview bar, which has to clear the stop
+    /// `mb-3` - under the gradient's preview bar, which has to clear the stop
     /// markers hanging below it.
     pub const BAR_GAP: f32 = 12.0;
 
     /// The body line box: 14/20, the design system's only body size.
     pub const LINE: f32 = 20.0;
-    /// A micro label's line box — the 12 DIP caption face at the same 1.43
+    /// A micro label's line box - the 12 DIP caption face at the same 1.43
     /// ratio the 14/20 body uses, rounded to a whole DIP. The web writes these
     /// at 10 px, a size the shared `TextFormats` table does not carry, so they
     /// are drawn with `caption` (12) and given its line.
@@ -137,14 +137,14 @@ pub mod m {
     pub const PICKER_W: f32 = 312.0;
 
     /// The saturation/value square: `sqSide = Math.round((SIZE - 2*RING -
-    /// 12)/Math.SQRT2)` with `SIZE = 212`, `RING = 22` — the square inscribed
+    /// 12)/Math.SQRT2)` with `SIZE = 212`, `RING = 22` - the square inscribed
     /// in the hue ring's inner circle, which comes to **110**.
     ///
     /// The web's `SvArea` is `size × size`. The desktop panel stacks
     /// vertically instead of nesting the area inside a ring, so 110 is used as
     /// the area's HEIGHT and its width is the panel's content width.
     pub const SV_SIDE: f32 = 110.0;
-    /// `borderRadius: shape === 'circle' ? '50%' : 2` — the square shape's 2.
+    /// `borderRadius: shape === 'circle' ? '50%' : 2` - the square shape's 2.
     pub const SV_RADIUS: f32 = 2.0;
     /// The SV handle: `width:11, height:11`, `border: '2px solid #fff'`,
     /// `boxShadow: '0 0 0 1px rgba(0,0,0,.5)'`.
@@ -152,7 +152,7 @@ pub mod m {
     pub const HANDLE_RING: f32 = 2.0;
     pub const HANDLE_SHADOW: f32 = 1.0;
 
-    // `ColorChan` — one labelled channel slider.
+    // `ColorChan` - one labelled channel slider.
 
     /// `h-3` on the track.
     pub const CHAN_TRACK_H: f32 = 12.0;
@@ -168,7 +168,7 @@ pub mod m {
     /// track at each end.
     pub const CHAN_THUMB_W: f32 = 3.0;
     pub const CHAN_THUMB_OVER: f32 = 2.0;
-    /// The row's height is its tallest child — the `h-5` numeric box.
+    /// The row's height is its tallest child - the `h-5` numeric box.
     pub const CHAN_ROW_H: f32 = CHAN_BOX_H;
     /// `space-y-1.5` between two channel rows.
     pub const CHAN_GAP_Y: f32 = 6.0;
@@ -184,8 +184,8 @@ pub mod m {
     /// The `#` label's column.
     ///
     /// **A decision, not a measurement**: the web sizes that span by its own
-    /// glyph, which a pure layout function — one that takes a rectangle and no
-    /// canvas, so hit-testing and painting cannot disagree — has no way to
+    /// glyph, which a pure layout function - one that takes a rectangle and no
+    /// canvas, so hit-testing and painting cannot disagree - has no way to
     /// measure. One step of the spacing scale is used instead, and it is
     /// written here so the decision is visible rather than hidden in a paint
     /// body.
@@ -216,7 +216,7 @@ pub mod m {
     /// `Plus size={12}`, `Pipette size={11}` in the custom row.
     pub const PLUS_ICON: f32 = 12.0;
     pub const SWATCHES_COLS: usize = 10;
-    /// `boxShadow: '0 0 0 2px #1a73e8'` on the selected swatch — a 2 DIP ring
+    /// `boxShadow: '0 0 0 2px #1a73e8'` on the selected swatch - a 2 DIP ring
     /// in the accent, drawn OUTSIDE the circle as a box-shadow spread is.
     pub const SELECT_RING: f32 = 2.0;
 
@@ -228,7 +228,7 @@ pub mod m {
     pub const BAR_H: f32 = 22.0;
     pub const BAR_RADIUS: f32 = 3.0;
     /// The transparency chequer: `repeating-conic-gradient(#bbb 0% 25%, #fff
-    /// 0% 50%)` at `background-size: 10px 10px` — a 2×2 board per 10 px tile,
+    /// 0% 50%)` at `background-size: 10px 10px` - a 2×2 board per 10 px tile,
     /// so each square is 5.
     pub const CHEQUER: f32 = 5.0;
     /// A stop marker: `width:12, height:12`, `borderRadius:2`, `border: 2px`,
@@ -238,7 +238,7 @@ pub mod m {
     pub const STOP_RING: f32 = 2.0;
     pub const STOP_DROP: f32 = 4.0;
     /// The `linear` / `radial` buttons: `px-2 py-0.5 text-[10px]`,
-    /// `borderRadius: 3` — 10 over `py-0.5` twice is a 20 DIP box.
+    /// `borderRadius: 3` - 10 over `py-0.5` twice is a 20 DIP box.
     pub const TYPE_BTN_H: f32 = 21.0;
     /// The two type buttons' widths as the web lays them out (their 10 px
     /// label, `px-2`, the border).
@@ -255,14 +255,14 @@ pub mod m {
     pub const NUM_H: f32 = 22.5;
     /// The « Position » caption's width before its box (`gap-1`).
     pub const POS_LABEL_W: f32 = 48.0;
-    /// `px-1.5 py-1 text-[10px] rounded` — the « add a stop » button.
+    /// `px-1.5 py-1 text-[10px] rounded` - the « add a stop » button.
     pub const ADD_H: f32 = 23.0;
     /// The « add a stop » button's width. **A decision**: the web sizes it to
     /// its content (px-1.5, a Plus size={11}, gap-1, the label); a
     /// canvas-free layout cannot measure the label, so this holds « Ajouter un
     /// arrêt » at the caption size with that padding. A longer label ellipsizes.
     pub const ADD_W: f32 = 99.8;
-    /// `Trash2 size={13}` / `Plus size={11}` / `size={13}` — the glyphs.
+    /// `Trash2 size={13}` / `Plus size={11}` / `size={13}` - the glyphs.
     pub const ICON_SM: f32 = 11.0;
     pub const ICON_MD: f32 = 13.0;
     /// `pt-2` above the selected-stop editor, under its rule.
@@ -270,7 +270,7 @@ pub mod m {
 
     // ── Floating surfaces and interaction ────────────────────────────────────
 
-    /// `const M = 8` in `ColorField.tsx`'s `reposition()` — the gap between
+    /// `const M = 8` in `ColorField.tsx`'s `reposition()` - the gap between
     /// the swatch and its popover, and the margin the popover keeps from every
     /// viewport edge.
     pub const POPOVER_MARGIN: f32 = 8.0;
@@ -279,7 +279,7 @@ pub mod m {
     /// this much larger on every side, or the shadow is cut.
     pub const SHADOW_MARGIN: f32 = 10.0;
     /// `focus-visible:ring-2` on the SV area, the channel tracks and the hue
-    /// ring — a 2 DIP ring drawn OUTSIDE the element, as a box-shadow is.
+    /// ring - a 2 DIP ring drawn OUTSIDE the element, as a box-shadow is.
     pub const FOCUS_RING: f32 = 2.0;
     /// `hover:scale-110` on a round swatch: the chip grows by 10 %, i.e. by
     /// 5 % of its side on every edge.
@@ -290,7 +290,7 @@ pub mod m {
     /// `ColorChan`'s arrow keys: `st = e.shiftKey ? 10 : 1`.
     pub const CHAN_STEP: f64 = 1.0;
     pub const CHAN_STEP_BIG: f64 = 10.0;
-    /// A gradient stop nudged from the keyboard: one percent, ten with Shift —
+    /// A gradient stop nudged from the keyboard: one percent, ten with Shift -
     /// the same 1 / 10 pair `ColorChan` uses, on the 0..=100 scale the
     /// position box shows. A desktop addition: the web's markers are `<div>`s
     /// with no `tabIndex`.
@@ -321,13 +321,13 @@ pub mod m {
     pub const GRAD_CELL: f32 = 2.0;
 }
 
-/// The same colour at a fraction of its alpha — how this design system dims.
+/// The same colour at a fraction of its alpha - how this design system dims.
 fn fade(c: D2D1_COLOR_F, alpha: f32) -> D2D1_COLOR_F {
     D2D1_COLOR_F { a: c.a * alpha, ..c }
 }
 
 /// Tailwind's `shadow-lg`: `0 10px 15px -3px rgb(0 0 0 / .1), 0 4px 6px -4px
-/// rgb(0 0 0 / .1)` — `ColorSwatchPicker`'s panel.
+/// rgb(0 0 0 / .1)` - `ColorSwatchPicker`'s panel.
 pub const SHADOW_LG: [kubuno_drive_desktop_app_controls::themes::shape::ShadowLayer; 2] = [
     kubuno_drive_desktop_app_controls::themes::shape::ShadowLayer { dy: 10.0, blur: 15.0, spread: -3.0, opacity: 0.1 },
     kubuno_drive_desktop_app_controls::themes::shape::ShadowLayer { dy: 4.0, blur: 6.0, spread: -4.0, opacity: 0.1 },
@@ -337,7 +337,7 @@ pub const SHADOW_LG: [kubuno_drive_desktop_app_controls::themes::shape::ShadowLa
 const DISABLED_ALPHA: f32 = 0.5;
 
 // ═════════════════════════════════════════════════════════════════════════════
-// Colour arithmetic — a port of `core/frontend/src/ui/color.ts`
+// Colour arithmetic - a port of `core/frontend/src/ui/color.ts`
 //
 // Channels, in the source's own words: « RGB 0..255, H 0..360, S/V/L 0..1,
 // CMYK 0..100 ». Everything is `f64` because every JavaScript number is, and
@@ -354,7 +354,7 @@ pub fn js_round(x: f64) -> f64 {
     (x + 0.5).floor()
 }
 
-/// A colour in sRGB, channels 0..=255 and **not rounded** — exactly what the
+/// A colour in sRGB, channels 0..=255 and **not rounded** - exactly what the
 /// web's converters hand back, so a value survives a round trip through HSV
 /// without being quantised twice.
 #[derive(Debug, Clone, Copy, PartialEq, Default)]
@@ -395,14 +395,14 @@ impl Rgb {
     }
 
     /// The three channels as the web writes them into a hex string:
-    /// `Math.max(0, Math.min(255, Math.round(v)))`, in that order — rounded
+    /// `Math.max(0, Math.min(255, Math.round(v)))`, in that order - rounded
     /// first, clamped after.
     pub fn channels(self) -> (u8, u8, u8) {
         let ch = |v: f64| js_round(v).clamp(0.0, 255.0) as u8;
         (ch(self.r), ch(self.g), ch(self.b))
     }
 
-    /// `rgbToHex` — lowercase, always six digits, always a leading `#`.
+    /// `rgbToHex` - lowercase, always six digits, always a leading `#`.
     pub fn to_hex(self) -> String {
         let (r, g, b) = self.channels();
         format!("#{r:02x}{g:02x}{b:02x}")
@@ -466,7 +466,7 @@ fn hue2rgb(p: f64, q: f64, mut tt: f64) -> f64 {
     p
 }
 
-/// `hslToRgb`, term for term — including the `s === 0` short circuit, which
+/// `hslToRgb`, term for term - including the `s === 0` short circuit, which
 /// returns a grey of `l * 255` without going through `hue2rgb` at all.
 pub fn hsl_to_rgb(h: f64, s: f64, l: f64) -> Rgb {
     let h = ((h % 360.0) + 360.0) % 360.0 / 360.0;
@@ -486,7 +486,7 @@ pub fn hsl_to_rgb(h: f64, s: f64, l: f64) -> Rgb {
 /// `rgbToHsv`, term for term.
 ///
 /// The `% 6` on the red branch is JavaScript's remainder, which keeps the sign
-/// of the dividend — the same operator Rust's `%` is on floats — and the
+/// of the dividend - the same operator Rust's `%` is on floats - and the
 /// `if (h < 0) h += 360` that follows is what makes magenta come out at 300
 /// rather than at −60.
 pub fn rgb_to_hsv(r: f64, g: f64, b: f64) -> Hsv {
@@ -534,7 +534,7 @@ pub fn hsv_to_rgb(h: f64, s: f64, v: f64) -> Rgb {
     Rgb::new((r + m) * 255.0, (g + m) * 255.0, (b + m) * 255.0)
 }
 
-/// `rgbToCmyk` — including the `k >= 1` short circuit, which returns pure
+/// `rgbToCmyk` - including the `k >= 1` short circuit, which returns pure
 /// black rather than dividing by zero.
 pub fn rgb_to_cmyk(r: f64, g: f64, b: f64) -> Cmyk {
     let (rr, gg, bb) = (r / 255.0, g / 255.0, b / 255.0);
@@ -561,7 +561,7 @@ pub fn cmyk_to_rgb(c: f64, m: f64, y: f64, k: f64) -> Rgb {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Color — an RGB triple with the gradient model's opacity
+// Color - an RGB triple with the gradient model's opacity
 // ─────────────────────────────────────────────────────────────────────────────
 
 /// A colour and its opacity.
@@ -579,7 +579,7 @@ pub struct Color {
 }
 
 impl Default for Color {
-    /// Opaque black — the first swatch of both palettes.
+    /// Opaque black - the first swatch of both palettes.
     fn default() -> Self {
         Self { rgb: Rgb::new(0.0, 0.0, 0.0), opacity: 100.0 }
     }
@@ -595,13 +595,13 @@ impl Color {
         Self { rgb, opacity: 100.0 }
     }
 
-    /// Parses a `#rrggbb` literal, panicking on a malformed one — for the
+    /// Parses a `#rrggbb` literal, panicking on a malformed one - for the
     /// palette constants below, which are checked by a test rather than at
     /// run time.
     fn lit(hex: &str) -> Self {
         // The fallback is only reachable from the palette constants below,
         // whose spelling a unit test pins; user input never comes through
-        // here — it goes through `parse` and gets a `None` it can act on.
+        // here - it goes through `parse` and gets a `None` it can act on.
         parse(hex).unwrap_or_default()
     }
 
@@ -613,7 +613,7 @@ impl Color {
         format!("rgba({r}, {g}, {b}, {a})")
     }
 
-    /// The hex the web compares swatches by. Opacity does not take part —
+    /// The hex the web compares swatches by. Opacity does not take part -
     /// the web's own test is `c.toLowerCase() === hex.toLowerCase()` on a
     /// six-digit string.
     pub fn same_swatch(self, other: Color) -> bool {
@@ -643,7 +643,7 @@ impl Color {
 /// ```
 ///
 /// So: trimmed, **one** optional leading `#`, then three digits (each doubled)
-/// or six. Anything else — four digits, eight digits, a `rgb(…)` string — is
+/// or six. Anything else - four digits, eight digits, a `rgb(…)` string - is
 /// silently ignored by the web, and is `None` here. Alpha cannot be expressed:
 /// the result is always opaque.
 pub fn parse_web_hex(text: &str) -> Option<Rgb> {
@@ -669,9 +669,9 @@ fn hex_triple(six: &str) -> Option<Rgb> {
 ///
 /// | notation | where it comes from |
 /// |---|---|
-/// | `#rgb`, `#rrggbb` (with or without the `#`) | the web's hex field — see [`parse_web_hex`] |
+/// | `#rgb`, `#rrggbb` (with or without the `#`) | the web's hex field - see [`parse_web_hex`] |
 /// | `rgb(r, g, b)`, `rgba(r, g, b, a)` | the web's own OUTPUT: `rgbaFromHex` serialises every gradient stop this way, so a serialised gradient reads back |
-/// | `#rrggbbaa` | an **addition**. The web has no notation for a colour with alpha — its picker is `#rrggbb` and its opacity lives beside the colour, in the model. The desktop's alpha slider needs one notation that carries both, and the eight-digit hex is the one CSS already defines |
+/// | `#rrggbbaa` | an **addition**. The web has no notation for a colour with alpha - its picker is `#rrggbb` and its opacity lives beside the colour, in the model. The desktop's alpha slider needs one notation that carries both, and the eight-digit hex is the one CSS already defines |
 /// | `hsl(h, s%, l%)`, `hsla(h, s%, l%, a)` | an **addition**, for symmetry with `rgb()`: the web parses no `hsl()` anywhere |
 ///
 /// `#rgba`, the four-digit shorthand, is deliberately **refused**: it would be
@@ -753,14 +753,14 @@ fn parse_hsl_call(args: &[String]) -> Option<Color> {
 // The two palettes the web ships
 // ─────────────────────────────────────────────────────────────────────────────
 
-/// `ColorPicker.tsx`'s `SWATCHES` — the twelve chips under the channel
+/// `ColorPicker.tsx`'s `SWATCHES` - the twelve chips under the channel
 /// sliders.
 pub const PICKER_SWATCHES: [&str; 12] = [
     "#000000", "#ffffff", "#e84a4a", "#f9ab00", "#f4d03f", "#1e8e3e", "#16a085", "#4a90e8",
     "#2c3e50", "#9b51e0", "#ff7eb6", "#7f8c8d",
 ];
 
-/// `ColorSwatchPicker.tsx`'s `SWATCHES` — « palette de pastilles style Google
+/// `ColorSwatchPicker.tsx`'s `SWATCHES` - « palette de pastilles style Google
 /// Docs (10 colonnes) : gris, teintes pures, puis nuances claires → foncées »,
 /// eight rows of ten.
 pub const DOCS_SWATCHES: [&str; 80] = [
@@ -793,7 +793,7 @@ pub fn docs_swatches() -> Vec<Color> {
 }
 
 // ═════════════════════════════════════════════════════════════════════════════
-// Gradient — a port of `core/frontend/src/ui/gradient.ts`
+// Gradient - a port of `core/frontend/src/ui/gradient.ts`
 // ═════════════════════════════════════════════════════════════════════════════
 
 /// `Gradient['type']`.
@@ -846,7 +846,7 @@ impl Default for Gradient {
 }
 
 impl Gradient {
-    /// The stops in drawing order — `[...stops].sort((a,b) => a.position -
+    /// The stops in drawing order - `[...stops].sort((a,b) => a.position -
     /// b.position)`, which every part of the web's gradient code starts with.
     /// The stored order is left alone: it is what the stop indices refer to.
     pub fn sorted(&self) -> Vec<GradientStop> {
@@ -855,7 +855,7 @@ impl Gradient {
         s
     }
 
-    /// `gradientToCss` — the exact string the web hands to `background-image`.
+    /// `gradientToCss` - the exact string the web hands to `background-image`.
     pub fn to_css(&self) -> String {
         let stops = self
             .sorted()
@@ -927,7 +927,7 @@ impl Gradient {
         Some(Gradient { kind, angle, stops })
     }
 
-    /// `sampleStop` — the colour the gradient already has at `p`, so an
+    /// `sampleStop` - the colour the gradient already has at `p`, so an
     /// inserted stop blends in instead of jumping.
     ///
     /// Ported with its edges intact: before the first stop and after the last
@@ -972,14 +972,14 @@ impl Gradient {
         }
     }
 
-    /// `addStop` — appends the sampled stop and returns its index, which the
+    /// `addStop` - appends the sampled stop and returns its index, which the
     /// web then selects (`setSel(stops.length - 1)`).
     pub fn add_stop(&mut self, p: f64) -> usize {
         self.stops.push(self.sample_stop(p));
         self.stops.len() - 1
     }
 
-    /// `removeStop` — **refused** below three stops (`if (grad.stops.length <=
+    /// `removeStop` - **refused** below three stops (`if (grad.stops.length <=
     /// 2) return`), because a gradient needs two ends. Returns whether it
     /// happened.
     pub fn remove_stop(&mut self, idx: usize) -> bool {
@@ -1034,7 +1034,7 @@ impl Gradient {
 /// Fills `area` with a horizontal ramp, one DIP per strip.
 ///
 /// `colour_at` receives the strip's own fraction as the web's canvas loop
-/// computes it — `x / n`, the strip's LEFT edge, not its centre.
+/// computes it - `x / n`, the strip's LEFT edge, not its centre.
 fn ramp_x(c: &dyn Canvas, area: Rect, mut colour_at: impl FnMut(f64) -> D2D1_COLOR_F) {
     let w = area.right - area.left;
     if w <= 0.0 {
@@ -1107,7 +1107,7 @@ fn swatch_fill(c: &dyn Canvas, area: Rect, radius: f32, colour: Color, alpha: f3
 /// The keyboard focus ring: `focus-visible:ring-2`, 2 DIP OUTSIDE `rect` (the
 /// stroke is drawn inward, so the rectangle is grown by the ring first).
 ///
-/// The web writes `ring-white/70` on the picker's own sliders — a ring that is
+/// The web writes `ring-white/70` on the picker's own sliders - a ring that is
 /// invisible on the light panel it sits on. The accent is used instead, the
 /// colour every other focus ring of this design system wears.
 fn focus_ring(c: &dyn Canvas, rect: Rect, radius: f32) {
@@ -1116,7 +1116,7 @@ fn focus_ring(c: &dyn Canvas, rect: Rect, radius: f32) {
 }
 
 // ═════════════════════════════════════════════════════════════════════════════
-// Keyboard — the keys the web's `onKeyDown` handlers read
+// Keyboard - the keys the web's `onKeyDown` handlers read
 // ═════════════════════════════════════════════════════════════════════════════
 
 /// A navigation key, as the family's keyboard handlers see it.
@@ -1154,7 +1154,7 @@ impl ColorKey {
     }
 
     /// `ArrowRight` / `ArrowUp` grow a value, `ArrowLeft` / `ArrowDown`
-    /// shrink it — `ColorChan`'s pairing.
+    /// shrink it - `ColorChan`'s pairing.
     pub fn sign(self) -> f64 {
         match self {
             Self::Right | Self::Up | Self::PageUp | Self::End => 1.0,
@@ -1163,8 +1163,8 @@ impl ColorKey {
     }
 }
 
-/// Consumes this frame's navigation keys — pressed alone or with Shift, the
-/// only modifier the web's handlers read — and returns them with their Shift
+/// Consumes this frame's navigation keys - pressed alone or with Shift, the
+/// only modifier the web's handlers read - and returns them with their Shift
 /// flag, in the order they were pressed. Keys held with Ctrl or Alt are left
 /// in the queue for whoever owns those chords.
 pub fn take_color_keys() -> Vec<(ColorKey, bool)> {
@@ -1185,7 +1185,7 @@ pub fn take_color_keys() -> Vec<(ColorKey, bool)> {
     out
 }
 
-/// One channel's value after `key` — `ColorChan`'s `onKeyDown`, verbatim:
+/// One channel's value after `key` - `ColorChan`'s `onKeyDown`, verbatim:
 /// `st = shift ? 10 : 1`, Left/Down subtract and Right/Up add, clamped to
 /// `0..=max`. Home / End jump to the ends and PageUp / PageDown move by ten,
 /// the rest of the ARIA slider pattern.
@@ -1202,7 +1202,7 @@ pub fn channel_step(value: f64, max: f64, key: ColorKey, shift: bool) -> f64 {
 }
 
 // ═════════════════════════════════════════════════════════════════════════════
-// FieldDraft — the text a user is typing into a hex or numeric box
+// FieldDraft - the text a user is typing into a hex or numeric box
 // ═════════════════════════════════════════════════════════════════════════════
 
 /// What a [`FieldDraft`] accepts.
@@ -1221,7 +1221,7 @@ pub enum DraftOutcome {
     Idle,
     /// The caret or the selection moved; the text did not change.
     Moved,
-    /// The text changed — apply it now, the way the web's `onChange` does on
+    /// The text changed - apply it now, the way the web's `onChange` does on
     /// every keystroke.
     Edited,
     /// Enter: the value is final.
@@ -1237,8 +1237,8 @@ pub enum DraftOutcome {
 /// user can only ever get from one valid colour to another. That makes the
 /// field nearly impossible to type into (erase one digit and it springs back).
 /// The desktop keeps the user's draft while the box has the focus instead,
-/// applies it the moment it parses — the same live update the web's
-/// `onChange` performs — and shows the model's value again on blur or Escape.
+/// applies it the moment it parses - the same live update the web's
+/// `onChange` performs - and shows the model's value again on blur or Escape.
 ///
 /// All positions are byte offsets, and every character the draft admits is
 /// ASCII, so they are character offsets too.
@@ -1259,7 +1259,7 @@ impl FieldDraft {
     /// `0..=360`, the widest range a numeric box in this family carries.
     pub const DIGITS_MAX: usize = 3;
 
-    /// A draft of `text` with ALL of it selected — what a browser does when a
+    /// A draft of `text` with ALL of it selected - what a browser does when a
     /// box receives the focus from the keyboard, so typing replaces it.
     pub fn new(kind: DraftKind, text: &str) -> Self {
         let mut d = Self { kind, text: String::new(), caret: 0, anchor: 0, last_input_ms: 0 };
@@ -1314,7 +1314,7 @@ impl FieldDraft {
             }
             let ok = match self.kind {
                 DraftKind::Digits => ch.is_ascii_digit(),
-                // One `#`, and only in front — the web strips exactly one.
+                // One `#`, and only in front - the web strips exactly one.
                 DraftKind::Hex => {
                     ch.is_ascii_hexdigit() || (ch == '#' && self.caret == 0 && !self.text.starts_with('#'))
                 }
@@ -1390,7 +1390,7 @@ impl FieldDraft {
         self.caret = self.text.len();
     }
 
-    /// The text with its `#` removed — what the hex field's parser reads.
+    /// The text with its `#` removed - what the hex field's parser reads.
     pub fn digits(&self) -> &str {
         self.text.strip_prefix('#').unwrap_or(&self.text)
     }
@@ -1401,7 +1401,7 @@ impl FieldDraft {
     }
 
     /// The caret index nearest to `x`, given a function measuring the width of
-    /// a prefix — a click places the caret between the two characters it
+    /// a prefix - a click places the caret between the two characters it
     /// falls between.
     pub fn index_at(&self, x: f32, width_of: impl Fn(&str) -> f32) -> usize {
         let mut best = 0;
@@ -1494,7 +1494,7 @@ impl FieldDraft {
 // ColorField
 // ═════════════════════════════════════════════════════════════════════════════
 
-/// The swatch button that opens a picker — `ColorField.tsx`.
+/// The swatch button that opens a picker - `ColorField.tsx`.
 ///
 /// Its model is [`kubuno_desktop_controls::buttons::Button`], because that is what it
 /// is: a `<button type="button">` whose whole face is the colour. `text`,
@@ -1503,8 +1503,8 @@ impl FieldDraft {
 /// colour it shows and whether its popover is open, neither of which .NET has a
 /// concept for.
 ///
-/// The web's popover — a portal to `<body>`, clamped to the viewport on every
-/// edge — is a host popup on the desktop (`kubuno_desktop_controls::host::popup`),
+/// The web's popover - a portal to `<body>`, clamped to the viewport on every
+/// edge - is a host popup on the desktop (`kubuno_desktop_controls::host::popup`),
 /// placed by [`ColorField::popover_rect`], which is `reposition()` ported term
 /// for term. What `open` changes on the field itself is what it changes in the
 /// web: the border turns accent.
@@ -1518,7 +1518,7 @@ pub struct ColorField {
     pub color: Color,
     /// Whether the picker attached to it is showing.
     pub open: bool,
-    /// `width = 32`, `height = 24` — overridable, as the web's props are.
+    /// `width = 32`, `height = 24` - overridable, as the web's props are.
     pub width: f32,
     pub height: f32,
 }
@@ -1545,7 +1545,7 @@ impl ColorField {
         self
     }
 
-    /// Where the popover opens — `reposition()` in `ColorField.tsx`:
+    /// Where the popover opens - `reposition()` in `ColorField.tsx`:
     ///
     /// ```text
     /// let left = r.left - PW - M            // prefer LEFT of the swatch
@@ -1558,7 +1558,7 @@ impl ColorField {
     /// ```
     ///
     /// `anchor` is the swatch, `size` the popover's measured size, `viewport`
-    /// the area it must stay inside — on the desktop the monitor's work area
+    /// the area it must stay inside - on the desktop the monitor's work area
     /// (`Frame::screen_area`), since a popup may leave the window. All three
     /// in the same space; the result is in that space too, WITHOUT the shadow
     /// margin (grow it by [`m::SHADOW_MARGIN`](m) for the popup's bounds).
@@ -1607,11 +1607,11 @@ impl Widget for ColorField {
 
         swatch_fill(canvas, bounds, m::FIELD_RADIUS, self.color, alpha);
         // `border: 1px solid ${open ? theme.accent : theme.border}`. Hover is
-        // not a state the web gives this button — it states no hover rule.
+        // not a state the web gives this button - it states no hover rule.
         let border = if self.open && !dead { t.accent } else { t.card_stroke };
         canvas.stroke_rounded(&bounds, m::FIELD_RADIUS, &fade(border, alpha));
         // The browser's own focus outline on a `<button>`, which is two-tone
-        // (dark then light) precisely so it reads on ANY colour — and this
+        // (dark then light) precisely so it reads on ANY colour - and this
         // button's face can be any colour, the accent included. Drawn INSIDE
         // the bounds so the field never paints over a neighbour, and only for
         // a keyboard focus.
@@ -1644,7 +1644,7 @@ impl DerefMut for ColorField {
 // ═════════════════════════════════════════════════════════════════════════════
 
 /// A grid of `columns` equal cells with `gap` between them, laid out inside a
-/// content rectangle — `gridTemplateColumns: 'repeat(10, 1fr)'` with
+/// content rectangle - `gridTemplateColumns: 'repeat(10, 1fr)'` with
 /// `aspect-square` and `gap-1`, which makes the cell size a consequence of the
 /// available width and not a number to choose.
 ///
@@ -1665,7 +1665,7 @@ impl SwatchGrid {
         Self { columns, gap, cell }
     }
 
-    /// A grid of cells of a FIXED size — the picker's `w-4 h-4` chip row, which
+    /// A grid of cells of a FIXED size - the picker's `w-4 h-4` chip row, which
     /// wraps rather than stretching (`flex flex-wrap gap-1`).
     pub fn fixed(width: f32, cell: f32, gap: f32) -> Self {
         let columns = (((width + gap) / (cell + gap)).floor() as usize).max(1);
@@ -1676,7 +1676,7 @@ impl SwatchGrid {
         len.div_ceil(self.columns)
     }
 
-    /// The grid's height for `len` cells — zero when there is nothing in it,
+    /// The grid's height for `len` cells - zero when there is nothing in it,
     /// because the web renders no block at all in that case.
     pub fn height(&self, len: usize) -> f32 {
         let rows = self.rows(len);
@@ -1696,7 +1696,7 @@ impl SwatchGrid {
     }
 
     /// Which of `len` cells `(x, y)` lands on, testing the DISC when the cells
-    /// are circles (`rounded-full`) and the rectangle when they are not —
+    /// are circles (`rounded-full`) and the rectangle when they are not -
     /// border-radius clips pointer events in a browser too, so the corners of a
     /// round swatch must not answer.
     pub fn cell_at(
@@ -1718,7 +1718,7 @@ impl SwatchGrid {
         })
     }
 
-    /// The cell a navigation key moves to from `i`, among `len` cells — the
+    /// The cell a navigation key moves to from `i`, among `len` cells - the
     /// ARIA grid pattern: the arrows move by one cell or one row (stopping at
     /// the edges, never wrapping), Home / End go to the ends of the ROW,
     /// PageUp / PageDown to the first / last row of the same column.
@@ -1748,7 +1748,7 @@ impl SwatchGrid {
             ColorKey::End => (row_start + cols - 1).min(len - 1),
             ColorKey::PageUp => i % cols,
             ColorKey::PageDown => {
-                // The last row that HAS a cell in this column — a short last
+                // The last row that HAS a cell in this column - a short last
                 // row may not reach it.
                 let col = i % cols;
                 let mut row = (len - 1) / cols;
@@ -1761,20 +1761,20 @@ impl SwatchGrid {
     }
 }
 
-/// How a chip says it is the current colour — the web has three spellings.
+/// How a chip says it is the current colour - the web has three spellings.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 enum SelectMark {
-    /// `border: 1px solid C.accent` in place of the border — the picker's
+    /// `border: 1px solid C.accent` in place of the border - the picker's
     /// twelve fixed chips.
     Border,
-    /// The accent border PLUS `0 0 0 1px C.accent` — the recent colours.
+    /// The accent border PLUS `0 0 0 1px C.accent` - the recent colours.
     BorderRing,
 }
 
 /// One round chip of `ColorSwatchPicker`, with the web's literal outlines:
 /// `border: 1px solid rgba(0,0,0,.08)`, except pure white which gets
 /// `#dadce0` (in both themes), and the selection `boxShadow: '0 0 0 2px
-/// #1a73e8'` — a literal blue, drawn OUTSIDE the chip as a box-shadow is.
+/// #1a73e8'` - a literal blue, drawn OUTSIDE the chip as a box-shadow is.
 fn paint_dot(c: &dyn Canvas, rect: Rect, colour: Color, selected: bool, grow: bool, alpha: f32) {
     let (rect, radius) = {
         let d = if grow { (rect.right - rect.left) * m::HOVER_GROW } else { 0.0 };
@@ -1810,7 +1810,7 @@ fn paint_chip(
     let t = c.theme();
     // `hover:scale-110`: the chip grows 10 % about its centre. A transform the
     // canvas has no primitive for, but a scale about the centre of a filled
-    // shape IS a larger shape — so it is drawn larger, radius included.
+    // shape IS a larger shape - so it is drawn larger, radius included.
     let (rect, radius) = if grow {
         let d = (rect.right - rect.left) * m::HOVER_GROW;
         (rect.inflate(d, d), radius * (1.0 + 2.0 * m::HOVER_GROW))
@@ -1833,7 +1833,7 @@ fn paint_chip(
     }
 }
 
-/// The keyboard focus on a chip — the browser's own outline on a focused
+/// The keyboard focus on a chip - the browser's own outline on a focused
 /// `<button>`, drawn OUTSIDE the selection ring so the two never hide each
 /// other, and in the primary ink so it reads against the accent ring.
 fn chip_focus(c: &dyn Canvas, rect: Rect, radius: f32) {
@@ -1846,7 +1846,7 @@ fn chip_focus(c: &dyn Canvas, rect: Rect, radius: f32) {
 // SwatchPicker
 // ═════════════════════════════════════════════════════════════════════════════
 
-/// The quick picker — `ColorSwatchPicker.tsx`: a grid of round chips, a
+/// The quick picker - `ColorSwatchPicker.tsx`: a grid of round chips, a
 /// « Personnalisé » section under it, and a `+` that opens the full picker.
 ///
 /// Its model is [`kubuno_desktop_controls::containers::Panel`], the toolkit's own
@@ -1858,7 +1858,7 @@ pub struct SwatchPicker {
     inner: PanelModel,
     /// The fixed palette. Defaults to [`docs_swatches`], the web's own eighty.
     pub colors: Vec<Color>,
-    /// The user's own colours — the web persists these in `localStorage` under
+    /// The user's own colours - the web persists these in `localStorage` under
     /// `kubuno:picker:custom-swatches` and shows at most twenty.
     pub custom: Vec<Color>,
     /// The caption over the custom row (`customLabel = 'Personnalisé'`).
@@ -1869,13 +1869,13 @@ pub struct SwatchPicker {
     /// The chip under the pointer, in the fixed palette.
     pub hot: Option<usize>,
     pub columns: usize,
-    /// The colour the picker is showing — the web's `norm`, which the custom
+    /// The colour the picker is showing - the web's `norm`, which the custom
     /// row compares against too. [`SwatchPicker::select`] sets it.
     pub current: Option<Color>,
     /// The cell of the custom row under the pointer (the last one is `+`).
     pub hot_custom: Option<usize>,
     /// The keyboard cursor, as a FLAT cell index: the palette first, then the
-    /// custom row — see [`SwatchPicker::cell_count`]. The grid is one tab stop;
+    /// custom row - see [`SwatchPicker::cell_count`]. The grid is one tab stop;
     /// the arrows move this ([`SwatchPicker::step_cursor`]).
     pub focus: Option<usize>,
     /// Whether the cursor's ring shows (`:focus-visible`).
@@ -1915,7 +1915,7 @@ impl SwatchPicker {
     /// `custom.slice(0, 20)`, plus the `+` cell the web always appends.
     pub const CUSTOM_MAX: usize = 20;
 
-    /// Selects the chip whose hex matches `colour`, if the palette holds one —
+    /// Selects the chip whose hex matches `colour`, if the palette holds one -
     /// the web's `c.toLowerCase() === norm` test.
     pub fn select(&mut self, colour: Color) {
         self.selected = self.index_of(colour);
@@ -1930,7 +1930,7 @@ impl SwatchPicker {
         self.custom.truncate(Self::CUSTOM_MAX);
     }
 
-    /// Every cell, palette and custom row together — the flat index space of
+    /// Every cell, palette and custom row together - the flat index space of
     /// [`SwatchPicker::focus`] and [`SwatchPicker::cell_at`].
     pub fn cell_count(&self) -> usize {
         self.colors.len() + self.custom_cells()
@@ -1980,7 +1980,7 @@ impl SwatchPicker {
 
     /// Where a navigation key moves the cursor from flat cell `i`: within a
     /// grid as [`SwatchGrid::step`] does, and ACROSS the caption between them
-    /// — Down from the palette's last row lands on the custom row in the same
+    /// - Down from the palette's last row lands on the custom row in the same
     /// column (or its last cell), Up from the custom row's first row lands
     /// back on the palette.
     pub fn step_cursor(&self, i: usize, key: ColorKey) -> usize {
@@ -2011,7 +2011,7 @@ impl SwatchPicker {
         self.colors.iter().position(|c| c.same_swatch(colour))
     }
 
-    /// The panel's interior — `p-3` inside its border.
+    /// The panel's interior - `p-3` inside its border.
     pub fn content(&self, bounds: Rect) -> Rect {
         Rect::new(
             bounds.left + pm::INSET,
@@ -2046,7 +2046,7 @@ impl SwatchPicker {
     }
 
     /// Which cell of the custom row is under `(x, y)`. The LAST index is the
-    /// `+` button, never a colour — see [`SwatchPicker::custom_cells`].
+    /// `+` button, never a colour - see [`SwatchPicker::custom_cells`].
     pub fn custom_at(&self, bounds: Rect, x: f32, y: f32) -> Option<usize> {
         let content = self.content(bounds);
         self.grid(bounds).cell_at(
@@ -2059,7 +2059,7 @@ impl SwatchPicker {
         )
     }
 
-    /// The panel's height at `width` — everything below the fixed grid depends
+    /// The panel's height at `width` - everything below the fixed grid depends
     /// on how many custom colours there are.
     pub fn height_for_width(&self, width: f32) -> f32 {
         let inner = width - 2.0 * pm::INSET;
@@ -2083,7 +2083,7 @@ impl Widget for SwatchPicker {
     }
 
     fn paint(&self, canvas: &dyn Canvas, bounds: Rect, state: WidgetState) {
-        // A floating panel: no opaque ground under its rounded corners — they
+        // A floating panel: no opaque ground under its rounded corners - they
         // belong to whatever the panel floats over, as the web's `rounded-lg`
         // corners do. The panel's own fill covers everything else.
         let t = canvas.theme();
@@ -2184,7 +2184,7 @@ pub struct GradientLayout {
     pub linear: Rect,
     pub radial: Rect,
     pub close: Rect,
-    /// The preview bar. The stop markers hang BELOW it — see
+    /// The preview bar. The stop markers hang BELOW it - see
     /// [`GradientPicker::stop_rect`].
     pub bar: Rect,
     /// The angle row, `None` on a radial gradient (`{grad.type === 'linear' &&
@@ -2207,7 +2207,7 @@ pub enum GradientPart {
     Close,
     /// A stop marker. A press here selects and starts dragging it.
     Stop(usize),
-    /// The bar itself — a press here INSERTS a stop, which is what
+    /// The bar itself - a press here INSERTS a stop, which is what
     /// `cursor-copy` announces.
     Bar,
     /// The angle row's slider.
@@ -2252,11 +2252,11 @@ impl GradientPart {
     }
 }
 
-/// The gradient builder — `GradientPicker.tsx`.
+/// The gradient builder - `GradientPicker.tsx`.
 ///
 /// Its model is [`kubuno_desktop_controls::containers::Panel`] for the surface,
-/// [`Gradient`] for the value, and [`crate::range::Slider`] — itself a
-/// `TrackBar` — for the angle and opacity rows, which the web draws with its
+/// [`Gradient`] for the value, and [`crate::range::Slider`] - itself a
+/// `TrackBar` - for the angle and opacity rows, which the web draws with its
 /// own `RangeSlider`. Only the preview bar and its markers are new code.
 #[derive(Clone)]
 pub struct GradientPicker {
@@ -2275,10 +2275,10 @@ pub struct GradientPicker {
     /// The box being typed into, and the caret's blink phase.
     pub edit: Option<(GradientPart, FieldDraft)>,
     pub caret_on: bool,
-    /// Whether the selected stop's `ColorField` has its picker open — its
+    /// Whether the selected stop's `ColorField` has its picker open - its
     /// border turns accent, as the field's own does.
     pub field_open: bool,
-    /// Whether the header shows the ✕ (`onClose` given — the web's
+    /// Whether the header shows the ✕ (`onClose` given - the web's
     /// `GradientField` popover passes one; an inline panel does not).
     pub closable: bool,
 }
@@ -2311,7 +2311,7 @@ impl GradientPicker {
         self.selected.min(self.gradient.stops.len().saturating_sub(1))
     }
 
-    /// The stop indices in DRAWING order — the web maps `sorted` to its
+    /// The stop indices in DRAWING order - the web maps `sorted` to its
     /// markers, so the marker furthest right is the last in the DOM and the
     /// one on top where two overlap.
     pub fn draw_order(&self) -> Vec<usize> {
@@ -2336,7 +2336,7 @@ impl GradientPicker {
         }
     }
 
-    /// The slider's own rectangle inside a labelled row — between the
+    /// The slider's own rectangle inside a labelled row - between the
     /// `width: 48` caption and the `w-14` box, `gap-2` on both sides.
     pub fn slider_track(row: Rect) -> Rect {
         let boxed = Self::row_box(row);
@@ -2411,7 +2411,7 @@ impl GradientPicker {
     ///
     /// * the markers: Left / Right move the selected stop by 1 % (10 % with
     ///   Shift), Home / End put it at 0 % / 100 %, Up / Down select the
-    ///   previous / next stop along the bar — a desktop addition, the web's
+    ///   previous / next stop along the bar - a desktop addition, the web's
     ///   markers take no keyboard;
     /// * the two sliders: a native `<input type="range">`'s keys, through
     ///   [`channel_step`];
@@ -2504,7 +2504,7 @@ impl GradientPicker {
         self.edit = Some((part, d));
     }
 
-    /// Applies the draft — `Number(e.target.value)`, clamped, on every
+    /// Applies the draft - `Number(e.target.value)`, clamped, on every
     /// keystroke; an empty box is zero, as `Number('')` is.
     pub fn apply_edit(&mut self) -> bool {
         let Some((part, d)) = self.edit.clone() else { return false };
@@ -2538,7 +2538,7 @@ impl GradientPicker {
         self.gradient.stops.get(i).copied()
     }
 
-    /// The angle slider, 0..=360 — `RangeSlider min={0} max={360}`.
+    /// The angle slider, 0..=360 - `RangeSlider min={0} max={360}`.
     pub fn angle_slider(&self) -> Slider {
         let mut s = Slider::new();
         s.set_minimum(0);
@@ -2564,7 +2564,7 @@ impl GradientPicker {
         let r = bounds.right - pm::INSET;
         let mut y = bounds.top + pm::INSET;
 
-        // `linear` / `radial` (`gap-1`), then the ✕ at the far end — a
+        // `linear` / `radial` (`gap-1`), then the ✕ at the far end - a
         // `text-[11px] px-1` glyph button, centred in the 21 DIP row.
         let linear = Rect::new(l, y, l + m::TYPE_W[0], y + m::TYPE_BTN_H);
         let radial = Rect::new(linear.right + m::TYPE_GAP, y, linear.right + m::TYPE_GAP + m::TYPE_W[1], y + m::TYPE_BTN_H);
@@ -2630,7 +2630,7 @@ impl GradientPicker {
     /// Markers overlap when two stops sit close together, and the web resolves
     /// that by DOM order: the last one rendered is on top and takes the press.
     /// The web renders them SORTED by position ([`GradientPicker::draw_order`]),
-    /// and so does `paint`; this searches that order from its end — so the
+    /// and so does `paint`; this searches that order from its end - so the
     /// marker that answers is the one the user can see.
     pub fn stop_at(&self, bounds: Rect, x: f32, y: f32) -> Option<usize> {
         self.draw_order()
@@ -2639,7 +2639,7 @@ impl GradientPicker {
             .find(|&i| self.stop_rect(bounds, i).is_some_and(|r| r.contains(x, y)))
     }
 
-    /// The position a press at `x` designates — `posFromEvent`, clamped 0..=1.
+    /// The position a press at `x` designates - `posFromEvent`, clamped 0..=1.
     pub fn position_at(&self, bounds: Rect, x: f32) -> f64 {
         let bar = self.layout(bounds).bar;
         let w = (bar.right - bar.left).max(1.0);
@@ -2648,7 +2648,7 @@ impl GradientPicker {
 
     /// Which part `(x, y)` lands on. The stop markers are tested BEFORE the
     /// bar, because the web stops their press from reaching it
-    /// (`e.stopPropagation()`) — otherwise every grab of a marker would also
+    /// (`e.stopPropagation()`) - otherwise every grab of a marker would also
     /// insert a stop.
     pub fn part_at(&self, bounds: Rect, x: f32, y: f32) -> Option<GradientPart> {
         let g = self.layout(bounds);
@@ -2735,7 +2735,7 @@ impl GradientPicker {
 }
 
 /// A gradient filling `bar` (rounded by `radius`), over the transparency
-/// chequer when `chequered` — else over white, as `GradientField`'s
+/// chequer when `chequered` - else over white, as `GradientField`'s
 /// `backgroundColor: '#fff'` is.
 fn paint_gradient(c: &dyn Canvas, bar: Rect, radius: f32, gradient: &Gradient, alpha: f32, chequered: bool) {
     {
@@ -2927,7 +2927,7 @@ impl Widget for GradientPicker {
         let parts = (GradientPart::Opacity, GradientPart::OpacityBox);
         self.paint_slider_row(canvas, g.opacity, "Opacité", &self.opacity_slider(), parts, alpha);
 
-        // « Ajouter un arrêt » — `px-1.5 py-1 text-[10px] rounded`,
+        // « Ajouter un arrêt » - `px-1.5 py-1 text-[10px] rounded`,
         // `background: C.surface`, `color: C.textDim`, a `Plus size={11}`, `gap-1`.
         canvas.fill_rounded(&g.add, crate::metrics::radius::SM, &fade(t.surface_2, alpha));
         let glyph = Rect::new(g.add.left + m::NUM_PAD_X, g.add.top, g.add.left + m::NUM_PAD_X + m::ICON_SM, g.add.bottom);
@@ -2969,7 +2969,7 @@ impl DerefMut for GradientPicker {
 // GradientField
 // ═════════════════════════════════════════════════════════════════════════════
 
-/// The gradient swatch button — `GradientField` in `GradientPicker.tsx`: a
+/// The gradient swatch button - `GradientField` in `GradientPicker.tsx`: a
 /// `32 × 24` button whose face is the gradient (`backgroundImage:
 /// gradientToCss(value), backgroundColor: '#fff'`), `border: 1px solid (open
 /// ? C.accent : C.border)`, `borderRadius: 4`. A click opens a
@@ -3162,7 +3162,7 @@ mod tests {
     }
 
     /// A saturation of zero keeps whatever hue it was given, in both
-    /// directions — the property the picker's own state depends on (drag the
+    /// directions - the property the picker's own state depends on (drag the
     /// SV handle to the left edge and the hue slider must not jump to red).
     #[test]
     fn zero_saturation_keeps_its_hue() {
@@ -3183,7 +3183,7 @@ mod tests {
         }
     }
 
-    /// Every one of the two palettes the web ships survives the same trip —
+    /// Every one of the two palettes the web ships survives the same trip -
     /// ninety-two colours, which is a far better sweep of the space than a
     /// handful of chosen ones.
     #[test]
@@ -3260,7 +3260,7 @@ mod tests {
         // Opacity: absent from every hex the web writes, so 100.
         assert_eq!(parse("#1a73e8").unwrap().opacity, 100.0);
 
-        // The eight-digit form — this family's own addition, for the alpha
+        // The eight-digit form - this family's own addition, for the alpha
         // slider.
         let half = parse("#1a73e880").unwrap();
         assert_eq!(half.rgb.to_hex(), "#1a73e8");
@@ -3268,7 +3268,7 @@ mod tests {
         assert_eq!(parse("#1a73e8ff").unwrap().opacity, 100.0);
         assert_eq!(parse("#1a73e800").unwrap().opacity, 0.0);
 
-        // `rgba(…)` — the web's OWN output, from `rgbaFromHex`.
+        // `rgba(…)` - the web's OWN output, from `rgbaFromHex`.
         let c = parse("rgba(26, 115, 232, 0.5)").unwrap();
         assert_eq!(c.rgb.to_hex(), "#1a73e8");
         assert!(close(c.opacity, 50.0));
@@ -3290,7 +3290,7 @@ mod tests {
             "",            // nothing
             "#",           // a hash and nothing else
             "#ab",         // two digits
-            "#abcd",       // the four-digit shorthand — deliberately not read
+            "#abcd",       // the four-digit shorthand - deliberately not read
             "#abcde",      // five
             "#abcdefa",    // seven
             "#abcdefabc",  // nine
@@ -3309,7 +3309,7 @@ mod tests {
     }
 
     /// The hex FIELD is stricter than [`parse`]: it is the web's own regex
-    /// pair, and it accepts three or six digits and nothing else — not the
+    /// pair, and it accepts three or six digits and nothing else - not the
     /// eight-digit form this family added, and not a `rgb()` string.
     #[test]
     fn the_hex_field_takes_only_what_the_web_takes() {
@@ -3340,7 +3340,7 @@ mod tests {
         assert_eq!(Rgb::new(9.0, 10.0, 15.0).to_hex(), "#090a0f");
     }
 
-    /// `rgbaFromHex(hex, opacity)` — the string the web hands to CSS.
+    /// `rgbaFromHex(hex, opacity)` - the string the web hands to CSS.
     #[test]
     fn the_css_serialiser_matches_the_webs() {
         assert_eq!(Color::opaque(Rgb::new(26.0, 115.0, 232.0)).to_css(), "rgba(26, 115, 232, 1)");
@@ -3351,7 +3351,7 @@ mod tests {
         assert_eq!(Color::new(Rgb::default(), -4.0).to_css(), "rgba(0, 0, 0, 0)");
     }
 
-    /// `gradientToCss` — sorted by position, percentages rounded, and the two
+    /// `gradientToCss` - sorted by position, percentages rounded, and the two
     /// shapes spelled the way the web spells them.
     #[test]
     fn the_gradient_serialiser_matches_the_webs() {
@@ -3391,7 +3391,7 @@ mod tests {
 
     // ── Chips ───────────────────────────────────────────────────────────────
 
-    /// Which chip is under a point — including the fact that a ROUND chip does
+    /// Which chip is under a point - including the fact that a ROUND chip does
     /// not answer for its corners, and that the gap between two chips answers
     /// for neither.
     #[test]
@@ -3418,7 +3418,7 @@ mod tests {
         // Only the cells that exist answer.
         assert_eq!(grid.cell_at(0.0, 0.0, 3, false, 1.0, 25.0), None);
 
-        // Round chips: the centre answers, the corner does not — a
+        // Round chips: the centre answers, the corner does not - a
         // `rounded-full` button does not receive a click on its corner in a
         // browser either.
         assert_eq!(grid.cell_at(0.0, 0.0, 80, true, 10.0, 10.0), Some(0));
@@ -3426,7 +3426,7 @@ mod tests {
     }
 
     /// The picker's chip row is a FIXED 16 DIP cell that wraps, not a stretched
-    /// one — `flex flex-wrap gap-1` over `w-4 h-4`.
+    /// one - `flex flex-wrap gap-1` over `w-4 h-4`.
     #[test]
     fn the_fixed_chip_row_wraps_instead_of_stretching() {
         let grid = SwatchGrid::fixed(236.0, 16.0, 4.0);
@@ -3504,7 +3504,7 @@ mod tests {
         assert!(close(mid.position, 0.5));
 
         // A quarter of the way: 0.25 * 255 = 63.75, which `rgbToHex` rounds to
-        // 64 — the quantisation the web performs on an inserted stop.
+        // 64 - the quantisation the web performs on an inserted stop.
         assert_eq!(g.sample_stop(0.25).color.to_hex(), "#404040");
         // The opacity is rounded too, and by `Math.round`.
         assert!(close(g.sample_stop(0.255).opacity, 26.0));
@@ -3559,7 +3559,7 @@ mod tests {
     }
 
     /// A linear gradient runs along its angle: 90° left to right, 0° bottom to
-    /// top, 180° top to bottom — the CSS definition, which is what the browser
+    /// top, 180° top to bottom - the CSS definition, which is what the browser
     /// applies to the web's own `gradientToCss` output.
     #[test]
     fn a_linear_gradient_runs_along_its_angle() {
@@ -3639,7 +3639,7 @@ mod tests {
     }
 
     /// The angle row exists only on a linear gradient, and the bin only when a
-    /// stop may actually be removed — both `&&`-guarded in the web.
+    /// stop may actually be removed - both `&&`-guarded in the web.
     #[test]
     fn the_gradient_panel_hides_what_does_not_apply() {
         let mut p = GradientPicker::new(Gradient::default());
@@ -3660,7 +3660,7 @@ mod tests {
         );
     }
 
-    /// The selected index is CLAMPED on read, the way the web clamps it —
+    /// The selected index is CLAMPED on read, the way the web clamps it -
     /// removing the last stop must not leave the editor pointing past the end.
     #[test]
     fn the_selected_stop_is_clamped_not_trusted() {
@@ -3706,7 +3706,7 @@ mod tests {
         field.enabled = false;
         assert!(!field.enabled);
 
-        // A panel is not a tab stop and has no border — the replica's own
+        // A panel is not a tab stop and has no border - the replica's own
         // overrides, reached without being restated.
         let picker = ColorPicker::new(Color::default());
         assert_eq!(picker.type_name(), "ColorPicker");
@@ -3729,7 +3729,7 @@ mod tests {
         assert_eq!(m::SV_SIDE, js_round((212.0 - 2.0 * 22.0 - 12.0) / 2.0_f64.sqrt()) as f32);
     }
 
-    /// A `ColorField` answers for the rectangle it was painted into — the
+    /// A `ColorField` answers for the rectangle it was painted into - the
     /// trait's default, half-open on the right and bottom.
     #[test]
     fn a_field_hit_test_is_its_rectangle() {
@@ -3779,8 +3779,8 @@ mod tests {
         // Wider than the viewport too: pinned to the left margin.
         let wide = ColorField::popover_rect(swatch, (2000.0, 100.0), screen);
         assert_eq!(wide.left, 8.0);
-        // A viewport that does not start at the origin — a second monitor, or
-        // a work area in client coordinates — is honoured, not assumed.
+        // A viewport that does not start at the origin - a second monitor, or
+        // a work area in client coordinates - is honoured, not assumed.
         let off = Rect::new(-1200.0, -50.0, -200.0, 750.0);
         let s2 = Rect::new(-1150.0, -40.0, -1118.0, -16.0);
         let r2 = ColorField::popover_rect(s2, (312.0, 400.0), off);

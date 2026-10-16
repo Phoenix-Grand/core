@@ -1,4 +1,4 @@
-<!-- ColorsGroup — converted from ColorsGroup.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- ColorsGroup - converted from ColorsGroup.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl>
   <Stack Direction="LeftToRight" Gap="12" WrapContents="true">
     <!-- TODO(views-migrate): <Swatch> is no .kbview element (a local or dynamic component) -->

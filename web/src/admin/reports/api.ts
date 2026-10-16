@@ -7,29 +7,29 @@ import type { DashboardPanel, PanelPeriod } from '../panels/types'
 import { getPublicConfig } from '../../core/api/publicConfig'
 
 /**
- * What a report reads — the SAME endpoints the dashboards read, narrowed.
+ * What a report reads - the SAME endpoints the dashboards read, narrowed.
  *
  * ## No second dialect
  *
  * A report is not a new measurement, it is the existing one printed in full: it
  * asks `/admin/dashboard` (or `/admin/security/dashboard`) for one panel, over
- * one window, with its breakdown untruncated. Every rule that governs a panel —
+ * one window, with its breakdown untruncated. Every rule that governs a panel -
  * the closed list of periods, the comparison against the window of identical
- * length before it, the privilege checked at instance scope — therefore governs
+ * length before it, the privilege checked at instance scope - therefore governs
  * the report by construction. A dedicated `/admin/reports` route would have been
  * a second place for those rules to be stated, and eventually a second answer.
  *
  * ## The two parameters a report adds
  *
- *   • `panel=<id>`  — compute this panel and no other. A document about one
+ *   • `panel=<id>`  - compute this panel and no other. A document about one
  *     panel has no use for the other ten, and computing them is ten times the
  *     database work for figures nobody will read.
- *   • `full=true`   — read every slice of the breakdown, not the card's top-N.
+ *   • `full=true`   - read every slice of the breakdown, not the card's top-N.
  *     A ranking cut at six is what a card wants and exactly what a report must
  *     not be. The server still keeps a ceiling and SAYS when it was reached
  *     (`breakdown_truncated`), because a list that stopped is not a list that
  *     ended.
- *   • `detail=true` — list the RECORDS behind the figure, not only its count.
+ *   • `detail=true` - list the RECORDS behind the figure, not only its count.
  *     A report of failed sign-ins that never names an account is a counter
  *     printed on paper. The rows name people, so the server checks the panel's
  *     own privilege at instance scope (plus, where the rows are a directory,
@@ -55,7 +55,7 @@ export interface PanelProvenance {
  * `kind` is what the console formats on, and it is a CLOSED vocabulary the
  * server owns: `instant` is an ISO-8601 instant to be spelt in the zone the
  * document names, `code` an identifier printed exactly as stored, `text` a
- * human string. A kind this build does not know is printed as plain text —
+ * human string. A kind this build does not know is printed as plain text -
  * ugly and true, rather than dropped.
  */
 export interface PanelDetailColumn {
@@ -80,7 +80,7 @@ export interface PanelDetail {
  * a printed document needs.
  *
  * All of them are OPTIONAL on the wire. A console talking to a server that
- * predates them still renders a correct report — it simply cannot state the
+ * predates them still renders a correct report - it simply cannot state the
  * method, cannot promise the list is complete and cannot list the records, so
  * it says none of the three.
  */
@@ -126,7 +126,7 @@ const ENDPOINT: Record<PanelSource, string> = {
  *
  * Exported because the report page needs the SAME answer the query hook uses:
  * without it, a caller who may not open the endpoint would get a query that
- * never runs and a page that renders nothing — a blank sheet, which on a report
+ * never runs and a page that renders nothing - a blank sheet, which on a report
  * is the one thing that must never happen silently.
  */
 export function reportPrivilege(source: PanelSource): string {
@@ -165,8 +165,8 @@ export function usePanelReport(source: PanelSource, panelId: string, period: str
     staleTime: 60_000,
     // A report is a DOCUMENT, not a live view. Two reasons not to re-read it
     // behind the reader's back: the figures would change between the moment
-    // they check them and the moment the sheet leaves the printer — with a
-    // "generated at" stamp that no longer matches — and the server audits every
+    // they check them and the moment the sheet leaves the printer - with a
+    // "generated at" stamp that no longer matches - and the server audits every
     // reading of the records, so an operator switching windows would fill the
     // trail with consultations they did not make. Changing the period is an
     // explicit act and still refetches.
@@ -175,7 +175,7 @@ export function usePanelReport(source: PanelSource, panelId: string, period: str
 }
 
 /**
- * What this instance calls itself — the first line of every printed report.
+ * What this instance calls itself - the first line of every printed report.
  *
  * Read from the PUBLIC configuration rather than from the administration
  * settings: the name is public by declaration (`instance.name`, `is_public`),

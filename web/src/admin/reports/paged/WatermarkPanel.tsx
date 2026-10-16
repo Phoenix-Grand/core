@@ -11,8 +11,8 @@ import type { WatermarkKind, WatermarkSpec } from './watermark'
  * A popover rather than a modal: every control here changes the sheets behind
  * it, live. A dialog would cover the one thing the operator is adjusting.
  *
- * Three sliders and one choice, and no more. What a stamp is for — "BROUILLON",
- * a company mark, a case number — is settled by the text or the picture; the
+ * Three sliders and one choice, and no more. What a stamp is for - "BROUILLON",
+ * a company mark, a case number - is settled by the text or the picture; the
  * rest is how loud it is and which way it leans.
  */
 export default function WatermarkPanel({ value, onChange }: {
@@ -66,7 +66,7 @@ export default function WatermarkPanel({ value, onChange }: {
 
       <AnchoredPopover anchorRef={anchorRef} open={open} onClose={() => setOpen(false)} align="right">
         {/* `no-print`: the popover is rendered in a PORTAL, outside the toolbar
-            that the print stylesheet hides — left alone it came out on page 1
+            that the print stylesheet hides - left alone it came out on page 1
             of the report, sliders and all. */}
         <div className="no-print w-80 rounded-xl border border-border bg-surface-0 p-4 shadow-lg">
           <p className="mb-3 text-text-primary" style={{ fontSize: 'var(--kb-text-heading)' }}>

@@ -1,8 +1,8 @@
-//! `textDocument/hover` — component doc on an element name, property/event/
+//! `textDocument/hover` - component doc on an element name, property/event/
 //! common-attribute doc on an attribute name (`XML_VIEWS.md` §4: "a doc
 //! string lifted from the existing `///` doc comment" is exactly what
 //! [`kubuno_desktop_views::registry::PropertyMeta::doc`]/[`kubuno_desktop_views::registry::
-//! EventMeta::doc`] carry — this module is that registry's first consumer
+//! EventMeta::doc`] carry - this module is that registry's first consumer
 //! outside `kubuno-desktop-views` itself, per §4's own framing: "the language server
 //! reads it for hover and completion").
 
@@ -50,7 +50,7 @@ pub fn hover(doc: &Document, pos: Position) -> Option<Hover> {
         if attr_name == "x:Name" {
             (format!("**`x:Name`**\n\n{}", common_attrs::X_NAME_DOC), token.text_range())
         } else if let Some((level, prop)) = registered {
-            let from = level.map(|l| format!(" — inherited from `{l}`")).unwrap_or_default();
+            let from = level.map(|l| format!(" - inherited from `{l}`")).unwrap_or_default();
             let alias = if prop.name == attr_name { String::new() } else { format!("\n\n*Older name for `{}`.*", prop.name) };
             (
                 format!("**`{attr_name}`** on `<{element_name}>`\n\n{}\n\n*Default: `{}`*{from}{alias}", prop.doc, prop.default),
@@ -64,7 +64,7 @@ pub fn hover(doc: &Document, pos: Position) -> Option<Hover> {
             let alias = if event.name == attr_name { String::new() } else { format!("\n\n*Older name for `{}`.*", event.name) };
             (
                 format!(
-                    "**`{attr_name}`** event on `<{element_name}>`\n\n{}\n\n*{} — `{}`*{alias}",
+                    "**`{attr_name}`** event on `<{element_name}>`\n\n{}\n\n*{} - `{}`*{alias}",
                     event.doc,
                     event.category.name(),
                     event.args_type

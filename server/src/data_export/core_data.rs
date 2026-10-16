@@ -3,7 +3,7 @@
 //!
 //! The modules answer for their own data through
 //! [`super::contract`]; this file is the core answering for its own, and it is
-//! the one part of the export that always exists — a service picker with every
+//! the one part of the export that always exists - a service picker with every
 //! module unticked still produces a complete account sheet, because "who this
 //! person is" is the thing every other file in the archive refers to.
 //!
@@ -14,7 +14,7 @@
 //! preference: a `SELECT *` exports whatever the next migration adds, and the
 //! next migration is exactly where the next secret arrives. With an explicit
 //! list, adding a sensitive column is inert here until somebody deliberately
-//! types its name — and typing it means walking past this paragraph.
+//! types its name - and typing it means walking past this paragraph.
 //!
 //! Never exported, and absent from every list below: `password_hash`,
 //! `totp_secret`, `totp_pending_secret`, refresh- and verification-token hashes,
@@ -28,7 +28,7 @@
 //! JSON for the structured records: it survives a round trip, it is what an
 //! importer on the other side will read, and it does not lose a nested field the
 //! way a flattened table would. CSV for the audit trail alone, because that one
-//! is read by a person scrolling — and it is rendered by
+//! is read by a person scrolling - and it is rendered by
 //! [`crate::audit::query::csv_line`], the same writer the console's own export
 //! button uses, so the two can never disagree about what a line looks like.
 
@@ -49,7 +49,7 @@ use crate::errors::AppError;
 // for a nested list, a correlated `json_agg`). Neither has a portable spelling
 // across MySQL and SQLite that survives the `ORDER BY` inside the aggregate, so
 // every sheet is now fetched as its explicit rows and serialised in Rust. The
-// column list — the whole security design of this file — is unchanged; only the
+// column list - the whole security design of this file - is unchanged; only the
 // `COALESCE(json_agg(t …), '[]') FROM ( … ) t` wrapper is gone, replaced by
 // `serde_json::to_value` over a typed row. `host(ip_address)` is spelled per
 // engine (`Backend::inet_text`).
@@ -219,7 +219,7 @@ async fn json_list<T: kubuno_db::exec::FromAnyRow + Serialize>(
 ///
 /// `oauth_id` is included and `oauth_provider` with it: they say *how* somebody
 /// signs in, which is part of an honest answer to "what do you hold about me",
-/// and neither is a credential — the identifier is issued by the provider and
+/// and neither is a credential - the identifier is issued by the provider and
 /// grants nothing on its own.
 pub async fn account_profile(db: &DbPool, user_id: Uuid) -> Result<Value, AppError> {
     let profile = db
@@ -281,8 +281,8 @@ pub async fn account_profile(db: &DbPool, user_id: Uuid) -> Result<Value, AppErr
 
 /// The devices and sessions the instance has seen.
 ///
-/// **No token, and no hash of one.** `token_hash` is the credential — exporting
-/// it would hand over a working session — and it is simply not in the column
+/// **No token, and no hash of one.** `token_hash` is the credential - exporting
+/// it would hand over a working session - and it is simply not in the column
 /// list. What is here is what a person can act on: which device, from where,
 /// when, and whether it is still open.
 pub async fn account_devices(db: &DbPool, user_id: Uuid) -> Result<Value, AppError> {
@@ -365,7 +365,7 @@ pub async fn instance_groups(db: &DbPool) -> Result<Value, AppError> {
             AppError::Database(e)
         })?;
 
-    // Membership is fetched once and folded by group in Rust — the former
+    // Membership is fetched once and folded by group in Rust - the former
     // correlated `json_agg` per group. Ordered by (group, username) so each
     // group's members come out already sorted.
     let members = db
@@ -421,12 +421,12 @@ pub async fn instance_org_units(db: &DbPool) -> Result<Value, AppError> {
 /// credential is exported as `"(masqué)"` rather than as its value. Two things
 /// make that acceptable rather than a guess:
 ///
-///   * it errs in the safe direction — a harmless setting whose name contains
+///   * it errs in the safe direction - a harmless setting whose name contains
 ///     `secret` is redacted, which costs a line of an archive, whereas the
 ///     opposite error costs the instance;
 ///   * the settings that genuinely hold a credential (the SMTP password, the
 ///     OAuth client secrets) are stored **encrypted**, so what this would
-///     otherwise export is ciphertext — and ciphertext in an archive is a
+///     otherwise export is ciphertext - and ciphertext in an archive is a
 ///     credential waiting for the day the key leaks.
 pub async fn instance_settings(db: &DbPool) -> Result<Value, AppError> {
     let rows = db

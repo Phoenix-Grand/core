@@ -1,5 +1,5 @@
 // Modules register the route prefixes whose apps should auto-collapse the left
-// sidebar on open (to maximise horizontal workspace). The Shell reads this — core
+// sidebar on open (to maximise horizontal workspace). The Shell reads this - core
 // never hardcodes module paths, so module independence is preserved.
 const _prefixes: string[] = []
 

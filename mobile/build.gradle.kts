@@ -36,7 +36,7 @@ subprojects {
                 publications.register<MavenPublication>("release") {
                     from(components[component])
                     pom {
-                        name.set("Kubuno mobile — ${project.name}")
+                        name.set("Kubuno mobile - ${project.name}")
                         url.set("https://github.com/kubuno/core/tree/main/mobile")
                         licenses {
                             license {

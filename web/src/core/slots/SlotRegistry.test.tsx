@@ -1,6 +1,6 @@
 /**
  * The shell's `app-dialogs` slot as a `.kbview` screen renders it (core `0b661a0`): a `ReactHost` hosting `<Slot>`
- * with memoised props. A module registers its dialogs when its bundle loads — after the shell's first render — and
+ * with memoised props. A module registers its dialogs when its bundle loads - after the shell's first render - and
  * they must appear (WEB-VIEWS §22.4, defect 1).
  */
 import { act, cleanup, render, screen } from '@testing-library/react'

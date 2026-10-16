@@ -1,7 +1,7 @@
 // Pure colour-space conversions shared across the whole app via @ui.
 // Channels: RGB 0..255, H 0..360, S/V/L 0..1, CMYK 0..100.
 // (Originally lived in paintsharp's editor theme; promoted to a core UI primitive so
-//  every module — not just PaintSharp — can reuse the ColorPicker.)
+//  every module - not just PaintSharp - can reuse the ColorPicker.)
 
 export function hexToRgb(hex: string): [number, number, number] {
   return [parseInt(hex.slice(1, 3), 16), parseInt(hex.slice(3, 5), 16), parseInt(hex.slice(5, 7), 16)]

@@ -1,9 +1,9 @@
-//! Kubuno primitives — **dialogs**: the family the project's own rules make
+//! Kubuno primitives - **dialogs**: the family the project's own rules make
 //! mandatory.
 //!
-//! `CLAUDE.md` forbids the browser dialogs outright — « **Jamais** de dialogs
+//! `CLAUDE.md` forbids the browser dialogs outright - « **Jamais** de dialogs
 //! navigateur (`alert`/`confirm`/`prompt`) → `ConfirmDialog`/`useConfirm`,
-//! `PromptDialog`/`prompt()` du core » — and until this file existed that rule
+//! `PromptDialog`/`prompt()` du core » - and until this file existed that rule
 //! had no desktop counterpart at all: a shell that needed a confirmation had
 //! nothing to call. Everything here is therefore a port of a **web component
 //! that already ships**, not a design:
@@ -22,7 +22,7 @@
 //!
 //! ## What is reused rather than rebuilt
 //!
-//! A dialog is a floating surface with a header, a body and an action bar —
+//! A dialog is a floating surface with a header, a body and an action bar -
 //! which is a [`crate::containers::Panel`] with three docked bands. So:
 //!
 //! * the **three bands** come from
@@ -32,15 +32,15 @@
 //! * the **body's children** are a `Panel`'s children, placed and painted by
 //!   that family;
 //! * the **action bar's buttons** are [`crate::buttons::Button`] as they ship
-//!   — variant, size, colours and hit-testing included;
+//!   - variant, size, colours and hit-testing included;
 //! * [`PromptDialog`]'s input is [`crate::text::TextField`], not a second
 //!   field;
-//! * [`Popover`]'s anchoring is [`crate::display::place`] — the tooltip's own
+//! * [`Popover`]'s anchoring is [`crate::display::place`] - the tooltip's own
 //!   flip-and-clamp, which already solved the four edges. See
 //!   [`place_anchored`] for the two things a popover does differently and why
 //!   they could not be expressed as arguments to it.
 //!
-//! ## Measure, then place — never inside the painter
+//! ## Measure, then place - never inside the painter
 //!
 //! Every surface here answers two questions as pure(ish) functions:
 //!
@@ -75,7 +75,7 @@ use crate::text::{field_height, TextField};
 use crate::widget::{Widget, WidgetState};
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Metrics — every one of them citing the line it was read from.
+// Metrics - every one of them citing the line it was read from.
 //
 // `crate::metrics` is the crate's one table and it is not this family's file,
 // so what these six surfaces need and the design system never named as a token
@@ -109,10 +109,10 @@ pub const HOST_MARGIN: f32 = space::SM;
 
 /// Where the window sits vertically: `top: 33%` with `translateY(-33%)`, so a
 /// third of the free space is above it. Horizontally it is `left: 50%` with
-/// `translateX(-50%)` — plain centring, which needs no constant.
+/// `translateX(-50%)` - plain centring, which needs no constant.
 const TOP_FRACTION: f32 = 0.33;
 
-// The title band is the standard Kubuno window band (32 DIP, Windows 11's caption height — decision
+// The title band is the standard Kubuno window band (32 DIP, Windows 11's caption height - decision
 // of 2026-10-04, where the web's `.kb-window-titlebar` is 50): its height
 // ([`kubuno_desktop_controls::window_chrome::TITLEBAR_HEIGHT`]), its insets and its close button
 // are laid out and painted by [`kubuno_desktop_controls::window_chrome`], which holds the numbers.
@@ -131,7 +131,7 @@ const BODY_PAD: f32 = space::XL;
 /// A paragraph's line box. The three dialogs set their message `text-sm
 /// leading-relaxed`, and Tailwind's `leading-relaxed` is `1.625`. The ratio
 /// is kept over the body size (`text::BODY` = 13.5, the web's `text-sm`):
-/// 13.5 × 1.625 = 21.94, ceiled the way `Font.Height` is — the same rounding
+/// 13.5 × 1.625 = 21.94, ceiled the way `Font.Height` is - the same rounding
 /// [`Role::line_height`] documents for `Title`.
 pub const MESSAGE_LINE: f32 = 22.0;
 
@@ -143,7 +143,7 @@ const FOCUS_RING: f32 = 2.0;
 const FOCUS_OFFSET: f32 = 1.0;
 
 
-/// How far a floating surface's shadow reaches past its rectangle — what a
+/// How far a floating surface's shadow reaches past its rectangle - what a
 /// [`kubuno_desktop_controls::host::popup`] must include around the panel so the
 /// shadow is not cut. [`SHADOW_MENU`]'s widest layer is `0 2px 6px 2px`:
 /// 2 + 6 + 2 = 10 DIP below, 8 above; one number covers every side.
@@ -168,7 +168,7 @@ const OPTION_GAP: f32 = space::MD;
 /// The toast card: `px-3 py-2.5`, `gap-2.5` between its three columns, a
 /// `size={16}` variant glyph, a `size={14}` close cross in a `p-1` box, and
 /// `gap-2` between two stacked cards. `bottom-4 right-4` is the anchor inset,
-/// and `maxWidth: min(24rem, calc(100vw - 2rem))` the width — 24rem = 384.
+/// and `maxWidth: min(24rem, calc(100vw - 2rem))` the width - 24rem = 384.
 const TOAST_PAD_X: f32 = space::MD;
 const TOAST_PAD_Y: f32 = 10.0;
 const TOAST_GAP: f32 = 10.0;
@@ -182,7 +182,7 @@ const TOAST_INSET: f32 = space::LG;
 const TOAST_ACTION_GAP: f32 = 6.0;
 const TOAST_ACTION_PAD_X: f32 = 6.0;
 
-/// `max = 4` on `<ToastProvider>` — past it the OLDEST is dropped, « the newest
+/// `max = 4` on `<ToastProvider>` - past it the OLDEST is dropped, « the newest
 /// message is the relevant one ».
 pub const TOAST_MAX: usize = 4;
 
@@ -196,19 +196,19 @@ pub const TOAST_WIDTH: f32 = 384.0;
 pub const POPOVER_WIDTH: f32 = 232.0;
 pub const POPOVER_HEIGHT: f32 = 300.0;
 
-/// `AnchoredPopover`'s `gap = 4` — how far the panel sits off its anchor. Its
+/// `AnchoredPopover`'s `gap = 4` - how far the panel sits off its anchor. Its
 /// `M = 8` viewport keep-off is the SAME number as the tooltip's
 /// [`crate::display::Tooltip::MARGIN`], and is taken from there rather than
 /// restated.
 pub const POPOVER_GAP: f32 = space::XS;
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Text — the one thing the canvas cannot do for us.
+// Text - the one thing the canvas cannot do for us.
 // ─────────────────────────────────────────────────────────────────────────────
 
 /// Breaks `text` into the lines that fit in `max_width`.
 ///
-/// [`Canvas`] publishes fills, strokes, single-run text and named geometries —
+/// [`Canvas`] publishes fills, strokes, single-run text and named geometries -
 /// **no wrapped layout**. A dialog's height is its message's height, so the
 /// wrap has to happen somewhere; putting it here, as a pure function over a
 /// measuring closure, is what lets « one line », « several lines » and « a very
@@ -216,14 +216,14 @@ pub const POPOVER_GAP: f32 = space::XS;
 ///
 /// The rules are the browser's, restricted to what this family needs:
 ///
-/// * an explicit `\n` always breaks — `ConfirmDialog`'s message is
+/// * an explicit `\n` always breaks - `ConfirmDialog`'s message is
 ///   `whitespace-pre-line`, so a caller's line breaks are content (a `\r`
 ///   before it, from a Windows clipboard, is dropped);
 /// * words are greedy-fitted;
 /// * a hyphen inside a word is a break opportunity, as in every browser
 ///   (UAX #14 classes `HY`/`BA`): « Compte-rendu » may end one line with
 ///   « Compte- » and start the next with « rendu »;
-/// * a word wider than `max_width` on a line of its own is broken — at the
+/// * a word wider than `max_width` on a line of its own is broken - at the
 ///   last separator a file name or a path is made of ([`SOFT_BREAKS`]) when
 ///   one keeps at least half the line, otherwise between two characters.
 ///   That is CSS `overflow-wrap: anywhere`, which is what a dialog quoting a
@@ -266,7 +266,7 @@ pub fn wrap(text: &str, max_width: f32, width_of: &dyn Fn(&str) -> f32) -> Vec<S
             out.extend(pieces);
         }
         // An empty source line is a blank line the caller asked for, and it
-        // still costs one line box — dropping it would close the gap a
+        // still costs one line box - dropping it would close the gap a
         // `\n\n` message deliberately opens.
         out.push(line);
     }
@@ -280,7 +280,7 @@ pub fn wrap(text: &str, max_width: f32, width_of: &dyn Fn(&str) -> f32) -> Vec<S
 pub const SOFT_BREAKS: [char; 6] = ['-', '_', '.', '/', '\\', '–'];
 
 /// The longest head of `word`, ending on a hyphen, that still fits after
-/// `line` and a space — `None` when no hyphen does (or the hyphen is the
+/// `line` and a space - `None` when no hyphen does (or the hyphen is the
 /// word's last character, which is no break).
 fn hyphen_split<'a>(
     line: &str,
@@ -297,7 +297,7 @@ fn hyphen_split<'a>(
         .map(|end| (&word[..end], &word[end..]))
 }
 
-/// Cuts `word` into pieces that each fit in `max_width` — the last piece is
+/// Cuts `word` into pieces that each fit in `max_width` - the last piece is
 /// the remainder, which fits too and which the caller keeps open for the next
 /// word. A word that already fits comes back whole.
 ///
@@ -342,8 +342,8 @@ fn wrap_on(canvas: &dyn Canvas, text: &str, max_width: f32, format: &IDWriteText
     wrap(text, max_width, &|s: &str| canvas.measure(s, format))
 }
 
-/// Paints already-wrapped lines inside `at` — whose `left`/`right` bound them
-/// and whose `top` is the first line's — and answers how tall they were.
+/// Paints already-wrapped lines inside `at` - whose `left`/`right` bound them
+/// and whose `top` is the first line's - and answers how tall they were.
 ///
 /// `at.bottom` is ignored: a paragraph is as tall as its lines, and passing a
 /// rectangle rather than three floats is what keeps this under the argument
@@ -373,7 +373,7 @@ fn paint_focus_ring(canvas: &dyn Canvas, rect: Rect, corner: f32, colour: &D2D1_
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Placement — pure, so a host smaller than the dialog is a test.
+// Placement - pure, so a host smaller than the dialog is a test.
 // ─────────────────────────────────────────────────────────────────────────────
 
 /// Where a dialog of `size` goes inside `host`.
@@ -381,7 +381,7 @@ fn paint_focus_ring(canvas: &dyn Canvas, rect: Rect, corner: f32, colour: &D2D1_
 /// `FloatingWindow` positions itself with `left: 50%; top: 33%` and
 /// `transform: translate(-50%, -33%)`, clamped to `calc(100vw - 16px)` /
 /// `calc(100vh - 16px)`. That is: centred horizontally, a THIRD of the way
-/// down (not half — a dialog sits above the optical centre), and never closer
+/// down (not half - a dialog sits above the optical centre), and never closer
 /// than [`HOST_MARGIN`] to an edge.
 ///
 /// A host smaller than the dialog is the interesting case, and it is why the
@@ -424,7 +424,7 @@ pub enum ActionId {
     Cancel,
 }
 
-/// One button of the window's footer — `WindowAction` in `FloatingWindow.tsx`.
+/// One button of the window's footer - `WindowAction` in `FloatingWindow.tsx`.
 ///
 /// `loading` is deliberately **not** ported: the web spins a spinner inside the
 /// button, and neither [`crate::buttons::Button`] nor this family owns one (the
@@ -434,7 +434,7 @@ pub enum ActionId {
 pub struct Action {
     pub label: String,
     /// Destructive: the label turns `danger`. Still a text button, never a
-    /// filled one — the footer's own comment insists on it.
+    /// filled one - the footer's own comment insists on it.
     pub danger: bool,
     pub enabled: bool,
 }
@@ -455,7 +455,7 @@ impl Action {
     }
 
     /// The button that paints it: `variant={danger ? 'textDanger' : 'text'}`
-    /// for the confirming action, `variant="ghost"` for the cancel — the two
+    /// for the confirming action, `variant="ghost"` for the cancel - the two
     /// lines of `FloatingWindow.tsx`'s footer, at the `md` size every dialog
     /// button in the product is.
     fn button(&self, id: ActionId) -> Button {
@@ -470,7 +470,7 @@ impl Action {
     }
 }
 
-/// What a window puts in its footer — `WindowActions`.
+/// What a window puts in its footer - `WindowActions`.
 ///
 /// **The order lives here and nowhere else**: the action on the LEFT, the
 /// cancel on the RIGHT, both at least [`ACTION_MIN_WIDTH`] wide so the pair
@@ -478,7 +478,7 @@ impl Action {
 /// one Word uses), and the whole point of stating it once is that no dialog
 /// gets to have an opinion about it.
 ///
-/// `None` for both means **no footer at all** — a tool panel confirms nothing
+/// `None` for both means **no footer at all** - a tool panel confirms nothing
 /// and must not grow a bar with a lonely « Fermer » in it.
 #[derive(Debug, Clone, Default)]
 pub struct Actions {
@@ -492,7 +492,7 @@ impl Actions {
         Self { confirm: Some(Action::new(confirm)), cancel: Some(Action::new(cancel)) }
     }
 
-    /// A single way out — `actions={{ cancel: … }}`.
+    /// A single way out - `actions={{ cancel: … }}`.
     pub fn only_cancel(cancel: impl Into<String>) -> Self {
         Self { confirm: None, cancel: Some(Action::new(cancel)) }
     }
@@ -501,7 +501,7 @@ impl Actions {
         self.confirm.is_none() && self.cancel.is_none()
     }
 
-    /// The actions, in **paint order** — confirm first, then cancel.
+    /// The actions, in **paint order** - confirm first, then cancel.
     fn list(&self) -> Vec<(ActionId, &Action)> {
         let mut out = Vec::new();
         if let Some(a) = self.confirm.as_ref() {
@@ -517,7 +517,7 @@ impl Actions {
 /// Lays the action buttons out inside `footer`, right-aligned, given each
 /// button's intrinsic width.
 ///
-/// Pure — the widths come from [`crate::buttons::Button::width_of`], which a
+/// Pure - the widths come from [`crate::buttons::Button::width_of`], which a
 /// test can feed without a live font. The group hangs off the RIGHT edge
 /// (`ms-auto`), so it is built from the last button backwards; the returned
 /// rectangles are in the input's order, which is the paint order.
@@ -535,10 +535,10 @@ pub fn action_rects(footer: Rect, widths: &[f32]) -> Vec<Rect> {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// The keyboard — pure, so the focus trap and Entrée / Échap are unit tests.
+// The keyboard - pure, so the focus trap and Entrée / Échap are unit tests.
 // ─────────────────────────────────────────────────────────────────────────────
 
-/// A focusable part of a dialog — what the keyboard can land on.
+/// A focusable part of a dialog - what the keyboard can land on.
 ///
 /// The web's dialogs are DOM trees whose tab order is document order: the ✕
 /// in the title band, then the body's controls, then the footer's buttons.
@@ -576,7 +576,7 @@ impl DialogPart {
         order.iter().copied().find(|p| p.focus_id() == id)
     }
 
-    /// Whether the part is a button — something Espace and Entrée press.
+    /// Whether the part is a button - something Espace and Entrée press.
     pub fn is_button(self) -> bool {
         !matches!(self, DialogPart::Field)
     }
@@ -587,7 +587,7 @@ impl DialogPart {
 pub enum DialogKey {
     Escape,
     Enter,
-    /// Maj+Entrée — a new line in a multiline prompt, Entrée everywhere else.
+    /// Maj+Entrée - a new line in a multiline prompt, Entrée everywhere else.
     ShiftEnter,
     Space,
     Tab,
@@ -616,7 +616,7 @@ impl DialogKey {
 /// What a key asks the dialog's owner to do.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum DialogCommand {
-    /// Close without choosing — Échap, which `FloatingWindow` wires to
+    /// Close without choosing - Échap, which `FloatingWindow` wires to
     /// `onClose` (the cancel).
     Dismiss,
     /// Press a part: a footer action, the ✕, a conflict row.
@@ -626,7 +626,7 @@ pub enum DialogCommand {
 }
 
 /// The focus trap: the part after (or before) `current` in `order`, wrapping
-/// at both ends so Tab never leaves the dialog — the WAI-ARIA dialog pattern
+/// at both ends so Tab never leaves the dialog - the WAI-ARIA dialog pattern
 /// (« Tab: moves focus to the next tabbable element inside the dialog; if
 /// focus is on the last one, moves focus to the first »). From no focus,
 /// forward lands on the first part and backward on the last, as a browser's
@@ -646,18 +646,18 @@ pub fn cycle_focus(order: &[DialogPart], current: Option<DialogPart>, forward: b
     order.get(next).copied()
 }
 
-/// Resolves a key against a dialog's focus — shared by every dialog here.
+/// Resolves a key against a dialog's focus - shared by every dialog here.
 ///
 /// * **Échap** dismisses (`FloatingWindow`'s capture-phase listener).
 /// * **Tab / Maj+Tab** cycle inside `order` ([`cycle_focus`]).
 /// * **Espace** presses the focused button (a native `<button>`).
 /// * **Entrée** presses the focused button when that button is not the
-///   confirming action — the ✕, « Annuler », a conflict row: a browser clicks
+///   confirming action - the ✕, « Annuler », a conflict row: a browser clicks
 ///   the focused button, and cancelling on Entrée after tabbing to
 ///   « Annuler » is what a keyboard user means. Anywhere else (the field, the
 ///   confirming action, nothing) it confirms: `ConfirmDialog`'s window-level
 ///   `keydown` → `onConfirm`, `PromptDialog`'s `onKeyDown` → `submit()`. A
-///   disabled confirming action answers nothing — `submit` checks
+///   disabled confirming action answers nothing - `submit` checks
 ///   `canConfirm` first.
 ///
 /// `confirm_enabled` is `None` when the dialog has no confirming action.
@@ -688,13 +688,13 @@ pub fn resolve_key(
 }
 
 // ═════════════════════════════════════════════════════════════════════════════
-// FloatingWindow — the surface all three dialogs are built on.
+// FloatingWindow - the surface all three dialogs are built on.
 // ═════════════════════════════════════════════════════════════════════════════
 
 /// A floating window: an accent title band, a body, and the footer the whole
 /// product shares.
 ///
-/// It owns a [`Panel`] — the body — so `padding`, `border_style`, `dock`,
+/// It owns a [`Panel`] - the body - so `padding`, `border_style`, `dock`,
 /// `anchor`, `minimum_size` and the child list are that family's, reached
 /// through [`Deref`]. The three bands are laid out by the dock engine
 /// ([`Panel::layout_children`]), not by arithmetic written here.
@@ -733,7 +733,7 @@ pub struct FloatingWindow {
     /// Whether the pointer is on the ✕.
     ///
     /// A [`WidgetState`] describes ONE widget and a window paints several
-    /// targets, so the caller that tracks hover says which — the convention
+    /// targets, so the caller that tracks hover says which - the convention
     /// `Panel::paint_children` documents (« the pointer is over ONE child and
     /// the container does not know which »).
     pub close_hot: bool,
@@ -742,7 +742,7 @@ pub struct FloatingWindow {
     /// What the body asks for, in DIP. A dialog built on this type sets it from
     /// its own measured content; a caller hosting free content sets it itself.
     pub content_height: f32,
-    /// The footer button under the pointer, which paints its hover — the same
+    /// The footer button under the pointer, which paints its hover - the same
     /// « the caller says which » convention as [`FloatingWindow::close_hot`].
     pub hot_action: Option<ActionId>,
     /// The footer button the pointer is held down on (`:active`).
@@ -753,7 +753,7 @@ pub struct FloatingWindow {
     pub focus: Option<DialogPart>,
     /// Whether the focus ring SHOWS (`:focus-visible`): true once the keyboard
     /// moved the focus, false for the programmatic `autoFocus` of a dialog
-    /// opened by a click — a browser does not ring a button focused that way.
+    /// opened by a click - a browser does not ring a button focused that way.
     /// A text field shows its focus whatever this says.
     pub focus_visible: bool,
     /// The radius of the window's corners, in DIP (8 by default, a desktop window's; 0 is square).
@@ -789,7 +789,7 @@ impl FloatingWindow {
 
     /// The tab order: the ✕, then the enabled footer actions (a disabled
     /// `<button>` is skipped by Tab). A window with free body content lists
-    /// only its own chrome — the body's controls belong to its caller.
+    /// only its own chrome - the body's controls belong to its caller.
     pub fn focus_order(&self) -> Vec<DialogPart> {
         let mut out = vec![DialogPart::Close];
         out.extend(
@@ -804,7 +804,7 @@ impl FloatingWindow {
 
     /// Where the focus goes on open: the confirming action (`autoFocus: true`
     /// on `ConfirmDialog`'s confirm), else the first part after the ✕, else
-    /// the ✕ — WAI-ARIA's « focus the first focusable element », with the ✕
+    /// the ✕ - WAI-ARIA's « focus the first focusable element », with the ✕
     /// passed over because landing on « close » first is how a keyboard user
     /// loses a dialog by pressing Entrée.
     pub fn initial_focus(&self) -> Option<DialogPart> {
@@ -812,7 +812,7 @@ impl FloatingWindow {
         order.iter().copied().find(|p| *p != DialogPart::Close).or(order.first().copied())
     }
 
-    /// Resolves a key against this window's focus — see [`resolve_key`].
+    /// Resolves a key against this window's focus - see [`resolve_key`].
     pub fn key_command(&self, key: DialogKey) -> Option<DialogCommand> {
         let confirm = self.actions.confirm.as_ref().map(|a| a.enabled);
         resolve_key(key, self.focus, &self.focus_order(), confirm)
@@ -831,7 +831,7 @@ impl FloatingWindow {
         WidgetState::REST.focused(on).focus_visible(on && self.focus_visible)
     }
 
-    /// **CANVAS space.** Where a part of the window's own chrome is — the ✕ or
+    /// **CANVAS space.** Where a part of the window's own chrome is - the ✕ or
     /// a footer action; `None` for a body part (a dialog built on this type
     /// answers those) or an action the window does not have.
     pub fn part_rect(&self, canvas: &dyn Canvas, bounds: Rect, part: DialogPart) -> Option<Rect> {
@@ -893,7 +893,7 @@ impl FloatingWindow {
         kubuno_desktop_controls::window_chrome::TITLEBAR_HEIGHT + self.footer_height()
     }
 
-    /// `py-3` around a `md` button — or nothing at all when the window has no
+    /// `py-3` around a `md` button - or nothing at all when the window has no
     /// actions.
     pub fn footer_height(&self) -> f32 {
         if self.actions.is_empty() {
@@ -919,7 +919,7 @@ impl FloatingWindow {
 
     // ── Geometry (all of it derived from the `bounds` ARGUMENT) ───────────
 
-    /// The three bands — body, title, footer — from the dock engine.
+    /// The three bands - body, title, footer - from the dock engine.
     ///
     /// The `Fill` child is added FIRST on purpose: the engine walks the child
     /// list in reverse, so a `Fill` added last would be resolved first and take
@@ -973,7 +973,7 @@ impl FloatingWindow {
         action_rects(footer, &widths)
     }
 
-    /// Which action a canvas-space point landed on — `None` for a point on no
+    /// Which action a canvas-space point landed on - `None` for a point on no
     /// button, or on a disabled one (a dead button does not answer).
     pub fn action_at(&self, canvas: &dyn Canvas, bounds: Rect, x: f32, y: f32) -> Option<ActionId> {
         let rects = self.action_rects(canvas, bounds);
@@ -994,7 +994,7 @@ impl FloatingWindow {
     ///
     /// The web's backdrop is a full-host div with `onClick={onClose}` sitting
     /// one z-index under the window, so « outside the window, inside the host,
-    /// and only when there IS a backdrop » is exactly its behaviour — a
+    /// and only when there IS a backdrop » is exactly its behaviour - a
     /// non-modal tool panel swallows nothing and closes on nothing.
     pub fn dismisses(&self, host: Rect, bounds: Rect, x: f32, y: f32) -> bool {
         self.backdrop && host.contains(x, y) && !bounds.contains(x, y)
@@ -1002,7 +1002,7 @@ impl FloatingWindow {
 
     // ── Painting ─────────────────────────────────────────────────────────
 
-    /// The veil, then the window — what a modal caller draws.
+    /// The veil, then the window - what a modal caller draws.
     pub fn paint_modal(&self, canvas: &dyn Canvas, host: Rect, bounds: Rect, state: WidgetState) {
         if self.backdrop {
             canvas.fill_rounded(&host, 0.0, &canvas.theme().dialog_scrim);
@@ -1014,8 +1014,8 @@ impl FloatingWindow {
     fn paint_titlebar(&self, canvas: &dyn Canvas, bounds: Rect) {
         use kubuno_desktop_controls::window_chrome as wc;
         let t = canvas.theme();
-        // The band every Kubuno window wears — top-level forms, dialogs, the designer's picture of a
-        // form — painted by the one shared painter, so they cannot drift from this one.
+        // The band every Kubuno window wears - top-level forms, dialogs, the designer's picture of a
+        // form - painted by the one shared painter, so they cannot drift from this one.
         let style = wc::ChromeStyle::default();
         let window = Rect::new(bounds.left, bounds.top, bounds.right, bounds.top + kubuno_desktop_controls::window_chrome::TITLEBAR_HEIGHT);
         let layout = wc::layout(&style, window, self.icon.is_some(), wc::SystemButtons::CLOSE_ONLY, wc::SlotWidths::default());
@@ -1115,7 +1115,7 @@ impl Widget for FloatingWindow {
 // ConfirmDialog
 // ═════════════════════════════════════════════════════════════════════════════
 
-/// How loud a confirmation is — `ConfirmVariant` in `ConfirmDialog.tsx`.
+/// How loud a confirmation is - `ConfirmVariant` in `ConfirmDialog.tsx`.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
 pub enum ConfirmVariant {
     #[default]
@@ -1144,7 +1144,7 @@ impl ConfirmVariant {
     /// (`bg-red-100 text-red-600`, `bg-amber-100 text-amber-600`,
     /// `bg-gray-100 text-gray-600`) rather than as design tokens, which is a
     /// slip in the component and not a licence to hard-code a colour here: the
-    /// three pairs are read as their token equivalents — `danger_light` /
+    /// three pairs are read as their token equivalents - `danger_light` /
     /// `danger`, `warning_light` / `caution` (the amber the palette already
     /// carries « for the conflict dialog's warning text »), and `surface_2` /
     /// `text_secondary`.
@@ -1157,14 +1157,14 @@ impl ConfirmVariant {
     }
 }
 
-/// « Êtes-vous sûr ? » — the primitive the project's rules require instead of
+/// « Êtes-vous sûr ? » - the primitive the project's rules require instead of
 /// `window.confirm`.
 ///
 /// A [`FloatingWindow`] at `defaultWidth={380}` with a `backdrop`, whose body
 /// is `p-6 flex flex-col gap-4`: a 48 DIP disc holding the variant's glyph,
-/// then the message. The footer is the window's own — `ConfirmDialog.tsx`'s
+/// then the message. The footer is the window's own - `ConfirmDialog.tsx`'s
 /// own comment records the day it stopped drawing two filled buttons of its
-/// own — so the confirming action is a TEXT button on the left and « Annuler »
+/// own - so the confirming action is a TEXT button on the left and « Annuler »
 /// a ghost on the right.
 pub struct ConfirmDialog {
     window: FloatingWindow,
@@ -1186,13 +1186,13 @@ impl ConfirmDialog {
         Self { window, message: message.into(), variant: ConfirmVariant::default() }
     }
 
-    /// The tab order — the window's own: the ✕, the confirm, the cancel. The
+    /// The tab order - the window's own: the ✕, the confirm, the cancel. The
     /// disc and the message are not focusable.
     pub fn focus_order(&self) -> Vec<DialogPart> {
         self.window.focus_order()
     }
 
-    /// Resolves a key: Échap cancels, Entrée confirms, Tab cycles inside —
+    /// Resolves a key: Échap cancels, Entrée confirms, Tab cycles inside -
     /// see [`resolve_key`].
     pub fn key_command(&self, key: DialogKey) -> Option<DialogCommand> {
         self.window.key_command(key)
@@ -1221,7 +1221,7 @@ impl ConfirmDialog {
         }
     }
 
-    /// `hideCancel` — a one-button information dialog.
+    /// `hideCancel` - a one-button information dialog.
     pub fn hide_cancel(mut self) -> Self {
         self.window.actions.cancel = None;
         self
@@ -1327,7 +1327,7 @@ impl Widget for ConfirmDialog {
 // PromptDialog
 // ═════════════════════════════════════════════════════════════════════════════
 
-/// « Comment voulez-vous l'appeler ? » — the primitive that replaces
+/// « Comment voulez-vous l'appeler ? » - the primitive that replaces
 /// `window.prompt`.
 ///
 /// A [`FloatingWindow`] at `defaultWidth={400}`, body `p-6 flex flex-col
@@ -1336,7 +1336,7 @@ impl Widget for ConfirmDialog {
 /// ## The field is a [`TextField`], not a second one
 ///
 /// `f.set_text(…)`, `f.placeholder_text`, `f.select(…)`, `f.max_length`,
-/// `f.multiline` are the replica's, through that family — including the caret
+/// `f.multiline` are the replica's, through that family - including the caret
 /// and selection painting, which is the shipping `edit_box`.
 ///
 /// ## One deliberate difference from the reference
@@ -1346,7 +1346,7 @@ impl Widget for ConfirmDialog {
 /// and records why in a comment (« a confirmation is a dialog like any other »).
 /// This port follows the rule, not the straggler: the two buttons are the
 /// window's, so every dialog in the product has one footer. The behaviour is
-/// kept exactly — `canConfirm = allowEmpty || value.trim() !== ''` disables the
+/// kept exactly - `canConfirm = allowEmpty || value.trim() !== ''` disables the
 /// confirming action, it does not hide it.
 pub struct PromptDialog {
     window: FloatingWindow,
@@ -1355,9 +1355,9 @@ pub struct PromptDialog {
     /// The input. Public: a caller drives its text, selection and placeholder
     /// through the replica.
     pub field: TextField,
-    /// `allowEmpty` — whether an empty value may be confirmed.
+    /// `allowEmpty` - whether an empty value may be confirmed.
     pub allow_empty: bool,
-    /// The fixed end of the selection, in characters — where a Maj+arrow or a
+    /// The fixed end of the selection, in characters - where a Maj+arrow or a
     /// drag started. The replica stores a selection as `start + length` and
     /// has no direction, so the end that moves is kept here.
     anchor: i32,
@@ -1365,7 +1365,7 @@ pub struct PromptDialog {
     caret: i32,
 }
 
-/// One editing operation on [`PromptDialog`]'s input — what the keys of a
+/// One editing operation on [`PromptDialog`]'s input - what the keys of a
 /// native `<input>` / `<textarea>` do, decoded by [`FieldEdit::from_key`].
 ///
 /// The field is the replica's `TextBox`; these operations go through its own
@@ -1394,7 +1394,7 @@ pub enum FieldEdit {
 
 impl FieldEdit {
     /// Decodes a key-down into an edit, or `None` for a key the field does not
-    /// own (Entrée, Échap, Tab — the dialog's; Ctrl+C / X / V — the caller's,
+    /// own (Entrée, Échap, Tab - the dialog's; Ctrl+C / X / V - the caller's,
     /// because the clipboard is the host's). Maj+Entrée in a multiline field
     /// is a line break.
     pub fn from_key(key: u16, mods: Modifiers, multiline: bool) -> Option<Self> {
@@ -1417,7 +1417,7 @@ impl FieldEdit {
     }
 }
 
-/// The character index of the word boundary before `at` in `text` — what
+/// The character index of the word boundary before `at` in `text` - what
 /// Ctrl+← and Ctrl+Retour arrière jump to: back over spaces, then over the
 /// word.
 fn word_start(text: &str, at: i32) -> i32 {
@@ -1486,7 +1486,7 @@ impl PromptDialog {
 
     // ── Keyboard ─────────────────────────────────────────────────────────
 
-    /// The tab order: the ✕, the field, then the enabled actions — a
+    /// The tab order: the ✕, the field, then the enabled actions - a
     /// disabled « OK » (empty value) is skipped, as a disabled `<button>` is.
     pub fn focus_order(&self) -> Vec<DialogPart> {
         let mut order = self.window.focus_order();
@@ -1494,12 +1494,12 @@ impl PromptDialog {
         order
     }
 
-    /// The field — `el.focus(); el.select()` on open.
+    /// The field - `el.focus(); el.select()` on open.
     pub fn initial_focus(&self) -> Option<DialogPart> {
         Some(DialogPart::Field)
     }
 
-    /// Resolves a key — see [`resolve_key`]. Entrée submits only when
+    /// Resolves a key - see [`resolve_key`]. Entrée submits only when
     /// `canConfirm`; in a multiline prompt Maj+Entrée belongs to the field
     /// (`e.key === 'Enter' && !(multiline && e.shiftKey)`), so it answers
     /// nothing here and [`FieldEdit::from_key`] turns it into a line break.
@@ -1516,13 +1516,13 @@ impl PromptDialog {
         self.caret
     }
 
-    /// The selected text — what Ctrl+C copies.
+    /// The selected text - what Ctrl+C copies.
     pub fn selected_text(&self) -> String {
         self.field.selected_text()
     }
 
     /// Puts the caret at `at` (clamped into the text); `extend` keeps the
-    /// anchor, so the selection runs from it to the caret — Maj+click, a drag.
+    /// anchor, so the selection runs from it to the caret - Maj+click, a drag.
     pub fn set_caret(&mut self, at: i32, extend: bool) {
         let n = self.field.text().chars().count() as i32;
         self.caret = at.clamp(0, n);
@@ -1600,7 +1600,7 @@ impl PromptDialog {
     }
 
     /// The character index nearest to canvas-space `x` in the field painted in
-    /// `bounds` — where a click puts the caret. Measured against the live font
+    /// `bounds` - where a click puts the caret. Measured against the live font
     /// prefix by prefix; a single-line field whose text is scrolled (longer
     /// than the box) is measured from its unscrolled start, which is a known
     /// limit of this port (the scroll offset is the predecessor's, private to
@@ -1629,7 +1629,7 @@ impl PromptDialog {
         self
     }
 
-    /// `multiline` — a `rows={3}` text area instead of an input.
+    /// `multiline` - a `rows={3}` text area instead of an input.
     pub fn multiline(mut self, on: bool) -> Self {
         self.field.multiline = on;
         self
@@ -1645,7 +1645,7 @@ impl PromptDialog {
         self.allow_empty || !self.field.text().trim().is_empty()
     }
 
-    /// The field's height: `h-9` for one line, `rows={3}` when multiline —
+    /// The field's height: `h-9` for one line, `rows={3}` when multiline -
     /// [`crate::text::field_height`], so the two families cannot disagree.
     pub fn field_height(&self) -> f32 {
         field_height(self.field.multiline, 3)
@@ -1658,7 +1658,7 @@ impl PromptDialog {
         Rect::new(body.left + BODY_PAD, top, body.right - BODY_PAD, top + self.field_height())
     }
 
-    /// The message, wrapped — empty when there is none.
+    /// The message, wrapped - empty when there is none.
     pub fn lines(&self, canvas: &dyn Canvas, width: f32) -> Vec<String> {
         if self.message.is_empty() {
             return Vec::new();
@@ -1666,7 +1666,7 @@ impl PromptDialog {
         wrap_on(canvas, &self.message, width - 2.0 * BODY_PAD, &canvas.formats().body)
     }
 
-    /// The message block, `gap-4` included — zero when there is no message, so
+    /// The message block, `gap-4` included - zero when there is no message, so
     /// the field sits directly under the padding.
     fn message_height(&self, canvas: &dyn Canvas, width: f32) -> f32 {
         let lines = self.lines(canvas, width).len() as f32;
@@ -1765,7 +1765,7 @@ impl Widget for PromptDialog {
 // ConflictDialog
 // ═════════════════════════════════════════════════════════════════════════════
 
-/// What the user chose — `ConflictChoice`.
+/// What the user chose - `ConflictChoice`.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum ConflictChoice {
     /// « Écraser » for a file, « Fusionner » for a folder.
@@ -1774,7 +1774,7 @@ pub enum ConflictChoice {
     Cancel,
 }
 
-/// What is in conflict — `type: 'file' | 'folder'`, which decides the first
+/// What is in conflict - `type: 'file' | 'folder'`, which decides the first
 /// option's label and wording.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
 pub enum ConflictKind {
@@ -1783,13 +1783,13 @@ pub enum ConflictKind {
     Folder,
 }
 
-/// « Un fichier nommé « … » existe déjà. » — the three-way choice Drive shows
+/// « Un fichier nommé « … » existe déjà. » - the three-way choice Drive shows
 /// on a name collision.
 ///
 /// A [`FloatingWindow`] at `defaultWidth={400}` whose body is `p-6 gap-5`: the
 /// sentence, then two option rows, each `p-3 rounded-xl border border-border`
 /// with a 32 DIP tinted icon box, a title and a two-line explanation. The third
-/// choice, « Annuler », is the window's own cancel action — the reference draws
+/// choice, « Annuler », is the window's own cancel action - the reference draws
 /// it as a bare text button inside the body, which is the shape
 /// `ConfirmDialog.tsx` moved away from, so the port puts it in the one footer
 /// the product has.
@@ -1829,19 +1829,19 @@ impl ConflictDialog {
 
     /// « Annuler ». The web autofocuses nothing here; WAI-ARIA's advice for a
     /// dialog whose choices are destructive is to start on the least
-    /// destructive one, and the first row overwrites a file — so a stray
+    /// destructive one, and the first row overwrites a file - so a stray
     /// Entrée must not land on it.
     pub fn initial_focus(&self) -> Option<DialogPart> {
         Some(DialogPart::Action(ActionId::Cancel))
     }
 
     /// Resolves a key: Échap and Entrée on « Annuler » cancel, Entrée or
-    /// Espace on a row chooses it, Tab cycles — see [`resolve_key`].
+    /// Espace on a row chooses it, Tab cycles - see [`resolve_key`].
     pub fn key_command(&self, key: DialogKey) -> Option<DialogCommand> {
         resolve_key(key, self.window.focus, &self.focus_order(), None)
     }
 
-    /// The choice a part stands for — a row's, or « Annuler » / the ✕.
+    /// The choice a part stands for - a row's, or « Annuler » / the ✕.
     pub fn choice_of(&self, part: DialogPart) -> Option<ConflictChoice> {
         match part {
             DialogPart::Option(i) => self.options().get(i).map(|o| o.0),
@@ -1850,7 +1850,7 @@ impl ConflictDialog {
         }
     }
 
-    /// The two options, in order — `(choice, title, explanation, icon)`.
+    /// The two options, in order - `(choice, title, explanation, icon)`.
     ///
     /// The wording is the component's, verbatim, because it is what the product
     /// says today and a dialog that says something else is a different dialog.
@@ -1901,7 +1901,7 @@ impl ConflictDialog {
         wrap_on(canvas, text, inner, &canvas.formats().caption)
     }
 
-    /// One row's height: `p-3` around whichever is taller — the icon box, or
+    /// One row's height: `p-3` around whichever is taller - the icon box, or
     /// the title line plus `mt-0.5` plus the explanation.
     fn option_height(&self, canvas: &dyn Canvas, width: f32, text: &str) -> f32 {
         let lines = self.option_lines(canvas, width, text).len() as f32;
@@ -1976,7 +1976,7 @@ impl ConflictDialog {
             return;
         };
 
-        // `hover:border-primary hover:bg-primary/5` — the accent tint the web
+        // `hover:border-primary hover:bg-primary/5` - the accent tint the web
         // washes the row with is `accent_light`, the token that already is
         // « the accent at a fraction of its strength ».
         if hot {
@@ -1985,7 +1985,7 @@ impl ConflictDialog {
         canvas.stroke_rounded(&rect, radius::XL, if hot { &t.accent } else { &t.card_stroke });
 
         // `bg-danger/10` on the destructive option, `bg-primary/10` on the
-        // other — the same two tinted grounds the palette carries as
+        // other - the same two tinted grounds the palette carries as
         // `danger_light` and `accent_light`.
         let (ground, glyph) = if *choice == ConflictChoice::Overwrite {
             (t.danger_light, t.danger)
@@ -2076,10 +2076,10 @@ impl Widget for ConflictDialog {
 }
 
 // ═════════════════════════════════════════════════════════════════════════════
-// Popover — the anchored floating panel.
+// Popover - the anchored floating panel.
 // ═════════════════════════════════════════════════════════════════════════════
 
-/// Which of the popover's edges lines up with the anchor's — `align: 'left' |
+/// Which of the popover's edges lines up with the anchor's - `align: 'left' |
 /// 'right'` in `AnchoredPopover.tsx`, generalised to the cross axis of
 /// whichever side it settles on.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
@@ -2090,7 +2090,7 @@ pub enum Align {
     Start,
     /// Trailing edges flush.
     End,
-    /// Centred on the anchor — what a tooltip does, offered so a caller can ask
+    /// Centred on the anchor - what a tooltip does, offered so a caller can ask
     /// for it without leaving this family.
     Center,
 }
@@ -2098,7 +2098,7 @@ pub enum Align {
 /// Every alignment, for the gallery and the tests.
 pub const ALIGNMENTS: [Align; 3] = [Align::Start, Align::End, Align::Center];
 
-/// Where an anchored panel of `size` goes — **the tooltip's placement, reused**.
+/// Where an anchored panel of `size` goes - **the tooltip's placement, reused**.
 ///
 /// [`crate::display::place`] already solved this problem: prefer a side, flip
 /// to the opposite one when it does not fit, take the roomier of the two when
@@ -2109,17 +2109,17 @@ pub const ALIGNMENTS: [Align; 3] = [Align::Start, Align::End, Align::Center];
 /// and the clamp are that function's, called here, not a second copy.
 ///
 /// Two things a popover does that a tooltip does not, and neither can be passed
-/// to `place` as an argument — which is why they are applied afterwards rather
+/// to `place` as an argument - which is why they are applied afterwards rather
 /// than by forking it:
 ///
 /// 1. **A different gap.** `TOOLTIP_GAP` is 14 (« clears the mouse cursor
 ///    itself »); a popover hangs 4 off its anchor because it is anchored to a
 ///    *control*, not to the pointer. `place` bakes its gap in as a constant, so
-///    the rectangle is pulled back toward the anchor by the difference — a move
+///    the rectangle is pulled back toward the anchor by the difference - a move
 ///    INTO the viewport, which cannot undo the clamp.
 /// 2. **Edge alignment instead of centring.** A menu's left edge lines up with
 ///    its button's; a tooltip is centred. The cross axis is therefore
-///    recomputed from [`Align`] and re-clamped — four lines, the only ones in
+///    recomputed from [`Align`] and re-clamped - four lines, the only ones in
 ///    this function that are not reused.
 ///
 /// The returned [`Placement`] carries the tooltip's vocabulary. Its `tip` is
@@ -2174,7 +2174,7 @@ pub fn place_anchored(
 }
 
 /// Keeps an `extent`-long box inside `[0, limit]`, a
-/// [`crate::display::Tooltip::MARGIN`] off both ends — `M = 8` in
+/// [`crate::display::Tooltip::MARGIN`] off both ends - `M = 8` in
 /// `AnchoredPopover.tsx`, the same number, taken from the same place.
 fn clamp_cross(v: f32, extent: f32, limit: f32) -> f32 {
     let lo = display::Tooltip::MARGIN;
@@ -2182,7 +2182,7 @@ fn clamp_cross(v: f32, extent: f32, limit: f32) -> f32 {
     v.clamp(lo, hi)
 }
 
-/// [`place_anchored`] against an `area` that does not start at the origin —
+/// [`place_anchored`] against an `area` that does not start at the origin -
 /// the monitor's work area in the window's client coordinates
 /// (`Frame::screen_area`), which is what a popover shown in a
 /// [`kubuno_desktop_controls::host::popup`] is placed against: it may hang past the
@@ -2212,13 +2212,13 @@ pub fn rebase(rect: Rect, popup: Rect) -> Rect {
     Rect::new(rect.left - popup.left, rect.top - popup.top, rect.right - popup.left, rect.bottom - popup.top)
 }
 
-/// A floating panel pinned to a control — `AnchoredPopover`, which portals a
+/// A floating panel pinned to a control - `AnchoredPopover`, which portals a
 /// menu or a picker out of a clipping toolbar and positions it against its
 /// button.
 ///
 /// The web component paints **nothing**: it is a positioner, and its child
 /// carries the chrome. On the desktop there is no DOM to inherit a surface
-/// from, so this one paints the float surface every Kubuno popup wears —
+/// from, so this one paints the float surface every Kubuno popup wears -
 /// `layer_background` at [`radius::FLOAT`] under [`SHADOW_MENU`], exactly what
 /// `lists`' menu panel draws, so a popover and a menu cannot drift apart.
 ///
@@ -2226,7 +2226,7 @@ pub fn rebase(rect: Rect, popup: Rect) -> Rect {
 /// places and paints them.
 pub struct Popover {
     panel: Panel,
-    /// The side the caller prefers. Honoured when it fits — see
+    /// The side the caller prefers. Honoured when it fits - see
     /// [`place_anchored`].
     pub side: Side,
     pub align: Align,
@@ -2240,7 +2240,7 @@ impl Default for Popover {
     fn default() -> Self {
         Self {
             panel: Panel::new().with_padding(Padding::all(space::XS)),
-            // `top = r.bottom + gap` — below the anchor, like the component.
+            // `top = r.bottom + gap` - below the anchor, like the component.
             side: Side::Bottom,
             align: Align::default(),
             size: Size::new(POPOVER_WIDTH, POPOVER_HEIGHT),
@@ -2279,7 +2279,7 @@ impl Popover {
         place_anchored(anchor, self.size, self.side, self.align, viewport)
     }
 
-    /// Where this panel lands against `anchor` inside an arbitrary `area` —
+    /// Where this panel lands against `anchor` inside an arbitrary `area` -
     /// the screen, for a popover shown in a popup. See [`place_anchored_in`].
     pub fn place_in(&self, anchor: Rect, area: Rect) -> Placement {
         place_anchored_in(anchor, self.size, self.side, self.align, area)
@@ -2288,7 +2288,7 @@ impl Popover {
     /// Whether a click at `(x, y)` dismisses it.
     ///
     /// The component renders a full-viewport `onMouseDown={onClose}` catcher
-    /// under the panel, so anything outside the panel closes it — and unlike a
+    /// under the panel, so anything outside the panel closes it - and unlike a
     /// dialog's backdrop there is no modal flag to check: an anchored popover
     /// is always light-dismissed.
     pub fn dismisses(&self, bounds: Rect, x: f32, y: f32) -> bool {
@@ -2339,10 +2339,10 @@ impl Widget for Popover {
 }
 
 // ═════════════════════════════════════════════════════════════════════════════
-// Toast — the transient notification, and its stack.
+// Toast - the transient notification, and its stack.
 // ═════════════════════════════════════════════════════════════════════════════
 
-/// How loud a toast is — `ToastVariant`, and its `SKIN` map.
+/// How loud a toast is - `ToastVariant`, and its `SKIN` map.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
 pub enum ToastVariant {
     #[default]
@@ -2391,7 +2391,7 @@ impl ToastVariant {
     }
 }
 
-/// Where the stack is anchored — `ToastProviderProps['placement']`.
+/// Where the stack is anchored - `ToastProviderProps['placement']`.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
 pub enum ToastPlacement {
     #[default]
@@ -2415,7 +2415,7 @@ impl ToastPlacement {
     }
 }
 
-/// Lays a stack of toasts out inside `host` — **pure**, so « one », « three »
+/// Lays a stack of toasts out inside `host` - **pure**, so « one », « three »
 /// and « more than fits » are unit tests.
 ///
 /// The rules, from `ToastProvider`:
@@ -2468,7 +2468,7 @@ pub fn stack(host: Rect, placement: ToastPlacement, sizes: &[Size]) -> Vec<Rect>
     out
 }
 
-/// A transient notification — `ToastCard`.
+/// A transient notification - `ToastCard`.
 ///
 /// `rounded-lg border border-border bg-surface-0 px-3 py-2.5` under
 /// `--kb-shadow-float`, with three columns: the variant glyph, the text (an
@@ -2481,7 +2481,7 @@ pub fn stack(host: Rect, placement: ToastPlacement, sizes: &[Size]) -> Vec<Rect>
 ///
 /// The **timing** (a 100 ms tick, paused under the pointer) is the host's, not
 /// this type's: it is a message loop concern with no painted result. What is
-/// ported is the number a host counts down — [`ToastVariant::duration_ms`].
+/// ported is the number a host counts down - [`ToastVariant::duration_ms`].
 pub struct Toast {
     inner: kc::Label,
     /// The optional bold line above the message.
@@ -2489,11 +2489,11 @@ pub struct Toast {
     pub variant: ToastVariant,
     /// One inline action: « Annuler », « Voir », « Réessayer ».
     pub action: Option<String>,
-    /// Lifetime in ms. `0` keeps it until dismissed — « for failures the user
+    /// Lifetime in ms. `0` keeps it until dismissed - « for failures the user
     /// must acknowledge ».
     pub duration_ms: u32,
     /// The pointer is on the ✕ (`hover:bg-surface-2 hover:text-text-primary`).
-    /// Painting with `WidgetState::hot` still lights it too — the original
+    /// Painting with `WidgetState::hot` still lights it too - the original
     /// convention, kept for callers that have one target only.
     pub close_hot: bool,
     /// The pointer is on the inline action (`hover:bg-primary-light`).
@@ -2598,7 +2598,7 @@ impl Toast {
         )
     }
 
-    /// How wide the text column is in a card `width` wide — everything the
+    /// How wide the text column is in a card `width` wide - everything the
     /// glyph, the ✕ and the paddings leave.
     fn text_width(&self, width: f32) -> f32 {
         let r = self.text_rect(Rect::new(0.0, 0.0, width, 0.0));
@@ -2614,8 +2614,8 @@ impl Toast {
     ///
     /// **Width: shrink-to-fit, capped.** The stack is a `flex-col items-end`
     /// with `maxWidth: min(24rem, calc(100vw - 2rem))`, so a card is as wide
-    /// as its content wants — the longest of its title, its message on one
-    /// line and its action — and never wider than [`TOAST_WIDTH`] nor
+    /// as its content wants - the longest of its title, its message on one
+    /// line and its action - and never wider than [`TOAST_WIDTH`] nor
     /// `max_width`. « Enregistré » is a small card; a sentence reaches the cap
     /// and wraps. **Height:** as tall as its rows.
     pub fn measure_at(&self, canvas: &dyn Canvas, max_width: f32) -> Size {
@@ -2649,8 +2649,8 @@ impl Toast {
         Size::new(width, 2.0 * TOAST_PAD_Y + h.max(line))
     }
 
-    /// **CANVAS space.** The inline action's button — `mt-1.5 -ml-1.5 px-1.5
-    /// py-0.5 rounded-md` under the message — or `None` without an action.
+    /// **CANVAS space.** The inline action's button - `mt-1.5 -ml-1.5 px-1.5
+    /// py-0.5 rounded-md` under the message - or `None` without an action.
     pub fn action_rect(&self, canvas: &dyn Canvas, bounds: Rect) -> Option<Rect> {
         let label = self.action.as_ref()?;
         let text = self.text_rect(bounds);
@@ -2776,7 +2776,7 @@ pub struct QueuedToast {
     pub left_ms: Option<u32>,
 }
 
-/// The toasts on screen — `ToastProvider`'s state and timer, without React.
+/// The toasts on screen - `ToastProvider`'s state and timer, without React.
 ///
 /// * [`ToastQueue::push`] appends; past [`ToastQueue::max`] the OLDEST is
 ///   dropped (« the newest message is the relevant one »);
@@ -2784,7 +2784,7 @@ pub struct QueuedToast {
 ///   instead of stacking a duplicate (`opts.id`, « a save indicator fired on
 ///   every keystroke »).
 /// * [`ToastQueue::tick`] counts the lifetimes down and removes the expired
-///   ones — except while `paused`, which the host sets while the pointer is
+///   ones - except while `paused`, which the host sets while the pointer is
 ///   over the stack or the focus is in it (« otherwise a toast carrying an
 ///   Undo can expire under the cursor on its way to the button »).
 /// * [`ToastQueue::display_order`] is the order the cards stack in: the web
@@ -2880,7 +2880,7 @@ impl ToastQueue {
         self.items.is_empty()
     }
 
-    /// Whether any toast is still counting down — a host keeps its timer
+    /// Whether any toast is still counting down - a host keeps its timer
     /// running only then.
     pub fn is_timed(&self) -> bool {
         self.items.iter().any(|q| q.left_ms.is_some())
@@ -2896,9 +2896,9 @@ impl ToastQueue {
         out
     }
 
-    /// Lays the stack out in `host` — each card measured against the room the
+    /// Lays the stack out in `host` - each card measured against the room the
     /// stack leaves (`calc(100vw - 2rem)`), so a narrow host wraps the text
-    /// instead of clipping it — and returns `(index into items, rect)` in
+    /// instead of clipping it - and returns `(index into items, rect)` in
     /// stacking order.
     pub fn layout(&self, canvas: &dyn Canvas, host: Rect, placement: ToastPlacement) -> Vec<(usize, Rect)> {
         let room = (host.right - host.left - 2.0 * TOAST_INSET).max(0.0);
@@ -2936,7 +2936,7 @@ mod tests {
     #[test]
     fn a_long_message_wraps_at_the_width_it_is_given() {
         // 12 words of 4 characters: three of them and their two spaces are 14
-        // glyphs, i.e. 98 DIP — a fourth would not fit in 100.
+        // glyphs, i.e. 98 DIP - a fourth would not fit in 100.
         let text = "abcd abcd abcd abcd abcd abcd abcd abcd abcd abcd abcd abcd";
         assert_eq!(lines(text, 100.0).len(), 4, "three words a line → 4 lines");
         // 19 glyphs = 133 DIP is a fourth word, and 24 is not a fifth.
@@ -3001,7 +3001,7 @@ mod tests {
     #[test]
     fn a_very_long_title_does_not_change_the_measurement() {
         // The band ellipsises rather than wrapping (`text_ellipsis`), so a long
-        // title costs exactly the same height as a short one — which is what
+        // title costs exactly the same height as a short one - which is what
         // makes a dialog's height a function of its BODY alone.
         let short = FloatingWindow::new("Ok");
         let long = FloatingWindow::new("Réinitialiser le mot de passe de Marie Dupont, sans faute");
@@ -3130,7 +3130,7 @@ mod tests {
     fn the_window_width_honours_the_minimum_and_the_host() {
         let w = FloatingWindow::new("t").with_width(WIDTH_CONFIRM);
         assert_eq!(w.width_for(f32::INFINITY), WIDTH_CONFIRM);
-        // A host of 200 leaves 184 once the margins are taken — less than
+        // A host of 200 leaves 184 once the margins are taken - less than
         // `minWidth`, and `place` is what then shrinks the rectangle.
         assert_eq!(w.width_for(200.0), 200.0 - 2.0 * HOST_MARGIN);
         let narrow = FloatingWindow::new("t").with_width(100.0);
@@ -3641,8 +3641,8 @@ mod tests {
 
     /// **No paint path here may read the model's own rectangle.** Reading
     /// `self.bounds` (through the deref to the replica) instead of the `bounds`
-    /// ARGUMENT has been shipped three times in this codebase — `Label`,
-    /// `PictureBox`, `LinkLabel` — and each time it painted the control near
+    /// ARGUMENT has been shipped three times in this codebase - `Label`,
+    /// `PictureBox`, `LinkLabel` - and each time it painted the control near
     /// the window origin. `display.rs` greps itself for it; so does this file,
     /// because a dialog is the widget most likely to be painted somewhere other
     /// than where its model thinks it lives.
@@ -3657,7 +3657,7 @@ mod tests {
             for needle in [".bounds", "control().bounds"] {
                 assert!(
                     !code.contains(needle),
-                    "line {}: `{}` reads the model's own rectangle — paint into the \
+                    "line {}: `{}` reads the model's own rectangle - paint into the \
                      `bounds` ARGUMENT",
                     n + 1,
                     code.trim()

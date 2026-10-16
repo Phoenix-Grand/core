@@ -12,7 +12,7 @@
 //! ## The probes are on demand
 //!
 //! Verification and the mail diagnosis are DNS round-trips, and they run when an
-//! administrator asks — never on the read path. A list that resolved twenty
+//! administrator asks - never on the read path. A list that resolved twenty
 //! domains would take seconds to paint and would hammer a resolver every time
 //! somebody glanced at the page.
 
@@ -62,8 +62,8 @@ pub async fn list(
     let overview = store::overview(&state.db).await?;
 
     // The address the instance sends from, so the page can say whether it
-    // matches a domain that has been proven. A mismatch is not an error — an
-    // instance can legitimately send from a relay's domain — but it is the
+    // matches a domain that has been proven. A mismatch is not an error - an
+    // instance can legitimately send from a relay's domain - but it is the
     // single most useful thing this page can point out about mail.
     let from_address = crate::settings::instance_value(&state.db, "mail.from_address")
         .await
@@ -86,20 +86,20 @@ pub async fn list(
 //
 // The mail module has to answer, on every reception, "is this name ours?". It
 // used to answer from a free-text setting of its own, which is how an instance
-// ended up serving a domain the console had never heard of — and kept serving
+// ended up serving a domain the console had never heard of - and kept serving
 // one an administrator had just removed here.
 //
 // This is the single reading that ends that split. It is deliberately NOT
 // limited to the verified names: a panel that only ever sees the verified ones
 // cannot tell "declared, waiting for its DNS record" from "never declared", and
 // those two call for opposite advice. Deciding what to *serve* stays with the
-// caller — mail serves the verified ones only.
+// caller - mail serves the verified ones only.
 //
 // Guarded by `InternalRequest`: there is no layer on `/internal`, the guard is
-// per handler. Read-only by construction — a module that could write here would
+// per handler. Read-only by construction - a module that could write here would
 // be a module that decides what the instance is called.
 
-/// `GET /internal/domains` — every declared domain with its state.
+/// `GET /internal/domains` - every declared domain with its state.
 pub async fn internal_list_domains(
     State(state): State<AppState>,
     _internal: InternalRequest,
@@ -122,7 +122,7 @@ pub async fn internal_list_domains(
     Ok(Json(json!({ "domains": items })))
 }
 
-/// `GET /admin/domains/:id` — the sheet, blockers included.
+/// `GET /admin/domains/:id` - the sheet, blockers included.
 pub async fn get(
     State(state): State<AppState>,
     _admin: AdminUser,
@@ -176,7 +176,7 @@ pub async fn create(
     Ok(Json(json!({ "domain": domain_json(&domain) })))
 }
 
-/// `POST /admin/domains/:id/verify` — read the DNS now.
+/// `POST /admin/domains/:id/verify` - read the DNS now.
 ///
 /// Not audited as a *change*: it records what the world says, and running it is
 /// not a decision. The transition to verified is what the entry below reports,
@@ -211,7 +211,7 @@ pub async fn verify(
 ///
 /// Emitted the moment the PRIMARY domain has both its ownership proof (TXT) and
 /// routable mail (MX). The mail module subscribes and, on this signal,
-/// provisions an address for every account that has none — the automatic
+/// provisions an address for every account that has none - the automatic
 /// mailbox attribution the administrator configured. Idempotent on the mail
 /// side: an account that already has an address is left alone, so re-emitting
 /// (a second MX check, a re-promotion) provisions only what is new.
@@ -232,7 +232,7 @@ async fn announce_mail_ready(state: &AppState, domain: &crate::domains::Domain) 
         .await;
 }
 
-/// `POST /admin/domains/:id/mail-check` — refresh the MX / SPF / DMARC reading.
+/// `POST /admin/domains/:id/mail-check` - refresh the MX / SPF / DMARC reading.
 pub async fn mail_check(
     State(state): State<AppState>,
     _admin: AdminUser,
@@ -245,10 +245,10 @@ pub async fn mail_check(
     Ok(Json(json!({ "domain": domain_json(&domain) })))
 }
 
-/// `POST /admin/domains/:id/primary` — promote a verified domain.
+/// `POST /admin/domains/:id/primary` - promote a verified domain.
 ///
 /// The most consequential button on the page: it changes what the instance
-/// calls itself. It changes **no account address** — the console says so before
+/// calls itself. It changes **no account address** - the console says so before
 /// the click, and this handler is the reason it can say it truthfully.
 pub async fn promote(
     State(state): State<AppState>,

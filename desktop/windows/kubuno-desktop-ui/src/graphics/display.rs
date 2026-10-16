@@ -1,5 +1,5 @@
 //! The display list: every [`super::Graphics`] call becomes an [`Op`] carrying its own state
-//! (transform, clip, hints). A surface executes ops as they come; a [`DisplayList`] keeps them —
+//! (transform, clip, hints). A surface executes ops as they come; a [`DisplayList`] keeps them -
 //! for tests (what was drawn, in which state) and for a control's paint buffer (replayed while the
 //! control is valid, instead of painting it again).
 
@@ -116,7 +116,7 @@ impl OpState {
 }
 
 /// A primitive of the underlying [`kubuno_drive_desktop_app_controls::Canvas`], called through a `Graphics`
-/// (its `Canvas` implementation) — recorded so a buffered paint that mixes both APIs replays
+/// (its `Canvas` implementation) - recorded so a buffered paint that mixes both APIs replays
 /// whole. Executed on the surface as is: the `Graphics` transform and clip do not apply.
 #[derive(Clone)]
 pub enum CanvasCall {

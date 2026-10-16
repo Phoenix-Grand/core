@@ -8,8 +8,8 @@ import { foldText } from '@ui'
  *
  * TOLERANCE. An administrator types fast, lower-case and without accents.
  * "unites" must find "Unités", "reinit mdp" must find "Réinitialiser le mot de
- * passe". Both sides are therefore folded — Unicode-decomposed, stripped of
- * diacritics, lower-cased — by `foldText`, the very function the `@ui` Combobox
+ * passe". Both sides are therefore folded - Unicode-decomposed, stripped of
+ * diacritics, lower-cased - by `foldText`, the very function the `@ui` Combobox
  * filters with, so the whole product agrees on what "the same text" means.
  *
  * ORDER. A result list that is merely *correct* is useless: what the operator
@@ -77,7 +77,7 @@ function scoreTerm(f: Folded, term: string): number {
 }
 
 /**
- * Score of a whole query. Returns 0 when any term is unmatched — the entry is
+ * Score of a whole query. Returns 0 when any term is unmatched - the entry is
  * then not a result at all.
  */
 export function scoreEntry(f: Folded, terms: string[]): number {
@@ -95,7 +95,7 @@ export function scoreEntry(f: Folded, terms: string[]): number {
 
 /**
  * Loose score, for "did you mean" suggestions on an empty result list: the best
- * single term wins, unmatched terms are forgiven. Never used for real results —
+ * single term wins, unmatched terms are forgiven. Never used for real results -
  * it would let one matching word drag in entries the operator did not ask for.
  */
 export function scoreLoose(f: Folded, terms: string[]): number {
@@ -119,7 +119,7 @@ export const KIND_ORDER: AdminResultKind[] = [
 ]
 
 export interface AdminResult {
-  /** Stable within a render — used as React key and as the ARIA option id. */
+  /** Stable within a render - used as React key and as the ARIA option id. */
   key:        string
   kind:       AdminResultKind
   label:      string
@@ -132,7 +132,7 @@ export interface AdminResult {
   /** Target is a declared placeholder: badged, ranked down, kept out of the top. */
   soon?:      boolean
   Icon?:      LucideIcon
-  /** Users only — the row paints the real avatar when there is one. */
+  /** Users only - the row paints the real avatar when there is one. */
   avatarUrl?: string | null
 }
 
@@ -150,7 +150,7 @@ export function rankCategory(results: AdminResult[], cap: number): AdminResult[]
  * This is the strong form of "never a placeholder in the first three rows": a
  * target that does not exist yet can never displace one that does, whatever
  * category it came from. It can only surface near the top when there are fewer
- * than three real answers — which is to say, when there is nothing to hide it
+ * than three real answers - which is to say, when there is nothing to hide it
  * behind and naming it is more useful than an empty list. It is badged either
  * way, so it is never mistaken for a working destination.
  */
@@ -165,8 +165,8 @@ export interface ResultRun { kind: AdminResultKind; items: AdminResult[] }
 /**
  * Splits the flat, keyboard-ordered list into consecutive same-category runs.
  *
- * Painting from the flat order — instead of grouping by category and hoping the
- * two agree — is what makes arrow navigation match what the eye reads, even
+ * Painting from the flat order - instead of grouping by category and hoping the
+ * two agree - is what makes arrow navigation match what the eye reads, even
  * after a placeholder has been demoted past the categories that follow it.
  */
 export function groupRuns(flat: AdminResult[]): ResultRun[] {

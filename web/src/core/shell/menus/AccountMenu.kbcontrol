@@ -1,6 +1,6 @@
 <!--
   The account panel (user control AccountMenu, shared contract vskubuno docs/SHELL-CONTROLS.md §2). Its header
-  stays put — the active account's address, its mini avatar once the hero has scrolled away, the close button —
+  stays put - the active account's address, its mini avatar once the hero has scrolled away, the close button -
   while the rest scrolls under it: the avatar and its camera, « Bonjour … ! », « Gérer votre compte », the other
   accounts (a card that folds: a click switches, a dead session shows « Déconnecté » with Connexion / Supprimer,
   an account of another instance Ouvrir / Supprimer), then « Ajouter un compte », « Étiquettes »,

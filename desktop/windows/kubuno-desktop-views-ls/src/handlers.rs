@@ -100,7 +100,7 @@ impl CodeBehind {
         self.typed_handlers().any(|(_, m)| m.handler_name == name) || self.table_names().any(|n| n == name)
     }
 
-    /// Whether `name` is taken by any `fn` of the folder (a handler or not) — a rename target must be free.
+    /// Whether `name` is taken by any `fn` of the folder (a handler or not) - a rename target must be free.
     fn name_taken(&self, name: &str) -> bool {
         self.exists(name) || self.files.iter().any(|f| !code_behind::fns_named(&f.text, name).is_empty())
     }

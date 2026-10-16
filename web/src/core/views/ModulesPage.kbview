@@ -1,4 +1,4 @@
-<!-- ModulesPage — converted from ModulesPage.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- ModulesPage - converted from ModulesPage.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <Panel Class="contents">
   <Stack Gap="16" CrossAlign="Center" Justify="Center" Visible="{Binding show_case_1}" Class="py-32 text-center">
     <Stack Direction="LeftToRight" Gap="0" CrossAlign="Center" Justify="Center" BackColor="Surface2" Class="w-20 h-20 rounded-3xl">

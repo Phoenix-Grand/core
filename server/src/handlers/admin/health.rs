@@ -1,4 +1,4 @@
-//! `/admin/health-checks` — the instance health report and the "ignored" state.
+//! `/admin/health-checks` - the instance health report and the "ignored" state.
 //!
 //! The evaluation itself lives in [`crate::health`]; this file is the HTTP
 //! surface: it takes the exposure probe from the request being served, narrows
@@ -29,7 +29,7 @@ const MAX_REASON_LEN: usize = 500;
 /// What this very request says about how it reached the server.
 ///
 /// The core has no "am I behind TLS" helper, and `X-Forwarded-Proto` is
-/// forgeable by anyone who can open a socket — so the header is believed only
+/// forgeable by anyone who can open a socket - so the header is believed only
 /// when the socket peer sits in `server.trusted_proxy_cidrs`, the same rule
 /// `client_ip` applies to `X-Forwarded-For`. Everything else is recorded as
 /// "a proxy claims something we cannot verify".
@@ -49,7 +49,7 @@ fn probe_from(headers: &HeaderMap, peer: Option<SocketAddr>) -> RequestProbe {
         .map(|addr| client_ip::is_trusted_proxy(addr.ip()))
         .unwrap_or(false);
 
-    // A comma-separated chain (`https, http`) keeps the FIRST hop — the scheme
+    // A comma-separated chain (`https, http`) keeps the FIRST hop - the scheme
     // the browser actually used.
     let claims_https = forwarded_proto
         .as_deref()
@@ -105,7 +105,7 @@ pub struct MuteDto {
 ///
 /// Silencing a finding is a security decision, so it needs the privilege that
 /// governs the instance settings, it is written with its author, and it is
-/// audited. It is also reversible — that is the whole difference between
+/// audited. It is also reversible - that is the whole difference between
 /// "ignored" and "hidden".
 pub async fn mute_check(
     State(state): State<AppState>,
@@ -177,7 +177,7 @@ pub async fn mute_check(
     Ok(Json(json!({ "message": "Contrôle ignoré", "check_id": id })))
 }
 
-/// `DELETE /api/v1/admin/health-checks/:id/ignore` — put the finding back.
+/// `DELETE /api/v1/admin/health-checks/:id/ignore` - put the finding back.
 pub async fn unmute_check(
     State(state): State<AppState>,
     audit: AdminAudit,

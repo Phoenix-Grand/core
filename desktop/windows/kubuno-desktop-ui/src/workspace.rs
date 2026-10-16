@@ -1,4 +1,4 @@
-//! The workspace chrome — a port of the web's shared shell of every advanced
+//! The workspace chrome - a port of the web's shared shell of every advanced
 //! application (`core/frontend/src/core/shell/workspace/`: `WorkspaceShell.tsx`,
 //! `MenuBar.tsx`, `WorkspaceMenuBar.tsx`, `theme.ts`), the frame PaintSharp's
 //! editors and the Office apps sit in, around a [`crate::dock::DockArea`].
@@ -7,7 +7,7 @@
 //!
 //! topbar (back · title icon · title + subtitle + doc info · delete · search ·
 //! actions) · menu bar · options bar · (tool rail + body) · bottom bar ·
-//! status bar — each optional, all data-driven: [`WorkspaceShell::frame`]
+//! status bar - each optional, all data-driven: [`WorkspaceShell::frame`]
 //! paints the frame and hands back the rectangles the host fills (the body,
 //! the options bar, the tool rail, the topbar's action area…) and what the
 //! user did ([`WorkspaceRun`]).
@@ -39,7 +39,7 @@ use crate::lists::{self, Menu, MenuEntry, MenuKey, MenuOutcome};
 use crate::{Widget, WidgetState};
 
 // ═════════════════════════════════════════════════════════════════════════════
-// Theme — `theme.ts`
+// Theme - `theme.ts`
 // ═════════════════════════════════════════════════════════════════════════════
 
 /// `WorkspaceTheme`.
@@ -137,7 +137,7 @@ fn fill(c: &dyn Canvas, r: Rect, colour: D2D1_COLOR_F) {
 // Menu model
 // ═════════════════════════════════════════════════════════════════════════════
 
-/// A menu row — the web's rich `MenuItem` (action / separator / submenu).
+/// A menu row - the web's rich `MenuItem` (action / separator / submenu).
 #[derive(Debug, Clone, PartialEq)]
 pub enum WsMenuItem {
     Action { id: String, label: String, shortcut: Option<String>, enabled: bool, checked: bool, danger: bool },

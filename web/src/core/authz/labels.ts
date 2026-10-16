@@ -11,14 +11,14 @@ import type { Role } from './types'
  * `core.privileges` and `core.roles` store `label` / `name` / `description` as
  * plain text, seeded in French by migrations 000044, 000053 and 000054. Those
  * columns cannot become translation keys: the catalogue is **extensible by
- * modules** — a module declares its privileges at registration and the core
- * prefixes them by force — so the core can never know the whole key space ahead
+ * modules** - a module declares its privileges at registration and the core
+ * prefixes them by force - so the core can never know the whole key space ahead
  * of time. The stored text stays the source of truth.
  *
  * What the core *does* know is its own `core.*` catalogue and its own system
  * roles, both addressed by a stable identifier the API already returns (`key`,
  * `slug`, `domain`). So the translation is looked up **from that identifier, in
- * the browser**, and falls back to the stored column whenever no entry exists —
+ * the browser**, and falls back to the stored column whenever no entry exists -
  * which is exactly the module-declared case.
  *
  * Resolving client-side rather than by `Accept-Language` on the server also
@@ -31,7 +31,7 @@ import type { Role } from './types'
  * A system role's `name` and `description` remain editable (only its privilege
  * set is frozen server-side). The French entries in `i18n/locales/fr/core.json`
  * are byte-identical to the migration seed, so "the stored value still equals
- * the French string" is precisely "nobody has rewritten it" — and a rewritten
+ * the French string" is precisely "nobody has rewritten it" - and a rewritten
  * role keeps the operator's wording, in every language. Should the two ever
  * drift apart, the fallback is the stored French label: what this screen showed
  * before any of this existed, never a raw key and never a blank.

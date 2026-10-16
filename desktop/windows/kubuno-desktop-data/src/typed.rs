@@ -1,14 +1,14 @@
 //! Typed rows (`vskubuno/docs/DATA.md`, DATA-4): the runtime side of [`crate::data_source!`].
 //!
 //! - [`TypedRow`]: implemented by the row structs `data_source!` generates, so typed rows and the
-//!   dynamic components share one runtime — a [`Table`] (and a [`BindingSource`], its change
+//!   dynamic components share one runtime - a [`Table`] (and a [`BindingSource`], its change
 //!   tracking and its bindings) can be loaded from typed rows and read back as typed rows
 //!   ([`Table::from_typed`], [`Table::to_typed`], [`BindingSource::load_typed`],
 //!   [`BindingSource::to_typed`], [`BindingSource::typed_changes`]…).
 //! - [`FieldValue`]: the conversion of one field type to and from a [`DbValue`].
 //! - The typed pools of a [`ConnectionHandle`] (`sqlite_pool`, `pg_pool`, `mysql_pool`) and the
 //!   `run_*` helpers that run typed `sqlx` code on the data runtime and return a [`DataTask`] the UI
-//!   awaits without blocking — what the generated `*_task` functions call.
+//!   awaits without blocking - what the generated `*_task` functions call.
 
 use std::future::Future;
 
@@ -242,14 +242,14 @@ impl FieldValue for serde_json::Value {
     }
 }
 
-/// Field `index` (column `column`) of `values` as `T` — what the generated `from_values` calls.
+/// Field `index` (column `column`) of `values` as `T` - what the generated `from_values` calls.
 #[doc(hidden)]
 pub fn field<T: FieldValue>(values: &[DbValue], index: usize, column: &str) -> Result<T, DataError> {
     let value = values.get(index).unwrap_or(&DbValue::Null);
     T::from_db(value).map_err(|reason| DataError::Validation(format!("column `{column}`: {reason}")))
 }
 
-/// A column of a typed row — what the generated `columns` calls. `provider` is the `.kbdata`
+/// A column of a typed row - what the generated `columns` calls. `provider` is the `.kbdata`
 /// provider name (`sqlite`, `postgres`, `mysql`, `sqlserver`).
 #[doc(hidden)]
 #[allow(clippy::too_many_arguments)]
@@ -381,7 +381,7 @@ macro_rules! typed_pool {
         #[cfg(feature = $feature)]
         impl ConnectionHandle {
             #[doc = concat!("The connection's `", stringify!($ty), "` (opened on first use, with the retry policy), for typed")]
-            /// `sqlx` code — the functions `data_source!` generates take it. The task runs on the
+            /// `sqlx` code - the functions `data_source!` generates take it. The task runs on the
             /// data runtime and can be awaited from any executor; the pool itself must be used from
             /// a Tokio context (the data runtime: [`Self::run_sqlite`] and co, or [`crate::block_on`]).
             pub fn $pool(&self) -> DataTask<$ty> {

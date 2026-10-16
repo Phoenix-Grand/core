@@ -760,7 +760,7 @@ impl Popover {
 /// A custom control of a view, typed with its class: what `#[kubuno_desktop::view]` gives a
 /// `#[control]` field (`#[control] thread: Custom<MessageThread>`), the Rust twin of the
 /// `private MessageThread thread;` of a `Form1.Designer.cs`. It is a [`Control`] (deref) whose
-/// class instance is reached with [`Custom::with`] — `self.thread.with(|t| t.append(message))`.
+/// class instance is reached with [`Custom::with`] - `self.thread.with(|t| t.append(message))`.
 /// Works for the controls of the project and those of a library it depends on.
 pub struct Custom<T> {
     control: Control,
@@ -781,7 +781,7 @@ impl<T> Custom<T> {
 }
 
 /// Code-first: a custom control or user control of the application created in code, then added to
-/// a form like any control — `form.controls().add(&Custom::<AddressEditor>::new().location(16.0, 16.0))`.
+/// a form like any control - `form.controls().add(&Custom::<AddressEditor>::new().location(16.0, 16.0))`.
 impl<T: kubuno_desktop_views::registry::Registered + 'static> Custom<T> {
     /// A new control of class `T`, not yet in a form (WinForms `new AddressEditor()`).
     pub fn new() -> Self {
@@ -789,7 +789,7 @@ impl<T: kubuno_desktop_views::registry::Registered + 'static> Custom<T> {
     }
 
     /// A new control of class `T` whose declared properties (`#[property]` fields) take the values
-    /// `instance` has — Windows Forms' object initializer, `new AddressEditor { Street = "…" }`:
+    /// `instance` has - Windows Forms' object initializer, `new AddressEditor { Street = "…" }`:
     /// `Custom::from_instance(AddressEditor { street: "…".into(), ..Default::default() })`. Only the
     /// values that differ from `T::default()` are written; the control is created from them when
     /// its form shows (the instance itself is not kept).
@@ -809,7 +809,7 @@ impl<T: kubuno_desktop_views::registry::Registered + 'static> Custom<T> {
     }
 
     /// A new control of class `T` whose declared properties are those `init` gives a default
-    /// instance — the object initializer without the struct update syntax (the class's `base`
+    /// instance - the object initializer without the struct update syntax (the class's `base`
     /// field is private to its module): `Custom::<AddressEditor>::init(|e| e.street = "…".into())`.
     pub fn init(init: impl FnOnce(&mut T)) -> Self
     where

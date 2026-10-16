@@ -1,8 +1,8 @@
-//! Parse + validate + build — `XML_VIEWS.md` §5's "arse+compile happens once
+//! Parse + validate + build - `XML_VIEWS.md` §5's "arse+compile happens once
 //! per file change, resolving every element against the registry into a
 //! small closure plan". [`compile`] is that whole pass: lex/parse ([`crate::
-//! syntax`]), validate against the registry ([`crate::validate`]), and — only
-//! once the file is clean — walk the typed [`crate::ast`] tree calling each
+//! syntax`]), validate against the registry ([`crate::validate`]), and - only
+//! once the file is clean - walk the typed [`crate::ast`] tree calling each
 //! element's `ComponentMeta::build` (declared once per component by the
 //! `component!` table in `crate::registry::components`) to produce the live
 //! [`crate::node::ViewNode`] tree [`crate::runtime::Runtime`] paints every
@@ -13,13 +13,13 @@
 //! phase): this file runs at *runtime*, on every file change, not at
 //! `cargo build` time.
 //!
-//! A file with any diagnostic — a parse error, an unknown element/attribute,
-//! a bad enum/type value — never reaches `build`: validation is deliberately
+//! A file with any diagnostic - a parse error, an unknown element/attribute,
+//! a bad enum/type value - never reaches `build`: validation is deliberately
 //! a gate, not merely advisory, so a `build` closure can read `Props` without
 //! re-deriving checks [`crate::validate`] already performed (see that
 //! module's own diagnostics, which [`compile`] returns unchanged on failure).
 //! [`crate::runtime::Runtime`] is what keeps painting the last good tree
-//! while a file is in this broken state — this module only ever answers
+//! while a file is in this broken state - this module only ever answers
 //! "here is a fresh tree" or "here are the diagnostics", never both at once.
 
 use crate::ast::{AstNode, Document, Element};
@@ -31,7 +31,7 @@ use crate::syntax::{self, Diagnostic, Parse};
 use crate::validate;
 use crate::node::ViewNode;
 
-/// A successfully compiled `.kbview` file — the "plan" `XML_VIEWS.md` §5
+/// A successfully compiled `.kbview` file - the "plan" `XML_VIEWS.md` §5
 /// talks about. Opaque: a caller drives it through
 /// [`crate::runtime::Runtime`], not by reaching into the tree.
 pub struct CompiledView {
@@ -53,13 +53,13 @@ pub struct CompiledView {
 }
 
 /// Parses, validates and builds `text` against the default registry
-/// ([`crate::registry::all`]). `Err` carries every diagnostic collected —
+/// ([`crate::registry::all`]). `Err` carries every diagnostic collected -
 /// parse errors and validator findings together, exactly as
 /// [`crate::validate::validate`] already returns them, plus (rare: only on an
 /// internal inconsistency the validator should already have caught) a
 /// build-time diagnostic.
 /// The view as the designer shows it: merged over its base views (`x:Inherits`, read next to the view this thread
-/// last loaded) and, in the designer, with its design-time attributes (`d:…`) applied — what the design canvas reads
+/// last loaded) and, in the designer, with its design-time attributes (`d:…`) applied - what the design canvas reads
 /// its size, title and window style from. `text` itself when there is nothing to apply.
 pub fn designed_view_text(text: &str) -> String {
     let dir = crate::icon::default_base_dir();
@@ -89,7 +89,7 @@ pub(crate) fn compile_reusing(
     compile_full(text, registry::all(), base_dir, reuse)
 }
 
-/// [`compile`] against an explicit registry slice — what
+/// [`compile`] against an explicit registry slice - what
 /// [`crate::registry::tests`] and this module's own tests use to exercise a
 /// smaller table without depending on [`crate::registry::all`]'s exact
 /// contents.
@@ -111,14 +111,14 @@ fn compile_full(
 /// designer, with its design-time attributes applied. `Err` when the base view cannot be read.
 pub(crate) fn prepare_text<'t>(text: &'t str, base_dir: Option<&std::path::Path>) -> Result<std::borrow::Cow<'t, str>, Diagnostic> {
     use std::borrow::Cow;
-    // Visual inheritance (`x:Inherits="base.kbview"`): the view merged over its base, read next to it — a designer
+    // Visual inheritance (`x:Inherits="base.kbview"`): the view merged over its base, read next to it - a designer
     // edit or a hot reload of a derived view (the macros embed the merged view already).
     let text: Cow<'t, str> = match kubuno_desktop_views_meta::inherit::resolve(text, base_dir.map(|d| d.join("view.kbview")).as_deref(), &|p| std::fs::read_to_string(p)) {
         Ok(Some((view, _))) => Cow::Owned(view),
         Ok(None) => Cow::Borrowed(text),
         Err(message) => return Err(Diagnostic { range: Default::default(), line: 1, column: 1, message }),
     };
-    // In the designer, the design-time attributes (`d:Visible="false"`) replace their run-time ones — in the view
+    // In the designer, the design-time attributes (`d:Visible="false"`) replace their run-time ones - in the view
     // being designed only, not in the views of the user controls it uses (see `inside_user_control`).
     let design_attributes = crate::design::design_time() && !crate::node::custom::inside_user_control();
     Ok(match design_attributes.then(|| kubuno_desktop_views_meta::inherit::apply_design_attributes(&text)).flatten() {
@@ -252,7 +252,7 @@ pub(crate) fn scoped_focus(id: kubuno_desktop_ui::FocusId) -> kubuno_desktop_ui:
 
 /// Builds one element into its live [`ViewNode`], looked up by name in
 /// [`crate::registry::all`], then wraps it in a [`DesignSlot`] carrying its
-/// [`Element::stable_id`] and `parent_layout` — `vskubuno/docs/DESIGNER.md`
+/// [`Element::stable_id`] and `parent_layout` - `vskubuno/docs/DESIGNER.md`
 /// §6 (DSG-6): "needs an id on every node, not just `x:Name`'d ones". Doing
 /// the wrapping HERE, the single choke point every element (this crate's own
 /// five, or any `registry::families::*` component) passes through, is what
@@ -260,7 +260,7 @@ pub(crate) fn scoped_focus(id: kubuno_desktop_ui::FocusId) -> kubuno_desktop_ui:
 /// having to do it itself (see `crate::design`'s own doc).
 ///
 /// `parent_layout` is the [`LayoutKind`] of the CONTAINER placing this
-/// element — [`LayoutKind::None`] for the document root (no parent) and for
+/// element - [`LayoutKind::None`] for the document root (no parent) and for
 /// [`crate::registry::ChildrenModel::SingleWidget`] callers, the container's
 /// own [`crate::registry::ComponentMeta::layout`] for a `List`/Dock-Anchor
 /// child (see the call sites in [`crate::props::Props::build_children`]/
@@ -268,7 +268,7 @@ pub(crate) fn scoped_focus(id: kubuno_desktop_ui::FocusId) -> kubuno_desktop_ui:
 /// build_single_child`], and `registry::families::containers`'s `<Panel>`
 /// child loop, the one call site that does not go through `Props` at all).
 ///
-/// `pub(crate)` — reached through the `Props` helpers above by a component's
+/// `pub(crate)` - reached through the `Props` helpers above by a component's
 /// own `build` closure, and by [`compile_with_registry`] for the root; never
 /// called with an element that was not already checked by [`crate::validate::
 /// validate`] against the same registry (see this module's doc), so an
@@ -335,7 +335,7 @@ pub(crate) fn build_node(element: &Element, cx: &mut BuildCx, parent_layout: Lay
     };
     // A named component or control of an application class keeps its instance across a new
     // composition of the view (a hot reload, a control added or moved from code): like a Windows
-    // Forms control, it outlives a layout change — its fields (what code set through typed access,
+    // Forms control, it outlives a layout change - its fields (what code set through typed access,
     // a user control's data) stay.
     let reused = scope_name.as_ref().and_then(|name| {
         let i = cx.reuse.iter().position(|(n, c, _)| n == name && *c == meta.name)?;
@@ -388,7 +388,7 @@ mod tests {
         // e.g. `kubuno-desktop-ui/src/buttons.rs`'s tests, which exercise pure
         // geometry helpers instead): a real `Canvas` needs a live Direct2D
         // device, which unit tests do not have. So this checks the one thing
-        // reachable without one — that `compile` actually produced a tree
+        // reachable without one - that `compile` actually produced a tree
         // (`CompiledView.root` is `pub(crate)`, reachable from here) rather
         // than short-circuiting on the way there.
         let src = r#"<Card Title="Réglages"><Stack Direction="TopDown"><Button Text="Ok"/></Stack></Card>"#;
@@ -402,8 +402,8 @@ mod tests {
         assert!(compile(src).is_ok());
     }
 
-    /// `CompiledView` (the `Ok` side) is not `Debug` — a compiled widget tree
-    /// has no useful textual form and nothing else in this crate needs one —
+    /// `CompiledView` (the `Ok` side) is not `Debug` - a compiled widget tree
+    /// has no useful textual form and nothing else in this crate needs one -
     /// so `Result::unwrap_err` is not reachable here; this extracts the `Err`
     /// side directly instead.
     fn expect_err(src: &str) -> Vec<Diagnostic> {
@@ -437,7 +437,7 @@ mod tests {
     fn a_panel_with_anchor_and_dock_children_compiles() {
         // Exercises `registry::families::containers`'s `<Panel>` build
         // closure, the one call site that calls `build_node` directly rather
-        // than through a `Props` helper (see that module's doc) — a
+        // than through a `Props` helper (see that module's doc) - a
         // regression guard for DSG-6's `build_node(element, cx,
         // parent_layout)` signature change reaching every call site,
         // including this one.
@@ -447,7 +447,7 @@ mod tests {
 
     #[test]
     fn worked_settings_snippet_from_the_design_note_compiles() {
-        // `XML_VIEWS.md` §7, restricted to the five registered components —
+        // `XML_VIEWS.md` §7, restricted to the five registered components -
         // the same snippet `crate::validate`'s own test parses, compiled all
         // the way to a live tree here.
         let src = r#"

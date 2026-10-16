@@ -3,7 +3,7 @@ import type { User } from '../types'
 
 /**
  * One signed-in account of THIS browser (Google-style multi-account). The
- * server enumerates them from its own HttpOnly slot cookies — the cookie jar
+ * server enumerates them from its own HttpOnly slot cookies - the cookie jar
  * is the roster, nothing is persisted client-side.
  */
 export interface BrowserAccount {

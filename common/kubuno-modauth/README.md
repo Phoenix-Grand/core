@@ -15,7 +15,7 @@ Every module runs as its own process listening on loopback, and the core is a
 reverse proxy in front of them: it authenticates the caller, then forwards the
 request with the caller's identity attached. When that identity travelled as plain
 `X-Kubuno-User-Id` / `-Role` / `-Email` headers, any process able to reach a
-module's loopback port could forge them and impersonate any user — administrators
+module's loopback port could forge them and impersonate any user - administrators
 included.
 
 The core already derives a **distinct internal secret per module**. This crate binds

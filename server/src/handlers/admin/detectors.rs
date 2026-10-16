@@ -1,6 +1,6 @@
-//! `/admin/detectors` — managing content detectors, and trying one out.
+//! `/admin/detectors` - managing content detectors, and trying one out.
 //!
-//! Reads are gated on `core.rules.read`, **writes on `core.rules.manage`** —
+//! Reads are gated on `core.rules.read`, **writes on `core.rules.manage`** -
 //! the same pair the rules surface uses, and deliberately not a lesser one. A
 //! detector does nothing on its own, so it is tempting to treat editing one as
 //! ordinary administration. It is not: whoever can widen a pattern can make a
@@ -16,7 +16,7 @@
 //! inspected content is displayed. It is displayed **in the browser**, in the
 //! textarea the administrator typed it into: the response carries offsets,
 //! confidences and counters, and not one character of the text. Nothing is
-//! written — no row, no audit entry, no log line — so a compliance officer can
+//! written - no row, no audit entry, no log line - so a compliance officer can
 //! paste a real example to check a threshold without that example becoming a
 //! copy of the thing they are protecting.
 
@@ -335,7 +335,7 @@ pub async fn list_detectors(
     })))
 }
 
-/// `GET /api/v1/admin/detectors/:id` — the detector plus which rules use it.
+/// `GET /api/v1/admin/detectors/:id` - the detector plus which rules use it.
 pub async fn get_detector(
     State(state): State<AppState>,
     ctx: AdminCtx,
@@ -407,8 +407,8 @@ pub async fn update_detector(
 
     let before = store::get(&state.db, id).await?;
     let draft = prepare(&input)?;
-    // A built-in may be tuned — an instance whose regulator disagrees with our
-    // idea of a phone number must not have to fork the core — but not renamed:
+    // A built-in may be tuned - an instance whose regulator disagrees with our
+    // idea of a phone number must not have to fork the core - but not renamed:
     // its key is what rules written before this edit point at.
     if before.is_builtin && draft.key != before.key {
         return Err(AppError::Validation(
@@ -535,8 +535,8 @@ pub struct TestDto {
 
 /// `POST /api/v1/admin/detectors/test`
 ///
-/// Answers with **offsets**, not text. The browser already holds the sample —
-/// the administrator typed it — so it highlights locally, and the response can
+/// Answers with **offsets**, not text. The browser already holds the sample -
+/// the administrator typed it - so it highlights locally, and the response can
 /// keep the promise the rest of the feature makes: no inspected value in a JSON
 /// body, ever, not even here.
 ///
@@ -581,7 +581,7 @@ pub async fn test_detector(
     };
 
     // The same bounds the gate runs under, so what an administrator sees here
-    // is what a module would get — including the truncation.
+    // is what a module would get - including the truncation.
     let limits = Limits {
         max_part_bytes: MAX_SAMPLE_BYTES,
         ..crate::rules::detect::limits_from_settings(&state.db).await
@@ -633,7 +633,7 @@ pub struct LookupQuery {
 ///
 /// The other half of the contract with a blocked user. They were told a
 /// reference and nothing else; somebody holding `core.rules.read` pastes it here
-/// and gets the run — which rule, which version, which mode, how many matches.
+/// and gets the run - which rule, which version, which mode, how many matches.
 /// The asymmetry is the design: the person who must not learn the policy holds a
 /// token that means nothing, and the person who may learn it can resolve it.
 pub async fn lookup_reference(

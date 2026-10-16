@@ -45,7 +45,7 @@ async function loadOne(m: ActiveModule): Promise<boolean> {
   try {
     // Feuille de style du module (best-effort), injectée avant le JS. L'entrée
     // est content-hashée par le core (`entry-<hash>.js`) ; on dérive le CSS en
-    // gardant le MÊME hash (`entry-<hash>.css`) — le core réécrit vers le vrai
+    // gardant le MÊME hash (`entry-<hash>.css`) - le core réécrit vers le vrai
     // entry.css. Sinon iOS resert un CSS périmé. (Le `(\?.*)?` couvre encore
     // l'ancien format `?v=` par sécurité pendant une transition.)
     const cssHref = entry.replace(/\.js(\?.*)?$/, '.css$1')
@@ -62,7 +62,7 @@ async function loadOne(m: ActiveModule): Promise<boolean> {
     // Handshake de version : un module bâti contre un autre SDK est ignoré.
     const v = typeof mod.sdkVersion === 'number' ? mod.sdkVersion : undefined
     if (v !== undefined && v !== SDK_VERSION) {
-      console.warn(`[modules] ${m.module_id} : SDK v${v} ≠ host v${SDK_VERSION} — ignoré`)
+      console.warn(`[modules] ${m.module_id} : SDK v${v} ≠ host v${SDK_VERSION} - ignoré`)
       useModuleLoadStore.getState().recordFailure({
         moduleId: m.module_id,
         reason: 'sdk-mismatch',
@@ -74,7 +74,7 @@ async function loadOne(m: ActiveModule): Promise<boolean> {
     // (`viewsAbi`, exported next to `sdkVersion` by modules that use views) cannot be rendered by this host.
     const abi = typeof mod.viewsAbi === 'number' ? mod.viewsAbi : undefined
     if (abi !== undefined && abi !== VIEWS_ABI) {
-      console.warn(`[modules] ${m.module_id} : views ABI ${abi} ≠ host ${VIEWS_ABI} — ignoré`)
+      console.warn(`[modules] ${m.module_id} : views ABI ${abi} ≠ host ${VIEWS_ABI} - ignoré`)
       useModuleLoadStore.getState().recordFailure({
         moduleId: m.module_id,
         reason: 'views-mismatch',
@@ -83,7 +83,7 @@ async function loadOne(m: ActiveModule): Promise<boolean> {
       return false
     }
     if (typeof mod.register !== 'function') {
-      console.warn(`[modules] ${m.module_id} : pas d'export register() — ignoré`)
+      console.warn(`[modules] ${m.module_id} : pas d'export register() - ignoré`)
       useModuleLoadStore.getState().recordFailure({
         moduleId: m.module_id,
         reason: 'no-register',
@@ -107,7 +107,7 @@ async function loadOne(m: ActiveModule): Promise<boolean> {
     }
     return true
   } catch (err) {
-    // Isolation : l'échec d'un module ne casse jamais le shell ni les autres —
+    // Isolation : l'échec d'un module ne casse jamais le shell ni les autres -
     // mais il ne doit plus disparaître en silence : on le recense pour la cloche
     // (cf. useModuleLoadAlerts). Le cas le plus courant est une erreur de liaison
     // ES (« does not provide an export named 'X' ») d'un module bâti contre une

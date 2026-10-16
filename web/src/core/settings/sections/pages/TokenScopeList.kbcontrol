@@ -1,4 +1,4 @@
-<!-- TokenScopeList — converted from TokenScopeList.tsx by @kubuno/views-migrate. -->
+<!-- TokenScopeList - converted from TokenScopeList.tsx by @kubuno/views-migrate. -->
 <UserControl x:Props="TokenScopeListProps">
   <Panel Class="contents">
     <Label HtmlTag="Span"

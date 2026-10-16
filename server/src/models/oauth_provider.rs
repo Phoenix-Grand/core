@@ -17,7 +17,7 @@ pub struct OAuthProvider {
     pub enabled:           bool,
     pub allow_signup:      bool,
     pub position:          i32,
-    /// Claim names feeding our fields. Dotted paths allowed — see
+    /// Claim names feeding our fields. Dotted paths allowed - see
     /// [`crate::auth::oauth::ClaimMap`].
     pub claim_username:     String,
     pub claim_email:        String,
@@ -40,7 +40,7 @@ impl OAuthProvider {
     }
 }
 
-/// Admin-facing view — exposes everything EXCEPT the secret (only whether one is set).
+/// Admin-facing view - exposes everything EXCEPT the secret (only whether one is set).
 #[derive(Debug, Serialize)]
 pub struct AdminOAuthProvider {
     pub id:           Uuid,

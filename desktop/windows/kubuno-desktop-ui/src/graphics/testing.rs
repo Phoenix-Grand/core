@@ -1,6 +1,6 @@
 //! Surfaces without a window: the theme and text formats a canvas-less [`super::Graphics`]
 //! answers with, and [`RecordingCanvas`], a canvas that records the primitives it is asked to
-//! draw — for the tests of anything that paints (widgets, owner-draw handlers, custom controls).
+//! draw - for the tests of anything that paints (widgets, owner-draw handlers, custom controls).
 
 use std::cell::RefCell;
 

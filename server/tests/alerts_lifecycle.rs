@@ -154,7 +154,7 @@ async fn drop_user(db: &DbPool, id: Uuid) {
 // ── Deduplication ────────────────────────────────────────────────────────────
 
 /// The contract the whole feature rests on: two hundred observations of one
-/// problem are ONE row whose counter says two hundred — not two hundred rows.
+/// problem are ONE row whose counter says two hundred - not two hundred rows.
 #[tokio::test(flavor = "multi_thread", worker_threads = 2)]
 async fn recurrences_increment_a_counter_instead_of_creating_rows() {
     let Some(db) = common::test_pool().await else { return };
@@ -395,7 +395,7 @@ async fn the_queue_is_narrowed_to_what_the_caller_may_read() {
     assert!(ids.contains(&job_alert.id));
     assert!(!ids.contains(&module_alert.id), "hors périmètre : invisible");
 
-    // Addressing it directly is refused too — hiding a row from a list is not a
+    // Addressing it directly is refused too - hiding a row from a list is not a
     // boundary if the detail route serves it anyway.
     assert!(store::get(&db, module_alert.id, &delegate).await.is_err());
 

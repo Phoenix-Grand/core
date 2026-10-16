@@ -10,8 +10,8 @@
 
 **The build-time side of `.kbview` views for the [Kubuno](https://github.com/kubuno/core) web UI.**
 
-A `.kbview` file describes a screen declaratively — the same XML format, element names, `{Binding}` and
-`{Res}` grammar as the Kubuno desktop views — and a same-stem TypeScript **code-behind** class holds its
+A `.kbview` file describes a screen declaratively - the same XML format, element names, `{Binding}` and
+`{Res}` grammar as the Kubuno desktop views - and a same-stem TypeScript **code-behind** class holds its
 state and handlers (WinForms style). This package turns the view into code the browser runs and checks
 it against the code-behind:
 
@@ -49,7 +49,7 @@ Peer dependencies: `typescript` (always) and `vite` (for the plugin). Node.js �
 
 ## Set up a module
 
-`vite.config.ts` — add the plugin and keep `@kubuno/views` external like the other host singletons:
+`vite.config.ts` - add the plugin and keep `@kubuno/views` external like the other host singletons:
 
 ```ts
 import react from '@vitejs/plugin-react'
@@ -63,7 +63,7 @@ export default defineConfig({
 })
 ```
 
-`tsconfig.json` — let TypeScript see the generated files next to your sources:
+`tsconfig.json` - let TypeScript see the generated files next to your sources:
 
 ```jsonc
 {
@@ -72,7 +72,7 @@ export default defineConfig({
 }
 ```
 
-`package.json` — type-check with `kbview-tsc` instead of `tsc`:
+`package.json` - type-check with `kbview-tsc` instead of `tsc`:
 
 ```json
 { "scripts": { "typecheck": "kbview-tsc -b", "build": "kbview-tsc -b && vite build" } }
@@ -123,8 +123,8 @@ exported under the file's name.
 ## Module isolation
 
 A view may only use the host's elements (`@ui`, `@kubuno/sdk`, `@kubuno/views`) and its own project's
-controls and user controls (`.kbcontrol`). A control resolving to anything else — another module's
-package — is a compile **error**, and the generated code only imports host singletons, `lucide-react` and
+controls and user controls (`.kbcontrol`). A control resolving to anything else - another module's
+package - is a compile **error**, and the generated code only imports host singletons, `lucide-react` and
 the project's own files.
 
 ## The Visual Studio design surface
@@ -148,7 +148,7 @@ Studio where to find it; the file is removed when the server stops. Turn the rou
 |---|---|
 | `entry` | the page's entry module, project-root-relative. Only the core names one (`src/views/design/entry.tsx`); a module leaves it out and gets `@kubuno/host-runtime`'s page. |
 | `themes` | a folder of Kubuno themes (`<id>/theme.json` + CSS). Default: the host runtime's light and dark Kubuno themes. |
-| `setup` | project modules the page imports, in order, before it renders a view: what the project's own entry loads in the host — typically its stylesheet and its translations. Project-root-relative files, or bare specifiers. |
+| `setup` | project modules the page imports, in order, before it renders a view: what the project's own entry loads in the host - typically its stylesheet and its translations. Project-root-relative files, or bare specifiers. |
 
 ### Module projects: `@kubuno/host-runtime`
 
@@ -161,7 +161,7 @@ gives every module the host's single instance of each; on npm, `@kubuno/sdk`, `@
 
 - serves the package's project-mode page at `/__kubuno_design__/` (registries, controls and code-behinds from your
   dev server, HMR kept);
-- resolves each shared specifier — the exact specifiers its `dist/project/shared.json` lists, never their subpaths —
+- resolves each shared specifier - the exact specifiers its `dist/project/shared.json` lists, never their subpaths -
   to the package's module of the same name, built together with the page: one React, one `@ui`, the real sdk,
   drive and views runtime, i18next with the core's translations, for the page and your code alike;
 - keeps those specifiers external in Vite's dependency pre-bundling (a pre-bundled `lucide-react` or

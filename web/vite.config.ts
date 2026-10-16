@@ -18,7 +18,7 @@ const pkg = JSON.parse(
  * Version strings injected at build time as `__APP_VERSION__` / `__APP_BUILD__`
  * (see src/vite-env.d.ts), derived from git the way `build_deb.sh` derives the
  * package build id. The point is that a screenshot of the login page names the
- * commit it was built from — `package.json` alone only moves on a release, so
+ * commit it was built from - `package.json` alone only moves on a release, so
  * between two releases it can say nothing useful.
  *
  *   released (clean tree, HEAD on tag `v<version>`)   0.1.5
@@ -27,7 +27,7 @@ const pkg = JSON.parse(
  *
  * One deliberate difference from `build_deb.sh`: no UTC timestamp after `dirty`.
  * These strings are baked into the bundle, so a value that changes on every build
- * would change the chunk content-hash on every build — defeating the stable-hash
+ * would change the chunk content-hash on every build - defeating the stable-hash
  * scheme the shared chunks rely on (see SHARED_CHUNK below) and leaving a fresh
  * copy of every shared chunk in the deployed `shared/` directory each time.
  *
@@ -71,7 +71,7 @@ const VERSION = versionStrings()
 // the host app plus every module all point at the SAME hashed URL → the single
 // shared instance is preserved. The hash makes the URL change whenever the content
 // changes, which busts iOS Safari's memory/bfcache (keyed by URL, and it ignores
-// `no-store` as long as the URL is stable) — the source of stale content on iPhone.
+// `no-store` as long as the URL is stable) - the source of stale content on iPhone.
 // Trade-off: the inline import map changes hash → the core re-reads
 // `importmap.sha256` on (re)start, which every frontend deployment does anyway.
 const SHARED_CHUNK = (name: string | undefined) =>
@@ -131,7 +131,7 @@ export default defineConfig({
           // Les arbres de PAGES (console d'admin, réglages, installation) ne font
           // PAS partie de la surface singleton de l'import map (@kubuno/sdk ne les
           // réexporte pas). Les sortir du chunk eager kubuno-shared pour qu'ils
-          // soient chargés à la demande — il FAUT que App.tsx les importe en
+          // soient chargés à la demande - il FAUT que App.tsx les importe en
           // React.lazy, sinon ils restent tirés dans le graphe eager. AVANT la
           // règle /src/core/ ci-dessous.
           // La console d'admin vit dans son propre dossier `src/admin` (projet

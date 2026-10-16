@@ -1,4 +1,4 @@
-# Kubuno Desktop — Linux
+# Kubuno Desktop - Linux
 
 What Linux does differently from the portable app of [`../common`](../common), and nothing else
 (desktop/README.md, "Platform extension points"). Today Linux overrides nothing:

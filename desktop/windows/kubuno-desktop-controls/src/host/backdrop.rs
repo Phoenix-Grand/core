@@ -1,6 +1,6 @@
 //! The backdrop of a floating panel window ([`super::form::FloatingPanel`]): what is behind the
 //! window, blurred by the compositor, clipped to the panel's own corner radius, with the
-//! renderer's (transparent) swap chain on top — the web's frosted floating panels (the app
+//! renderer's (transparent) swap chain on top - the web's frosted floating panels (the app
 //! launcher, the account panel) as real windows that may extend past their owner.
 //!
 //! Ported from the shell's `flyout_window.rs`, where every dead end below was hit first:
@@ -30,7 +30,7 @@ use windows::Win32::System::WinRT::Composition::{ICompositorDesktopInterop, ICom
 pub(crate) struct PanelBackdrop {
     _target: DesktopWindowTarget,
     /// Laid out in LOGICAL units; its scale maps them to the window's physical pixels (the target
-    /// applies no DPI scaling of its own — measured: content sized in logical units landed at
+    /// applies no DPI scaling of its own - measured: content sized in logical units landed at
     /// exactly `size / scale` physical pixels).
     root: ContainerVisual,
     /// The blurred, rounded panel, inset by the shadow margin. The clip lives here rather than on
@@ -154,7 +154,7 @@ struct WindowCompositionAttribData {
 }
 
 /// Opens the host-backdrop feed for `hwnd`: without it `CreateHostBackdropBrush` has nothing to
-/// sample and paints BLACK — the compositor only receives what is behind a window once the window
+/// sample and paints BLACK - the compositor only receives what is behind a window once the window
 /// asks DWM for it (`ACCENT_ENABLE_HOSTBACKDROP`, through the undocumented but long-stable
 /// `SetWindowCompositionAttribute`). False when the entry point is missing.
 fn enable_host_backdrop(hwnd: HWND) -> bool {

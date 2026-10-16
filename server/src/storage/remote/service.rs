@@ -1,4 +1,4 @@
-//! Remote-mount service — connector cache + config encryption.
+//! Remote-mount service - connector cache + config encryption.
 //! The key derives from the shared internal_secret (SAME derivation as the former
 //! drive module → migrated configs stay decryptable without a re-seal).
 

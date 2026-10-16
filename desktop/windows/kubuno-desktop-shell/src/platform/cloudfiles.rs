@@ -1,8 +1,8 @@
-//! Cloud Files API (CfApi) integration — native Windows sync-status overlays.
+//! Cloud Files API (CfApi) integration - native Windows sync-status overlays.
 //!
 //! Registering each sync folder as a CfApi *sync root* makes Explorer show the
 //! standard cloud overlays (✓ in-sync, ⟳ syncing) and a "Status" column, the
-//! same way OneDrive does — no admin rights, no COM overlay DLL. Our files are
+//! same way OneDrive does - no admin rights, no COM overlay DLL. Our files are
 //! always fully local (population = always-full), so we never field on-demand
 //! hydration; we just register the root, keep a connection while running, and
 //! mark files in-sync.
@@ -25,9 +25,9 @@ pub const DISPLAY_PREFIX: &str = "Kubuno";
 /// Register `folder` as a sync root via the **WinRT** StorageProviderSyncRootManager.
 ///
 /// This is the API that wires up the shell integration (display name, icon and,
-/// crucially, the status overlays) — the low-level Win32 `CfRegisterSyncRoot`
+/// crucially, the status overlays) - the low-level Win32 `CfRegisterSyncRoot`
 /// only sets up the file-system filter and does *not* render overlays.
-/// Returns true if the folder was registered (fails on non-local volumes —
+/// Returns true if the folder was registered (fails on non-local volumes -
 /// CfApi/StorageProvider require a local NTFS path). `name` is the label shown
 /// in the Explorer navigation pane.
 pub fn register(id: &str, name: &str, folder: &Path) -> bool {
@@ -45,8 +45,8 @@ pub fn register(id: &str, name: &str, folder: &Path) -> bool {
 
 /// Waits for a WinRT async operation and hands back its result.
 ///
-/// `windows` 0.62 dropped the blocking `get()` — these operations are futures
-/// now — and registering a sync root is a one-shot startup step that has no use
+/// `windows` 0.62 dropped the blocking `get()` - these operations are futures
+/// now - and registering a sync root is a one-shot startup step that has no use
 /// for an async runtime. So the completion handler signals a channel. It fires
 /// immediately when the operation has already finished, which is the common
 /// case for a local path.
@@ -115,7 +115,7 @@ fn register_winrt(id: &str, name: &str, folder: &Path) -> windows::core::Result<
 /// provider stays "online" while the app runs.
 static CONNECTIONS: std::sync::Mutex<Vec<(String, i64)>> = std::sync::Mutex::new(Vec::new());
 
-/// FETCH_DATA callback — invoked when an online-only file is opened. Reads the
+/// FETCH_DATA callback - invoked when an online-only file is opened. Reads the
 /// `"instanceId|serverFileId"` stored in the placeholder's FileIdentity,
 /// downloads the content from Kubuno and hands it back to the OS via CfExecute.
 unsafe extern "system" fn on_fetch_data(
@@ -215,7 +215,7 @@ pub fn make_ondemand(instance: &str, files: &[(PathBuf, String)]) {
     eprintln!("[cloudfiles] {done} fichier(s) passés en on-demand pour {instance}");
 }
 
-/// True if `path` is already an online-only placeholder (attributes only — no
+/// True if `path` is already an online-only placeholder (attributes only - no
 /// hydration triggered).
 fn is_online_only(path: &Path) -> bool {
     use std::os::windows::fs::MetadataExt;
@@ -260,13 +260,13 @@ pub fn unregister(id: &str) {
 /// Drops every sync root of OURS whose instance no longer exists.
 ///
 /// Registrations outlive the app: they sit in the shell until someone
-/// unregisters them. So an instance removed while the app was closed — or a
-/// config directory wiped by hand, or a reinstall — leaves a dead entry in the
+/// unregisters them. So an instance removed while the app was closed - or a
+/// config directory wiped by hand, or a reinstall - leaves a dead entry in the
 /// navigation pane forever, and several of them stack up looking identical.
 ///
 /// Ours are recognised by their DISPLAY NAME, not by their icon: the icon is
 /// the path of the running executable, which changes between a dev build and an
-/// installed one — so matching on it would skip the very entries left behind by
+/// installed one - so matching on it would skip the very entries left behind by
 /// a previous install, the ones most in need of cleaning. Other providers
 /// (OneDrive, Nextcloud, iCloud) never carry our name, which is what matters.
 pub fn prune_orphans(live_ids: &[String]) {
@@ -299,7 +299,7 @@ pub fn prune_orphans(live_ids: &[String]) {
 /// Second pass, over the REGISTRY rather than the API.
 ///
 /// A registration can end up half-dead: its `SyncRootManager` key still exists
-/// — so Explorer keeps drawing the navigation entry — while WinRT no longer
+/// - so Explorer keeps drawing the navigation entry - while WinRT no longer
 /// lists it, and `Unregister` then answers "element not found". Nothing in the
 /// API can clear those, so the leftover key is removed directly. Only keys
 /// carrying our display name are touched, and a failure (the key may be ACL'd)

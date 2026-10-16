@@ -1,7 +1,7 @@
 import type { LucideIcon } from 'lucide-react'
 
 /**
- * What a dashboard panel IS — the vocabulary shared by every panelled page of
+ * What a dashboard panel IS - the vocabulary shared by every panelled page of
  * the console.
  *
  * The console has more than one dashboard (the security overview, the general
@@ -27,7 +27,7 @@ export interface PanelSlice {
   key:   string
   value: number
   /**
-   * This slice's own ceiling, when it has one — an account's quota against the
+   * This slice's own ceiling, when it has one - an account's quota against the
    * volume it holds. Absent for a slice that is simply a share of a whole, which
    * is then drawn against the largest slice.
    */
@@ -38,7 +38,7 @@ export interface PanelSlice {
  * One panel, as the server computed it.
  *
  * `previous_total` covers the window of identical length immediately before the
- * reading — including for a period still running, which is read up to now on
+ * reading - including for a period still running, which is read up to now on
  * both sides so three days of a month are never compared against a whole one.
  * It is **null** for a panel that describes the present and whose past nobody
  * recorded (how accounts are spread between active and suspended, which modules
@@ -58,7 +58,7 @@ export interface DashboardPanel {
   breakdown:      PanelSlice[]
   /**
    * A limit of the MEASUREMENT, printed under the chart. Not a warning about the
-   * instance — a statement about what the number can and cannot mean.
+   * instance - a statement about what the number can and cannot mean.
    */
   caveat:         string | null
 }
@@ -92,8 +92,8 @@ export type PanelShape =
  * What an increase MEANS.
  *
  * Readings are not "up is good". More failed sign-ins, more disowned devices and
- * more alerts are worse; more sign-ins is neither. Colouring every rise green —
- * the default of every generic dashboard — would make a breach look like growth.
+ * more alerts are worse; more sign-ins is neither. Colouring every rise green -
+ * the default of every generic dashboard - would make a breach look like growth.
  */
 export type PanelPolarity = 'neutral' | 'bad-up'
 
@@ -109,7 +109,7 @@ export interface PanelDef {
   /** Privilege the server requires at instance scope. */
   privilege: string
   /**
-   * Nav leaf that owns the RECORDS behind this panel — the session inventory,
+   * Nav leaf that owns the RECORDS behind this panel - the session inventory,
    * the audit trail, the alert queue.
    *
    * It is no longer what "afficher le rapport" opens: that action now opens the
@@ -134,7 +134,7 @@ export interface PanelDef {
    * Translation key of one breakdown entry.
    *
    * A function rather than a prefix, because the vocabularies these pages show
-   * are ALREADY translated elsewhere and their key shapes differ — an
+   * are ALREADY translated elsewhere and their key shapes differ - an
    * authentication strength is `devices.auth_<x>`, an alert kind is
    * `admin.al_<x_with_underscores>_name`. Reusing them is not a shortcut: it is
    * what stops the same thing being called two different names on two screens.

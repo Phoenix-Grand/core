@@ -1,7 +1,7 @@
 //! A web project as the language server sees it: its root (the folder of `kubuno.views.json` /
 //! `package.json` / `.esproj`), its element registries (the host's `kbview-registry.web.json` and the
 //! project's own control registries, re-read when they change), its views and user controls, and the
-//! web compiler loaded with all of them — the same inputs, rules and outputs as `@kubuno/views-compiler`'s
+//! web compiler loaded with all of them - the same inputs, rules and outputs as `@kubuno/views-compiler`'s
 //! `ViewProject` (`core/frontend/packages/views-compiler/src/project.ts`).
 
 use std::cell::RefCell;

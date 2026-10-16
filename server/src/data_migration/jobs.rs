@@ -12,7 +12,7 @@
 //! is pending: a per-campaign payload would let the second campaign started
 //! that minute silently swallow the first one's re-arm. So the type means "walk
 //! whatever is running", the tick walks every running campaign, and starting a
-//! campaign is `ensure_scheduled` — idempotent by construction.
+//! campaign is `ensure_scheduled` - idempotent by construction.
 //!
 //! ## A failed mailbox is not a failed job
 //!
@@ -28,7 +28,7 @@
 //! ## Why the chain stops
 //!
 //! The tick re-arms itself only while work remains. An instance that has never
-//! migrated anything runs no timer at all — the queue is empty and stays empty
+//! migrated anything runs no timer at all - the queue is empty and stays empty
 //! until an administrator starts a campaign.
 
 use std::sync::Arc;
@@ -85,7 +85,7 @@ pub fn register(registry: &mut JobRegistry, server: Arc<ServerSettings>, jwt_sec
                     }
                 }
                 Ok(false) => {
-                    tracing::debug!("data_migration: plus rien à migrer — la chaîne s'arrête");
+                    tracing::debug!("data_migration: plus rien à migrer - la chaîne s'arrête");
                 }
                 Err(e) => {
                     tracing::error!(error = %e, "data_migration: état du travail restant illisible");
@@ -147,7 +147,7 @@ async fn tick(db: &DbPool, server: &ServerSettings, jwt_secret: &str) -> TickOut
         let account_id = claimed.account_id;
         let campaign = &claimed.campaign;
 
-        // Where the module answers. Absent means it is down or was removed —
+        // Where the module answers. Absent means it is down or was removed -
         // not the account's fault, so the row goes back untouched.
         let base_url = match store::module_base_url(db, &campaign.module_id).await {
             Ok(Some(url)) => url,
@@ -155,7 +155,7 @@ async fn tick(db: &DbPool, server: &ServerSettings, jwt_secret: &str) -> TickOut
                 tracing::warn!(
                     module = %campaign.module_id,
                     campagne = %campaign.id,
-                    "data_migration: module absent — migration différée"
+                    "data_migration: module absent - migration différée"
                 );
                 release(db, account_id).await;
                 return TickOutcome::ModuleUnreachable;
@@ -196,7 +196,7 @@ async fn tick(db: &DbPool, server: &ServerSettings, jwt_secret: &str) -> TickOut
         let source = dispatch::SourceCredentials {
             host:     campaign.source_host.clone(),
             // Guarded by a CHECK constraint and by validation at creation, so
-            // the clamp is a formality — but a truncating cast would silently
+            // the clamp is a formality - but a truncating cast would silently
             // dial a different port, and that is a bad thing to be silent about.
             port:     campaign.source_port.clamp(1, 65535) as u16,
             security: campaign.source_security.clone(),

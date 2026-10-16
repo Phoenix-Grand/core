@@ -26,23 +26,23 @@ use windows::Win32::Graphics::Dxgi::*;
 pub struct TextFormats {
     /// Caption with word wrap + centering, for grid tile names.
     pub caption_wrap: IDWriteTextFormat,
-    /// Body with word wrap (Details pane values — paths…).
+    /// Body with word wrap (Details pane values - paths…).
     pub body_wrap: IDWriteTextFormat,
     pub body: IDWriteTextFormat,
-    /// Meta size (`--kb-text-meta`) — `AppBarButton` label ("New" in the
+    /// Meta size (`--kb-text-meta`) - `AppBarButton` label ("New" in the
     /// command bar), Text family like the control (not the Small variant).
     pub body_small: IDWriteTextFormat,
     pub body_strong: IDWriteTextFormat,
     /// `--kb-text-meta`: metadata, captions.
     pub caption: IDWriteTextFormat,
-    /// Meta size, medium — active tab titles.
+    /// Meta size, medium - active tab titles.
     pub caption_strong: IDWriteTextFormat,
     /// `--kb-text-micro`: badges, counters.
     pub micro: IDWriteTextFormat,
     pub subtitle: IDWriteTextFormat,
-    /// Medium — `--kb-text-heading`: window/dialog titles, section headers.
+    /// Medium - `--kb-text-heading`: window/dialog titles, section headers.
     pub heading: IDWriteTextFormat,
-    /// Semibold heading — a heading the web marks `font-semibold`.
+    /// Semibold heading - a heading the web marks `font-semibold`.
     pub heading_strong: IDWriteTextFormat,
     /// `--kb-text-title`: the object name heading a panel.
     pub title: IDWriteTextFormat,
@@ -214,7 +214,7 @@ impl Renderer {
     }
 
     /// Exact text width via DirectWrite (like `Painter::measure`, but
-    /// available outside a draw pass — used to size breadcrumb segments
+    /// available outside a draw pass - used to size breadcrumb segments
     /// tightly before `Layout::compute`).
     pub fn measure_width(&self, text: &str, format: &IDWriteTextFormat) -> f32 {
         let wide: Vec<u16> = text.encode_utf16().collect();
@@ -316,7 +316,7 @@ fn create_d3d_device() -> Result<ID3D11Device> {
             None,
         );
         if result.is_err() {
-            // Fall back to WARP (software) — keeps the app usable in VMs.
+            // Fall back to WARP (software) - keeps the app usable in VMs.
             D3D11CreateDevice(
                 None,
                 D3D_DRIVER_TYPE_WARP,
@@ -385,7 +385,7 @@ fn load_images(ctx: &ID2D1DeviceContext) -> Result<Images> {
     })
 }
 
-/// How the text of a part of a window differs from the application's own — a control's `Font`
+/// How the text of a part of a window differs from the application's own - a control's `Font`
 /// (family, size, bold, italic) and `RightToLeft`. The default changes nothing.
 #[derive(Debug, Clone, PartialEq)]
 pub struct TextStyle {
@@ -409,13 +409,13 @@ fn create_text_formats(dwrite: &IDWriteFactory, font_override: Option<&str>) -> 
     create_text_formats_styled(dwrite, font_override, &TextStyle::default())
 }
 
-/// The shared text formats (see [`Renderer::formats`]) restyled by `style` — what a subtree with its
+/// The shared text formats (see [`Renderer::formats`]) restyled by `style` - what a subtree with its
 /// own font paints with. `font_override` is the application's own family choice, as for the
 /// renderer's formats.
 pub fn create_text_formats_styled(dwrite: &IDWriteFactory, font_override: Option<&str>, style: &TextStyle) -> Result<TextFormats> {
     // AppThemeFontFamily: a custom family replaces every Segoe UI Variable
     // optical variant (the original swaps ContentControlThemeFontFamily). The
-    // font choice comes from the app (settings) and is injected here — the
+    // font choice comes from the app (settings) and is injected here - the
     // controls crate doesn't know about `services::settings`.
     let custom: Option<String> = style
         .family
@@ -425,7 +425,7 @@ pub fn create_text_formats_styled(dwrite: &IDWriteFactory, font_override: Option
         .map(str::to_owned);
     let make = |family: &str, weight: DWRITE_FONT_WEIGHT, size: f32| -> Result<IDWriteTextFormat> {
         // A user's chosen font replaces the UI family; otherwise the family
-        // passed here — the OS's own "Segoe UI Variable" optical variants —
+        // passed here - the OS's own "Segoe UI Variable" optical variants -
         // resolves from the SYSTEM collection, so every desktop app reads in the
         // operating system's default typeface (Windows falls back to Segoe UI
         // where the variable family is absent). Icon fonts (Segoe Fluent Icons)
@@ -477,7 +477,7 @@ pub fn create_text_formats_styled(dwrite: &IDWriteFactory, font_override: Option
 
     // The web allows SIX text sizes and no others (`--kb-text-*`): micro 10.5,
     // meta 11.5, body 13.5, heading 15.5, title 21.5, page 22.5.
-    // `MEDIUM` is this system's heaviest step — there is no bold.
+    // `MEDIUM` is this system's heaviest step - there is no bold.
     use crate::themes::shape::text as ts;
     const MEDIUM: DWRITE_FONT_WEIGHT = DWRITE_FONT_WEIGHT_MEDIUM;
     Ok(TextFormats {

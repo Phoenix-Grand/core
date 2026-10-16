@@ -134,7 +134,7 @@ pub struct ProbeDto {
     password: String,
 }
 
-/// `POST /admin/data-migration/probe` — what does the source hold?
+/// `POST /admin/data-migration/probe` - what does the source hold?
 ///
 /// Carries `manage` rather than `read`: it authenticates against a third-party
 /// server with a credential the caller supplies, which is an action, not a
@@ -265,7 +265,7 @@ pub async fn create(
     tx.commit(
         AuditEntry::new("core.data_migration.create")
             .target(target::MIGRATION_CAMPAIGN, id, name.to_string())
-            // The server and the size of the operation — never a credential,
+            // The server and the size of the operation - never a credential,
             // never the mapping's passwords.
             .after(json!({
                 "id":          id,
@@ -298,7 +298,7 @@ pub async fn create(
 
 // ── Running it ──────────────────────────────────────────────────────────────
 
-/// `POST /admin/data-migration/:id/start` — also the "reprendre" of a paused
+/// `POST /admin/data-migration/:id/start` - also the "reprendre" of a paused
 /// campaign, and the "relancer" of a finished one that has failures left.
 pub async fn start(
     State(state): State<AppState>,
@@ -336,11 +336,11 @@ pub async fn start(
     Ok(Json(json!({ "campaign": campaign_json(&campaign, None) })))
 }
 
-/// `POST /admin/data-migration/:id/pause` — stop between chunks.
+/// `POST /admin/data-migration/:id/pause` - stop between chunks.
 ///
 /// Nothing is undone and no cursor is dropped: the accounts keep their
 /// position, the job stops claiming them, and a later `start` carries on. There
-/// is no way to abort a chunk already in flight, and there should not be — the
+/// is no way to abort a chunk already in flight, and there should not be - the
 /// module is mid-write, and interrupting it is how a mailbox ends up half
 /// copied with no record of where.
 pub async fn pause(
@@ -412,7 +412,7 @@ pub async fn retry_account(
 ///
 /// Removes the campaign and, with it, every stored source credential. What was
 /// already copied stays where it was copied: this deletes the plan, never the
-/// mail — and saying so on the confirmation is the difference between a tidy-up
+/// mail - and saying so on the confirmation is the difference between a tidy-up
 /// and a disaster.
 pub async fn delete(
     State(state): State<AppState>,

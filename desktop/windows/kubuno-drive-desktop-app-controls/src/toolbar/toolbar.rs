@@ -37,7 +37,7 @@ pub struct ToolbarView {
 /// Opacity of a disabled command (`disabled:opacity-40` in the web).
 const DISABLED_OPACITY: f32 = 0.40;
 
-/// A color at reduced opacity — a disabled command keeps its hue and only
+/// A color at reduced opacity - a disabled command keeps its hue and only
 /// fades (the web dims the whole button, it does not recolor it).
 fn dimmed(color: &D2D1_COLOR_F) -> D2D1_COLOR_F {
     D2D1_COLOR_F { a: color.a * DISABLED_OPACITY, ..*color }
@@ -53,14 +53,14 @@ fn draw_plus(c: &dyn Canvas, rect: &Rect, size: f32, thickness: f32, color: &D2D
     c.fill_rounded(&Rect::new(cx - half, cy - arm, cx + half, cy + arm), half, color);
 }
 
-/// Draws the command bar through a [`Canvas`] — DRAWING now lives WITH the
+/// Draws the command bar through a [`Canvas`] - DRAWING now lives WITH the
 /// control (mirrors `Toolbar` from `Files.App.Controls`).
 pub fn draw(c: &dyn Canvas, v: &ToolbarView) {
     let t = c.theme();
     let f = c.formats();
 
     // The web has NO toolbar card: the command bar sits straight on the white
-    // module panel (`--color-surface-0`) — no border, no shadow, no radius.
+    // module panel (`--color-surface-0`) - no border, no shadow, no radius.
     // The content card right below carries the separation, so no bottom rule
     // is drawn here (it would double that card's own top border).
     if let Some(card) = &v.card {
@@ -77,7 +77,7 @@ pub fn draw(c: &dyn Canvas, v: &ToolbarView) {
             }
             ButtonVisual::NewButton { label, hot } => {
                 // A command-bar button like its neighbours, not the web's
-                // free-standing sidebar pill — that shape only reads right
+                // free-standing sidebar pill - that shape only reads right
                 // floating over the page, which is not where it lives here.
                 // Kubuno styling all the same: accent « + », 14px label at
                 // normal weight, chevron for the menu it opens.

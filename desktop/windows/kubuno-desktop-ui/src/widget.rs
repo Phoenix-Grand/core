@@ -20,12 +20,12 @@ pub struct WidgetState {
     pub pressed: bool,
     /// It holds the keyboard focus.
     pub focused: bool,
-    /// It is the current choice — an active nav row, the selected tab.
+    /// It is the current choice - an active nav row, the selected tab.
     pub selected: bool,
     /// It cannot be interacted with. Kept here (and not only on the model) so
     /// a container can grey a whole subtree without mutating its children.
     pub disabled: bool,
-    /// The focus ring should SHOW — the web's `:focus-visible`, as opposed to
+    /// The focus ring should SHOW - the web's `:focus-visible`, as opposed to
     /// `:focus` ([`WidgetState::focused`]). True when the focus came from the
     /// keyboard (Tab, arrows) or the control always shows it (a text field);
     /// false after a pointer click on a button. Meaningful only with
@@ -74,7 +74,7 @@ impl WidgetState {
         self
     }
 
-    /// Whether to paint the focus ring: focused AND focus-visible — the web's
+    /// Whether to paint the focus ring: focused AND focus-visible - the web's
     /// `:focus-visible` selector. What a primitive tests before drawing its
     /// ring, so a mouse click on a button does not leave a ring behind.
     pub fn show_focus_ring(&self) -> bool {
@@ -113,7 +113,7 @@ impl From<ControlState> for WidgetState {
 /// only what the *Kubuno* layer decides: how big it wants to be, and how it
 /// looks.
 pub trait Widget {
-    /// The replica underneath — the property surface, the defaults and the
+    /// The replica underneath - the property surface, the defaults and the
     /// state machine, all of it checked against the real toolkit.
     ///
     /// This is what makes a primitive layout-able: a caller builds a
@@ -125,15 +125,15 @@ pub trait Widget {
     ///
     /// It is not the replica's `preferred_size`: WinForms measures a button as
     /// text plus a system-metric border, Kubuno measures it as a token height
-    /// and a token padding. What *is* reused is the structure — which parts
-    /// are stacked, in what order, with which gaps — because that is where the
+    /// and a token padding. What *is* reused is the structure - which parts
+    /// are stacked, in what order, with which gaps - because that is where the
     /// mistakes are, not in the numbers.
     fn measure(&self, canvas: &dyn Canvas) -> Size;
 
     /// Paints it into `bounds`.
     ///
     /// `bounds` is the rectangle the caller assigned, in the canvas' own
-    /// coordinates — a primitive never reads its model's `bounds` to paint
+    /// coordinates - a primitive never reads its model's `bounds` to paint
     /// (doing so is a bug this codebase has already shipped once: a control
     /// painted where it *thought* it was rather than where it was put).
     fn paint(&self, canvas: &dyn Canvas, bounds: Rect, state: WidgetState);

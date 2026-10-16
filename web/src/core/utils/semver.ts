@@ -1,5 +1,5 @@
 /**
- * Minimal SemVer comparison — no dependency, because the only question we ever
+ * Minimal SemVer comparison - no dependency, because the only question we ever
  * ask is "is the catalogue ahead of what is installed?".
  *
  * Comparing versions as plain strings made the Marketplace offer 0.1.8 to an

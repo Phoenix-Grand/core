@@ -9,14 +9,14 @@ use kubuno_desktop_shell_controls::Tile;
 /// One launchable app of the connected instance.
 #[derive(Debug, Clone, PartialEq, Default)]
 pub struct AppEntry {
-    /// The app id, as the server's `sidebar_items[].id` — the key the waffle's favourites are stored
+    /// The app id, as the server's `sidebar_items[].id` - the key the waffle's favourites are stored
     /// under, shared with the web.
     pub id: String,
     pub label: String,
     /// The SPA route (`/drive`, `/office/documents`): what a launch opens on the web.
     pub path: String,
     /// The app's glyph: the Lucide name the server gives (`sidebar_items[].icon`), `Cloud` when the
-    /// embedded icon set does not know it. Shown only when there is no logo — the web's fallback too.
+    /// embedded icon set does not know it. Shown only when there is no logo - the web's fallback too.
     pub icon: String,
     /// The brand logo the server serves for this app (`logo_url`): the very file the web launcher
     /// shows. `None` keeps `icon`.
@@ -82,8 +82,8 @@ pub fn parse_modules(value: &serde_json::Value) -> Vec<AppEntry> {
             .unwrap_or_default();
         let module_logo = logo_url(&m);
         // The module's ROOT entry wears the module's brand logo; a sub-app (Office ▸ Documents) wears
-        // its own logo or its glyph. The root is the entry named after the module, else its first one —
-        // the web's `moduleGlyph.ts` rule (Mail's only entry is `mail-inbox`) — unless a sub-app already
+        // its own logo or its glyph. The root is the entry named after the module, else its first one -
+        // the web's `moduleGlyph.ts` rule (Mail's only entry is `mail-inbox`) - unless a sub-app already
         // carries that very logo as its own (Media's module logo is its Listen sub-app's).
         let item_id = |it: &serde_json::Value| it.get("id").and_then(|x| x.as_str()).unwrap_or(module).to_string();
         let root = items.iter().position(|it| item_id(it) == module).or_else(|| {
@@ -177,7 +177,7 @@ pub fn waffle_favorites(user: &serde_json::Value) -> Vec<String> {
         .unwrap_or_default()
 }
 
-/// The first letter of each word, two at most — the rule the web's `HeaderActions` uses.
+/// The first letter of each word, two at most - the rule the web's `HeaderActions` uses.
 pub fn initials_of(name: &str) -> String {
     let from_words: String = name.split_whitespace().filter_map(|w| w.chars().next()).take(2).collect();
     let s = if from_words.is_empty() { name.chars().take(2).collect::<String>() } else { from_words };
@@ -238,7 +238,7 @@ mod tests {
         assert!(parse_modules(&json!({ "error": "x" })).is_empty());
     }
 
-    /// The module logo goes to the module's root: the entry named after it, else its first entry —
+    /// The module logo goes to the module's root: the entry named after it, else its first entry -
     /// unless a sub-app already wears that logo as its own.
     #[test]
     fn the_module_logo_goes_to_its_root() {

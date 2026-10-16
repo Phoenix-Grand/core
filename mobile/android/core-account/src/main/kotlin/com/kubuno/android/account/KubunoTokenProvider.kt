@@ -16,7 +16,7 @@ import kotlinx.coroutines.runBlocking
  * Lends a short-lived access token to the sibling Kubuno apps.
  *
  * Android binds ONE authenticator per account type, so every app's
- * `getAuthToken` is answered by a single process — and that process can only
+ * `getAuthToken` is answered by a single process - and that process can only
  * mint from its OWN refresh token, which never leaves it. When that one app's
  * session dies, the account is still registered but nothing can produce a
  * token, and every app wrongly reports an expired session.
@@ -24,7 +24,7 @@ import kotlinx.coroutines.runBlocking
  * This provider closes that gap: any app that still holds a live session for
  * the same (instance, user) hands out an access token, and
  * [KubunoAuthenticator] asks around before giving up. Refresh tokens are never
- * exchanged — only the 15-minute access token — so no second process can ever
+ * exchanged - only the 15-minute access token - so no second process can ever
  * rotate a session and get the family revoked.
  *
  * Exported, but behind a signature-level permission: only apps carrying the

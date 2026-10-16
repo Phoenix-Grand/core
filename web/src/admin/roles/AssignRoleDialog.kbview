@@ -1,4 +1,4 @@
-<!-- AssignRoleDialog — converted from AssignRoleDialog.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- AssignRoleDialog - converted from AssignRoleDialog.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <FloatingWindow x:Props="AssignRoleDialogProps"
                 ConfirmText="{Res admin.assign_submit}"
                 ConfirmEnabled="{Binding enabled_unless_subject_ready_scope_ready}"

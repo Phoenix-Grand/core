@@ -1,4 +1,4 @@
-//! Gallery page — **display**: the five type roles, the nine content
+//! Gallery page - **display**: the five type roles, the nine content
 //! alignments on one rectangle, links in their states, every badge variant, a
 //! grid of icons (and the missing-glyph box), text overflow in narrow cards,
 //! tooltips placed on the four sides and wrapped at their max width, and both
@@ -11,7 +11,7 @@
 //! mistake in the vertical thirds impossible to miss.
 //!
 //! The static exposition is laid out in two columns so it fits the pane left
-//! of the interactive column without scrolling — the host has no scroll view,
+//! of the interactive column without scrolling - the host has no scroll view,
 //! so a section that overflows is a section nobody checks.
 
 use std::cell::RefCell;
@@ -27,7 +27,7 @@ use kubuno_desktop_ui::{Canvas, ContentAlignment, Rect, Size, Widget, WidgetStat
 use super::interact::{self, Live};
 use super::sheet::{Page, MARGIN};
 
-/// The nine cells, in the toolkit's own order — three rows of three.
+/// The nine cells, in the toolkit's own order - three rows of three.
 const NINE: [(ContentAlignment, &str); 9] = [
     (ContentAlignment::TopLeft, "TopLeft"),
     (ContentAlignment::TopCenter, "TopCenter"),
@@ -61,7 +61,7 @@ const ICONS: [&str; 14] = [
 ];
 
 /// A long, unbreakable-looking sentence the overflow demos share.
-const LONG: &str = "Partage de liens publics — les destinataires ouvrent le dossier sans compte Kubuno";
+const LONG: &str = "Partage de liens publics - les destinataires ouvrent le dossier sans compte Kubuno";
 
 /// The multi-line tooltip text: long enough to wrap at `maxWidth: 280`, with an
 /// explicit break (`pre-line`).
@@ -169,8 +169,8 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
 
         let (left, mut y, right) = interact::panel(c, interact::panel_rect(f.size));
 
-        // ── LinkLabel — two links, each its own tab stop. ──
-        y = interact::caption(c, left, right, y, "LinkLabel — survol par lien, clic ou Tab + Entrée");
+        // ── LinkLabel - two links, each its own tab stop. ──
+        y = interact::caption(c, left, right, y, "LinkLabel - survol par lien, clic ou Tab + Entrée");
         let text = "Lire les conditions d'utilisation et la confidentialité";
         let spans = [("conditions d'utilisation", "conditions"), ("confidentialité", "confidentialité")];
         let mut link = LinkLabel::new(text);
@@ -199,7 +199,7 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
                 focused = Some(i);
                 focus_visible = st.visible;
             }
-            // ARIA link: Enter follows it (Space does not — that is a button).
+            // ARIA link: Enter follows it (Space does not - that is a button).
             let by_key = st.focused && live.take_key(vk::ENTER, Modifiers::NONE);
             if live.hit(*r) || by_key {
                 ui.visited[i] = true;
@@ -218,10 +218,10 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
             .paint(c, Rect::new(left, y, right, y + 16.0), WidgetState::REST);
         y += 16.0 + space::MD;
 
-        // ── Tooltips — the web's delay, pointer-anchored, multi-line. ──
-        y = interact::caption(c, left, right, y, "Tooltip — 400 ms de délai, Échap ou clic le masque");
+        // ── Tooltips - the web's delay, pointer-anchored, multi-line. ──
+        y = interact::caption(c, left, right, y, "Tooltip - 400 ms de délai, Échap ou clic le masque");
         let targets = [
-            ("Info courte", "Renommer — F2"),
+            ("Info courte", "Renommer - F2"),
             ("Info longue", LONG_TIP),
         ];
         let now = host::now_ms();
@@ -250,8 +250,8 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
         }
         y += 32.0 + space::MD;
 
-        // ── Overflow — the wheel over the card changes its width. ──
-        y = interact::caption(c, left, right, y, "Débordement — molette sur la carte = largeur");
+        // ── Overflow - the wheel over the card changes its width. ──
+        y = interact::caption(c, left, right, y, "Débordement - molette sur la carte = largeur");
         let card_h = 20.0 + 40.0 + 20.0 + space::SM * 4.0;
         let probe = Rect::new(left, y, right, y + card_h);
         let (_, dy) = live.wheel_over(probe);
@@ -278,8 +278,8 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
             .paint(c, Rect::new(left, y, right, y + 16.0), WidgetState::REST);
         y += 16.0 + space::MD;
 
-        // ── Icons — a known glyph, a lucide rename, a missing one. ──
-        y = interact::caption(c, left, right, y, "Icon — connue · alias lucide · absente (boîte)");
+        // ── Icons - a known glyph, a lucide rename, a missing one. ──
+        y = interact::caption(c, left, right, y, "Icon - connue · alias lucide · absente (boîte)");
         let mut x = left;
         for (name, tint) in [("Star", Some(t.accent)), ("CircleAlert", None), ("Save", None)] {
             let icon = Icon::sized(name, 24.0).tint(tint);
@@ -294,7 +294,7 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
     });
 }
 
-/// The character index of `needle` in `hay` (0 when absent) — a link span is
+/// The character index of `needle` in `hay` (0 when absent) - a link span is
 /// counted in characters, not bytes.
 fn char_index(hay: &str, needle: &str) -> usize {
     hay.find(needle).map(|b| hay[..b].chars().count()).unwrap_or(0)
@@ -302,8 +302,8 @@ fn char_index(hay: &str, needle: &str) -> usize {
 
 /// The live tooltip, painted as a **floating surface** in its own top-level
 /// window ([`host::overlay`]) so it sits above everything and can spill past
-/// the window's edges. Placed the web way — below the pointer, left-aligned
-/// with it — against the monitor's work area, not the window.
+/// the window's edges. Placed the web way - below the pointer, left-aligned
+/// with it - against the monitor's work area, not the window.
 pub fn overlay(c: &dyn Canvas, f: &Frame) {
     let Some((text, at)) = UI.with(|ui| ui.borrow().pending_tip) else {
         return;
@@ -327,12 +327,12 @@ pub fn overlay(c: &dyn Canvas, f: &Frame) {
 // ── The five type roles ──────────────────────────────────────────────────────
 
 fn roles(p: &mut Page) {
-    p.section("Label — les cinq rôles typographiques");
+    p.section("Label - les cinq rôles typographiques");
     let top = p.y;
     let mut y = top;
 
     for role in ROLES {
-        let l = Label::new(format!("{role:?} — {} px, ligne {}", role.size(), role.line_height())).role(role);
+        let l = Label::new(format!("{role:?} - {} px, ligne {}", role.size(), role.line_height())).role(role);
         let want = l.measure(p.c);
         let r = Rect::new(MARGIN, y, MARGIN + want.width, y + want.height);
         l.paint(p.c, r, WidgetState::REST);
@@ -363,7 +363,7 @@ fn overflow(p: &mut Page) {
     let t = p.c.theme();
     let f = p.c.formats();
     p.c.text(
-        "Débordement — le texte ne sort jamais de sa boîte",
+        "Débordement - le texte ne sort jamais de sa boîte",
         &Rect::new(x0, p.y, right, p.y + 24.0),
         &f.heading,
         &t.text_primary,
@@ -417,7 +417,7 @@ fn overflow(p: &mut Page) {
 // ── The nine alignments, on one rectangle ────────────────────────────────────
 
 fn alignments(p: &mut Page) {
-    p.section("Label — les neuf ContentAlignment · Tooltip — quatre côtés, texte long");
+    p.section("Label - les neuf ContentAlignment · Tooltip - quatre côtés, texte long");
     let top = p.caption("le même rectangle neuf fois : seule l'ancre change");
 
     let (w, h) = (pm::ALIGN_W, pm::ALIGN_H);
@@ -474,7 +474,7 @@ fn tooltips(p: &mut Page) {
 // ── Links ────────────────────────────────────────────────────────────────────
 
 fn links(p: &mut Page) {
-    p.section("LinkLabel — normal, survol, pressé, visité, désactivé, focus clavier");
+    p.section("LinkLabel - normal, survol, pressé, visité, désactivé, focus clavier");
     let top = p.caption("souligné au survol seulement (hover:underline), anneau 2 px au focus clavier");
 
     let states = [
@@ -504,7 +504,7 @@ fn links(p: &mut Page) {
 // ── Badges ───────────────────────────────────────────────────────────────────
 
 fn badges(p: &mut Page) {
-    p.section("Badge — six variantes, pastille, deux tailles, largeur plafonnée");
+    p.section("Badge - six variantes, pastille, deux tailles, largeur plafonnée");
     let top = p.caption("chaque pastille est dimensionnée par measure(), pas par sa cellule");
 
     let mut y = top;
@@ -553,7 +553,7 @@ fn badges(p: &mut Page) {
 // ── Icons, and the two rules ─────────────────────────────────────────────────
 
 fn icons_and_separators(p: &mut Page) {
-    p.section("Icon — géométrie, jamais un caractère · glyphe absent = boîte · Separator");
+    p.section("Icon - géométrie, jamais un caractère · glyphe absent = boîte · Separator");
     let top = p.caption("16 et 24 DIP · CircleAlert via l'alias lucide · Save absent · accent et inerte");
 
     let cell = pm::ICON_CELL;

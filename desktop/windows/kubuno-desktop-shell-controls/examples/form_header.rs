@@ -1,7 +1,7 @@
 //! A window whose title bar is a Kubuno header, made with the Form's own properties (vskubuno
 //! `docs/SHELL-CONTROLS.md` §5): `ShowSearch`, `ShowNotifications`, `ShowSettings`, `ShowHelp`, `ShowWaffle`,
-//! `ShowAccount` put the web header's standard items at the end of the title bar — the `HeaderActions` user control
-//! this crate registers — and the free regions hold the app's own controls: a menu button on the left, a search
+//! `ShowAccount` put the web header's standard items at the end of the title bar - the `HeaderActions` user control
+//! this crate registers - and the free regions hold the app's own controls: a menu button on the left, a search
 //! field in the centre. The data are the designer's samples; nothing is launched or saved (the picks are logged).
 //!
 //! `cargo run -p kubuno-desktop-shell-controls --example form_header [-- --dark] [--rtl] [--compact] [--minimal] [--accent]`

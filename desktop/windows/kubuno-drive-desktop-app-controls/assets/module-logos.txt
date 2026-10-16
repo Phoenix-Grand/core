@@ -7,7 +7,7 @@
 #
 #   @#rrggbb  literal brand fill colour (lowercase, 6 hex digits).
 #   t:dx,dy   the shape sits inside a `<g transform="translate(dx,dy)">`.
-#             Path coordinates are VERBATIM — the renderer applies the translate.
+#             Path coordinates are VERBATIM - the renderer applies the translate.
 #   s:<w>     the shape is STROKED, not filled: `w` is the stroke width in
 #             viewBox units. Round caps and round joins.
 #
@@ -99,12 +99,12 @@
 @#ffffff M465.443 460.755a125.286 125.286 0 1 0 250.572 0a125.286 125.286 0 1 0 -250.572 0
 @#ffffff M539.141,523.398l103.177,0l36.849,246.888l-176.875,0l36.849,-246.888Z
 
-# PaintsharpLogo — in the source every shape sits inside
+# PaintsharpLogo - in the source every shape sits inside
 # `<g transform="matrix(1,0,0,1,-380.817,-425.926)"><g transform="matrix(1.31793,0,0,1.00491,-1144.65,-231.829)">`.
 # That chain is a non-uniform scale plus a translate; the two compose into the
 # `m:` prefix each line carries, which keeps the path data verbatim.
 # Each source shape also carries stroke="<same colour>" strokeWidth=0.85,
-# a hairline outline that is dropped here — it only thickens the shape.
+# a hairline outline that is dropped here - it only thickens the shape.
 === PaintsharpLogo @597
 @#267fcd m:1.31793,0,0,1.00491,-1525.467,-657.755 M1282.51,745.358C1282.51,745.358 1510.81,910.479 1513.44,912.341C1520.57,917.394 1563.07,946.396 1563.27,999.933C1563.49,1059.39 1563.69,1117.22 1563.69,1117.22C1563.69,1117.22 1564.36,1137.97 1543.31,1156.11C1521.83,1174.62 1454.76,1218.6 1454.76,1218.6C1454.76,1218.6 1454.78,1039.06 1454.76,1026.81C1454.71,998.717 1439.55,981.204 1428.29,972.337C1403.51,952.83 1325.11,898.818 1317.18,893.458C1296.4,879.419 1284.62,855.831 1283.33,841.576C1281.02,816.107 1282.51,745.358 1282.51,745.358Z
 @#1d4493 m:1.31793,0,0,1.00491,-1525.467,-657.755 M1157.95,655.039L1282.51,745.358C1282.51,745.358 1281.72,812.864 1282.81,834.944C1284.57,870.757 1316.13,892.695 1315.77,892.565C1315.42,892.434 1395.37,947.513 1425.3,969.947C1454.11,991.536 1454.3,1017.59 1454.7,1025.84C1454.84,1028.76 1454.42,1248.8 1454.76,1248.04C1455.09,1247.28 1389.11,1202.25 1374.24,1192.97C1366.83,1188.35 1362.58,1180.98 1362.78,1172.96C1362.79,1172.94 1363.53,1056.85 1362.32,1015.99C1362.05,1006.86 1360.36,998.37 1357.66,990.505C1348.93,965.059 1329.66,946.207 1313.86,933.971C1312.4,932.841 1209.05,860.597 1186.95,842.804C1174.83,833.037 1158.59,815.001 1157.95,784.919C1157.74,775.172 1157.95,655.039 1157.95,655.039Z
@@ -116,10 +116,10 @@
 @#ffffff s:1.4 M6 8.5l1.7 7h.1l1.6-5.2h.1L11.2 15.5h.1l1.7-7
 @#9decd9 s:1.4 M15 8.5h3M16.5 8.5V15.5M15 15.5h3
 
-# AppLogo — WARNING: the first (background) shape of the source is filled with
+# AppLogo - WARNING: the first (background) shape of the source is filled with
 # a linear gradient, `fill="url(#app-grad)"` = linearGradient x1=0 y1=0 x2=1 y2=1
 # with stops #2563eb (offset 0) -> #7c3aed (offset 1). This format has no
-# gradient fill, so that shape is NOT emitted below — the section starts at the
+# gradient fill, so that shape is NOT emitted below - the section starts at the
 # white window. Its path data, if a solid fallback is chosen, is:
 #   M1179.167,294.792l0,589.583c0,162.7 -132.092,294.792 -294.792,294.792l-589.583,0c-162.7,0 -294.792,-132.092 -294.792,-294.792l0,-589.583c0,-162.7 132.092,-294.792 294.792,-294.792l589.583,0c162.7,0 294.792,132.092 294.792,294.792Z
 === AppLogo @1180

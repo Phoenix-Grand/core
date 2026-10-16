@@ -1,4 +1,4 @@
-//! The shared sign-in screens driven like a user would — typing into the fields, pressing Enter, tapping — against the
+//! The shared sign-in screens driven like a user would - typing into the fields, pressing Enter, tapping - against the
 //! mock Kubuno core of the account layer, with a UI loop that drains the tasks the network calls post back.
 
 #[path = "../../kubuno-mobile-account/tests/mock/mod.rs"]

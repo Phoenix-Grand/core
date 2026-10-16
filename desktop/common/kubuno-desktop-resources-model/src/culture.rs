@@ -57,8 +57,8 @@ pub fn split_file_name(file_name: &str) -> Option<(String, Option<String>)> {
 /// invariant (neutral) file:
 ///
 /// 1. the culture itself and its parents (`fr-CA` → `fr-CA`, `fr`), like .NET;
-/// 2. then — a Kubuno addition for sets that only ship specific cultures (drive's `fr-FR` but no
-///    `fr`) — the first available culture of the same language (`fr-CA` → `fr-FR`).
+/// 2. then - a Kubuno addition for sets that only ship specific cultures (drive's `fr-FR` but no
+///    `fr`) - the first available culture of the same language (`fr-CA` → `fr-FR`).
 ///
 /// Comparisons ignore case; the returned names are those of `available`.
 pub fn fallback_chain<'a>(culture: &str, available: &[&'a str]) -> Vec<&'a str> {

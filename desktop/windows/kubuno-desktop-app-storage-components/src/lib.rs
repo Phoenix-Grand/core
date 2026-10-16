@@ -1,4 +1,4 @@
-//! # `kubuno-desktop-app-storage-components` — storage components of Kubuno desktop views
+//! # `kubuno-desktop-app-storage-components` - storage components of Kubuno desktop views
 //!
 //! `vskubuno/docs/STORAGE-COMPONENTS.md`. Non-visual components of a `.kbview` (the designer's component tray, the
 //! Toolbox tab "Stockage" / "Storage") over the portable engine `kubuno-desktop-app-storage`:

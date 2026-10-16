@@ -29,7 +29,7 @@ use crate::forms::Form;
 use kubuno_desktop_views::ast::{AstNode, Document, Element};
 
 /// A form is waited for through its window: once it is open, that window; before (the usual case,
-/// `close_when` called before `Application::run`), the first window the process shows — which is
+/// `close_when` called before `Application::run`), the first window the process shows - which is
 /// the main form's.
 impl SplashTarget for Form {
     fn splash_target_hwnd(&self) -> Option<isize> {

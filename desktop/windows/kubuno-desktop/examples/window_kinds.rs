@@ -1,7 +1,7 @@
 //! Every kind of Kubuno window, in the web `FloatingWindow`'s look: a main form with controls in
 //! its title bar, a dialog with an action bar, tool windows, a splash screen, a flyout, a
 //! borderless window, an MDI parent with documents, an in-window dialog over a veil, and the
-//! message boxes — in the light or the dark theme, switched live.
+//! message boxes - in the light or the dark theme, switched live.
 //!
 //! `cargo run -p kubuno-desktop --example window_kinds [-- --open <kind>] [--dark]`, `<kind>` one of
 //! `dialog`, `tool`, `splash`, `flyout`, `borderless`, `mdi`, `inwindow`, `info`, `warning`,
@@ -14,7 +14,7 @@ use kubuno_desktop::prelude::*;
 /// both on the right, text buttons).
 fn properties_dialog() -> Form {
     let dialog = Form::new()
-        .text("Propriétés — Rapport annuel.pdf")
+        .text("Propriétés - Rapport annuel.pdf")
         .client_size(560.0, 232.0)
         .window_kind(WindowKind::Dialog);
     dialog.set_icon("FileText");
@@ -64,7 +64,7 @@ fn borderless() -> Form {
     let window = Form::new().text("Lecteur").client_size(420.0, 260.0).form_border_style(FormBorderStyle::None);
     window.root().set_property("ResizeBorder", true);
     window.root().set_property("CornerPreference", "Round");
-    let bar = Label::new().text("  Glisser ici pour déplacer — fenêtre sans bordure").bounds(0.0, 0.0, 420.0, 40.0).anchor(Anchor::TOP | Anchor::LEFT | Anchor::RIGHT)
+    let bar = Label::new().text("  Glisser ici pour déplacer - fenêtre sans bordure").bounds(0.0, 0.0, 420.0, 40.0).anchor(Anchor::TOP | Anchor::LEFT | Anchor::RIGHT)
         .property("BackColor", "Surface2").property("TitleBar.Drag", true);
     let close = Button::new().text("Fermer").variant("Secondary").bounds(312.0, 208.0, 96.0, 36.0).anchor(Anchor::BOTTOM | Anchor::RIGHT);
     let me = window.clone();
@@ -74,7 +74,7 @@ fn borderless() -> Form {
 }
 
 fn mdi_parent() -> Form {
-    let parent = Form::new().text("Éditeur — MDI").client_size(900.0, 560.0);
+    let parent = Form::new().text("Éditeur - MDI").client_size(900.0, 560.0);
     parent.set_is_mdi_container(true);
     parent.set_icon("LayoutGrid");
     let bottom = Anchor::BOTTOM | Anchor::LEFT;
@@ -168,7 +168,7 @@ fn main() -> kubuno_desktop::Result {
         Application::set_theme(kubuno_desktop::ui::Theme::dark());
     }
 
-    let form = Form::new().text("Kubuno — Types de fenêtres").client_size(760.0, 420.0).start_position(StartPosition::CenterScreen);
+    let form = Form::new().text("Kubuno - Types de fenêtres").client_size(760.0, 420.0).start_position(StartPosition::CenterScreen);
     form.set_icon("AppWindow");
     form.set_subtitle("Rapport annuel.kbdoc");
     form.set_help_button(true);

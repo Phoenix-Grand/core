@@ -9,7 +9,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::{ChildrenModel, LayoutKind, PropKind};
 
-/// One exported property — [`crate::PropertyMeta`], field-for-field
+/// One exported property - [`crate::PropertyMeta`], field-for-field
 /// (`vskubuno/docs/DESIGNER.md` §5: "properties: [{name, kind, default,
 /// doc}]").
 #[derive(Debug, Serialize)]
@@ -44,9 +44,9 @@ pub struct PropertyJson {
 }
 
 /// Mirrors [`PropKind`] with serde's own default "externally tagged" enum
-/// encoding — the three scalar variants as bare strings (`"Bool"`, `"F32"`,
+/// encoding - the three scalar variants as bare strings (`"Bool"`, `"F32"`,
 /// `"String"`), the one variant that carries data as a single-key object
-/// (`{"Enum": ["A", "B"]}`) — exactly what the C# `PropKindJsonConverter`'s
+/// (`{"Enum": ["A", "B"]}`) - exactly what the C# `PropKindJsonConverter`'s
 /// own doc comment already says it expects ("serde's default... not
 /// something invented for this bridge"), so no `#[serde(...)]` attribute is
 /// needed here at all.
@@ -69,7 +69,7 @@ impl From<PropKind> for PropKindJson {
     }
 }
 
-/// One exported event — [`crate::EventMeta`], field-for-field (`vskubuno/docs/EVENTS.md`
+/// One exported event - [`crate::EventMeta`], field-for-field (`vskubuno/docs/EVENTS.md`
 /// §5.1, EVT-3): the attribute name, its display name (no `On`), the user docs, the ⚡
 /// tab category, the args type and chain, cancelable, routing, older aliases, browsable,
 /// and `root_only` for the view's own events (`kubuno_desktop_views::registry::VIEW_EVENTS`), which only the
@@ -102,7 +102,7 @@ pub struct EventJson {
 }
 
 /// Mirrors [`ChildrenModel`] as the bare string the C# `JsonStringEnumConverter`
-/// expects (`ComponentMeta.Children`) — [`ChildrenModel::List`]'s own gated
+/// expects (`ComponentMeta.Children`) - [`ChildrenModel::List`]'s own gated
 /// names travel separately, as [`ComponentJson::allowed_children`] (see this
 /// module's doc).
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -122,7 +122,7 @@ impl From<ChildrenModel> for ChildrenModelJson {
     }
 }
 
-/// Mirrors [`LayoutKind`]'s real, current variant set — see this module's doc
+/// Mirrors [`LayoutKind`]'s real, current variant set - see this module's doc
 /// for why this is wider than the C# type's first guess, and why that guess
 /// was the thing that had to change, not this. [`LayoutKind::None`] itself
 /// never appears here: [`ComponentJson::layout_kind`] is `Option<Self>`, and
@@ -151,7 +151,7 @@ impl LayoutKindJson {
     }
 }
 
-/// One exported component — the whole shape §5 asks for. Field order matches
+/// One exported component - the whole shape §5 asks for. Field order matches
 /// the regenerated fixture's own (`name, doc, family, icon, children,
 /// allowed_children, layout_kind, properties, events`); JSON object key order
 /// is not semantically significant to either side's deserializer, but a
@@ -162,7 +162,7 @@ pub struct ComponentJson {
     pub doc: &'static str,
     /// The French user documentation (`kubuno_desktop_views::registry::docs_fr`), or null.
     pub doc_fr: Option<&'static str>,
-    /// The toolbox grouping — `"core"` for the five components declared
+    /// The toolbox grouping - `"core"` for the five components declared
     /// directly in `registry/components.rs`, otherwise the owning
     /// `registry::families` module's own name (`"choice"`, `"containers"`,
     /// `"data"`, `"display"`, `"text"`), derived by name lookup against each
@@ -173,7 +173,7 @@ pub struct ComponentJson {
     /// A short glyph name for the toolbox (§5: "an icon glyph name...
     /// node.rs's static_icon table is the right precedent for a short
     /// curated name list"). Cheap here means mechanical, not hand-curated:
-    /// the component's own PascalCase name, kebab-cased (`kebab_case` in the export) —
+    /// the component's own PascalCase name, kebab-cased (`kebab_case` in the export) -
     /// `"TextField"` -> `"text-field"`, matching the one multi-word example
     /// the original illustrative fixture already used, with no
     /// per-component table to keep in sync as new components are
@@ -186,7 +186,7 @@ pub struct ComponentJson {
     pub layout_kind: Option<LayoutKindJson>,
     pub properties: Vec<PropertyJson>,
     /// The component's own events, then the common ones it does not override
-    /// (`ComponentMeta::all_events`), then — for a control — the view events flagged
+    /// (`ComponentMeta::all_events`), then - for a control - the view events flagged
     /// `root_only`.
     pub events: Vec<EventJson>,
     /// The designer double-click's event (`ComponentMeta::default_event`); the view's
@@ -228,7 +228,7 @@ pub struct RegistryExport {
     pub components: Vec<ComponentJson>,
 }
 
-/// A 64-bit FNV-1a hash, hex-encoded: what backs [`RegistryExport::version`] — cheap, no new
+/// A 64-bit FNV-1a hash, hex-encoded: what backs [`RegistryExport::version`] - cheap, no new
 /// dependency, and deterministic across processes (unlike `DefaultHasher`'s per-process seed), which
 /// a cache key shared by several language-server processes needs. A cache key, not a checksum.
 pub fn fnv1a_hex(bytes: &[u8]) -> String {

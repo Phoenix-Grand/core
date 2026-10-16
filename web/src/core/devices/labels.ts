@@ -21,7 +21,7 @@ export const signalLevelLabel = (t: TFunction, level: SignalLevel | string): str
   t(`devices.signal_${level}`, { defaultValue: level })
 
 /**
- * Tri-state wording. `unknown` reads as "unknown", never as "no" — the two are
+ * Tri-state wording. `unknown` reads as "unknown", never as "no" - the two are
  * different statements and only one of them is a measurement.
  */
 export const triLabel = (t: TFunction, tri: Tri): string =>

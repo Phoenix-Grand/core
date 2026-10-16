@@ -1,4 +1,4 @@
-//! Component family `data` — declared with the `component!` table (see
+//! Component family `data` - declared with the `component!` table (see
 //! `../macros.rs`) plus, in this same file, the view nodes those components
 //! build. Compiled only with the `family-data` feature while the families are
 //! being written in parallel; the feature is on by default once integrated.
@@ -8,7 +8,7 @@
 //! [`ListBox`](kubuno_desktop_ui::lists::ListBox), [`CheckedListBox`](kubuno_desktop_ui::lists::CheckedListBox),
 //! [`ListView`](kubuno_desktop_ui::views::ListView), [`TreeView`](kubuno_desktop_ui::views::TreeView),
 //! [`DataTable`](kubuno_desktop_ui::tables::DataTable) and [`MonthCalendar`](kubuno_desktop_ui::datetime::MonthCalendar)
-//! — the six `kubuno-desktop-ui` primitives that hold a *collection* rather than a
+//! - the six `kubuno-desktop-ui` primitives that hold a *collection* rather than a
 //! single value.
 //!
 //! ## `ItemsSource`
@@ -18,31 +18,31 @@
 //! Value::List` (rows of named [`crate::binding::Row`] fields) is that list
 //! shape; every component below reads its `ItemsSource="{Binding Path}"`
 //! every frame (`resolve_item_labels`/`resolve_item_rows`) and, when it
-//! resolves to a `Value::List`, uses it — a `ListBox`/`CheckedListBox`/
+//! resolves to a `Value::List`, uses it - a `ListBox`/`CheckedListBox`/
 //! `ListView`(single-column)/`TreeView`(flat, see below) row from each row's
 //! `"Text"` field; a `ListView`/`DataTable` cell from the field its own
 //! `<Column Binding="{Binding Field}">` names. The **static child markup**
-//! this family reads directly off the parsed XML remains fully supported —
+//! this family reads directly off the parsed XML remains fully supported -
 //! used whenever `ItemsSource` names no binding, or the binding is unset or
 //! not currently a list (e.g. before the view model has loaded anything):
 //!
-//! - `<Item Text=".."/>` — one row of a `<ListBox>`/`<CheckedListBox>`/
+//! - `<Item Text=".."/>` - one row of a `<ListBox>`/`<CheckedListBox>`/
 //!   `<ListView>`; nested under itself, the same element also describes one
 //!   node of a `<TreeView>`'s tree (`<Item Text=".."><Item Text=".."/></Item>`)
-//!   — a hierarchy `ItemsSource` cannot express (`Value::List` is flat; a
+//!   - a hierarchy `ItemsSource` cannot express (`Value::List` is flat; a
 //!   bound `<TreeView>` is always one level deep, see [`resolve_item_labels`]'s
 //!   callers).
-//! - `<Column Header=".." Binding=".." Width=".."/>` — one column of a
+//! - `<Column Header=".." Binding=".." Width=".."/>` - one column of a
 //!   `<ListView>`/`<DataTable>`. `Binding`'s bare field name (`column_id`'s
 //!   own `binding_field`) is now also what a bound row is read by.
 //!
 //! `Item`/`Column` are registered here as ordinary (inert) components purely
-//! so `crate::validate` accepts them as children — they never reach
+//! so `crate::validate` accepts them as children - they never reach
 //! `crate::compile::build_node` in practice (a parent reads them off
 //! `crate::ast::Element` directly, see [`static_item_labels`] and
 //! [`static_columns`]), so their own `build` never runs outside a test.
 //! `crate::validate` now DOES restrict which parent each is valid under
-//! (`ChildrenModel::List(&["Item"])`/`&["Column"]`, per component below) —
+//! (`ChildrenModel::List(&["Item"])`/`&["Column"]`, per component below) -
 //! `<Item>` inside, say, `<Tabs>` is a validate-time diagnostic, not silently
 //! accepted the way it was before that check existed.
 //!
@@ -80,19 +80,19 @@
 //! (each adds the binding write-back, or lack of one, that shape needs): a
 //! selection change is `Changed(index or path, as text)`; a checked toggle
 //! is `Toggled(new_state)`; a row/day activation (double-click, or a header
-//! sort toggle) is `Clicked` — the closest existing shape in each case,
+//! sort toggle) is `Clicked` - the closest existing shape in each case,
 //! distinguished by the `On*` handler name the XML attribute carried,
 //! exactly like every other component in this crate.
 //!
 //! ## Wheel scrolling and scroll chaining
 //!
 //! Every scrollable node below claims the frame's wheel travel with
-//! `kubuno_desktop_controls::host::claim_wheel()` — but ONLY once it has checked
+//! `kubuno_desktop_controls::host::claim_wheel()` - but ONLY once it has checked
 //! that its own scroll position actually changed (before/after the real
 //! `scroll`/`scroll_by`/`scroll_rows` call), never merely because the wheel
 //! moved. A control already at its own scroll limit (or with nothing to
-//! scroll at all — three rows in a tall box) must leave the wheel unclaimed
-//! so it falls through to whatever `<ScrollArea>` hosts it — standard
+//! scroll at all - three rows in a tall box) must leave the wheel unclaimed
+//! so it falls through to whatever `<ScrollArea>` hosts it - standard
 //! browser/OS "scroll chaining", and the fix for a real bug this family
 //! shipped with: hovering a short `ListView` inside a scrolling page used to
 //! swallow every wheel notch regardless, so nothing past it (a `<MonthCalendar>`
@@ -123,13 +123,13 @@ use kubuno_desktop_ui::views::{ColumnHeader, ListView, ListViewItem, NodePath, T
 use kubuno_desktop_ui::{Canvas, FocusId, Rect, Size, Widget};
 
 // ─────────────────────────────────────────────────────────────────────────
-// Static child markup — read directly off the parsed XML (see the module
+// Static child markup - read directly off the parsed XML (see the module
 // doc's "ItemsSource gap" section), not through `Props::build_children`:
 // `<Item>`/`<Column>` are metadata for the PARENT to read, not paintable
 // widgets of their own.
 // ─────────────────────────────────────────────────────────────────────────
 
-/// The `<Item Text=".."/>` children of `element`, flattened — what a
+/// The `<Item Text=".."/>` children of `element`, flattened - what a
 /// `<ListBox>`/`<CheckedListBox>`/`<ListView>` reads for its rows. A nested
 /// `<Item>` (meaningful only to [`static_tree_nodes`]) is simply not
 /// descended into here.
@@ -157,11 +157,11 @@ fn static_item_labels(element: &Element) -> Vec<String> {
 }
 
 /// The `<Item Text=".." <FieldName>=".."/>` children of `element`, one row
-/// per `<Item>`, one value per `field_names` entry, in column order — what a
+/// per `<Item>`, one value per `field_names` entry, in column order - what a
 /// `<ListView>` with declared `<Column Binding="{Binding Field}">` children
 /// reads for a static (non-`ItemsSource`) row's per-column cells:
 /// `<Item Text="Alice" Role="Admin"/>` against columns bound to `Name`
-/// (index 0, read from the conventional `Text` attribute — the same one
+/// (index 0, read from the conventional `Text` attribute - the same one
 /// `static_item_labels`/every other list control's `<Item>` already uses)
 /// and `Role` (index ≥ 1, read from the attribute named exactly like the
 /// column's own bare binding field). `field_names` empty (no `<Column>`
@@ -186,7 +186,7 @@ fn static_item_rows(element: &Element, field_names: &[String]) -> Vec<Vec<String
         .collect()
 }
 
-/// The `<Item Text="..">…</Item>` children of `element`, recursively — what
+/// The `<Item Text="..">…</Item>` children of `element`, recursively - what
 /// a `<TreeView>` reads for its node tree. A node with children starts
 /// expanded, so a static tree is visible without any extra markup.
 fn static_tree_nodes(element: &Element) -> Vec<TreeNode> {
@@ -217,7 +217,7 @@ fn static_tree_heights(element: &Element, prefix: &[usize], out: &mut std::colle
 }
 
 /// The `<Column Header=".." Binding=".." Width=".."/>` children of
-/// `element`, as raw `(header, binding, width)` triples — what a
+/// `element`, as raw `(header, binding, width)` triples - what a
 /// `<ListView>`/`<DataTable>` turns into its own `ColumnHeader`s. `width`
 /// falls back to a plain 160 DIP column, the same fallback
 /// `kubuno_desktop_controls::views::ColumnHeader::default` uses for an unspecified
@@ -240,17 +240,17 @@ fn static_columns(element: &Element) -> Vec<(String, String, i32)> {
 }
 
 /// A stable column id (`ColumnHeader::name`, the replica's own identity key
-/// — see `kubuno_desktop_ui::tables::column`) derived from a `Binding` expression
+/// - see `kubuno_desktop_ui::tables::column`) derived from a `Binding` expression
 /// (`{Binding Name}` → `"Name"`) when there is one, else from the header
 /// text, else a positional fallback so two same-titled columns still get
 /// distinct identities (`DataTable::toggle_sort` keys the sort state on this).
-/// The bare field name a `<Column Binding="{Binding Name}">` names, if any —
+/// The bare field name a `<Column Binding="{Binding Name}">` names, if any -
 /// `"{Binding Name, Mode=TwoWay}"` → `"Name"`. `None` for a column with no
 /// `Binding` (a static-label-only column), or a malformed one. Shared by
 /// [`column_id`] (the id falls back to the header when there is none) and,
 /// with the row-reading side of `ItemsSource`, by [`resolve_item_rows`]'s
-/// callers directly, which need the bare field name — not `column_id`'s own
-/// header/positional fallback — to read the matching [`crate::binding::Row`]
+/// callers directly, which need the bare field name - not `column_id`'s own
+/// header/positional fallback - to read the matching [`crate::binding::Row`]
 /// field.
 fn binding_field(binding: &str) -> Option<&str> {
     binding
@@ -285,7 +285,7 @@ fn parse_selection_mode(s: &str) -> SelectionMode {
 }
 
 /// `YYYY-MM-DD` → [`Date`]. `None` for anything else, including a partial or
-/// malformed string — the caller simply leaves the calendar's own selection
+/// malformed string - the caller simply leaves the calendar's own selection
 /// alone in that case (see `MonthCalendarNode::paint`).
 fn parse_iso_date(s: &str) -> Option<Date> {
     let mut parts = s.splitn(3, '-');
@@ -304,7 +304,7 @@ fn format_iso_date(d: Date) -> String {
 }
 
 /// A [`NodePath`] as the dot-joined text a `SelectedPath` binding carries
-/// (`"0.2.1"`) — `NodePath` itself has no scalar `binding::Value` shape (see
+/// (`"0.2.1"`) - `NodePath` itself has no scalar `binding::Value` shape (see
 /// the module doc), so this is the family's own stand-in encoding.
 fn path_to_string(path: &NodePath) -> String {
     path.iter().map(usize::to_string).collect::<Vec<_>>().join(".")
@@ -319,7 +319,7 @@ fn parse_path(s: &str) -> Option<NodePath> {
 }
 
 // ─────────────────────────────────────────────────────────────────────────
-// Event helpers — this family's per-shape convenience wrappers around the
+// Event helpers - this family's per-shape convenience wrappers around the
 // now-shared `crate::node::PaintCx::fire` (`pub(crate)`): each one adds the
 // binding write-back (or lack of one) and the [`Value`]/[`ViewEventKind`]
 // shape a data control's own event needs, then dispatches through the one
@@ -347,7 +347,7 @@ fn fire_index_changed(
     cx.fire(event, focus_id, handler, ViewEventKind::Changed(index.to_string()), &mut args);
 }
 
-/// The text-valued twin of [`fire_index_changed`] — `SelectedPath` (a
+/// The text-valued twin of [`fire_index_changed`] - `SelectedPath` (a
 /// [`NodePath`], see [`path_to_string`]), `SelectedDate` (an ISO date, see
 /// [`format_iso_date`]), or a sort-state summary with no binding at all.
 fn fire_string_changed(
@@ -382,19 +382,19 @@ fn fire_toggled(
 }
 
 /// An activation (Enter / double-click on a row, a day, a node): the closest
-/// existing [`ViewEventKind`] shape is `Clicked` — see the module doc.
+/// existing [`ViewEventKind`] shape is `Clicked` - see the module doc.
 fn fire_clicked(cx: &mut PaintCx<'_>, event: &'static str, focus_id: Option<FocusId>, handler: Option<&str>, item: Value) {
     cx.fire(event, focus_id, handler, ViewEventKind::Clicked, &mut ItemActivateEventArgs { item });
 }
 
 // ─────────────────────────────────────────────────────────────────────────
-// `ItemsSource` — reading a bound row list every frame (`crate::binding::
+// `ItemsSource` - reading a bound row list every frame (`crate::binding::
 // Value::List`/`Row`), the piece this file's own module doc used to call
 // "the ItemsSource gap": a component below still declares the attribute as
 // `PropKind::String` so `{Binding Path}` parses and validates (unchanged),
 // and its `build` closure now also captures the parsed binding
 // (`props.str("ItemsSource", "")?.binding().cloned()`) for its node to
-// re-resolve every frame here, alongside — not instead of — the static
+// re-resolve every frame here, alongside - not instead of - the static
 // `<Item>`/`<Column>` children this file already reads directly off the XML.
 // A node with no `ItemsSource` binding, or one that resolves to anything
 // other than `Value::List` (unset, wrong shape), simply keeps whatever the
@@ -403,10 +403,10 @@ fn fire_clicked(cx: &mut PaintCx<'_>, event: &'static str, focus_id: Option<Focu
 // ─────────────────────────────────────────────────────────────────────────
 
 /// The flat, single-field shape `ListBox`/`CheckedListBox`/`ListView`
-/// (single-column)/`TreeView` (flat — see the module doc's own hedge on tree
+/// (single-column)/`TreeView` (flat - see the module doc's own hedge on tree
 /// binding) read a row as: its `"Text"` field, rendered as display text
 /// ([`crate::binding::Row::text`]). `None` when `items_source` is unbound or
-/// does not currently resolve to a list — the caller's cue to leave its
+/// does not currently resolve to a list - the caller's cue to leave its
 /// existing (static-children-built) items exactly alone.
 #[cfg(test)]
 fn resolve_item_labels(vm: &dyn ViewModel, items_source: &Option<BindingSpec>) -> Option<Vec<String>> {
@@ -419,7 +419,7 @@ fn resolve_item_labels(vm: &dyn ViewModel, items_source: &Option<BindingSpec>) -
 
 /// The multi-column shape `ListView`/`DataTable` read a row as: one text
 /// value per declared `<Column Binding="{Binding Field}">`, in column order
-/// — `field_names` is each column's bare field name (`column_id`'s own
+/// - `field_names` is each column's bare field name (`column_id`'s own
 /// `from_binding`, already derived once at build time; see each of those
 /// components' `build`). `None` under the same conditions as
 /// [`resolve_item_labels`].
@@ -443,17 +443,17 @@ fn cells_of(rows: &[crate::binding::Row], field_names: &[String]) -> Vec<Vec<Str
 }
 
 /// The shared "claim the wheel only if this actually scrolled" check every
-/// nested scrollable below uses — see the module doc's "Wheel scrolling and
+/// nested scrollable below uses - see the module doc's "Wheel scrolling and
 /// scroll chaining". `apply` receives the wheel's vertical DIP travel,
 /// performs the real (already-clamped) scroll, and reports whether the
 /// position actually changed; `host::claim_wheel()` runs exactly when it
 /// did. Does nothing when the wheel already went to something else this
-/// frame, the pointer is not over `bounds`, or there was no wheel travel —
+/// frame, the pointer is not over `bounds`, or there was no wheel travel -
 /// `apply` is not even called in those cases, so a caller's closure never
 /// has to guard against being asked to "scroll" a stationary wheel.
 ///
-/// Takes no `Canvas`/`ViewModel`, only `&Frame`, so this — the actual
-/// scroll-or-not decision — is unit-testable without the live `Canvas`
+/// Takes no `Canvas`/`ViewModel`, only `&Frame`, so this - the actual
+/// scroll-or-not decision - is unit-testable without the live `Canvas`
 /// nothing in this crate's own test suite constructs either (see `node.rs`'s
 /// module doc on why); `data::tests` below exercises it directly.
 fn claim_wheel_if_scrolled(frame: &Frame, bounds: Rect, mut apply: impl FnMut(f32) -> bool) {
@@ -465,7 +465,7 @@ fn claim_wheel_if_scrolled(frame: &Frame, bounds: Rect, mut apply: impl FnMut(f3
 }
 
 // ─────────────────────────────────────────────────────────────────────────
-// InertNode — the placeholder `<Item>`/`<Column>` build to (see the module
+// InertNode - the placeholder `<Item>`/`<Column>` build to (see the module
 // doc): never actually reached outside a test, since their parent reads the
 // raw XML instead of calling `Props::build_children` on them.
 // ─────────────────────────────────────────────────────────────────────────
@@ -500,7 +500,7 @@ struct ListBoxNode {
     pub(crate) draw_mode: PropSource<String>,
     pub(crate) owner: crate::owner_draw::OwnerDrawEvents,
     widget: ListBox,
-    /// Whether the mouse was already down the last time this node acted —
+    /// Whether the mouse was already down the last time this node acted -
     /// so a held button selects once per press, on the down edge, the way a
     /// native list box does (not on release, unlike a push button: see
     /// `node::press_release`'s own doc for why a button is different).
@@ -625,7 +625,7 @@ struct CheckedListBoxNode {
     watch: crate::binding::ListWatch,
     /// `Sorted`.
     sorted: bool,
-    /// The item labels currently in [`Self::widget`] — kept alongside it
+    /// The item labels currently in [`Self::widget`] - kept alongside it
     /// (rather than re-derived from `widget.items`, which the composed
     /// replica does not expose directly the way `ListBox::items` does) so a
     /// bound `ItemsSource`'s new resolution can be compared against what is
@@ -672,7 +672,7 @@ impl ViewNode for CheckedListBoxNode {
             }
             if self.items != labels {
                 // No in-place `items` setter on the composed replica (unlike
-                // `ListBox::items`) — rebuilt wholesale. Every row starts
+                // `ListBox::items`) - rebuilt wholesale. Every row starts
                 // unchecked, same as the widget's own initial construction;
                 // a bound row's check state is not modelled (see this
                 // component's `ItemsSource` doc).
@@ -746,7 +746,7 @@ impl ViewNode for CheckedListBoxNode {
 // ─────────────────────────────────────────────────────────────────────────
 
 /// One [`ListViewItem`] per row: `values[0]` is the primary column, every
-/// further value a `with_sub` secondary column, in column order — the exact
+/// further value a `with_sub` secondary column, in column order - the exact
 /// shape `XML_VIEWS.md` §3's worked example describes
 /// (`ListViewItem::new(…).with_sub(…)`).
 fn build_list_view_item(values: &[String]) -> ListViewItem {
@@ -762,7 +762,7 @@ struct ListViewNode {
     /// The bound rows last shown.
     watch: crate::binding::ListWatch,
     /// This component's own `<Column Binding="..">` field names, in column
-    /// order — read from a bound row every frame (see [`resolve_item_rows`]);
+    /// order - read from a bound row every frame (see [`resolve_item_rows`]);
     /// empty for a column with no `Binding`.
     field_names: Vec<String>,
     multi_select: PropSource<bool>,
@@ -1001,7 +1001,7 @@ impl ViewNode for TreeViewNode {
 
         claim_wheel_if_scrolled(cx.frame, bounds, |wy| {
             // `TreeView` has no `clamp_scroll`/`max_scroll` of its own (unlike
-            // `ListView`) — derived here from its own public `rows()`/
+            // `ListView`) - derived here from its own public `rows()`/
             // `row_height()` so the upper bound is real content height, not
             // "grows forever downward" (without it, every downward notch
             // would count as "it moved" even once every row is on screen).
@@ -1039,7 +1039,7 @@ struct TableColumn {
     field: String,
     /// A `Binding` names the field: only then is an edited value written back.
     bound: bool,
-    /// `FormatString` / `Culture` / `NullValue` — the column's attributes over the parts of its
+    /// `FormatString` / `Culture` / `NullValue` - the column's attributes over the parts of its
     /// own `Binding` (`{Binding amount, FormatString=N2}`), over the table's `Culture`.
     format: BindingFormat,
     /// `ReadOnly="True"`: never edited in place.
@@ -1104,8 +1104,8 @@ fn data_table_columns(element: &Element, table_culture: Option<&str>) -> (Vec<Co
 /// The text a cell shows for `row`'s field: as held without a format (DATA-1: `Row::text`),
 /// else formatted per the column's `FormatString`/`Culture`/`NullValue`
 /// ([`crate::format::to_target`]: a text number `"1234.5"` with `N2` → `1 234,50` in French, an
-/// ISO date with `d` → `01/05/1952`, `""` (NULL) → `NullValue`; a text that does not parse —
-/// a value being typed — is shown as it is).
+/// ISO date with `d` → `01/05/1952`, `""` (NULL) → `NullValue`; a text that does not parse -
+/// a value being typed - is shown as it is).
 fn cell_display(row: &Row, column: &TableColumn) -> String {
     if column.format.is_empty() {
         return row.text(&column.field);
@@ -1119,7 +1119,7 @@ fn cell_display(row: &Row, column: &TableColumn) -> String {
 
 /// How two cells of a column compare for the grid's sort: numbers (held as numbers or as their
 /// text, the way a `BindingSource` hands them) numerically, empty (NULL) cells first, anything
-/// else as text ignoring case — never by the formatted text (`1 234,50` < `999,00` would be
+/// else as text ignoring case - never by the formatted text (`1 234,50` < `999,00` would be
 /// wrong).
 fn compare_cells(a: Option<&Value>, b: Option<&Value>) -> std::cmp::Ordering {
     use std::cmp::Ordering;
@@ -1188,7 +1188,7 @@ fn set_item_cell(item: &mut ListViewItem, model: usize, text: String) {
 
 struct DataTableNode {
     items_source: Option<BindingSpec>,
-    /// This component's own column ids, in column order — each one doubles
+    /// This component's own column ids, in column order - each one doubles
     /// as the row field it reads (see the component's `ItemsSource` doc and
     /// [`resolve_item_rows`]).
     field_names: Vec<String>,
@@ -1520,7 +1520,7 @@ impl DataTableNode {
 
     /// The user made item `item` the current row (click, arrows, a commit that moves): it is
     /// selected, `SelectedIndex` and `OnSelectionChanged` follow, and a `BindingSource` behind
-    /// moves its `Position` there — which ends the pending row edit and can be refused by its
+    /// moves its `Position` there - which ends the pending row edit and can be refused by its
     /// `RowValidating`: the grid then goes back to the source's current row. Returns whether
     /// the move happened.
     fn user_moved_to(&mut self, cx: &mut PaintCx<'_>, item: usize, ctrl: bool, shift: bool) -> bool {
@@ -1627,7 +1627,7 @@ impl DataTableNode {
 
     /// Writes an edited cell back (see the component's doc): through the current row of a
     /// `BindingSource` (`<path>.Position` then `<path>.Current.<field>`), through
-    /// `<path>[<row>].<field>` for any other bound list, into the item itself for static rows —
+    /// `<path>[<row>].<field>` for any other bound list, into the item itself for static rows -
     /// parsed back per the column's format in the first two cases (`ViewModel::set_bound`).
     fn write_back(&mut self, cx: &mut PaintCx<'_>, item: usize, column: usize, text: &str) {
         let Some(col) = self.columns.get(column).cloned() else { return };
@@ -1680,7 +1680,7 @@ impl DataTableNode {
     }
 
     /// The keys of a focused table that is not editing a cell: the cell keys first (F2, ← →,
-    /// Tab, Escape, typed text — `DataTable::cell_key`), then the rows' (`DataTable::on_key`:
+    /// Tab, Escape, typed text - `DataTable::cell_key`), then the rows' (`DataTable::on_key`:
     /// ↑ ↓ PgUp PgDn Home End, Ctrl+A, Enter → `OnRowActivated`). A move of the current row
     /// goes through [`Self::user_moved_to`].
     fn handle_keys(&mut self, cx: &mut PaintCx<'_>, bounds: Rect) {
@@ -1863,7 +1863,7 @@ impl ViewNode for DataTableNode {
 
         // `DataTable::scroll_by` already reports whether it actually moved
         // (unlike the other list controls' own `scroll_by`/`scroll_rows`),
-        // so this was already scroll-chaining correctly — routed through the
+        // so this was already scroll-chaining correctly - routed through the
         // shared helper anyway for one rule in one place.
         claim_wheel_if_scrolled(cx.frame, bounds, |wy| self.widget.scroll_by(bounds, 0.0, wy));
 
@@ -1922,7 +1922,7 @@ impl ViewNode for MonthCalendarNode {
             }
         }
         // Never left at the replica's `DEFAULT_TODAY` (`2000-01-01`)
-        // sentinel — see `crate::clock`'s own doc.
+        // sentinel - see `crate::clock`'s own doc.
         let today = parse_iso_date(&self.today.resolve(cx.vm)).unwrap_or_else(crate::clock::today);
         self.widget.set_today_date(today);
 
@@ -1972,7 +1972,7 @@ impl ViewNode for MonthCalendarNode {
 // `../macros.rs`), which is a CHILD of this module, not a copy of it: it
 // does not inherit this file's own `use` statements. So every reference to
 // a `kubuno_desktop_ui`/`kubuno_desktop_controls` item and to one of this family's own
-// helpers/node types below is written as a full, absolute path — exactly
+// helpers/node types below is written as a full, absolute path - exactly
 // how `registry/components.rs`'s own `ctor: kubuno_desktop_ui::buttons::Button::
 // new(..)` already does it, and per this family's own brief ("use full
 // paths for your node types in build blocks").
@@ -2049,7 +2049,7 @@ component! {
         PropertyMeta::new("CheckOnClick", PropKind::Bool, "false",
             "Checks or unchecks an item with a single click anywhere on it.",
         ),
-        // Note: A `{Binding Path}` to a row list (`crate::binding::Value::List`); each row's `Text` field becomes one row's label, re-read every frame (all unchecked — a bound row's check state is not modelled, see this family's report). Static `<Item Text=".."/>` children still work and are used as long as this either names no binding or the binding is unset/not a list.
+        // Note: A `{Binding Path}` to a row list (`crate::binding::Value::List`); each row's `Text` field becomes one row's label, re-read every frame (all unchecked - a bound row's check state is not modelled, see this family's report). Static `<Item Text=".."/>` children still work and are used as long as this either names no binding or the binding is unset/not a list.
         PropertyMeta::new("ItemsSource", PropKind::String, "",
             "Binding to the list of items to show, instead of Item children.",
         ),
@@ -2117,7 +2117,7 @@ component! {
             .iter()
             .map(|(_, binding, _)| crate::registry::families::data::binding_field(binding).unwrap_or_default().to_string())
             .collect();
-        // One value per `field_names` entry, per `<Item>` — see
+        // One value per `field_names` entry, per `<Item>` - see
         // `static_item_rows`'s own doc for the `Text`/`<FieldName>`
         // attribute convention this reads.
         let items = crate::registry::families::data::static_item_rows(props.element(), &field_names);
@@ -2150,7 +2150,7 @@ component! {
             "Selected item, as indexes separated by dots, for example 0.2.1. Empty means none.",
         ),
         PropertyMeta::new("MultiSelect", PropKind::Bool, "false", "Allows several items to be selected."),
-        // Note: A `{Binding Path}` to a row list (`crate::binding::Value::List`); each row's `Text` field becomes one FLAT, top-level, always-childless node — `Value::List` has no nested-row shape, so a bound tree is one level deep (see this family's report); nest with static `<Item Text="..">..</Item>` children for a real hierarchy. Static children still work and are used as long as this either names no binding or the binding is unset/not a list.
+        // Note: A `{Binding Path}` to a row list (`crate::binding::Value::List`); each row's `Text` field becomes one FLAT, top-level, always-childless node - `Value::List` has no nested-row shape, so a bound tree is one level deep (see this family's report); nest with static `<Item Text="..">..</Item>` children for a real hierarchy. Static children still work and are used as long as this either names no binding or the binding is unset/not a list.
         PropertyMeta::new("ItemsSource", PropKind::String, "",
             "Binding to a flat list of items to show, instead of Item children.",
         ),
@@ -2194,7 +2194,7 @@ component! {
 component! {
     mod_name: data_table,
     name: "DataTable",
-    // Note: A full data grid — toolbar, sortable columns, pagination (`kubuno_desktop_ui::tables::DataTable` replica).
+    // Note: A full data grid - toolbar, sortable columns, pagination (`kubuno_desktop_ui::tables::DataTable` replica).
     doc: "A data table with sortable columns and pages. Declare the columns as Column children.",
     ctor: kubuno_desktop_ui::tables::DataTable::new(),
     children: ChildrenModel::List(&["Column"]),
@@ -2204,7 +2204,7 @@ component! {
         PropertyMeta::new("SelectedIndex", PropKind::F32, "-1",
             "Index of the selected row, starting at 0. -1 means none.",
         ),
-        // Note: A `{Binding Path}` to a row list (`crate::binding::Value::List`), the shape `admin_users.rs::table()` already hand-builds; each row's field named by a column's own `Binding` (its bare path, e.g. `Name` for `{Binding Name}` — the same name that column's id/sort-key already uses) becomes that column's cell text for that row, re-read every frame. Without this, the table declares its columns with static `<Column Header=".." Binding=".."/>` children and starts with zero rows.
+        // Note: A `{Binding Path}` to a row list (`crate::binding::Value::List`), the shape `admin_users.rs::table()` already hand-builds; each row's field named by a column's own `Binding` (its bare path, e.g. `Name` for `{Binding Name}` - the same name that column's id/sort-key already uses) becomes that column's cell text for that row, re-read every frame. Without this, the table declares its columns with static `<Column Header=".." Binding=".."/>` children and starts with zero rows.
         PropertyMeta::new("ItemsSource", PropKind::String, "",
             "Binding to the list of rows to show. Each column shows the field named by its Binding.",
         ),
@@ -2301,7 +2301,7 @@ component! {
         PropertyMeta::new("SelectedDate", PropKind::String, "",
             "Selected date, in the form YYYY-MM-DD. Empty means none.",
         ),
-        // Note: Overrides the « today » marker/footer (ISO `YYYY-MM-DD`) — for a test or a screenshot that needs a fixed date; empty (the default) reads the real local date every frame (`crate::clock::today`).
+        // Note: Overrides the « today » marker/footer (ISO `YYYY-MM-DD`) - for a test or a screenshot that needs a fixed date; empty (the default) reads the real local date every frame (`crate::clock::today`).
         PropertyMeta::new("Today", PropKind::String, "",
             "Date treated as today, in the form YYYY-MM-DD. Leave empty to use the current date.",
         ),
@@ -2326,7 +2326,7 @@ component! {
 component! {
     mod_name: item,
     name: "Item",
-    // Note: A static list entry — a row of `<ListBox>`/`<CheckedListBox>`/`<ListView>`, or (nested under itself) one node of a `<TreeView>`'s tree. Read directly off the parsed XML by the parent's `build` (see this file's module doc); never reached through `Props::build_children`, so it builds an inert placeholder. Accepts any attribute name, not just `Text`: a `<ListView>`/`<DataTable>` row's other columns are read the same way, by an attribute named exactly like that column's own `Binding` field (see `static_item_rows`).
+    // Note: A static list entry - a row of `<ListBox>`/`<CheckedListBox>`/`<ListView>`, or (nested under itself) one node of a `<TreeView>`'s tree. Read directly off the parsed XML by the parent's `build` (see this file's module doc); never reached through `Props::build_children`, so it builds an inert placeholder. Accepts any attribute name, not just `Text`: a `<ListView>`/`<DataTable>` row's other columns are read the same way, by an attribute named exactly like that column's own `Binding` field (see `static_item_rows`).
     doc: "An item of a ListBox, CheckedListBox, ListView or TreeView.",
     ctor: (),
     children: ChildrenModel::List(&["Item"]),
@@ -2344,18 +2344,18 @@ component! {
 component! {
     mod_name: column,
     name: "Column",
-    // Note: A static column declaration — a `<ListView>`/`<DataTable>` child. Read directly off the parsed XML by the parent's `build` (see this file's module doc); never reached through `Props::build_children`, so it builds an inert placeholder.
+    // Note: A static column declaration - a `<ListView>`/`<DataTable>` child. Read directly off the parsed XML by the parent's `build` (see this file's module doc); never reached through `Props::build_children`, so it builds an inert placeholder.
     doc: "A column of a ListView or DataTable.",
     ctor: (),
     children: ChildrenModel::None,
     props: [
         PropertyMeta::new("Header", PropKind::String, "", "Text of the column header."),
-        // Note: A `{Binding Path}` naming the row field this column shows — accepted (and used to derive the column's stable id) but not resolved per row until `ItemsSource` is (see this file's module doc).
+        // Note: A `{Binding Path}` naming the row field this column shows - accepted (and used to derive the column's stable id) but not resolved per row until `ItemsSource` is (see this file's module doc).
         PropertyMeta::new("Binding", PropKind::String, "",
             "Field of each row shown in this column, for example {Binding Name}.",
         ),
         PropertyMeta::new("Width", PropKind::F32, "160", "Width of the column, in pixels."),
-        // Note: WinForms `DataGridViewColumn.DefaultCellStyle.Format` — the same formats as a binding's `FormatString` (`crate::format`): numbers `N2`, `C`, `P0`, `#,##0.00`…, dates `d`, `D`, `g`, `dd/MM/yyyy`…; an edited value is parsed back with it. May also be given inside `Binding` (`{Binding amount, FormatString=N2}`); this attribute wins.
+        // Note: WinForms `DataGridViewColumn.DefaultCellStyle.Format` - the same formats as a binding's `FormatString` (`crate::format`): numbers `N2`, `C`, `P0`, `#,##0.00`…, dates `d`, `D`, `g`, `dd/MM/yyyy`…; an edited value is parsed back with it. May also be given inside `Binding` (`{Binding amount, FormatString=N2}`); this attribute wins.
         PropertyMeta::new("FormatString", PropKind::String, "",
             "Format of the values shown in this column, for example N2 for a number with two decimals or d for a short date. Empty shows the values as they are.",
         ).category("Appearance"),
@@ -2415,7 +2415,7 @@ mod tests {
     // ── Wheel scrolling / scroll chaining ───────────────────────────────
 
     /// A frame with the mouse over `mouse` and `wy` DIP of vertical wheel
-    /// travel — everything [`claim_wheel_if_scrolled`] reads, nothing else
+    /// travel - everything [`claim_wheel_if_scrolled`] reads, nothing else
     /// populated (no live `Canvas` needed at all: see this function's own
     /// doc on why it takes only `&Frame`).
     fn wheel_frame(mouse: (f32, f32), wy: f32) -> Frame {
@@ -2441,10 +2441,10 @@ mod tests {
     fn a_list_that_fits_entirely_does_not_claim_the_wheel() {
         // The exact regression this fixes: a `<ListBox>` short enough that
         // all its rows are already on screen (a 3-item list in a box tall
-        // enough for far more) used to swallow every wheel notch anyway —
+        // enough for far more) used to swallow every wheel notch anyway -
         // this pins that it no longer does, which is the precondition for
         // an enclosing `<ScrollArea>` to receive it instead (standard scroll
-        // chaining — kubuno_desktop_ui's own `ScrollArea` is the tested, trusted
+        // chaining - kubuno_desktop_ui's own `ScrollArea` is the tested, trusted
         // consumer of an unclaimed wheel; this crate's own contract is
         // exactly "leave it unclaimed when there is nothing to scroll").
         let items = vec!["Alpha".to_string(), "Beta".to_string(), "Gamma".to_string()];
@@ -2455,7 +2455,7 @@ mod tests {
         // produces, never the raw global flag: `host::WHEEL_CLAIMED` is a
         // `thread_local!` that Rust's test harness may run other tests on
         // the same OS thread before or after this one (there is no public
-        // `begin_frame`-style reset reachable from this crate — see
+        // `begin_frame`-style reset reachable from this crate - see
         // `kubuno_desktop_controls::host::begin_frame`, `pub(crate)`), so only the
         // change THIS call makes is deterministic, not the ambient value.
         let claimed_before = host::wheel_claimed();
@@ -2549,7 +2549,7 @@ mod tests {
 
     #[test]
     fn list_box_node_starts_from_its_static_items_until_a_bound_list_resolves() {
-        // `ListBoxNode::new`'s own construction — the same seed `paint`'s
+        // `ListBoxNode::new`'s own construction - the same seed `paint`'s
         // first lines (`resolve_item_labels`, see the test above) leave
         // untouched until `items_source` actually resolves to a list; a
         // `ListBoxNode` never manufactures a live `Canvas`-driven frame in

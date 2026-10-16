@@ -7,10 +7,10 @@
 //! shipping a newer dataset must leave all three alone. Three columns carry
 //! that promise:
 //!
-//! * `is_overridden` — set the first time the console writes a row. The upsert
+//! * `is_overridden` - set the first time the console writes a row. The upsert
 //!   below skips those rows entirely.
-//! * `enabled` — never written by the seeder, in either direction.
-//! * `is_orphan` — a row the new dataset no longer knows, but which somebody
+//! * `enabled` - never written by the seeder, in either direction.
+//! * `is_orphan` - a row the new dataset no longer knows, but which somebody
 //!   edited. Deleting it would throw the edit away; keeping it quietly would go
 //!   on announcing a day the source dropped. It is kept and flagged, and the
 //!   console shows it as what it is.
@@ -161,7 +161,7 @@ pub struct ShippedHoliday {
     pub to_year: Option<i32>,
 }
 
-/// Looks one day up in the shipped dataset — what "rétablir la version
+/// Looks one day up in the shipped dataset - what "rétablir la version
 /// d'origine" restores.
 ///
 /// Parses on demand rather than keeping the dataset in memory: this is a button
@@ -193,7 +193,7 @@ pub fn shipped_holiday(calendar_code: &str, key: &str) -> Option<ShippedHoliday>
     })
 }
 
-/// Loads the dataset. `force` re-applies it even when the version matches —
+/// Loads the dataset. `force` re-applies it even when the version matches -
 /// what the console's "recharger le référentiel" does after somebody has
 /// deleted rows they now want back.
 pub async fn load(db: &DbPool, force: bool) -> Result<SeedReport, AppError> {
@@ -234,7 +234,7 @@ pub async fn load(db: &DbPool, force: bool) -> Result<SeedReport, AppError> {
 
     // Read the current built-in inventory BEFORE any write. The removal/orphan
     // reconciliation at the end used to be a pair of PostgreSQL `UNNEST` array
-    // anti-joins — not portable, and `params!` binds a `Vec<String>` as a JSON
+    // anti-joins - not portable, and `params!` binds a `Vec<String>` as a JSON
     // array rather than an SQL array, so the old form could not be kept even on
     // PostgreSQL. It is now computed in Rust against the shipped set and applied
     // by id. Reading before the writes is correct: freshly inserted rows are, by
@@ -304,7 +304,7 @@ pub async fn load(db: &DbPool, force: bool) -> Result<SeedReport, AppError> {
         AppError::Database(e)
     })?;
 
-    // Every (calendar code, holiday key) the dataset declares — what the
+    // Every (calendar code, holiday key) the dataset declares - what the
     // removal pass at the end compares against.
     let mut shipped_keys: Vec<(String, String)> = Vec::new();
 
@@ -329,7 +329,7 @@ pub async fn load(db: &DbPool, force: bool) -> Result<SeedReport, AppError> {
                 json!({})
             };
             // A calendar carries a coverage window only when something in it
-            // actually runs out — the explicit date lists. A country whose days
+            // actually runs out - the explicit date lists. A country whose days
             // are all rules answers for every year, and saying otherwise would
             // put a false limit in front of the reader.
             let bounded = entry.holidays.iter().any(|h| h.kind == "dates");
@@ -536,7 +536,7 @@ mod tests {
     use super::*;
 
     /// The dataset is embedded in the binary, so a corrupt one is a build-time
-    /// problem — and this is the test that turns it into one.
+    /// problem - and this is the test that turns it into one.
     #[test]
     fn the_shipped_dataset_parses_and_covers_the_world() {
         let dataset: Dataset = serde_json::from_str(DATASET).expect("jeu de données lisible");

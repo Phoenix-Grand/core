@@ -1,11 +1,11 @@
-//! Maintenance notices — a permanent banner shown to every connected user for
+//! Maintenance notices - a permanent banner shown to every connected user for
 //! the whole duration of a database maintenance operation (engine switch,
 //! schema-prefix change, backup restore, module database change/switch/sync).
 //!
 //! ## How it stays consistent
 //!
 //! An operation opens a [`MaintenanceGuard`] before its real work and closes it
-//! with [`finish`](MaintenanceGuard::finish) in **every** branch — success and
+//! with [`finish`](MaintenanceGuard::finish) in **every** branch - success and
 //! error alike. The guard:
 //!
 //!   - on creation: inserts a row in `core.maintenance_notices` and broadcasts a
@@ -57,7 +57,7 @@ pub struct MaintenanceNotice {
     pub started_at: DateTime<Utc>,
 }
 
-/// The notices currently active, newest first — the fallback the shell reads on
+/// The notices currently active, newest first - the fallback the shell reads on
 /// (re)load. Never fails the caller: on a database error it logs and returns an
 /// empty list, so `/api/v1/config` still serves.
 pub async fn active(db: &DbPool) -> Vec<MaintenanceNotice> {
@@ -79,13 +79,13 @@ pub async fn active(db: &DbPool) -> Vec<MaintenanceNotice> {
 
 /// Removes notices left behind by an operation whose process died before it
 /// could finish (a restart during a core engine switch, a panic that skipped
-/// `Drop`). Runs once at startup, best-effort — a failure here never blocks the
+/// `Drop`). Runs once at startup, best-effort - a failure here never blocks the
 /// boot.
 ///
 /// Every `global` notice present at startup is cleared unconditionally: such a
 /// notice can only have been opened by a process that is no longer this one, so
 /// its operation has already ended (typically by the very restart we are booting
-/// from). Any notice — module-scoped included — older than
+/// from). Any notice - module-scoped included - older than
 /// [`STALE_AFTER_MINUTES`] is cleared too.
 pub async fn sweep_stale(db: &DbPool) {
     // The cutoff is expressed as a server-side `NOW() - INTERVAL` in the engine's
@@ -124,7 +124,7 @@ pub struct MaintenanceGuard {
 }
 
 impl MaintenanceGuard {
-    /// Opens a notice: INSERT the row + broadcast `start`. Best-effort — a
+    /// Opens a notice: INSERT the row + broadcast `start`. Best-effort - a
     /// failure to record the notice is logged but never blocks the operation it
     /// announces, and the guard is returned regardless so the caller's control
     /// flow is unchanged.
@@ -257,7 +257,7 @@ mod tests {
         dir
     }
 
-    /// A migrated SQLite pool in a throwaway directory — the portable engine that
+    /// A migrated SQLite pool in a throwaway directory - the portable engine that
     /// runs everywhere, so these tests need no external server.
     async fn sqlite_pool(dir: &Path) -> DbPool {
         let settings: DbSettings = serde_json::from_value(serde_json::json!({
@@ -301,7 +301,7 @@ mod tests {
         let guard =
             MaintenanceGuard::start(&pool, &ws, GLOBAL_SCOPE, "Migration en cours…", "migrate").await;
 
-        // INSERT visible — this is exactly what `/config` serves.
+        // INSERT visible - this is exactly what `/config` serves.
         let notices = active(&pool).await;
         assert_eq!(notices.len(), 1, "one active notice after start");
         assert_eq!(notices[0].scope, GLOBAL_SCOPE);
@@ -310,7 +310,7 @@ mod tests {
 
         guard.finish().await;
 
-        // DELETE visible — the banner lifts on its own.
+        // DELETE visible - the banner lifts on its own.
         assert!(active(&pool).await.is_empty(), "notice lifted after finish()");
 
         std::fs::remove_dir_all(&dir).ok();
@@ -347,7 +347,7 @@ mod tests {
         let dir = tmp_dir("sweep");
         let pool = sqlite_pool(&dir).await;
 
-        // A stale module notice (older than the cutoff) — an operation a crash
+        // A stale module notice (older than the cutoff) - an operation a crash
         // abandoned. `started_at` is written in the exact text shape the column
         // stores (the SQLite default), so the sweep's comparison is like-for-like.
         let stale = new_id();
@@ -362,7 +362,7 @@ mod tests {
         .await
         .unwrap();
 
-        // A fresh GLOBAL notice — left by an operation that ended with a restart.
+        // A fresh GLOBAL notice - left by an operation that ended with a restart.
         let global = new_id();
         pool.execute(
             "INSERT INTO core.maintenance_notices (id, scope, message, kind) VALUES ($1, $2, $3, $4)",
@@ -371,7 +371,7 @@ mod tests {
         .await
         .unwrap();
 
-        // A fresh MODULE notice — a live operation from another process (kept).
+        // A fresh MODULE notice - a live operation from another process (kept).
         let fresh = new_id();
         pool.execute(
             "INSERT INTO core.maintenance_notices (id, scope, message, kind) VALUES ($1, $2, $3, $4)",
@@ -412,7 +412,7 @@ mod tests {
     #[tokio::test]
     async fn guard_and_sweep_on_postgres_when_configured() {
         let Some(pool) = pg_pool_if_configured().await else {
-            eprintln!("KUBUNO_PG_TEST_URL absent — test PG ignoré");
+            eprintln!("KUBUNO_PG_TEST_URL absent - test PG ignoré");
             return;
         };
         let ws = Arc::new(WsHub::new());

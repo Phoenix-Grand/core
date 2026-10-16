@@ -1,4 +1,4 @@
-<!-- ModuleMaintenanceBanner — converted from ModuleMaintenanceBanner.tsx by @kubuno/views-migrate. -->
+<!-- ModuleMaintenanceBanner - converted from ModuleMaintenanceBanner.tsx by @kubuno/views-migrate. -->
 <UserControl x:Props="ModuleMaintenanceBannerProps">
   <Panel Visible="{Binding show_main}" Class="px-3 pt-2 no-print">
     <Callout Variant="Warning" Title="{Res shell.maintenance_module_title}" Body="{Binding callout_text}"/>

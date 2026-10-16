@@ -2,7 +2,7 @@
 //!
 //! Everything here is pure: an entry in, a [`MappedUser`] out. That is what
 //! makes the mapping testable without a directory, and the mapping is the part
-//! operators get wrong — an Active Directory forest and an OpenLDAP tree agree
+//! operators get wrong - an Active Directory forest and an OpenLDAP tree agree
 //! on almost none of the attribute names.
 //!
 //! ## Two things the wire format forces
@@ -26,7 +26,7 @@ use super::model::AttributeMap;
 /// What one directory entry contributes to an account.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct MappedUser {
-    /// Distinguished name — what the bind is attempted against.
+    /// Distinguished name - what the bind is attempted against.
     pub dn: String,
     /// Stable identifier read through `attr_unique_id`, when the entry has one.
     pub uid: Option<String>,
@@ -166,7 +166,7 @@ pub fn rdn_value(dn: &str) -> Option<String> {
 /// Parses a raw result entry without letting a malformed one take the process
 /// down.
 ///
-/// `SearchEntry::construct` panics on anything it cannot parse — its own
+/// `SearchEntry::construct` panics on anything it cannot parse - its own
 /// documentation says so. On the sign-in path the peer is a directory an
 /// operator configured, but "configured by an operator" is not "trusted to be
 /// well-formed", and a panic in a request task is a 500 with no explanation at

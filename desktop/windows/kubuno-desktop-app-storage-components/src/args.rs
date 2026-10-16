@@ -28,7 +28,7 @@ pub struct RegistryValueChangedEventArgs {
     pub external: bool,
 }
 
-/// Raises an event of a component: its Rust subscribers first, then the `.kbview` handler its element names —
+/// Raises an event of a component: its Rust subscribers first, then the `.kbview` handler its element names -
 /// synchronously inside a binding or the runtime's sync (a cancelable event can be cancelled by its XML handler),
 /// else queued for the runtime. Returns the args as the handlers left them.
 pub(crate) fn emit<A: EventArgs + Clone>(core: &mut ComponentCore, class: &'static str, event: &Event<A>, attr: &'static str, mut args: A) -> A {

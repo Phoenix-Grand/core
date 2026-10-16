@@ -1,5 +1,5 @@
 <!-- Resources (WV-6): {Res} strings from a .kbres set (Resources.kbres, English, + its .fr / .ar satellites) with
-     arguments — a name, and a count that picks the plural form of the language (Arabic has six). -->
+     arguments - a name, and a count that picks the plural form of the language (Arabic has six). -->
 <Stack xmlns="https://kubuno.com/views" xmlns:x="https://kubuno.com/views/x" Gap="8" MaximumSize="560, 0">
   <Label Text="{Res title, Source=gallery, Name={Binding who}}" Role="Heading"/>
   <Repeater ItemsSource="{Binding counts}" ItemKey="n">

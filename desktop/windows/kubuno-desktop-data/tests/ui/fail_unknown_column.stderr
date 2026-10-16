@@ -1,4 +1,4 @@
-error: `fail_unknown_column.kbdata`: names: error returned from database: (code: 1) no such column: nme — the .kbdata does not match the database schema
+error: `fail_unknown_column.kbdata`: names: error returned from database: (code: 1) no such column: nme - the .kbdata does not match the database schema
  --> tests/ui/fail_unknown_column.rs:2:1
   |
 2 | kubuno_desktop_data::data_source!("fail_unknown_column.kbdata");

@@ -2,7 +2,7 @@
 //!
 //! Historically the core handed the very same `server.internal_secret` to every
 //! supervised module. Any module holding it could therefore speak for any other
-//! module — and, through the proxy's internal impersonation path, for any user
+//! module - and, through the proxy's internal impersonation path, for any user
 //! including administrators. The trust boundary was "all modules at once".
 //!
 //! The core now derives a distinct secret per module:
@@ -21,7 +21,7 @@
 //! * HKDF would work too, but its extract step only matters when the input
 //!   keying material is non-uniform. Here the master secret is a random value of
 //!   at least 32 bytes (enforced by `ServerSettings::validate_internal_secret`),
-//!   so HKDF-Expand — which *is* HMAC — is all that is needed. One HMAC call is
+//!   so HKDF-Expand - which *is* HMAC - is all that is needed. One HMAC call is
 //!   the same construction with fewer moving parts.
 //!
 //! The derivation is deterministic, so nothing has to be stored: the core
@@ -99,7 +99,7 @@ pub fn derive_module_secret(master: &str, module_id: &str) -> String {
 /// Both comparisons run in constant time with respect to the secret contents.
 pub fn authenticate(master: &str, presented: &str, allow_master: bool) -> Option<InternalCaller> {
     if let Some(rest) = presented.strip_prefix(DERIVED_PREFIX) {
-        // "<module_id>.<base64url tag>" — the module id may not contain a dot,
+        // "<module_id>.<base64url tag>" - the module id may not contain a dot,
         // so splitting on the last dot is unambiguous.
         let (module_id, tag_b64) = rest.rsplit_once('.')?;
         if module_id.is_empty() {

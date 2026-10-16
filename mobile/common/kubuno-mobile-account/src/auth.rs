@@ -1,7 +1,7 @@
 //! Signing in a native client: `POST /auth/login`, and, when the account has a second factor, `POST /auth/totp`.
 //!
 //! A native sign-in sends `client_type: "native"`, which makes the server return the token pair in the JSON body
-//! ([`NativeTokens`]) instead of setting an HttpOnly cookie — so the phone can keep the refresh token in its secret
+//! ([`NativeTokens`]) instead of setting an HttpOnly cookie - so the phone can keep the refresh token in its secret
 //! store and refresh without a cookie jar. When the account has TOTP enabled the login answers `{requires_totp,
 //! totp_session}` instead, and the code (or a backup code) is verified with [`verify_totp`].
 

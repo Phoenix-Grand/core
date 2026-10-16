@@ -39,7 +39,7 @@ struct AdminModuleRow {
 #[derive(sqlx::FromRow)]
 struct DependencyRow {
     id:           String,
-    // PostgreSQL `TEXT[]` today; read as a JSON array (portable) — the column is
+    // PostgreSQL `TEXT[]` today; read as a JSON array (portable) - the column is
     // migrated `TEXT[]` → `JSONB` on the schema-consolidation side.
     #[sqlx(json)]
     dependencies: Vec<String>,
@@ -113,7 +113,7 @@ pub async fn update_settings(
 
     // The relay settings are refused here, not silently ignored. Accepting
     // `mail.smtp_password` on this route would store whatever string was posted
-    // *in clear* under a key the rest of the code reads as ciphertext — the
+    // *in clear* under a key the rest of the code reads as ciphertext - the
     // credential would then be unusable and readable at the same time. There is
     // exactly one writer, and it encrypts.
     if let Some(key) = updates.keys().find(|k| crate::handlers::admin::mail::owns_setting(k)) {
@@ -125,7 +125,7 @@ pub async fn update_settings(
     // The authentication policy is refused here for the same reason, and for a
     // sharper one: this route writes `core.settings.value`, which the scope
     // resolver no longer reads. Accepting it would let an administrator believe
-    // they had changed who may sign in while nothing had changed at all — and it
+    // they had changed who may sign in while nothing had changed at all - and it
     // would step around the anti-lockout guard, which lives on the scoped route.
     if let Some(key) = updates
         .keys()
@@ -156,7 +156,7 @@ pub async fn update_settings(
     validate_module_bounds(&state.db, &updates).await?;
 
     // Every key that is about to change is audited, including the retention
-    // setting itself — the one an attacker would go for first.
+    // setting itself - the one an attacker would go for first.
     let mut tx = audit.begin(&state.db).await?;
     let admin_id = audit.admin.id;
 
@@ -465,7 +465,7 @@ pub async fn toggle_module(
     } else {
         // Enable: restore the instance from the database without waiting for the
         // next heartbeat. `DbTx` is not involved here, so the row is read on the
-        // pool with `fetch_optional_row` and mapped by hand — `subscribed_events`
+        // pool with `fetch_optional_row` and mapped by hand - `subscribed_events`
         // is a PostgreSQL `TEXT[]` column (see the port notes).
         let row = state
             .db

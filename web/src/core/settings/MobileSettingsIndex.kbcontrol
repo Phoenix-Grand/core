@@ -1,4 +1,4 @@
-<!-- MobileSettingsIndex — converted from MobileSettingsIndex.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- MobileSettingsIndex - converted from MobileSettingsIndex.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl>
   <Panel Class="pb-2">
     <Label HtmlTag="H1" Text="{Res settings.page_title}" FontWeight="Medium" Overflow="Wrap" ForeColor="TextPrimary" Class="text-xl px-1 mb-3"/>

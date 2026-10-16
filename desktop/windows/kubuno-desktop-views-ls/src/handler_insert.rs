@@ -10,7 +10,7 @@
 //! insert a matching Rust handler stub into the code-behind `.rs` file this
 //! module locates the same way [`crate::definition::sibling_rs_files`] does.
 //! Both edits travel back to the client as one [`lsp_types::WorkspaceEdit`]
-//! (`changes: { uri -> [TextEdit] }`) — the client applies each file's edits
+//! (`changes: { uri -> [TextEdit] }`) - the client applies each file's edits
 //! through its own buffer, one undo unit per file (`vskubuno`'s
 //! `Editing/` services + the new `Handlers/HandlerCreationService.cs`, DSG-10's
 //! C# half).
@@ -18,31 +18,31 @@
 //! ## The stub shape, and why it is a real `fn` *and* a table entry
 //!
 //! [`kubuno_desktop_views::handlers!`] only ever accepts an inline closure literal
-//! (`"name" => |vm, value| { … }`) — there is no way to register a bare `fn`
+//! (`"name" => |vm, value| { … }`) - there is no way to register a bare `fn`
 //! item in the table directly. But [`crate::definition::goto_definition`]
 //! (the *read* half this package extends) only ever finds a literal `fn
-//! <name>` — it cannot see into a `handlers!` table's closure bodies (its own
+//! <name>` - it cannot see into a `handlers!` table's closure bodies (its own
 //! doc explains why: a real resolution needs the interpreter/binding layer
 //! this crate deliberately does not link). Generating *only* a closure entry
 //! would create a handler "go to definition" could never find; generating
 //! *only* a free `fn` would leave it undispatched. So this module always
 //! creates a standalone `fn <name>(vm: &mut dyn ViewModel, value: Value)`
 //! (the one payload shape [`kubuno_desktop_views::registry::EventMeta`] models today
-//! — see that type's own doc, "No payload type is modelled yet"), and, only
+//! - see that type's own doc, "No payload type is modelled yet"), and, only
 //! when the target file already uses the `handlers!` table convention, also
 //! inserts one forwarding entry `"<name>" => |vm, value| <name>(vm, value),`
-//! registering it — "plus registering it in the `handlers!` table if the
+//! registering it - "plus registering it in the `handlers!` table if the
 //! convention requires it" is conditional on that convention actually being
 //! present in the file, exactly this way.
 //!
 //! ## Typed code-behinds (`vskubuno/docs/EVENTS.md` §5.4, EVT-4)
 //!
 //! When the code-behind has a `#[kubuno_desktop_views::event_handlers]` impl, the stub is a typed
-//! method appended to it instead — `fn on_ok_click(&mut self, sender: &Sender<Button>, e:
+//! method appended to it instead - `fn on_ok_click(&mut self, sender: &Sender<Button>, e:
 //! &MouseEventArgs)`: the sender typed with the element's control type
 //! (`kubuno_desktop_views::controls`, `&ElementRef` for a structural element), the args with the
 //! event's Rust type from the registry (`EventMeta::args_rust`, `&dyn EventArgs` for the root
-//! args, `&mut` when the handler can set `handled`/`cancel`) — plus
+//! args, `&mut` when the handler can set `handled`/`cancel`) - plus
 //! `use kubuno_desktop_views::prelude::*;` when the file lacks it. No table entry: the macro
 //! dispatches by method name. So each file keeps a single style: typed when it already is,
 //! legacy otherwise ([`crate::convert_handlers`] migrates one).
@@ -50,7 +50,7 @@
 //! ## Never regenerates or reformats
 //!
 //! Every edit this module produces is a **pure, zero-length insertion** at a
-//! computed offset — never a replace, never a whole-block rewrite. The two
+//! computed offset - never a replace, never a whole-block rewrite. The two
 //! insertion points (the new `fn`, and, when applicable, its `handlers!`
 //! table entry) are computed with a small brace-depth scanner
 //! ([`find_handlers_block`]) rather than a Rust parser, deliberately mirroring
@@ -61,7 +61,7 @@
 //! ## A known limitation shared with `crate::definition`
 //!
 //! Like [`crate::definition::goto_definition`], this module reads the
-//! code-behind `.rs` file from **disk**, not from a live VS buffer — this
+//! code-behind `.rs` file from **disk**, not from a live VS buffer - this
 //! server has no LSP document for it (only `.kbview` documents are tracked by
 //! [`crate::documents::DocumentStore`]). If that file is open in Visual
 //! Studio with unsaved changes, the computed byte offsets are only as fresh
@@ -89,7 +89,7 @@ pub struct CreateHandlerParams {
     pub uri: Uri,
     pub element_id: String,
     /// The declared event name exactly as the registry carries it (e.g.
-    /// `"OnClick"` — [`kubuno_desktop_views::registry::EventMeta::name`] already
+    /// `"OnClick"` - [`kubuno_desktop_views::registry::EventMeta::name`] already
     /// includes the `On` prefix; this is also the `.kbview` attribute name).
     pub event: String,
     #[serde(default)]
@@ -100,10 +100,10 @@ pub struct CreateHandlerParams {
 }
 
 /// Exactly one of `location`/`edit` is `Some` on a successful call: `location`
-/// when the event already names a handler (a "go to definition" — no edit is
+/// when the event already names a handler (a "go to definition" - no edit is
 /// produced), `edit` when a new one was created. Both `None` only in the same
 /// "degrade to no-op" cases every other bridge method in this crate uses (no
-/// open document, an id/name that does not resolve — see the module doc of
+/// open document, an id/name that does not resolve - see the module doc of
 /// [`crate::edit_bridge`] for the precedent this follows).
 #[derive(Debug, Serialize, Default)]
 #[serde(rename_all = "camelCase")]
@@ -185,7 +185,7 @@ pub fn create_handler(doc: Option<&Document>, uri: &Uri, params: &CreateHandlerP
 
     // `lsp_types::Uri` wraps a `fluent-uri` type with an internal `Cell`
     // memoizing a lazily-parsed component, which trips clippy's interior-
-    // mutability-as-map-key lint — same as `crate::documents::DocumentStore`'s
+    // mutability-as-map-key lint - same as `crate::documents::DocumentStore`'s
     // own `HashMap<Uri, Document>`. Never mutated after insertion here (the
     // map is built once and handed straight to `WorkspaceEdit`), so this is
     // exactly the lint's documented false-positive case.
@@ -209,7 +209,7 @@ fn to_text_edit(doc: &Document, e: edit::Edit) -> TextEdit {
 
 // ── name picking ───────────────────────────────────────────────────────
 
-/// `on_<xname or element>_<event>`, all `snake_case` — `DESIGNER.md` §6,
+/// `on_<xname or element>_<event>`, all `snake_case` - `DESIGNER.md` §6,
 /// DSG-10's own naming rule.
 fn default_handler_name(x_name: Option<&str>, element_name: &str, event: &str) -> String {
     let subject = x_name
@@ -275,7 +275,7 @@ pub(crate) fn to_snake_case(s: &str) -> String {
     out.trim_matches('_').to_string()
 }
 
-/// `base`, or `base_2`/`base_3`/… — the first name for which no sibling `.rs`
+/// `base`, or `base_2`/`base_3`/… - the first name for which no sibling `.rs`
 /// file (the same set [`definition::sibling_rs_files`] scans) already
 /// declares a matching `fn`.
 fn unique_name(dir: &Path, base: &str) -> String {
@@ -303,7 +303,7 @@ fn name_exists(dir: &Path, name: &str) -> bool {
 /// `XML_VIEWS.md` §7's convention) when present; otherwise the one sibling
 /// `.rs` file that already contains a `handlers!` table, when exactly one
 /// does; otherwise the only sibling `.rs` file, when there is exactly one.
-/// `None` when none of these narrows to a single, unambiguous file — this
+/// `None` when none of these narrows to a single, unambiguous file - this
 /// package does not guess between several equally-plausible targets.
 pub(crate) fn pick_code_behind_file(dir: &Path, kbview_path: &Path) -> Option<PathBuf> {
     let files = definition::sibling_rs_files(dir);
@@ -331,7 +331,7 @@ pub(crate) fn pick_code_behind_file(dir: &Path, kbview_path: &Path) -> Option<Pa
 }
 
 /// The full `{path, edits}` this module inserts into the code-behind file for
-/// `name` — see the module doc for the "real `fn` + conditional table entry"
+/// `name` - see the module doc for the "real `fn` + conditional table entry"
 /// shape. `None` when [`pick_code_behind_file`] cannot settle on one file, or
 /// it cannot be read.
 pub(crate) fn insert_handler_stub(
@@ -349,7 +349,7 @@ pub(crate) fn insert_handler_stub(
     // Keep the file's own line endings (a CRLF file stays CRLF).
     let nl = if text.contains("\r\n") { "\r\n" } else { "\n" };
 
-    // A typed code-behind (EVT-4): the stub is a method of its `#[event_handlers]` impl — or, for a
+    // A typed code-behind (EVT-4): the stub is a method of its `#[event_handlers]` impl - or, for a
     // `#[kubuno_desktop::view]` form class, a plain method of the struct's `impl`.
     if let Some(imp) = code_behind::find_typed_impl(&text) {
         return Some((path, typed_stub_edits(&index, &text, &imp, name, element, event, root, nl)));
@@ -376,7 +376,7 @@ pub(crate) fn insert_handler_stub(
             edits.extend(table_entry_edits(&index, &text, open, close, &indent, name, nl));
         }
         None => {
-            // No `handlers!` table in this file yet — a top-level stub only,
+            // No `handlers!` table in this file yet - a top-level stub only,
             // no registration entry ("if the convention requires it").
             let mut fn_text = String::new();
             if !text.is_empty() && !text.ends_with('\n') {
@@ -400,11 +400,11 @@ pub(crate) fn insert_handler_stub(
 
 /// The typed signature of a new handler (`vskubuno/docs/EVENTS.md` §5.4): the sender typed
 /// with the element's control type (`&ElementRef` for a structural element, which has none),
-/// and the event's Rust args type — `&dyn EventArgs` for the root args (WinForms'
-/// `EventArgs e`), `&mut` when a handler writes back into them (`handled`, `cancel`) —
+/// and the event's Rust args type - `&dyn EventArgs` for the root args (WinForms'
+/// `EventArgs e`), `&mut` when a handler writes back into them (`handled`, `cancel`) -
 /// or, for a `#[kubuno_desktop::view]` form class (`view`): the sender typed with the
 /// control's handle (`&Button`, `&Control` for an element without one, `&Form` for the view's own
-/// events on its root) and the root args under their Windows Forms name (`&EventArgs`) —
+/// events on its root) and the root args under their Windows Forms name (`&EventArgs`) -
 /// `fn hello_click(&mut self, _sender: &Button, _e: &MouseEventArgs)`.
 /// The path a form's code-behind names an args type of a control of the project with: `crate::<module>::<Args>`
 /// when the args struct is declared in the file of the control (`AddressValidatedEventArgs` next to
@@ -551,12 +551,12 @@ fn table_entry_edits(
 }
 
 /// Finds the first `handlers!` macro invocation's `{ … }` block, returning
-/// `(keyword_offset, open_brace_offset, close_brace_offset)` — `keyword_offset`
+/// `(keyword_offset, open_brace_offset, close_brace_offset)` - `keyword_offset`
 /// is where the literal `handlers!` starts (used to find *its own line's*
 /// indentation, even when other code shares that line, e.g. `let mut h =
 /// handlers! {`); `open`/`close` point *at* the `{`/`}` characters themselves.
 /// A small brace-depth scan that skips over `"…"` string literals (so a
-/// handler body's own braces inside a string never miscount) — deliberately
+/// handler body's own braces inside a string never miscount) - deliberately
 /// not a Rust parser, mirroring this crate's established "plain text search"
 /// simplification (see the module doc). `None` when no `handlers!` invocation
 /// is found, or its block is unterminated.
@@ -677,7 +677,7 @@ mod tests {
         let kbview_edits = changes.get(&uri).expect("kbview edit");
         assert_eq!(kbview_edits.len(), 1);
         // No `OnClick` attribute existed yet, so `set_attribute` inserts the
-        // whole ` OnClick="…"` — not just a value replacement (see
+        // whole ` OnClick="…"` - not just a value replacement (see
         // `kubuno_desktop_views::edit::set_attribute`'s own doc).
         assert_eq!(kbview_edits[0].new_text, " OnClick=\"on_button_click\"");
 

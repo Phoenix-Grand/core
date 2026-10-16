@@ -1,4 +1,4 @@
-<!-- CoverSheet — converted from CoverSheet.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- CoverSheet - converted from CoverSheet.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="CoverSheetProps">
   <Stack Gap="0" Class="h-full">
     <Stack Direction="LeftToRight" CrossAlign="Center">

@@ -1,4 +1,4 @@
-//! [`Form`]: a window's content and state — a `.kbview` view, controls created in code, or both.
+//! [`Form`]: a window's content and state - a `.kbview` view, controls created in code, or both.
 
 use std::cell::{Cell, RefCell};
 use std::collections::HashMap;
@@ -97,7 +97,7 @@ impl FormShared {
     }
 }
 
-/// A window's content and state — Windows Forms' `Form`: a `.kbview` view (a struct with
+/// A window's content and state - Windows Forms' `Form`: a `.kbview` view (a struct with
 /// `#[kubuno_desktop::view]` derefs to its form), controls created in code ([`Form::controls`]), or both.
 /// A cheap, clonable handle.
 ///
@@ -347,7 +347,7 @@ impl Form {
     // ── Window kind and chrome ───────────────────────────────────────────────────────────────
 
     /// The kind of window (`WindowKind`): a main window, a dialog, a tool window, a splash screen,
-    /// a flyout or an MDI document — a preset of the border, buttons and placement.
+    /// a flyout or an MDI document - a preset of the border, buttons and placement.
     pub fn window_kind(self, kind: WindowKind) -> Self {
         self.set_window_kind(kind);
         self
@@ -357,7 +357,7 @@ impl Form {
         self.root().set_property("WindowKind", format!("{kind:?}"));
     }
 
-    /// The window's icon — its title bar, the task bar, Alt+Tab: a name of the Kubuno icon set
+    /// The window's icon - its title bar, the task bar, Alt+Tab: a name of the Kubuno icon set
     /// (`"FileText"`), or an image file (`.ico`, `.svg`, `.png`…, [`super::IconSource::file`]).
     pub fn set_icon(&self, icon: impl Into<super::IconSource>) {
         self.root().set_property("Icon", icon.into());
@@ -374,8 +374,8 @@ impl Form {
         self.root().set_property("Subtitle", Value::Str(subtitle.into()));
     }
 
-    /// The title bar's height class (`TitleBarStyle`): `Standard` (32 DIP, Windows 11's — the default) or
-    /// `Tall` (64 DIP, the web's header — the default of a window showing the header's menus).
+    /// The title bar's height class (`TitleBarStyle`): `Standard` (32 DIP, Windows 11's - the default) or
+    /// `Tall` (64 DIP, the web's header - the default of a window showing the header's menus).
     pub fn set_title_bar_style(&self, style: kubuno_desktop_controls::window_chrome::TitleBarStyle) {
         use kubuno_desktop_controls::window_chrome::TitleBarStyle;
         let name = match style {
@@ -642,7 +642,7 @@ impl Form {
         self.root().on("OnMdiChildActivate")
     }
 
-    /// `Load`: once, when the form's window is created and before it is first shown — a form
+    /// `Load`: once, when the form's window is created and before it is first shown - a form
     /// started hidden ([`Form::start_hidden`]) gets it too, without being shown.
     pub fn load(&self) -> ControlEvent<'_, Form, EmptyEventArgs> {
         self.root().on("OnLoad")
@@ -681,7 +681,7 @@ impl Form {
     }
 }
 
-/// Anything that has a form: a [`Form`], a struct with `#[kubuno_desktop::view]` — what a dialog's owner is.
+/// Anything that has a form: a [`Form`], a struct with `#[kubuno_desktop::view]` - what a dialog's owner is.
 pub trait AsForm {
     fn as_form(&self) -> &Form;
 }

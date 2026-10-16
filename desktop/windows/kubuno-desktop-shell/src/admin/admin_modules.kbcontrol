@@ -1,6 +1,6 @@
 <!--
   The installed modules (the web's ModulesPanel): how many there are and « Marketplace » (the web console) on the
-  title's line, a filter, then the table — the module (its logo, its name, its version, « Par défaut » on the one
+  title's line, a filter, then the table - the module (its logo, its name, its version, « Par défaut » on the one
   the instance opens on, its description), whether its service is on for everyone (a dot and the words), and a ⋮
   that switches it on or off for everyone.
 -->

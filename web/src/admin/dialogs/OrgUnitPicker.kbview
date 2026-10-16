@@ -1,4 +1,4 @@
-<!-- OrgUnitPicker — converted from OrgUnitPicker.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- OrgUnitPicker - converted from OrgUnitPicker.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <Panel x:Props="OrgUnitPickerProps" OnMouseDown="panel_mouse_down">
   <FloatingWindow ConfirmText="{Res admin.ou_done}"
                   ConfirmEnabled="{Binding enabled_unless_sel}"

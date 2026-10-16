@@ -1,6 +1,6 @@
 //! The account the account-scoped data belongs to (`docs/STORAGE-COMPONENTS.md`, decision Q6): settings, key/value
-//! stores, files and local databases declared `AccountScoped` live below `<user_data_dir>/accounts/<key>/<app>/` — the
-//! layout of `kubuno-desktop-sync-engine`, so signing an account out (which deletes `accounts/<key>`) wipes them too — and,
+//! stores, files and local databases declared `AccountScoped` live below `<user_data_dir>/accounts/<key>/<app>/` - the
+//! layout of `kubuno-desktop-sync-engine`, so signing an account out (which deletes `accounts/<key>`) wipes them too - and,
 //! for the Registry back-end, below `HKCU\Software\Kubuno\Accounts\<key>\Apps\<app>`.
 //!
 //! The app says which account is current ([`set_current_account`], after a sign-in or an account switch; the shell's

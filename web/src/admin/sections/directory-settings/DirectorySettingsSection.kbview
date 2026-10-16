@@ -1,4 +1,4 @@
-<!-- DirectorySettingsSection — converted from DirectorySettingsSection.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- DirectorySettingsSection - converted from DirectorySettingsSection.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <Panel Class="contents">
   <Panel Visible="{Binding show_case_1}" Class="min-w-0">
     <!-- TODO(views-migrate): elements held in an expression -->

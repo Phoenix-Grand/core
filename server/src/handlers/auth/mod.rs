@@ -3,17 +3,17 @@
 //! Every handler and DTO is re-exported at this level, so the router and the
 //! OpenAPI declarations keep referring to `crate::handlers::auth::<name>`.
 //!
-//! - [`login`]          — sign in / sign out (`/auth/login`, `/auth/logout`)
-//! - [`accounts`]       — Google-style multi-account (`/auth/accounts`, `/auth/switch`)
-//! - [`register`]       — public sign up (`/auth/register`)
-//! - [`tokens`]         — refresh token issuance + shared cookie helpers
-//! - [`refresh`]        — rotation, reuse detection, rotation grace (`/auth/refresh`)
-//! - [`tickets`]        — signed download / stream tickets (`/auth/tickets`)
-//! - [`totp`]           — second factor verification (`/auth/totp`), TOTP or backup code
-//! - [`reauth`]         — step-up before a sensitive action (`/auth/reauth`)
-//! - [`password_reset`] — forgotten / reset password
-//! - [`oauth`]          — generic OIDC providers (Keycloak, GitLab, Authentik, …)
-//! - [`oauth_users`]    — SSO user lookup, linking and creation
+//! - [`login`]          - sign in / sign out (`/auth/login`, `/auth/logout`)
+//! - [`accounts`]       - Google-style multi-account (`/auth/accounts`, `/auth/switch`)
+//! - [`register`]       - public sign up (`/auth/register`)
+//! - [`tokens`]         - refresh token issuance + shared cookie helpers
+//! - [`refresh`]        - rotation, reuse detection, rotation grace (`/auth/refresh`)
+//! - [`tickets`]        - signed download / stream tickets (`/auth/tickets`)
+//! - [`totp`]           - second factor verification (`/auth/totp`), TOTP or backup code
+//! - [`reauth`]         - step-up before a sensitive action (`/auth/reauth`)
+//! - [`password_reset`] - forgotten / reset password
+//! - [`oauth`]          - generic OIDC providers (Keycloak, GitLab, Authentik, …)
+//! - [`oauth_users`]    - SSO user lookup, linking and creation
 
 mod accounts;
 mod captcha;

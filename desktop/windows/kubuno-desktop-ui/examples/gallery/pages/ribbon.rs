@@ -1,9 +1,9 @@
-//! Gallery page — the Office ribbon (`office/frontend/src/ribbon/Ribbon.tsx`).
+//! Gallery page - the Office ribbon (`office/frontend/src/ribbon/Ribbon.tsx`).
 //!
 //! The exposition (left) runs three LIVE ribbons, declared as data exactly as
 //! a web editor declares its tabs:
 //!
-//! * the Documents ribbon at full width — coloured strip, « Fichier » opening
+//! * the Documents ribbon at full width - coloured strip, « Fichier » opening
 //!   the Backstage, quick actions (Save / Undo / Redo), Accueil with every item
 //!   kind (large paste, stacked buttons, font and size drop-downs, toggles,
 //!   splits with their menus, a styles gallery, a « Sélectionner » menu),
@@ -198,7 +198,7 @@ fn with_ui<R>(f: impl FnOnce(&mut Ui) -> R) -> R {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// The declaration — what `buildDocumentRibbon` returns, in Rust
+// The declaration - what `buildDocumentRibbon` returns, in Rust
 // ─────────────────────────────────────────────────────────────────────────────
 
 fn strip_actions() -> Vec<RibbonItem> {
@@ -460,7 +460,7 @@ pub fn draw(c: &dyn Canvas, f: &Frame) {
         let right = p.area.right - MARGIN;
 
         // ── 1. The Documents ribbon over its document ─────────────────────────
-        p.section("Ruban — @office Ribbon.tsx : bande d'onglets, groupes, repli responsive");
+        p.section("Ruban - @office Ribbon.tsx : bande d'onglets, groupes, repli responsive");
         p.caption("en direct : « Fichier » ouvre le Backstage · actions rapides · gros boutons, piles de 3, listes, bascules, boutons scindés, galerie · Ctrl+F1 réduit");
         let frame = Rect::new(MARGIN, p.y, right, p.y + 114.0 + DOC_H);
         c.fill_rounded(&frame, 8.0, &t.card_background);
@@ -567,7 +567,7 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
         let fm = c.formats();
         let (left, mut y, right) = interact::panel(c, interact::panel_rect(f.size));
 
-        y = interact::caption(c, left, right, y, "Onglet contextuel — apparaît à droite, le ruban y bascule");
+        y = interact::caption(c, left, right, y, "Onglet contextuel - apparaît à droite, le ruban y bascule");
         let sw = Switch::new().on(ui.image).label("Image sélectionnée (onglet « Image »)");
         let h = sw.height_for_width(c, right - left);
         let r = Rect::new(left, y, left + sw.measure(c).width.min(right - left), y + h);
@@ -580,7 +580,7 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
         sw.paint(c, r, live.state(r));
         y += h + 16.0;
 
-        y = interact::caption(c, left, right, y, "Extension d'un autre module — un groupe fusionné dans Accueil");
+        y = interact::caption(c, left, right, y, "Extension d'un autre module - un groupe fusionné dans Accueil");
         let sw = Switch::new().on(ui.assistant).label("Module « Assistant » installé (RibbonExtension)");
         let h = sw.height_for_width(c, right - left);
         let r = Rect::new(left, y, left + sw.measure(c).width.min(right - left), y + h);
@@ -593,7 +593,7 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
         sw.paint(c, r, live.state(r));
         y += h + 16.0;
 
-        y = interact::caption(c, left, right, y, "Réduction du ruban — clic sur un onglet : aperçu flottant");
+        y = interact::caption(c, left, right, y, "Réduction du ruban - clic sur un onglet : aperçu flottant");
         let collapsed = ui.main.is_collapsed();
         let sw = Switch::new().on(collapsed).label("Ruban réduit (Ctrl+F1)");
         let h = sw.height_for_width(c, right - left);

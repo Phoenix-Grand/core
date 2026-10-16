@@ -118,7 +118,7 @@ export function AnchoredPopover({
     <>
       {/* 9999 is what every other portal'd overlay uses (MenuDropdown, Combobox;
           Tooltip sits one layer above at 10000). This used to be 200, which is
-          below a FloatingWindow — the popover was in the DOM, correctly
+          below a FloatingWindow - the popover was in the DOM, correctly
           positioned, and painted UNDER the window that opened it. Measured. */}
       {lightDismiss && <div className={`${posCls} inset-0`} style={{ zIndex: 9998 }} onMouseDown={onClose} />}
       <div ref={popRef} className={posCls}

@@ -5,7 +5,7 @@ use kubuno_drive_desktop_app_controls::Rect;
 
 use super::types::{Color, PointF, RectExt};
 
-/// One colour of a gradient at `position` (`0..=1` along it) — GDI+'s `ColorBlend` entry.
+/// One colour of a gradient at `position` (`0..=1` along it) - GDI+'s `ColorBlend` entry.
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct GradientStop {
     pub position: f32,
@@ -93,7 +93,7 @@ impl LinearGradientBrush {
     }
 }
 
-/// A gradient radiating from `center` over an ellipse of radii `radius_x`/`radius_y` — GDI+'s
+/// A gradient radiating from `center` over an ellipse of radii `radius_x`/`radius_y` - GDI+'s
 /// elliptical `PathGradientBrush` (`CenterColor` → `SurroundColors`), Direct2D's radial brush.
 /// `origin_offset` moves the focal point off the centre (`CenterPoint`).
 #[derive(Debug, Clone, PartialEq)]
@@ -269,7 +269,7 @@ pub enum PenAlignment {
     /// Centred on the outline (GDI+'s default).
     #[default]
     Center,
-    /// Wholly inside the shape — a border that never leaves its box.
+    /// Wholly inside the shape - a border that never leaves its box.
     Inset,
 }
 
@@ -298,7 +298,7 @@ impl Pen {
         Self::from_brush(Brush::Solid(color.into()), width)
     }
 
-    /// A pen stroking with `brush` (`new Pen(brush, width)`) — a gradient outline.
+    /// A pen stroking with `brush` (`new Pen(brush, width)`) - a gradient outline.
     pub fn from_brush(brush: impl Into<Brush>, width: f32) -> Self {
         Self {
             brush: brush.into(),

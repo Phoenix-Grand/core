@@ -1,5 +1,5 @@
 /**
- * `@kubuno/views` — the runtime of `.kbview` web views (vskubuno docs/WEB-VIEWS.md, lot WV-3).
+ * `@kubuno/views` - the runtime of `.kbview` web views (vskubuno docs/WEB-VIEWS.md, lot WV-3).
  *
  * Provided by the host through its import map (one instance: one binding engine, one live-view registry);
  * modules keep `@kubuno/views` external. The npm package ships the types only.

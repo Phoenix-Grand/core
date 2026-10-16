@@ -1,4 +1,4 @@
-<!-- SettingsMovedNotice — converted from SettingsMovedNotice.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- SettingsMovedNotice - converted from SettingsMovedNotice.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl>
   <Panel Visible="{Binding show_main}" Class="mb-6 max-w-2xl">
     <!-- TODO(views-migrate): <Callout> with element children -->

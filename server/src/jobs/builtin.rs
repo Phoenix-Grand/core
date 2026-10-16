@@ -1,17 +1,17 @@
 //! Job types shipped by the core itself.
 //!
-//! * [`CLEANUP_EVENT_LOG`] — periodic purge of `core.event_log` (30-day
+//! * [`CLEANUP_EVENT_LOG`] - periodic purge of `core.event_log` (30-day
 //!   retention). The SQL function `core.cleanup_event_log()` has existed since
 //!   migration `000003` and nothing ever called it; this is its caller.
-//! * [`PURGE_ADMIN_AUDIT`] — periodic purge of `core.admin_audit`, honouring the
+//! * [`PURGE_ADMIN_AUDIT`] - periodic purge of `core.admin_audit`, honouring the
 //!   configurable `security.audit_retention_days` window. Same shape as above;
 //!   [`crate::audit::retention::purge_expired`] records its own entry in the
 //!   trail, so a purge is never an invisible deletion.
-//! * [`PURGE_MODULE_USAGE`] — periodic purge of `core.module_usage_daily`,
+//! * [`PURGE_MODULE_USAGE`] - periodic purge of `core.module_usage_daily`,
 //!   honouring the configurable `usage.retention_days` window. The counters say
 //!   who used which application; keeping them past their window would be the
 //!   difference between a statistic and a file on somebody.
-//! * [`SELFTEST`] — diagnostic job used to exercise the runner end to end
+//! * [`SELFTEST`] - diagnostic job used to exercise the runner end to end
 //!   (execution, retry with backoff, crash recovery) on a real instance,
 //!   without waiting for a real workload. It does nothing but sleep and,
 //!   optionally, fail on purpose.
@@ -130,7 +130,7 @@ pub fn register(registry: &mut JobRegistry) {
     });
 
     // Only `done` rows. A `failed` job is what an operator opens the queue to
-    // look at — the delivery a module refused, the e-mail that never went out —
+    // look at - the delivery a module refused, the e-mail that never went out -
     // and a purge that swept those away would delete the evidence rather than
     // the noise. They are cleared by hand, from the console.
     registry.register_fn(PURGE_FINISHED_JOBS, |ctx, job| async move {
@@ -160,7 +160,7 @@ pub fn register(registry: &mut JobRegistry) {
     // Attendance counters (`core.module_usage_daily`).
     //
     // The table says who used which application, which is the most personal
-    // thing the console counts — so it is the one whose window an operator must
+    // thing the console counts - so it is the one whose window an operator must
     // be able to shorten, and the purge honours the setting rather than a
     // constant. A window of 0 keeps nothing at all: "measure nothing" has to be
     // reachable from the settings page, not only by editing the source.
@@ -232,8 +232,8 @@ pub fn register(registry: &mut JobRegistry) {
     //
     // * It states the divergence between the authoritative total
     //   (`SUM(core.users.used_bytes)`, what quotas are enforced against) and the
-    //   sum of the declarations. That residue is normal — it is every module
-    //   that does not declare yet — and the point is that it is written down
+    //   sum of the declarations. That residue is normal - it is every module
+    //   that does not declare yet - and the point is that it is written down
     //   somewhere periodically rather than only visible to whoever opens the
     //   console.
     // * It raises an alert for a module that used to declare and has gone quiet,
@@ -243,8 +243,8 @@ pub fn register(registry: &mut JobRegistry) {
     //   than no figure.
     //
     // What it does **not** do is recompute anything on a module's behalf. The
-    // core cannot enumerate another module's storage — that is the entire reason
-    // the module has to declare — so a "reconciliation" that recounted would be
+    // core cannot enumerate another module's storage - that is the entire reason
+    // the module has to declare - so a "reconciliation" that recounted would be
     // inventing the number it is supposed to be checking.
     registry.register_fn(STORAGE_USAGE_RECONCILE, |ctx, job| async move {
         let sum_sql = format!(
@@ -280,7 +280,7 @@ pub fn register(registry: &mut JobRegistry) {
                 format!("“{display_name}” has stopped declaring what it stores"),
             )
             .summary(format!(
-                "Its last declaration was {hours} h ago. Its share of the storage breakdown is still shown — it is the last measurement known to be true — but it is no longer being refreshed."
+                "Its last declaration was {hours} h ago. Its share of the storage breakdown is still shown - it is the last measurement known to be true - but it is no longer being refreshed."
             ))
             .payload(serde_json::json!({
                 "module_id":        module_id,
@@ -332,7 +332,7 @@ pub fn register(registry: &mut JobRegistry) {
     //
     // `deleted_at` is stamped only by `admin::users::delete_user` and cleared by
     // reactivation, so accounts that were already inactive when this shipped
-    // carry no stamp and are never swept — erasing them stays a deliberate,
+    // carry no stamp and are never swept - erasing them stays a deliberate,
     // one-at-a-time act through the purge route.
     registry.register_fn(PURGE_DELETED_USERS, |ctx, job| async move {
         // Read straight from the instance row, like `audit::retention`: this is
@@ -354,7 +354,7 @@ pub fn register(registry: &mut JobRegistry) {
 
         // Release alerts these accounts had taken, first. `core.alerts` pairs
         // `assignee_id` with `assigned_at` under a CHECK, while the foreign key
-        // nulls only the first — so the delete below would fail on the
+        // nulls only the first - so the delete below would fail on the
         // constraint. Same reasoning as `admin::users::purge_user`. Written as a
         // correlated subquery (portable) rather than PostgreSQL's `UPDATE … FROM`.
         if let Err(e) = ctx
@@ -388,7 +388,7 @@ pub fn register(registry: &mut JobRegistry) {
                 tracing::error!(error = %e, "Lecture des comptes à purger échouée");
                 e
             })?;
-        // Take each account's setting overrides with it — the
+        // Take each account's setting overrides with it - the
         // `setting_values_purge_scope` trigger's job on PostgreSQL, which has no
         // equivalent for the polymorphic `scope_id` on the other engines.
         if ctx.db.backend() != kubuno_db::Backend::Postgres {

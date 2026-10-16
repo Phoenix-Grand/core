@@ -3,7 +3,7 @@
 // It is the only screen a freshly installed instance serves: the core has no
 // database yet, so every other API route answers 503 and the client is sent
 // here. The wizard collects the database connection, the first administrator and
-// the instance name, then hands over — the server writes its configuration,
+// the instance name, then hands over - the server writes its configuration,
 // creates the schema and starts the real instance on the same port, with nothing
 // to restart by hand.
 import { useEffect, useMemo, useState } from 'react'
@@ -33,7 +33,7 @@ interface ThemeChoice {
   id: string
   name: string
   color_scheme: string
-  /** The theme's CSS variables, in full — applied live when it is picked. */
+  /** The theme's CSS variables, in full - applied live when it is picked. */
   vars: Record<string, string>
 }
 
@@ -59,8 +59,8 @@ registerSetupI18n()
  *
  *  Choosing a theme has to be visible: an operator picking one on this screen is
  *  choosing what the instance will look like, and a card-sized swatch is not an
- *  answer. The theme's variables are set on the document root — the same
- *  mechanism the running shell uses — so the whole wizard (header, buttons,
+ *  answer. The theme's variables are set on the document root - the same
+ *  mechanism the running shell uses - so the whole wizard (header, buttons,
  *  cards, illustration frame) turns with the selection and stays that way for
  *  the remaining steps.
  *
@@ -82,7 +82,7 @@ function applyThemeVars(theme: ThemeChoice | null) {
   root.style.colorScheme = theme.color_scheme || 'light'
 }
 
-/** The theme the product falls back to everywhere else — so the picker opens on
+/** The theme the product falls back to everywhere else - so the picker opens on
  *  it rather than on nothing. */
 const DEFAULT_THEME_ID = 'kubuno-reference'
 
@@ -90,7 +90,7 @@ const DEFAULT_THEME_ID = 'kubuno-reference'
  *
  *  The browser holds nothing but an unguessable identifier: the form carries the
  *  installation token and two passwords, and browser storage is the wrong place
- *  for those. They live in the installer process's memory instead — never
+ *  for those. They live in the installer process's memory instead - never
  *  written to a disk, gone when the process ends, erased the moment the
  *  installation succeeds.
  *
@@ -150,8 +150,8 @@ export default function SetupWizard() {
   const [status, setStatus] = useState<SetupStatus | null>(null)
   const [unavailable, setUnavailable] = useState(false)
 
-  // The step lives in the URL, so a refresh — or a bookmark, or the browser's
-  // Back button — lands where the operator was instead of at the beginning.
+  // The step lives in the URL, so a refresh - or a bookmark, or the browser's
+  // Back button - lands where the operator was instead of at the beginning.
   const navigate = useNavigate()
   const { step: stepParam } = useParams<{ step?: string }>()
   const urlStep = Math.max(0, STEPS.indexOf((stepParam ?? 'welcome') as StepKey))
@@ -160,9 +160,9 @@ export default function SetupWizard() {
     navigate(clamped === 0 ? '/setup' : `/setup/${STEPS[clamped]}`)
   }
 
-  // Step 1 — proof that whoever is installing has access to the machine.
+  // Step 1 - proof that whoever is installing has access to the machine.
   const [token, setToken] = useState('')
-  // Step 2 — database
+  // Step 2 - database
   const [dbHost, setDbHost] = useState('localhost')
   const [dbPort, setDbPort] = useState('5432')
   const [dbName, setDbName] = useState('kubuno')
@@ -173,24 +173,24 @@ export default function SetupWizard() {
   const [testing, setTesting] = useState(false)
   const [dbTest, setDbTest] = useState<DbTest | null>(null)
   const [createDb, setCreateDb] = useState(false)
-  // Step 3 — first administrator
+  // Step 3 - first administrator
   const [admUser, setAdmUser] = useState('admin')
   const [admEmail, setAdmEmail] = useState('')
   const [admPassword, setAdmPassword] = useState('')
   const [admConfirm, setAdmConfirm] = useState('')
-  // Step 4 — instance
+  // Step 4 - instance
   const [instanceName, setInstanceName] = useState('Kubuno')
   const [logoDataUrl, setLogoDataUrl] = useState<string | null>(null)
   const [logoError, setLogoError] = useState<string | null>(null)
   const [themes, setThemes] = useState<ThemeChoice[]>([])
   const [themeId, setThemeId] = useState<string | null>(null)
-  // Step 5 — installing
+  // Step 5 - installing
   const [installing, setInstalling] = useState(false)
   const [installed, setInstalled] = useState(false)
   const [admExisted, setAdmExisted] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  // English on arrival, whatever the browser says — then whatever the operator
+  // English on arrival, whatever the browser says - then whatever the operator
   // picks, which also becomes the instance's default language.
   useEffect(() => {
     void i18n.changeLanguage(lang)
@@ -233,7 +233,7 @@ export default function SetupWizard() {
     axios
       .get<SetupStatus>('/api/v1/setup/status')
       .then(r => {
-        // An installed instance answers `setup_required: false` — and an older
+        // An installed instance answers `setup_required: false` - and an older
         // one has no such route at all, so the SPA's index.html comes back with
         // a 200. Anything that is not the expected object means "installed".
         if (typeof r.data !== 'object' || r.data === null || r.data.setup_required !== true) {
@@ -248,7 +248,7 @@ export default function SetupWizard() {
       })
       .catch(() => setUnavailable(true))
 
-    // The themes shipped with the instance, read off disk by the installer —
+    // The themes shipped with the instance, read off disk by the installer -
     // the very ones the administration console manages afterwards.
     axios
       .get<{ themes: ThemeChoice[] }>('/api/v1/setup/themes')
@@ -308,7 +308,7 @@ export default function SetupWizard() {
    *
    *  Matters on a refresh: the URL may name a step whose prerequisites are gone
    *  (the token and the passwords are deliberately not kept), and showing the
-   *  administrator form to someone who has not proved anything would be a lie —
+   *  administrator form to someone who has not proved anything would be a lie -
    *  Install would refuse at the end. So the wizard steps back to the last
    *  honest step and corrects the address. */
   const reachableStep = (): number => {
@@ -383,7 +383,7 @@ export default function SetupWizard() {
   useEffect(() => {
     // Not before the draft is back: on the first render every field is empty,
     // and judging the step then would send a restored installation back to the
-    // welcome screen — exactly what the draft exists to prevent.
+    // welcome screen - exactly what the draft exists to prevent.
     if (!status || !hydrated || installed) return
     const allowed = Math.min(urlStep, reachableStep())
     if (allowed !== urlStep) {
@@ -570,7 +570,7 @@ export default function SetupWizard() {
               <>
                 <Summary rows={[
                   [t('install.summaryDb'), `${dbUser}@${dbHost}:${dbPort}/${dbName}${createDb ? ` (${t('install.toCreate')})` : ''}`],
-                  [t('install.summaryAdmin'), `${admUser} — ${admEmail}`],
+                  [t('install.summaryAdmin'), `${admUser} - ${admEmail}`],
                   [t('install.summaryInstance'), instanceName],
                   [t('install.summaryConfig'), status.config_path],
                 ]} />
@@ -642,7 +642,7 @@ function apiError(e: unknown, t: (k: string, o?: Record<string, unknown>) => str
 // ── Presentation ─────────────────────────────────────────────────────────────
 // The shape the big cloud suites use for their setup flows: a slim bar carrying
 // the product mark and the step, a progress rule under it, then one screen per
-// question — the form on one side, what the step is FOR on the other.
+// question - the form on one side, what the step is FOR on the other.
 
 function Shell({ children, navLabel, progress, trailing, version }: {
   children: React.ReactNode; navLabel?: string; progress?: number
@@ -662,7 +662,7 @@ function Shell({ children, navLabel, progress, trailing, version }: {
         )}
         <SetupWordmark height={26} />
         {/* The language choice sits in the bar, reachable from the first screen
-            to the last — it is a decision about the instance, not a preference
+            to the last - it is a decision about the instance, not a preference
             buried in a menu. */}
         {trailing && <span className="absolute" style={{ insetInlineEnd: 24 }}>{trailing}</span>}
       </header>
@@ -716,7 +716,7 @@ function SetupFooter({ version }: { version?: string }) {
 }
 
 /** The rounded action button of the flow. `ghost` outlines it, `text` drops the
- *  frame — the hierarchy the reference screens use between Next / Test / Back. */
+ *  frame - the hierarchy the reference screens use between Next / Test / Back. */
 function Pill({ children, onClick, disabled, tone = 'primary' }: {
   children: React.ReactNode; onClick?: () => void; disabled?: boolean
   tone?: 'primary' | 'ghost' | 'text'
@@ -751,7 +751,7 @@ function Done({ title, text, last }: { title: string; text: string; last?: boole
 }
 
 /** The flow's illustration, served by the core itself out of `frontend/public/`
- *  — at this point in the life of an instance nothing else can serve anything.
+ *  - at this point in the life of an instance nothing else can serve anything.
  *
  *  Three sources are tried in turn, so artwork can be added without touching
  *  this file: the step's own picture (`setup-<step>.png`), the one shared by the
@@ -775,7 +775,7 @@ function Illustration({ stepKey }: { stepKey: string }) {
   )
 }
 
-/** Last resort: artwork the app draws itself — no image bank, no network. */
+/** Last resort: artwork the app draws itself - no image bank, no network. */
 function houseArt(): string {
   const ill = ILLUSTRATIONS.find(i => i.id === 'arcs-azur') ?? ILLUSTRATIONS[0]
   return illustrationSrc(ill.svg)
@@ -785,8 +785,8 @@ function houseArt(): string {
  *  people expect for a picture, and it leaves room to show the result at the
  *  size it will actually be used.
  *
- *  Stored as a data-URI in `instance.logo_url` — the key the shell already
- *  reads — because no upload endpoint can exist before the instance does. */
+ *  Stored as a data-URI in `instance.logo_url` - the key the shell already
+ *  reads - because no upload endpoint can exist before the instance does. */
 function LogoField({ value, onChange, error, onError, t }: {
   value: string | null; onChange: (v: string | null) => void
   error: string | null; onError: (v: string | null) => void
@@ -850,7 +850,7 @@ function LogoField({ value, onChange, error, onError, t }: {
   )
 }
 
-/** The themes shipped with the instance — the same ones the administration
+/** The themes shipped with the instance - the same ones the administration
  *  console offers later, not an invented palette. Each card is drawn with that
  *  theme's OWN variables, so what is on the card is what the instance will look
  *  like. */
@@ -875,7 +875,7 @@ function ThemeField({ themes, value, onChange, t }: {
                     className="overflow-hidden rounded-xl p-0 text-left transition-shadow"
                     style={{ border: `2px solid ${active ? 'var(--color-primary)' : 'var(--color-border)'}`,
                              background: 'var(--color-surface-0)', cursor: 'pointer' }}>
-              {/* Miniature of the shell: rail, header, content — painted with the
+              {/* Miniature of the shell: rail, header, content - painted with the
                   theme's own colours. */}
               <div className="flex h-20" style={{ background: surface }} aria-hidden>
                 <div className="h-full w-1/4" style={{ background: panel, borderRight: `1px solid ${line}` }}>
@@ -906,7 +906,7 @@ function ThemeField({ themes, value, onChange, t }: {
 }
 
 /** The small grey caption above an optional field. */
-/** Caption of an optional field — every field carrying one is optional. */
+/** Caption of an optional field - every field carrying one is optional. */
 function FieldLabel({ children }: { children: React.ReactNode }) {
   const { t } = useTranslation(SETUP_NS)
   return (

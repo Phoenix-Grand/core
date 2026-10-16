@@ -6,7 +6,7 @@
 //! hands the clicks on the fragment's controls back to it ([`dispatch`]). Dropping (or
 //! [`MergeHandle::remove`]) the handle takes the fragment out again.
 //!
-//! - A [`TabMerge`] whose `merge` names an existing tab (by the id the ribbon gives it — its
+//! - A [`TabMerge`] whose `merge` names an existing tab (by the id the ribbon gives it - its
 //!   `x:Name` for a `.kbview` ribbon) adds its groups to that tab, else it adds a new tab.
 //! - Each group goes before / after the group named by `insert_before` / `insert_after`
 //!   (customUI's `insertAfterMso`), else at the end.

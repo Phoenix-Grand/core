@@ -14,7 +14,7 @@ use windows::Win32::Graphics::Direct2D::Common::D2D1_COLOR_F;
 pub const SCROLLBAR_SIZE: f32 = 12.0;
 /// The thumb's width at rest (the *panning indicator*).
 pub const INDICATOR_WIDTH: f32 = 2.0;
-/// The thumb's width when expanded — the web's `::-webkit-scrollbar { width: 8px }`.
+/// The thumb's width when expanded - the web's `::-webkit-scrollbar { width: 8px }`.
 pub const THUMB_WIDTH: f32 = 8.0;
 /// `ScrollBarVerticalThumbMinHeight`: the thumb never shrinks below 24 DIP.
 pub const MIN_THUMB: f32 = 24.0;
@@ -25,7 +25,7 @@ pub const ARROW_SIZE: f32 = 12.0;
 pub const FADE_AFTER_MS: f32 = 1500.0;
 pub const FADE_MS: f32 = 250.0;
 
-// Chevrons for the `RepeatButton`s (Segoe Fluent Icons) — a control carries
+// Chevrons for the `RepeatButton`s (Segoe Fluent Icons) - a control carries
 // its own glyphs, like `breadcrumb_bar` re-declares `ChevronRight`.
 const GLYPH_CHEVRON_UP: &str = "\u{E70E}";
 const GLYPH_CHEVRON_DOWN: &str = "\u{E70D}";
@@ -110,7 +110,7 @@ const fn rgb(r: u8, g: u8, b: u8) -> D2D1_COLOR_F {
 
 /// `--scrollbar-thumb-hover`: #bdc1c6 in the light theme (theme.css), #80868b
 /// in `kubuno-dark/theme.json`. Resolved here rather than read from `Theme`,
-/// which only carries `scrollbar_thumb` — see the note in the task report.
+/// which only carries `scrollbar_thumb` - see the note in the task report.
 fn thumb_hover(mode: ThemeMode) -> D2D1_COLOR_F {
     match mode {
         ThemeMode::Light => rgb(189, 193, 198),
@@ -147,7 +147,7 @@ pub fn draw(c: &dyn Canvas, bar: &Scrollbar, alpha: f32, hot_thumb: bool) {
         c.text(down, &b, &f.icon_tiny, &fade(t.text_secondary), true);
     }
 
-    // `::-webkit-scrollbar-thumb { border-radius: 4px }` — capped at half the
+    // `::-webkit-scrollbar-thumb { border-radius: 4px }` - capped at half the
     // thickness so the 2 DIP resting indicator still reads as a pill.
     let thickness = if bar.horizontal {
         bar.thumb.bottom - bar.thumb.top

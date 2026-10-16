@@ -5,7 +5,7 @@
 //! a plain window, a Direct2D swap chain (built by
 //! [`kubuno_drive_desktop_app_controls::Renderer`]) and a message loop that, on every paint,
 //! hands a `&dyn Canvas` to a caller-supplied closure. That is the whole point
-//! — the demo binaries mount the control families over this host and compare
+//! - the demo binaries mount the control families over this host and compare
 //! them side by side with the reference sheets.
 //!
 //! It is a HOST, not an application framework. It carries no pages, no
@@ -14,8 +14,8 @@
 //! caller's closure, which owns the controls and their state.
 //!
 //! An application window (the desktop shell) configures it through
-//! [`HostOptions`] / [`run_with_options`] — its own title bar
-//! ([`Chrome::Custom`] + [`set_title_bar`]), a DWM backdrop, a font override —
+//! [`HostOptions`] / [`run_with_options`] - its own title bar
+//! ([`Chrome::Custom`] + [`set_title_bar`]), a DWM backdrop, a font override -
 //! and plugs into it with [`on_message`] (tray callbacks, worker-thread
 //! messages), [`set_close_handler`] (hide to the tray), [`quit`],
 //! [`set_theme`] and [`set_font_override`].
@@ -85,15 +85,15 @@ pub use caption::{Hot as CaptionButton, TitleBar};
 
 /// Which chrome the host paints around the client area.
 ///
-/// * `Chrome::System` — Windows draws its own title bar and buttons. The
+/// * `Chrome::System` - Windows draws its own title bar and buttons. The
 ///   default; unchanged behaviour for every existing caller.
-/// * `Chrome::Kubuno` — the host strips the system caption (WM_NCCALCSIZE),
+/// * `Chrome::Kubuno` - the host strips the system caption (WM_NCCALCSIZE),
 ///   paints the Kubuno title band itself (see [`caption`]), and turns clicks on
 ///   the min/max/close slots into the matching `SC_*` system command. On
 ///   Windows 10 the same window opens with the system chrome, because
 ///   `WM_NCCALCSIZE` still fires but the DWM tint injected by [`run`] is a
-///   no-op — the fallback is honest, not silent.
-/// * `Chrome::Custom` — the system caption is stripped exactly as for
+///   no-op - the fallback is honest, not silent.
+/// * `Chrome::Custom` - the system caption is stripped exactly as for
 ///   `Kubuno`, but the host paints NOTHING and reserves nothing
 ///   (`Frame::chrome_top == 0`): the page draws its own title bar and declares
 ///   its geometry every frame with [`set_title_bar`], which drives
@@ -114,12 +114,12 @@ pub enum Chrome {
 /// transparent.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum Backdrop {
-    /// Leave the attribute alone — the window's default look.
+    /// Leave the attribute alone - the window's default look.
     #[default]
     None,
     /// `DWMSBT_MAINWINDOW`, the Mica material.
     Mica,
-    /// `DWMSBT_TABBEDWINDOW`, "Mica Alt" — the one Windows 11 gives to shells
+    /// `DWMSBT_TABBEDWINDOW`, "Mica Alt" - the one Windows 11 gives to shells
     /// with a content pane.
     MicaAlt,
     /// `DWMSBT_TRANSIENTWINDOW`, the Acrylic material (flyouts, popovers).
@@ -193,7 +193,7 @@ pub struct HostOptions {
     /// [`set_form`]. Ignored for an embedded [`HostOptions::parent`] window.
     pub form:          FormOptions,
     /// The window that OWNS this one (a raw `HWND` value): an owned top-level window stays above
-    /// its owner, is minimised with it and has no task bar button of its own — a WinForms
+    /// its owner, is minimised with it and has no task bar button of its own - a WinForms
     /// `Form.Owner`, what a dialog opened with `ShowDialog(owner)` gets. `StartPosition =
     /// CenterParent` centres the window on it. Ignored for an embedded [`HostOptions::parent`] window.
     pub owner:         Option<isize>,
@@ -277,7 +277,7 @@ const WAKE_TIMER_ID: usize = 0x4B56;
 /// window still exists ([`parent_watch`]), in milliseconds.
 const PARENT_WATCH_MS: u32 = 500;
 
-/// Fully transparent — the ground of a floating surface's window.
+/// Fully transparent - the ground of a floating surface's window.
 const TRANSPARENT: windows::Win32::Graphics::Direct2D::Common::D2D1_COLOR_F =
     windows::Win32::Graphics::Direct2D::Common::D2D1_COLOR_F { r: 0.0, g: 0.0, b: 0.0, a: 0.0 };
 
@@ -294,7 +294,7 @@ pub struct Frame {
     /// The pointer, in DIP, relative to the client area. Stays at its last
     /// position between moves; a control reads it to light its hover state.
     /// When the pointer leaves the window (and every interactive popup) it
-    /// is parked at `(POINTER_AWAY, POINTER_AWAY)` — far off, finite — so no
+    /// is parked at `(POINTER_AWAY, POINTER_AWAY)` - far off, finite - so no
     /// hover lingers; during a left-button drag it keeps following the pointer
     /// outside the window (the window captures the mouse).
     pub mouse: (f32, f32),
@@ -302,24 +302,24 @@ pub struct Frame {
     /// click by comparing this across frames (`down && !prev_down`), so a
     /// press is GUARANTEED to read as down for at least one rendered frame
     /// even when the matching release already arrived before that frame
-    /// painted — a fast tap (touchpad, synthetic click) can complete its
+    /// painted - a fast tap (touchpad, synthetic click) can complete its
     /// whole press+release between two frames, since `WM_PAINT` is only
     /// synthesized once the message queue is otherwise empty. See
     /// [`consume_button_edge`] for how the host latches this.
     pub mouse_down: bool,
-    /// Whether the RIGHT mouse button is currently held — its rising edge is
+    /// Whether the RIGHT mouse button is currently held - its rising edge is
     /// what opens a context menu. Latched exactly like [`Frame::mouse_down`].
     pub right_down: bool,
     /// Whether the MIDDLE mouse button is currently held. Latched exactly
     /// like [`Frame::mouse_down`].
     pub middle_down: bool,
-    /// `true` for the one frame after the window lost activation — a click on
+    /// `true` for the one frame after the window lost activation - a click on
     /// the desktop or another application, Alt-Tab. Menus, popovers and help
     /// bubbles close on it, the way the web closes them on blur: a floating
     /// surface overflowing the window can be clicked around, and that click
     /// never reaches this window.
     pub dismiss: bool,
-    /// `dpi / 96`, clamped to > 0 — the same factor `Canvas::scale` returns.
+    /// `dpi / 96`, clamped to > 0 - the same factor `Canvas::scale` returns.
     pub scale: f32,
     /// The client area's top-left in screen DIP.
     pub client_origin: (f32, f32),
@@ -341,7 +341,7 @@ pub struct Frame {
     /// toward the user), `.0 > 0` scrolls RIGHT. Fractional on precision
     /// touchpads. `(0, 0)` on a frame without wheel input. See
     /// [`Frame::wheel_dip`] for a distance. Shift+wheel is NOT turned into
-    /// horizontal scrolling here — a page that wants it reads `mods.shift`.
+    /// horizontal scrolling here - a page that wants it reads `mods.shift`.
     pub wheel: (f32, f32),
     /// How many quick successive left presses the current (or last) press
     /// completes: `1` single, `2` double, `3` triple (it saturates at 3), using
@@ -360,13 +360,13 @@ impl Frame {
         (self.wheel.0 * WHEEL_NOTCH_DIP, self.wheel.1 * WHEEL_NOTCH_DIP)
     }
 
-    /// Whether the pointer is on the host's "nowhere" position — it left the
-    /// window (and every interactive popup) — so no hover should show.
+    /// Whether the pointer is on the host's "nowhere" position - it left the
+    /// window (and every interactive popup) - so no hover should show.
     pub fn pointer_outside(&self) -> bool {
         self.mouse.0 <= POINTER_AWAY || self.mouse.1 <= POINTER_AWAY
     }
 
-    /// The monitor's work area in **client** DIP — the viewport a floating
+    /// The monitor's work area in **client** DIP - the viewport a floating
     /// surface places itself in. It reaches past the window on every side the
     /// monitor does, which is what lets a tooltip, a menu or a help bubble
     /// overflow its owner instead of being squeezed inside it.
@@ -381,7 +381,7 @@ impl Frame {
 /// window that may extend beyond the host window (see [`overlay`] and
 /// [`popup`]).
 struct OverlayReq {
-    /// Where the surface goes, in CLIENT DIP — it may lie partly or wholly
+    /// Where the surface goes, in CLIENT DIP - it may lie partly or wholly
     /// outside the client area.
     bounds:      Rect,
     /// Whether the surface takes the pointer ([`popup`]) or lets it through
@@ -394,19 +394,19 @@ struct OverlayReq {
 thread_local! {
     /// Floating surfaces requested during the current frame, drained by the host
     /// once the main window has finished painting. Thread-local because the host
-    /// is single-threaded and the page has no handle to it — it just calls
+    /// is single-threaded and the page has no handle to it - it just calls
     /// [`overlay`] or [`popup`] from inside its paint.
     static OVERLAYS: std::cell::RefCell<Vec<OverlayReq>> =
         const { std::cell::RefCell::new(Vec::new()) };
     /// Where content coordinates sit in the client area: the sum of the
     /// scroll offsets a painter has in force (see [`content_offset`]).
     static CONTENT_OFFSET: std::cell::Cell<(f32, f32)> = const { std::cell::Cell::new((0.0, 0.0)) };
-    /// The interactive surfaces of the last frame, in client DIP — what
+    /// The interactive surfaces of the last frame, in client DIP - what
     /// [`over_popup`] tests the pointer against.
     static LAST_POPUPS: std::cell::RefCell<Vec<Rect>> = const { std::cell::RefCell::new(Vec::new()) };
 }
 
-/// Requests a **pass-through** floating surface — a tooltip — painted after the
+/// Requests a **pass-through** floating surface - a tooltip - painted after the
 /// current frame in a top-level window of its own, so it sits above everything
 /// and may extend beyond the host window's edges.
 ///
@@ -422,8 +422,8 @@ where
     push_surface(bounds, false, paint);
 }
 
-/// Requests an **interactive** floating surface — a menu, a help bubble, a
-/// popover — exactly like [`overlay`], except that it takes the pointer: hover
+/// Requests an **interactive** floating surface - a menu, a help bubble, a
+/// popover - exactly like [`overlay`], except that it takes the pointer: hover
 /// and clicks over it are reported through [`Frame::mouse`] in the page's own
 /// client coordinates (outside the client area when the surface overflows), so
 /// the page hit-tests it with the same rectangles it placed it with. It never
@@ -460,7 +460,7 @@ pub fn content_offset() -> (f32, f32) {
     CONTENT_OFFSET.with(|c| c.get())
 }
 
-/// Moves the content origin — called by the painter as offsets are pushed
+/// Moves the content origin - called by the painter as offsets are pushed
 /// and popped, so it always matches the transform in force.
 pub(crate) fn shift_content_offset(dx: f32, dy: f32) {
     CONTENT_OFFSET.with(|c| {
@@ -628,8 +628,8 @@ pub fn on_message_value(msg: u32, mut handler: impl FnMut(&MessageArgs) -> Optio
 }
 
 /// Decides what `WM_CLOSE` does (the caption's close button, Alt+F4,
-/// [`close_window`]): `true` proceeds — the window is destroyed and the
-/// message loop ends — `false` cancels it (a tray application hides instead).
+/// [`close_window`]): `true` proceeds - the window is destroyed and the
+/// message loop ends - `false` cancels it (a tray application hides instead).
 /// Replaces any previous handler. [`quit`] bypasses it.
 pub fn set_close_handler(handler: impl FnMut() -> bool + 'static) {
     CLOSE_HANDLER.with(|c| *c.borrow_mut() = Some(Box::new(handler)));
@@ -656,7 +656,7 @@ pub fn show_window(show: bool) {
 const WM_KUBUNO_RESIZE_PAGE: u32 = WM_APP + 0x4B58;
 
 /// Resizes the open window `hwnd` (one of this thread's host windows) so its page area is
-/// `width × height` DIP — WinForms' `ClientSize` set on a shown form. A floating panel's window
+/// `width × height` DIP - WinForms' `ClientSize` set on a shown form. A floating panel's window
 /// keeps its shadow margin around the page; the window keeps its top-left corner.
 ///
 /// Posted, not sent: asked from an event handler, it runs inside the window's frame, while the
@@ -675,7 +675,7 @@ pub fn resize_page(hwnd: isize, width: f32, height: f32) {
     }
 }
 
-/// Shows (`true`, activating it) or hides (`false`) the host window `hwnd` (a raw `HWND` value) —
+/// Shows (`true`, activating it) or hides (`false`) the host window `hwnd` (a raw `HWND` value) -
 /// a form's `Visible`, for any window of the thread rather than the running one.
 pub fn set_window_visible(hwnd: isize, visible: bool) {
     // SAFETY: `ShowWindow` accepts any handle value; a stale one makes the call fail.
@@ -697,7 +697,7 @@ pub fn window_visible() -> bool {
 }
 
 /// Shows the host window, restores it if minimised, and brings it to the
-/// foreground — what a tray icon's "Show" does.
+/// foreground - what a tray icon's "Show" does.
 pub fn restore_and_focus() {
     let Some(hwnd) = main_window() else { return };
     // SAFETY: plain window-state calls on the host's own window, from its thread.
@@ -728,7 +728,7 @@ pub fn set_font_override(font: Option<String>) {
 }
 
 /// Runs `f` once with the main window, after it is created and set up (and
-/// shown, unless `start_hidden`) and right before the message loop starts —
+/// shown, unless `start_hidden`) and right before the message loop starts -
 /// where a tray icon is added or a worker thread is handed the window to post
 /// to. Register it before [`run_with_options`].
 pub fn on_ready(f: impl FnOnce(HWND) + 'static) {
@@ -794,7 +794,7 @@ fn close_allowed() -> bool {
 }
 
 /// The caller's per-frame paint callback, boxed so the host is not generic
-/// over it — the message loop and the `GWLP_USERDATA` pointer both want a
+/// over it - the message loop and the `GWLP_USERDATA` pointer both want a
 /// concrete `Host` type, free of a closure type parameter.
 type PaintFn = Box<dyn FnMut(&dyn ControlCanvas, &Frame)>;
 
@@ -820,7 +820,7 @@ struct Host {
     ///
     /// Owned by the window, like [`Host::visuals`], and for a stronger version
     /// of the same reason: rebuilding it per frame would mean a GDI round trip
-    /// per control per frame. It is created unconditionally — on a themed-off
+    /// per control per frame. It is created unconditionally - on a themed-off
     /// machine it simply answers "no" to everything and every control paints
     /// classic, which costs one boolean read.
     parts:      ThemeRenderer,
@@ -835,7 +835,7 @@ struct Host {
     /// actually rendered: guarantees the matching [`Frame`] field reports at
     /// least one frame of "down", even if the button's `WM_*BUTTONUP` already
     /// arrived before that frame painted. Never cleared by the `*BUTTONUP`
-    /// itself — that message is exactly the one that can race ahead of the
+    /// itself - that message is exactly the one that can race ahead of the
     /// paint, so touching the latch there would defeat the point. See
     /// [`consume_button_edge`].
     left_press_latch:   bool,
@@ -858,7 +858,7 @@ struct Host {
     on_paint:   PaintFn,
     /// The popup windows that host floating surfaces ([`overlay`], [`popup`]),
     /// one per surface of the busiest frame so far, created on demand and
-    /// reused — the n-th surface of a frame always goes to the n-th window.
+    /// reused - the n-th surface of a frame always goes to the n-th window.
     popups:     Vec<OverlayWindow>,
     title:      String,
     chrome:     Chrome,
@@ -880,7 +880,7 @@ struct Host {
     /// The pointer shape the last frame asked for (see [`set_cursor`]).
     cursor:     Cursor,
     /// The caption band painted last frame (the accent, or what the page asked
-    /// for), and the colour DWM draws the window border in — kept equal so
+    /// for), and the colour DWM draws the window border in - kept equal so
     /// the frame shows no seam.
     caption_band: windows::Win32::Graphics::Direct2D::Common::D2D1_COLOR_F,
     dwm_band:     u32,
@@ -1107,7 +1107,7 @@ where
 ///
 /// Called while another host window of the thread runs (from one of its frames: an event
 /// handler), it opens a second window and runs a **nested** message loop until that window is
-/// destroyed — how a dialog is shown: [`HostOptions::modal`] disables the thread's other windows
+/// destroyed - how a dialog is shown: [`HostOptions::modal`] disables the thread's other windows
 /// meanwhile, [`HostOptions::owner`] owns it. Otherwise its loop is the thread's main loop: when
 /// the window is destroyed the loop ends, and the thread's other host windows ([`open_window`])
 /// are closed with it (closing a WinForms application's main form ends the application).
@@ -1118,7 +1118,7 @@ where
     run_boxed(opts, Box::new(on_paint))
 }
 
-/// [`run_with_options`] for a paint closure that borrows from the caller — a modal dialog painting
+/// [`run_with_options`] for a paint closure that borrows from the caller - a modal dialog painting
 /// a view its caller still owns afterwards (`ShowDialog`). The window is destroyed, and the closure
 /// dropped, before this returns.
 pub fn run_scoped<'a, F>(opts: HostOptions, on_paint: F) -> Result<()>
@@ -1128,13 +1128,13 @@ where
     let boxed: ScopedPaintFn<'a> = Box::new(on_paint);
     // SAFETY: only the window's procedure calls the closure, through the `Host` that `run_boxed`
     // keeps on its own stack; `run_boxed` destroys the window (after which no message reaches the
-    // host) and drops the host before it returns, so the closure is never called — nor dropped —
+    // host) and drops the host before it returns, so the closure is never called - nor dropped -
     // after `'a`. The two box types differ only by that lifetime.
     let boxed: PaintFn = unsafe { std::mem::transmute::<ScopedPaintFn<'a>, PaintFn>(boxed) };
     run_boxed(opts, boxed)
 }
 
-/// Opens a host window WITHOUT a loop of its own — a WinForms `Form.Show()`: the thread's running
+/// Opens a host window WITHOUT a loop of its own - a WinForms `Form.Show()`: the thread's running
 /// loop ([`run_with_options`], or the nested loop of a dialog) dispatches its messages, and the
 /// window lives until it is closed, or until the main window's loop ends. Call it on the UI thread,
 /// typically from a frame of another window. Returns the new window.
@@ -1266,13 +1266,13 @@ fn create(opts: HostOptions, on_paint: PaintFn, role: Role) -> Result<Created> {
     unsafe {
         // Per-monitor v2, exactly as the shell's `main` sets it: the controls
         // paint at the real scale of whatever display they sit on. Harmless if
-        // the host binary already set it — the second call just fails and is
+        // the host binary already set it - the second call just fails and is
         // ignored.
         let _ = SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
 
         // The renderer builds its bitmaps through WIC, which is COM: without an
         // apartment on THIS thread, `Renderer::new` fails and the window opens
-        // permanently blank. The host owns this rather than every caller —
+        // permanently blank. The host owns this rather than every caller -
         // forgetting it is invisible until nothing paints. `RPC_E_CHANGED_MODE`
         // means the caller already initialised COM its own way, which is fine.
         let _ = CoInitializeEx(None, COINIT_APARTMENTTHREADED);
@@ -1461,7 +1461,7 @@ fn create(opts: HostOptions, on_paint: PaintFn, role: Role) -> Result<Created> {
                     let _ = SetWindowPos(hwnd, None, x, y, 0, 0, SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE);
                 }
             }
-            // An owned window stays above its owner — which a non-topmost window cannot do over a
+            // An owned window stays above its owner - which a non-topmost window cannot do over a
             // topmost one (`TopMost`): it takes its owner's topmost state.
             if let Some(owner) = owner {
                 let topmost = (GetWindowLongPtrW(owner, GWL_EXSTYLE) as u32 & WS_EX_TOPMOST.0) != 0;
@@ -1507,14 +1507,14 @@ thread_local! {
     /// Embedded mode: `(parent, own window)` watched by [`parent_watch`].
     static EMBED_WATCH: std::cell::Cell<Option<(HWND, HWND)>> = const { std::cell::Cell::new(None) };
     /// Embedded mode: the parent HWND ([`HostOptions::parent`]), so
-    /// [`notify_tab_out`] — called from the page, which has no `&Host` — can
+    /// [`notify_tab_out`] - called from the page, which has no `&Host` - can
     /// reach it. `0` for a top-level host.
     static PARENT_HWND: std::cell::Cell<isize> = const { std::cell::Cell::new(0) };
 }
 
 /// Windows message posted to the parent HWND ([`HostOptions::parent`]) when
 /// this window's own [`kubuno_desktop_ui::focus::FocusRing`]-style Tab/Shift+Tab
-/// handling ran past its last or first focusable control — the "tabOut" half
+/// handling ran past its last or first focusable control - the "tabOut" half
 /// of the keyboard protocol (`vskubuno/docs/DESIGNER.md` §7). `wParam` is `1`
 /// for a Shift+Tab that ran off the FIRST control (backward), `0` for a Tab
 /// that ran off the LAST one (forward); `lParam` is unused. Only ever posted
@@ -1553,13 +1553,13 @@ pub fn notify_tab_out(backward: bool) {
 /// immediately BEFORE the raw `WM_KEYDOWN`/`WM_SYSKEYDOWN` it forwards,
 /// carrying the modifier keys held at the ORIGINAL moment the key went down
 /// (`wParam` bit 0 = Ctrl, bit 1 = Shift, bit 2 = Alt; `lParam` unused). A
-/// plain Win32 keyboard message carries no modifier state at all — modifiers
-/// are a separate, per-thread `GetKeyState` table — so without this, whoever
+/// plain Win32 keyboard message carries no modifier state at all - modifiers
+/// are a separate, per-thread `GetKeyState` table - so without this, whoever
 /// re-dispatches the forwarded `WM_KEYDOWN` (`vskubuno`'s
 /// `RustDesignSurfaceHost`) can only read whatever ITS thread's key-state
-/// table says *at the time it finally processes the posted message*, which —
+/// table says *at the time it finally processes the posted message*, which -
 /// after the round trip through this frame, `PostMessage`'s queuing, and the
-/// parent's own message pump — may already be stale (a fast Ctrl+S can
+/// parent's own message pump - may already be stale (a fast Ctrl+S can
 /// release Ctrl before the parent ever gets to it). `PostMessage` to the same
 /// destination window from the same source thread is FIFO, so the parent is
 /// guaranteed to see this message immediately before the key message it
@@ -1600,7 +1600,7 @@ fn accent_bgr(c: windows::Win32::Graphics::Direct2D::Common::D2D1_COLOR_F) -> u3
 
 /// Who rounds the corners of a window with `form` under `chrome` (`frame::plan`): the radius it
 /// asks for (`KUBUNO_CORNER_RADIUS` overriding it, for testing), and whether the host can draw its
-/// frame — not under Windows' own title bar, nor over a system material (only DWM clips those to a
+/// frame - not under Windows' own title bar, nor over a system material (only DWM clips those to a
 /// curve), nor for a translucent (layered) window, a floating panel (rounded by its own
 /// composition clip) or an embedded one.
 fn corner_path(form: &FormOptions, chrome: Chrome, backdrop: Backdrop, embedded: bool) -> frame::CornerPath {
@@ -1644,7 +1644,7 @@ fn page_inset(hwnd: HWND) -> i32 {
 /// * System and Kubuno chrome: the caption, its text and the border are
 ///   tinted with the accent (minimal-integration Kubuno look: the window reads
 ///   as Kubuno at a glance even with the system caption). Custom chrome keeps
-///   DWM's own border — the page owns the whole top of the window.
+///   DWM's own border - the page owns the whole top of the window.
 /// * Rounded corners, Windows 11's normal look, made explicit.
 /// * Immersive dark mode from the theme's mode (the frame and the system
 ///   menus follow it).
@@ -1686,12 +1686,12 @@ fn apply_dwm_theme(hwnd: HWND, theme: &Theme, chrome: Chrome, backdrop: Backdrop
 /// report for the frame about to be painted, consuming the latch.
 ///
 /// `WM_PAINT` is only synthesized once the message queue is otherwise empty,
-/// so a fast press+release — a touchpad tap, a synthetic click — can post
+/// so a fast press+release - a touchpad tap, a synthetic click - can post
 /// BOTH its `WM_*BUTTONDOWN` and `WM_*BUTTONUP` before the paint that would
 /// have shown the button down ever runs. Reading only the level at render
 /// time then sees the button already up and the press is lost: no widget
 /// ever observes a `down && !prev_down` edge. `*latch` is set by the DOWN
-/// handler (never touched by the UP handler — that message is exactly the
+/// handler (never touched by the UP handler - that message is exactly the
 /// one that can race ahead of the paint) and is consumed here, so the frame
 /// immediately following a press always reports the button down at least
 /// once, whether or not it has already been released again by then; the
@@ -1754,7 +1754,7 @@ impl Host {
 
     /// The `DWM_WINDOW_CORNER_PREFERENCE` of the window: square when the host draws its corners (a
     /// floating panel, a host-rounded window: DWM's curve would cut their shadow margin), else
-    /// what `frame::plan` gives its radius now — the nearest preset for a radius only the host
+    /// what `frame::plan` gives its radius now - the nearest preset for a radius only the host
     /// could draw, as a window created on DWM's path cannot change path.
     fn corner_dwm(&self) -> i32 {
         if self.form.panel.is_some() || self.rounded.is_some() {
@@ -1849,7 +1849,7 @@ impl Host {
     }
 
     /// Ends what [`Host::paint_shape`] began, then draws a host-rounded window's 1 px border along
-    /// its curve — DWM's border, in the same colour: the form's `BorderColor`, else the band's (no
+    /// its curve - DWM's border, in the same colour: the form's `BorderColor`, else the band's (no
     /// seam), else the theme's floating-surface border.
     fn end_shape(&self, painter: &Painter, size: (f32, f32)) {
         use kubuno_drive_desktop_app_controls::Canvas as _;
@@ -1976,7 +1976,7 @@ impl Host {
 
     /// The window is created in physical pixels before its DPI is known, so on
     /// a scaled display the caller's logical size would come out tiny. Resize
-    /// to `want` × scale once the DPI is in hand — the same fix the shell
+    /// to `want` × scale once the DPI is in hand - the same fix the shell
     /// applies in `size_to_dpi`.
     fn size_to_dpi(&self) {
         let scale = self.scale();
@@ -2046,7 +2046,7 @@ impl Host {
         //
         // A failure here is NOT swallowed. `Renderer::new` builds its bitmaps
         // through WIC (`CoCreateInstance`), which fails on a thread with no COM
-        // apartment — and the symptom is a window that opens permanently blank
+        // apartment - and the symptom is a window that opens permanently blank
         // with nothing logged anywhere. Saying so costs one line and saves an
         // afternoon.
         // A floating panel renders into a swap chain its own composition tree shows over the
@@ -2076,7 +2076,7 @@ impl Host {
         }
         // Every cached themed part is a bitmap belonging to the device that was
         // just replaced. Drawing one from the new context is undefined and
-        // surfaces as a failure inside `EndDraw` — far from here, and only on
+        // surfaces as a failure inside `EndDraw` - far from here, and only on
         // the machines that actually lose a device.
         self.parts.on_device_lost();
         self.rebuild_visuals();
@@ -2090,7 +2090,7 @@ impl Host {
     /// measure every control against text a third too small, and the mistake
     /// looks like a layout bug rather than a stale read.
     fn rebuild_visuals(&mut self) {
-        // The themed parts are read per DPI too — `OpenThemeDataForDpi` hands
+        // The themed parts are read per DPI too - `OpenThemeDataForDpi` hands
         // back the theme's own artwork for that scale, so a stale handle is a
         // part drawn from the 96 DPI bitmaps and stretched. Kept next to the
         // metrics and the font because all three go stale at the same instant.
@@ -2156,7 +2156,7 @@ impl Host {
         let dpi = self.dpi;
         if let Some(r) = self.renderer.as_mut() {
             // A failed resize leaves the swap chain at its old size, showing as
-            // an unpainted strip — worth a line rather than a silent `let _`.
+            // an unpainted strip - worth a line rather than a silent `let _`.
             if let Err(e) = r.resize(w, h, dpi) {
                 eprintln!("[host] resize {w}x{h}: {e}");
             }
@@ -2256,7 +2256,7 @@ impl Host {
     }
 
     /// Registers the window as an OLE drop target ([`dnd`]); `false` when OLE refuses (the window
-    /// already has a drop target — a design surface's own —, or OLE cannot start on this thread).
+    /// already has a drop target - a design surface's own -, or OLE cannot start on this thread).
     fn register_drop_target(&self) -> bool {
         use windows::Win32::System::Ole::{IDropTarget, OleInitialize, RegisterDragDrop};
         // SAFETY: OLE initialisation of this (UI, STA) thread and registration of a live COM object
@@ -2314,7 +2314,7 @@ impl Host {
         // field. `self.dpi` starts at 96 and is only refreshed on `init` and
         // `WM_DPICHANGED`, so any paint that slips in before or between those
         // hands the caller a 1:1 line while the canvas draws at the real scale
-        // — layout then measures against a window far wider than the one it is
+        // - layout then measures against a window far wider than the one it is
         // drawn into, and the right-hand content is silently clipped away.
         // One call per frame removes the whole class of staleness.
         // A zoom asked for by the page (`input::set_zoom`, a designer's zoom) scales the DPI: every
@@ -2362,14 +2362,14 @@ impl Host {
             let parts = &self.parts;
             // No visuals means the system font could not be read, which
             // `rebuild_visuals` has already reported. Painting anyway would paint
-            // in the design system's colours — the exact thing this crate stopped
-            // doing — so the frame is skipped instead.
+            // in the design system's colours - the exact thing this crate stopped
+            // doing - so the frame is skipped instead.
             let Some(visuals) = self.visuals.as_ref() else { return };
 
             // Under Chrome::Kubuno the client area's top band (`chrome_top`)
             // DIP belong to the host: the client keeps painting into its full
             // window, but the page's top strip must land at y = chrome_top.
-            // Mouse, size and origin STAY in the full client's coordinates —
+            // Mouse, size and origin STAY in the full client's coordinates -
             // the caption reads them there, and the client shifts by chrome_top
             // wherever its layout needs to.
             // Under Chrome::Custom nothing is reserved: the page paints its
@@ -2459,7 +2459,7 @@ impl Host {
                     // the band (a ribbon continuing its tab strip into it): the ground uses the
                     // colours of the last frame, a change repaints once more.
                     // The window's frame: the client area, less the shadow margin of a floating
-                    // panel or a host-rounded window — everything below is drawn in its
+                    // panel or a host-rounded window - everything below is drawn in its
                     // coordinates.
                     let full_size = (w as f32 / scale - margin * 2.0, h as f32 / scale - margin * 2.0);
                     let shaped = self.paint_shape(&painter, full_size, margin, &ground);
@@ -2543,11 +2543,11 @@ impl Host {
         }
 
         // The floating surfaces the frame requested, painted last into their own
-        // top-level popup — over everything, the nav strip included, and free to
+        // top-level popup - over everything, the nav strip included, and free to
         // spill beyond the window's edges.
         self.render_overlays();
         // After everything that could have consumed a key this frame (the
-        // page's own paint AND any popup it opened) — see
+        // page's own paint AND any popup it opened) - see
         // `forward_unhandled_keys`'s own doc.
         if self.parent.is_some() {
             self.forward_unhandled_keys();
@@ -2566,7 +2566,7 @@ impl Host {
     }
 
     /// Embedded mode only: re-posts to the parent every key-down this frame's
-    /// page (and any popup it opened) did NOT consume from the input queue —
+    /// page (and any popup it opened) did NOT consume from the input queue -
     /// `FocusRing`/a text field takes `Tab`, arrows, typed characters… so
     /// whatever is left is, by definition, not meant for this surface.
     ///
@@ -2579,7 +2579,7 @@ impl Host {
     /// accelerator table without this crate knowing anything about VS
     /// commands. A repeated key held down that is unconsumed for part of its
     /// repeat and consumed for the rest (unusual) may be forwarded a few more
-    /// or fewer times than it repeated — acceptable for a shim whose whole
+    /// or fewer times than it repeated - acceptable for a shim whose whole
     /// purpose is single-shot accelerator chords, not text input.
     fn forward_unhandled_keys(&mut self) {
         let Some(parent) = self.parent else { return };
@@ -2593,7 +2593,7 @@ impl Host {
                 // SAFETY: posting to a window handle is sound even if the
                 // window has since been destroyed (the call then simply
                 // fails). Order matters: WM_KUBUNO_KEY_MODS FIRST (its own doc
-                // explains why), the key message second — both posted from
+                // explains why), the key message second - both posted from
                 // this same thread to the same destination, so PostMessage's
                 // FIFO ordering guarantees the parent sees them in this order.
                 unsafe {
@@ -2766,7 +2766,7 @@ impl Host {
     /// A press and its release can both arrive before the frame that would show them (a touchpad
     /// tap, a posted `WM_LBUTTONDOWN`/`WM_LBUTTONUP`, input relayed by assistive technology or a
     /// remote session), and the release re-arms `TME_LEAVE`: when the system cursor is not over the
-    /// window — or has already moved on — `WM_MOUSELEAVE` follows at once, still before that frame.
+    /// window - or has already moved on - `WM_MOUSELEAVE` follows at once, still before that frame.
     /// Clearing the pointer then would show the page a press and a release nowhere, and the click
     /// would be lost.
     fn settle_pointer(&mut self) -> bool {
@@ -2845,12 +2845,12 @@ impl Host {
     }
 
     /// Returns the index in [`Host::popups`] of the `k`-th window of the given
-    /// kind (pass-through or interactive), creating it — sized `w × h`
-    /// physical pixels — when the pool of that kind has fewer. `None` if it
+    /// kind (pass-through or interactive), creating it - sized `w × h`
+    /// physical pixels - when the pool of that kind has fewer. `None` if it
     /// could not be built.
     ///
-    /// Each is a top-level `WS_POPUP` OWNED by the host window — so it stays
-    /// above it and is destroyed with it — transparent through
+    /// Each is a top-level `WS_POPUP` OWNED by the host window - so it stays
+    /// above it and is destroyed with it - transparent through
     /// DirectComposition (the surface clears to nothing but what it paints) and
     /// never activated (`WS_EX_NOACTIVATE`, plus `MA_NOACTIVATE` in its window
     /// procedure), so the window that opened it keeps the focus. Being top-level
@@ -2860,7 +2860,7 @@ impl Host {
     /// `WS_EX_NOREDIRECTIONBITMAP`: the window's pixels come from its swap
     /// chain ONLY. Without it Windows also keeps a GDI redirection surface
     /// under the composition visual, which nothing ever paints: wherever the
-    /// swap chain is transparent — or not presented yet after a resize — that
+    /// swap chain is transparent - or not presented yet after a resize - that
     /// surface shows through, as a black or stale rectangle.
     ///
     /// The kind is fixed for the window's life (`WS_EX_TRANSPARENT` for a
@@ -2947,18 +2947,18 @@ impl Host {
     /// Drained after the main paint (hence `&mut self` here, not during the
     /// borrow-locked paint pass). Pass-through surfaces ([`overlay`]) and
     /// interactive ones ([`popup`]) come from two separate pools, the n-th
-    /// surface of a kind going to the n-th window of that kind — so a tooltip
+    /// surface of a kind going to the n-th window of that kind - so a tooltip
     /// and the menu that replaces it never share a window. Windows not used
     /// this frame are hidden, so a surface a page stops requesting disappears.
     /// Each is positioned in screen pixels from its client-DIP bounds, painted
     /// onto a transparent surface, and shown topmost in request order (a later
-    /// surface — a submenu — stacks over an earlier one) without stealing
+    /// surface - a submenu - stacks over an earlier one) without stealing
     /// focus.
     ///
     /// No stale pixels: a window that appears (or jumps to another place at
     /// another size, which is the same thing to the eye) is hidden first,
     /// repainted, and shown only once the compositor has taken the new frame
-    /// (`DwmFlush`) — so it never flashes the surface it showed last time, nor
+    /// (`DwmFlush`) - so it never flashes the surface it showed last time, nor
     /// an unpresented buffer. A surface that stays put and keeps its size (a
     /// menu whose highlight moves) or only moves (a tooltip following the
     /// pointer) is updated in place without waiting.
@@ -3025,8 +3025,8 @@ impl Host {
                 let ctx = &ov.renderer.d2d_context;
                 ctx.BeginDraw();
                 // Cleared to fully transparent: only what the surface paints
-                // shows, so every other pixel lets whatever is behind it — the
-                // host window, another app, the desktop — through.
+                // shows, so every other pixel lets whatever is behind it - the
+                // host window, another app, the desktop - through.
                 ctx.Clear(None);
                 if let Ok(painter) = Painter::new(&ov.renderer, &self.theme, visuals, &ov.parts) {
                     painter.set_scale(scale);
@@ -3075,7 +3075,7 @@ impl Host {
         }
     }
 
-    /// Destroys every popup — their renderers are bound to a DPI (and a device)
+    /// Destroys every popup - their renderers are bound to a DPI (and a device)
     /// that just changed. The next surface rebuilds what it needs.
     fn drop_popups(&mut self) {
         for ov in self.popups.drain(..) {
@@ -3092,8 +3092,8 @@ impl Host {
 
 /// A popup's window procedure. A pass-through popup never sees the pointer; an
 /// interactive one reports it to the host that owns it, mapped into the host's
-/// CLIENT coordinates — outside `[0, size]` when the surface overflows the
-/// window — so the page hit-tests the surface with the very rectangles it placed
+/// CLIENT coordinates - outside `[0, size]` when the surface overflows the
+/// window - so the page hit-tests the surface with the very rectangles it placed
 /// it with. A press captures the pointer, so a drag that leaves the surface is
 /// still reported to it until release.
 unsafe extern "system" fn overlay_wndproc(
@@ -3231,7 +3231,7 @@ fn queue_key(msg: u32, wparam: WPARAM, lparam: LPARAM) {
     }
 }
 
-/// The client area's top-left corner in screen DIP — `(0, 0)` client mapped to
+/// The client area's top-left corner in screen DIP - `(0, 0)` client mapped to
 /// the screen, divided back to DIP so a page can add its DIP layout to it.
 fn client_origin_dip(hwnd: HWND, scale: f32) -> (f32, f32) {
     let mut p = POINT { x: 0, y: 0 };
@@ -3279,7 +3279,7 @@ pub fn screen_geometry(hwnd: isize) -> Option<ScreenGeometry> {
 
 /// The work area of the monitor the window is on, in screen DIP. Falls back to
 /// a rectangle at the origin of the given client size if the monitor cannot be
-/// read — a floating surface then simply clamps to the window instead.
+/// read - a floating surface then simply clamps to the window instead.
 fn work_area_dip(hwnd: HWND, scale: f32, client: (f32, f32)) -> (f32, f32, f32, f32) {
     unsafe {
         let mon = MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST);
@@ -3445,7 +3445,7 @@ unsafe extern "system" fn wndproc(
                 // the next floating surfaces rebuild at the new scale.
                 host.drop_popups();
                 // The metrics and the UI font are both read per DPI, so they
-                // are re-read here — before the resize, so the very next paint
+                // are re-read here - before the resize, so the very next paint
                 // already measures against the new display.
                 host.rebuild_visuals();
                 // Windows suggests a new window rect (in `lparam`) that keeps the
@@ -3476,7 +3476,7 @@ unsafe extern "system" fn wndproc(
             }
             // The user switched visual style, toggled high contrast, or logged
             // a policy change in. Every theme handle now points at an msstyles
-            // file that is gone, and every cached part was drawn from it — so
+            // file that is gone, and every cached part was drawn from it - so
             // both are dropped here. The SYSTEM colours move at the same moment
             // (high contrast rewrites the whole `COLOR_*` table), so the
             // classic fallback is re-read too; without that, turning high
@@ -3502,7 +3502,7 @@ unsafe extern "system" fn wndproc(
             // erase avoids a flash of the background brush before the paint.
             WM_ERASEBKGND => LRESULT(1),
             WM_MOUSEMOVE => {
-                // Repaint on every move so hover states track the pointer — the
+                // Repaint on every move so hover states track the pointer - the
                 // whole reason the host forwards the mouse at all.
                 host.mouse = (host.dip(x()), host.dip(y()));
                 host.track_leave();
@@ -3740,9 +3740,9 @@ unsafe extern "system" fn wndproc(
                 host.invalidate();
                 LRESULT(0)
             }
-            // Losing activation — a click on the desktop or another app, which
+            // Losing activation - a click on the desktop or another app, which
             // a surface overflowing the window lets the user make without ever
-            // touching this window — is the web's blur: the next frame carries
+            // touching this window - is the web's blur: the next frame carries
             // `Frame::dismiss` so open menus and bubbles close.
             WM_ACTIVATE => {
                 if (wparam.0 & 0xFFFF) as u32 == WA_INACTIVE {
@@ -3836,7 +3836,7 @@ unsafe extern "system" fn wndproc(
                 }
                 LRESULT(0)
             }
-            // A floating panel: its shadow margin is not the panel — a press there goes to the
+            // A floating panel: its shadow margin is not the panel - a press there goes to the
             // window under it (which, taking the activation, closes a flyout), as on the web.
             WM_NCHITTEST if host.form.panel.is_some() && host.panel_margin() > 0.0 => {
                 let mut pt = POINT { x: (lparam.0 & 0xFFFF) as i16 as i32,
@@ -3858,7 +3858,7 @@ unsafe extern "system" fn wndproc(
                 let (cw, ch) = client_px(hwnd);
                 let size = (cw as f32 / scale, ch as f32 / scale);
                 // The band (`crate::window_chrome`), the resize borders (never while maximised, nor
-                // for a fixed border), the grip, the page's drag areas and holes — see
+                // for a fixed border), the grip, the page's drag areas and holes - see
                 // `chrome::hit_test` for the order. A borderless window has no band: only its drag
                 // areas (`TitleBar.Drag`) move it, and it resizes by its edges with `resize_border`.
                 let border = if host.form.resizable() { resize_border_dip(hwnd, scale) } else { None };
@@ -4020,7 +4020,7 @@ mod tests {
     #[test]
     fn a_quick_click_still_reports_one_frame_of_down() {
         // WM_*BUTTONDOWN sets the latch; WM_*BUTTONUP (simulated here by
-        // dropping the raw level to false) never touches it — exactly what
+        // dropping the raw level to false) never touches it - exactly what
         // happens when both messages are processed before the next WM_PAINT.
         let down = true;
         let mut latch = true;

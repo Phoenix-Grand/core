@@ -24,7 +24,7 @@ import { useAuthStore } from '../store/authStore'
  * below is defence-in-depth (and picks the browser's active account).
  *
  * ── Rules ────────────────────────────────────────────────────────────────────
- * * **Only mine.** An event not listing the active user is ignored — a broadcast
+ * * **Only mine.** An event not listing the active user is ignored - a broadcast
  *   is not a personal notification.
  * * **Announced once.** `pushKeyed` is keyed on `<module>:<id>`, so a module that
  *   folds several events into one id (an aggregated "5 replies") lands as a

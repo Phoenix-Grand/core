@@ -1,4 +1,4 @@
-<!-- ImpactPanel — converted from ImpactPanel.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- ImpactPanel - converted from ImpactPanel.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="Props">
   <Panel Class="contents">
     <Callout Title="{Res admin.rl_impact_title}" Body="{Binding callout_text}" Visible="{Binding show_case_1}"/>

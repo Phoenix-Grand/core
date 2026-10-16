@@ -1,4 +1,4 @@
-<!-- HBarList — converted from HBarList.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- HBarList - converted from HBarList.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="HBarListProps">
   <Panel HtmlTag="Ul" Class="space-y-3">
     <Repeater ItemKey="key" ItemsSource="{Binding rows_items}">

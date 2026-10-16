@@ -100,7 +100,7 @@ export function Part1({ rows, columns, isLoading, isError, t, refetch, anyFilter
             pageSize={0}
             t={t}
             emptyState={
-              // The ONE empty state worth celebrating — and it says when the
+              // The ONE empty state worth celebrating - and it says when the
               // instance was last looked at, because silence is only good news
               // when something has been listening.
               <EmptyState

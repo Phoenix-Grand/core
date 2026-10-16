@@ -14,7 +14,7 @@
 //!
 //! ## The limitation, stated rather than buried
 //!
-//! `core.event_log` keeps **structural** fields — the serialised event payload —
+//! `core.event_log` keeps **structural** fields - the serialised event payload -
 //! and is purged after 30 days. So:
 //!
 //! * a rule comparing something the payload never carried cannot be replayed
@@ -102,7 +102,7 @@ async fn execute(
     to: DateTime<Utc>,
 ) -> Result<Value, AppError> {
     // The event type the rule's trigger listens to. Filtering in SQL rather
-    // than in Rust is what makes a 30-day replay affordable — and it is only
+    // than in Rust is what makes a 30-day replay affordable - and it is only
     // possible because `event_type` now stores the real type (see the defect
     // fixed in `crate::events::bus`).
     let event_type: Option<String> = db

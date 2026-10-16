@@ -1,4 +1,4 @@
-<!-- GroupBox: a settings section — its title, help line and content. -->
+<!-- GroupBox: a settings section - its title, help line and content. -->
 <Stack xmlns="https://kubuno.com/views" xmlns:x="https://kubuno.com/views/x" Gap="0">
   <GroupBox Title="Notifications" Description="Choose how Kubuno tells you about new activity.">
     <Stack Gap="12">

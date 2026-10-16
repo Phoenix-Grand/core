@@ -1,4 +1,4 @@
-<!-- ScopeHeadline — converted from ScopeHeadline.tsx by @kubuno/views-migrate. -->
+<!-- ScopeHeadline - converted from ScopeHeadline.tsx by @kubuno/views-migrate. -->
 <UserControl x:Props="ScopeHeadlineProps">
   <Panel Class="mb-4 flex flex-wrap items-baseline gap-x-2 gap-y-1 border-b border-border pb-3">
     <Label HtmlTag="Span"

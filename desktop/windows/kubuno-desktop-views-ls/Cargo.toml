@@ -25,8 +25,8 @@ path = "src/main.rs"
 #   for tests, an in-memory channel pair via `Connection::memory()`) with no
 #   opinion on how requests are dispatched. `tower-lsp` instead commits to an
 #   async `tower::Service`/`async_trait` architecture (and a Tokio runtime) for
-#   a server whose actual work here — reparsing a small `.kbview` file,
-#   walking a `rowan` tree, scanning a registry slice — is synchronous and
+#   a server whose actual work here - reparsing a small `.kbview` file,
+#   walking a `rowan` tree, scanning a registry slice - is synchronous and
 #   CPU-bound, never I/O-bound; pulling in an async runtime would buy nothing
 #   and would fight `kubuno-desktop-views`' own synchronous API (`syntax::parse`,
 #   `validate::validate_with_default_registry` take `&str`/`&Parse`, return
@@ -45,7 +45,7 @@ serde      = { workspace = true }
 serde_json = { workspace = true }
 
 # `kubuno_desktop_views::syntax::Diagnostic::range` and every `ast` node's
-# `text_range()` are `rowan::TextRange`s — this crate's own `Position`
+# `text_range()` are `rowan::TextRange`s - this crate's own `Position`
 # conversions and tree-walking helpers (`tree.rs`, `position.rs`) work in
 # terms of the same `rowan::TextSize`/`TextRange`, so it needs the type
 # directly rather than only through `kubuno-desktop-views`' re-exports (which only

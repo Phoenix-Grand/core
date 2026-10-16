@@ -1,4 +1,4 @@
-//! Painting part of a window in other colours, another font or with an image — what a control's
+//! Painting part of a window in other colours, another font or with an image - what a control's
 //! `BackColor`, `ForeColor`, `Font`, `RightToLeft`, `BackgroundImage` and `Image` need
 //! (`vskubuno/docs/EVENTS.md` §16, "WinForms-rich property sets").
 //!
@@ -6,7 +6,7 @@
 //! formats ([`Canvas::formats`]); they never take a colour or a font from their caller. So a control
 //! whose colours or font differ is painted through a [`StyledCanvas`]: the same surface, answering
 //! with a theme whose tokens were overridden and a set of formats built for its font. Every drawing
-//! call goes straight through to the real surface, so nothing else changes — clips, offsets, the
+//! call goes straight through to the real surface, so nothing else changes - clips, offsets, the
 //! background stack and the pixel snapping stay the window's.
 //!
 //! Also here: the named system colours (`SystemColors.Control`…) a colour property may name, whether
@@ -364,7 +364,7 @@ pub fn system_color(name: &str) -> Option<D2D1_COLOR_F> {
     Some(crate::system::colorref_to_d2d(colorref))
 }
 
-/// Whether Windows' high-contrast mode is on — theme tokens then resolve to the system colours,
+/// Whether Windows' high-contrast mode is on - theme tokens then resolve to the system colours,
 /// like every Windows application's.
 pub fn high_contrast() -> bool {
     use windows::Win32::UI::Accessibility::{HCF_HIGHCONTRASTON, HIGHCONTRASTW};
@@ -388,7 +388,7 @@ thread_local! {
 }
 
 /// Approximate resident-byte budget for decoded images on one thread (a decoded bitmap costs
-/// width*height*4 bytes). Past it, least-recently-used entries are dropped — a still-drawing caller
+/// width*height*4 bytes). Past it, least-recently-used entries are dropped - a still-drawing caller
 /// keeps its own clone of the returned bitmap, so eviction only ever costs a later re-decode.
 const IMAGES_BUDGET_BYTES: usize = 128 * 1024 * 1024;
 
@@ -494,7 +494,7 @@ fn load_svg_bytes(c: &dyn ControlCanvas, key: u64, bytes: &[u8]) -> Option<ID2D1
 }
 
 /// The image file at `path`, decoded once for the surface's device (`None` when the surface has no
-/// device, or the file cannot be read or decoded — logged once).
+/// device, or the file cannot be read or decoded - logged once).
 pub fn load_image(c: &dyn ControlCanvas, path: &str) -> Option<ID2D1Bitmap1> {
     if path.starts_with("kbres:") {
         return load_resource_image(c, path);
@@ -517,7 +517,7 @@ pub fn load_image(c: &dyn ControlCanvas, path: &str) -> Option<ID2D1Bitmap1> {
 }
 
 /// An image held in memory (the bytes of a PNG, JPEG, GIF, BMP, TIFF or ICO file), decoded once per
-/// `key` for the surface's device — `key` names the content (a hash, a stamp): the same key never
+/// `key` for the surface's device - `key` names the content (a hash, a stamp): the same key never
 /// decodes twice. `None` when the surface has no device or the bytes are not an image (logged once).
 pub fn load_image_bytes(c: &dyn ControlCanvas, key: u64, bytes: &[u8]) -> Option<ID2D1Bitmap1> {
     let renderer = c.renderer()?;
@@ -554,7 +554,7 @@ fn decode_bytes(renderer: &Renderer, bytes: &[u8]) -> windows::core::Result<ID2D
     }
 }
 
-/// Releases the decoded images of this thread (see [`load_image`]) — what the host does when its
+/// Releases the decoded images of this thread (see [`load_image`]) - what the host does when its
 /// window loop ends, while the device and COM are still there: left to the thread-local destructors,
 /// they were released during the process's exit, after the Direct2D and WIC libraries, and the process
 /// ended with an error code.

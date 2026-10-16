@@ -13,20 +13,20 @@ use crate::authz::{AdminContext, PrivilegeScope};
 /// credential may exercise.
 ///
 /// `grant` is `None` for a browser session, and the context comes back
-/// untouched — this function is a no-op on the interactive path.
+/// untouched - this function is a no-op on the interactive path.
 ///
 /// For a token there are two cases, and the difference between them *is* the
 /// migration policy:
 ///
-/// * **scoped token** — the effective privilege set is the intersection. A
+/// * **scoped token** - the effective privilege set is the intersection. A
 ///   superuser owner is not special-cased into "everything": their token holds
 ///   exactly its listed scopes, at instance scope, because that is what
 ///   intersecting "all privileges, instance-wide" with a list produces.
 ///   Crucially the intersection *preserves the owner's scope*: if the owner holds
-///   `core.users.update` over one organisational unit only, so does the token —
+///   `core.users.update` over one organisational unit only, so does the token -
 ///   listing the key cannot widen it to the instance.
 ///
-/// * **legacy token** — issued before scopes existed. It runs on the owner's
+/// * **legacy token** - issued before scopes existed. It runs on the owner's
 ///   privileges during the grace window, minus the ones no bearer may ever
 ///   exercise. Administrative *writes* are refused separately and immediately,
 ///   with no grace at all (see [`super::deny_legacy_admin_write`]).
@@ -41,7 +41,7 @@ pub fn apply(mut ctx: AdminContext, grant: Option<&TokenGrant>) -> AdminContext 
     };
 
     if grant.is_legacy {
-        // Keep what the owner holds — including the superuser flag — but never
+        // Keep what the owner holds - including the superuser flag - but never
         // the scopes reserved to a person.
         ctx.denied = forbidden_keys(&ctx);
         return ctx;
@@ -99,7 +99,7 @@ fn forbidden_keys(ctx: &AdminContext) -> HashSet<String> {
 ///
 /// Mirrors `is_token_grantable = FALSE` in the catalogue (migration `000053`).
 /// The duplication is deliberate: the flag stops such a scope being *granted*,
-/// this list stops it being *exercised* — including by a legacy token, which was
+/// this list stops it being *exercised* - including by a legacy token, which was
 /// never granted anything and would otherwise inherit them all from its owner.
 pub const NEVER_BY_TOKEN: &[&str] = &[
     crate::authz::keys::ROLES_MANAGE,
@@ -176,7 +176,7 @@ mod tests {
         let out = apply(ctx, Some(&grant(&["core.users.read"], false)));
         assert!(!out.is_superuser, "le drapeau ne doit pas survivre à l'intersection");
         assert!(out.has("core.users.read"));
-        // Not held, and — the real point — not implicitly held either.
+        // Not held, and - the real point - not implicitly held either.
         assert!(!out.has("core.settings.manage"));
         assert!(!out.has("un.module.execute"));
     }

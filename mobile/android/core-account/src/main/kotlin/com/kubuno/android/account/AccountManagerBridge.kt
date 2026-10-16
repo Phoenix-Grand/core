@@ -17,7 +17,7 @@ import kotlinx.coroutines.withContext
 /**
  * Mirrors [AccountRegistry] into the system's `AccountManager`.
  *
- * The registry stays the source of truth — it is what this app reads and
+ * The registry stays the source of truth - it is what this app reads and
  * writes. The system accounts exist only so that *other* Kubuno apps can
  * discover which accounts are signed in here and ask [KubunoAuthenticator] for
  * an access token. This is a one-way projection: nothing is ever read back
@@ -54,7 +54,7 @@ class AccountManagerBridge @Inject constructor(
      * user has forgotten in the app.
      *
      * Matching is done on the `account_id` user data, never on the display
-     * name — a rename (new display name, instance moved domain) must not be
+     * name - a rename (new display name, instance moved domain) must not be
      * seen as "old account gone, new account appeared", which would make
      * sibling apps lose their binding.
      */
@@ -64,7 +64,7 @@ class AccountManagerBridge @Inject constructor(
         val system = dedupeByIdentity(manager.getAccountsByType(KubunoAccounts.TYPE))
 
         // Additive only. This runs in EVERY Kubuno app, but a system account may
-        // belong to a sibling app whose registry this process cannot see —
+        // belong to a sibling app whose registry this process cannot see -
         // pruning "accounts not in my registry" would let a consumer app (an
         // empty registry) delete the accounts the owner created. Removal is
         // therefore explicit: an app drops an account through remove() when the
@@ -102,7 +102,7 @@ class AccountManagerBridge @Inject constructor(
             // (unencrypted at the app level) system database, while our own
             // session store is AES-GCM under a non-exportable Keystore key.
             // The refresh token would be the only thing worth putting there,
-            // and it must never leave this app — sharing it would let a second
+            // and it must never leave this app - sharing it would let a second
             // process rotate concurrently and get the whole session family
             // revoked. Sibling apps get access tokens through getAuthToken().
             //
@@ -123,7 +123,7 @@ class AccountManagerBridge @Inject constructor(
 
     /**
      * Removes the extra system entries left when two apps each published the
-     * same (instance, user). The survivor is the one with the plain name — the
+     * same (instance, user). The survivor is the one with the plain name - the
      * first ever created; the later ones carry a `#<id>` suffix from
      * [uniqueName]. Only genuine duplicates are touched, so a real second
      * account is never collapsed into the first.
@@ -161,7 +161,7 @@ class AccountManagerBridge @Inject constructor(
      * Makes [account] readable by the other Kubuno apps.
      *
      * Since Android O an account is invisible to an app unless it owns the
-     * authenticator or is granted visibility — and the same-signature default
+     * authenticator or is granted visibility - and the same-signature default
      * stops applying once a second app declares the same authenticator, which
      * is exactly our case. So the owner grants visibility explicitly, gated on
      * a shared signing certificate: only genuine Kubuno apps, never a package
@@ -186,7 +186,7 @@ class AccountManagerBridge @Inject constructor(
         val accounts = manager.getAccountsByType(KubunoAccounts.TYPE)
         accounts.firstOrNull { manager.getUserData(it, KubunoAccounts.USER_DATA_ACCOUNT_ID) == id.value }?.name
             // Adopted entry: it was published by a sibling app, so it carries
-            // that app's account_id — find it by identity instead.
+            // that app's account_id - find it by identity instead.
             ?: registry.get(id)?.let { record ->
                 val key = identityKey(record.serverUrl, record.userId)
                 accounts.firstOrNull { identityOf(it) == key }?.name

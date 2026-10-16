@@ -1,10 +1,10 @@
-//! Data binding — `XML_VIEWS.md` §3: `{Binding Path}` / `{Binding Path,
+//! Data binding - `XML_VIEWS.md` §3: `{Binding Path}` / `{Binding Path,
 //! Mode=TwoWay}`, evaluated against a small [`ViewModel`] trait (get/set by
 //! path, a closed [`Value`] enum) rather than a reflection system. Because a
 //! view is rebuilt every frame from live state anyway (§0), one-way binding is
 //! "read `vm.get(path)` at the moment the element is built, every frame";
 //! two-way binding is the same read plus, when the live widget reports a
-//! change, `vm.set(path, new_value)` — see [`crate::node`] for where that
+//! change, `vm.set(path, new_value)` - see [`crate::node`] for where that
 //! write actually happens (on the interaction that produced the new value,
 //! not on every frame).
 //!
@@ -20,9 +20,9 @@ use std::collections::HashMap;
 /// A dynamically typed value a [`ViewModel`] reads or writes.
 ///
 /// Four variants: every property [`crate::registry::PropKind`] declares
-/// (`Bool`, `F32`, `String`, and `Enum` — carried as its variant name, a
+/// (`Bool`, `F32`, `String`, and `Enum` - carried as its variant name, a
 /// `String`) fits one of the first three; [`Value::List`] is the one
-/// addition — rows of named fields, what an `ItemsSource="{Binding Path}"`
+/// addition - rows of named fields, what an `ItemsSource="{Binding Path}"`
 /// on `ListBox`/`CheckedListBox`/`ListView`/`TreeView`/`DataTable`/`Dropdown`/
 /// `ComboBox` reads (`registry::families::data`'s module doc names this the
 /// "`ItemsSource` gap"; this is what closes it). Still not a `Box<dyn Any>`:
@@ -33,11 +33,11 @@ pub enum Value {
     Bool(bool),
     F32(f32),
     Str(String),
-    /// Rows of an `ItemsSource` binding, in order — see [`Rows`]: a shared snapshot, so reading
+    /// Rows of an `ItemsSource` binding, in order - see [`Rows`]: a shared snapshot, so reading
     /// it every frame clones a pointer, and a list node knows it is unchanged from its stamp.
     List(Rows),
     /// Any Rust value handed to a property of a custom control (`#[property] messages:
-    /// Shared<Vec<Message>>`) — see [`ObjectValue`]. Never written in XML: only bound.
+    /// Shared<Vec<Message>>`) - see [`ObjectValue`]. Never written in XML: only bound.
     Object(ObjectValue),
 }
 
@@ -52,7 +52,7 @@ fn next_stamp() -> u64 {
 ///
 /// Cloning is a pointer copy, so a view model can hand its list to a binding every frame for
 /// free; a list node (`ListBox`, `ListView`, `DataTable`, `Repeater`…) compares the stamp with
-/// the one it built its items from and does nothing when they are equal — the change detection
+/// the one it built its items from and does nothing when they are equal - the change detection
 /// of a long list costs one integer comparison per frame, not a copy and a diff of every row.
 ///
 /// Keep a `Rows` in the view model and change it in place ([`Rows::make_mut`], [`Rows::push`],
@@ -171,7 +171,7 @@ impl<'a> IntoIterator for &'a Rows {
 }
 
 /// The item of a `<Repeater>` whose template is painting (or whose event is being handled): what
-/// a handler named in an item template reads to know which item raised it —
+/// a handler named in an item template reads to know which item raised it -
 /// `kubuno_desktop_views::binding::current_item()`.
 #[derive(Debug, Clone, PartialEq)]
 pub struct ItemContext {
@@ -201,7 +201,7 @@ pub(crate) fn with_current_item<R>(item: ItemContext, f: impl FnOnce() -> R) -> 
 }
 
 /// The change detection of a bound list, kept by a list node: [`ListWatch::changed`] answers the
-/// rows only when they are not those it answered last time — the same snapshot (its stamp) costs
+/// rows only when they are not those it answered last time - the same snapshot (its stamp) costs
 /// one comparison; a new snapshot of equal rows (a view model that converts its `Vec` every
 /// frame) a comparison of the rows, never a rebuild of the node's items.
 #[derive(Default, Clone)]
@@ -357,7 +357,7 @@ impl From<ObjectValue> for Value {
     }
 }
 
-/// One row of a [`Value::List`] — named fields, in declaration order (a
+/// One row of a [`Value::List`] - named fields, in declaration order (a
 /// `DataTable`/`ListView` reads its columns' `Binding` names off a row this
 /// way, in the order the caller built it; a `HashMap` would not preserve
 /// that order and a handful of short-lived fields gains nothing from one).
@@ -371,7 +371,7 @@ impl Row {
         Self::default()
     }
 
-    /// Adds one named field, chainable — `Row::new().with("Text", Value::Str(name))`.
+    /// Adds one named field, chainable - `Row::new().with("Text", Value::Str(name))`.
     pub fn with(mut self, name: impl Into<String>, value: Value) -> Self {
         self.0.push((name.into(), value));
         self
@@ -387,7 +387,7 @@ impl Row {
         &self.0
     }
 
-    /// The field named `name`, rendered as display text — `Str` as itself,
+    /// The field named `name`, rendered as display text - `Str` as itself,
     /// `F32`/`Bool` via their own `Display`, `List`/a missing field as empty.
     /// What every row-consuming node (`registry::families::data`, `text`'s
     /// `Dropdown`/`ComboBox`) reads a label/value/cell from: a row field is
@@ -445,8 +445,8 @@ impl FromValue for String {
 
 /// The code-behind's state, read and written by path (§3: "a small `Bindable`
 /// trait the code-behind's state struct implements"). A path is whatever the
-/// view model chooses — a field name, as in every example in `XML_VIEWS.md`
-/// §7 (`Notifications`, `SyncIntervalMin`, `Proxy`…) — this trait does not
+/// view model chooses - a field name, as in every example in `XML_VIEWS.md`
+/// §7 (`Notifications`, `SyncIntervalMin`, `Proxy`…) - this trait does not
 /// interpret it.
 pub trait ViewModel {
     fn get(&self, path: &str) -> Option<Value>;
@@ -487,7 +487,7 @@ pub trait ViewModel {
     }
 }
 
-/// A trivial [`ViewModel`] over a flat `HashMap<String, Value>` — enough for
+/// A trivial [`ViewModel`] over a flat `HashMap<String, Value>` - enough for
 /// the example view model and for this crate's own tests, without asking
 /// every test to write a bespoke struct.
 #[derive(Debug, Default, Clone)]
@@ -576,7 +576,7 @@ impl BindingSpec {
 
     /// What a control does with a user change of a bound property whose mode
     /// [`writes_back`](BindingMode::writes_back): the value goes through the converter backwards,
-    /// then to the source — now (`PropertyChanged`), when the focus leaves the element
+    /// then to the source - now (`PropertyChanged`), when the focus leaves the element
     /// (`LostFocus`), or when the code calls [`update_sources`] (`Explicit`). Until then the
     /// property keeps showing the value the user entered.
     pub fn update_source(&self, vm: &mut dyn ViewModel, value: Value) {
@@ -962,7 +962,7 @@ impl ValueConverter for Builtin {
     }
 }
 
-/// Registers a converter type before `main` — what `#[kubuno_desktop_views::value_converter]` expands to,
+/// Registers a converter type before `main` - what `#[kubuno_desktop_views::value_converter]` expands to,
 /// usable by hand: `kubuno_desktop_views::register_value_converter!("Initials", Initials);` (`Initials:
 /// ValueConverter + Default`).
 #[macro_export]
@@ -990,7 +990,7 @@ pub fn parse_binding_report(raw: &str) -> (Option<BindingSpec>, Vec<BindingIssue
 
 /// Parses a `{Binding Path}` / `{Binding Path, Mode=TwoWay}` attribute value (or a `{Res key}`,
 /// [`crate::resources`]) with the grammar of `kubuno-desktop-views-syntax`.
-/// `None` for anything that is not the `Binding` shape at all — a caller that
+/// `None` for anything that is not the `Binding` shape at all - a caller that
 /// already checked [`is_binding_expr`] treats `None` here as a malformed
 /// binding, not "not a binding".
 pub fn parse_binding(raw: &str) -> Option<BindingSpec> {
@@ -1053,7 +1053,7 @@ impl<T: Clone + FromValue> PropSource<T> {
         }
     }
 
-    /// The binding this property carries, when it is bound at all — what a
+    /// The binding this property carries, when it is bound at all - what a
     /// two-way write-back (`XML_VIEWS.md` §3) needs: the path, and whether
     /// `Mode=TwoWay` actually asked for a write-back.
     pub fn binding(&self) -> Option<&BindingSpec> {
@@ -1072,7 +1072,7 @@ impl<T: Clone + FromValue> PropSource<T> {
 pub type Handler = Box<dyn FnMut(&mut dyn ViewModel, Value)>;
 
 /// The handler table a view's code-behind builds with [`crate::handlers!`]
-/// (or by hand) and hands to [`crate::runtime::Runtime::frame`] — §2's
+/// (or by hand) and hands to [`crate::runtime::Runtime::frame`] - §2's
 /// "a `HashMap<&'static str, Box<dyn FnMut(&mut State, ViewEvent)>>`
 /// populated in the view struct's constructor", narrowed to the [`Value`]
 /// payload this crate actually carries.
@@ -1129,7 +1129,7 @@ impl HandlerTable {
     }
 
     /// Runs the handler named `name`, if the table has one. Silent when it
-    /// does not — an `OnClick`/`OnToggled` naming a handler nobody registered
+    /// does not - an `OnClick`/`OnToggled` naming a handler nobody registered
     /// is a validator-time concern ([`crate::validate`] does not check this;
     /// see that module's doc for why), not a runtime panic.
     pub fn dispatch(&mut self, name: &str, vm: &mut dyn ViewModel, value: Value) -> bool {
@@ -1146,14 +1146,14 @@ impl HandlerTable {
     }
 }
 
-/// Builds a [`HandlerTable`] declaratively — `XML_VIEWS.md` §7's
+/// Builds a [`HandlerTable`] declaratively - `XML_VIEWS.md` §7's
 /// `kubuno_desktop_views::handlers! { "offline_toggled" => |s, on| { … } }`.
 ///
 /// The closure's first parameter is `&mut dyn ViewModel` and the second is
 /// the [`Value`] the interaction produced; a handler that only wants the view
 /// model narrows the value itself (`Value::Bool(on) => …`).
 ///
-/// The body is any expression: a block (`|vm, v| { … }`) or a call — the form
+/// The body is any expression: a block (`|vm, v| { … }`) or a call - the form
 /// `kubuno/createHandler` (the designer's "create handler") writes for a handler it
 /// generated as a `fn` next to the table (`"save" => |vm, value| save(vm, value),`).
 #[macro_export]

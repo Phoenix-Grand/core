@@ -1,6 +1,6 @@
 /**
  * Navigation and misc elements (WV-5b): `Toolbar`/`ToolbarItem`, `Sidebar`/`SidebarItem`/`SidebarSection`,
- * `StatusBar`/`StatusLabel`, `Splitter`, `SearchField`, `MaskedField`, `PaintBox` — the desktop's names and members
+ * `StatusBar`/`StatusLabel`, `Splitter`, `SearchField`, `MaskedField`, `PaintBox` - the desktop's names and members
  * (VIEWS-SPEC §2), rendered by new `@ui` components; the web-only members are allowlisted (`allowlist.nav.ts`).
  */
 import type { ComponentProps } from 'react'

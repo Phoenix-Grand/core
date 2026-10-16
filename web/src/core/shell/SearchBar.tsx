@@ -56,7 +56,7 @@ function SearchBarBase({ dark = false, compact = false }: { dark?: boolean; comp
   // Voice dictation (shared hook): live transcript fills the search field.
   const voice = useVoiceDictation({ getSeed: () => '', onText: handleChange })
 
-  // Clear the field when switching between modules — but not on the initial
+  // Clear the field when switching between modules - but not on the initial
   // mount, so a query seeded from the URL (F5-restored search) survives. A
   // module keeps ownership of its query while its own routes stay active.
   const prevModuleRef = useRef<string | undefined>(undefined)
@@ -99,7 +99,7 @@ function SearchBarBase({ dark = false, compact = false }: { dark?: boolean; comp
   const ico    = compact ? 16 : 20
   const fltBtn = compact ? 'w-8 h-8' : 'w-10 h-10'
 
-  /* Contenu de la ligne de recherche — identique dans les deux états */
+  /* Contenu de la ligne de recherche - identique dans les deux états */
   const searchRow = (
     <div className={`flex items-center ${rowH} flex-shrink-0`}>
       <div className={`${compact ? 'pl-3 pr-2' : 'pl-4 pr-2'} flex-shrink-0`}>
@@ -129,7 +129,7 @@ function SearchBarBase({ dark = false, compact = false }: { dark?: boolean; comp
       )}
 
       <div className="flex items-center flex-shrink-0 pr-2">
-        {/* Bouton micro — recherche vocale auto-hébergée (Vosk/Whisper), présent
+        {/* Bouton micro - recherche vocale auto-hébergée (Vosk/Whisper), présent
             par défaut sur tous les navigateurs. Masqué si l'admin a désactivé la
             reconnaissance vocale ou si le module stt est absent. */}
         {voice.enabled && (
@@ -177,7 +177,7 @@ function SearchBarBase({ dark = false, compact = false }: { dark?: boolean; comp
   return (
     <div ref={containerRef} className="kb-search relative w-full">
 
-      {/* Toast d'écoute vocale — centré à l'écran, fourni par le hook partagé.
+      {/* Toast d'écoute vocale - centré à l'écran, fourni par le hook partagé.
           Rendu DANS containerRef pour que le clic dessus ne compte pas comme un
           clic « extérieur » (qui arrête la dictée). */}
       {voice.voiceToast}
@@ -185,7 +185,7 @@ function SearchBarBase({ dark = false, compact = false }: { dark?: boolean; comp
       {filterOpen ? (
         <>
           {/*
-           * Spacer invisible — maintient la hauteur du header pendant que
+           * Spacer invisible - maintient la hauteur du header pendant que
            * le bloc unifié est en position absolute.
            */}
           <div className={rowH} aria-hidden />

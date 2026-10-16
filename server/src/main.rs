@@ -46,15 +46,15 @@ struct Cli {
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    // Charger .env si présent (développement / Docker) — optionnel
+    // Charger .env si présent (développement / Docker) - optionnel
     let _ = dotenvy::dotenv();
 
-    // Parser les arguments — affiche l'aide et quitte proprement sur --help / --version
+    // Parser les arguments - affiche l'aide et quitte proprement sur --help / --version
     let cli = Cli::parse();
 
     // Read the configuration WITHOUT validating it first: a freshly installed
     // package still carries the example's placeholders, which is exactly what
-    // `Settings::load()` refuses to start on — and the state the installation
+    // `Settings::load()` refuses to start on - and the state the installation
     // wizard exists to leave behind.
     let raw = Settings::load_unvalidated_from(cli.config.as_deref())
         .context("Lecture de la configuration")?;
@@ -73,11 +73,11 @@ async fn main() -> Result<()> {
 
     // Not installed yet: serve the wizard on the normal port until it succeeds,
     // then carry on with the configuration it has just written. Nothing has to
-    // be restarted — same behaviour under systemd, Docker and in development.
+    // be restarted - same behaviour under systemd, Docker and in development.
     if kubuno_core::setup::needs_setup(&raw).await {
         tracing::warn!(
             manquant = ?kubuno_core::setup::missing(&raw),
-            "Instance non installée — assistant d'installation"
+            "Instance non installée - assistant d'installation"
         );
         if !kubuno_core::setup::run_wizard(&raw).await? {
             tracing::info!("Arrêt avant la fin de l'installation");
@@ -102,7 +102,7 @@ async fn main() -> Result<()> {
     // client (limitation de débit, anti-DDoS, sessions, journal d'accès) en dépend.
     kubuno_core::auth::client_ip::init(&settings.server.trusted_proxy_cidrs);
 
-    // Load the key that protects data at rest — SMTP and directory passwords,
+    // Load the key that protects data at rest - SMTP and directory passwords,
     // OIDC client secrets, TOTP secrets. It lives in its own file so that
     // rotating the token-signing secret, which is a thing an administrator
     // SHOULD be able to do, no longer makes every stored secret and every
@@ -159,7 +159,7 @@ async fn main() -> Result<()> {
     kubuno_core::devices::bootstrap(&pool).await;
 
     // Référentiel des jours fériés : le jeu de données livré, chargé une fois
-    // par version. Jamais bloquant — une instance qui échoue ici sert ce qu'elle
+    // par version. Jamais bloquant - une instance qui échoue ici sert ce qu'elle
     // a déjà, et toutes les lectures tolèrent un référentiel vide.
     kubuno_core::holidays::seed::ensure_dataset(&pool).await;
 
@@ -169,8 +169,8 @@ async fn main() -> Result<()> {
         .context("Création du compte administrateur initial")?;
 
     // An administrator whose account predates this repair holds the `role`
-    // flag but no role assignment, and the console — which reads the assignment
-    // — showed them almost nothing. The migration that granted it ran before
+    // flag but no role assignment, and the console - which reads the assignment
+    // - showed them almost nothing. The migration that granted it ran before
     // their account existed, so only a check at start can put it right.
     if let Err(e) = kubuno_core::authz::bootstrap::reconcile_superadmins(&pool).await {
         tracing::error!(error = %e, "Vérification des attributions de super-administration");
@@ -203,7 +203,7 @@ async fn main() -> Result<()> {
     ));
 
     // Worker EventBus → modules abonnés. Met en file une livraison par module
-    // dont `subscribed_events` nomme le type — la file (core.jobs) porte les
+    // dont `subscribed_events` nomme le type - la file (core.jobs) porte les
     // réessais, pour qu'un module redémarré reçoive quand même l'événement.
     // Avant lui, `subscribed_events` était stocké, affiché, et lu par personne :
     // les traitements « UserDeleted » des modules ne s'exécutaient jamais.
@@ -222,7 +222,7 @@ async fn main() -> Result<()> {
     kubuno_core::mailer::register_jobs(&mut job_registry, &settings.auth.jwt_secret);
     // Centre d'alertes (core.alerts.scan) : les producteurs ont besoin de la
     // configuration (évaluation de santé, volume de données), que le contexte
-    // de tâche ne transporte pas — d'où la capture.
+    // de tâche ne transporte pas - d'où la capture.
     kubuno_core::alerts::jobs::register(&mut job_registry, Arc::new(settings.clone()));
     // Moteur de règles (core.rules.action / .backtest / .maintenance) : les
     // réglages serveur sont capturés car exécuter l'action d'un MODULE est un
@@ -234,7 +234,7 @@ async fn main() -> Result<()> {
     );
     // Sauvegarde planifiée du schéma core (core.backup.run / .run_now). Écrite
     // en Rust depuis le pool : kubuno-seccomp interdit execve, donc pg_dump
-    // n'est pas lançable depuis le serveur — cf. crate::backup.
+    // n'est pas lançable depuis le serveur - cf. crate::backup.
     kubuno_core::backup::jobs::register(&mut job_registry);
     // Livraison des événements aux modules (core.events.deliver). Les réglages
     // serveur sont capturés : l'appel porte le secret interne DU MODULE VISÉ,
@@ -271,17 +271,17 @@ async fn main() -> Result<()> {
     )
     .await;
     // Tâches récurrentes du core (purges du journal d'événements et du journal
-    // d'audit administratif) — idempotent, ne double pas au redémarrage.
+    // d'audit administratif) - idempotent, ne double pas au redémarrage.
     kubuno_core::jobs::builtin::schedule(&pool).await;
-    // Analyse périodique du centre d'alertes — même discipline : idempotent,
+    // Analyse périodique du centre d'alertes - même discipline : idempotent,
     // ré-armé par son propre gestionnaire après chaque passage réussi.
     kubuno_core::alerts::jobs::schedule(&pool).await;
     // Un cycle par annuaire dont la synchronisation périodique est armée.
     kubuno_core::directory::job::schedule_all(&pool).await;
     // Entretien du moteur de règles (purge du journal d'exécution et des
-    // compteurs de seuil) — même discipline idempotente.
+    // compteurs de seuil) - même discipline idempotente.
     kubuno_core::rules::jobs::schedule(&pool).await;
-    // Sauvegarde automatique — même discipline : idempotente, ré-armée par son
+    // Sauvegarde automatique - même discipline : idempotente, ré-armée par son
     // propre gestionnaire, et planifiée à l'heure de la politique (jamais à
     // l'instant du démarrage : un redéploiement ne doit pas déclencher un dump).
     kubuno_core::backup::jobs::schedule(&pool).await;
@@ -328,7 +328,7 @@ async fn main() -> Result<()> {
         Arc::clone(&usage),
     ));
 
-    // Live TLS state — shared with the response layer (HSTS) and the admin
+    // Live TLS state - shared with the response layer (HSTS) and the admin
     // handlers (hot certificate reload). Populated below once the serving mode
     // is decided.
     let tls_runtime = Arc::new(kubuno_core::network::TlsRuntime::new());
@@ -363,14 +363,14 @@ async fn main() -> Result<()> {
     // HSTS is seeded for EVERY serving mode, not just the ones that terminate
     // TLS here: an instance behind a TLS-terminating reverse proxy serves plain
     // HTTP at this socket and must still send the header (the response layer
-    // decides per request — see `network::runtime::response_is_over_tls`).
+    // decides per request - see `network::runtime::response_is_over_tls`).
     set_hsts_from_db(&db, &tls_runtime).await;
 
     let secure_cookies = settings.server.secure_cookies;
     let warn_insecure_cookies = |reason: &str| {
         if !secure_cookies {
             tracing::warn!(
-                "{reason} mais server.secure_cookies = false — activez secure_cookies \
+                "{reason} mais server.secure_cookies = false - activez secure_cookies \
                  pour que les cookies (refresh token) soient marqués Secure."
             );
         }
@@ -380,7 +380,7 @@ async fn main() -> Result<()> {
     //
     // Like any ordinary web server, the core listens on HTTP **and** HTTPS at the
     // same time when both are configured (Apache's `Listen 80` + `Listen 443`).
-    // Enabling HTTPS therefore never takes the HTTP port away — which would cut
+    // Enabling HTTPS therefore never takes the HTTP port away - which would cut
     // off a reverse proxy, a health probe or a module talking to the loopback
     // port. What the HTTP socket *serves* is the choice: the application, or a
     // redirect to HTTPS.
@@ -427,13 +427,13 @@ async fn main() -> Result<()> {
                     }
                     Err(e) => tracing::error!(
                         error = %e,
-                        "réseau : certificat actif inexploitable — HTTPS non démarré. \
+                        "réseau : certificat actif inexploitable - HTTPS non démarré. \
                          Ré-importez un certificat depuis la console."
                     ),
                 }
             }
             None => tracing::warn!(
-                "network.https_enabled = true mais aucun certificat actif — HTTPS non démarré. \
+                "network.https_enabled = true mais aucun certificat actif - HTTPS non démarré. \
                  Importez un certificat depuis la console puis redémarrez le service."
             ),
         }
@@ -449,7 +449,7 @@ async fn main() -> Result<()> {
             net.http_redirect_to_https
         });
 
-    // Plain-HTTP ports. `server.port` always — the main listener, whose failure
+    // Plain-HTTP ports. `server.port` always - the main listener, whose failure
     // to bind is fatal. In the legacy file mode `server.port` carries the TLS
     // listener instead, so only the extra port is plain HTTP.
     let mut http_ports: Vec<u16> = Vec::new();
@@ -479,7 +479,7 @@ async fn main() -> Result<()> {
         None
     };
 
-    // Hosts this instance legitimately answers for — the active certificate's
+    // Hosts this instance legitimately answers for - the active certificate's
     // subject alternative names, plus the domains ACME is configured for. Used
     // to keep the HTTP→HTTPS redirect from being pointed at somebody else's
     // domain by a forged `Host` header (see `network::redirect`).
@@ -517,7 +517,7 @@ async fn main() -> Result<()> {
 
     let redirect_target_port = https_port.unwrap_or(443);
     // The router served on a plain-HTTP socket: the application, or the redirect
-    // to HTTPS. The redirect must NOT swallow the ACME challenge — proving domain
+    // to HTTPS. The redirect must NOT swallow the ACME challenge - proving domain
     // control happens over plain HTTP, and answering a renewal check with a 308
     // to the very certificate being renewed is how automatic renewal quietly
     // stops working (see `network::redirect`).
@@ -544,7 +544,7 @@ async fn main() -> Result<()> {
 
     // The extra port is a convenience, never a condition of starting: 80 without
     // CAP_NET_BIND_SERVICE, or a port another service already holds, must cost a
-    // loud log line — not the instance.
+    // loud log line - not the instance.
     if let Some(port) = extra_http_port {
         let addr = std::net::SocketAddr::new(http_addr.ip(), port);
         match tokio::net::TcpListener::bind(&addr).await {
@@ -554,7 +554,7 @@ async fn main() -> Result<()> {
             }
             Err(e) => tracing::error!(
                 error = %e,
-                "réseau : port de redirection {addr} non disponible — la redirection HTTP→HTTPS \
+                "réseau : port de redirection {addr} non disponible - la redirection HTTP→HTTPS \
                  n'y répondra pas (un port < 1024 exige la capacité CAP_NET_BIND_SERVICE). \
                  Le reste du service démarre normalement."
             ),
@@ -573,7 +573,7 @@ async fn main() -> Result<()> {
 
     // L'exécuteur de tâches s'arrête APRÈS le serveur : il cesse de réclamer de
     // nouvelles tâches puis laisse celles en cours se terminer. Une tâche coupée
-    // en deux serait rejouée depuis le début au démarrage suivant — tous les
+    // en deux serait rejouée depuis le début au démarrage suivant - tous les
     // gestionnaires ne sont pas idempotents.
     jobs.shutdown(std::time::Duration::from_secs(30)).await;
 
@@ -624,7 +624,7 @@ async fn serve_https(
         let handle = handle.clone();
         tokio::spawn(async move {
             shutdown_signal().await;
-            tracing::info!("Signal d'arrêt reçu — fin de service HTTPS en douceur");
+            tracing::info!("Signal d'arrêt reçu - fin de service HTTPS en douceur");
             handle.graceful_shutdown(Some(std::time::Duration::from_secs(15)));
         });
     }
@@ -651,7 +651,7 @@ async fn serve_http(
     )
     .with_graceful_shutdown(async {
         shutdown_signal().await;
-        tracing::info!("Signal d'arrêt reçu — fin de service HTTP en douceur");
+        tracing::info!("Signal d'arrêt reçu - fin de service HTTP en douceur");
     })
     .await
     .context("Erreur du serveur HTTP")

@@ -43,7 +43,7 @@ impl AccountRow {
         if self.design_mode() && self.title.is_empty() {
             self.account_id = "sample-cloud".into();
             self.active_id = "sample-cloud".into();
-            self.title = "Camille Martin — cloud.exemple.fr".into();
+            self.title = "Camille Martin - cloud.exemple.fr".into();
             self.folder = r"C:\Users\Camille\Kubuno".into();
         }
     }

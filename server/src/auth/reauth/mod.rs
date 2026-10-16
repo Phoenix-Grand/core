@@ -19,13 +19,13 @@
 //!
 //! The four pieces:
 //!
-//! - [`claims`] — the token. Signed with a *derived* key so it can never be used
+//! - [`claims`] - the token. Signed with a *derived* key so it can never be used
 //!   as an access token, nor an access token as a proof. It grants nothing on its
 //!   own.
-//! - [`store`] — the grant row: revocation and the grace window.
-//! - [`catalog`] — which actions are sensitive, and how to hand that decision over
+//! - [`store`] - the grant row: revocation and the grace window.
+//! - [`catalog`] - which actions are sensitive, and how to hand that decision over
 //!   to the delegated-privilege catalogue.
-//! - [`guard`] — the extractor handlers take, and the distinguishable refusal.
+//! - [`guard`] - the extractor handlers take, and the distinguishable refusal.
 
 pub mod catalog;
 pub mod claims;

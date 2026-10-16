@@ -24,12 +24,12 @@ pub enum AppError {
     /// Distinct from [`AppError::Forbidden`] on purpose: a bare "accès refusé" is
     /// indistinguishable from a genuine lack of authorisation, so a client cannot
     /// tell whether to offer a way forward. This one carries a code the client
-    /// acts on — open the re-authentication dialog, then replay the request.
+    /// acts on - open the re-authentication dialog, then replay the request.
     #[error("Réauthentification requise pour cette action sensible")]
     ReauthRequired,
 
     /// The caller is a personal API token: no second factor, nobody at the
-    /// keyboard, so the challenge can never be met. Final, not retryable — a
+    /// keyboard, so the challenge can never be met. Final, not retryable - a
     /// `ReauthRequired` here would send an unattended script into a loop.
     #[error("Cette action sensible exige une personne : un jeton d'API ne peut pas la réaliser")]
     ReauthImpossible,
@@ -38,7 +38,7 @@ pub enum AppError {
     /// migration grace window closed.
     ///
     /// Distinguishable from a plain 401 on purpose: nothing is wrong with the
-    /// network, the account or the token's own expiry — the credential belongs to
+    /// network, the account or the token's own expiry - the credential belongs to
     /// a policy that has been withdrawn, and the only way forward is to reissue
     /// one with explicit scopes. A 401 would send the holder debugging the wrong
     /// thing, and the client's refresh interceptor chasing a token it cannot mint.
@@ -50,7 +50,7 @@ pub enum AppError {
     ApiTokenLegacyExpired,
 
     /// A legacy token attempting an administrative write. Refused immediately,
-    /// with no grace period — this is the defect the scoping work exists to close.
+    /// with no grace period - this is the defect the scoping work exists to close.
     #[error(
         "Un jeton d'API sans portées ne peut pas effectuer d'écriture d'administration. \
          Réémettez un jeton en sélectionnant explicitement ses portées."
@@ -90,7 +90,7 @@ pub enum AppError {
     /// Sign-in is refused because the account has failed enough times that a
     /// CAPTCHA is now required and none (or a wrong one) was provided. The
     /// user-facing message is the SAME generic "invalid credentials" as every
-    /// other sign-in failure — only the machine `code` differs, so the login
+    /// other sign-in failure - only the machine `code` differs, so the login
     /// form knows to show the CAPTCHA. See `handlers::auth::login`.
     #[error("Identifiants invalides")]
     CaptchaRequired,
@@ -131,7 +131,7 @@ impl AppError {
     /// a response body never leaks internals. That genericity used to reach the
     /// logs and the audit trail too, which left an administrator facing
     /// "Erreur interne" on four surfaces at once with no way to diagnose the
-    /// failure — even with full shell access to the server.
+    /// failure - even with full shell access to the server.
     pub fn detail(&self) -> String {
         match self {
             // anyhow's alternate form prints the whole chain, "outer: inner: root".

@@ -20,7 +20,7 @@ export default {
     alreadyInitialised: 'Diese Datenbank enthält bereits ein Kubuno-Schema. Die Installation verwendet es weiter, ohne vorhandene Daten zu löschen, und behält den bereits eingetragenen Administrator.',
   },
   admin: {
-    title: 'Ihr Administratorkonto', lead: 'Dieses Konto verwaltet die Instanz — es ist das mit den meisten Rechten.',
+    title: 'Ihr Administratorkonto', lead: 'Dieses Konto verwaltet die Instanz - es ist das mit den meisten Rechten.',
     pitchTitle: 'Sie halten die Schlüssel',
     pitch: 'Vor diesem Konto existiert keines, und niemand sonst kann es anlegen: Das Passwort, das Sie wählen, kennen nur Sie.',
     username: 'Benutzername', email: 'E-Mail-Adresse', password: 'Passwort', confirm: 'Bestätigung',
@@ -29,13 +29,13 @@ export default {
   instance: {
     title: 'Ihre Instanz', lead: 'Der Name, den Ihre Benutzer sehen werden.',
     pitchTitle: 'Nach Ihrem Bild',
-    pitch: 'Name, Logo, Farben und Design werden anschließend in der Verwaltungskonsole gesetzt — für die gesamte Instanz.',
+    pitch: 'Name, Logo, Farben und Design werden anschließend in der Verwaltungskonsole gesetzt - für die gesamte Instanz.',
     name: 'Name der Instanz', optional: 'optional', logo: 'Logo', theme: 'Design',
     logoDrop: 'Bild hierher ziehen oder klicken, um es auszuwählen', logoChosen: 'Logo ausgewählt',
     logoHint: 'PNG, JPEG, WebP oder SVG · höchstens 200 KB',
-    logoTypes: 'Nur PNG, JPEG, WebP oder SVG.', logoTooBig: 'Datei zu groß — höchstens 200 KB.',
+    logoTypes: 'Nur PNG, JPEG, WebP oder SVG.', logoTooBig: 'Datei zu groß - höchstens 200 KB.',
     logoUnreadable: 'Die Datei konnte nicht gelesen werden.', remove: 'Entfernen', light: 'hell', dark: 'dunkel',
-    footnote: 'Logo und Design sind optional — Sie können sie jederzeit in der Verwaltungskonsole ändern.',
+    footnote: 'Logo und Design sind optional - Sie können sie jederzeit in der Verwaltungskonsole ändern.',
   },
   install: {
     title: 'Bereit zur Installation', lead: 'Prüfen Sie die Übersicht und starten Sie die Installation.',

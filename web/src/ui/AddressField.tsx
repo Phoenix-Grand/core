@@ -1,6 +1,6 @@
 // Shared @ui primitive: a postal-address block, Google-Contacts style. A
 // location-pin icon on the left, the street on its own line, postal code + city
-// on a row, a searchable country selector, and — behind a Plus/Moins chevron —
+// on a row, a searchable country selector, and - behind a Plus/Moins chevron -
 // the less-common lines (PO box, extra line, region). An optional editable
 // "Libellé" closes the block. The value is structured; nothing is parsed.
 import { useEffect, useRef, useState, type ReactNode } from 'react'

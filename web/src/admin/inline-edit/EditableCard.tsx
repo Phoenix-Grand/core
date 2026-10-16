@@ -9,8 +9,8 @@ import { useUnsavedEditor } from './unsaved'
  *
  * The console used to answer "Modifier" with a floating window laid over the
  * sheet. Two things followed, every time: the window offered fewer fields than
- * the sheet displayed — so an operator could read a value where they could not
- * change it — and the duplicated form quietly drifted from the card it was
+ * the sheet displayed - so an operator could read a value where they could not
+ * change it - and the duplicated form quietly drifted from the card it was
  * supposed to mirror. There is no third form here: the same card is the reading
  * surface and the editing surface.
  *
@@ -41,7 +41,7 @@ export interface EditableCardProps {
   onEdit:    () => void
   onCancel:  () => void
   onSave:    () => void
-  /** Save is disabled while false — nothing changed, nothing to write. */
+  /** Save is disabled while false - nothing changed, nothing to write. */
   dirty:     boolean
   saving?:   boolean
   /** A refusal that belongs to no single field. Shown atop the card body. */
@@ -62,10 +62,10 @@ export default function EditableCard({
   const { t } = useTranslation()
 
   // Leaving the sheet with this card half-edited must not lose the field in
-  // silence — see `unsaved.ts`.
+  // silence - see `unsaved.ts`.
   useUnsavedEditor(editing && dirty)
 
-  // The ring is the whole "you are editing this one" signal — a full token
+  // The ring is the whole "you are editing this one" signal - a full token
   // colour, never an opacity modifier, so the dark theme remaps it too.
   const skin = [className, editing ? 'ring-1 ring-primary' : ''].filter(Boolean).join(' ')
 

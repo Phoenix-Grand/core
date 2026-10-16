@@ -3,13 +3,13 @@
 //!
 //! ## Three sources, in decreasing order of honesty
 //!
-//! 1. **A native client's device key** (`X-Kubuno-Device-Key`) — the application
+//! 1. **A native client's device key** (`X-Kubuno-Device-Key`) - the application
 //!    generates it once, stores it in the OS keychain, and sends it on every
 //!    authentication. Strong.
-//! 2. **A first-party opaque cookie** (`kb_device`) — minted by the server on
+//! 2. **A first-party opaque cookie** (`kb_device`) - minted by the server on
 //!    the first browser sign-in that has none. HttpOnly, so no script can read
 //!    or forge it, and it carries nothing but a random value. Strong.
-//! 3. **A fingerprint derived from the normalised user agent** — the fallback,
+//! 3. **A fingerprint derived from the normalised user agent** - the fallback,
 //!    and the only thing available for sessions opened before this table
 //!    existed. Honestly weaker: two identical laptops of the same account
 //!    collapse into one row. The console shows which of the two kinds a device
@@ -137,7 +137,7 @@ pub fn resolve(
     }
 }
 
-/// Fingerprint key without minting anything — used by the backfill, which
+/// Fingerprint key without minting anything - used by the backfill, which
 /// reconciles rows that were written before any cookie existed.
 pub fn fingerprint_key(user_id: Uuid, client_type: &str, normalised: &Normalised) -> DeviceKey {
     DeviceKey {
@@ -169,7 +169,7 @@ struct TouchedRow {
 /// Creates or refreshes the inventory row for a device that just authenticated.
 ///
 /// Observed fields are always refreshed (a laptop that moved country must say
-/// so). Declared fields are never touched here — only the declaration route
+/// so). Declared fields are never touched here - only the declaration route
 /// writes them, and only when the operator switched declarations on.
 ///
 /// The old `RETURNING` is replaced by an insert-then-reselect: the row is keyed
@@ -196,7 +196,7 @@ pub async fn upsert(
 
     // NOTE (multi-DBMS): `$12::inet` is PostgreSQL-only; the cast is applied only
     // on PostgreSQL (where `last_ip` is an `inet`) and dropped elsewhere. Flagged
-    // in the port report — the column needs a portable (TEXT) form on MySQL/SQLite.
+    // in the port report - the column needs a portable (TEXT) form on MySQL/SQLite.
     let ip_placeholder = match backend {
         Backend::Postgres => "$12::inet",
         _ => "$12",
@@ -320,7 +320,7 @@ pub async fn attach_session(
 /// Appends a line to a device timeline.
 ///
 /// Best-effort: a timeline that could not be written must never turn a
-/// successful sign-in into a 500. The failure is logged loudly instead — the
+/// successful sign-in into a 500. The failure is logged loudly instead - the
 /// administrative audit trail, which *is* transactional, remains the authority
 /// on every operator action.
 #[allow(clippy::too_many_arguments)]
@@ -388,7 +388,7 @@ pub async fn record_event_tx(
 /// Runs once at startup and is cheap afterwards: it only ever looks at rows
 /// where `device_id IS NULL`, and there are none after the first pass. Doing it
 /// in Rust rather than in the migration is what lets it use the very same
-/// normaliser as the live path — an SQL approximation of the parser would file
+/// normaliser as the live path - an SQL approximation of the parser would file
 /// the same laptop under two different devices depending on which code touched
 /// it first.
 /// One row of the backfill scan: `(session, account, user agent, client, address)`.

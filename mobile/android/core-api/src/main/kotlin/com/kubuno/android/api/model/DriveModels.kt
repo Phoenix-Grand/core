@@ -45,7 +45,7 @@ data class DriveChange(
     val folder: DriveFolderDto? = null,
 )
 
-/** Full file model (subset we consume — byte-compatible with GET /api/v1/drive). */
+/** Full file model (subset we consume - byte-compatible with GET /api/v1/drive). */
 @Serializable
 data class DriveFileDto(
     val id: String,
@@ -76,7 +76,7 @@ data class UploadEnvelope(val upload: UploadSessionDto)
 /**
  * `strict` makes a name clash a 409 instead of a silent "(2)" rename. We leave
  * it false to match the web, so callers must read the name back from the
- * response — the server may have renamed the item.
+ * response - the server may have renamed the item.
  */
 @Serializable
 data class RenameRequest(
@@ -116,7 +116,7 @@ data class InitUploadRequest(
 )
 
 /**
- * Resumable upload session. [chunksReceived] is a plain counter — the server
+ * Resumable upload session. [chunksReceived] is a plain counter - the server
  * exposes no per-index bitmap and increments it on every accepted chunk, even
  * a duplicate, so the client must track which indices it has acknowledged.
  */

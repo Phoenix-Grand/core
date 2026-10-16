@@ -21,7 +21,7 @@ import coil3.request.crossfade
 import java.io.File
 
 /**
- * Image with pinch-to-zoom and pan — the gesture the web lacked (it zoomed only
+ * Image with pinch-to-zoom and pan - the gesture the web lacked (it zoomed only
  * with Ctrl+wheel). Double-tap toggles between fit and 2×. Loaded from the local
  * file the app already downloaded, so no auth is needed at render time.
  */

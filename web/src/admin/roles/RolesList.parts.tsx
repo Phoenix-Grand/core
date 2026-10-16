@@ -72,7 +72,7 @@ export function Part1({ rows, loading, error, onRetry, q, setQ, t, isSuperuser, 
               },
               {
                 id: 'description', header: t('admin.roles_col_desc'), minWidth: 220,
-                cell: r => <span className="text-text-secondary">{roleDescription(r) ?? '—'}</span>,
+                cell: r => <span className="text-text-secondary">{roleDescription(r) ?? '-'}</span>,
               },
               { id: 'type', header: t('admin.roles_col_type'), sortValue: r => r.slug, cell: r => <TypeBadge role={r} /> },
               { id: 'scope', header: t('admin.roles_col_scope'), cell: r => <DelegabilityChip role={r} /> },

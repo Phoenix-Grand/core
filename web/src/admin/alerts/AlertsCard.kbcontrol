@@ -1,4 +1,4 @@
-<!-- AlertsCard — converted from AlertsCard.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- AlertsCard - converted from AlertsCard.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl>
   <Panel Class="rounded-xl border border-border bg-[#F0F4F9] p-5">
     <Stack Direction="LeftToRight" CrossAlign="Center" Justify="SpaceBetween" Class="mb-3">

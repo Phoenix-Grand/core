@@ -1,4 +1,4 @@
-<!-- GroupsPanel — converted from GroupsPanel.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- GroupsPanel - converted from GroupsPanel.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <Panel>
   <Stack Direction="LeftToRight" Gap="0" CrossAlign="Center" Justify="SpaceBetween" Class="mb-5">
     <Panel>

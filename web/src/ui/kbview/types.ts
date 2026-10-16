@@ -18,7 +18,7 @@
 
 // ── Shared enums (the desktop registry's own values: `kubuno-views` `registry::export`) ──
 
-/** A property's value kind — serialized like serde's externally tagged `PropKind`. */
+/** A property's value kind - serialized like serde's externally tagged `PropKind`. */
 export type PropKind = 'Bool' | 'F32' | 'String' | { readonly Enum: readonly string[] }
 
 /** Properties-window groups (the desktop's category names, English, translated by the designer). */
@@ -37,7 +37,7 @@ export type ChildrenModel = 'None' | 'SingleWidget' | 'List'
 /** The layout engine a container applies to its children (`null`: none of its own). */
 export type LayoutKind = 'Flow' | 'DockAnchor' | 'Split' | 'Tabs'
 
-/** Toolbox tab — the desktop export's `family` values. */
+/** Toolbox tab - the desktop export's `family` values. */
 export type Family =
   | 'core' | 'display' | 'choice' | 'text' | 'containers' | 'data' | 'docking' | 'navigation'
   | 'components' | 'ribbon'
@@ -168,12 +168,12 @@ export type DomEvent =
 
 type StringKeys<P> = Extract<keyof P, string>
 
-/** Keys of `P` whose (non-null) value is a function — the callback props. */
+/** Keys of `P` whose (non-null) value is a function - the callback props. */
 export type CallbackKeys<P> = {
   [K in StringKeys<P>]-?: NonNullable<P[K]> extends (...args: never[]) => unknown ? K : never
 }[StringKeys<P>]
 
-/** Keys of `P` whose (non-null) value is an array — the data props children are adapted into. */
+/** Keys of `P` whose (non-null) value is an array - the data props children are adapted into. */
 export type ArrayKeys<P> = {
   [K in StringKeys<P>]-?: NonNullable<P[K]> extends readonly unknown[] ? K : never
 }[StringKeys<P>]
@@ -268,7 +268,7 @@ export type EventSource<P> = EventFromProp<P> | EventFromRuntime
 
 // ── The metadata tables ──
 
-/** One `.kbview` property — the desktop `PropertyJson` fields plus its web mapping. */
+/** One `.kbview` property - the desktop `PropertyJson` fields plus its web mapping. */
 export interface PropertyMeta<P> {
   readonly name: string
   readonly kind: PropKind
@@ -293,7 +293,7 @@ export interface PropertyMeta<P> {
   readonly to: PropTarget<P>
 }
 
-/** One `.kbview` event — the desktop `EventJson` fields plus its web source. */
+/** One `.kbview` event - the desktop `EventJson` fields plus its web source. */
 export interface EventMeta<P> {
   readonly name: string
   readonly doc: string
@@ -313,7 +313,7 @@ interface ChildrenAdapter {
   readonly item: string | readonly string[]
   /**
    * Where an item's own content (its child element) goes: an item field
-   * (`AccordionSection` content → `content`), or `selected-after` — the runtime renders the
+   * (`AccordionSection` content → `content`), or `selected-after` - the runtime renders the
    * selected item's content after the component (`Tabs`, whose `@ui` component is the tab strip).
    */
   readonly content?: 'selected-after' | 'none' | { readonly field: string }
@@ -324,7 +324,7 @@ interface ChildrenAdapter {
 }
 
 /**
- * Children → prop: an array prop (`<TabItem>` children → `Tabs.tabs[]`), or — `shape: 'record'` — an
+ * Children → prop: an array prop (`<TabItem>` children → `Tabs.tabs[]`), or - `shape: 'record'` - an
  * object keyed by each child's key (`<DockPanel>` children → `DockArea.panels`).
  */
 export type ChildrenToProp<P> =
@@ -398,7 +398,7 @@ export interface DesignDefaults {
 
 /** One `.kbview` element of the web target. */
 export interface ElementMeta<P> {
-  /** Canonical element name — the desktop name (VIEWS-SPEC §2). */
+  /** Canonical element name - the desktop name (VIEWS-SPEC §2). */
   readonly name: string
   readonly doc: string
   readonly docFr: string

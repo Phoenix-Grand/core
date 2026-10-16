@@ -24,7 +24,7 @@ export function driveFileEnvelope(f: DriveFileData): KubunoDataEnvelope {
     type: 'drive.file',
     module: 'drive',
     title: f.name,
-    text: `${f.name} — ${formatSize(f.size_bytes)}\n${location.origin}${href}`,
+    text: `${f.name} - ${formatSize(f.size_bytes)}\n${location.origin}${href}`,
     href,
     data: f,
   }

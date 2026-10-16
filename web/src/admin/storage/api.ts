@@ -47,13 +47,13 @@ export interface TrendPoint {
  * One line of a category breakdown, as declared by a module.
  *
  * `billable` and `held` are carried on every row so a reading never has to know
- * the vocabulary to be drawn correctly — but the **catalog** below is what makes
+ * the vocabulary to be drawn correctly - but the **catalog** below is what makes
  * the rules true. Never hard-code the ten identifiers' meaning in the frontend:
  * a downgraded server may send a category this build has never heard of, and the
  * only correct answer is to show it with the rule the server states.
  */
 export interface CategoryUsage {
-  /** A vocabulary identifier — or an unknown one, on a newer server. */
+  /** A vocabulary identifier - or an unknown one, on a newer server. */
   category:     string
   used_bytes:   number
   object_count: number | null
@@ -104,7 +104,7 @@ export interface ModuleUsage {
 
 export interface ModuleBreakdown {
   modules:             ModuleUsage[]
-  /** Sum of every declaration — the BILLED share, and only that. */
+  /** Sum of every declaration - the BILLED share, and only that. */
   declared_bytes:      number
   /** The authoritative total minus the declarations: the share nobody claimed. */
   unattributed_bytes:  number
@@ -112,7 +112,7 @@ export interface ModuleBreakdown {
   over_declared_bytes: number
   silent_modules:      number
   stale_hours:         number
-  /** Everything the modules occupy, billed or not — the disk-sizing figure. */
+  /** Everything the modules occupy, billed or not - the disk-sizing figure. */
   held_bytes:          number
   /** Held by another module on a module's behalf. Outside every total. */
   delegated_bytes:     number
@@ -134,8 +134,8 @@ export interface HeldBackAccount {
 /**
  * Why the reconciliation is holding off.
  *
- * `no_declarant` is about the instance, not a module — `module_id` is empty for
- * it — and it is the one that matters most: an empty declaration table read as
+ * `no_declarant` is about the instance, not a module - `module_id` is empty for
+ * it - and it is the one that matters most: an empty declaration table read as
  * "the modules charge nobody anything" would zero every quota counter on an
  * instance whose only fault is that the channel is not plugged in yet.
  */
@@ -148,7 +148,7 @@ export interface ReconciliationBlock {
 }
 
 /**
- * The state of the counter reconciliation — the hourly job that realigns each
+ * The state of the counter reconciliation - the hourly job that realigns each
  * account's quota counter on what the modules declare.
  *
  * `corrected_accounts` and `bytes_moved` are always 0 in this overview: the
@@ -221,7 +221,7 @@ export interface AccountModuleUsage {
 export interface AccountUsage {
   user_id:             string
   quota_bytes:         number
-  /** The quota counter — the number enforcement actually reads. */
+  /** The quota counter - the number enforcement actually reads. */
   used_bytes:          number
   /** What the modules say they charge this account. */
   billable_bytes:      number
@@ -336,7 +336,7 @@ export function useSetAccountQuota() {
  * The default a new account receives, at instance or organisational-unit scope.
  *
  * `bytes === null` clears the level, which is what makes the unit inherit its
- * parent again — and keep following it. Writing the inherited value instead
+ * parent again - and keep following it. Writing the inherited value instead
  * would freeze the unit silently the day the parent moved.
  */
 export function useSetDefaultQuota() {

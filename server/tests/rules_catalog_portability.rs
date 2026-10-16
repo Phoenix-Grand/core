@@ -2,7 +2,7 @@
 //! engine: registering, then re-registering with fewer entries (which purges the
 //! vanished ones a rule does not use), then re-evaluating orphans. On MySQL this
 //! used to fail on an unquoted `key`, a PostgreSQL-only `LATERAL
-//! jsonb_array_elements` and `<> NOT EXISTS (…)` — and since it runs inside the
+//! jsonb_array_elements` and `<> NOT EXISTS (…)` - and since it runs inside the
 //! registration transaction, no module could register on MySQL at all.
 //!
 //! SQLite always runs; MySQL runs when `KUBUNO_MYSQL_TEST_URL` names a user that
@@ -95,7 +95,7 @@ async fn module_catalogue_registers_on_sqlite() {
 #[tokio::test]
 async fn module_catalogue_registers_on_mysql() {
     let Some(url) = std::env::var("KUBUNO_MYSQL_TEST_URL").ok().filter(|u| !u.trim().is_empty()) else {
-        eprintln!("KUBUNO_MYSQL_TEST_URL not set — module_catalogue_registers_on_mysql skipped");
+        eprintln!("KUBUNO_MYSQL_TEST_URL not set - module_catalogue_registers_on_mysql skipped");
         return;
     };
     let prefix = format!("t{}_", &uuid::Uuid::new_v4().simple().to_string()[..10]);
@@ -113,7 +113,7 @@ async fn module_catalogue_registers_on_mysql() {
 #[tokio::test]
 async fn module_catalogue_registers_on_postgres() {
     let Some(url) = std::env::var("KUBUNO_PG_TEST_URL").ok().filter(|u| !u.trim().is_empty()) else {
-        eprintln!("KUBUNO_PG_TEST_URL not set — module_catalogue_registers_on_postgres skipped");
+        eprintln!("KUBUNO_PG_TEST_URL not set - module_catalogue_registers_on_postgres skipped");
         return;
     };
     // Unprefixed `core` on a throwaway database, wiped first (as the other

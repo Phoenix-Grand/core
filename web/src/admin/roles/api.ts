@@ -4,7 +4,7 @@ import { useAuthStore } from '../../core/store/authStore'
 import type { Privilege, Role, RoleAssignment } from '../../core/authz/types'
 
 // Server-backed data of the delegated-administration console. One place for the
-// query keys, so a write can invalidate exactly what it changed — including the
+// query keys, so a write can invalidate exactly what it changed - including the
 // caller's own effective privileges, which a grant may well have just widened.
 
 export const ROLES_KEY       = ['admin-roles']
@@ -73,7 +73,7 @@ export interface RolePayload {
 
 /**
  * A role update. Every field is optional and an absent one means "leave it
- * alone" server-side — which is what lets the editor send only what the operator
+ * alone" server-side - which is what lets the editor send only what the operator
  * actually changed, rather than echoing a translated label back into the row.
  * `privileges` must be absent for a system role: the server refuses the field on
  * one, even carrying an identical set.

@@ -21,8 +21,8 @@ export function Part1({ rows, columns, isLoading, isError, t, refetch, q, setQ, 
             rowActions={rowActions}
             onRowClick={a => go(a.id)}
             pageSize={25}
-            // Without this the table's own chrome — "Rows per page", its empty and
-            // error states — stays in English while the rest of the page is not.
+            // Without this the table's own chrome - "Rows per page", its empty and
+            // error states - stays in English while the rest of the page is not.
             t={t}
             emptyState={
               <EmptyState

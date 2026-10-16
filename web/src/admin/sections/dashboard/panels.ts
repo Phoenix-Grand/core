@@ -6,7 +6,7 @@ import { PRIV } from '../../../core/authz/types'
 import type { PanelDef } from '../../panels/types'
 
 /**
- * What each panel of the general dashboard IS — the half the server does not
+ * What each panel of the general dashboard IS - the half the server does not
  * send.
  *
  * Same contract as the security overview's own table: a panel the server returns
@@ -63,7 +63,7 @@ export const PANELS: PanelDef[] = [
     polarity: 'neutral',
     privilege: PRIV.USERS_READ,
     reportTab: 'users',
-    // The vocabulary the account list already uses — one name per role, on both
+    // The vocabulary the account list already uses - one name per role, on both
     // screens.
     legendKey: k => `admin.role_${k}`,
   },
@@ -162,7 +162,7 @@ export const PANELS: PanelDef[] = [
   },
 ]
 
-/** The default order — the order they are declared in. */
+/** The default order - the order they are declared in. */
 export const DEFAULT_ORDER = PANELS.map(p => p.id)
 
 const BY_ID = new Map(PANELS.map(p => [p.id, p]))

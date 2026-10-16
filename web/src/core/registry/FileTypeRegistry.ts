@@ -3,7 +3,7 @@
 // Principe : tout module (ou sous-module) qui manipule des fichiers DÉCLARE ici,
 // dans son register.ts, les MIME types et/ou extensions qu'il sait ouvrir. Le
 // module `files` (parcours, « ouvrir avec », StartPage…) s'appuie ensuite sur
-// ces déclarations pour FILTRER les fichiers pertinents — au lieu de listes de
+// ces déclarations pour FILTRER les fichiers pertinents - au lieu de listes de
 // MIME codées en dur et dupliquées dans chaque module.
 
 export interface FileTypeDeclaration {

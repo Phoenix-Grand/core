@@ -1,4 +1,4 @@
-<!-- HealthSection — converted from HealthSection.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- HealthSection - converted from HealthSection.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <Panel Class="contents">
   <Stack Direction="LeftToRight" Gap="0" Justify="Center" Visible="{Binding show_case_1}" Class="py-16">
     <Spinner/>

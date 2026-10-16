@@ -1,7 +1,7 @@
 //! First-run installation, the way WordPress and Nextcloud do it.
 //!
 //! A freshly installed package has no database and only the placeholder secrets
-//! the example configuration ships — the exact state `Settings::load()` refuses
+//! the example configuration ships - the exact state `Settings::load()` refuses
 //! to start on. Rather than leaving the administrator to edit
 //! `/etc/kubuno/config.toml` by hand and create the schema themselves, the
 //! process notices it is not installed yet and serves an installation wizard on
@@ -46,8 +46,8 @@ pub fn missing(s: &Settings) -> Vec<&'static str> {
     let db_by_url = s.database.url.as_deref().map(|u| !u.trim().is_empty()).unwrap_or(false);
     let db_by_fields = s.database.user.as_deref().map(|u| !u.trim().is_empty()).unwrap_or(false)
         && s.database.database.as_deref().map(|d| !d.trim().is_empty()).unwrap_or(false);
-    // SQLite needs neither a URL nor credentials — only a file, and its directory
-    // has a default — so an SQLite engine is configured as soon as it is chosen.
+    // SQLite needs neither a URL nor credentials - only a file, and its directory
+    // has a default - so an SQLite engine is configured as soon as it is chosen.
     let is_sqlite = matches!(
         kubuno_db::Backend::parse(&s.database.engine),
         Some(kubuno_db::Backend::Sqlite)
@@ -67,8 +67,8 @@ pub fn missing(s: &Settings) -> Vec<&'static str> {
 /// Does this boot have to run the installation wizard?
 ///
 /// An incomplete configuration is not enough. An instance whose database ALREADY
-/// holds an administrator is installed — whatever its configuration file looks
-/// like — and offering to install it again would take a working service off the
+/// holds an administrator is installed - whatever its configuration file looks
+/// like - and offering to install it again would take a working service off the
 /// air and invite someone to point it at another database. A placeholder secret
 /// on such an instance is a misconfiguration to shout about, not an invitation
 /// to start over.
@@ -83,7 +83,7 @@ pub async fn needs_setup(s: &Settings) -> bool {
     if already_installed(s).await {
         tracing::error!(
             manquant = ?missing,
-            "Configuration incomplète sur une instance QUI CONTIENT DÉJÀ DES DONNÉES — \
+            "Configuration incomplète sur une instance QUI CONTIENT DÉJÀ DES DONNÉES - \
              l'assistant d'installation n'est pas proposé. Corrigez ces valeurs dans \
              /etc/kubuno/config.toml (générez un secret avec : openssl rand -base64 48)"
         );
@@ -93,12 +93,12 @@ pub async fn needs_setup(s: &Settings) -> bool {
 }
 
 /// Does the configured database already carry a Kubuno instance with an
-/// administrator? `false` whenever we cannot tell — the caller only ever uses
+/// administrator? `false` whenever we cannot tell - the caller only ever uses
 /// this to hold the wizard back.
 async fn already_installed(s: &Settings) -> bool {
     // Connect with whichever engine is configured. An unreachable database, or a
     // `core.users` table that does not exist yet, both surface here as "cannot
-    // tell" — the count query errors and we fall back to `false`, which only
+    // tell" - the count query errors and we fall back to `false`, which only
     // ever holds the wizard back.
     let Ok(pool) = kubuno_db::connect(&s.database, crate::database::SCHEMA).await else {
         return false;
@@ -151,14 +151,14 @@ pub async fn run_wizard(settings: &Settings) -> Result<bool> {
         async move {
             tokio::select! {
                 _ = async { while rx.changed().await.is_ok() { if *rx.borrow() { break } } } =>
-                    tracing::info!("Installation terminée — démarrage de l'instance"),
+                    tracing::info!("Installation terminée - démarrage de l'instance"),
                 _ = stop_signal() => tracing::info!("Signal d'arrêt reçu pendant l'installation"),
             }
         }
     });
 
     // The browser that ran the wizard keeps its connection open, and a graceful
-    // shutdown waits for it — the real server would never get the port back. So
+    // shutdown waits for it - the real server would never get the port back. So
     // the wizard is given a moment to flush its last response, then the socket
     // is dropped whatever the browser is still holding.
     let deadline = {
@@ -181,7 +181,7 @@ pub async fn run_wizard(settings: &Settings) -> Result<bool> {
     Ok(installed.load(Ordering::SeqCst))
 }
 
-/// Ctrl-C or SIGTERM — the wizard has to answer them like any other server.
+/// Ctrl-C or SIGTERM - the wizard has to answer them like any other server.
 async fn stop_signal() {
     let ctrl_c = async {
         let _ = tokio::signal::ctrl_c().await;

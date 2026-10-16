@@ -1,5 +1,5 @@
 /**
- * `AppTileGrid` — the irreducible part of the `WaffleMenu` user control: the favourites card (with the
+ * `AppTileGrid` - the irreducible part of the `WaffleMenu` user control: the favourites card (with the
  * header the view gives it, `<AppTileGrid.Header>`) over every other app, three tiles to a row, and the
  * drag-and-drop edit of the favourites (reorder, add, remove). A designable custom control (WEB-VIEWS §10):
  * registered in the core's project registry (`kbview-controls.json`), placed and configured from the view.
@@ -70,7 +70,7 @@ function AppTileGridImpl({
    *
    * The scrolling element is the view's ScrollArea around the grid. A NATIVE listener in the CAPTURE
    * phase: the favourite tiles stop the propagation of their `dragover`, which would keep an ancestor's
-   * handler from firing above the card — at the top edge, exactly where it is needed. The speed is kept and
+   * handler from firing above the card - at the top edge, exactly where it is needed. The speed is kept and
    * replayed in an animation loop: `dragover` only fires on movement, and the list must keep scrolling
    * while the pointer rests against the edge.
    *
@@ -370,7 +370,7 @@ function AppTileGridImpl({
       </div>
 
       {/* The other apps (on the tint): inset by `--kb-waffle-inset`, the card's side margin plus its grid's
-          16px padding — what puts these tiles on the SAME columns, at the same width, as the card's. */}
+          16px padding - what puts these tiles on the SAME columns, at the same width, as the card's. */}
       <div
         className={`pb-4 rounded-b-[28px] transition-colors
           ${editing && allZoneOver && dragSrc === 'fav' ? 'bg-danger/5 ring-2 ring-inset ring-danger/30' : ''}`}

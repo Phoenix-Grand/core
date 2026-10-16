@@ -22,7 +22,7 @@ pub struct ChainLevel {
     /// Unit / group / account name. `None` for the factory default and the
     /// instance, which have no subject to name.
     pub scope_name: Option<String>,
-    /// Internal ordering weight — the higher, the more specific.
+    /// Internal ordering weight - the higher, the more specific.
     pub specificity: i32,
     pub value: Value,
     pub locked: bool,
@@ -31,7 +31,7 @@ pub struct ChainLevel {
 }
 
 impl ChainLevel {
-    /// True when this level *is* the target scope — the row an admin would
+    /// True when this level *is* the target scope - the row an admin would
     /// delete to go back to inheriting.
     fn is_own(&self, scope: &SettingScope) -> bool {
         self.scope_type == scope.kind.as_str() && self.scope_id == scope.id
@@ -94,14 +94,14 @@ impl Resolution {
 /// Two rules, in this order:
 ///
 /// 1. **A lock wins.** The most *general* locked level short-circuits every
-///    level below it — that is the whole point of locking, and it is why the
+///    level below it - that is the whole point of locking, and it is why the
 ///    search starts from the general end rather than the specific one.
 /// 2. Otherwise the most **specific** level wins: user, then group, then the
 ///    closest organisational unit, then the instance, then the factory default.
 fn winner(chain: &[ChainLevel]) -> Option<usize> {
     // Both passes are written without relying on the incoming order, so a chain
     // reordered by a caller cannot silently change the answer. Ties are settled
-    // by position — the query already ordered equal levels (several groups of
+    // by position - the query already ordered equal levels (several groups of
     // the same account) most-recently-set first.
     let mut best: Option<usize> = None;
     for (i, l) in chain.iter().enumerate() {
@@ -137,7 +137,7 @@ pub fn resolve(chain: Vec<ChainLevel>, scope: &SettingScope) -> Resolution {
         None => false,
     };
 
-    // What the scope falls back to once its own row is gone — computed on the
+    // What the scope falls back to once its own row is gone - computed on the
     // chain minus that row, never stored. This is the value "revert to
     // inherited" restores, and it keeps tracking the parent afterwards.
     let without_own: Vec<ChainLevel> = chain
@@ -169,7 +169,7 @@ fn own_specificity(chain: &[ChainLevel], scope: &SettingScope) -> i32 {
     }
     // No row of its own: fall back to the nominal weight of the kind. Org units
     // are the only ambiguous case (their weight depends on depth), and the
-    // target unit is always the deepest of its own chain — hence the maximum.
+    // target unit is always the deepest of its own chain - hence the maximum.
     match scope.kind {
         ScopeKind::Default => 0,
         ScopeKind::Instance => 100,
@@ -216,8 +216,8 @@ struct SubjectLevelRow {
 ///
 /// This is the portable reimplementation of the PostgreSQL-only
 /// `core.setting_chain` set-returning function (migration `000060`). It gathers
-/// the same levels — factory default, instance, the ancestor org units of the
-/// anchor unit, the relevant groups and the user — and applies the identical
+/// the same levels - factory default, instance, the ancestor org units of the
+/// anchor unit, the relevant groups and the user - and applies the identical
 /// ordering (specificity, then most-recently-set, then a stable id tie-break).
 /// The org-unit walk reuses the portable recursive CTE of
 /// [`crate::database::compat`], depth guard included, so a cyclic tree truncates
@@ -303,7 +303,7 @@ pub async fn load_chain(
 
     // Org-unit levels: every ancestor of the anchor that carries an override.
     // `depth` 0 is the unit itself (most specific), so specificity decreases as
-    // the walk climbs — 200 + (64 - min(depth, 64)).
+    // the walk climbs - 200 + (64 - min(depth, 64)).
     if let Some(anchor_id) = anchor {
         let sql = format!(
             "SELECT a.id, a.name, a.depth, v.value, v.locked, v.updated_at, v.updated_by \
@@ -517,7 +517,7 @@ mod tests {
         ];
         let scope = SettingScope::org_unit(Uuid::from_u128(UNIT_A1));
         let r = resolve(chain, &scope);
-        // What "revert to inherited" would restore — read from the parent, not
+        // What "revert to inherited" would restore - read from the parent, not
         // copied anywhere.
         assert_eq!(r.inherited_value, Some(json!(3)));
         assert_eq!(r.inherited_source.as_ref().map(|o| o.scope_type.as_str()), Some("org_unit"));

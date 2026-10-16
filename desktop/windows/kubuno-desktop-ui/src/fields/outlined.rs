@@ -1,8 +1,8 @@
-//! The Material outlined text field — the base every form field is built on.
+//! The Material outlined text field - the base every form field is built on.
 //!
 //! Ported from the web `@ui/OutlinedField` (`core/frontend/src/ui/OutlinedField.tsx`).
 //! The label starts inside the box, in the placeholder's place, and floats up
-//! onto the top border once the field is focused or holds a value — the border
+//! onto the top border once the field is focused or holds a value - the border
 //! opening a notch around it (the real fieldset/legend technique, so it reads on
 //! any background rather than a chip masking the line). Focus paints the border
 //! and the label in the form's primary colour. An optional leading icon sits
@@ -11,7 +11,7 @@
 //!
 //! Desktop is immediate-mode, so the resting↔floated move is a state, not a
 //! tween: the label is drawn where it belongs for the current state. Everything
-//! else — the metrics, the notch gap, the per-state colours — matches the web.
+//! else - the metrics, the notch gap, the per-state colours - matches the web.
 //!
 //! ## Headroom (the floated label stays inside `bounds`)
 //!
@@ -32,9 +32,9 @@
 //! `placeholder_text`, `read_only`, `multiline`, `max_length`,
 //! `character_casing` and the password properties are set the same way.
 //!
-//! On top of it this file keeps the editing state the replica does not model —
+//! On top of it this file keeps the editing state the replica does not model -
 //! a caret and an anchor (a directional selection, which Shift+arrows need),
-//! an undo stack, the pointer drag — and the layout of the last paint (row
+//! an undo stack, the pointer drag - and the layout of the last paint (row
 //! wrapping, glyph boundaries, scroll), which is what maps a click to a
 //! character. The behaviour is the browser's `<input>` / `<textarea>`:
 //!
@@ -73,7 +73,7 @@ use windows::Win32::Graphics::DirectWrite::IDWriteTextFormat;
 use crate::focus::{caret_visible, FocusState};
 use crate::widget::{Widget, WidgetState};
 
-/// The box height at rest — the web's `FIELD_H` (`OutlinedField.tsx:105`).
+/// The box height at rest - the web's `FIELD_H` (`OutlinedField.tsx:105`).
 pub const HEIGHT: f32 = 48.0;
 /// The `large` variant, for one-question-per-screen layouts.
 pub const HEIGHT_LARGE: f32 = 56.0;
@@ -86,7 +86,7 @@ pub const MULTILINE_MIN_HEIGHT_LARGE: f32 = 96.0;
 /// so its line box reaches 8 px above the border.
 pub const HEADROOM: f32 = 8.0;
 
-/// The family-local metric table — every number with its web source.
+/// The family-local metric table - every number with its web source.
 mod m {
     /// `padX = 12` (`:100`): the text's inline inset.
     pub const PAD_X: f32 = 12.0;
@@ -141,7 +141,7 @@ mod m {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Pure text helpers — character indices throughout (Unicode scalars)
+// Pure text helpers - character indices throughout (Unicode scalars)
 // ─────────────────────────────────────────────────────────────────────────────
 
 fn char_len(s: &str) -> usize {
@@ -197,7 +197,7 @@ pub fn prev_word(text: &str, i: usize) -> usize {
 }
 
 /// Where Ctrl+Right lands from `i`: past the current run, then past the blanks
-/// after it — the start of the next word, as Windows edit controls do.
+/// after it - the start of the next word, as Windows edit controls do.
 pub fn next_word(text: &str, i: usize) -> usize {
     let chars: Vec<char> = text.chars().collect();
     let n = chars.len();
@@ -214,7 +214,7 @@ pub fn next_word(text: &str, i: usize) -> usize {
     k
 }
 
-/// The run of same-class characters around `i` — what a double-click selects.
+/// The run of same-class characters around `i` - what a double-click selects.
 /// At the end of the text it is the run before the caret.
 pub fn word_range(text: &str, i: usize) -> (usize, usize) {
     let chars: Vec<char> = text.chars().collect();
@@ -240,8 +240,8 @@ pub fn word_range(text: &str, i: usize) -> (usize, usize) {
 /// Splits `text` into visual rows no wider than `width`, as character ranges
 /// `(start, end)` (the `\n` itself belongs to no row).
 ///
-/// Hard breaks always split; a row too long breaks after its last blank, or —
-/// a single word wider than the row — between characters (`overflow-wrap:
+/// Hard breaks always split; a row too long breaks after its last blank, or -
+/// a single word wider than the row - between characters (`overflow-wrap:
 /// break-word`, what a textarea does). Blanks never force a break: they hang
 /// past the edge, as in the browser. An empty text, and an empty line, are one
 /// empty row.
@@ -309,7 +309,7 @@ fn row_of(rows: &[(usize, usize)], i: usize) -> usize {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Clipboard seam — the host's in the app, a fake in the tests
+// Clipboard seam - the host's in the app, a fake in the tests
 // ─────────────────────────────────────────────────────────────────────────────
 
 /// Where Ctrl+C/X/V go. [`OutlinedField::handle_frame`] uses the host's
@@ -334,13 +334,13 @@ impl Clipboard for HostClipboard {
 /// What a key did to the field.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum KeyOutcome {
-    /// Not a key the field acts on — it stays for the next consumer.
+    /// Not a key the field acts on - it stays for the next consumer.
     Ignored,
     /// The caret or the selection moved (or a copy happened).
     Moved,
     /// The text changed.
     Edited,
-    /// Enter on a single-line field — the form's submit.
+    /// Enter on a single-line field - the form's submit.
     Submit,
 }
 
@@ -432,7 +432,7 @@ impl View {
 #[derive(Default)]
 pub struct OutlinedField {
     inner: TextBox,
-    /// The floating label — the field's resting hint and its floated title.
+    /// The floating label - the field's resting hint and its floated title.
     pub label: String,
     /// A glyph outside the box on its left, by name from the icon set.
     pub leading_icon: Option<&'static str>,
@@ -497,7 +497,7 @@ impl OutlinedField {
         self
     }
 
-    /// The room reserved above the box for the floated label — [`HEADROOM`].
+    /// The room reserved above the box for the floated label - [`HEADROOM`].
     /// A layout that stacks fields adds it to the box height; [`Widget::measure`]
     /// already does.
     pub fn headroom() -> f32 {
@@ -519,7 +519,7 @@ impl OutlinedField {
         HEADROOM + self.box_height()
     }
 
-    /// The label floats up when the field is focused or holds a value — a filled
+    /// The label floats up when the field is focused or holds a value - a filled
     /// field keeps its label up even unfocused (`floated`, `:88`).
     pub fn is_floated(&self, state: WidgetState) -> bool {
         state.focused || !self.text.is_empty()
@@ -594,7 +594,7 @@ impl OutlinedField {
     }
 
     /// Replaces the value programmatically (no undo entry, `Modified` cleared),
-    /// caret at the end — what assigning `value` does on the web.
+    /// caret at the end - what assigning `value` does on the web.
     pub fn set_value(&mut self, value: &str) {
         self.inner.set_text(value);
         let n = char_len(&self.text);
@@ -675,7 +675,7 @@ impl OutlinedField {
         self.sync_selection();
     }
 
-    /// Replaces the selection with `s` — the one edit primitive. Typing runs
+    /// Replaces the selection with `s` - the one edit primitive. Typing runs
     /// coalesce into one undo step. Returns whether the text changed.
     fn replace_selection(&mut self, s: &str, kind: EditKind) -> bool {
         if self.read_only {
@@ -759,8 +759,8 @@ impl OutlinedField {
         }
     }
 
-    /// The visual rows and the x of each caret stop from the last paint, or —
-    /// before any paint, or when the text changed since — the hard lines with
+    /// The visual rows and the x of each caret stop from the last paint, or -
+    /// before any paint, or when the text changed since - the hard lines with
     /// one unit per character (enough for the key logic to stay correct).
     fn rows_for_keys(&self) -> Vec<Row> {
         let display = self.display();
@@ -775,7 +775,7 @@ impl OutlinedField {
             .collect()
     }
 
-    /// Whether the field acts on `vk` with `mods` — decided before the key is
+    /// Whether the field acts on `vk` with `mods` - decided before the key is
     /// taken from the host queue, so an ignored key stays for the page.
     pub fn handles_key(&self, key: u16, mods: Modifiers) -> bool {
         let plain_or_shift = mods.matches(Modifiers::NONE) || mods.matches(Modifiers::SHIFT);
@@ -1242,7 +1242,7 @@ impl Widget for OutlinedField {
     }
 
     /// The width is only a usable minimum (a field stretches to its container,
-    /// `flex: 1`); the height is the headroom plus the box — the TRUE height of
+    /// `flex: 1`); the height is the headroom plus the box - the TRUE height of
     /// everything the field paints.
     fn measure(&self, _canvas: &dyn Canvas) -> Size {
         let icon = if self.leading_icon.is_some() { m::ICON_COL + m::ICON_GAP } else { 0.0 };
@@ -1285,7 +1285,7 @@ impl Widget for OutlinedField {
             self.paint_value(c, bx, &display, caret_owner, &ink);
         } else if caret_owner {
             // The empty field still shows its caret (and, focused, the web's
-            // `placeholder` — shown only while floated, `:227`).
+            // `placeholder` - shown only while floated, `:227`).
             if !self.placeholder_text.is_empty() {
                 let row = if self.multiline {
                     Rect::new(area.left, area.top, area.right, area.top + self.line_height())

@@ -1,6 +1,6 @@
 [package]
 name         = "kubuno-mobile-signin"
-description  = "The Kubuno mobile sign-in, shared by every app: the server / credentials / two-step screens (.kbview) and the flow that drives them over the account layer (kubuno-mobile-account) — server check, native sign-in, TOTP, then a session the app takes over."
+description  = "The Kubuno mobile sign-in, shared by every app: the server / credentials / two-step screens (.kbview) and the flow that drives them over the account layer (kubuno-mobile-account) - server check, native sign-in, TOTP, then a session the app takes over."
 version.workspace    = true
 edition.workspace    = true
 license.workspace    = true

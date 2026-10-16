@@ -1,4 +1,4 @@
-// Numeric parity probe — the REFERENCE half.
+// Numeric parity probe - the REFERENCE half.
 //
 // Drives the real `System.Windows.Forms` range controls through every case in
 // `..\range-cases.txt` and writes `..\range-winforms.json`. The port replays the
@@ -8,7 +8,7 @@
 // Three deliberate choices make the comparison meaningful:
 //
 //  * **Real handles.** Every control is parented to a Form and its handle is
-//    forced, so the native common control is in play — its scroll info, its
+//    forced, so the native common control is in play - its scroll info, its
 //    clamping, its tick marks. A model-only probe would be comparing two models.
 //  * **Real scrolling.** A scroll bar's page/line arithmetic is not reachable
 //    through any public setter: it lives in `ScrollBar.WmReflectScroll`, which
@@ -71,7 +71,7 @@ internal static class Program
         // An exception raised inside a control's `WndProc` does NOT come back
         // out of the `SendMessage` that provoked it: `Control.WndProc` hands it
         // to `Application.OnThreadException`, which puts up a modal dialog and
-        // waits — hanging an unattended probe forever. `ThrowException` makes it
+        // waits - hanging an unattended probe forever. `ThrowException` makes it
         // propagate instead, so the `try`/`catch` around each step sees it and
         // records an honest "err".
         //
@@ -287,7 +287,7 @@ internal static class Program
         _ => [],
     };
 
-    /// Toolkit-only observations. NOT compared — the port exposes no equivalent —
+    /// Toolkit-only observations. NOT compared - the port exposes no equivalent -
     /// but printed by the comparer, because they explain why a number is what it
     /// is.
     private static List<KeyValue> Extra(Control control)
@@ -333,7 +333,7 @@ internal static class Program
     /// Canonical decimal rendering, the twin of the Rust probe's `num`: the scale
     /// is normalised away (a `decimal` remembers that `3,50` has two places, an
     /// `f64` cannot) so `3.5` never differs from `3.50` for a spelling reason.
-    /// Everything else — including the digits an f64 cannot represent — is left
+    /// Everything else - including the digits an f64 cannot represent - is left
     /// exactly as the type produced it.
     private static string Num(decimal v) => (v / 1.000000000000000000000000000000000m).ToString(CultureInfo.InvariantCulture);
 }
@@ -353,8 +353,8 @@ internal sealed record CaseResult(
 
 internal static class Cases
 {
-    /// Parses the shared case file. The grammar is intentionally tiny — `id |
-    /// kind | step; step` — so the Rust probe's parser can be its twin.
+    /// Parses the shared case file. The grammar is intentionally tiny - `id |
+    /// kind | step; step` - so the Rust probe's parser can be its twin.
     public static List<Case> Load(string path)
     {
         var cases = new List<Case>();
@@ -389,7 +389,7 @@ internal static class Cases
 }
 
 /// A minimal JSON renderer, hand-rolled rather than `System.Text.Json` so the
-/// byte layout matches the Rust probe's writer exactly — two files that differ
+/// byte layout matches the Rust probe's writer exactly - two files that differ
 /// only in whitespace are much harder to read side by side.
 internal static class Json
 {

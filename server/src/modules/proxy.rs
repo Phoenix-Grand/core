@@ -75,7 +75,7 @@ pub async fn proxy_to_module(
 
     // ── Strip client-supplied identity headers ───────────────────────────────
     // Only an authenticated internal caller (a module presenting a valid secret,
-    // `caller` above) may carry a pre-set X-Kubuno-User-* — that is how one
+    // `caller` above) may carry a pre-set X-Kubuno-User-* - that is how one
     // module acts on a user's behalf. For everyone else these headers are the
     // core's to set from the verified token, and the signed X-Kubuno-Auth is the
     // core's alone to mint: an incoming copy is a forgery and is dropped here,
@@ -146,8 +146,8 @@ pub async fn proxy_to_module(
     }
 
     // Resolve the caller for the identity headers. In order:
-    //  1. `Authorization: Bearer` — a session JWT or a personal API token;
-    //  2. a signed ticket `?kt=` — what a browser presents where it cannot set a
+    //  1. `Authorization: Bearer` - a session JWT or a personal API token;
+    //  2. a signed ticket `?kt=` - what a browser presents where it cannot set a
     //     header (`<img>`, `<video>` and its Range requests, a download
     //     navigation, `EventSource`). Bound to THIS module, path and method: a
     //     ticket minted for drive is refused here when the path is photos';
@@ -217,7 +217,7 @@ pub async fn proxy_to_module(
 
             // Attendance. Counted HERE and nowhere else: this is the one line of
             // the whole system where an account and an application are known at
-            // the same time, and it costs a hash-map insert — the response is
+            // the same time, and it costs a hash-map insert - the response is
             // never made to wait for a measurement (see `modules::usage`).
             //
             // Deliberately NOT counted on the module→module branch above: a call
@@ -357,8 +357,8 @@ pub async fn proxy_to_module(
 /// core, which authenticates the CALLER (derived or master secret), re-injects
 /// the TARGET's secret, and relays to `{target}/ipc/<rest>`.
 ///
-/// The relay is BOUNDED to the target's `/ipc/` surface — the core prepends
-/// `/ipc/` — so a module can reach neither the user routes nor `/internal/*` of
+/// The relay is BOUNDED to the target's `/ipc/` surface - the core prepends
+/// `/ipc/` - so a module can reach neither the user routes nor `/internal/*` of
 /// another module through it. It works identically whether secrets are derived
 /// or shared: the core presents whatever value the target expects.
 ///
@@ -399,7 +399,7 @@ pub async fn ipc_relay(
     // Re-inject the TARGET's secret (the value it compares against its own), and
     // re-sign the identity token for the target when the caller set an
     // X-Kubuno-User-Id. The caller is authenticated (InternalRequest), so it is
-    // trusted for the identity it presents — the same trust the user→module
+    // trusted for the identity it presents - the same trust the user→module
     // proxy grants an authenticated internal caller. Drive's /ipc routes take the
     // user id from the path/body, so they need none of this; it is here so a
     // module that DOES verify X-Kubuno-Auth works through the relay too.
@@ -433,7 +433,7 @@ pub async fn ipc_relay(
 
     let mut forwarded = req.headers().clone();
     // Hop-by-hop headers, plus a user Authorization (the relay is internal), and
-    // any identity token the caller supplied — it must never present its own.
+    // any identity token the caller supplied - it must never present its own.
     for h in &["host", "connection", "transfer-encoding", "te", "upgrade",
                "keep-alive", "content-length", "authorization"] {
         forwarded.remove(*h);
@@ -595,7 +595,7 @@ pub async fn proxy_ws_to_module(
             user_headers.push(("x-kubuno-user-id".to_owned(), user.id.to_string()));
             user_headers.push(("x-kubuno-user-role".to_owned(), role.clone()));
             user_headers.push(("x-kubuno-user-email".to_owned(), user.email.clone()));
-            // Signed, audience-bound identity — same trust boundary as the HTTP
+            // Signed, audience-bound identity - same trust boundary as the HTTP
             // path (see kubuno-modauth). A WebSocket forged directly against the
             // module's loopback port cannot produce this without the secret.
             let mu = kubuno_modauth::ModuleUser {
@@ -732,7 +732,7 @@ fn tung_to_axum(msg: tungstenite::Message) -> axum::extract::ws::Message {
 ///
 /// Shared by the HTTP and the WebSocket path so the two cannot drift: a refusal
 /// or a role rule added here applies to both. Returns `(None, None)` for anything
-/// that does not resolve — the proxy then forwards no identity headers at all,
+/// that does not resolve - the proxy then forwards no identity headers at all,
 /// which is what an unauthenticated call should look like to a module.
 ///
 /// The grant is `Some` only for an API token; a session yields `(user, None)` and
@@ -751,8 +751,8 @@ async fn resolve_caller(
         return (user, None);
     }
 
-    // API token. Every refusal — revoked, expired, owner deactivated, legacy past
-    // its grace window — is decided by `resolve_grant`, the one path all three
+    // API token. Every refusal - revoked, expired, owner deactivated, legacy past
+    // its grace window - is decided by `resolve_grant`, the one path all three
     // entry points share.
     match token_scope::resolve_grant(&state.db, token).await {
         Ok(grant) => {
@@ -784,8 +784,8 @@ async fn load_active_user(state: &AppState, id: uuid::Uuid) -> Option<User> {
 ///
 /// Informational: the core has already narrowed the role above, so a module that
 /// ignores these headers is not less safe than before. A module that reads them
-/// can be stricter — refuse a programmatic call on a route meant for a person,
-/// say — without the core having to know that route exists.
+/// can be stricter - refuse a programmatic call on a route meant for a person,
+/// say - without the core having to know that route exists.
 fn annotate_origin(headers: &mut axum::http::HeaderMap, grant: Option<&TokenGrant>) {
     let origin = if grant.is_some() { "api_token" } else { "session" };
     if let Ok(v) = HeaderValue::from_str(origin) {

@@ -6,7 +6,7 @@ import { PRIV, type CanFn } from '../core/authz/types'
 
 // ── Admin navigation tree ────────────────────────────────────────────────────
 // Collapsible sections up to 3 levels deep. A node WITH children is an
-// expand-only group (not navigable — clicking toggles it). A leaf routes to
+// expand-only group (not navigable - clicking toggles it). A leaf routes to
 // /admin/<id>. `soon` leaves render a placeholder. `secondary` top-level
 // sections are hidden behind "Show more". Existing tab ids are preserved so old
 // links keep working.
@@ -22,7 +22,7 @@ import { PRIV, type CanFn } from '../core/authz/types'
 // protects it (sécurité), what it produced (rapports), what the instance itself
 // is (instance), and what runs by itself (automatisation). Capacity and the
 // machinery underneath sit last, behind the fold, because they are consulted
-// once a quarter — and a menu whose fifteen branches are all on screen at once
+// once a quarter - and a menu whose fifteen branches are all on screen at once
 // is a wall, not a menu.
 
 /**
@@ -33,7 +33,7 @@ import { PRIV, type CanFn } from '../core/authz/types'
  * The console addresses a place by path: `/admin/users/<id>/security`, but also
  * `/admin/resources/buildings`. The second segment is a RECORD in the first and
  * a PANE in the second, and nothing in the strings themselves says which. The
- * tempting shortcut — "it looks like a UUID, so it is a record" — is a guess
+ * tempting shortcut - "it looks like a UUID, so it is a record" - is a guess
  * about the shape of an identifier, and it holds exactly until the first
  * identifier that is not a UUID (a country code, a module id, a slug), then
  * misreads an address an operator pasted, silently.
@@ -46,17 +46,17 @@ import { PRIV, type CanFn } from '../core/authz/types'
  * ── Rules a declaration must respect ─────────────────────────────────────────
  *
  *  • `panes` is a CLOSED list of stable, untranslated ids (`security`,
- *    `buildings`) — never localised labels: an address may not change shape
+ *    `buildings`) - never localised labels: an address may not change shape
  *    with the interface language.
  *  • A record id must never collide with one of the section's pane ids, or
  *    `/admin/<section>/<that-id>` would read as the pane.
  *  • A section that declares nothing keeps its parameters in the query string.
- *    That is a graceful degradation, never a misreading — which is why adding a
+ *    That is a graceful degradation, never a misreading - which is why adding a
  *    pane and forgetting to list it here costs a prettier URL, not correctness.
  */
 export interface AdminUrlShape {
   /**
-   * Query parameter naming the ONE record the section opens — it becomes the
+   * Query parameter naming the ONE record the section opens - it becomes the
    * segment right after the section id. A section whose parameters are all
    * filters (`q`, `status`…) declares none.
    */
@@ -68,18 +68,18 @@ export interface AdminUrlShape {
    */
   panes?:  readonly string[]
   /**
-   * The panes of THIS section are not knowable at build time — they belong to
+   * The panes of THIS section are not knowable at build time - they belong to
    * the record, and the record is discovered at runtime.
    *
    * One section needs this: the installed modules. Each module splits its
    * administration into pages it declares itself (`[[setting_groups]]` in its
-   * manifest), so the core cannot list them here without naming modules — the
+   * manifest), so the core cannot list them here without naming modules - the
    * one thing it never does.
    *
    * Why accepting an unlisted pane is SAFE here, and only here: the flag is
    * legal solely on a section that also declares `entity`, and it is honoured
    * ONLY in third position, `/admin/<section>/<record>/<pane>`. At that depth
-   * there is nothing left to disambiguate — the record has already claimed the
+   * there is nothing left to disambiguate - the record has already claimed the
    * second segment, and a third segment can be nothing but one of its panes.
    * The ambiguity this whole file exists to prevent ("is this segment a record
    * or a pane?") simply cannot arise. The second segment keeps being read
@@ -88,7 +88,7 @@ export interface AdminUrlShape {
    * What is still declared, and what is not: the SHAPE stays declared here (a
    * record, then its panes); only the VOCABULARY of the panes is deferred to
    * the record. The section is therefore responsible for what an unknown pane
-   * means — `ModuleAdminPage` falls back to the module's first group rather
+   * means - `ModuleAdminPage` falls back to the module's first group rather
    * than painting an empty page for a bookmark that outlived a group.
    */
   dynamicPanes?: boolean
@@ -103,7 +103,7 @@ export interface AdminNavItem {
   secondary?: boolean      // top-level: behind "Show more"
   children?:  AdminNavItem[]
   /**
-   * Privilege required to *see* this leaf — the read-level key of whatever the
+   * Privilege required to *see* this leaf - the read-level key of whatever the
    * section calls. A leaf without one is visible to any administrator (the
    * landing page). Groups carry none: a group is visible exactly when at least
    * one of its children is.
@@ -130,15 +130,15 @@ export const ADMIN_NAV: AdminNavItem[] = [
     // Buildings, bookable resources and the equipment attached to them. Under
     // Directory rather than under a module: it describes the organisation, like
     // accounts and units do, and several modules read it while none owns it.
-    // The key is a literal rather than a `PRIV.*` entry so that this file — a
-    // declarative list — keeps its single import; the constant lives with the
+    // The key is a literal rather than a `PRIV.*` entry so that this file - a
+    // declarative list - keeps its single import; the constant lives with the
     // section that enforces it (`sections/resources/privileges.ts`).
     // Four screens, no record of its own: the pane IS the second segment
     // (`/admin/resources/buildings`). Kept in step with `ResourcePane`.
     { id: 'resources',          labelKey: 'admin.nav_resources',                                    priv: 'core.resources.read',
       url: { panes: ['overview', 'buildings', 'resources', 'features'] } },
     // The page is made ENTIRELY of scoped settings, so reading it needs
-    // `settings.read` — not `users.read`, which would have offered the entry to
+    // `settings.read` - not `users.read`, which would have offered the entry to
     // a delegated account the settings route then answers 403 to.
     { id: 'directory-settings', labelKey: 'admin.nav_directory_settings',                           priv: PRIV.SETTINGS_READ },
   ] },
@@ -147,15 +147,15 @@ export const ADMIN_NAV: AdminNavItem[] = [
     // account"), so it stays in the query string.
     { id: 'device-sessions', labelKey: 'admin.nav_sessions',  priv: PRIV.SESSIONS_READ,
       url: { entity: 'device' } },
-    // Where the live sessions come from — addresses and countries. Gated on
+    // Where the live sessions come from - addresses and countries. Gated on
     // the session key, not the settings one: it is a session listing.
     { id: 'networks',        labelKey: 'admin.nav_networks',  priv: PRIV.SESSIONS_READ },
   ] },
   { id: 'apps', labelKey: 'admin.nav_apps', Icon: LayoutGrid, children: [
     // The one section whose children are DISCOVERED, not declared: every
     // installed module is a row under it, and clicking one opens that module's
-    // administration page. They cannot be listed here — the core learns which
-    // modules exist from the instance, never from a hard-coded name — so the
+    // administration page. They cannot be listed here - the core learns which
+    // modules exist from the instance, never from a hard-coded name - so the
     // menu tree is grafted at render time (`AdminNavTree`) while this file keeps
     // declaring the only thing that is fixed: the SHAPE of the address.
     //
@@ -166,7 +166,7 @@ export const ADMIN_NAV: AdminNavItem[] = [
     // `dynamicPanes`: a module that splits its panel into pages declares them in
     // its own manifest, so the pane vocabulary belongs to the record, not here
     // (`/admin/modules/mail/authentication`). Safe because the pane can only be
-    // the THIRD segment — see `AdminUrlShape.dynamicPanes`.
+    // the THIRD segment - see `AdminUrlShape.dynamicPanes`.
     { id: 'modules',         labelKey: 'admin.nav_installed_modules',                priv: PRIV.MODULES_READ,
       url: { entity: 'module', dynamicPanes: true } },
     { id: 'marketplace',     labelKey: 'admin.nav_marketplace',                      priv: PRIV.MARKETPLACE_MANAGE,
@@ -176,7 +176,7 @@ export const ADMIN_NAV: AdminNavItem[] = [
   // Voice search lives here rather than under Applications because it is a CORE
   // feature: the `stt` process is `internal` infrastructure (a Vosk engine with
   // no frontend of its own), never a module a user installs or removes. Naming
-  // the entry after the feature — not after the `speech-to-text` module id —
+  // the entry after the feature - not after the `speech-to-text` module id -
   // is what keeps this file free of any module's name, the rule the modules
   // submenu is built to honour.
   { id: 'core-features', labelKey: 'admin.nav_core_features', Icon: Puzzle, children: [
@@ -204,14 +204,14 @@ export const ADMIN_NAV: AdminNavItem[] = [
     // own page rather than a group folded into a broader one: "how long before
     // people are signed out" is a question operators arrive with.
     { id: 'session-policy', labelKey: 'admin.nav_session_policy',          priv: PRIV.SETTINGS_READ },
-    // Programmatic access — what a credential that is not a browser may do.
+    // Programmatic access - what a credential that is not a browser may do.
     // Gated on the settings key, not the audit one: the page edits policy.
     { id: 'access-data', labelKey: 'admin.nav_access_data',                priv: PRIV.SETTINGS_READ },
     // Rate limits and flood protection: what keeps the instance answering.
     { id: 'service-protection', labelKey: 'admin.nav_service_protection',  priv: PRIV.SETTINGS_READ },
     // The overview, above the reports it summarises. Every panel it draws is a
-    // count over what the core itself records — the audit trail, the alert
-    // queue, the rule log, the device inventory — and each one links back to the
+    // count over what the core itself records - the audit trail, the alert
+    // queue, the rule log, the device inventory - and each one links back to the
     // report that owns those records. Gated on the audit key, which is the one
     // an operator trusted with "read what happened here" already holds.
     { id: 'security-center', labelKey: 'admin.nav_security_center', children: [
@@ -219,12 +219,12 @@ export const ADMIN_NAV: AdminNavItem[] = [
     ] },
   ] },
   { id: 'reporting', labelKey: 'admin.nav_reporting', Icon: BarChart3, children: [
-    // The printable documents behind the dashboard panels — one panel, one
+    // The printable documents behind the dashboard panels - one panel, one
     // window, every figure, in a form that can be handed to somebody or filed.
     // Its record is the PANEL (`/admin/reports/storage`); the window and the
     // dashboard the id came from identify no place and stay in the query
     // string. No `priv`: a report narrows itself to what its own endpoint
-    // serves the caller — every panel is gated at instance scope there — so an
+    // serves the caller - every panel is gated at instance scope there - so an
     // administrator who may read one report and not another sees the catalogue
     // and is told, per document, which ones are withheld.
     { id: 'reports',   labelKey: 'admin.nav_reports',   url: { entity: 'panel' } },
@@ -234,14 +234,14 @@ export const ADMIN_NAV: AdminNavItem[] = [
   // What this instance IS. Named after the thing being administered rather than
   // after a subscription: the reference this console imitates calls it
   // "Account" because it means *your account with the vendor*, and a
-  // self-hosted product has no vendor and no account — it has an instance.
+  // self-hosted product has no vendor and no account - it has an instance.
   //
   // The section id stays `account` so that every link minted while it carried
   // that name still resolves; only the label and the icon are what people read.
   { id: 'account', labelKey: 'admin.nav_instance', Icon: Building2, children: [
     { id: 'settings',       labelKey: 'admin.nav_instance_profile',              priv: PRIV.SETTINGS_READ },
     // Right under the identity, because it answers the same question those
-    // fields do — where this organisation lives. The language and the time zone
+    // fields do - where this organisation lives. The language and the time zone
     // are on the page above; the days off are too big a referential to be a
     // field, so they are the leaf next to it. The key is a literal so that this
     // declarative list keeps its single import.
@@ -263,7 +263,7 @@ export const ADMIN_NAV: AdminNavItem[] = [
     // la fiche porte le suivi compte par compte.
     { id: 'data-migration', labelKey: 'admin.nav_data_migration',               priv: 'core.data_migration.read',
       url: { entity: 'campaign' } },
-    // Faire SORTIR les données — le miroir de la migration juste au-dessus.
+    // Faire SORTIR les données - le miroir de la migration juste au-dessus.
     // Clé littérale, comme les autres sections qui portent leur propre paire de
     // privilèges (cf. `sections/data-export/privileges.ts`) : `core.audit.read`
     // ne convient pas, la page nomme chaque compte couvert par une archive et
@@ -277,20 +277,20 @@ export const ADMIN_NAV: AdminNavItem[] = [
   // because "what did the engine actually do" is a question an operator arrives
   // with, not one they reach through the inventory.
   { id: 'automation', labelKey: 'admin.nav_automation', Icon: Workflow, children: [
-    // The rule editor's panes — kept in step with `Pane` in `rules/RuleEditor`.
+    // The rule editor's panes - kept in step with `Pane` in `rules/RuleEditor`.
     { id: 'rules',     labelKey: 'admin.nav_rules',     priv: PRIV.RULES_READ,
       url: { entity: 'rule', panes: ['basics', 'conditions', 'actions', 'scope', 'mode', 'impact', 'history'] } },
     { id: 'rules-log', labelKey: 'admin.nav_rules_log', priv: PRIV.RULES_READ,
       url: { entity: 'rule' } },
     // Data protection. Next to the rules rather than under Security: a
-    // detector does nothing on its own — it is the vocabulary a rule is written
+    // detector does nothing on its own - it is the vocabulary a rule is written
     // in, and somebody tuning a threshold is somebody editing a rule.
     { id: 'detectors', labelKey: 'admin.nav_detectors', priv: PRIV.RULES_READ,
       url: { entity: 'detector' } },
   ] },
   // Filed under Facturation because that is where an operator looks for it, and
   // deliberately NOT a billing page: the software is AGPL-3.0-or-later and is
-  // not sold — no seat, no plan, no licence to enforce. What the page shows is
+  // not sold - no seat, no plan, no licence to enforce. What the page shows is
   // the licence itself, which installation this is, and whether a support
   // contract exists (see `sections/subscription/SubscriptionSection.tsx`).
   { id: 'billing', labelKey: 'admin.nav_billing', Icon: CreditCard, secondary: true, children: [
@@ -301,8 +301,8 @@ export const ADMIN_NAV: AdminNavItem[] = [
   // changing a quota or the default policy is still gated on the account and
   // settings keys, inside the page.
   { id: 'storage', labelKey: 'admin.nav_storage', Icon: Cloud,    secondary: true, priv: PRIV.STORAGE_READ },
-  // What runs the instance rather than what it serves. One leaf today — the
-  // background worker — and the natural home of the operational policies this
+  // What runs the instance rather than what it serves. One leaf today - the
+  // background worker - and the natural home of the operational policies this
   // product still owes its operators (a scheduled backup, first of all).
   { id: 'system', labelKey: 'admin.nav_system', Icon: Server, secondary: true, children: [
     { id: 'background-jobs', labelKey: 'admin.nav_background_jobs', priv: PRIV.SETTINGS_READ },
@@ -344,7 +344,7 @@ export const firstLeafId = (id: string): string => {
  * Prunes the tree down to what `can` allows.
  *
  * A leaf survives when its `priv` is held (or it declares none); a group
- * survives only when at least one descendant did — an empty group is a heading
+ * survives only when at least one descendant did - an empty group is a heading
  * pointing at nothing. Returns fresh nodes, so `firstLeafOf` on a filtered group
  * lands on a leaf the caller may actually open.
  */
@@ -362,7 +362,7 @@ export function filterNav(items: AdminNavItem[], can: CanFn): AdminNavItem[] {
 }
 
 /**
- * May the caller open this tab? Unknown ids are refused — resolving a tab that
+ * May the caller open this tab? Unknown ids are refused - resolving a tab that
  * is not in the tree would bypass the filter entirely.
  */
 export function canSeeTab(id: string, can: CanFn): boolean {

@@ -1,4 +1,4 @@
-<!-- ActivityTab — converted from ActivityTab.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- ActivityTab - converted from ActivityTab.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="ActivityTabProps">
   <Card Title="{Res admin.ud_act_title}" IconSize="16" Icon="History" Subtitle="{Binding subtitle}" Flush="true">
     <!-- TODO(views-migrate): <DataTable> t, columns, rowKey, onRetry, defaultSort, pageSizeOptions, configurableColumns, minTableWidth, emptyState: no .kbview property -->

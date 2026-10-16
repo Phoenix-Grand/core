@@ -7,14 +7,14 @@
 //! rather than to configuration, and would put a pattern's compile cost on the
 //! path of the user whose message is being checked. The compiled set is
 //! therefore built once and replaced atomically, exactly like
-//! [`super::super::index`] does for rules — and reloaded through the **same**
+//! [`super::super::index`] does for rules - and reloaded through the **same**
 //! `LISTEN/NOTIFY` channel, so there is one refresh mechanism on the instance
 //! rather than two that can disagree about which is stale.
 //!
 //! ## A detector that will not compile does not stop the others
 //!
 //! A build failure is logged and that detector is left out of the set. The
-//! alternative — refusing to load anything — means one bad pattern disarms every
+//! alternative - refusing to load anything - means one bad pattern disarms every
 //! rule on the instance, which is the failure mode a data-protection control can
 //! least afford. Validation at write time is what keeps this branch rare; it is
 //! not what keeps it impossible, because a `regex` upgrade could in principle
@@ -184,7 +184,7 @@ pub async fn get(db: &DbPool, id: Uuid) -> Result<Detector, AppError> {
 
 pub async fn key_exists(db: &DbPool, key: &str, except: Option<Uuid>) -> Result<bool, AppError> {
     // Built dynamically so the "ignore this id" clause is present only when there
-    // is an id to ignore — no `$2::uuid IS NULL` placeholder trick. The probe
+    // is an id to ignore - no `$2::uuid IS NULL` placeholder trick. The probe
     // selects a constant cast to a single decodable width.
     let mut qb = DbQueryBuilder::new(
         db.backend(),
@@ -364,7 +364,7 @@ struct NameRow {
 /// Asked before a deletion, so the console can say "three rules use this" rather
 /// than leaving an operator to find out from a rule that quietly stopped
 /// blocking. The condition tree is JSONB, so the question is a containment test
-/// rather than a foreign key — a detector leaf can sit at any depth.
+/// rather than a foreign key - a detector leaf can sit at any depth.
 pub async fn rules_using(db: &DbPool, key: &str) -> Result<Vec<String>, AppError> {
     // The `%…%` pattern is built in Rust and bound. `CAST(conditions AS TEXT)`
     // reads the JSONB tree as text on PostgreSQL; the containment `LIKE` is a

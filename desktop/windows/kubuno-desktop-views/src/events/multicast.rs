@@ -14,7 +14,7 @@
 //!   dropping the state its closure talks to).
 //! - **Re-entrancy.** A handler may raise the same event again. A handler that
 //!   is already running is skipped in the nested raise (with a
-//!   `tracing::warn!`) rather than panicking — which is also what ends a
+//!   `tracing::warn!`) rather than panicking - which is also what ends a
 //!   ping-pong between two events. The nesting of raises on a thread (all
 //!   events together) is capped at [`MAX_RAISE_DEPTH`], which catches longer
 //!   cascades between controls: a raise beyond it calls nothing and logs a
@@ -191,7 +191,7 @@ impl<A: EventArgs> Event<A> {
         }
     }
 
-    /// Whether at least one handler is subscribed — lets a raiser skip
+    /// Whether at least one handler is subscribed - lets a raiser skip
     /// building costly args.
     pub fn has_subscribers(&self) -> bool {
         self.subscriber_count() > 0

@@ -10,7 +10,7 @@ import { isFailing, SEVERITY_RANK } from './types'
  * banner all read it, and three components asking the same question three times
  * per navigation is how a "free" banner becomes a request per page.
  *
- * Open to any administrator — the server narrows the report to what the caller
+ * Open to any administrator - the server narrows the report to what the caller
  * may read, so a delegate gets a shorter list rather than a 403 and a blank
  * page. Nothing here is gated client-side for the same reason.
  */
@@ -36,7 +36,7 @@ export function useHealthChecks(enabled = true) {
   })
 }
 
-/** "Check everything again" — bypasses the server-side cache. */
+/** "Check everything again" - bypasses the server-side cache. */
 export function useRefreshHealthChecks() {
   const qc = useQueryClient()
   return useMutation({

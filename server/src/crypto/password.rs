@@ -65,7 +65,7 @@ mod tests {
     #[test]
     fn generated_passwords_avoid_ambiguous_characters() {
         // One draw only samples a fraction of the alphabet, so a stray glyph
-        // would surface as a test that fails once in a while — the kind that
+        // would surface as a test that fails once in a while - the kind that
         // ends up ignored. Draw enough to hit every character many times over.
         for _ in 0..200 {
             let pwd = generate_password(GENERATED_LENGTH);

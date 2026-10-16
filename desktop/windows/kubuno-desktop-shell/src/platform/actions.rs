@@ -1,5 +1,5 @@
-//! What the shell opens outside itself: a URL in the user's browser — where every Kubuno module
-//! lives, the shell hosting no web view at all — and a folder in Explorer.
+//! What the shell opens outside itself: a URL in the user's browser - where every Kubuno module
+//! lives, the shell hosting no web view at all - and a folder in Explorer.
 //!
 //! The Tauri build routed every action through an IPC command invoked from JavaScript; the window
 //! (`shell_window`) now calls the engine directly, and these two are what is left of the shell's

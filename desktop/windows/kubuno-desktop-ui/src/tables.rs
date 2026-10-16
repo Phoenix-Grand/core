@@ -1,4 +1,4 @@
-//! Kubuno primitives — the **data table**: [`DataTable`].
+//! Kubuno primitives - the **data table**: [`DataTable`].
 //!
 //! # Where the pixels come from
 //!
@@ -22,8 +22,8 @@
 //! # It is a [`ListView`], plus chrome
 //!
 //! The row/column/sort/selection model is **not restated**: a [`DataTable`]
-//! owns a [`crate::views::ListView`] — which itself owns
-//! [`kubuno_desktop_controls::views::ListView`] — and reaches all of it through
+//! owns a [`crate::views::ListView`] - which itself owns
+//! [`kubuno_desktop_controls::views::ListView`] - and reaches all of it through
 //! [`Deref`]. Columns and their widths, items and their sub-items, the
 //! per-item `selected` flag, [`kc::ListView::set_selected`] (which is what
 //! enforces `MultiSelect`), [`kc::ListView::selected_indices`], the sort
@@ -32,7 +32,7 @@
 //! ([`crate::views::ListView::visible_range`]) all come from there. What this
 //! layer adds is exactly what the web component adds over a bare table: a
 //! toolbar, a bulk-action bar, a pagination footer, three empty states, a
-//! loading skeleton, a card layout for a narrow container — and the DataTable's
+//! loading skeleton, a card layout for a narrow container - and the DataTable's
 //! own ink.
 //!
 //! ## Why the rows are painted here and not by [`crate::views::ListView`]
@@ -42,7 +42,7 @@
 //!
 //! * a selected file row wears « a tinted band plus the 3 DIP accent edge
 //!   (`border-l-[3px] border-primary`) » (`views.rs`), while `DataTable.tsx`
-//!   writes « Selection outranks both — it is a state, not a reading aid.
+//!   writes « Selection outranks both - it is a state, not a reading aid.
 //!   **Tint only, never a left accent bar.** »;
 //! * a data table is **zebra-striped** (`i % 2 === 1 && 'bg-surface-1'`) and
 //!   hovers one step further on `surface-2`; a file row has no zebra and hovers
@@ -68,7 +68,7 @@
 //! [`DataTable::visible_rows`] delegates to
 //! [`crate::views::ListView::visible_range`] and then clamps to the current
 //! page, so a table of 100 000 rows with pagination off paints a screenful.
-//! The web has no virtualisation at all — it mounts `pageRows` into the DOM and
+//! The web has no virtualisation at all - it mounts `pageRows` into the DOM and
 //! relies on the page size to keep that small.
 //!
 //! # What the web does and this port does NOT
@@ -77,7 +77,7 @@
 //!
 //! * **the touch branch of the popups**: the column chooser, the row overflow
 //!   menu, the bulk overflow and the right-click copy menu (cell / row /
-//!   column) ARE ported — [`DataTable::menu`] builds each as a
+//!   column) ARE ported - [`DataTable::menu`] builds each as a
 //!   [`crate::lists::Menu`], [`DataTable::menu_rect`] places it against the
 //!   monitor (the caller paints it in a `host::popup`, so it can leave the
 //!   window), [`DataTable::menu_command`] says what an entry does. Their
@@ -85,7 +85,7 @@
 //!   a canvas has no text selection to copy.
 //! * **`table-layout: auto`**: the web lets the browser distribute the width
 //!   between columns from their content. Column widths here are the ones
-//!   declared on the [`ColumnHeader`] — the web's state AFTER a first resize,
+//!   declared on the [`ColumnHeader`] - the web's state AFTER a first resize,
 //!   when `useColumnResize` pins `table-layout: fixed`. Resizing itself (the
 //!   8 DIP grip, the 56 DIP floor, the ±8 / ±24 keyboard nudge, the
 //!   double-click reset) is ported, and so is the horizontal scroller: content
@@ -103,11 +103,11 @@
 //! * **restoring the incoming order** when the sort cycles back to « none ».
 //!   The web sorts a *copy* and can hand back `rows` untouched; the replica
 //!   sorts the item list in place, and keeping a shadow copy of it here would
-//!   be a second source of truth for the rows — which rule 1 of the brief
+//!   be a second source of truth for the rows - which rule 1 of the brief
 //!   exists to prevent. [`DataTable::toggle_sort`] therefore reaches
 //!   [`SortOrder::None`] (and stops drawing an indicator) without unsorting.
 //! * **the coarse-pointer branch** (`isCoarsePointer`), which only chooses
-//!   between a sheet and a menu — both of which are out of scope above.
+//!   between a sheet and a menu - both of which are out of scope above.
 //! * ARIA (`aria-sort`, `role="radiogroup"`, the `sr-only` status line).
 //!
 //! # What this port adds over the web
@@ -115,7 +115,7 @@
 //! * **row focus**: the web table has no keyboard row model at all. Rows are
 //!   one tab stop here ([`FocusPart::Rows`]) walked with the arrows (the ARIA
 //!   grid pattern), Space / Shift / Ctrl+A for selection, Enter for
-//!   `onRowClick`, the context-menu key for the menus — [`DataTable::on_key`];
+//!   `onRowClick`, the context-menu key for the menus - [`DataTable::on_key`];
 //! * **a vertical scroll** under a sticky header: the web table grows with its
 //!   page and lets the page scroll. A box shorter than its page scrolls here
 //!   ([`DataTable::scroll_by`]) with WinUI's overlay bar;
@@ -164,13 +164,13 @@ pub mod grid {
     pub const CELL_PAD_X: f32 = space::LG;
     pub const CELL_PAD_Y: f32 = 10.0;
 
-    /// The one body line box of this design system — 14 over 20, the same line
+    /// The one body line box of this design system - 14 over 20, the same line
     /// the replica layer measures a `Body` role with.
     pub const LINE: f32 = 20.0;
 
     /// A row, header included: `py-2.5` over a body line. It comes to 40, which
     /// is also [`height::FILE_ROW`] and therefore
-    /// [`crate::views::Density::Normal`] — a coincidence a test pins, so the
+    /// [`crate::views::Density::Normal`] - a coincidence a test pins, so the
     /// two never drift apart silently.
     pub const ROW: f32 = CELL_PAD_Y * 2.0 + LINE;
 
@@ -188,7 +188,7 @@ pub mod grid {
     /// The sort indicator: `<ArrowUp size={12} />` after a `gap-1`.
     pub const SORT_GLYPH: f32 = 12.0;
     pub const SORT_GAP: f32 = space::XS;
-    /// `opacity-60` — what the idle double chevron fades to under the pointer.
+    /// `opacity-60` - what the idle double chevron fades to under the pointer.
     pub const SORT_HINT_ALPHA: f32 = 0.6;
 
     /// The bordered box the table lives in: `rounded-xl border bg-surface-0`,
@@ -254,7 +254,7 @@ pub mod grid {
     pub const CARD_DL_GAP_X: f32 = space::MD;
     pub const CARD_DL_GAP_Y: f32 = space::XS;
     /// The line box of a `--kb-text-meta` node. **No source**: the web never
-    /// declares one — it sets `fontSize` inline and inherits the line height.
+    /// declares one - it sets `fontSize` inline and inherits the line height.
     /// 16 is this family's decision (the 12/16 pair Tailwind's own `text-xs`
     /// ships), written here rather than hidden as a literal in a paint body.
     pub const META_LINE: f32 = 16.0;
@@ -286,11 +286,11 @@ pub mod grid {
     pub const RESIZE_STEP_BIG: f32 = 24.0;
 
     /// The sort button around a sortable header's label:
-    /// `rounded-sm px-1 py-0.5 -mx-1` — what its focus ring outlines.
+    /// `rounded-sm px-1 py-0.5 -mx-1` - what its focus ring outlines.
     pub const SORT_BUTTON_PAD_X: f32 = space::XS;
     pub const SORT_BUTTON_PAD_Y: f32 = space::XXS;
 
-    /// `focus-visible:ring-2 ring-primary` — every focusable part of the
+    /// `focus-visible:ring-2 ring-primary` - every focusable part of the
     /// table (header buttons, chooser, pagination, bulk bar) wears it.
     pub const FOCUS_RING: f32 = 2.0;
 
@@ -308,17 +308,17 @@ pub mod grid {
 
     /// Added to a MEASURED label before it becomes the width of its own box.
     /// DirectWrite lays the run out again at draw time and a fraction of a
-    /// DIP of difference is enough to ellipsise the last letter — the
+    /// DIP of difference is enough to ellipsise the last letter - the
     /// « Lignes par pa… » defect. Not a design length: a rounding guard.
     pub const TEXT_SLACK: f32 = 1.0;
 }
 
-/// How many bulk actions stay inline before the rest fold into the overflow —
+/// How many bulk actions stay inline before the rest fold into the overflow -
 /// `INLINE_BULK_DESKTOP` / `INLINE_BULK_COMPACT` in `Toolbar.tsx`.
 pub const INLINE_BULK_DESKTOP: usize = 3;
 pub const INLINE_BULK_COMPACT: usize = 1;
 
-/// The same colour at a lower alpha — how this design system dims. Same rule as
+/// The same colour at a lower alpha - how this design system dims. Same rule as
 /// `buttons::fade` and [`kubuno_drive_desktop_app_controls::switch::fade`]; it is duplicated
 /// rather than imported because both of those are private to their family.
 fn fade(c: D2D1_COLOR_F, alpha: f32) -> D2D1_COLOR_F {
@@ -326,7 +326,7 @@ fn fade(c: D2D1_COLOR_F, alpha: f32) -> D2D1_COLOR_F {
 }
 
 // =============================================================================
-//  Layout mode — the cards / table decision
+//  Layout mode - the cards / table decision
 // =============================================================================
 
 /// What a [`DataTable`] is currently laid out as.
@@ -339,7 +339,7 @@ pub enum Mode {
     Cards,
 }
 
-/// What the caller asked for — `layout` in `DataTableProps`.
+/// What the caller asked for - `layout` in `DataTableProps`.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum Layout {
     /// Follow the container width.
@@ -357,7 +357,7 @@ pub enum Layout {
 /// `layout === 'cards' || (layout === 'auto' && width !== null && width < cardsBelow)`.
 /// Two things follow from that line and both matter:
 ///
-/// * the threshold is **strict** — a container exactly `cards_below` wide is
+/// * the threshold is **strict** - a container exactly `cards_below` wide is
 ///   still a table;
 /// * a container that genuinely measures 0 (a collapsed panel, a clipped
 ///   accordion) is honoured, not treated as wide. There is no « unmeasured »
@@ -380,13 +380,13 @@ pub fn layout_mode(layout: Layout, width: f32, cards_below: f32) -> Mode {
 }
 
 // =============================================================================
-//  Columns — the web's per-column booleans, on the replica's own payload
+//  Columns - the web's per-column booleans, on the replica's own payload
 // =============================================================================
 
 /// The flags `DataTableColumn` carries and `ColumnHeader` has no field for.
 ///
 /// They ride in [`ColumnHeader::tag`], the toolkit's own general-purpose
-/// per-column payload, as a space-separated set — the same trick
+/// per-column payload, as a space-separated set - the same trick
 /// [`crate::lists::DANGER_TAG`] uses for a menu row, and for the same reason:
 /// a second, parallel list of column options here would be a second source of
 /// truth for the columns.
@@ -397,7 +397,7 @@ pub mod flags {
     pub const PRIMARY: &str = "primary";
     /// `hideOnCards`: skip this column in the card layout.
     pub const HIDE_ON_CARDS: &str = "hide-on-cards";
-    /// `required`: the column that identifies the row — it cannot be hidden.
+    /// `required`: the column that identifies the row - it cannot be hidden.
     pub const REQUIRED: &str = "required";
     /// `ReadOnly` (WinForms `DataGridViewColumn.ReadOnly`): the cells of this column are never
     /// edited in place, even in an [`super::DataTable::editable`] table.
@@ -433,7 +433,7 @@ pub fn has_flag(col: &ColumnHeader, flag: &str) -> bool {
     col.tag.as_deref().is_some_and(|t| t.split(' ').any(|f| f == flag))
 }
 
-/// The plain-text name of a column — `columnLabel` in `helpers.ts`: the header
+/// The plain-text name of a column - `columnLabel` in `helpers.ts`: the header
 /// text, falling back to the id when there is none.
 pub fn column_label(col: &ColumnHeader) -> &str {
     if col.text.is_empty() {
@@ -454,7 +454,7 @@ pub fn column_label(col: &ColumnHeader) -> &str {
 /// before a bulk delete is a trap ».
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum SelectAll {
-    /// No row of the page is selected — and an empty page is here too, because
+    /// No row of the page is selected - and an empty page is here too, because
     /// `allOnPage` requires `pageKeys.length > 0`.
     None,
     /// Some but not all: `someOnPage && !allOnPage`, the indeterminate box.
@@ -512,7 +512,7 @@ impl BulkAction {
 }
 
 // =============================================================================
-//  Chrome geometry — pure, so it can be tested and hit-tested from one place
+//  Chrome geometry - pure, so it can be tested and hit-tested from one place
 // =============================================================================
 
 /// A piece of the table's chrome the pointer can be over.
@@ -544,7 +544,7 @@ pub enum Chrome {
     /// (`role="separator"` in `DataTable.tsx`). Outranks [`Chrome::Header`]:
     /// « a resize must not also sort the column ».
     ResizeHandle(usize),
-    /// A scroll bar's rail — vertical, or horizontal when the table is wider
+    /// A scroll bar's rail - vertical, or horizontal when the table is wider
     /// than its box.
     ScrollBar { horizontal: bool },
 }
@@ -554,8 +554,8 @@ pub enum Chrome {
 /// The web table is a sequence of native tab stops (the chooser, the bulk
 /// buttons, the select-all box, each sort button, each resize separator, the
 /// pagination buttons) and has **no** row focus at all. Rows here are ONE
-/// extra stop, [`FocusPart::Rows`], walked with the arrows — the ARIA grid
-/// pattern — so a keyboard user can reach, select and act on a row without
+/// extra stop, [`FocusPart::Rows`], walked with the arrows - the ARIA grid
+/// pattern - so a keyboard user can reach, select and act on a row without
 /// a tab stop per check box.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum FocusPart {
@@ -568,7 +568,7 @@ pub enum FocusPart {
 /// One of the table's floating menus, each painted in a `host::popup`.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum TableMenu {
-    /// The row's overflow menu — [`DataTable::row_menu_actions`].
+    /// The row's overflow menu - [`DataTable::row_menu_actions`].
     Row(usize),
     /// The right-click copy menu: the cell under the pointer (a **visible**
     /// column index), its row, its column.
@@ -579,7 +579,7 @@ pub enum TableMenu {
     Columns,
 }
 
-/// What choosing an entry of a [`TableMenu`] asks for — see
+/// What choosing an entry of a [`TableMenu`] asks for - see
 /// [`DataTable::menu_command`].
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum TableCommand {
@@ -600,11 +600,11 @@ pub enum TableEvent {
     OpenMenu(TableMenu),
     /// An inline bulk action, by id.
     BulkAction(String),
-    /// Enter on the cursor row — the web's `onRowClick`.
+    /// Enter on the cursor row - the web's `onRowClick`.
     RowActivated(usize),
 }
 
-/// A column being resized by drag — `drag.current` in `useColumnResize.ts`.
+/// A column being resized by drag - `drag.current` in `useColumnResize.ts`.
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct ColumnDrag {
     /// The **visible** column.
@@ -624,12 +624,12 @@ pub struct ScrollDrag {
 /// One data cell, as handed to a [`CellPainter`].
 #[derive(Clone, Copy)]
 pub struct Cell<'a> {
-    /// The cell's text — the sub-item, what the table would draw.
+    /// The cell's text - the sub-item, what the table would draw.
     pub text: &'a str,
     /// The item index.
     pub row: usize,
     /// The **model** column (an index into `columns`, what
-    /// [`ListViewItem::cell`] reads) — stable when a column is hidden.
+    /// [`ListViewItem::cell`] reads) - stable when a column is hidden.
     pub column: usize,
     /// The content box: the cell minus its `px-4` padding, full row height.
     pub rect: Rect,
@@ -639,14 +639,14 @@ pub struct Cell<'a> {
     pub disabled: bool,
 }
 
-/// The web column's `cell: (row) => ReactNode` — a hook that paints one cell
+/// The web column's `cell: (row) => ReactNode` - a hook that paints one cell
 /// itself (a badge, an avatar and a name…). Return `true` when it painted the
 /// cell, `false` to let the table draw the text as usual. It paints inside
 /// the table's clip, so it cannot spill out of the body.
 pub type CellPainter = Box<dyn Fn(&dyn Canvas, &Cell<'_>) -> bool>;
 
 /// Where a menu of `want` size opens against the monitor's work area `area`
-/// — `MenuDropdown`'s rule: at `at`, pulled back inside the viewport by
+/// - `MenuDropdown`'s rule: at `at`, pulled back inside the viewport by
 /// [`grid::MENU_EDGE`], and flipped to END at `flip_bottom` (the trigger's
 /// top, or the pointer) when it would run off the bottom. Pure.
 pub fn place_menu(at: (f32, f32), flip_bottom: f32, want: Size, area: Rect) -> Rect {
@@ -666,7 +666,7 @@ pub fn place_menu(at: (f32, f32), flip_bottom: f32, want: Size, area: Rect) -> R
 }
 
 /// Every rectangle the table is made of, resolved once from the bounds it was
-/// given — so the painters and the hit tests can never disagree about where
+/// given - so the painters and the hit tests can never disagree about where
 /// something is.
 /// (`Rect` carries neither `Debug` nor `PartialEq`, so neither does this.)
 #[derive(Clone, Copy)]
@@ -691,11 +691,11 @@ pub struct TableLayout {
     pub hscroll: Rect,
 }
 
-/// The bulk bar's contents, laid out — see [`bulk_bar`].
+/// The bulk bar's contents, laid out - see [`bulk_bar`].
 #[derive(Clone)]
 pub struct BulkBar {
     pub close: Rect,
-    /// « N en sélection » — what is left between the close button and the
+    /// « N en sélection » - what is left between the close button and the
     /// actions, which is the web's `flex-1 truncate`.
     pub label: Rect,
     pub actions: Vec<Rect>,
@@ -743,7 +743,7 @@ pub fn bulk_bar(bar: Rect, action_widths: &[f32], overflow: bool) -> BulkBar {
     actions.reverse();
 
     // The label is the web's `flex-1 truncate`: it takes what is left, stopping
-    // `gap-2` before whatever comes next — the first inline action, else the
+    // `gap-2` before whatever comes next - the first inline action, else the
     // overflow, else the bar's own padding.
     let label_right = match actions.first().map(|r| r.left).or(overflow_rect.map(|r| r.left)) {
         Some(x) => x - grid::BAR_GAP,
@@ -855,7 +855,7 @@ pub fn size_group(left: f32, cy: f32, pill_widths: &[f32]) -> (Rect, Vec<Rect>) 
 pub struct EmptyWording {
     pub title: String,
     pub description: String,
-    /// The way out. `None` draws no button — which is what an unretryable
+    /// The way out. `None` draws no button - which is what an unretryable
     /// error or an unfiltered empty collection gets.
     pub action: Option<String>,
 }
@@ -883,7 +883,7 @@ pub struct Wording {
     pub empty: EmptyWording,
     pub no_results: EmptyWording,
     pub error: EmptyWording,
-    /// `ui.dt_copy_cell` / `ui.dt_copy_row` — the copy menu.
+    /// `ui.dt_copy_cell` / `ui.dt_copy_row` - the copy menu.
     pub copy_cell: String,
     pub copy_row: String,
     /// `ui.dt_copy_column`; `{name}` is replaced by the column's label.
@@ -930,7 +930,7 @@ enum EmptyKind {
 //  DataTable
 // =============================================================================
 
-/// The design system's one table — a [`ListView`] with the DataTable's chrome
+/// The design system's one table - a [`ListView`] with the DataTable's chrome
 /// and the DataTable's ink.
 ///
 /// ```text
@@ -956,12 +956,12 @@ pub struct DataTable {
 
     /// The skeleton replaces the body.
     pub loading: bool,
-    /// How many skeleton rows — `skeletonRows`, default 5.
+    /// How many skeleton rows - `skeletonRows`, default 5.
     pub skeleton_rows: usize,
     /// Non-`None` switches the body to the error state; the string replaces the
     /// default description, as the web's `error: ReactNode` does.
     pub error: Option<String>,
-    /// A search or filter is active — picks « no result » over « nothing yet ».
+    /// A search or filter is active - picks « no result » over « nothing yet ».
     pub filtered: bool,
 
     /// 0-based, like the whole web component. Read it through
@@ -984,7 +984,7 @@ pub struct DataTable {
     pub row_actions: bool,
 
     pub layout: Layout,
-    /// Container width under which `Auto` switches to cards — `cardsBelow`.
+    /// Container width under which `Auto` switches to cards - `cardsBelow`.
     pub cards_below: f32,
     /// The width the table wants before it starts overflowing its box.
     pub min_table_width: f32,
@@ -1003,16 +1003,16 @@ pub struct DataTable {
     pub resize: Option<ColumnDrag>,
     /// The scroll thumb being dragged, if any.
     pub scroll_drag: Option<ScrollDrag>,
-    /// The horizontal scroll of a table wider than its box — the web's
+    /// The horizontal scroll of a table wider than its box - the web's
     /// `overflow-x-auto` scroller. Clamped wherever it is read.
     pub scroll_x: f32,
-    /// The keyboard cursor row (an item index) — see [`FocusPart::Rows`].
+    /// The keyboard cursor row (an item index) - see [`FocusPart::Rows`].
     pub cursor: Option<usize>,
     /// What holds the focus inside the table, fed back by the caller from its
     /// focus manager, and whether the ring shows (`:focus-visible`).
     pub focus_part: Option<FocusPart>,
     pub focus_visible: bool,
-    /// Per-cell painter — the web column's `cell` renderer.
+    /// Per-cell painter - the web column's `cell` renderer.
     pub cell_painter: Option<CellPainter>,
     /// Owner-drawn cells (`DataGridView.CellPainting`): each cell is first offered to the
     /// owner-draw handler lent for the paint (`crate::graphics::owner_draw`), as a `DrawItem`
@@ -1033,7 +1033,7 @@ pub struct DataTable {
     anchor: Option<usize>,
     range_base: Option<Vec<usize>>,
     /// The widths the columns were DECLARED with, by id, recorded the first
-    /// time one is resized — what a double-click on its grip goes back to.
+    /// time one is resized - what a double-click on its grip goes back to.
     declared_widths: Vec<(String, i32)>,
     /// How many bulk actions the last laid-out bar kept inline ([`fit_bulk`]),
     /// so the overflow menu, the hit tests and the focus stops agree with it.
@@ -1099,7 +1099,7 @@ impl DataTable {
         Self::default()
     }
 
-    /// The table model underneath — columns, items, selection, sort.
+    /// The table model underneath - columns, items, selection, sort.
     pub fn list(&self) -> &ListView {
         &self.list
     }
@@ -1110,7 +1110,7 @@ impl DataTable {
 
     // ── Columns ──────────────────────────────────────────────────────────
 
-    /// The columns actually laid out — `visibleColumns` in the web: every
+    /// The columns actually laid out - `visibleColumns` in the web: every
     /// column whose id is not in [`DataTable::hidden_columns`].
     pub fn visible_columns(&self) -> Vec<ColumnHeader> {
         self.list
@@ -1126,7 +1126,7 @@ impl DataTable {
         cols.get(index).is_some_and(|c| has_flag(c, flags::SORTABLE))
     }
 
-    /// The selection column's width — 0 when the table is not selectable.
+    /// The selection column's width - 0 when the table is not selectable.
     pub fn select_width(&self) -> f32 {
         if self.selectable {
             grid::SELECT_COL
@@ -1135,7 +1135,7 @@ impl DataTable {
         }
     }
 
-    /// The actions column's width — 0 when there are no row actions.
+    /// The actions column's width - 0 when there are no row actions.
     pub fn actions_width(&self) -> f32 {
         if self.row_actions {
             grid::ACTIONS_COL
@@ -1152,14 +1152,14 @@ impl DataTable {
         self.select_width() + cols + self.actions_width()
     }
 
-    /// Whether the content is wider than the box it was given — what the web's
+    /// Whether the content is wider than the box it was given - what the web's
     /// `overflow-x-auto` scroller exists for, and what this port clips instead.
     pub fn overflows(&self, bounds: Rect) -> bool {
         self.table_width().max(self.min_table_width) > bounds.right - bounds.left
     }
 
     /// The left x of each visible column, plus one entry at the right edge of
-    /// the last one — [`kc::DetailsGeometry::column_x_offsets`], the replica's
+    /// the last one - [`kc::DetailsGeometry::column_x_offsets`], the replica's
     /// own arithmetic, over the filtered column list and starting after the
     /// selection column.
     pub fn column_x_offsets(&self, bounds: Rect) -> Vec<f32> {
@@ -1167,7 +1167,7 @@ impl DataTable {
     }
 
     /// The width the table's content spans inside a box `view` wide: the box
-    /// itself (`w-full`), or more when the columns — or `minTableWidth` — ask
+    /// itself (`w-full`), or more when the columns - or `minTableWidth` - ask
     /// for more, in which case it scrolls sideways inside the box.
     pub fn content_width(&self, view: f32) -> f32 {
         view.max(self.table_width().max(self.min_table_width))
@@ -1208,7 +1208,7 @@ impl DataTable {
         .column_x_offsets(cols)
     }
 
-    /// The visible column `x` falls in — header band and cells agree, because
+    /// The visible column `x` falls in - header band and cells agree, because
     /// both read this.
     pub fn column_at(&self, bounds: Rect, x: f32) -> Option<usize> {
         let xs = self.column_x_offsets(bounds);
@@ -1217,7 +1217,7 @@ impl DataTable {
 
     // ── Pagination ───────────────────────────────────────────────────────
 
-    /// Whether the footer exists at all — `paginated = pageSize > 0`.
+    /// Whether the footer exists at all - `paginated = pageSize > 0`.
     pub fn paginated(&self) -> bool {
         self.page_size > 0
     }
@@ -1232,7 +1232,7 @@ impl DataTable {
         }
     }
 
-    /// `Math.max(1, Math.ceil(total / pageSize))` — never zero, so a page
+    /// `Math.max(1, Math.ceil(total / pageSize))` - never zero, so a page
     /// counter always reads « 1 / 1 » rather than « 1 / 0 ».
     pub fn page_count(&self) -> usize {
         if !self.paginated() {
@@ -1243,8 +1243,8 @@ impl DataTable {
 
     /// The page actually shown.
     ///
-    /// The web applies a snap-back in an effect — « a filter that shrinks the
-    /// result set can strand the user on a page that no longer exists » — and
+    /// The web applies a snap-back in an effect - « a filter that shrinks the
+    /// result set can strand the user on a page that no longer exists » - and
     /// it only fires past page 0. The same rule, as a projection of the raw
     /// [`DataTable::page`] rather than a second stored value.
     pub fn page_index(&self) -> usize {
@@ -1270,7 +1270,7 @@ impl DataTable {
     }
 
     /// What the footer's counter reads: `(first, last, total)`, with `first`
-    /// **1-based** — « 0-based in the API, 1-based in what the user reads ».
+    /// **1-based** - « 0-based in the API, 1-based in what the user reads ».
     pub fn page_counter(&self) -> (usize, usize, usize) {
         let total = self.total();
         if total == 0 {
@@ -1287,7 +1287,7 @@ impl DataTable {
         self.page = page.min(self.page_count().saturating_sub(1));
     }
 
-    /// Changes the page size and returns to the first page — `setPageSize`
+    /// Changes the page size and returns to the first page - `setPageSize`
     /// calls `setPage(0)`, because the row under the cursor is not on page 3
     /// any more once the page holds four times as many.
     pub fn set_page_size(&mut self, size: usize) {
@@ -1297,7 +1297,7 @@ impl DataTable {
 
     // ── Selection ────────────────────────────────────────────────────────
 
-    /// The selected items — [`kc::ListView::selected_indices`], the replica's
+    /// The selected items - [`kc::ListView::selected_indices`], the replica's
     /// own derivation from the per-item flag.
     pub fn selected(&self) -> Vec<usize> {
         self.list.selected_indices()
@@ -1336,8 +1336,8 @@ impl DataTable {
     ///
     /// `toggleAll` in the web: when the whole page is selected it *removes the
     /// page's keys* and leaves the rest of the selection alone; otherwise it
-    /// *adds* them. So the indeterminate state selects the page — it does not
-    /// clear it — and a row selected on another page survives either way.
+    /// *adds* them. So the indeterminate state selects the page - it does not
+    /// clear it - and a row selected on another page survives either way.
     pub fn toggle_all(&mut self) {
         let select = self.select_all_state() != SelectAll::All;
         for i in self.page_range() {
@@ -1351,7 +1351,7 @@ impl DataTable {
         self.list.set_selected(index, !now);
     }
 
-    /// Drops the selection — the « × » on the bulk bar.
+    /// Drops the selection - the « × » on the bulk bar.
     pub fn clear_selection(&mut self) {
         self.list.clear_selection();
     }
@@ -1363,7 +1363,7 @@ impl DataTable {
     /// `nextSort` in `helpers.ts`: a different column starts ascending, an
     /// ascending column goes descending, and a descending one goes back to no
     /// sort at all. Three states, so a table can always be put back to its
-    /// declared order — see the module docs on what « back » does and does not
+    /// declared order - see the module docs on what « back » does and does not
     /// mean here.
     pub fn toggle_sort(&mut self, index: usize) {
         let cols = self.visible_columns();
@@ -1420,12 +1420,12 @@ impl DataTable {
         None
     }
 
-    /// Whether the body is showing one of the three empty states — `isEmpty`.
+    /// Whether the body is showing one of the three empty states - `isEmpty`.
     pub fn is_empty(&self) -> bool {
         self.empty_kind().is_some()
     }
 
-    /// The height the toolbar band needs — 0 when there is nothing in it.
+    /// The height the toolbar band needs - 0 when there is nothing in it.
     pub fn toolbar_height(&self) -> f32 {
         if self.selection_mode() {
             grid::BAR_HEIGHT
@@ -1447,7 +1447,7 @@ impl DataTable {
         }
     }
 
-    /// The height of one skeleton row — `px-4 py-3` around the taller of a text
+    /// The height of one skeleton row - `px-4 py-3` around the taller of a text
     /// bar and the check box placeholder.
     fn skeleton_row(&self) -> f32 {
         let content =
@@ -1481,7 +1481,7 @@ impl DataTable {
 
         // The column header exists only when the body is showing rows in table
         // mode: a skeleton, an empty state and a card list all replace it. Its
-        // height is the ROW's, not a constant — a `<th>` and a `<td>` are the
+        // height is the ROW's, not a constant - a `<th>` and a `<td>` are the
         // same box on the web, so a denser table gets a denser header too.
         let hh = if mode == Mode::Table && !self.loading && !self.is_empty() {
             self.list.row_height()
@@ -1512,7 +1512,7 @@ impl DataTable {
     /// The list's own header is the Drive file area's (28 DIP); a DataTable
     /// header is 40 (`py-2.5` over a body line), so the two bands do not
     /// coincide. Rather than re-derive the row arithmetic here, the rectangle
-    /// is shifted by the difference — read from the list's own accessor, never
+    /// is shifted by the difference - read from the list's own accessor, never
     /// from a literal.
     fn list_frame(&self, l: &TableLayout) -> Rect {
         Rect::new(
@@ -1524,7 +1524,7 @@ impl DataTable {
     }
 
     /// **The virtualisation entry point.** The item indices that intersect the
-    /// body — the list's own [`crate::views::ListView::visible_range`],
+    /// body - the list's own [`crate::views::ListView::visible_range`],
     /// clamped to the current page and shifted onto its first index.
     ///
     /// The clamp is what makes it correct under pagination: the list's
@@ -1536,8 +1536,8 @@ impl DataTable {
 
     fn visible_rows_in(&self, l: &TableLayout) -> Range<usize> {
         if l.mode == Mode::Cards {
-            // Cards are not a fixed pitch — each one is as tall as its own
-            // pairs — so the band is walked from the top instead.
+            // Cards are not a fixed pitch - each one is as tall as its own
+            // pairs - so the band is walked from the top instead.
             return self.page_range();
         }
         let page = self.page_range();
@@ -1548,7 +1548,7 @@ impl DataTable {
         (page.start + start)..(page.start + end.max(start))
     }
 
-    /// The band item `index` occupies — the list's own `item_rect`, offset by
+    /// The band item `index` occupies - the list's own `item_rect`, offset by
     /// the page's first index because a page always starts at the body's top.
     pub fn row_rect(&self, bounds: Rect, index: usize) -> Rect {
         let l = self.layout_of(bounds);
@@ -1646,7 +1646,7 @@ impl DataTable {
     ///
     /// Takes a [`Canvas`] because half of the chrome is sized by its text (a
     /// bulk action's button, the page-size pills, the page counter); the parts
-    /// that are not — [`bulk_bar`], [`nav_cluster`], [`size_group`] — are pure
+    /// that are not - [`bulk_bar`], [`nav_cluster`], [`size_group`] - are pure
     /// functions this only feeds.
     pub fn chrome_at(&self, c: &dyn Canvas, bounds: Rect, x: f32, y: f32) -> Option<Chrome> {
         let l = self.layout_of(bounds);
@@ -1817,8 +1817,8 @@ impl DataTable {
         let (group, pills) = size_group(left, cy, &widths);
         // The web bar is `flex-wrap`: a footer too narrow for the size group,
         // the counter AND the navigation wraps onto a second line. The band
-        // here has one line, so the group — the optional part, the one
-        // `compact` drops too — goes instead of anything overlapping.
+        // here has one line, so the group - the optional part, the one
+        // `compact` drops too - goes instead of anything overlapping.
         let counter = c.measure(&self.counter_text(), &f.body) + grid::TEXT_SLACK;
         let nav_left = self
             .nav_cluster_of(c, l)
@@ -1933,7 +1933,7 @@ impl DataTable {
     }
 
     /// The column whose resize grip is under `(x, y)`. Where two strips
-    /// could meet, the column to the LEFT of the edge wins — the grip belongs
+    /// could meet, the column to the LEFT of the edge wins - the grip belongs
     /// to the edge, and the edge to the column it ends.
     pub fn resize_handle_at(&self, bounds: Rect, x: f32, y: f32) -> Option<usize> {
         let l = self.layout_of(bounds);
@@ -1966,7 +1966,7 @@ impl DataTable {
         col.width = width.max(grid::RESIZE_MIN).round() as i32;
     }
 
-    /// The keyboard equivalent — `nudge`: « a mouse-only affordance is not an
+    /// The keyboard equivalent - `nudge`: « a mouse-only affordance is not an
     /// affordance ».
     pub fn nudge_column(&mut self, visible: usize, delta: f32) {
         let w = self.column_width(visible);
@@ -2077,7 +2077,7 @@ impl DataTable {
     }
 
     /// The area a bar is laid against, shortened so its gutter stays inside the
-    /// frame's `rounded-xl` border — clear of the rounded corners, which a bar
+    /// frame's `rounded-xl` border - clear of the rounded corners, which a bar
     /// running down to the frame's edge (no footer, no header) would cross.
     fn bar_area(l: &TableLayout, horizontal: bool) -> Rect {
         let (frame, r) = crate::range::inside_border(l.frame, radius::XL);
@@ -2096,7 +2096,7 @@ impl DataTable {
 
     /// Starts dragging a scroll bar at `(x, y)`. On the thumb, it grabs it
     /// where it was pressed; on the rail, the thumb first jumps under the
-    /// pointer — the overlay bar's behaviour — then follows it.
+    /// pointer - the overlay bar's behaviour - then follows it.
     pub fn begin_scroll_drag(&mut self, bounds: Rect, horizontal: bool, x: f32, y: f32) {
         let l = self.layout_of(bounds);
         let Some(bar) = self.scrollbar_in(&l, horizontal, true) else {
@@ -2135,7 +2135,7 @@ impl DataTable {
         self.scroll_drag = None;
     }
 
-    /// Scrolls the least needed for item `index` to be fully in the body —
+    /// Scrolls the least needed for item `index` to be fully in the body -
     /// what a keyboard move does after it moves the cursor.
     pub fn scroll_into_view(&mut self, bounds: Rect, index: usize) {
         let l = self.layout_of(bounds);
@@ -2181,7 +2181,7 @@ impl DataTable {
         Some(Rect::new(a + grid::CELL_PAD_X, r.top, (b - grid::CELL_PAD_X).max(a + grid::CELL_PAD_X), r.bottom))
     }
 
-    /// The text of one cell — item `row`, **visible** column `column`.
+    /// The text of one cell - item `row`, **visible** column `column`.
     pub fn cell_text(&self, row: usize, column: usize) -> String {
         let cols = self.visible_columns();
         match (self.model_column(&cols, column), self.list.items.get(row)) {
@@ -2190,13 +2190,13 @@ impl DataTable {
         }
     }
 
-    /// One row, tab-separated — `rowText` in `copy.ts`: « pastes into a
+    /// One row, tab-separated - `rowText` in `copy.ts`: « pastes into a
     /// spreadsheet as separate columns ».
     pub fn row_text(&self, row: usize) -> String {
         (0..self.visible_columns().len()).map(|c| self.cell_text(row, c)).collect::<Vec<_>>().join("\t")
     }
 
-    /// Every row of the CURRENT PAGE for one column, one value per line —
+    /// Every row of the CURRENT PAGE for one column, one value per line -
     /// `columnText`, which copies « the current page, because that is all the
     /// DOM holds ».
     pub fn column_text(&self, column: usize) -> String {
@@ -2279,7 +2279,7 @@ impl DataTable {
         }
     }
 
-    /// Applies what the table can apply on its own — showing or hiding a
+    /// Applies what the table can apply on its own - showing or hiding a
     /// column. Returns whether it did; every other command is the caller's.
     pub fn apply_command(&mut self, cmd: &TableCommand) -> bool {
         match cmd {
@@ -2350,7 +2350,7 @@ impl DataTable {
     // ── Clicks and keys ──────────────────────────────────────────────────
 
     /// A click on a row's check box. With Shift, the rows between the last
-    /// clicked one and this one all take the clicked row's NEW state — the
+    /// clicked one and this one all take the clicked row's NEW state - the
     /// range gesture of mail and file lists.
     pub fn click_row_check(&mut self, index: usize, shift: bool) {
         let on = !self.list.items.get(index).is_some_and(|it| it.selected);
@@ -2408,7 +2408,7 @@ impl DataTable {
         }
     }
 
-    /// The focus stops, in Tab order — the web's DOM order: the toolbar
+    /// The focus stops, in Tab order - the web's DOM order: the toolbar
     /// (chooser, or the bulk bar's close, actions and overflow), the
     /// select-all box, each sort button then its resize separator, the rows,
     /// the page-size radios, the enabled pagination buttons. A caller
@@ -2694,7 +2694,7 @@ impl DataTable {
         let t = c.theme();
         let f = c.formats();
         c.fill_rounded(&l.header, 0.0, &t.card_background);
-        // The header scrolls sideways with the rows but never vertically — it
+        // The header scrolls sideways with the rows but never vertically - it
         // is its own band, so it stays put (sticky) over a scrolled body.
         c.push_clip(&l.header);
         let (content_left, _) = self.content_span(l.frame);
@@ -2751,7 +2751,7 @@ impl DataTable {
                 }
             };
             // The label's box runs to the glyph, or to the cell's edge when
-            // there is none — **not** to `left + label_w`. A rectangle exactly
+            // there is none - **not** to `left + label_w`. A rectangle exactly
             // as wide as the measured text ellipsises it: DirectWrite lays the
             // run out again at draw time and a fraction of a DIP of difference
             // is enough to trim the last letter.
@@ -2792,8 +2792,8 @@ impl DataTable {
         }
 
         // The resize grips: an 8 DIP strip whose only visible part is a 1 DIP
-        // rule — `hover:after:bg-border-strong`, `focus-visible:after:bg-primary`
-        // — so the header is not a permanent grid of lines.
+        // rule - `hover:after:bg-border-strong`, `focus-visible:after:bg-primary`
+        // - so the header is not a permanent grid of lines.
         if self.can_resize(l) {
             for i in 0..cols.len() {
                 let Some(grip) = self.resize_grip(l, i) else { continue };
@@ -2821,7 +2821,7 @@ impl DataTable {
         c.fill_rounded(&rule, 0.0, &t.card_stroke);
     }
 
-    /// The rows — **only the visible range**, clipped to the body.
+    /// The rows - **only the visible range**, clipped to the body.
     fn paint_rows(
         &self,
         c: &dyn Canvas,
@@ -2833,7 +2833,7 @@ impl DataTable {
         let t = c.theme();
         let page = self.page_range();
         let ink = if state.disabled { &t.text_tertiary } else { &t.text_primary };
-        // Each visible column's MODEL index — what `item.cell` reads. The two
+        // Each visible column's MODEL index - what `item.cell` reads. The two
         // differ as soon as a column is hidden.
         let models: Vec<usize> =
             (0..cols.len()).map(|i| self.model_column(cols, i).unwrap_or(i)).collect();
@@ -2905,7 +2905,7 @@ impl DataTable {
                         continue;
                     }
                 }
-                // The column's own renderer first — the web's `col.cell(row)`.
+                // The column's own renderer first - the web's `col.cell(row)`.
                 // It paints inside the cell's clip: a badge wider than its
                 // column is cut at the column's edge, not over the next one.
                 if let Some(painter) = &self.cell_painter {
@@ -2926,7 +2926,7 @@ impl DataTable {
                     }
                 }
                 // Every cell is body-sized and `text-text-primary`, aligned per
-                // column — column 0 included, unlike a file list.
+                // column - column 0 included, unlike a file list.
                 Self::cell_text_in(c, item.cell(model), &cell, header.text_align, ink);
             }
             // The error glyphs (WinForms `ErrorText`) over the cells' text, not over an editor.
@@ -2998,7 +2998,7 @@ impl DataTable {
         }
     }
 
-    /// The scroll bars over the body — WinUI's thin indicator that unfolds
+    /// The scroll bars over the body - WinUI's thin indicator that unfolds
     /// under the pointer, skinned as the web's `::-webkit-scrollbar`.
     fn paint_scrollbars(&self, c: &dyn Canvas, l: &TableLayout) {
         for horizontal in [false, true] {
@@ -3016,7 +3016,7 @@ impl DataTable {
         let f = c.formats();
         let (primary, pairs) = self.card_columns();
         let ink = if state.disabled { &t.text_tertiary } else { &t.text_primary };
-        // The MODEL index of a column — what `item.cell` reads, stable when a
+        // The MODEL index of a column - what `item.cell` reads, stable when a
         // column before it is hidden.
         let index_of =
             |col: &ColumnHeader| self.list.columns.iter().position(|c| c.name == col.name).unwrap_or(0);
@@ -3101,7 +3101,7 @@ impl DataTable {
         c.pop_clip();
     }
 
-    /// The loading state — a skeleton, not a spinner: « a table with these
+    /// The loading state - a skeleton, not a spinner: « a table with these
     /// columns is arriving here », so the layout does not jump.
     fn paint_skeleton(&self, c: &dyn Canvas, l: &TableLayout, columns: usize) {
         let t = c.theme();
@@ -3158,7 +3158,7 @@ impl DataTable {
             EmptyKind::FirstUse => (&self.copy.empty, "Inbox", t.accent_light, t.accent),
         };
         let description = match (kind, &self.error) {
-            // « typeof error === 'boolean' ? default : error » — a caller's
+            // « typeof error === 'boolean' ? default : error » - a caller's
             // message replaces the generic one.
             (EmptyKind::Error, Some(msg)) if !msg.is_empty() => msg.as_str(),
             _ => copy.description.as_str(),
@@ -3233,7 +3233,7 @@ impl DataTable {
             };
             let mut button = action.button();
             if l.mode == Mode::Cards {
-                // Icon only in a narrow bar — the web passes `null` as the child.
+                // Icon only in a narrow bar - the web passes `null` as the child.
                 button = Button::new("")
                     .variant(if action.danger { Variant::Danger } else { Variant::Secondary })
                     .size(ButtonSize::Sm);
@@ -3299,7 +3299,7 @@ impl DataTable {
         }
     }
 
-    /// The pagination band — always inside the table's own footer.
+    /// The pagination band - always inside the table's own footer.
     fn paint_footer(&self, c: &dyn Canvas, l: &TableLayout) {
         if l.footer.bottom <= l.footer.top {
             return;
@@ -3392,7 +3392,7 @@ impl Widget for DataTable {
     }
 
     /// The declared column widths (plus the two fixed columns) by the height
-    /// every band adds up to — never less than [`DataTable::min_table_width`],
+    /// every band adds up to - never less than [`DataTable::min_table_width`],
     /// which is what the web pins its table at before it starts scrolling.
     fn measure(&self, _canvas: &dyn Canvas) -> Size {
         let rh = self.list.row_height();
@@ -3411,7 +3411,7 @@ impl Widget for DataTable {
         )
     }
 
-    /// Paints into the `bounds` **argument** — never the model's own rectangle.
+    /// Paints into the `bounds` **argument** - never the model's own rectangle.
     fn paint(&self, canvas: &dyn Canvas, bounds: Rect, state: WidgetState) {
         let t = canvas.theme();
         let l = self.layout_of(bounds);
@@ -3456,7 +3456,7 @@ impl Widget for DataTable {
 }
 
 // =============================================================================
-//  Tests — pure geometry and pure state, no device needed.
+//  Tests - pure geometry and pure state, no device needed.
 // =============================================================================
 
 #[cfg(test)]
@@ -3501,13 +3501,13 @@ mod tests {
 
     #[test]
     fn the_cards_threshold_is_strict_and_only_applies_to_auto() {
-        // `width < cardsBelow` — a container exactly at the threshold is still
+        // `width < cardsBelow` - a container exactly at the threshold is still
         // a table.
         assert_eq!(layout_mode(Layout::Auto, 700.0, 700.0), Mode::Table);
         assert_eq!(layout_mode(Layout::Auto, 699.99, 700.0), Mode::Cards);
         assert_eq!(layout_mode(Layout::Auto, 1200.0, 700.0), Mode::Table);
         // A container that genuinely measures 0 is honoured, not treated as
-        // wide — that is the bug the web's `width !== null` guard exists for.
+        // wide - that is the bug the web's `width !== null` guard exists for.
         assert_eq!(layout_mode(Layout::Auto, 0.0, 700.0), Mode::Cards);
         // A forced layout ignores the width in both directions.
         assert_eq!(layout_mode(Layout::Table, 10.0, 700.0), Mode::Table);
@@ -3548,7 +3548,7 @@ mod tests {
         let b = bounds();
         let top = t.layout_of(b).body.top;
         assert_eq!(t.row_at(b, 100.0, top + grid::ROW), Some(1));
-        // Row 2 exists in the model but is on page 2 — the band under row 1 is
+        // Row 2 exists in the model but is on page 2 - the band under row 1 is
         // empty, not row 2.
         assert_eq!(t.row_at(b, 100.0, top + 2.0 * grid::ROW), None);
         t.page = 1;
@@ -3711,7 +3711,7 @@ mod tests {
         assert_eq!(t.page_count(), 2);
         assert_eq!(t.page_index(), 1, "snapped back to the last page");
         assert_eq!(t.page_range(), 25..30);
-        // But page 0 is never snapped — that is what `page > 0` guards.
+        // But page 0 is never snapped - that is what `page > 0` guards.
         t.items.clear();
         t.page = 0;
         assert_eq!(t.page_index(), 0);

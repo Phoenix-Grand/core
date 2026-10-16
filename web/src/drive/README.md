@@ -9,15 +9,15 @@
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://github.com/kubuno/core/blob/main/LICENSE)
 [![Docs](https://img.shields.io/badge/docs-kubuno%2Fcore-4D38DB.svg)](https://github.com/kubuno/core)
 
-**The drive client surface for [Kubuno](https://github.com/kubuno/core) — reuse the file browser and storage UI in any file-backed module.**
+**The drive client surface for [Kubuno](https://github.com/kubuno/core) - reuse the file browser and storage UI in any file-backed module.**
 
-File-backed Kubuno modules (office, notes, flow, paintsharp…) don't reimplement a file picker: they reuse the drive module's client components — the generic file browser, storage explorer, and the standard file dialogs. `@kubuno/drive` exposes that surface. As with the rest of the SDK, the implementation is provided by the host at runtime; this package ships the **type surface**.
+File-backed Kubuno modules (office, notes, flow, paintsharp…) don't reimplement a file picker: they reuse the drive module's client components - the generic file browser, storage explorer, and the standard file dialogs. `@kubuno/drive` exposes that surface. As with the rest of the SDK, the implementation is provided by the host at runtime; this package ships the **type surface**.
 
 ## Overview
 
-- **Browsing** — `ModuleFileBrowser`, `ModuleStartPage`, `StorageExplorer`, `FolderGlyph`, `fileView`.
-- **Dialogs** — `MoveModal`, `RenameModal`, `BatchRenameModal`, `NewFolderModal`, `ShareModal`, `FileInfoModal`, `VersionHistoryModal`.
-- **Viewers, stores & helpers** — `FilesTextViewer`, `UploadPanel`, `useMarqueeSelection`, `storageSource`, the drive `api` and dialog/media stores.
+- **Browsing** - `ModuleFileBrowser`, `ModuleStartPage`, `StorageExplorer`, `FolderGlyph`, `fileView`.
+- **Dialogs** - `MoveModal`, `RenameModal`, `BatchRenameModal`, `NewFolderModal`, `ShareModal`, `FileInfoModal`, `VersionHistoryModal`.
+- **Viewers, stores & helpers** - `FilesTextViewer`, `UploadPanel`, `useMarqueeSelection`, `storageSource`, the drive `api` and dialog/media stores.
 
 ## Compatibility
 
@@ -43,7 +43,7 @@ function PickFile() {
 }
 ```
 
-> **Runtime note:** mark `@kubuno/drive` as `external` in your module build — the host
+> **Runtime note:** mark `@kubuno/drive` as `external` in your module build - the host
 > serves a single shared instance via its import map. This package is build-time types only
 > (its JS entry is a stub that throws if ever executed).
 

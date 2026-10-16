@@ -138,7 +138,7 @@ export class ForcePasswordChange extends ViewBase {
       // the brand-new password so the user lands on a fully valid session. The
       // fresh `user` payload also carries the cleared flag, which lifts this
       // screen. If anything gets in the way (2FA, network), fall back to a
-      // clean sign-out — the password change itself already went through.
+      // clean sign-out - the password change itself already went through.
       try {
         const { requiresTotp } = await this.login(this.email, this.form.next)
         if (requiresTotp) await this.logout()

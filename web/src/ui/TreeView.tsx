@@ -38,7 +38,7 @@ function ancestors(path: string): string[] {
 }
 
 /**
- * A tree of items that expand (the `.kbview` `TreeView`): WAI-ARIA tree pattern — `role="tree"`, treeitems with
+ * A tree of items that expand (the `.kbview` `TreeView`): WAI-ARIA tree pattern - `role="tree"`, treeitems with
  * `aria-level`, `aria-setsize`, `aria-posinset`, `aria-expanded`; Up / Down, Home / End, Page Up / Page Down,
  * Right (Left in RTL) expands then enters, Left collapses then goes to the parent, Enter activates, type-ahead.
  * Virtualised over the shown rows.

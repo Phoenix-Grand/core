@@ -1,6 +1,6 @@
 <!--
   The confirmation asked before something destructive (deleting a label, disconnecting an account,
-  signing out): an in-window dialog over a veil, as the shell always showed it — the page underneath
+  signing out): an in-window dialog over a veil, as the shell always showed it - the page underneath
   takes no input until it closes. The glyph on its disc says how serious it is (danger, warning), the
   message says what will happen, and the confirming action says it again (« Supprimer », « Déconnecter »).
   Enter confirms, Escape and « Annuler » cancel. ConfirmDialog (confirm_dialog.rs) fills it in.

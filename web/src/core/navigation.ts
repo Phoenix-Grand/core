@@ -2,12 +2,12 @@
  * SPA navigation for code that runs OUTSIDE React.
  *
  * Menus are data now (`MenuItem[]` built by a plain function), background workers
- * and registries likewise — none of them can call React Router's `useNavigate`.
+ * and registries likewise - none of them can call React Router's `useNavigate`.
  * Every module had therefore copy-pasted the same `pushState` + synthetic
  * `popstate` helper; this is that helper, once, in the core.
  *
  * The shell hands it the router's real `navigate` (see `Shell.tsx`), so links go
- * through React Router proper. Before that (or outside the router — a module
+ * through React Router proper. Before that (or outside the router - a module
  * bundle registering at boot), it falls back to History API + a synthetic
  * `popstate`, which the router listens to.
  */

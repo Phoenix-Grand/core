@@ -16,7 +16,7 @@ kubuno-desktop-views        = { workspace = true }
 kubuno-desktop-views-macros = { workspace = true }
 # Logging, re-exported as `kubuno_desktop::tracing` (the templates log with it).
 tracing             = { workspace = true }
-# The printing stack (`kubuno_desktop::printing`): PrintDocument, the preview and the print dialogs — part of
+# The printing stack (`kubuno_desktop::printing`): PrintDocument, the preview and the print dialogs - part of
 # Windows Forms itself, so always there (it adds no `windows` feature: see its Cargo.toml).
 kubuno-desktop-print        = { workspace = true }
 # Resources (`kubuno_desktop::resources!`, the UI culture): `.kbres` files embedded at compile time.

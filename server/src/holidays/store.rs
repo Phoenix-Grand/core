@@ -257,7 +257,7 @@ pub async fn calendar(db: &DbPool, id: Uuid) -> Result<HolidayCalendar, AppError
     Ok(row.into_calendar())
 }
 
-/// The days declared on one calendar, and — when `include_inherited` — the ones
+/// The days declared on one calendar, and - when `include_inherited` - the ones
 /// it takes from its country, exclusions already applied.
 ///
 /// Returns `(holiday, inherited)` so the console can show an inherited row as
@@ -322,7 +322,7 @@ pub async fn exclusions(db: &DbPool, calendar_id: Uuid) -> Result<Vec<String>, A
 /// What one organisational unit turns on or off, closest ancestor first.
 ///
 /// The walk goes *up*: a unit inherits its parent's adjustments, and its own
-/// answer wins over theirs — the same rule as `core.setting_values`, so an
+/// answer wins over theirs - the same rule as `core.setting_values`, so an
 /// operator does not have to hold two inheritance models in their head.
 pub async fn unit_prefs(
     db: &DbPool,
@@ -364,13 +364,13 @@ pub struct FeedQuery<'a> {
     pub codes: &'a [String],
     pub from: NaiveDate,
     pub to: NaiveDate,
-    /// Empty means every category — a module that has not filtered wants the
+    /// Empty means every category - a module that has not filtered wants the
     /// whole answer, not a silently narrowed one.
     pub categories: &'a [Category],
     pub locale: &'a str,
     /// The reader's unit, when known: what the overlay is applied for.
     pub org_unit_id: Option<Uuid>,
-    /// `intl.holidays_enabled` — when false, only what this instance declared
+    /// `intl.holidays_enabled` - when false, only what this instance declared
     /// itself is served.
     pub builtin_enabled: bool,
 }

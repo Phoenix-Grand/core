@@ -37,7 +37,7 @@ struct InventoryRow {
 }
 
 /// Reads it back. Best-effort: a rotation must never fail because the inventory
-/// could not be consulted — the session is what keeps the user signed in, the
+/// could not be consulted - the session is what keeps the user signed in, the
 /// inventory is what tells an operator about it.
 pub(super) async fn session_inventory(state: &AppState, session_id: uuid::Uuid) -> SessionInventory {
     let row = state
@@ -68,8 +68,8 @@ pub(super) async fn session_inventory(state: &AppState, session_id: uuid::Uuid) 
 ///
 /// The check lives on the refresh path because that is the only moment a
 /// blocked machine comes back: an access token already issued keeps working
-/// until it expires (fifteen minutes), and revoking the sessions at block time —
-/// which the console does — closes that window from the other side.
+/// until it expires (fifteen minutes), and revoking the sessions at block time -
+/// which the console does - closes that window from the other side.
 pub(super) async fn device_is_blocked(state: &AppState, device_id: Option<uuid::Uuid>) -> bool {
     let Some(device_id) = device_id else {
         return false;
@@ -96,7 +96,7 @@ pub(super) async fn device_is_blocked(state: &AppState, device_id: Option<uuid::
 
 /// Rotation grace: heals a native client that lost the successor token (killed
 /// between the server rotation and its own persistence). Eligible only when the
-/// successor has NEVER been used — it then gets superseded by a fresh token in
+/// successor has NEVER been used - it then gets superseded by a fresh token in
 /// the same family. Returns None when the presentation must be treated as reuse.
 async fn try_rotation_grace(
     state: &AppState,
@@ -207,7 +207,7 @@ async fn try_rotation_grace(
     post,
     path = "/api/v1/auth/refresh",
     tag = "auth",
-    request_body(content = RefreshRequest, description = "Optionnel — clients natifs. Le web envoie le refresh via cookie."),
+    request_body(content = RefreshRequest, description = "Optionnel - clients natifs. Le web envoie le refresh via cookie."),
     responses(
         (status = 200, description = "Nouveau couple (natif, avec rotation) ou nouvel access_token (web)", body = NativeTokenResponse),
         (status = 401, description = "Refresh invalide, expiré ou réutilisé")
@@ -265,14 +265,14 @@ pub async fn refresh(
     // whole device family (the thief AND the legitimate user must sign in again).
     //
     // ROTATION GRACE: a native client killed/crashed BETWEEN the server rotation
-    // and its persistence of the new token replays the old one on restart — this
+    // and its persistence of the new token replays the old one on restart - this
     // is not theft. If the successor has NEVER served, `try_rotation_grace`
     // replaces it with a fresh token instead of revoking the family; an already
     // used successor returns None → we fall back to the revocation below.
     //
     // WINDOW: a VIRGIN successor alone proves the crash case (a thief who
     // intercepted the rotation would present the successor, not the old token),
-    // so the window is wide (24 h) — a dev loop that kills/restarts the app well
+    // so the window is wide (24 h) - a dev loop that kills/restarts the app well
     // beyond 60 s stays clean. It remains anchored on the ORIGINAL `revoked_at`
     // (grace does not move it), so a crash-loop cannot extend it indefinitely;
     // and the "successor already used" case keeps the immediate revocation (via
@@ -296,7 +296,7 @@ pub async fn refresh(
                     params![Utc::now(), family],
                 )
                 .await?;
-            tracing::warn!(user_id = %rt.user_id, family_id = %family, "Refresh token reuse detected — family revoked");
+            tracing::warn!(user_id = %rt.user_id, family_id = %family, "Refresh token reuse detected - family revoked");
         }
         return Err(AppError::Unauthorized);
     }

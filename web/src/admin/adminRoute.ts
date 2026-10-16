@@ -21,20 +21,20 @@ import { NAV_INDEX, type AdminUrlShape } from './adminNav'
  * ── Why each section DECLARES its shape ──────────────────────────────────────
  *
  * The second segment is an id in `/admin/users/<uuid>` and a pane in
- * `/admin/resources/buildings`. Nothing in those two strings says which — and
+ * `/admin/resources/buildings`. Nothing in those two strings says which - and
  * guessing from the shape of the segment ("it looks like a UUID, so it is an
  * id") holds exactly until the first identifier that is not a UUID, then fails
  * silently on a URL an operator pasted.
  *
  * So the answer is not inferred, it is declared: every section that puts
- * anything after its own id carries an `url` block in `adminNav.ts` — the name
+ * anything after its own id carries an `url` block in `adminNav.ts` - the name
  * of its entity parameter, and the CLOSED list of its pane ids. Reading and
  * writing both go through this module, which reads that declaration; a section
  * that declares nothing simply keeps its parameters in the query string, which
  * is a degradation, never a misreading.
  *
  * Two rules the declaration must respect (both stated in `adminNav.ts`):
- *   • pane ids are stable, untranslated identifiers (`security`, `buildings`) —
+ *   • pane ids are stable, untranslated identifiers (`security`, `buildings`) -
  *     an address may not change shape with the interface language;
  *   • no record id may collide with one of the section's pane ids.
  *
@@ -46,31 +46,31 @@ import { NAV_INDEX, type AdminUrlShape } from './adminNav'
  * `dynamicPanes: true` next to its `entity`, and the third segment is then
  * taken as a pane whatever it spells.
  *
- * That is still declaring rather than guessing: the shape — a record, then its
- * panes — is what the section states, and the flag only says whose vocabulary
+ * That is still declaring rather than guessing: the shape - a record, then its
+ * panes - is what the section states, and the flag only says whose vocabulary
  * fills the last segment. It cannot misread anything, because it is honoured in
  * THIRD position only: the record has already claimed the second segment, so no
  * "record or pane?" question is left to answer. And because a pane read this way
  * may name a page that no longer exists, the section owes a fallback (see
- * `ModuleAdminPage`) — never a blank screen.
+ * `ModuleAdminPage`) - never a blank screen.
  *
  * ── One builder, one reader ──────────────────────────────────────────────────
  *
  * `adminUrl()` is the only place an admin address is spelt: a caller passes
  * `params: { user: id, pane: 'security' }` and never has to know where those two
  * land. `useAdminParams()` does the reverse for the sections, republishing the
- * path segments under their parameter names — so a section keeps asking for
+ * path segments under their parameter names - so a section keeps asking for
  * `params.get('user')` and knows nothing of any of this.
  *
  * ── Historic addresses ───────────────────────────────────────────────────────
  *
  * `/admin?tab=users&user=<id>&pane=security` is minted in alerts, in e-mails and
  * in operators' bookmarks. `AdminPage` rewrites any non-canonical spelling to
- * the canonical one (`canonicalAdminUrl`) with a history REPLACEMENT — an
+ * the canonical one (`canonicalAdminUrl`) with a history REPLACEMENT - an
  * addition would make the Back button bounce between the two forever.
  */
 
-/** The landing section — the one that owns `/admin` itself, with no segment. */
+/** The landing section - the one that owns `/admin` itself, with no segment. */
 export const ADMIN_HOME = 'home'
 
 /** Root of the console. */
@@ -113,7 +113,7 @@ export interface AdminPlace {
  * Reads a pathname into a place.
  *
  * A segment the declaration does not account for is DROPPED rather than
- * guessed at — `canonicalAdminUrl` then rewrites the address without it, so a
+ * guessed at - `canonicalAdminUrl` then rewrites the address without it, so a
  * malformed URL heals into a valid one instead of rendering something nobody
  * asked for.
  */
@@ -124,7 +124,7 @@ export function placeFromPath(pathname: string): AdminPlace {
   const shape   = urlShapeOf(tab)
   const isPane  = (v: string | undefined) => !!v && !!shape?.panes?.includes(v)
   const hasEnt  = !!shape?.entity
-  // A record's own vocabulary, readable only in third position — never in
+  // A record's own vocabulary, readable only in third position - never in
   // second, where it would turn the record into a pane (see `dynamicPanes`).
   const dynamic = hasEnt && !!shape?.dynamicPanes
 
@@ -145,7 +145,7 @@ export function placeFromPath(pathname: string): AdminPlace {
 export const tabFromPath = (pathname: string): string => placeFromPath(pathname).tab
 
 /**
- * Does this section spell `pane` in the path — and, for a section whose panes
+ * Does this section spell `pane` in the path - and, for a section whose panes
  * belong to its record, is there a record for it to belong to?
  *
  * The `hasRecord` guard is what keeps `dynamicPanes` to third position on the
@@ -185,12 +185,12 @@ export interface AdminUrlTarget {
   action?: string
   /** The resource the verb applies to, when it needs one. */
   id?:     string
-  /** What the destination reads — `user`, `pane`, `q`… Placed by the declaration. */
+  /** What the destination reads - `user`, `pane`, `q`… Placed by the declaration. */
   params?: Record<string, string | number | null | undefined>
 }
 
 /**
- * Builds the canonical URL of a target — the single place an admin address is
+ * Builds the canonical URL of a target - the single place an admin address is
  * spelt. See `adminUrl` in adminAction.ts, which is the name callers use.
  */
 export function buildAdminUrl(target: AdminUrlTarget): string {
@@ -222,7 +222,7 @@ export function buildAdminUrl(target: AdminUrlTarget): string {
 }
 
 /**
- * The address you are at, with a few parameters changed — "stay here, but open
+ * The address you are at, with a few parameters changed - "stay here, but open
  * that record" / "switch pane". A `null` (or empty) value drops the parameter.
  *
  * Sections used to spell this by hand (`new URLSearchParams(params)`, then
@@ -246,7 +246,7 @@ export function useAdminTab(): string {
 }
 
 /**
- * The whole place currently on screen — section, open record, pane.
+ * The whole place currently on screen - section, open record, pane.
  *
  * What `useAdminTab` gives is enough to highlight a menu SECTION; a menu that
  * also lists records (the installed modules under Applications) has to tell
@@ -262,7 +262,7 @@ export function useAdminPlace(): AdminPlace {
  * under the parameter names the section already asks for.
  *
  * One translation, here, instead of every section learning where its id is
- * spelt — which is what keeps `params.get('user')` working unchanged.
+ * spelt - which is what keeps `params.get('user')` working unchanged.
  */
 export function useAdminParams(): URLSearchParams {
   const { pathname } = useLocation()
@@ -292,15 +292,15 @@ export function sectionParams(pathname: string, search: URLSearchParams): URLSea
  * The canonical spelling of the current address, or `null` when it already is
  * canonical.
  *
- * Covers every historic form in ONE hop — `/admin?tab=users&user=<id>&pane=security`
- * goes straight to `/admin/users/<id>/security`, never through an intermediate —
+ * Covers every historic form in ONE hop - `/admin?tab=users&user=<id>&pane=security`
+ * goes straight to `/admin/users/<id>/security`, never through an intermediate -
  * and is idempotent: fed its own output, it returns `null`.
  */
 /**
  * Section ids that were renamed, mapped to their current spelling.
  *
  * A renamed section is not a query-param migration `canonicalAdminUrl` already
- * handles — it is a different path segment — so a bookmark to the old id would
+ * handles - it is a different path segment - so a bookmark to the old id would
  * otherwise land on "Section introuvable". `speech-to-text` became
  * `voice-search` when the feature stopped being framed as a module.
  */

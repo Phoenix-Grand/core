@@ -1,4 +1,4 @@
-<!-- DevicesSection — converted from DevicesSection.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- DevicesSection - converted from DevicesSection.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <Panel x:Props="AdminSectionProps" Class="contents">
   <DeviceDetail Id="{Binding device_detail_id}" OnBack="device_detail_back" Visible="{Binding show_case_1}"/>
   <Panel Visible="{Binding show_main}" Class="min-w-0">

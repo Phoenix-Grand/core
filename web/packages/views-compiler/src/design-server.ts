@@ -2,17 +2,17 @@
  * The design surface's dev-server route (vskubuno docs/WEB-VIEWS.md §4.2, lot WV-9b): in `vite serve`, the
  * project's own dev server also serves the page the Visual Studio web designer (WebView2) shows.
  *
- * - `GET /__kubuno_design__/` — an HTML page that loads the design entry, passed through
+ * - `GET /__kubuno_design__/` - an HTML page that loads the design entry, passed through
  *   `server.transformIndexHtml` (so the Vite client and the React refresh preamble are injected). The entry is
  *   `kubuno.views.json` → `design.entry` (a project-root-relative file, e.g. the core's
  *   `src/views/design/entry.tsx`), else `@kubuno/host-runtime/entry` (module projects: the package's project-mode
  *   entry, loaded at its own URL so that its relative URLs resolve; see `host-runtime.ts`).
- * - `GET /__kubuno_design__/project.json` — what the page's in-browser compiler needs, read exactly as
+ * - `GET /__kubuno_design__/project.json` - what the page's in-browser compiler needs, read exactly as
  *   `ViewProject` reads it: the host registry's text, the project registries (project-local modules rewritten to
  *   project-root-relative specifiers, `/src/x`), the user controls, the plan ABI and the compiler's version; and the
  *   URLs of the project modules the page imports before it renders (`design.setup`: the project's stylesheet, its
  *   translations).
- * - `GET /__kubuno_design__/themes/<id>/<file>` — the Kubuno themes the page can apply (`design.themes`, a folder
+ * - `GET /__kubuno_design__/themes/<id>/<file>` - the Kubuno themes the page can apply (`design.themes`, a folder
  *   of `<id>/theme.json` + its CSS, else the host runtime's; only `.json` and `.css` files are served).
  * - While the server listens, `<root>/.kubuno/design-server.json` tells Visual Studio where the page is
  *   (`{version, urls, designPath, pid, root}`); it is removed when the server closes or the process exits.

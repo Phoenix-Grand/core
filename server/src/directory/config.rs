@@ -2,7 +2,7 @@
 //! that never travels in clear.
 //!
 //! The service-account password is stored as an AES-256-GCM blob keyed by a
-//! domain-separated derivation of the JWT secret — the same construction the
+//! domain-separated derivation of the JWT secret - the same construction the
 //! SMTP relay (`crate::mailer::config`) and the OIDC client secrets
 //! (`crate::auth::oauth`) use. The three keys differ, so one of them leaking
 //! never unlocks another.
@@ -14,7 +14,7 @@ use crate::{crypto::encryption, errors::AppError};
 
 use super::model::LdapDirectory;
 
-/// Master switch. Off, no sign-in attempt reaches any directory — the lever an
+/// Master switch. Off, no sign-in attempt reaches any directory - the lever an
 /// operator pulls at 3 a.m. without editing every row.
 pub const KEY_LOGIN_ENABLED: &str = "auth.directory_login_enabled";
 /// Instance default for provisioning on a first successful directory sign-in.
@@ -56,7 +56,7 @@ pub fn decrypt_password(jwt_secret: &str, blob: &str) -> String {
         Err(e) => {
             tracing::error!(
                 error = %e,
-                "annuaire : mot de passe de service indéchiffrable (secret JWT changé ?) — liaison anonyme"
+                "annuaire : mot de passe de service indéchiffrable (secret JWT changé ?) - liaison anonyme"
             );
             String::new()
         }

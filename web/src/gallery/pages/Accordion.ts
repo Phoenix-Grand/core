@@ -9,7 +9,7 @@ export class Accordion extends ViewBase {
   @bind accessor last = ''
 
   get status(): string {
-    return `first: ${this.first} — toggles: ${this.toggles} ${this.last}`
+    return `first: ${this.first} - toggles: ${this.toggles} ${this.last}`
   }
 
   section_toggled(_sender: ElementHandle, e: ValueChangedEventArgs<boolean>): void {

@@ -1,10 +1,10 @@
-//! The control library's demo application — the « formulaires fictifs ».
+//! The control library's demo application - the « formulaires fictifs ».
 //!
 //! One page per control family, each mirroring the reference sheet the real
 //! toolkit produced (`C:\kubuno-build\winforms-ref\shots\NN-family.png`), so the
 //! two can be put side by side and read as the same document. Every pixel comes
 //! from the library: the demo owns no painter, no font and no metric of its own,
-//! and it hard-codes no DPI — sizes come from each control's `preferred_size`
+//! and it hard-codes no DPI - sizes come from each control's `preferred_size`
 //! and from `Canvas::scale()` inside the controls themselves.
 //!
 //! ```text
@@ -16,7 +16,7 @@
 //! There is deliberately no `--shot`: the host hands the paint closure a
 //! `&dyn Canvas`, which has no read-back, and neither `Frame` nor `Canvas`
 //! exposes the swap chain or the concrete `Painter`. Capturing a page to PNG
-//! from inside this binary is therefore not possible with today's API — screen
+//! from inside this binary is therefore not possible with today's API - screen
 //! captures are taken from outside instead.
 
 mod pages;
@@ -28,7 +28,7 @@ use kubuno_desktop_controls::host::{self, Frame};
 use kubuno_desktop_controls::layout_panels::{flow_layout, FlowChild, FlowDirection};
 use kubuno_desktop_controls::{Appearance, Control, ControlCanvas, Padding, Rect};
 
-/// The band the page switcher sits in, and the spacing between its tabs — the
+/// The band the page switcher sits in, and the spacing between its tabs - the
 /// same DIP vocabulary the sheet uses.
 const SWITCHER_PADDING: Padding = Padding::all(8.0);
 const TAB_MARGIN: Padding = Padding::all(4.0);
@@ -43,7 +43,7 @@ const COINIT_APARTMENTTHREADED: u32 = 0x2;
 
 // The renderer behind `Canvas` builds its bitmaps through WIC, which is a COM
 // class: on a thread with no apartment `CoCreateInstance` fails, `Renderer::new`
-// returns an error, and `host::run` — which swallows it with `.ok()` — paints a
+// returns an error, and `host::run` - which swallows it with `.ok()` - paints a
 // blank window. The drive shell's own `main` initialises COM before it opens its
 // window for exactly this reason; `host::run` does not, so the demo must.
 //
@@ -67,7 +67,7 @@ fn main() {
     let mut was_down = false;
 
     let result = host::run(
-        "Kubuno — galerie de contrôles",
+        "Kubuno - galerie de contrôles",
         1500,
         1000,
         opts.theme,
@@ -85,7 +85,7 @@ fn main() {
 
 /// Paints the page switcher and returns the bottom of its band.
 ///
-/// The tabs are `CheckBox`es in `Appearance::Button` — the library's own toggle
+/// The tabs are `CheckBox`es in `Appearance::Button` - the library's own toggle
 /// face, so the selected page reads as pressed without the demo inventing a
 /// look. Hit-testing goes through `Control::hit_test` against `Frame::mouse`,
 /// and the click is edge-triggered so holding the button does not cycle pages.
@@ -129,7 +129,7 @@ fn switcher(c: &dyn ControlCanvas, f: &Frame, area: Rect, current: &mut usize, w
         } else if t.hit_test(f.mouse.0, f.mouse.1) {
             // `ButtonBase` paints its face from the theme alone, so hover can
             // only be expressed through the one colour it does resolve from the
-            // control — the foreground.
+            // control - the foreground.
             t.fore_color = Some(c.theme().accent);
         }
     }

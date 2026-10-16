@@ -4,7 +4,7 @@
  * A module (contacts, mail…) contributes a source of mention candidates by
  * registering a `MentionProvider` at the `'mentions.provider'` extension point.
  * Any mention-aware field (`Input`/`Textarea`/`RichText` with `mentions`) then
- * discovers those providers DYNAMICALLY — with no provider registered, mentions
+ * discovers those providers DYNAMICALLY - with no provider registered, mentions
  * are simply inert (silent degradation), per the polyrepo « never assume a
  * module is installed » rule.
  *
@@ -66,8 +66,8 @@ function withSignedAvatars(provider: MentionProvider): MentionProvider {
 /**
  * The instance's own people, offered wherever `@` is typed.
  *
- * A mention field asked the modules and nobody else: with contacts absent — or
- * simply holding nobody by that name — typing `@` did nothing at all, which
+ * A mention field asked the modules and nobody else: with contacts absent - or
+ * simply holding nobody by that name - typing `@` did nothing at all, which
  * reads as a broken feature rather than an empty one. Yet the one thing every
  * instance always has is its own accounts, and they belong to the core.
  *
@@ -90,7 +90,7 @@ export function installDirectoryMentions(): void {
         return (data.users ?? []).map(u => ({
           id:           u.id,
           label:        u.display_name || u.username,
-          // The address when the policy shares it, the username otherwise —
+          // The address when the policy shares it, the username otherwise -
           // something to tell two people of the same name apart either way.
           secondary:    u.email ?? u.username,
           avatarUrl:    u.avatar_url ?? undefined,

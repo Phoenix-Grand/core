@@ -2,7 +2,7 @@
 //
 // The five modes are the whole point of this screen, so their presentation is
 // centralised: a mode is never rendered as its wire string, and the badge colour
-// is a promise about what the rule is allowed to do — simulation must never look
+// is a promise about what the rule is allowed to do - simulation must never look
 // like enforcement, and enforcement must never look ordinary.
 
 import type { TFunction } from 'i18next'

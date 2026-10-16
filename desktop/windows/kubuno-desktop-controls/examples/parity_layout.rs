@@ -1,8 +1,8 @@
 //! The port's side of the layout parity harness.
 //!
 //! It reads the SHARED case list (`tools/winforms-ref/parity/cases.json`), runs
-//! every case through the real layout engine — [`kubuno_desktop_controls::layout::layout`]
-//! and [`Panel::local_display_rect`], nothing re-implemented — and writes
+//! every case through the real layout engine - [`kubuno_desktop_controls::layout::layout`]
+//! and [`Panel::local_display_rect`], nothing re-implemented - and writes
 //! `tools/winforms-ref/parity/out/layout-port.json` in the same shape the
 //! WinForms probe writes. `compare-layout.ps1` then diffs the two.
 //!
@@ -17,7 +17,7 @@
 //!
 //! ## What « the same case » means on this side
 //!
-//! Each node is a [`Panel`] — leaf and container differ only in whether they
+//! Each node is a [`Panel`] - leaf and container differ only in whether they
 //! have children, so no control-specific preferred size can leak into the
 //! numbers. The tree is walked exactly as [`Children::perform_layout`] walks one
 //! level, recursing into each child afterwards:
@@ -26,17 +26,17 @@
 //! * the items come from `Item::from(&ControlBase)`,
 //! * the rectangles come from `layout::layout(display, previous, &items)`,
 //! * `previous` is the display rect of this node's PREVIOUS pass, `None` on the
-//!   first — the same rule `Children` applies.
+//!   first - the same rule `Children` applies.
 //!
 //! The recursion is the only thing this file adds, because `Children` lays out
 //! one level and stores its children as `Box<dyn Control>`, which cannot be
 //! walked back down as concrete containers.
 //!
-//! ## Coordinate spaces — read this before judging a delta
+//! ## Coordinate spaces - read this before judging a delta
 //!
 //! WinForms reports a child's `Bounds` relative to its parent's CLIENT
 //! rectangle. The port's layout engine returns rectangles relative to the
-//! parent's DISPLAY rectangle (the client rect already deflated by padding —
+//! parent's DISPLAY rectangle (the client rect already deflated by padding -
 //! see `local_display_rect`, which deliberately puts its top-left at the
 //! origin). With zero padding the two coincide; with padding they differ by the
 //! padding's top-left. Both probes therefore also record the container's own
@@ -59,7 +59,7 @@ use kubuno_desktop_controls::enums::{AnchorStyles, DockStyle, Padding, Size};
 use kubuno_desktop_controls::layout::{self, Item};
 
 // ─────────────────────────────────────────────────────────────────────────────
-// A minimal JSON reader — just enough for the case file.
+// A minimal JSON reader - just enough for the case file.
 // ─────────────────────────────────────────────────────────────────────────────
 
 /// The subset of JSON the case file uses. `Null` exists only so a missing key
@@ -301,7 +301,7 @@ impl<'a> Parser<'a> {
 /// its previous layout pass.
 ///
 /// `previous` is the state [`kubuno_desktop_controls::containers::Children`] keeps for
-/// exactly the same reason — anchoring is defined against the CHANGE in size, so
+/// exactly the same reason - anchoring is defined against the CHANGE in size, so
 /// a first pass legitimately moves nothing.
 struct Node {
     panel:    Panel,
@@ -338,13 +338,13 @@ fn build(spec: &Json) -> Node {
     Node { panel, kids, previous: None }
 }
 
-/// Lays a node's children out, then recurses — one pass over the whole subtree.
+/// Lays a node's children out, then recurses - one pass over the whole subtree.
 ///
 /// The three lines that matter are the ones `Children::perform_layout` runs:
 /// take the container's display rect in its own local space, feed the engine the
 /// items and the previous rect, write the results back onto the children.
 fn lay_out(node: &mut Node) {
-    // `Panel::local_display_rect` — the port's own padding/border model, not a
+    // `Panel::local_display_rect` - the port's own padding/border model, not a
     // reimplementation of it. A `Panel` defaults to `BorderStyle::None`, so the
     // only inset is the padding, which is what the WinForms `Panel` does too.
     let display = node.panel.local_display_rect();
@@ -359,8 +359,8 @@ fn lay_out(node: &mut Node) {
     }
 }
 
-/// Walks the laid-out tree in collection order — the same index a child has in
-/// the WinForms `Controls` collection — and records each rectangle.
+/// Walks the laid-out tree in collection order - the same index a child has in
+/// the WinForms `Controls` collection - and records each rectangle.
 fn emit(node: &Node, prefix: &str, sink: &mut String) {
     for (i, kid) in node.kids.iter().enumerate() {
         let path =
@@ -378,7 +378,7 @@ fn emit(node: &Node, prefix: &str, sink: &mut String) {
         );
         if !kid.kids.is_empty() {
             // The nested container's display rect, in the SAME space its own
-            // children's bounds are expressed in — which for the port is its
+            // children's bounds are expressed in - which for the port is its
             // local space, top-left at the origin. The WinForms probe records
             // `DisplayRectangle`, which is in the container's client space. The
             // compare script uses the pair to separate that origin convention
@@ -445,7 +445,7 @@ fn read_anchor(v: &Json) -> AnchorStyles {
 /// Formats a rectangle the way the C# probe does: `[left, top, right, bottom]`.
 /// The port works in `f32` and WinForms in `int`; a whole number is written
 /// without a decimal point so the two files read the same, and a fractional one
-/// is written as-is rather than rounded — a rounded fraction would hide exactly
+/// is written as-is rather than rounded - a rounded fraction would hide exactly
 /// the sub-DIP disagreement the harness exists to catch.
 fn rect_json(r: Rect) -> String {
     format!(

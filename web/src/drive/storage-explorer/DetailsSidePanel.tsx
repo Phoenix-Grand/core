@@ -4,7 +4,7 @@
  * Replaces the floating "Informations" window for the explorer: a window had to
  * be dismissed before the next file could be inspected, so comparing two items
  * meant opening and closing it twice. The panel stays open and follows the
- * selection — which is what makes it useful with nothing selected too, as a
+ * selection - which is what makes it useful with nothing selected too, as a
  * place that says what to do rather than an empty rectangle.
  *
  * Renders the BODY only: the shell draws the title, the close button, the

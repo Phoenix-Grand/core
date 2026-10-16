@@ -67,7 +67,7 @@ pub(crate) fn dts(opts: &CompileOptions, facts: &Facts) -> String {
         types.extend(args.iter().cloned());
     }
     let mut out = String::new();
-    let _ = writeln!(out, "// {GENERATED_BY} from {} — do not edit (rebuilt on every change; never committed).", opts.file);
+    let _ = writeln!(out, "// {GENERATED_BY} from {} - do not edit (rebuilt on every change; never committed).", opts.file);
     let imports: Vec<String> = types.iter().map(|t| format!("{t} as __{t}")).collect();
     let _ = writeln!(out, "import type {{ {} }} from '@kubuno/views'", imports.join(", "));
     let props = match (&facts.props_type, &opts.code_behind) {
@@ -149,7 +149,7 @@ fn scope_expr(rows: &[String]) -> String {
 pub(crate) fn check(opts: &CompileOptions, facts: &Facts) -> (String, Vec<CheckSpan>) {
     let mut w = CheckWriter { text: String::new(), line: 0, spans: Vec::new() };
     let file_name = opts.file.rsplit('/').next().unwrap_or(&opts.file).to_string();
-    w.push_line(&format!("// {GENERATED_BY} from {} — do not edit. Type-checks the view's bindings against its code-behind;", opts.file));
+    w.push_line(&format!("// {GENERATED_BY} from {} - do not edit. Type-checks the view's bindings against its code-behind;", opts.file));
     w.push_line("// kbview-tsc maps every error back to the .kbview (see the .check.json next to this file).");
     w.push_line("/* eslint-disable */");
     match &opts.code_behind {
@@ -223,7 +223,7 @@ fn ts_string(s: &str) -> String {
 /// set (attached, design-time and root-only properties excluded).
 pub fn handle_types(reg: &WebRegistry) -> String {
     let mut out = String::new();
-    let _ = writeln!(out, "// {GENERATED_BY} (handle_types) from kbview-registry.web.json — do not edit; `npm run build:views-handles`.");
+    let _ = writeln!(out, "// {GENERATED_BY} (handle_types) from kbview-registry.web.json - do not edit; `npm run build:views-handles`.");
     out.push_str("/* eslint-disable */\nimport type { ElementHandle } from './view'\n\n");
     // Elements rendered by `@kubuno/views` itself (`Repeater`, `Timer`…) declare their handle next to their
     // component (a value and a type of the same name must live in one module).
@@ -231,7 +231,7 @@ pub fn handle_types(reg: &WebRegistry) -> String {
     elements.sort_by(|a, b| a.entry.name.cmp(&b.entry.name));
     for el in &elements {
         let doc = el.entry.doc.lines().next().unwrap_or_default().replace("*/", "* /");
-        let _ = writeln!(out, "/** `<{}>` — {} */", el.entry.name, doc);
+        let _ = writeln!(out, "/** `<{}>` - {} */", el.entry.name, doc);
         let _ = writeln!(out, "export interface {} extends ElementHandle {{", el.entry.name);
         let mut seen = BTreeSet::new();
         for p in &el.entry.properties {

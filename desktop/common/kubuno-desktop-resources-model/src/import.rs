@@ -1,4 +1,4 @@
-//! Import of .NET resource files (`.resx`, and the `.resw` of UWP/WinUI apps — the same format):
+//! Import of .NET resource files (`.resx`, and the `.resw` of UWP/WinUI apps - the same format):
 //! their string entries (`<data name="X" xml:space="preserve"><value>…</value><comment>…</comment></data>`)
 //! become `String` entries. Non-string data (`type="System.Drawing.Bitmap…"`, `mimetype=…`) and
 //! file references (`System.Resources.ResXFileRef`) are reported, not converted.

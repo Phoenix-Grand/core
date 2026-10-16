@@ -1,6 +1,6 @@
 import { resolveCssColor } from './canvasColor'
 
-/* Canvas painter for the `Checkbox` — pure drawing, no React. Same split as
+/* Canvas painter for the `Checkbox` - pure drawing, no React. Same split as
  * `toggleCanvas.ts` / `radioCanvas.ts`: the geometry and the paint pass can be read
  * (and tested) on their own. All lengths are in CSS pixels; the device pixel ratio is
  * applied at paint time. */
@@ -35,7 +35,7 @@ export type CheckboxVariant = 'default' | 'dark'
 
 /* Colours come from the theme tokens rather than being hard-coded, so a runtime
  * theme or a per-module accent (`[data-module="<id>"]`) still applies. `dark` stays
- * literal — it is fixed editor chrome (VS Code tones), not the dark theme. */
+ * literal - it is fixed editor chrome (VS Code tones), not the dark theme. */
 export function readCheckboxPalette(el: Element, variant: CheckboxVariant, color?: string): CheckboxPalette {
   const cs = getComputedStyle(el)
   const token = (name: string, fallback: string) => cs.getPropertyValue(name).trim() || fallback
@@ -107,7 +107,7 @@ export function paintCheckbox(canvas: HTMLCanvasElement, opts: PaintCheckboxOpti
   ctx.stroke()
 
   /* Checked box painted OVER it at `filled` alpha. Cross-fading replaces
-   * interpolating the two colours, which would mean parsing them — and a theme is
+   * interpolating the two colours, which would mean parsing them - and a theme is
    * free to express them as hex, rgb() or oklch(). */
   if (filled > 0) {
     ctx.globalAlpha = filled
@@ -120,7 +120,7 @@ export function paintCheckbox(canvas: HTMLCanvasElement, opts: PaintCheckboxOpti
   }
 
   if (opts.indeterminate) {
-    // Dash — the tri-state the DOM property carried but nothing ever drew.
+    // Dash - the tri-state the DOM property carried but nothing ever drew.
     const w = g.tick, h = Math.max(2, Math.round(g.border))
     const x = (g.size - w) / 2, y = (g.size - h) / 2
     ctx.beginPath()
@@ -130,7 +130,7 @@ export function paintCheckbox(canvas: HTMLCanvasElement, opts: PaintCheckboxOpti
     return
   }
 
-  // Tick — scales from the centre, like the CSS `transform: scale()` it replaces.
+  // Tick - scales from the centre, like the CSS `transform: scale()` it replaces.
   if (progress > 0) {
     const s = g.tick * progress
     const ox = (g.size - s) / 2

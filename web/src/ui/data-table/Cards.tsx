@@ -23,7 +23,7 @@ export interface CardsProps<T> {
 }
 
 /**
- * Narrow layout — the table becomes a list of cards.
+ * Narrow layout - the table becomes a list of cards.
  *
  * This is a different HIERARCHY, not a squeezed table: the primary column
  * becomes the card's title, the remaining columns become label/value pairs, and

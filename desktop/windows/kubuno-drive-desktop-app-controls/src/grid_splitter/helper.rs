@@ -10,7 +10,7 @@
 //! are not ported.
 
 /// `SetColumnWidth`/`SetRowHeight`: current width + delta, clamped to
-/// `[min, max]`. `grip` is the handle's own width — the original forbids the
+/// `[min, max]`. `grip` is the handle's own width - the original forbids the
 /// column from shrinking below the handle (`newWidth > ActualWidth` of the
 /// splitter); pass `0.0` if this floor doesn't apply.
 pub fn resize(current: f32, delta: f32, min: f32, max: f32, grip: f32) -> f32 {

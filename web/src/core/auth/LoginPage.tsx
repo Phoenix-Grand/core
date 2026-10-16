@@ -601,7 +601,7 @@ export class LoginPage extends ViewBase {
     e.preventDefault()
     this.error = ''
     try {
-      // The answer is the typed text/number, or — for the slider — the pixel
+      // The answer is the typed text/number, or - for the slider - the pixel
       // position the piece was dropped at.
       const answer = this.captcha?.type === 'slider' ? String(this.sliderX) : this.captchaAnswer
       const cap = this.captchaRequired && this.captcha ? { id: this.captcha.challenge_id, answer } : undefined
@@ -616,7 +616,7 @@ export class LoginPage extends ViewBase {
       const msg = (err as { message?: string })?.message
       // The server demands a CAPTCHA from now on: reveal the field and load a
       // fresh challenge. A spent or wrong challenge comes back here too, so we
-      // always refresh — a challenge is single-use.
+      // always refresh - a challenge is single-use.
       if (code === 'CAPTCHA_REQUIRED') {
         this.captchaRequired = true
         await this.loadCaptcha()

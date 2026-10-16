@@ -1,4 +1,4 @@
-//! `core.data_export_runs` and `core.data_export_subjects` — the record of every
+//! `core.data_export_runs` and `core.data_export_subjects` - the record of every
 //! archive the instance ever produced.
 //!
 //! ## The rule of this file
@@ -9,7 +9,7 @@
 //! ran and died".
 //!
 //! The second half is specific to this feature and is the more important one. An
-//! archive is deleted — by the retention pass, by an operator, by a
+//! archive is deleted - by the retention pass, by an operator, by a
 //! cancellation. The row is not. "An export covering these 214 accounts was
 //! produced on 14 August, by this person, and downloaded twice" is a fact an
 //! investigation starts from, and it must survive the file it describes by
@@ -123,7 +123,7 @@ pub struct ExportSubject {
     pub error: Option<String>,
 }
 
-/// What the console — or an account asking for its own data — asked for,
+/// What the console - or an account asking for its own data - asked for,
 /// validated.
 pub struct NewExport {
     pub scope: String,
@@ -289,7 +289,7 @@ pub async fn get(db: &DbPool, id: Uuid) -> Result<Option<ExportRun>, AppError> {
 /// What the console reads, everywhere it reads one. A personal archive is not an
 /// administrative object: it is produced without the alert and without the hold
 /// that make an administrative export supervisable, and `core.data_export.read`
-/// — held by the read-only administrator out of the box — must therefore not be
+/// - held by the read-only administrator out of the box - must therefore not be
 /// a way to fetch one. Whoever needs somebody else's data asks for it with
 /// `core.data_export.execute`, which tells every administrator and waits.
 pub async fn get_admin(db: &DbPool, id: Uuid) -> Result<Option<ExportRun>, AppError> {
@@ -313,7 +313,7 @@ pub async fn get_admin(db: &DbPool, id: Uuid) -> Result<Option<ExportRun>, AppEr
 /// The read the personal routes use, and the only one they use: the owner is a
 /// condition of the query rather than a check performed on the result, so a
 /// handler cannot forget it and cannot be given an id belonging to somebody
-/// else. `origin` is part of the predicate too — an administrator's archive
+/// else. `origin` is part of the predicate too - an administrator's archive
 /// covering several accounts is not "one's own data" even when the requester
 /// happens to be its author.
 pub async fn get_own(db: &DbPool, id: Uuid, user_id: Uuid) -> Result<Option<ExportRun>, AppError> {
@@ -357,15 +357,15 @@ pub async fn list(db: &DbPool, limit: i64) -> Result<Vec<ExportRun>, AppError> {
 
 /// The **administrative** run currently pending or under way, if any.
 ///
-/// One administrative export at a time, instance-wide. Not a technical limit —
-/// two concurrent exports would work — but a deliberate one: they compete for
+/// One administrative export at a time, instance-wide. Not a technical limit -
+/// two concurrent exports would work - but a deliberate one: they compete for
 /// the same disk and the same modules, and, more to the point, "how many exports
 /// are running?" must have an answer an operator can hold in their head while
 /// deciding whether the one they are looking at is legitimate.
 ///
 /// Personal requests are deliberately **outside** that count. An archive of one
 /// account is small, and letting one person's portability request block the
-/// console — or the console block everybody's portability — would make each
+/// console - or the console block everybody's portability - would make each
 /// feature the other's outage.
 pub async fn active_admin(db: &DbPool) -> Result<Option<ExportRun>, AppError> {
     active_where(db, active_sql!("origin = 'admin'"), None).await
@@ -455,7 +455,7 @@ pub async fn pending_subjects(
 // ── Transitions ──────────────────────────────────────────────────────────────
 
 /// Moves a `pending` run to `running`. Returns `false` when somebody else got
-/// there first, or when the run was cancelled in between — which is how a
+/// there first, or when the run was cancelled in between - which is how a
 /// cancellation during the hold actually stops the work.
 pub async fn start(db: &DbPool, id: Uuid) -> Result<bool, AppError> {
     let affected = db
@@ -582,7 +582,7 @@ pub async fn fail(db: &DbPool, id: Uuid, error: &str, duration_ms: i64) -> Resul
 }
 
 /// Cancels a run that has not finished. Returns `false` when it was already
-/// closed — a cancellation that arrives one second late must say so rather than
+/// closed - a cancellation that arrives one second late must say so rather than
 /// pretend to have stopped something.
 pub async fn cancel(db: &DbPool, id: Uuid, reason: &str) -> Result<bool, AppError> {
     let now = Utc::now();
@@ -624,7 +624,7 @@ pub async fn mark_file_deleted(db: &DbPool, id: Uuid, expired: bool) -> Result<(
 }
 
 /// Records a download. Best-effort by design: a counter that could not be
-/// written must never prevent the archive from being served — the operator has
+/// written must never prevent the archive from being served - the operator has
 /// the right to it, and the audit entry is written on the other side of this
 /// call whatever happens here.
 pub async fn record_download(db: &DbPool, id: Uuid, by: Uuid) {
@@ -645,7 +645,7 @@ pub async fn record_download(db: &DbPool, id: Uuid, by: Uuid) {
 /// Claims one download **against the ceiling**, atomically.
 ///
 /// Returns the number of downloads left afterwards, or `None` when the ceiling
-/// was already reached — in which case nothing was written and the caller must
+/// was already reached - in which case nothing was written and the caller must
 /// refuse.
 ///
 /// Deliberately not the best-effort [`record_download`]: that one may fail

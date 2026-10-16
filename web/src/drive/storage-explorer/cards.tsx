@@ -102,7 +102,7 @@ export function FileCardBase({ file, thumb, selected, preSelected, focused, canM
       </div>
       {/* Aperçu : miniature pleine zone, sinon grande icône de type centrée */}
       <div className={`relative overflow-hidden rounded-lg bg-white ${dense ? 'mx-1.5 mb-1.5' : 'mx-2 mb-2'}`} style={{ height: thumbH }}>
-        {/* Kept revisions, top-left — the extension badge holds the opposite corner. */}
+        {/* Kept revisions, top-left - the extension badge holds the opposite corner. */}
         <VersionBadge file={file} variant="overlay" />
         {hasBigThumb ? (
           <Thumb spec={thumb} file={file} className="w-full h-full object-cover" />
@@ -112,7 +112,7 @@ export function FileCardBase({ file, thumb, selected, preSelected, focused, canM
           </div>
         )}
       </div>
-      {/* Extension badge — bottom-right of the preview. The outer span uses
+      {/* Extension badge - bottom-right of the preview. The outer span uses
           `background-color: inherit` so its padding ring matches the card's own
           background in EVERY state (hover/selected/focused) live, carving a
           seamless notch into the white preview area around the white pill.

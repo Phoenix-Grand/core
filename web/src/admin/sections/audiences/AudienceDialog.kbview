@@ -1,4 +1,4 @@
-<!-- AudienceDialog — converted from AudienceDialog.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- AudienceDialog - converted from AudienceDialog.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <Panel x:Props="AudienceDialogProps" OnMouseDown="panel_mouse_down">
   <FloatingWindow ConfirmText="{Res settings.create}"
                   ConfirmEnabled="{Binding enabled_unless_can_save}"

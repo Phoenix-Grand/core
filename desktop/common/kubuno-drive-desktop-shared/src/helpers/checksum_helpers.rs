@@ -27,7 +27,7 @@ pub async fn create_crc32<R: AsyncRead + Unpin>(stream: &mut R) -> std::io::Resu
         }
         hasher.update(&buf[..n]);
     }
-    // C# reverses GetCurrentHash() (little-endian) — equivalent to big-endian bytes.
+    // C# reverses GetCurrentHash() (little-endian) - equivalent to big-endian bytes.
     Ok(hex::encode_upper(hasher.finalize().to_be_bytes()))
 }
 

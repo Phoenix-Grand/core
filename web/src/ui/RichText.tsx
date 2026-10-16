@@ -20,7 +20,7 @@ interface RichTextProps {
   mentions?: MentionsConfig
 }
 
-// Éditeur de texte enrichi primitif (@ui) — contenteditable + execCommand.
+// Éditeur de texte enrichi primitif (@ui) - contenteditable + execCommand.
 // Toolbar : gras, italique, souligné, listes (numérotée/à puces), lien,
 // effacer la mise en forme. Sans dépendance lourde ; le lien s'ajoute via un
 // petit champ intégré (pas de dialogue navigateur).
@@ -68,7 +68,7 @@ export function RichText({ value, onChange, placeholder, className, minHeight = 
 
   // `kb-field-focus` reacts on `:focus-within`: the editable area is a
   // contenteditable INSIDE this box, and its own `outline-none` removed the only
-  // mark left — a rich field that took focus and showed nothing for it.
+  // mark left - a rich field that took focus and showed nothing for it.
   return (
     <div className={`kb-field-focus rounded-md border border-border bg-white overflow-hidden ${className ?? ''}`}>
       <div className="flex items-center gap-0.5 px-1.5 py-1 border-b border-border">

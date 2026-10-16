@@ -1,4 +1,4 @@
-<!-- AppSidebar — converted from AppSidebar.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- AppSidebar - converted from AppSidebar.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl>
   <Panel Visible="{Binding show_main}" Class="contents lg:relative lg:flex lg:flex-shrink-0">
     <!-- TODO(views-migrate): <aside> with a computed style -->

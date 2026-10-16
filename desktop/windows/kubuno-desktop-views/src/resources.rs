@@ -1,4 +1,4 @@
-//! `{Res key}` — resource references in views (`vskubuno/docs/RESOURCES.md`).
+//! `{Res key}` - resource references in views (`vskubuno/docs/RESOURCES.md`).
 //!
 //! ```xml
 //! <Button Text="{Res save_text}" Image="{Res save_icon}"/>
@@ -7,7 +7,7 @@
 //! ```
 //!
 //! A reference is parsed like a binding (so every bindable property takes one, with the same
-//! machinery) into a one-way [`BindingSpec`] whose path starts with [`RES_PREFIX`] — a path no view
+//! machinery) into a one-way [`BindingSpec`] whose path starts with [`RES_PREFIX`] - a path no view
 //! model can hold. It is resolved by [`kubuno_desktop_resources::lookup`] each frame, in the current UI
 //! culture: a string property gets the text, a colour or font property the `Value` text, an image
 //! property the URI `kbres:<set>/<name>`, which `kubuno_desktop_controls::styled::load_image` resolves when

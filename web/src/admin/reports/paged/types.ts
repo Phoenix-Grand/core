@@ -6,7 +6,7 @@ import type { ReactNode } from 'react'
  *
  * The distinction is the whole of it. A heading over three figures that gets
  * cut in half is a defect; a table of two thousand records that refuses to be
- * cut is a worse one — it would start on a fresh sheet and leave the previous
+ * cut is a worse one - it would start on a fresh sheet and leave the previous
  * one half empty, and it still would not fit. So blocks are atoms unless they
  * carry rows, and blocks that carry rows are cut between them, never through
  * one.
@@ -31,7 +31,7 @@ export interface TableItem {
   kind:  'table'
   id:    string
   title: string
-  /** Sentence under the table — a truncation notice, a count. Last fragment only. */
+  /** Sentence under the table - a truncation notice, a count. Last fragment only. */
   note?: ReactNode
   /** `--kb-text-body` for the aggregates, `--kb-text-meta` for the records. */
   fontSize: string

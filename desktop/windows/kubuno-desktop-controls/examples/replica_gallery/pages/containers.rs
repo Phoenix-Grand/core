@@ -1,10 +1,10 @@
-//! `04-containers` — Panel, GroupBox, FlowLayoutPanel, TableLayoutPanel,
+//! `04-containers` - Panel, GroupBox, FlowLayoutPanel, TableLayoutPanel,
 //! TabControl / TabPage, SplitContainer.
 //!
 //! Four of these paint their frame but not their content: `TabControl` owns no
 //! children, `SplitContainer` publishes its three rectangles, `TableLayoutPanel`
 //! publishes its track sizes, and `FlowLayoutPanel` publishes its packing. The
-//! page therefore decorates them — with library controls, placed against the
+//! page therefore decorates them - with library controls, placed against the
 //! geometry those very controls resolved.
 
 use kubuno_desktop_controls::buttons::{Button, RadioButton};
@@ -48,8 +48,8 @@ fn paint_at(c: &dyn ControlCanvas, ctrl: &dyn Control) {
 /// Moves a rectangle a container resolved in its **local** space into canvas
 /// space.
 ///
-/// The controls below publish their geometry the way the library lays it out —
-/// parent-relative — so a demo that paints a stand-in control against that
+/// The controls below publish their geometry the way the library lays it out -
+/// parent-relative - so a demo that paints a stand-in control against that
 /// geometry has to cross into canvas space itself. It asks the container where
 /// its local origin landed (`content_origin`) instead of re-deriving padding,
 /// border and caption band, which is exactly the duplication that let the page
@@ -68,11 +68,11 @@ fn bordered_panel() -> Panel {
 }
 
 /// The panel's own `paint` clips its children, which is what makes the
-/// over-wide label read as scrollable content cut at the frame — the same thing
+/// over-wide label read as scrollable content cut at the frame - the same thing
 /// the reference sheet shows.
 fn panel() -> Group {
     group(
-        "Panel — BorderStyle / AutoScroll",
+        "Panel - BorderStyle / AutoScroll",
         300.0,
         vec![kid(bordered_panel()).size(260.0, 90.0).decor(|c, r| {
             let mut p = bordered_panel();
@@ -102,7 +102,7 @@ fn group_box() -> Group {
             let mut g = captioned();
             g.set_bounds(r);
             // Client coordinates: `y` is measured from the group box's own top,
-            // so these clear the caption band themselves — the display rect's
+            // so these clear the caption band themselves - the display rect's
             // origin is what the LAYOUT uses, not what a hand-placed child does.
             let radio = |text: &str, checked: bool, y: f32| {
                 let mut b = RadioButton::new();
@@ -137,7 +137,7 @@ fn flow_panel() -> FlowLayoutPanel {
 /// decides where they land, so the wrap is the library's, not the demo's.
 fn flow() -> Group {
     group(
-        "FlowLayoutPanel — wrap",
+        "FlowLayoutPanel - wrap",
         300.0,
         vec![kid(flow_panel()).size(260.0, 90.0).decor(|c, r| {
             let mut f = flow_panel();
@@ -169,10 +169,10 @@ fn table_panel() -> TableLayoutPanel {
 
 /// The panel resolves the tracks (`column_widths`/`row_heights`) and paints the
 /// outer border; the per-cell lines it leaves to the host, so each cell's label
-/// carries its own `FixedSingle` border — the closest the library offers.
+/// carries its own `FixedSingle` border - the closest the library offers.
 fn table() -> Group {
     group(
-        "TableLayoutPanel — cell borders",
+        "TableLayoutPanel - cell borders",
         300.0,
         vec![kid(table_panel()).size(260.0, 90.0).decor(|c, r| {
             let mut t = table_panel();
@@ -181,7 +181,7 @@ fn table() -> Group {
             let placed = place_cells(t.column_count, t.row_count, t.grow_style, &cells);
 
             // Every track is `AutoSize` here, and an auto track is exactly as
-            // big as the content it is told about — so the cells have to be
+            // big as the content it is told about - so the cells have to be
             // measured before the panel can resolve its columns and rows.
             let mut labels: Vec<Label> = (0..6)
                 .map(|i| {
@@ -248,7 +248,7 @@ fn tabs() -> Group {
             let mut t = tab_control();
             t.control_mut().set_bounds(r);
             // `display_rect` is in the tab control's own local space, whose
-            // origin is the control's top-left — so the crossing is `r`'s origin.
+            // origin is the control's top-left - so the crossing is `r`'s origin.
             let page = at(t.display_rect(c), Point::new(r.left, r.top));
             paint_at(c, &label_at(c, "page content", page.left + 10.0, page.top + 10.0));
         })],
@@ -272,7 +272,7 @@ fn split() -> Group {
             let mut s = split_container();
             s.control_mut().set_bounds(r);
             // `arrange` answers in client coordinates, which start just inside the
-            // container's border — so crossing to canvas re-applies that border.
+            // container's border - so crossing to canvas re-applies that border.
             let o = content_origin(r, border_thickness(s.border_style), s.auto_scroll_position);
             let rects = s.arrange();
             let p1 = at(rects.panel1, o);

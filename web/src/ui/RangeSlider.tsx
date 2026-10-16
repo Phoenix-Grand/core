@@ -63,7 +63,7 @@ export interface RangeSliderProps {
   showValue?: boolean
   /** Accent colour for the fill/thumb (defaults to the theme primary). */
   accent?: string
-  /** Track (unfilled) colour — set a light value for dark editor themes. */
+  /** Track (unfilled) colour - set a light value for dark editor themes. */
   trackColor?: string
   disabled?: boolean
   className?: string

@@ -1,4 +1,4 @@
-//! Sidebar pane resizing — **port-only**, no C# counterpart in the
+//! Sidebar pane resizing - **port-only**, no C# counterpart in the
 //! `GridSplitter` folder.
 //!
 //! These helpers do NOT come from `GridSplitter` but from `MainPage`
@@ -26,7 +26,7 @@ pub enum PaneResize {
 
 /// Sidebar threshold decision + clamp. Below `compact_below`, switch to
 /// Compact (like the hamburger); otherwise width clamped to
-/// `[compact_below, max]` — the expanded mode's lower bound is the threshold
+/// `[compact_below, max]` - the expanded mode's lower bound is the threshold
 /// itself, faithful to the port.
 pub fn resolve_sidebar(target: f32, compact_below: f32, max: f32) -> PaneResize {
     if target < compact_below {

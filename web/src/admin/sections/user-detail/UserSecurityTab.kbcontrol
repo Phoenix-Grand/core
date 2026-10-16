@@ -1,4 +1,4 @@
-<!-- SecurityTab — converted from SecurityTab.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- SecurityTab - converted from SecurityTab.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="SecurityTabProps">
   <Stack Gap="16">
     <Card Title="{Res admin.ud_card_2fa}" IconSize="16" Icon="ShieldCheck">

@@ -10,7 +10,7 @@ import type { RailEntry } from '../../store/rightPanelStore'
  *
  * Edits are held in a DRAFT and written once on confirm, like the waffle launcher.
  * Saving on every click would fire a `PATCH /me` per keystroke-sized change, and two
- * responses landing out of order would put a stale `preferences` back into the store —
+ * responses landing out of order would put a stale `preferences` back into the store -
  * the race that already bit the module preferences.
  *
  * Order is changed with ↑/↓ rather than drag-and-drop: with a handful of rows it is
@@ -26,7 +26,7 @@ export default function RightRailCustomize({
 }) {
   const { t } = useTranslation()
 
-  // Start from the order the user actually sees, then append whatever is hidden —
+  // Start from the order the user actually sees, then append whatever is hidden -
   // a hidden row still needs a position, or showing it again would send it to the end.
   const [rows, setRows] = useState<string[]>(() => {
     const visible = applyPrefs(entries, prefs).map(e => e.moduleId)

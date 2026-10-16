@@ -1,18 +1,18 @@
-//! `POST /internal/storage/usage` — a module declares what it holds.
+//! `POST /internal/storage/usage` - a module declares what it holds.
 //!
 //! ## The one security property of this file
 //!
 //! **The declaring module is never read from the request body.** It is derived
 //! from the `X-Internal-Secret` the caller presented, which the core issues
 //! per module (see [`crate::auth::internal_secret`]). A module holding its own
-//! secret can compute no other module's secret, so `photos` cannot declare — or
-//! erase — `drive`'s share of the storage breakdown.
+//! secret can compute no other module's secret, so `photos` cannot declare - or
+//! erase - `drive`'s share of the storage breakdown.
 //!
 //! The body *may* carry `module_id`, for one reason only: a module started
 //! outside the core's supervision (development) presents the master secret and
 //! is not identified, so it has to name itself. When the caller **is**
 //! identified and the body disagrees, the request is refused rather than
-//! silently corrected — a mismatch is either a bug or an attempt, and both
+//! silently corrected - a mismatch is either a bug or an attempt, and both
 //! deserve a log line. This is the same discipline `ensure_caller_is` applies to
 //! module registration.
 //!
@@ -140,7 +140,7 @@ mod tests {
     /// The end-to-end property, from the bytes on the wire to the decision.
     ///
     /// The unit tests above start from an already-identified caller. This one
-    /// starts where a real request does — a `X-Internal-Secret` header value —
+    /// starts where a real request does - a `X-Internal-Secret` header value -
     /// and walks the whole path: derive the secret the core would hand to
     /// `photos`, authenticate it exactly as the extractor does, then try to
     /// declare `drive`'s usage with it. There is no arrangement of the body that

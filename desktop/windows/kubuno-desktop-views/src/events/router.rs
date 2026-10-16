@@ -38,8 +38,8 @@
 //! the button is released (WinForms' `Capture`).
 //!
 //! An event is dispatched only to the handler its element names (`OnMouseDown="…"`, or
-//! an older alias), through [`HandlerTable::dispatch_args`] — the typed handler when there
-//! is one, else the legacy `handlers!` entry with the args' legacy value — and it is
+//! an older alias), through [`HandlerTable::dispatch_args`] - the typed handler when there
+//! is one, else the legacy `handlers!` entry with the args' legacy value - and it is
 //! reported in the frame's returned events as [`ViewEventKind::Other`]. Elements that do
 //! not ask for an event cost nothing but the hit-test.
 //!
@@ -490,12 +490,12 @@ impl InputRouter {
 
     /// Whether the view's window is on screen this frame (read by [`Self::end_frame`]): Windows
     /// Forms raises `Load` when the form is created, visible or not, and `Shown` the first time it
-    /// is actually shown — a form started hidden gets `Load` from a frame run off screen.
+    /// is actually shown - a form started hidden gets `Load` from a frame run off screen.
     pub fn set_window_visible(&mut self, visible: bool) {
         self.hidden = !visible;
     }
 
-    /// The root element of the (re)compiled view — the sender of the view events. Load is
+    /// The root element of the (re)compiled view - the sender of the view events. Load is
     /// raised once, for the first view ever set; a hot reload does not raise it again.
     pub fn set_root(&mut self, root: Rc<SlotEvents>) {
         self.root = Some(root);
@@ -519,7 +519,7 @@ impl InputRouter {
     }
 
     /// Records one element painted this frame at `bounds` (content coordinates), in paint
-    /// order — called by `crate::design::DesignSlot::paint`.
+    /// order - called by `crate::design::DesignSlot::paint`.
     pub fn register(&mut self, slot: Rc<SlotEvents>, bounds: Rect) {
         self.register_with_control(slot, bounds, None);
     }
@@ -540,7 +540,7 @@ impl InputRouter {
 
     /// A user control finished painting its own view, whose elements were registered from `start` on (the first
     /// one its root): the root is merged into the user control's element registered just before (see
-    /// [`OwnRoot`]) instead of covering it — the pointer over the user control's own surface reaches the user
+    /// [`OwnRoot`]) instead of covering it - the pointer over the user control's own surface reaches the user
     /// control (its `on_mouse_…` overrides, the `Click` of the element using it), as in Windows Forms.
     pub(crate) fn absorb_view_root(&mut self, start: usize) {
         if start == 0 || start >= self.cur.len() || self.cur[start - 1].own.is_some() {
@@ -559,7 +559,7 @@ impl InputRouter {
     }
 
     /// Where the element named `name` was painted (content coordinates): this frame when it already
-    /// was, else the last frame — what a `<Popover>` anchors to.
+    /// was, else the last frame - what a `<Popover>` anchors to.
     pub(crate) fn bounds_of(&self, name: &str) -> Option<Rect> {
         self.cur.iter().rev().chain(self.prev.iter().rev()).find(|r| r.slot.name.as_deref() == Some(name)).map(|r| r.bounds)
     }
@@ -630,8 +630,8 @@ impl InputRouter {
     }
 
     /// WinForms' key pre-processing of a key-down on `target`: `wnd_proc`, then `process_cmd_key`
-    /// on the target and each ancestor control, then — for a dialog key the target does not take
-    /// as input (`is_input_key`) — `process_dialog_key` up the same chain. `true` when one of them
+    /// on the target and each ancestor control, then - for a dialog key the target does not take
+    /// as input (`is_input_key`) - `process_dialog_key` up the same chain. `true` when one of them
     /// consumed the key (no KeyDown/KeyPress follows).
     fn pre_process_key(&self, target: &Registered, keys: Keys) -> bool {
         if Self::pre_filter(target, Message::key(Message::WM_KEYDOWN, keys)) {

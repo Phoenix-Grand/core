@@ -1,5 +1,5 @@
 //! [`DataContext`]: data components **outside a view runtime** (tests, tools, a view model that paints
-//! without `Runtime`) — the same components, paths, events and operations as in a view, over a
+//! without `Runtime`) - the same components, paths, events and operations as in a view, over a
 //! [`ComponentScope`] this context owns (`vskubuno/docs/DATA.md` §7).
 //!
 //! In a view, the runtime owns the components (DATA-2): nothing to write in the view model, bindings

@@ -33,7 +33,7 @@ fn normalized_color(color: Option<&str>) -> Result<String, AppError> {
     Ok(c)
 }
 
-/// Effective rights of `user_id` on `label_id` — `None` when the label does not
+/// Effective rights of `user_id` on `label_id` - `None` when the label does not
 /// exist or is not shared with them. `core.label_access` folds ownership, direct
 /// shares and group shares, keeping the most permissive.
 async fn access(
@@ -66,7 +66,7 @@ async fn require_manage(db: &DbPool, user_id: Uuid, label_id: Uuid) -> Result<()
     }
 }
 
-/// GET /api/v1/labels — every label the caller may see: their own plus those
+/// GET /api/v1/labels - every label the caller may see: their own plus those
 /// shared with them directly or through one of their groups.
 pub async fn list(
     State(state): State<AppState>,
@@ -212,7 +212,7 @@ pub async fn update(
     Ok(Json(json!({ "label": label })))
 }
 
-/// DELETE /api/v1/labels/:id — links and shares go with it (ON DELETE CASCADE).
+/// DELETE /api/v1/labels/:id - links and shares go with it (ON DELETE CASCADE).
 /// A co-manager may delete: full co-ownership, so this wipes the label for
 /// EVERYONE, including the links of the other members.
 pub async fn delete(
@@ -234,7 +234,7 @@ pub struct ResourceQuery {
     pub resource_id:   String,
 }
 
-/// GET /api/v1/labels/resource?resource_type=&resource_id= — the label ids of
+/// GET /api/v1/labels/resource?resource_type=&resource_id= - the label ids of
 /// one element (the picker's initial state).
 pub async fn labels_for_resource(
     State(state): State<AppState>,
@@ -255,7 +255,7 @@ pub async fn labels_for_resource(
     Ok(Json(json!({ "label_ids": ids })))
 }
 
-/// PUT /api/v1/labels/resource — replaces the label set of one element in a
+/// PUT /api/v1/labels/resource - replaces the label set of one element in a
 /// single atomic call (what the picker saves).
 pub async fn set_resource_labels(
     State(state): State<AppState>,
@@ -266,7 +266,7 @@ pub async fn set_resource_labels(
 
     let backend = state.db.backend();
 
-    // Any label the caller may see can be linked — their own, and those shared
+    // Any label the caller may see can be linked - their own, and those shared
     // with them (a share is a shared vocabulary, so plain recipients may label
     // their own elements too). The links themselves stay owned by the caller.
     // Resolved before the transaction: it is a read only. Portable `label_access`
@@ -346,7 +346,7 @@ pub async fn set_resource_labels(
 
 #[derive(Debug, Deserialize)]
 pub struct BrowseQuery {
-    /// Comma-separated label ids — an element must carry ALL of them.
+    /// Comma-separated label ids - an element must carry ALL of them.
     pub labels: Option<String>,
     /// Free-text search over the link titles (trigram-indexed).
     pub q:      Option<String>,
@@ -354,7 +354,7 @@ pub struct BrowseQuery {
     pub module: Option<String>,
 }
 
-/// GET /api/v1/labels/browse — cross-module search & filter through labels.
+/// GET /api/v1/labels/browse - cross-module search & filter through labels.
 /// Returns one entry per element, with the ids of ALL its labels.
 pub async fn browse(
     State(state): State<AppState>,
@@ -372,7 +372,7 @@ pub async fn browse(
 
     // One row per element: aggregate its label ids, keep the newest snapshot.
     // Visibility: the caller's own links always, plus everyone's links on the
-    // labels they co-manage (`can_manage`) — a plain share stays private.
+    // labels they co-manage (`can_manage`) - a plain share stays private.
     // `other_owners` names the members who labelled an element that is not the
     // caller's, so the browser can attribute it.
     //
@@ -505,7 +505,7 @@ pub async fn browse(
     Ok(Json(json!({ "items": items })))
 }
 
-/// GET /api/v1/labels/:id/links — the raw links of one label, under the same
+/// GET /api/v1/labels/:id/links - the raw links of one label, under the same
 /// visibility rule as `browse`.
 pub async fn list_links(
     State(state): State<AppState>,
@@ -537,7 +537,7 @@ pub async fn list_links(
     Ok(Json(json!({ "links": links })))
 }
 
-/// DELETE /api/v1/labels/:id/links/:link_id — detach one element. The caller
+/// DELETE /api/v1/labels/:id/links/:link_id - detach one element. The caller
 /// detaches their own links; a co-manager may detach anyone's.
 pub async fn remove_link(
     State(state): State<AppState>,
@@ -559,7 +559,7 @@ pub async fn remove_link(
     Ok(Json(json!({ "ok": true })))
 }
 
-/// GET /api/v1/labels/:id/shares — the audience of a label (managers only).
+/// GET /api/v1/labels/:id/shares - the audience of a label (managers only).
 pub async fn list_shares(
     State(state): State<AppState>,
     AuthUser(user): AuthUser,
@@ -596,7 +596,7 @@ pub async fn list_shares(
     Ok(Json(json!({ "shares": shares })))
 }
 
-/// PUT /api/v1/labels/:id/shares — replaces the whole audience atomically
+/// PUT /api/v1/labels/:id/shares - replaces the whole audience atomically
 /// (managers only). Sharing back to the owner is a no-op and is dropped.
 pub async fn set_shares(
     State(state): State<AppState>,
@@ -648,7 +648,7 @@ pub async fn set_shares(
         if s.user_id == Some(owner_id) {
             continue; // the owner already has full rights
         }
-        // Unknown users/groups are rejected by the FKs — surface a clean 422.
+        // Unknown users/groups are rejected by the FKs - surface a clean 422.
         tx.execute(
             &insert_sql,
             params![new_id(), id, s.user_id, s.group_id, s.can_manage, user.id],
@@ -670,7 +670,7 @@ pub struct ShareTargetsQuery {
     pub q: Option<String>,
 }
 
-/// GET /api/v1/labels/share-targets?q= — users and groups the share picker can
+/// GET /api/v1/labels/share-targets?q= - users and groups the share picker can
 /// offer. Public fields only (no email), like `/users/search`.
 pub async fn share_targets(
     State(state): State<AppState>,

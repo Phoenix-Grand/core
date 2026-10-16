@@ -81,7 +81,7 @@ function Detail({ row, ruleSeverity }: { row: ExecutionRow; ruleSeverity: string
           style={{ fontSize: 'var(--kb-text-micro)' }}>
           {row.actor_user_id && <span className="font-mono">{t('admin.rl_log_actor_id', { id: row.actor_user_id })}</span>}
           {row.resource_type && (
-            <span className="font-mono">{row.resource_type}: {row.resource_id ?? '—'}</span>
+            <span className="font-mono">{row.resource_type}: {row.resource_id ?? '-'}</span>
           )}
         </div>
       )}

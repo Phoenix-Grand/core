@@ -84,7 +84,7 @@ export class MarketplacePanel extends ViewBase {
       onMutate: (id) => { this.busy = id; this.okMsg = null; this.errMsg = null; this.phase = ({ ...this.phase, [id]: '…' }) },
       onSuccess: (report) => {
         // Two whole sentences rather than one assembled with `+`: a concatenated
-        // default cannot be translated — a locale would only ever carry the first
+        // default cannot be translated - a locale would only ever carry the first
         // half, silently dropping the "and started" ending in every language.
         this.okMsg = report.started
           ? t('admin.mk_installed_started', {

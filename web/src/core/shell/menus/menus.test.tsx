@@ -4,7 +4,7 @@ import { createElement } from 'react'
 import { afterEach, beforeAll, describe, expect, it } from 'vitest'
 
 // `@ui` first, as the host does (`viewsHost`): it reaches the core's stores, which reach the shell and these
-// user controls — evaluated last, the controls find their base classes and components ready.
+// user controls - evaluated last, the controls find their base classes and components ready.
 import '@ui'
 import WaffleMenu from './WaffleMenu'
 import AccountMenu from './AccountMenu'

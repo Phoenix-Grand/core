@@ -257,7 +257,7 @@ export default function GridDashboard({ allWidgets, activeIds, editMode }: Props
           </div>
         )}
 
-        {/* Widgets — on mobile, render top-to-bottom (row then col) for a natural
+        {/* Widgets - on mobile, render top-to-bottom (row then col) for a natural
             stacked reading order. */}
         {(isMobile
           ? [...gridItems].sort((a, b) => a.pos.row - b.pos.row || a.pos.col - b.pos.col)

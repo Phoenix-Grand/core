@@ -59,7 +59,7 @@ pub struct RegisterModuleDto {
     #[serde(default)]
     pub rule_triggers:     Vec<crate::rules::catalog::TriggerDef>,
     /// Actions offertes au moteur de règles. Chacune DOIT porter l'endpoint
-    /// interne qui l'exécute — c'est le module qui dit où le répartiteur doit
+    /// interne qui l'exécute - c'est le module qui dit où le répartiteur doit
     /// frapper, le core ne connaît aucune route de module.
     #[serde(default)]
     pub rule_actions:      Vec<crate::rules::catalog::ActionDef>,
@@ -97,7 +97,7 @@ fn validate_module_id(id: &str) -> Result<(), AppError> {
 ///
 /// Un appelant NON identifié (secret maître : le core lui-même, un outil
 /// d'exploitation, ou un module lancé hors supervision en développement) passe
-/// comme avant — la compatibilité prime tant que `reject_master_internal_secret`
+/// comme avant - la compatibilité prime tant que `reject_master_internal_secret`
 /// n'est pas activé.
 pub fn ensure_caller_is(internal: &InternalRequest, module_id: &str) -> Result<(), AppError> {
     match internal.module_id() {
@@ -128,7 +128,7 @@ pub async fn register_module(
     validate_setting_groups(&dto.module_id, &dto.setting_groups, &dto.settings_schema)?;
 
     // Première inscription : is_enabled = TRUE (le module est actif par défaut).
-    // Sur ON CONFLICT, is_enabled n'est PAS mis à jour — l'admin garde le contrôle.
+    // Sur ON CONFLICT, is_enabled n'est PAS mis à jour - l'admin garde le contrôle.
     let display_name = dto.display_name.as_deref().unwrap_or(&dto.module_id);
     // The full settings manifest (every scope) is kept durably in core.modules.config
     // so the user-settings page can render even when the module process is down.
@@ -182,7 +182,7 @@ pub async fn register_module(
         )
         .await?;
 
-    // Vérifier si le module est activé — FALSE uniquement si l'admin l'a désactivé après coup
+    // Vérifier si le module est activé - FALSE uniquement si l'admin l'a désactivé après coup
     let is_enabled: bool = state
         .db
         .fetch_scalar::<bool>(
@@ -237,7 +237,7 @@ pub async fn register_module(
     // Seed the DECLARATION of every setting into core.settings, which since
     // migration 000060 is the schema table: key, type, enum domain, owning
     // module, factory default, label, visibility. The values live in
-    // core.setting_values, one row per scope, and none is created here — a
+    // core.setting_values, one row per scope, and none is created here - a
     // freshly declared setting must read as "factory", not as "set at instance
     // level". The `value` column is a compatibility mirror of the instance scope
     // and is deliberately left out of the conflict update: an admin-set value is
@@ -262,7 +262,7 @@ pub async fn register_module(
         ],
     );
     // `value` is bound to the factory default at $2 and `default_value` to the
-    // same value at $3 — a positional placeholder is never reused across engines,
+    // same value at $3 - a positional placeholder is never reused across engines,
     // so the value is passed twice rather than pointing two columns at one $2.
     let settings_sql = format!(
         r#"INSERT INTO core.settings
@@ -313,7 +313,7 @@ pub async fn register_module(
         .await?;
 
     // Rule catalogue: what this module lets an administrator react to, and what
-    // it lets a rule do to it. Third declaration of the same shape, on purpose —
+    // it lets a rule do to it. Third declaration of the same shape, on purpose -
     // a module widens the core's vocabulary and the core learns nothing about
     // the module beyond what it was handed.
     crate::rules::catalog::register_module(
@@ -389,14 +389,14 @@ pub async fn register_module(
 /// that drive a module's *runtime* (a listener's port, say) had nowhere to live.
 ///
 /// The caller is identified by the internal secret it presented, never by the
-/// request — a module can only ever read its own keys. Only instance-scoped
+/// request - a module can only ever read its own keys. Only instance-scoped
 /// settings are returned: `user` scope has no single value to speak of.
 pub async fn get_module_config(
     State(state): State<AppState>,
     AuthUser(user): AuthUser,
     // This route lives outside `/admin/*`, so the layer guard does not run and
     // the context is resolved here. It replaces a hand-rolled
-    // `user.role == "admin"` test — the kind of check that silently stops
+    // `user.role == "admin"` test - the kind of check that silently stops
     // agreeing with the rest of the system the day delegation arrives.
     ctx: AdminCtx,
     AxumPath(module_id): AxumPath<String>,
@@ -418,7 +418,7 @@ pub async fn get_module_config(
         .and_then(|s| serde_json::from_value(s.clone()).ok())
         .unwrap_or_default();
 
-    // Pages of the panel, in menu order. Empty for a module that declares none —
+    // Pages of the panel, in menu order. Empty for a module that declares none -
     // the console then renders the single page it always did.
     let groups = setting_groups_from_config(config.as_ref());
 
@@ -438,7 +438,7 @@ pub async fn get_module_config(
 
         // `global` reste exposé pour les interfaces existantes, mais il désigne
         // désormais « la valeur que ce compte hérite », c'est-à-dire l'unité la
-        // plus proche s'il y en a une, sinon l'instance — et non plus le seul
+        // plus proche s'il y en a une, sinon l'instance - et non plus le seul
         // niveau instance.
         let inherited = resolved.inherited_value.clone();
         let user_val = resolved
@@ -465,7 +465,7 @@ pub async fn get_module_config(
             "default":          def.default,
             // Presentation metadata, forwarded verbatim: the console renders
             // the schema and nothing else, so a knob added by a module shows up
-            // — searchable, bounded, folded where it belongs — with no change
+            // - searchable, bounded, folded where it belongs - with no change
             // on this side of the wire.
             "advanced":         def.advanced,
             "risk":             def.risk,

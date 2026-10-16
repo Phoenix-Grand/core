@@ -1,6 +1,6 @@
-//! The Kubuno primitive gallery — a single navigable window over every family.
+//! The Kubuno primitive gallery - a single navigable window over every family.
 //!
-//! One page per family, each showing every variant in every state — and, where
+//! One page per family, each showing every variant in every state - and, where
 //! a primitive replaces a hand-written predecessor from `kubuno-drive-desktop-app-controls`,
 //! the two painted **side by side from the same inputs**. That pairing is the
 //! point: the shipping shell calls the predecessor 149 times, so the rebuild is
@@ -16,7 +16,7 @@
 //! cargo run -p kubuno-desktop-ui --example gallery -j 1 -- --page fields   # open on a page
 //! ```
 //!
-//! `KUBUNO_UI_DARK=1` opens in the dark palette — several tokens differ, and a
+//! `KUBUNO_UI_DARK=1` opens in the dark palette - several tokens differ, and a
 //! primitive that hard-codes a colour shows up immediately.
 
 mod pages;
@@ -33,7 +33,7 @@ use pages::interact::{
     MIN_PANEL_W,
 };
 
-/// The page `steps` tabs away from `from`, wrapping — Ctrl+Tab / Ctrl+PageDown
+/// The page `steps` tabs away from `from`, wrapping - Ctrl+Tab / Ctrl+PageDown
 /// go forward, Ctrl+Shift+Tab / Ctrl+PageUp back, as in a browser.
 fn page_step(from: usize, steps: isize) -> usize {
     let n = PAGES.len() as isize;
@@ -43,7 +43,7 @@ fn page_step(from: usize, steps: isize) -> usize {
 /// One page: its name on the tab, what it paints, and an optional overlay pass
 /// painted **after** the nav strip. Floating surfaces (a tooltip, an open menu)
 /// must be composited over the whole window, the tab strip included, so a page
-/// that has one registers it here rather than drawing it in `draw` — where the
+/// that has one registers it here rather than drawing it in `draw` - where the
 /// nav, painted last, would cover it.
 type PageFn = fn(&dyn Canvas, &Frame);
 type Page = (&'static str, PageFn, Option<PageFn>, Option<PageFn>);
@@ -105,7 +105,7 @@ fn main() -> windows::core::Result<()> {
         Theme::detect()
     };
 
-    // The selected page and the previous button state live across paints — the
+    // The selected page and the previous button state live across paints - the
     // host re-invokes the closure on every move and click, so a click is the
     // edge where the button goes down.
     let selected = Cell::new(start);
@@ -126,7 +126,7 @@ fn main() -> windows::core::Result<()> {
     let zoom = std::env::var("KUBUNO_UI_ZOOM").ok().and_then(|z| z.parse::<f32>().ok()).filter(|z| *z > 0.0);
 
     host::run_with_chrome(
-        "Kubuno UI — galerie",
+        "Kubuno UI - galerie",
         1280,
         960,
         theme,
@@ -174,7 +174,7 @@ fn main() -> windows::core::Result<()> {
             .with_distance(dist.get().min(w - MIN_PANEL_W).max(MIN_PANEL_W));
         // Drag: the grip owns the pointer while the button is held. Recorded on
         // the rising edge so a click on the grip does not jump the split to the
-        // pointer's exact x — the offset preserves where the pointer met it.
+        // pointer's exact x - the offset preserves where the pointer met it.
         if clicked && splitter.hit_test_grip(body, mx, my) {
             dragging.set(true);
             drag_off.set(mx - splitter.splitter_rect(body).left);
@@ -188,7 +188,7 @@ fn main() -> windows::core::Result<()> {
             dist.set(splitter.panel1_rect(body).right - body.left);
         }
         // Publish the panel's width so every page's `interact::PANEL_W()` reads
-        // the current split — the same call that resizes on drag, kept live.
+        // the current split - the same call that resizes on drag, kept live.
         let panel_w = (body.right - splitter.panel1_rect(body).right).clamp(MIN_PANEL_W, MAX_PANEL_W);
         set_panel_w(panel_w);
 
@@ -206,16 +206,16 @@ fn main() -> windows::core::Result<()> {
         c.push_clip(&pane1);
         // The tab strip is transparent, as on the web: it shows the surface of
         // its parent. Here the parent is this pane, so the pane paints the page
-        // ground itself — in the theme's colour, dark included.
+        // ground itself - in the theme's colour, dark included.
         c.fill_rounded(&pane1, 0.0, &c.theme().window_background);
         // The gallery's navigation IS the Tabs component, driven by its own
-        // controller — the sliding indicator, scroll arrows, wheel and arrow
+        // controller - the sliding indicator, scroll arrows, wheel and arrow
         // keys are the component's, not a copy of them kept here, so every
         // change made to the component shows up in the gallery's own chrome.
         let tab_focus = with_focus(|ring| ring.register("gallery-tabs", strip));
         let run = tabs_ctl.borrow_mut().frame(c, &mut tabs, strip, f, Some(tab_focus));
         if run.changed {
-            // A page switch clears the old page's focus — unless the switch
+            // A page switch clears the old page's focus - unless the switch
             // came from the arrow keys on the strip, which keeps the focus.
             if !tab_focus.focused {
                 focus_reset();
@@ -250,7 +250,7 @@ fn main() -> windows::core::Result<()> {
         }
 
         // Paint the splitter itself. Kubuno's Splitter widget owns the
-        // divider's look — a hairline at rest, growing to the bar's full width
+        // divider's look - a hairline at rest, growing to the bar's full width
         // in `border_strong` on hover, and turning to the accent while
         // dragged. Painted after the page so the line lands over any card
         // edge that runs up to it.

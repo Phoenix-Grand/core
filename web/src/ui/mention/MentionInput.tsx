@@ -48,7 +48,7 @@ export function MentionInput({
       const el = inputRef.current
       const caret = el?.selectionStart ?? text.length
       // Offsets from `detectMention` are relative to the text before the caret,
-      // which — on a single line — are absolute offsets into `text`.
+      // which - on a single line - are absolute offsets into `text`.
       const nextText = text.slice(0, match.start) + text.slice(caret)
       const nextChips = chips.some((c) => c.id === item.id) ? chips : [...chips, item]
       setText(nextText)

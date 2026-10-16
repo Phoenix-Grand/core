@@ -4,13 +4,13 @@
 //!
 //! `POST /auth/forgot-password` answers **exactly the same thing** whether the
 //! address exists, belongs to a deactivated account, or is pure invention: same
-//! status, same body, same headers. That is not a nicety — a route that answers
+//! status, same body, same headers. That is not a nicety - a route that answers
 //! differently is a free membership oracle for whoever holds a leaked address
 //! list.
 //!
 //! Concretely, every branch below returns the same `ok` value, and *nothing*
 //! that follows the lookup is allowed to change it: a database failure, an
-//! unconfigured relay, a full job queue — all of them log and fall through to
+//! unconfigured relay, a full job queue - all of them log and fall through to
 //! the same answer. The only public signal remains "we accepted your request".
 
 use crate::{
@@ -67,7 +67,7 @@ pub async fn forgot_password(
     // `auth.self_service_recovery`, resolved for THIS account (migration
     // `000115`): an organisational unit whose people must go through a human
     // gets no link. Read after the lookup and answered with the same `ok` as
-    // every other branch — the route stays deaf, and an administrator can still
+    // every other branch - the route stays deaf, and an administrator can still
     // reset the password from the console.
     if !crate::settings::password_policy::self_service_recovery_allowed(&state.db, user_id).await {
         tracing::info!(
@@ -121,7 +121,7 @@ pub async fn forgot_password(
     );
 
     // The account's own choice first; failing that, the language its
-    // organisational unit — or the instance — declares. An account that never
+    // organisational unit - or the instance - declares. An account that never
     // opened the language picker is not an English-speaking account.
     let audience = mailer::audience(&state.db, Some(user_id), &preferences).await;
     let recipient = mailer::Recipient {

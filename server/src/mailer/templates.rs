@@ -27,7 +27,7 @@ pub const LOCALES: [&str; 13] = [
 /// When a message was produced, and the zone it is stated in.
 ///
 /// Carried explicitly rather than read from the clock inside [`render`] so the
-/// rendering stays a pure function of its inputs — which is what lets the tests
+/// rendering stays a pure function of its inputs - which is what lets the tests
 /// below assert an exact string instead of a regular expression.
 #[derive(Debug, Clone, Copy)]
 pub struct Stamp {
@@ -126,7 +126,7 @@ const STRINGS: [(&str, Strings); 13] = [
         admin_must_change: "You will be asked to choose a new password the next time you sign in.",
         admin_advice: "Change this password as soon as you sign in, and never reuse it elsewhere.",
         admin_cta: "Sign in",
-        test_subject: "{instance} — test message",
+        test_subject: "{instance} - test message",
         test_intro: "This test message confirms that the outgoing mail relay of {instance} is correctly configured.",
     }),
     ("fr", Strings {
@@ -149,7 +149,7 @@ const STRINGS: [(&str, Strings); 13] = [
         admin_must_change: "Un nouveau mot de passe vous sera demandé à votre prochaine connexion.",
         admin_advice: "Changez ce mot de passe dès votre connexion et ne le réutilisez nulle part ailleurs.",
         admin_cta: "Se connecter",
-        test_subject: "{instance} — message de test",
+        test_subject: "{instance} - message de test",
         test_intro: "Ce message de test confirme que le relais de courrier sortant de {instance} est correctement configuré.",
     }),
     ("es", Strings {
@@ -172,7 +172,7 @@ const STRINGS: [(&str, Strings); 13] = [
         admin_must_change: "Se le pedirá que elija una nueva contraseña la próxima vez que inicie sesión.",
         admin_advice: "Cambie esta contraseña en cuanto inicie sesión y no la reutilice en ningún otro sitio.",
         admin_cta: "Iniciar sesión",
-        test_subject: "{instance} — mensaje de prueba",
+        test_subject: "{instance} - mensaje de prueba",
         test_intro: "Este mensaje de prueba confirma que el relé de correo saliente de {instance} está correctamente configurado.",
     }),
     ("pt", Strings {
@@ -195,7 +195,7 @@ const STRINGS: [(&str, Strings); 13] = [
         admin_must_change: "Ser-lhe-á pedido que escolha uma nova palavra-passe no próximo início de sessão.",
         admin_advice: "Altere esta palavra-passe assim que iniciar sessão e nunca a reutilize noutro local.",
         admin_cta: "Iniciar sessão",
-        test_subject: "{instance} — mensagem de teste",
+        test_subject: "{instance} - mensagem de teste",
         test_intro: "Esta mensagem de teste confirma que o relé de correio de saída de {instance} está corretamente configurado.",
     }),
     ("it", Strings {
@@ -218,7 +218,7 @@ const STRINGS: [(&str, Strings); 13] = [
         admin_must_change: "Al prossimo accesso ti sarà chiesto di scegliere una nuova password.",
         admin_advice: "Cambia questa password appena effettui l'accesso e non riutilizzarla altrove.",
         admin_cta: "Accedi",
-        test_subject: "{instance} — messaggio di prova",
+        test_subject: "{instance} - messaggio di prova",
         test_intro: "Questo messaggio di prova conferma che il relay di posta in uscita di {instance} è configurato correttamente.",
     }),
     ("de", Strings {
@@ -241,7 +241,7 @@ const STRINGS: [(&str, Strings); 13] = [
         admin_must_change: "Bei der nächsten Anmeldung werden Sie aufgefordert, ein neues Passwort zu wählen.",
         admin_advice: "Ändern Sie dieses Passwort direkt nach der Anmeldung und verwenden Sie es nirgendwo sonst.",
         admin_cta: "Anmelden",
-        test_subject: "{instance} — Testnachricht",
+        test_subject: "{instance} - Testnachricht",
         test_intro: "Diese Testnachricht bestätigt, dass der ausgehende Mail-Relay von {instance} korrekt konfiguriert ist.",
     }),
     ("el", Strings {
@@ -264,7 +264,7 @@ const STRINGS: [(&str, Strings); 13] = [
         admin_must_change: "Στην επόμενη σύνδεση θα σας ζητηθεί να επιλέξετε νέο κωδικό πρόσβασης.",
         admin_advice: "Αλλάξτε αυτόν τον κωδικό μόλις συνδεθείτε και μην τον χρησιμοποιήσετε πουθενά αλλού.",
         admin_cta: "Σύνδεση",
-        test_subject: "{instance} — δοκιμαστικό μήνυμα",
+        test_subject: "{instance} - δοκιμαστικό μήνυμα",
         test_intro: "Αυτό το δοκιμαστικό μήνυμα επιβεβαιώνει ότι ο διακομιστής εξερχόμενης αλληλογραφίας του {instance} έχει ρυθμιστεί σωστά.",
     }),
     ("ru", Strings {
@@ -287,7 +287,7 @@ const STRINGS: [(&str, Strings); 13] = [
         admin_must_change: "При следующем входе вам будет предложено выбрать новый пароль.",
         admin_advice: "Смените этот пароль сразу после входа и не используйте его больше нигде.",
         admin_cta: "Войти",
-        test_subject: "{instance} — тестовое сообщение",
+        test_subject: "{instance} - тестовое сообщение",
         test_intro: "Это тестовое сообщение подтверждает, что ретранслятор исходящей почты {instance} настроен правильно.",
     }),
     ("ar", Strings {
@@ -310,7 +310,7 @@ const STRINGS: [(&str, Strings); 13] = [
         admin_must_change: "سيُطلب منك اختيار كلمة مرور جديدة عند تسجيل الدخول التالي.",
         admin_advice: "غيّر كلمة المرور هذه فور تسجيل الدخول ولا تستخدمها في أي مكان آخر.",
         admin_cta: "تسجيل الدخول",
-        test_subject: "{instance} — رسالة اختبار",
+        test_subject: "{instance} - رسالة اختبار",
         test_intro: "تؤكد رسالة الاختبار هذه أن مُرحّل البريد الصادر في {instance} مُهيّأ بشكل صحيح.",
     }),
     ("he", Strings {
@@ -333,7 +333,7 @@ const STRINGS: [(&str, Strings); 13] = [
         admin_must_change: "בכניסה הבאה תתבקשו לבחור סיסמה חדשה.",
         admin_advice: "שנו סיסמה זו מיד עם הכניסה ואל תשתמשו בה בשום מקום אחר.",
         admin_cta: "התחברות",
-        test_subject: "{instance} — הודעת בדיקה",
+        test_subject: "{instance} - הודעת בדיקה",
         test_intro: "הודעת בדיקה זו מאשרת שממסר הדואר היוצא של {instance} מוגדר כראוי.",
     }),
     ("hi", Strings {
@@ -356,7 +356,7 @@ const STRINGS: [(&str, Strings); 13] = [
         admin_must_change: "अगली बार साइन इन करते समय आपसे नया पासवर्ड चुनने के लिए कहा जाएगा।",
         admin_advice: "साइन इन करते ही यह पासवर्ड बदल दें और इसे कहीं और दोबारा उपयोग न करें।",
         admin_cta: "साइन इन करें",
-        test_subject: "{instance} — परीक्षण संदेश",
+        test_subject: "{instance} - परीक्षण संदेश",
         test_intro: "यह परीक्षण संदेश पुष्टि करता है कि {instance} का आउटगोइंग मेल रिले सही ढंग से कॉन्फ़िगर किया गया है।",
     }),
     ("zh", Strings {
@@ -379,7 +379,7 @@ const STRINGS: [(&str, Strings); 13] = [
         admin_must_change: "下次登录时，系统将要求您设置新密码。",
         admin_advice: "登录后请立即修改此密码，切勿在其他地方重复使用。",
         admin_cta: "登录",
-        test_subject: "{instance} — 测试邮件",
+        test_subject: "{instance} - 测试邮件",
         test_intro: "这封测试邮件确认 {instance} 的外发邮件中继已正确配置。",
     }),
     ("ja", Strings {
@@ -402,7 +402,7 @@ const STRINGS: [(&str, Strings); 13] = [
         admin_must_change: "次回のサインイン時に、新しいパスワードの設定を求められます。",
         admin_advice: "サインイン後すぐにこのパスワードを変更し、他のサービスで再利用しないでください。",
         admin_cta: "サインイン",
-        test_subject: "{instance} — テストメッセージ",
+        test_subject: "{instance} - テストメッセージ",
         test_intro: "このテストメッセージは、{instance} の送信メールリレーが正しく設定されていることを確認するものです。",
     }),
 ];
@@ -419,7 +419,7 @@ fn strings(locale: &str) -> &'static Strings {
 }
 
 /// Minimal HTML escaping for every interpolated value. Applied without
-/// exception — an instance name, a display name and an inviter label are all
+/// exception - an instance name, a display name and an inviter label are all
 /// operator- or user-supplied strings.
 fn esc(raw: &str) -> String {
     let mut out = String::with_capacity(raw.len());
@@ -445,7 +445,7 @@ fn fill(template: &str, slots: &[(&str, &str)]) -> String {
 }
 
 /// Body of a message, as a list of blocks. Rendered twice: once as HTML, once
-/// as text, from the same source — so the two alternatives can never drift.
+/// as text, from the same source - so the two alternatives can never drift.
 enum Block {
     Paragraph(String),
     /// Call-to-action button plus its raw URL (repeated for text clients).
@@ -518,13 +518,13 @@ fn render_text(instance: &str, blocks: &[Block]) -> String {
     out.trim_end().to_string()
 }
 
-/// Renders `tpl` for `locale`. `recipient_name` may be empty — the greeting
+/// Renders `tpl` for `locale`. `recipient_name` may be empty - the greeting
 /// then drops the name instead of addressing "Hello ,".
 ///
 /// `stamp` dates the message in the zone that applies to the recipient (see
 /// [`crate::settings::intl`]). It is the one date a reader of a transactional
-/// message actually needs — "was this reset request mine, ten minutes ago, or
-/// somebody else's, last night?" — and stating it in UTC on an instance whose
+/// message actually needs - "was this reset request mine, ten minutes ago, or
+/// somebody else's, last night?" - and stating it in UTC on an instance whose
 /// operator has declared a zone answers the question in the wrong units.
 pub fn render(
     locale: &str,
@@ -628,7 +628,7 @@ pub const DEFAULT_LOCALE: &str = "en";
 ///
 /// The distinction is the whole point: "no preference" is not "English". An
 /// account that never opened the language picker must be written to in the
-/// language the instance — or its organisational unit — declares, and only a
+/// language the instance - or its organisational unit - declares, and only a
 /// `None` here lets the caller go and ask.
 pub fn preferred_locale(preferences: &serde_json::Value) -> Option<&'static str> {
     preferences

@@ -7,7 +7,7 @@ export class Splitter extends ViewBase {
   @bind accessor distance = 180
 
   get caption(): string {
-    return `Second pane — the first is ${this.distance} px wide`
+    return `Second pane - the first is ${this.distance} px wide`
   }
 }
 

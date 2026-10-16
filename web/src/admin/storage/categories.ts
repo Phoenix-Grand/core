@@ -8,7 +8,7 @@ import type { CatalogEntry, CategoryUsage } from './api'
  *
  * **Only the labels live here.** Which categories are billed, and which occupy
  * the volume, is stated by the server's `catalog` and by the flags each row
- * carries — never by this file. A build that hard-coded the rules would keep
+ * carries - never by this file. A build that hard-coded the rules would keep
  * drawing yesterday's answer the day the server changed its mind, and would have
  * nothing at all to say about a category it has never heard of.
  */
@@ -83,7 +83,7 @@ export interface CategorySlice {
 }
 
 export interface CategoryReading {
-  /** Held categories with a volume, in catalog order — never in rank order. */
+  /** Held categories with a volume, in catalog order - never in rank order. */
   slices:     CategorySlice[]
   /** Past the eight-hue scale, folded into one entry. `null` when it is empty. */
   folded:     { count: number; bytes: number } | null
@@ -101,7 +101,7 @@ export interface CategoryReading {
  * Colour is bound to the category's place in the **catalog**, filtered to the
  * categories actually present: a category keeps its hue as the numbers move, and
  * the scale is not spent on rows that draw nothing. `delegated` is excluded here
- * by its own `held: false` — it belongs to no total, and every caller renders it
+ * by its own `held: false` - it belongs to no total, and every caller renders it
  * separately and says so.
  */
 export function useCategoryReading(

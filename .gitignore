@@ -1,17 +1,17 @@
 # ─────────────────────────────────────────────────────────────
-# Kubuno — fichiers NON versionnés (artefacts de build, données, secrets)
+# Kubuno - fichiers NON versionnés (artefacts de build, données, secrets)
 # Seul le CODE SOURCE est committé. Régénérables = exclus.
 # ─────────────────────────────────────────────────────────────
 
-# Rust — artefacts de compilation
+# Rust - artefacts de compilation
 /target/
 **/target/
 
-# Node — dépendances
+# Node - dépendances
 node_modules/
 **/node_modules/
 
-# Web host — build outputs (web/; frontend/ before the move)
+# Web host - build outputs (web/; frontend/ before the move)
 /web/dist/
 /web/dist-gallery/
 /web/dist-modules/
@@ -22,7 +22,7 @@ node_modules/
 /dist/
 *.deb
 
-# build_deb.sh — état local
+# build_deb.sh - état local
 /.build_state
 /.build_number
 
@@ -59,7 +59,7 @@ node_modules
 _cache/
 
 
-# Visual Studio tooling — per-machine artefacts (the .slnx / .slnLaunch / .rsproj /
+# Visual Studio tooling - per-machine artefacts (the .slnx / .slnLaunch / .rsproj /
 # .esproj / NuGet.Config files ARE versioned)
 obj/
 .vs/

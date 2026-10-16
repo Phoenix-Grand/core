@@ -1,13 +1,13 @@
-//! The layout engine: `Dock`, then `Anchor` — in that order, because that is
+//! The layout engine: `Dock`, then `Anchor` - in that order, because that is
 //! the order the toolkit resolves them.
 //!
 //! WinForms lays a container out in two passes:
 //!
-//! 1. **Dock** — children with a `DockStyle` other than `None` are placed
+//! 1. **Dock** - children with a `DockStyle` other than `None` are placed
 //!    against the container's remaining display rectangle, in **reverse
 //!    z-order** (the last docked child gets the outermost band), each one
 //!    consuming the edge it took. `Fill` takes whatever is left.
-//! 2. **Anchor** — every other child keeps its distance to the edges it is
+//! 2. **Anchor** - every other child keeps its distance to the edges it is
 //!    anchored to; anchoring to two opposite edges stretches it.
 //!
 //! Both passes are pure functions of `(container rect, children)` here, so the
@@ -17,8 +17,8 @@
 //!
 //! This engine is **space-agnostic**: it returns rectangles in whatever space
 //! `display` was given in. Callers must give it the container's display
-//! rectangle in the container's OWN local space — that is, with its top-left at
-//! the origin — because [`ControlBase::bounds`] is defined, as in WinForms,
+//! rectangle in the container's OWN local space - that is, with its top-left at
+//! the origin - because [`ControlBase::bounds`] is defined, as in WinForms,
 //! *relative to the parent's client area*.
 //!
 //! Passing a canvas-absolute rectangle "works" and is the tempting shortcut,
@@ -64,7 +64,7 @@ impl From<&ControlBase> for Item {
 /// deflated by its padding) and returns each child's new rectangle, in the same
 /// order as the input.
 ///
-/// `previous` is the container's display rect from the last pass — anchoring is
+/// `previous` is the container's display rect from the last pass - anchoring is
 /// defined against the SIZE CHANGE, so a first pass (where `previous` equals
 /// `display`) legitimately moves nothing.
 /// Applies a `MinimumSize`/`MaximumSize` bound to ONE axis. `0.0` means unset on
@@ -107,7 +107,7 @@ pub fn layout(display: Rect, previous: Rect, items: &[Item]) -> Vec<Rect> {
         if it.dock == DockStyle::None {
             continue;
         }
-        // An invisible child takes no band — but it KEEPS its bounds. Writing a
+        // An invisible child takes no band - but it KEEPS its bounds. Writing a
         // zero rectangle here destroyed the geometry of anything hidden and
         // shown again, because the caller stores what this returns.
         if !it.visible {
@@ -158,7 +158,7 @@ pub fn layout(display: Rect, previous: Rect, items: &[Item]) -> Vec<Rect> {
             // sit at the back of the z-order: a Fill added last takes the whole
             // remaining rectangle and the bands docked "after" it (earlier in z)
             // then overlap it. Deferring Fill to the end made every z-order
-            // "work", which is friendlier and is not what WinForms does — and it
+            // "work", which is friendlier and is not what WinForms does - and it
             // silently disagreed with the reference on nineteen rectangles.
             DockStyle::Fill => Rect::new(
                 free.left,
@@ -192,7 +192,7 @@ pub fn layout(display: Rect, previous: Rect, items: &[Item]) -> Vec<Rect> {
         // Both edges → stretch; the far edge only → move; the near edge only →
         // stay put; NEITHER → recentre. That last case is `GetAnchorDestination`
         // doing `left += displayRect.Width / 2` with INTEGER division, so it is
-        // `old − ⌊prev/2⌋ + ⌊cur/2⌋` and not `old + ⌊Δ/2⌋` — the two differ by a
+        // `old − ⌊prev/2⌋ + ⌊cur/2⌋` and not `old + ⌊Δ/2⌋` - the two differ by a
         // pixel whenever one extent is odd.
         let (nl, nr) = match (left_a, right_a) {
             (true, true) => (l, r + dw),
@@ -254,7 +254,7 @@ mod tests {
     }
 
     /// `Fill` is resolved at its own turn in the reverse walk and consumes
-    /// nothing — so a Fill added LAST (highest z) takes the whole display and
+    /// nothing - so a Fill added LAST (highest z) takes the whole display and
     /// the bands docked before it overlap it. This is why the toolkit tells you
     /// to send a Fill control to the back.
     ///
@@ -277,7 +277,7 @@ mod tests {
     }
 
     /// A Fill placed FIRST (lowest z) is resolved last and therefore receives
-    /// only what the bands left — the arrangement the toolkit actually
+    /// only what the bands left - the arrangement the toolkit actually
     /// recommends. Parity case `D08`, which agreed even before the fix.
     #[test]
     fn a_fill_at_the_back_of_the_z_order_gets_the_remainder() {
@@ -326,7 +326,7 @@ mod tests {
 
     /// A docked band keeps its own thickness even when the container cannot
     /// hold it: `DefaultLayout` never clamps the docking axis. Clamping read as
-    /// defensive and was simply wrong — parity case `D12` has WinForms report
+    /// defensive and was simply wrong - parity case `D12` has WinForms report
     /// `(0,0,200,400)` in a 100-tall container where the port reported
     /// `(0,0,200,100)`.
     #[test]
@@ -338,7 +338,7 @@ mod tests {
     }
 
     /// The dock pass honours `MinimumSize`/`MaximumSize` on the axis it
-    /// computes — the toolkit clamps in `SetBoundsCore` regardless of how the
+    /// computes - the toolkit clamps in `SetBoundsCore` regardless of how the
     /// size was arrived at. Parity case `D24`.
     #[test]
     fn a_docked_band_obeys_its_own_max_on_the_docking_axis() {
@@ -349,7 +349,7 @@ mod tests {
     }
 
     /// An unanchored axis RECENTRES, and with integer halving. Parity case
-    /// `A20`: 201 → 300 moves by 50, not 49.5 — the comment this replaces
+    /// `A20`: 201 → 300 moves by 50, not 49.5 - the comment this replaces
     /// claimed the child simply stayed put.
     #[test]
     fn an_unanchored_axis_recentres_with_integer_halving() {
@@ -364,7 +364,7 @@ mod tests {
         assert_eq!((out[0].top, out[0].bottom), (40.0, 70.0));
     }
 
-    /// A hidden ANCHORED child is still anchored — showing it again must find
+    /// A hidden ANCHORED child is still anchored - showing it again must find
     /// it where it belongs. Parity case `A15`, where the toolkit stretches it
     /// exactly like its visible twin.
     #[test]

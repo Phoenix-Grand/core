@@ -6,7 +6,7 @@
 //!
 //! * **Cross-engine** round-trip PostgreSQL ⇄ SQLite (and MySQL when configured):
 //!   a backup taken on one engine restored onto another, with faithful
-//!   uuid/bool/timestamp/json values — the destination-directed reconstruction.
+//!   uuid/bool/timestamp/json values - the destination-directed reconstruction.
 //! * **Multi-schema** coverage on PostgreSQL: `core` plus a secondary
 //!   `office_data` schema, backed up and restored together.
 //! * **Hot-restore orchestration** on SQLite: an automatic safety backup taken
@@ -49,7 +49,7 @@ async fn migrate(pool: &DbPool) {
 
 fn temp_dir(tag: &str) -> std::path::PathBuf {
     // The cargo target tmp dir sits on the repo's disk, which has room for the
-    // backup's free-space floor — unlike a small `/tmp` tmpfs.
+    // backup's free-space floor - unlike a small `/tmp` tmpfs.
     std::path::Path::new(env!("CARGO_TARGET_TMPDIR")).join(format!("kubuno-{tag}-{}", Uuid::new_v4()))
 }
 
@@ -145,7 +145,7 @@ async fn cross_engine_round_trip(source: &DbPool, target: &DbPool) {
 #[tokio::test]
 async fn cross_engine_pg_to_sqlite_and_back() {
     let Some(pg) = maybe_pg().await else {
-        eprintln!("KUBUNO_PG_TEST_URL absent — cross-moteur PG↔SQLite ignoré");
+        eprintln!("KUBUNO_PG_TEST_URL absent - cross-moteur PG↔SQLite ignoré");
         return;
     };
     let sq_dir = temp_dir("xsq");
@@ -166,7 +166,7 @@ async fn cross_engine_pg_to_sqlite_and_back() {
 #[tokio::test]
 async fn pg_multi_schema_round_trip() {
     let Some(db) = maybe_pg().await else {
-        eprintln!("KUBUNO_PG_TEST_URL absent — multi-schéma PG ignoré");
+        eprintln!("KUBUNO_PG_TEST_URL absent - multi-schéma PG ignoré");
         return;
     };
     migrate(&db).await;
@@ -249,7 +249,7 @@ async fn sqlite_hot_restore_takes_a_safety_backup_and_records_it() {
         .await
         .expect("delete marker");
 
-    // `actor: None` keeps `triggered_by` NULL — a real admin id would need to
+    // `actor: None` keeps `triggered_by` NULL - a real admin id would need to
     // exist in `core.users`; the recording path is exercised either way.
     let result = restore::restore_from_file(&db, dest.to_str().unwrap(), &outcome.file_name, None)
         .await

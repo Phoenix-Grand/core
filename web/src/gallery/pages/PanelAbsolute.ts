@@ -2,7 +2,7 @@ import { bind } from '@kubuno/views'
 
 import { ViewBase } from './PanelAbsolute.kbview'
 
-/** Gallery page: Panel Layout="Absolute" and Anchor — the board is laid out at 320 × 160, then resized. */
+/** Gallery page: Panel Layout="Absolute" and Anchor - the board is laid out at 320 × 160, then resized. */
 export class PanelAbsolute extends ViewBase {
   @bind accessor boardWidth = 320
   @bind accessor boardHeight = 160

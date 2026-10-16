@@ -1,4 +1,4 @@
-//! Endpoint MCP (Streamable HTTP) — agrège les outils déclarés par les modules
+//! Endpoint MCP (Streamable HTTP) - agrège les outils déclarés par les modules
 //! et proxifie leur exécution. Auth par token API (identité utilisateur).
 
 use async_trait::async_trait;
@@ -125,7 +125,7 @@ impl McpToolProvider for CoreToolProvider {
         };
 
         // The role presented to the module. When the call arrived on an API
-        // token, it is derived from that token's scopes — this endpoint
+        // token, it is derived from that token's scopes - this endpoint
         // authenticates by token and nothing else, so forwarding the owner's role
         // verbatim made it the shortest path in the whole system to untraced
         // administrative access inside every module.
@@ -181,7 +181,7 @@ async fn mcp_enabled(state: &AppState) -> bool {
         .unwrap_or(false)
 }
 
-/// POST /mcp — point d'entrée JSON-RPC (Streamable HTTP, réponses JSON).
+/// POST /mcp - point d'entrée JSON-RPC (Streamable HTTP, réponses JSON).
 pub async fn mcp_endpoint(
     State(state): State<AppState>,
     headers: HeaderMap,
@@ -191,7 +191,7 @@ pub async fn mcp_endpoint(
         return (StatusCode::NOT_FOUND, "Serveur MCP désactivé").into_response();
     }
 
-    // Auth: personal API token, and nothing else — no session, no cookie. That
+    // Auth: personal API token, and nothing else - no session, no cookie. That
     // makes this the one route where the scoping rules cannot be a second line of
     // defence behind an interactive check; they are the only line.
     let Some(token) = headers
@@ -210,7 +210,7 @@ pub async fn mcp_endpoint(
     };
 
     // A scoped token must say it may do this. A legacy token is admitted during
-    // its grace window — it predates the scope it is now missing — and every one
+    // its grace window - it predates the scope it is now missing - and every one
     // of its uses is logged and audited by `resolve_grant`.
     if !grant.may_carry(token_scope::MCP_EXECUTE) {
         tracing::warn!(
@@ -226,7 +226,7 @@ pub async fn mcp_endpoint(
     dispatch(&state, user_id, Some(grant), body).await
 }
 
-/// POST /internal/mcp — internal variant for trusted modules (e.g. the assistant module)
+/// POST /internal/mcp - internal variant for trusted modules (e.g. the assistant module)
 /// agissant au nom d'un utilisateur. Auth : `x-internal-secret` (extracteur
 /// `InternalRequest`) + identité via l'en-tête `x-kubuno-user-id`, au lieu d'un
 /// token API personnel (que l'assistant ne possède pas en cours de conversation).

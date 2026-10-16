@@ -10,7 +10,7 @@ interface CheckboxProps {
   onChange: (checked: boolean) => void
   /**
    * Tri-state, for a partial selection. Drawn as a dash and mirrored onto the input's
-   * DOM property (the only place the tri-state exists — markup cannot express it).
+   * DOM property (the only place the tri-state exists - markup cannot express it).
    */
   indeterminate?: boolean
   label?: string
@@ -28,13 +28,13 @@ const LBL: Record<CheckboxVariant, { label: string; desc: string }> = {
   dark:    { label: 'text-xs text-[#cccccc]', desc: 'text-[11px] text-[#808080]' },
 }
 
-const DURATION = 100   // ms — the CSS transition this replaces
+const DURATION = 100   // ms - the CSS transition this replaces
 
 /**
  * The box is drawn on a canvas; the hidden `<input type="checkbox">` keeps every
  * native behaviour (label association, keyboard, form submission, assistive
  * technologies). The input remains the single source of truth, exactly as when CSS
- * read `:checked` — the canvas only mirrors it.
+ * read `:checked` - the canvas only mirrors it.
  *
  * Same architecture as `Toggle` and `Radio`, including the four repaint triggers: a
  * canvas is a bitmap, so everything CSS used to redo for free has to be re-wired.
@@ -50,7 +50,7 @@ export function Checkbox({
   const raf       = useRef(0)
   const painted   = useRef(false)
   const [hovered, setHovered] = useState(false)
-  // Read inside `draw`, which must not be recreated on every hover — that would
+  // Read inside `draw`, which must not be recreated on every hover - that would
   // re-arm the observers below on each pointer move.
   const hoverRef = useRef(false)
   hoverRef.current = hovered
@@ -80,7 +80,7 @@ export function Checkbox({
     const start = performance.now()
     const step = (now: number) => {
       const t = Math.min(1, (now - start) / DURATION)
-      // The same curve as the CSS transition this replaces — sampled, not approximated.
+      // The same curve as the CSS transition this replaces - sampled, not approximated.
       progress.current = from + (target - from) * easeStandard(t)
       draw()
       if (t < 1) raf.current = requestAnimationFrame(step)
@@ -98,14 +98,14 @@ export function Checkbox({
     painted.current = true
   }, [checked, syncFromInput])
 
-  /* The tri-state lives ONLY as a DOM property — there is no attribute for it, so it
+  /* The tri-state lives ONLY as a DOM property - there is no attribute for it, so it
    * has to be pushed onto the input, and it fires no event: repaint explicitly. */
   useEffect(() => {
     if (inputRef.current) inputRef.current.indeterminate = indeterminate
     draw()
   }, [indeterminate, draw])
 
-  // Hover only recolours the border — repaint in place, no animation.
+  // Hover only recolours the border - repaint in place, no animation.
   useEffect(() => { draw() }, [hovered, draw])
 
   useEffect(() => {
@@ -113,7 +113,7 @@ export function Checkbox({
     const form  = input?.form
 
     // `change` covers pointer and keyboard toggles. `reset` covers a form restoring
-    // its defaults, which does NOT fire `change` — free with CSS, explicit here.
+    // its defaults, which does NOT fire `change` - free with CSS, explicit here.
     const onChangeEv = () => syncFromInput()
     const onReset    = () => requestAnimationFrame(() => syncFromInput(true))
     input?.addEventListener('change', onChangeEv)
@@ -122,7 +122,7 @@ export function Checkbox({
     /* A canvas is a bitmap, so unlike CSS it must be repainted when its rendering
      * conditions change. `device-pixel-content-box` is the primitive meant for this:
      * it reports the box in DEVICE pixels, so it fires exactly when the backing store
-     * needs resizing. A `resize` listener is NOT a substitute — changing the pixel
+     * needs resizing. A `resize` listener is NOT a substitute - changing the pixel
      * ratio while the CSS viewport keeps its size fires no resize event at all.
      *
      * The resolution query is the fallback for engines without that box (Safari). It
@@ -134,7 +134,7 @@ export function Checkbox({
         observer = new ResizeObserver(() => syncFromInput(true))
         observer.observe(canvasRef.current, { box: 'device-pixel-content-box' })
       } catch {
-        observer = null   // box unsupported — the media query below takes over
+        observer = null   // box unsupported - the media query below takes over
       }
     }
 

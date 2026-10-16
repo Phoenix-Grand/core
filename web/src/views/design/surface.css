@@ -128,7 +128,7 @@ html.kbd-page body {
 .kbd-canvas[data-document='page'] { background: var(--kbd-page-canvas); }
 .kbd-canvas[data-document='page'] .kbd-zoom { outline: 1px dashed var(--kbd-page-boundary); }
 /* A device frame sits on the neutral Visual Studio stage (not the white page sheet), so the space around a narrow
-   phone reads as a backdrop; the bezel — not a dashed line — is the device's boundary, and its shadow lifts it off
+   phone reads as a backdrop; the bezel - not a dashed line - is the device's boundary, and its shadow lifts it off
    the stage. These win over the page rules above for a view shown as a device. */
 .kbd-canvas[data-device='true'] { background: var(--vs-canvas); }
 .kbd-canvas[data-device='true'] .kbd-zoom { outline: none; }
@@ -160,7 +160,7 @@ html.kbd-page body {
 .kbd-overlay[data-design='false'] > * { display: none; }
 .kbd-ad { position: absolute; box-sizing: border-box; pointer-events: none; }
 /* Hover shares the selected control's exact geometry (same 2px solid border, same border-box rect and margins);
-   it is told apart only by opacity — a lighter version of the same selection box, not a thinner one. */
+   it is told apart only by opacity - a lighter version of the same selection box, not a thinner one. */
 .kbd-hover { border: 2px solid color-mix(in srgb, var(--kbd-adorner) 45%, transparent); }
 .kbd-sel { border: 2px solid var(--kbd-adorner); }
 .kbd-sel:not([data-primary='true']) { border-width: 1px; }
@@ -186,7 +186,7 @@ html.kbd-page body {
   position: absolute; padding: 2px 6px; border-radius: 3px; background: #1e1e1e; color: #fff;
   font: 11px/1.4 'Segoe UI', system-ui, sans-serif; pointer-events: none; white-space: nowrap;
 }
-/* A control's name tag (type + x:Name), a small flag at the top-left of its frame — hover, selection and the
+/* A control's name tag (type + x:Name), a small flag at the top-left of its frame - hover, selection and the
    primary selection's parent. It hangs just above the frame (`data-above`), or sits inside near the top. */
 .kbd-tag {
   position: absolute; max-width: 240px; padding: 1px 5px; border-radius: 3px 3px 3px 0;

@@ -3,7 +3,7 @@
  *
  * A canvas context SILENTLY IGNORES an unparseable colour: `ctx.fillStyle = 'var(--x)'`
  * leaves the previous value in place, which on a fresh context is opaque black. The
- * control then renders as a black blob with no error anywhere — exactly what happened
+ * control then renders as a black blob with no error anywhere - exactly what happened
  * when a caller passed `color="var(--color-primary)"`, perfectly valid for the CSS
  * implementation these replaced.
  *
@@ -18,7 +18,7 @@ let probe: CanvasRenderingContext2D | null | undefined
 
 function parses(value: string): boolean {
   if (probe === undefined) probe = document.createElement('canvas').getContext('2d')
-  if (!probe) return true          // no 2d context at all — nothing to protect
+  if (!probe) return true          // no 2d context at all - nothing to protect
   // Assigning an invalid colour is a no-op, so try from two different starting
   // points: only a value the context actually understood lands on the same result.
   probe.fillStyle = '#000000'
@@ -43,7 +43,7 @@ export function resolveCssColor(el: Element, value: string | undefined | null, f
   if (m) {
     const resolved = getComputedStyle(el).getPropertyValue(m[1]).trim()
     if (resolved) return parses(resolved) ? resolved : fallback
-    // `var()` own fallback, which may itself be a var() — resolve it too.
+    // `var()` own fallback, which may itself be a var() - resolve it too.
     return m[2] ? resolveCssColor(el, m[2], fallback) : fallback
   }
 

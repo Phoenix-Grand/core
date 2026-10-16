@@ -115,7 +115,7 @@ export class DataMigrationSection extends ViewBase {
       header: this.tr('admin.migr_col_items'),
       align: 'right',
       sortValue: r => r.tally.copied,
-      cell: r => <span className="text-text-secondary">{r.tally.copied || '—'}</span>,
+      cell: r => <span className="text-text-secondary">{r.tally.copied || '-'}</span>,
     },
     {
       id: 'status',

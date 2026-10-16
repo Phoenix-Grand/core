@@ -217,8 +217,8 @@ fn dc_target(surface: &Surface, dpi: f32) -> Result<ID2D1DCRenderTarget> {
     }
 }
 
-/// Paints the whole window into its DIB — shadow, card and (`dynamic`) the status line and the
-/// progress bar — in one pass, straight into the DIB: the first frame is the one that counts.
+/// Paints the whole window into its DIB - shadow, card and (`dynamic`) the status line and the
+/// progress bar - in one pass, straight into the DIB: the first frame is the one that counts.
 fn paint_window(rt: &ID2D1DCRenderTarget, content: &SplashContent, scale: f32, margin: i32, dynamic: Option<(Option<f32>, f32)>) -> Result<()> {
     let m = margin as f32 / scale;
     // SAFETY: drawing on the live DC target, between its BeginDraw and EndDraw.
@@ -236,7 +236,7 @@ fn paint_window(rt: &ID2D1DCRenderTarget, content: &SplashContent, scale: f32, m
 }
 
 /// The part of the card under the status line and the progress bar, as painted without them: a
-/// frame restores it, then paints them again — never the whole artwork.
+/// frame restores it, then paints them again - never the whole artwork.
 struct Strip {
     bitmap: ID2D1Bitmap,
     /// Where it goes, in the window's DIP.
@@ -292,7 +292,7 @@ pub struct Still {
 }
 
 /// Renders the splash showing `content` as its window would at `scale` (1.0 = 100 %), status
-/// line and progress bar included — for previews, documentation and tests.
+/// line and progress bar included - for previews, documentation and tests.
 pub fn render_still(content: &SplashContent, scale: f32) -> Result<Still> {
     let scale = scale.clamp(0.5, 4.0);
     let margin = (MARGIN * scale).round() as i32;
@@ -311,7 +311,7 @@ pub fn render_still(content: &SplashContent, scale: f32) -> Result<Still> {
 
 /// The monitor the application was launched on: the one the shell hands over in the start-up
 /// information (`STARTF_HASSHELLDATA`: `hStdOutput` is then a monitor), else the one under the
-/// pointer — where the user just clicked the tile or the icon.
+/// pointer - where the user just clicked the tile or the icon.
 fn launch_monitor() -> HMONITOR {
     const STARTF_HASSHELLDATA: u32 = 0x400;
     // SAFETY: plain queries into locals.

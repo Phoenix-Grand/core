@@ -1,7 +1,7 @@
 /**
  * Top bar of the explorer: breadcrumb + actions, replaced on touch by a
  * selection bar as soon as one item is ticked (long-press to enter, tap to
- * (un)tick — the mobile-app flow).
+ * (un)tick - the mobile-app flow).
  */
 import React from 'react'
 import { Trash2, Download, X, ListChecks, CheckSquare } from 'lucide-react'

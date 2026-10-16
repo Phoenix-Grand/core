@@ -3,15 +3,15 @@
 //! Each one closes a path that is obvious in hindsight and invisible in a code
 //! review that only checks "does this handler require a privilege":
 //!
-//! 1. [`ensure_role_management`] — defining roles is a superuser act. Whoever
+//! 1. [`ensure_role_management`] - defining roles is a superuser act. Whoever
 //!    can write a role can write themselves a role.
-//! 2. [`ensure_can_grant`] — you cannot grant what you do not hold, nor over a
+//! 2. [`ensure_can_grant`] - you cannot grant what you do not hold, nor over a
 //!    scope wider than your own.
-//! 3. [`ensure_can_act_on_user`] — you cannot touch an account that holds a role
+//! 3. [`ensure_can_act_on_user`] - you cannot touch an account that holds a role
 //!    you do not hold **in full**. Without this, `core.users.update` over the
 //!    root unit is a password reset on a super-administrator, which is a total
 //!    takeover through a privilege that reads as mundane.
-//! 4. [`ensure_superadmin_remains`] — the instance must keep at least one active
+//! 4. [`ensure_superadmin_remains`] - the instance must keep at least one active
 //!    super-administrator. An instance with none is unrecoverable without
 //!    database surgery.
 //! 5. [`AdminContext::require_superuser`] at the two call sites that execute
@@ -45,7 +45,7 @@ struct RoleAssignmentRow {
     privilege_key: Option<String>,
 }
 
-/// Guard 1 — defining roles and their privilege sets is superuser-only.
+/// Guard 1 - defining roles and their privilege sets is superuser-only.
 pub fn ensure_role_management(ctx: &AdminContext) -> Result<(), AppError> {
     ctx.require_superuser("gestion des rôles")
 }
@@ -152,7 +152,7 @@ pub async fn ensure_scopable(
     )))
 }
 
-/// Guard 2 — you cannot grant a privilege you do not hold, nor over a scope
+/// Guard 2 - you cannot grant a privilege you do not hold, nor over a scope
 /// wider than the one you hold it at.
 pub async fn ensure_can_grant(
     db: &DbPool,
@@ -251,12 +251,12 @@ async fn roles_held_by(
     Ok((superuser, keys))
 }
 
-/// Guard 3 — refuse to act on an account holding a role the caller does not
+/// Guard 3 - refuse to act on an account holding a role the caller does not
 /// hold in full.
 ///
 /// The attack this closes: an operator delegated `core.users.update` and
 /// `core.user_password.execute` over the **root** unit holds them over every
-/// account, including the super-administrators — and a password reset on a
+/// account, including the super-administrators - and a password reset on a
 /// super-administrator is a complete takeover through a privilege that looks
 /// like account maintenance. The rule is not "do not touch admins", it is the
 /// general form: whatever the target holds, the caller must hold too.
@@ -303,7 +303,7 @@ pub async fn ensure_can_act_on_user(
     Ok(())
 }
 
-/// Number of active super-administrators, evaluated on the given connection —
+/// Number of active super-administrators, evaluated on the given connection -
 /// so it can be called **inside** a transaction, after the mutation, and see its
 /// effect.
 pub async fn superadmin_count(tx: &mut DbTx) -> Result<i64, AppError> {
@@ -326,7 +326,7 @@ pub async fn superadmin_count(tx: &mut DbTx) -> Result<i64, AppError> {
     Ok(count.unwrap_or(0))
 }
 
-/// Guard 4 — refuse a mutation that would leave the instance with no active
+/// Guard 4 - refuse a mutation that would leave the instance with no active
 /// super-administrator.
 ///
 /// Called **after** the write, inside the same transaction: "would this leave
@@ -346,7 +346,7 @@ pub async fn ensure_superadmin_remains(tx: &mut DbTx) -> Result<(), AppError> {
 /// role".
 ///
 /// The column is **not** the source of truth any more, and its `CHECK` is
-/// frozen — but the module proxy forwards it in `X-Kubuno-User-Role` and the
+/// frozen - but the module proxy forwards it in `X-Kubuno-User-Role` and the
 /// frontend reads it, so it is maintained as a denormalised cache of exactly one
 /// fact. Delegated administrators keep `role = 'user'`: their power is scoped to
 /// the core's console and does not travel to the modules.
@@ -378,7 +378,7 @@ pub async fn sync_role_cache(tx: &mut DbTx, user_id: Uuid) -> Result<(), AppErro
 ///
 /// The legacy `PATCH /admin/users/:id { role }` surface predates this model and
 /// the console still uses it. Left alone it would create administrators with no
-/// assignment — invisible to the whole delegation model, and to guard 4. So the
+/// assignment - invisible to the whole delegation model, and to guard 4. So the
 /// two representations are written together.
 pub async fn apply_legacy_role_change(
     tx: &mut DbTx,

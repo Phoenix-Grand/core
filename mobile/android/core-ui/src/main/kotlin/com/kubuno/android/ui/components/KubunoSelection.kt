@@ -30,13 +30,13 @@ import androidx.compose.ui.unit.dp
  * Material's. The web paints these on a canvas with exact pixel sizes, so they
  * are redrawn here rather than restyled: Material's switch is a pill with a big
  * circular thumb, while Kubuno's is a rounded RECTANGLE with a small square
- * thumb — restyling could never match it.
+ * thumb - restyling could never match it.
  *
  * Layout mirrors the web components: the control, then a label with an optional
  * secondary description; the whole row is the touch target.
  */
 
-// TOGGLE_GEOMETRY from toggleCanvas.ts — a rounded rectangle, never a pill.
+// TOGGLE_GEOMETRY from toggleCanvas.ts - a rounded rectangle, never a pill.
 private data class ToggleGeom(
     val width: Int, val height: Int, val trackRadius: Int,
     val thumbSize: Int, val thumbRadius: Int, val thumbInset: Int,

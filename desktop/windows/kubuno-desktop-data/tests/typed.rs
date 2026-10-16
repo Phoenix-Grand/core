@@ -229,7 +229,7 @@ fn binding_source_round_trip_through_typed_rows() {
 }
 
 /// Every statement of the fixture has its file in the committed cache (else the build above would
-/// already have failed offline — this names the missing ones for whoever regenerates it).
+/// already have failed offline - this names the missing ones for whoever regenerates it).
 #[test]
 fn typed_fixture_cache_is_complete() {
     let manifest = std::path::Path::new(env!("CARGO_MANIFEST_DIR"));

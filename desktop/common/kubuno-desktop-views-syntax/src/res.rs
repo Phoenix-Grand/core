@@ -1,4 +1,4 @@
-//! `{Res key}` — the grammar of resource references (`vskubuno/docs/RESOURCES.md`, `VIEWS-SPEC.md`
+//! `{Res key}` - the grammar of resource references (`vskubuno/docs/RESOURCES.md`, `VIEWS-SPEC.md`
 //! §6.2, `WEB-VIEWS.md` §2.4): `{Res key}`, `{Res key, Source=set}`, `{Res Key=key, Set=set}`, and with
 //! arguments (WV-6) `{Res key, Count={Binding n}, Name={Binding user.name}, Sep=', '}`.
 //!
@@ -8,8 +8,8 @@
 //! is one quote). Arguments fill the string's `{{name}}` placeholders, and `Count` selects its plural form
 //! (`kubuno_desktop_resources_model::plural`).
 //!
-//! A reference is carried like a one-way binding whose path starts with [`RES_PREFIX`] — a path no view
-//! model can hold — with the arguments beside it (`BindingSyntax::res_args`). Resolving it (the `.kbres`
+//! A reference is carried like a one-way binding whose path starts with [`RES_PREFIX`] - a path no view
+//! model can hold - with the arguments beside it (`BindingSyntax::res_args`). Resolving it (the `.kbres`
 //! lookup, the UI culture) is the runtime's (`kubuno_desktop_views::resources`, which re-exports this
 //! module's items).
 

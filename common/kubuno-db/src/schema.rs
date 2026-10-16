@@ -1,5 +1,5 @@
 //! Optional schema-name prefixing, so several Kubuno instances can share one
-//! database server — WordPress-style table prefixes, but applied at the schema
+//! database server - WordPress-style table prefixes, but applied at the schema
 //! level (a PostgreSQL schema, a MySQL/MariaDB database, or a SQLite attached
 //! file/alias).
 //!
@@ -9,7 +9,7 @@
 //! [`SchemaPrefix::schema`] returns the schema name unchanged and
 //! [`SchemaPrefix::rewrite`] returns its input borrowed and untouched. A run
 //! without a prefix is therefore byte-for-byte identical to one from before this
-//! module existed — no cost, no behaviour change, no risk.
+//! module existed - no cost, no behaviour change, no risk.
 //!
 //! # What a prefix rewrites
 //!
@@ -26,8 +26,8 @@ use std::sync::Arc;
 
 /// Every schema qualifier prefix rewriting recognises: the core plus every
 /// module. A schema-qualified reference is only rewritten when its head matches
-/// one of these names, which keeps an unrelated `foo.bar` — or a module writing
-/// against a schema Kubuno does not own — untouched.
+/// one of these names, which keeps an unrelated `foo.bar` - or a module writing
+/// against a schema Kubuno does not own - untouched.
 ///
 /// Kept in sync by hand with the module roster in the workspace `CLAUDE.md`.
 pub const KUBUNO_SCHEMAS: &[&str] = &[
@@ -90,7 +90,7 @@ impl SchemaPrefix {
     /// Validates and builds a prefix from configuration. `None` or an empty
     /// string yields the inert default.
     ///
-    /// A non-empty prefix must match `^[a-z0-9_]{1,32}$` — lowercase ASCII
+    /// A non-empty prefix must match `^[a-z0-9_]{1,32}$` - lowercase ASCII
     /// letters, digits and underscore only. That guarantees it is a legal bare
     /// identifier on PostgreSQL, MySQL and SQLite and that it can never carry a
     /// quote, a dot or whitespace into a schema name, so no configuration value
@@ -220,7 +220,7 @@ mod tests {
         assert!(p.is_empty());
         assert_eq!(p.schema("notes"), "notes");
         assert_eq!(p.rewrite("SELECT * FROM notes.labels"), "SELECT * FROM notes.labels");
-        // A borrowed, untouched string — no allocation on the hot path.
+        // A borrowed, untouched string - no allocation on the hot path.
         assert!(matches!(p.rewrite("SELECT * FROM notes.labels"), Cow::Borrowed(_)));
 
         let p = SchemaPrefix::new(Some("")).unwrap();

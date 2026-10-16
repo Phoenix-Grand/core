@@ -63,7 +63,7 @@ pub fn chunk_path_v2(session_id: Uuid, chunk_index: u32) -> PathBuf {
 
 // ── Anciens helpers (conservés pour rétrocompatibilité interne) ───────────────
 
-/// @deprecated — Utiliser `user_file_path` à la place.
+/// @deprecated - Utiliser `user_file_path` à la place.
 pub fn file_path(
     base: &str,
     module_id: &str,
@@ -79,7 +79,7 @@ pub fn file_path(
         .join(file_id.to_string())
 }
 
-/// @deprecated — Utiliser `user_thumbnail_path` à la place.
+/// @deprecated - Utiliser `user_thumbnail_path` à la place.
 pub fn thumbnail_path(base: &str, module_id: &str, file_id: Uuid) -> PathBuf {
     PathBuf::from(base)
         .join("thumbs")
@@ -87,12 +87,12 @@ pub fn thumbnail_path(base: &str, module_id: &str, file_id: Uuid) -> PathBuf {
         .join(format!("{file_id}.jpg"))
 }
 
-/// @deprecated — Utiliser `upload_temp_dir_v2` à la place.
+/// @deprecated - Utiliser `upload_temp_dir_v2` à la place.
 pub fn upload_temp_dir(temp: &str, session_id: Uuid) -> PathBuf {
     PathBuf::from(temp).join(session_id.to_string())
 }
 
-/// @deprecated — Utiliser `chunk_path_v2` à la place.
+/// @deprecated - Utiliser `chunk_path_v2` à la place.
 pub fn chunk_path(temp: &str, session_id: Uuid, chunk_index: u32) -> PathBuf {
     PathBuf::from(temp)
         .join(session_id.to_string())

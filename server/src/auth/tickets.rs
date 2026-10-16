@@ -6,7 +6,7 @@
 //! `Authorization` header: an `<img src>`, a `<video>` and its Range requests,
 //! a download performed as a navigation, an `EventSource`, a `WebSocket`
 //! handshake. They used to authenticate with an `access_token` cookie that the
-//! web client wrote from JavaScript — readable by any script running in the
+//! web client wrote from JavaScript - readable by any script running in the
 //! page, so one XSS was enough to lift a full API credential.
 //!
 //! A ticket replaces that cookie for exactly those requests. It is a short-lived
@@ -17,15 +17,15 @@
 //! | binding   | meaning                                                           |
 //! |-----------|-------------------------------------------------------------------|
 //! | `uid`     | the account it acts for                                           |
-//! | `sid`     | the session it was minted from — signing out revokes it at once   |
-//! | `aud`     | `core` or a module id — a drive ticket is refused by photos       |
+//! | `sid`     | the session it was minted from - signing out revokes it at once   |
+//! | `aud`     | `core` or a module id - a drive ticket is refused by photos       |
 //! | `path`    | the exact request path (query string not included)                |
 //! | `mth`     | the HTTP method (`GET` also admits `HEAD`)                        |
 //! | `exp`     | expiry, seconds since the epoch                                   |
 //! | `once`    | optional nonce: the ticket is spent by its first use              |
 //!
-//! The core validates tickets in exactly two places — the module proxy and the
-//! [`crate::auth::middleware::AuthUser`] extractor — and the proxy turns a valid
+//! The core validates tickets in exactly two places - the module proxy and the
+//! [`crate::auth::middleware::AuthUser`] extractor - and the proxy turns a valid
 //! ticket into the same signed identity (`kubuno-modauth`) it forwards for a
 //! bearer, so modules need no code of their own.
 //!
@@ -78,7 +78,7 @@ pub enum Purpose {
     Download,
     /// Media playback (`<video>`/`<audio>` with Range requests) or `EventSource`.
     Stream,
-    /// `WebSocket` handshake — checked once, at connect.
+    /// `WebSocket` handshake - checked once, at connect.
     Socket,
 }
 
@@ -221,8 +221,8 @@ pub fn check_binding(
 }
 
 /// Expiry of a new ticket. Reusable tickets end on a bucket boundary of half the
-/// TTL (lifetime between `ttl/2` and `ttl`), which makes them deterministic —
-/// and so cacheable — within the bucket. One-time tickets live exactly `ttl`.
+/// TTL (lifetime between `ttl/2` and `ttl`), which makes them deterministic -
+/// and so cacheable - within the bucket. One-time tickets live exactly `ttl`.
 pub fn expiry(now: i64, ttl_secs: u64, one_time: bool) -> i64 {
     let ttl = ttl_secs.max(2) as i64;
     if one_time {
@@ -692,7 +692,7 @@ mod tests {
 
     #[test]
     fn range_requests_reuse_a_stream_ticket() {
-        // A media element issues many GETs (Range) — and possibly HEAD — against
+        // A media element issues many GETs (Range) - and possibly HEAD - against
         // the same path with the same ticket: all of them must pass.
         let mut c = claims(10_000);
         c.pur = Purpose::Stream;

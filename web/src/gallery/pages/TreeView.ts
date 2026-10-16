@@ -18,7 +18,7 @@ export class TreeView extends ViewBase {
   }
 
   get pathText(): string {
-    return `SelectedPath = ${this.path || '—'}${this.opened ? ` · activated: ${this.opened}` : ''}`
+    return `SelectedPath = ${this.path || '-'}${this.opened ? ` · activated: ${this.opened}` : ''}`
   }
 
   item_activate(_sender: ElementHandle, e: ItemActivateEventArgs<{ text?: string }>): void {

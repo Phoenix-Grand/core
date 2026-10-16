@@ -1,4 +1,4 @@
-//! A thin typed layer over the untyped [`crate::syntax`] tree — "Element,
+//! A thin typed layer over the untyped [`crate::syntax`] tree - "Element,
 //! Attribute, …" per the phase 2a brief, the same `rust-analyzer`/`taplo`
 //! pattern `XML_VIEWS.md` §6 points at: the interpreter (2c), the validator
 //! (`kubuno_desktop_views::validate`) and, later, the language server (§8's phase 3) all
@@ -42,7 +42,7 @@ ast_node!(Prolog, SyntaxKind::PROLOG);
 
 impl Document {
     /// The single root element, if the file has one (a document that failed
-    /// to parse even that far has none — see [`crate::syntax::Parse`]'s own
+    /// to parse even that far has none - see [`crate::syntax::Parse`]'s own
     /// diagnostics for why).
     pub fn root_element(&self) -> Option<Element> {
         self.0.children().find_map(Element::cast)
@@ -55,7 +55,7 @@ impl Document {
     /// The inverse of [`Element::stable_id`]: walks `id`'s dot-separated
     /// ordinal path from this document's root element. `None` for a
     /// malformed id (a non-numeric segment), an out-of-range index at any
-    /// level, or a document with no root element at all — never a panic, so
+    /// level, or a document with no root element at all - never a panic, so
     /// a caller (e.g. the language server's `kubuno/applyEdit` bridge,
     /// `vskubuno/docs/DESIGNER.md`'s "DSG-2 protocol") can treat a stale or
     /// bogus id from a client as a plain no-op.
@@ -73,7 +73,7 @@ impl Document {
 }
 
 impl Element {
-    /// The `START_TAG` child node — `pub(crate)` because only [`crate::edit`]
+    /// The `START_TAG` child node - `pub(crate)` because only [`crate::edit`]
     /// needs to reach past the typed accessors below (e.g. to find the
     /// tag's closing token as an insertion point).
     pub(crate) fn start_tag(&self) -> Option<SyntaxNode> {
@@ -85,7 +85,7 @@ impl Element {
         self.0.children().find(|n| n.kind() == SyntaxKind::END_TAG)
     }
 
-    /// The element name token in the start tag — the first [`SyntaxKind::IDENT`]
+    /// The element name token in the start tag - the first [`SyntaxKind::IDENT`]
     /// child.
     pub fn name_token(&self) -> Option<SyntaxToken> {
         self.start_tag()?.children_with_tokens().filter_map(|e| e.into_token()).find(|t| t.kind() == SyntaxKind::IDENT)
@@ -95,7 +95,7 @@ impl Element {
         self.name_token().map(|t| t.text().to_string())
     }
 
-    /// The end tag's own name token, when there is an end tag — used to
+    /// The end tag's own name token, when there is an end tag - used to
     /// check a `<Foo>…</Bar>` mismatch, which the parser accepts
     /// syntactically (error tolerance) but a validator should flag.
     pub fn end_name_token(&self) -> Option<SyntaxToken> {
@@ -114,14 +114,14 @@ impl Element {
         self.attributes().find(|a| a.name().as_deref() == Some(name))
     }
 
-    /// Direct child elements, in document order. Does not recurse — a
+    /// Direct child elements, in document order. Does not recurse - a
     /// grandchild is reached through its own parent's `children()`.
     pub fn children(&self) -> impl Iterator<Item = Element> {
         self.0.children().filter_map(Element::cast)
     }
 
     /// The concatenation of every direct `TEXT`/`CDATA` token's raw text
-    /// (no entity decoding, no trimming — callers that want "is this
+    /// (no entity decoding, no trimming - callers that want "is this
     /// element's body just whitespace" trim themselves).
     pub fn text(&self) -> String {
         self.0
@@ -132,7 +132,7 @@ impl Element {
             .collect()
     }
 
-    /// The byte range of the name in the *opening* tag — what a
+    /// The byte range of the name in the *opening* tag - what a
     /// "unknown element" diagnostic should underline.
     pub fn name_range(&self) -> Option<TextRange> {
         self.name_token().map(|t| t.text_range())
@@ -148,7 +148,7 @@ impl Element {
 
     /// The element's **stable id**: a dot-separated path of child-ordinal
     /// indices from the document root, counting element children only (text/
-    /// comments/attributes never consume an index) — independent of
+    /// comments/attributes never consume an index) - independent of
     /// `x:Name`, per `vskubuno/docs/DESIGNER.md`'s cross-cutting note ("DSG-2
     /// and DSG-6 must agree on one stable element-id scheme … a path of
     /// child-ordinal indices from the document root, independent of
@@ -157,14 +157,14 @@ impl Element {
     /// [`Document::resolve_id`] is the exact inverse.
     ///
     /// Stable across edits that do not reorder/insert/remove elements above
-    /// this one in the tree — good enough for the designer's selection/drag
+    /// this one in the tree - good enough for the designer's selection/drag
     /// state across the debounced re-parses `DESIGNER.md` §2 describes,
     /// without needing every node to carry an `x:Name`.
     pub fn stable_id(&self) -> String {
         let mut indices = Vec::new();
         let mut node = self.0.clone();
         // Only a step whose *parent* is itself an `ELEMENT` counts as an
-        // ordinal in the path — the outermost step (an element's parent is
+        // ordinal in the path - the outermost step (an element's parent is
         // the `DOCUMENT` node, not another element) must not contribute an
         // index, or the root element itself would wrongly get `"0"` instead
         // of the empty path.
@@ -200,7 +200,7 @@ impl Attribute {
         self.0.children_with_tokens().filter_map(|e| e.into_token()).find(|t| t.kind() == SyntaxKind::STRING)
     }
 
-    /// The value's raw token text, quotes included — `None` when the
+    /// The value's raw token text, quotes included - `None` when the
     /// attribute has no `="value"` part at all (a parse error already
     /// recorded it; see [`crate::syntax::Parse::diagnostics`]).
     pub fn raw_value(&self) -> Option<String> {
@@ -208,7 +208,7 @@ impl Attribute {
     }
 
     /// The value with its surrounding quotes stripped and its XML character references decoded
-    /// (`&amp;` → `&`, `&#65;` → `A`; an unknown or unterminated `&…` is kept as written) — `None` when the raw
+    /// (`&amp;` → `&`, `&#65;` → `A`; an unknown or unterminated `&…` is kept as written) - `None` when the raw
     /// value is missing or malformed (e.g. an unterminated string, whose
     /// token does not end with the quote it started with).
     pub fn value(&self) -> Option<String> {
@@ -221,14 +221,14 @@ impl Attribute {
         Some(decode_entities(&raw[quote.len_utf8()..raw.len() - quote.len_utf8()]))
     }
 
-    /// The value's byte range *inside* the quotes — what a "not a valid
+    /// The value's byte range *inside* the quotes - what a "not a valid
     /// value for this enum" diagnostic should underline.
     pub fn value_range(&self) -> Option<TextRange> {
         let t = self.value_token()?;
         let r = t.text_range();
         let text = t.text();
         if text.len() < 2 {
-            return Some(r); // Malformed (e.g. a lone quote) — underline it whole.
+            return Some(r); // Malformed (e.g. a lone quote) - underline it whole.
         }
         let start = r.start() + rowan::TextSize::from(1);
         let end = r.end() - rowan::TextSize::from(1);

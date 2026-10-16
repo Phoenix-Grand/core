@@ -1,6 +1,6 @@
-//! Rich text editor — the editing area `@ui/RichText` puts under its toolbar.
+//! Rich text editor - the editing area `@ui/RichText` puts under its toolbar.
 //!
-//! Web counterpart: `core/frontend/src/ui/RichText.tsx` — a `contenteditable`
+//! Web counterpart: `core/frontend/src/ui/RichText.tsx` - a `contenteditable`
 //! surface under a toolbar (bold, italic, underline, bulleted / numbered
 //! lists, link, clear formatting), `minHeight` 96 px, a controlled HTML value,
 //! the placeholder at `top-2 left-3`, and a link row (`kb-richtext-linkbar`)
@@ -10,14 +10,14 @@
 //!
 //! | layer | what | why it is separate |
 //! |---|---|---|
-//! | [`Document`] | blocks (paragraph, two heading levels, bullet / numbered items) of [`Span`]s carrying [`Marks`]; the selection; every editing operation; undo / redo | pure — the whole editing behaviour is unit-tested without a window |
+//! | [`Document`] | blocks (paragraph, two heading levels, bullet / numbered items) of [`Span`]s carrying [`Marks`]; the selection; every editing operation; undo / redo | pure - the whole editing behaviour is unit-tested without a window |
 //! | `Layout` (private) | word-wrapped lines of measured fragments, hit-testing, caret geometry | needs [`Canvas::measure`], nothing else |
 //! | [`RichTextBox`] | the Kubuno chrome, the input routing (pointer, keys, text, clipboard, wheel), the toolbar and the link row | the [`Widget`] |
 //!
 //! ## Where the web is followed, and where it cannot be
 //!
 //! * **Box**: `kb-field-focus rounded-md border border-border bg-white
-//!   overflow-hidden` — 4 DIP radius, `card_stroke` border, `layer_background`
+//!   overflow-hidden` - 4 DIP radius, `card_stroke` border, `layer_background`
 //!   ground, content clipped to the rounded box. Focus is `:has(:focus-visible)`
 //!   → `outline: 3px solid var(--color-primary); outline-offset: -1px` from
 //!   `index.css`; a contenteditable is `:focus-visible` on click too, which is
@@ -26,7 +26,7 @@
 //!   [&_a]:underline`, `[&_ul]:list-disc [&_ol]:list-decimal [&_ul]:ml-5
 //!   [&_ol]:ml-5`. Body text stays at the desktop's 12 DIP body size (a user
 //!   decision), with the web's `leading-relaxed` ratio applied to it.
-//! * **Keyboard**: what a browser does in a contenteditable — arrows,
+//! * **Keyboard**: what a browser does in a contenteditable - arrows,
 //!   Ctrl+arrows by word, Home / End on the visual line, Ctrl+Home / End,
 //!   Page Up / Down, Shift to extend, Ctrl+A, Ctrl+B / I / U, Ctrl+Z / Y,
 //!   Ctrl+C / X / V (plain text), Enter splits (an empty list item leaves the
@@ -39,8 +39,8 @@
 //!   them through [`RichTextBox::toggle_mark`] / [`RichTextBox::set_block`].
 //! * **Italic**: the shared [`kubuno_drive_desktop_app_controls::TextFormats`] has no slanted
 //!   face, so the few derived formats a run needs (italic, bold, monospace,
-//!   heading sizes) are built here from the family of `formats().body` — the
-//!   user's font override is therefore honoured — and cached per thread.
+//!   heading sizes) are built here from the family of `formats().body` - the
+//!   user's font override is therefore honoured - and cached per thread.
 //! * **IME**: committed text arrives through the host's `Text` events and is
 //!   inserted like typing. The composition string itself is not exposed by the
 //!   host, so it is not drawn inline.
@@ -79,7 +79,7 @@ pub mod richtext_metrics {
     /// `px-3 py-2` on the contenteditable.
     pub const PAD_X: f32 = space::MD;
     pub const PAD_Y: f32 = space::SM;
-    /// `minHeight = 96` — the prop's default, applied to the editable area.
+    /// `minHeight = 96` - the prop's default, applied to the editable area.
     pub const MIN_HEIGHT: f32 = 96.0;
     /// `leading-relaxed` (1.625), applied to the 13.5 DIP body.
     pub const LEADING: f32 = 1.625;
@@ -94,14 +94,14 @@ pub mod richtext_metrics {
     /// `[&_ul]:ml-5 [&_ol]:ml-5`.
     pub const LIST_INDENT: f32 = 20.0;
     /// The marker (`list-style-position: outside`) ends this far before the
-    /// item's text — the space a browser puts after « • » and « 1. ».
+    /// item's text - the space a browser puts after « • » and « 1. ».
     pub const MARKER_GAP: f32 = space::XS;
     /// `outline: 3px` of `.kb-field-focus:has(:focus-visible)`, drawn inward so
     /// the ring stays inside the bounds the caller gave.
     pub const FOCUS_OUTLINE: f32 = 3.0;
     /// The caret: one DIP, `currentColor` (the web never sets `caret-color`).
     pub const CARET_W: f32 = 1.0;
-    /// The browser's highlight: `--color-primary` at 35 % — the same recipe as
+    /// The browser's highlight: `--color-primary` at 35 % - the same recipe as
     /// `edit_box`, since the web declares no `::selection` rule.
     pub const SELECTION_ALPHA: f32 = 0.35;
     /// How wide the highlight of a selected line break is (a browser paints a
@@ -144,7 +144,7 @@ use richtext_metrics as m;
 // Document model
 // ═════════════════════════════════════════════════════════════════════════════
 
-/// The inline formatting of a run — what `execCommand('bold' | 'italic' |
+/// The inline formatting of a run - what `execCommand('bold' | 'italic' |
 /// 'underline' | 'strikeThrough' | 'createLink')` toggles on the web.
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
 pub struct Marks {
@@ -157,7 +157,7 @@ pub struct Marks {
     pub link: Option<String>,
 }
 
-/// One on/off inline mark — everything in [`Marks`] but the link, which
+/// One on/off inline mark - everything in [`Marks`] but the link, which
 /// carries a value.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Mark {
@@ -218,7 +218,7 @@ impl Marks {
     }
 }
 
-/// The block a paragraph is — `<div>`/`<p>`, `<h1>`, `<h2>`, `<ul><li>`,
+/// The block a paragraph is - `<div>`/`<p>`, `<h1>`, `<h2>`, `<ul><li>`,
 /// `<ol><li>`.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
 pub enum BlockKind {
@@ -382,7 +382,7 @@ impl Block {
     }
 
     /// The marks typing at `at` inherits: the character before it, or the one
-    /// after it at the start of the block — what a browser does.
+    /// after it at the start of the block - what a browser does.
     pub fn marks_at(&self, at: usize) -> Marks {
         let mut start = 0;
         let mut after: Option<&Span> = None;
@@ -530,7 +530,7 @@ fn word_left(s: &str, at: usize) -> usize {
 }
 
 /// Where Ctrl+Right lands from `at` in `s`, the Windows way: over one run of
-/// the same class, then over the spaces after it — the start of the next word.
+/// the same class, then over the spaces after it - the start of the next word.
 fn word_right(s: &str, at: usize) -> usize {
     let mut i = at;
     if let Some(c) = s[i..].chars().next() {
@@ -579,7 +579,7 @@ fn word_around(s: &str, at: usize) -> (usize, usize) {
     (a, b)
 }
 
-/// The rich document and its selection — the whole editing behaviour, with no
+/// The rich document and its selection - the whole editing behaviour, with no
 /// window, canvas or font involved.
 #[derive(Debug, Clone)]
 pub struct Document {
@@ -601,7 +601,7 @@ impl Default for Document {
 }
 
 impl Document {
-    /// One empty paragraph — an empty editor.
+    /// One empty paragraph - an empty editor.
     pub fn new() -> Self {
         Self::from_blocks(Vec::new())
     }
@@ -643,7 +643,7 @@ impl Document {
         self.sel
     }
 
-    /// Bumped on every content change — a layout cache key.
+    /// Bumped on every content change - a layout cache key.
     pub fn revision(&self) -> u64 {
         self.revision
     }
@@ -731,13 +731,13 @@ impl Document {
         Pos::new(p.block, word_right(&self.blocks[p.block].text(), p.offset))
     }
 
-    /// The word under `p` — a double-click.
+    /// The word under `p` - a double-click.
     pub fn word_range(&self, p: Pos) -> (Pos, Pos) {
         let (a, b) = word_around(&self.blocks[p.block].text(), p.offset);
         (Pos::new(p.block, a), Pos::new(p.block, b))
     }
 
-    /// The whole block — a triple-click selects the paragraph.
+    /// The whole block - a triple-click selects the paragraph.
     pub fn block_range(&self, block: usize) -> (Pos, Pos) {
         let block = block.min(self.blocks.len() - 1);
         (Pos::new(block, 0), Pos::new(block, self.blocks[block].len()))
@@ -1072,7 +1072,7 @@ impl Document {
             let kind = self.blocks[h.block].kind;
             if kind.is_list() || (kind.is_heading() && h.block == 0) {
                 // A list item (or a heading with nothing before it) turns back
-                // into a paragraph first — the browser's outdent.
+                // into a paragraph first - the browser's outdent.
                 self.begin(EditKind::Other);
                 self.blocks[h.block].kind = BlockKind::Paragraph;
                 self.finish(EditKind::Other);
@@ -1144,8 +1144,8 @@ impl Document {
     }
 
     /// `createLink` / `unlink`. With a selection, the runs get (or lose) the
-    /// href. With a caret, `Some(url)` inserts the URL itself as a link — what
-    /// `createLink` does on a collapsed range — and `None` unlinks the link
+    /// href. With a caret, `Some(url)` inserts the URL itself as a link - what
+    /// `createLink` does on a collapsed range - and `None` unlinks the link
     /// the caret is in.
     pub fn set_link(&mut self, href: Option<&str>) {
         if self.sel.is_collapsed() {
@@ -1283,7 +1283,7 @@ fn font_key(kind: BlockKind, marks: &Marks) -> FontKey {
     }
 }
 
-/// The shared format closest to `key` — used when DirectWrite cannot build a
+/// The shared format closest to `key` - used when DirectWrite cannot build a
 /// derived one (it never fails on a real machine; this keeps text visible if
 /// it does).
 fn fallback_format(c: &dyn Canvas, key: FontKey) -> IDWriteTextFormat {
@@ -1710,14 +1710,14 @@ enum Drag {
     Thumb(f32),
 }
 
-/// The rich text editor: `@ui/RichText`'s whole box — toolbar, optional link
-/// row, and the editing area — or the editing area alone
+/// The rich text editor: `@ui/RichText`'s whole box - toolbar, optional link
+/// row, and the editing area - or the editing area alone
 /// ([`RichTextBox::bare`]) for a host that brings its own bar.
 ///
 /// The replica is WinForms' `RichTextBox` (for `enabled`, `read_only` and the
 /// rest of the control surface, reached through [`Deref`]). Its `runs` are a
 /// flat styled string with no paragraphs, lists or links, so the content lives
-/// in [`RichTextBox::doc`] — the one concept the replica cannot hold.
+/// in [`RichTextBox::doc`] - the one concept the replica cannot hold.
 pub struct RichTextBox {
     inner: RichTextModel,
     /// The content and the selection.
@@ -1762,7 +1762,7 @@ impl Default for RichTextBox {
     }
 }
 
-/// `colour` at `DISABLED_ALPHA` of its alpha — `opacity-60`.
+/// `colour` at `DISABLED_ALPHA` of its alpha - `opacity-60`.
 fn faded(colour: &D2D1_COLOR_F) -> D2D1_COLOR_F {
     D2D1_COLOR_F { a: colour.a * m::DISABLED_ALPHA, ..*colour }
 }
@@ -1818,7 +1818,7 @@ impl RichTextBox {
         self.inner.enabled && !self.inner.read_only
     }
 
-    /// `host::now_ms()` at the last edit or caret move — the caret's blink
+    /// `host::now_ms()` at the last edit or caret move - the caret's blink
     /// phase restarts there.
     pub fn last_input_ms(&self) -> u64 {
         self.last_input_ms
@@ -1886,8 +1886,8 @@ impl RichTextBox {
         true
     }
 
-    /// `applyLink`: the draft becomes the selection's link — `https://` is
-    /// prefixed when no scheme was typed — and the row closes. An empty draft
+    /// `applyLink`: the draft becomes the selection's link - `https://` is
+    /// prefixed when no scheme was typed - and the row closes. An empty draft
     /// removes the link.
     pub fn apply_link(&mut self) {
         let Some(draft) = self.link_draft.take() else { return };
@@ -2007,7 +2007,7 @@ impl RichTextBox {
     }
 
     /// The height the whole box needs at `width` to show everything without
-    /// scrolling — the web box grows with its content (`minHeight`, no max).
+    /// scrolling - the web box grows with its content (`minHeight`, no max).
     pub fn height_for_width(&self, c: &dyn Canvas, width: f32) -> f32 {
         let bars = self.toolbar.as_ref().map_or(0.0, |_| rich_metrics::HEIGHT) + self.link_bar_height();
         let border = 2.0 * rich_metrics::RULE_UNDER;
@@ -2110,7 +2110,7 @@ impl RichTextBox {
         self.scroll_y = self.scroll_y.clamp(0.0, max);
     }
 
-    /// The vertical bar, when the content overflows, and its rail — kept
+    /// The vertical bar, when the content overflows, and its rail - kept
     /// inside the box's `rounded-md` border, clear of the rounded corners.
     fn scroll_bar(&self, c: &dyn Canvas, bounds: Rect) -> Option<(ScrollBar, Rect)> {
         let vp = self.viewport(bounds);
@@ -2280,7 +2280,7 @@ impl RichTextBox {
 
     // ── Keyboard ─────────────────────────────────────────────────────────────
 
-    /// Whether this editor, focused, takes `e` — the keys a contenteditable
+    /// Whether this editor, focused, takes `e` - the keys a contenteditable
     /// handles. Tab is not among them (the focus ring owns it), nor Escape
     /// unless the link row is open.
     pub fn wants_event(&self, e: &InputEvent) -> bool {

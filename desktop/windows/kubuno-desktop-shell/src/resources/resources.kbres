@@ -30,7 +30,7 @@
   <String Name="sync_now_button">Sync now</String>
   <String Name="sync_running_button">Synchronising…</String>
   <String Name="server_unreachable">Server unreachable</String>
-  <String Name="session_expired_reconnect">Session expired — sign in again</String>
+  <String Name="session_expired_reconnect">Session expired - sign in again</String>
   <String Name="online_label">Online</String>
   <String Name="online_description">Communication with the server enabled.</String>
   <String Name="offline_label">Offline</String>
@@ -39,7 +39,7 @@
   <String Name="link_folder">Open the folder</String>
   <String Name="link_web">Open the website</String>
   <String Name="no_account">No account connected.</String>
-  <String Name="sync_summary" Comment="{0} sent, {1} modified, {2} received, {3} deleted">↑ {0} sent, {1} modified — ↓ {2} received, {3} deleted</String>
+  <String Name="sync_summary" Comment="{0} sent, {1} modified, {2} received, {3} deleted">↑ {0} sent, {1} modified - ↓ {2} received, {3} deleted</String>
   <String Name="sync_failed" Comment="{0}: the error">Synchronisation failed: {0}</String>
   <String Name="sync_failed_title">Synchronisation failed</String>
   <String Name="manual_sync_title">Manual synchronisation</String>
@@ -175,7 +175,7 @@
   <String Name="dash_new_this_week" Comment="{0} is the number of accounts created in the last 7 days">+{0} this week</String>
   <String Name="dash_sessions">{0} sessions</String>
   <String Name="dash_healthy" Comment="{0} healthy modules out of {1}">{0}/{1} healthy</String>
-  <String Name="dash_intro">What this instance recorded. Every figure is read from a table the core writes — nothing is estimated.</String>
+  <String Name="dash_intro">What this instance recorded. Every figure is read from a table the core writes - nothing is estimated.</String>
   <String Name="dash_logins">Logins per day</String>
   <String Name="dash_signups">New accounts per day</String>
   <String Name="dash_empty_title">No data</String>
@@ -245,17 +245,17 @@
   <String Name="modules_off">Off for everyone</String>
   <String Name="modules_default">Default</String>
   <String Name="modules_empty_title">No module</String>
-  <String Name="modules_empty_text">The modules installed on this instance are listed here — the Marketplace is where to start.</String>
-  <String Name="isettings_intro">The instance's settings — read only.</String>
+  <String Name="modules_empty_text">The modules installed on this instance are listed here - the Marketplace is where to start.</String>
+  <String Name="isettings_intro">The instance's settings - read only.</String>
   <String Name="isettings_on">On</String>
   <String Name="isettings_off">Off</String>
   <String Name="isettings_misc">Miscellaneous</String>
   <String Name="isettings_empty_title">No setting</String>
-  <String Name="isettings_empty_text">This instance exposes no setting — the server returned an empty list.</String>
+  <String Name="isettings_empty_text">This instance exposes no setting - the server returned an empty list.</String>
   <String Name="storage_intro">What the accounts use, against what the volume can hold.</String>
   <String Name="storage_overview">Overview</String>
   <String Name="storage_of" Comment="The overview's figure: « 812 GB of 4 TB »">of {0}</String>
-  <String Name="storage_no_volume">Physical volume unknown — the server does not report it.</String>
+  <String Name="storage_no_volume">Physical volume unknown - the server does not report it.</String>
   <String Name="storage_accounts">Accounts</String>
   <String Name="storage_allocated">Allocated space</String>
   <String Name="storage_states">Account states</String>

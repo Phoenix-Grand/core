@@ -1,4 +1,4 @@
-<!-- ModulesPanel — converted from ModulesPanel.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- ModulesPanel - converted from ModulesPanel.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <Panel x:Props="AdminSectionProps" Class="contents">
   <!-- TODO(views-migrate): <MarketplacePanel> is no .kbview element (./MarketplacePanel#default) -->
   <ReactHost Component="{Binding MarketplacePanel}" Props="{Binding marketplace_panel_props}" Visible="{Binding show_case_1}"/>

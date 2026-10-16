@@ -26,7 +26,7 @@ pub const KEY_PUBLIC_URL:   &str = "mail.public_url";
 /// operator cannot declare their own relay working.
 pub const KEY_LAST_TEST_OK: &str = "mail.last_test_ok_at";
 
-/// Every key this module owns. The generic settings API refuses all of them —
+/// Every key this module owns. The generic settings API refuses all of them -
 /// the encrypted password has exactly one writer.
 pub const ALL_KEYS: &[&str] = &[
     KEY_ENABLED, KEY_HOST, KEY_PORT, KEY_SECURITY, KEY_USERNAME,
@@ -79,7 +79,7 @@ pub struct MailConfig {
     pub from_address: String,
     pub from_name:    String,
     /// Base URL of the instance for links inserted in messages. Empty when the
-    /// operator did not pin one — callers then derive it from the request.
+    /// operator did not pin one - callers then derive it from the request.
     pub public_url:   String,
 }
 
@@ -125,7 +125,7 @@ fn as_string(value: &serde_json::Value) -> String {
 
 /// Characters RFC 5322 forbids in an unquoted `display-name`. Parentheses are
 /// the trap in practice: they open a comment, so `Kubuno (test)` is not a name
-/// with parentheses, it is the name `Kubuno` followed by a comment — and the
+/// with parentheses, it is the name `Kubuno` followed by a comment - and the
 /// parser rejects the whole mailbox.
 const SPECIALS: &[char] = &['(', ')', '<', '>', '[', ']', ':', ';', '@', '\\', ',', '.', '"'];
 
@@ -199,7 +199,7 @@ impl MailConfig {
                     // credentials rather than refusing to boot.
                     tracing::error!(
                         error = %e,
-                        "mailer: mot de passe SMTP indéchiffrable (secret JWT changé ?) — authentification désactivée"
+                        "mailer: mot de passe SMTP indéchiffrable (secret JWT changé ?) - authentification désactivée"
                     );
                 }
             }
@@ -219,7 +219,7 @@ impl MailConfig {
     ///
     /// The display name is quoted when it contains anything RFC 5322 does not
     /// allow in an unquoted atom. Without this, an operator typing
-    /// `Kubuno (test)` — parentheses start a *comment* in the grammar — gets an
+    /// `Kubuno (test)` - parentheses start a *comment* in the grammar - gets an
     /// opaque "invalid input" at the first send, hours after saving.
     pub fn from_mailbox(&self) -> String {
         let name = self.from_name.trim();

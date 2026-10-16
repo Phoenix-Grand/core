@@ -18,7 +18,7 @@ pub const MAX_LOGIN_LEN: usize = 256;
 /// Escapes a value for inclusion in a filter (RFC 4515 §3).
 ///
 /// The NUL byte is in the list because the wire format is length-prefixed and a
-/// NUL is a perfectly transportable byte — dropping it silently would let two
+/// NUL is a perfectly transportable byte - dropping it silently would let two
 /// different logins produce the same query.
 pub fn escape_value(value: &str) -> String {
     let mut out = String::with_capacity(value.len());
@@ -74,8 +74,8 @@ pub enum FilterError {
 }
 
 impl FilterError {
-    /// Operator-facing wording. Never shown on the sign-in path — a stranger
-    /// gets the same "invalid credentials" as everybody else — only in the
+    /// Operator-facing wording. Never shown on the sign-in path - a stranger
+    /// gets the same "invalid credentials" as everybody else - only in the
     /// administration console and in the logs.
     pub const fn message(self) -> &'static str {
         match self {
@@ -113,7 +113,7 @@ pub fn build_user_filter(template: &str, login: &str) -> Result<String, FilterEr
 
 /// The filter listing everybody a synchronisation should import.
 ///
-/// The same template, with the placeholder widened to `*` — which is why the
+/// The same template, with the placeholder widened to `*` - which is why the
 /// placeholder is substituted rather than removed: `(uid=*)` still says "an
 /// entry that has a uid", and an operator's extra clauses (`objectClass`,
 /// `!(userAccountControl…)`) are preserved exactly as they wrote them.

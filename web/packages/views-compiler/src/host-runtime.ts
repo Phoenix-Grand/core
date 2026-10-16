@@ -7,7 +7,7 @@
  * is `@kubuno/host-runtime`'s project-mode entry, and that package also ships the host's shared modules, built
  * together with the page (one React, one `@ui`, the real sdk, drive and views runtime, i18next with the core's
  * translations). In `vite serve`, for a project whose design entry is the default one, the plugin resolves each
- * shared specifier to the package's module of the same name — the dev-server twin of the production import map —
+ * shared specifier to the package's module of the same name - the dev-server twin of the production import map -
  * and keeps those exact specifiers external in Vite's dependency pre-bundling (which would make copies of them).
  *
  * The package describes itself in `dist/project/shared.json` (`HostRuntimeManifest`); nothing here hard-codes its

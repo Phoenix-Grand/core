@@ -99,7 +99,7 @@ fn is_declared(root: &Element, prefix: &str) -> bool {
 /// The edit that adds the missing declarations to the root element: the default namespace when it
 /// has none, then those of the prefixes [`undeclared_prefixes`] reports. The text (each declaration
 /// preceded by a space) goes right after the root element's name, on its line, so no other line of
-/// the file moves. `None` when nothing is missing — nothing is ever added to a view that uses no
+/// the file moves. `None` when nothing is missing - nothing is ever added to a view that uses no
 /// prefix at all (no false positive) unless `always` asks for the standard set (a migration).
 pub fn missing_declarations(parse: &Parse, always: bool) -> Option<(TextSize, String)> {
     let root = Document::cast(parse.syntax()).and_then(|d| d.root_element())?;

@@ -2,7 +2,7 @@ import { createContext, createElement, forwardRef, useContext, useSyncExternalSt
 import type { ComponentType } from 'react'
 
 /**
- * ComponentRegistry — the indirection that lets a theme replace the *markup and
+ * ComponentRegistry - the indirection that lets a theme replace the *markup and
  * behaviour* (not just the colours) of a UI "object", from primitives to complex
  * components, either globally or for a specific module.
  *
@@ -67,7 +67,7 @@ export const ComponentRegistry = {
     if (moduleOverrides.delete(moduleId)) emit()
   },
 
-  /** Drop ALL overrides — called when switching theme. */
+  /** Drop ALL overrides - called when switching theme. */
   clearAll(): void {
     globalOverrides.clear()
     moduleOverrides.clear()
@@ -84,7 +84,7 @@ export const ComponentRegistry = {
   resolvePreview(key: string): AnyComp | undefined {
     return previewOverrides.get(key)
   },
-  /** Drop every preview override — called when the previewed theme changes. */
+  /** Drop every preview override - called when the previewed theme changes. */
   clearPreview(): void {
     if (previewOverrides.size) {
       previewOverrides.clear()

@@ -70,7 +70,7 @@ impl JobRunnerConfig {
             )
             .await
             .unwrap_or_else(|e| {
-                tracing::error!(error = %e, "Lecture des réglages jobs.* impossible — valeurs par défaut");
+                tracing::error!(error = %e, "Lecture des réglages jobs.* impossible - valeurs par défaut");
                 Vec::new()
             })
             .into_iter()
@@ -103,7 +103,7 @@ pub struct JobRunnerHandle {
 }
 
 impl JobRunnerHandle {
-    /// Stops claiming and waits — at most `grace` — for the jobs in flight.
+    /// Stops claiming and waits - at most `grace` - for the jobs in flight.
     ///
     /// Waiting on every slot is what guarantees no job is cut in half by a
     /// restart: a half-executed job would be retried from the start, and not
@@ -120,7 +120,7 @@ impl JobRunnerHandle {
             Ok(Ok(_)) => tracing::info!("Exécuteur de tâches arrêté proprement"),
             Ok(Err(e)) => tracing::warn!(error = %e, "Sémaphore de l'exécuteur fermé pendant l'arrêt"),
             Err(_) => tracing::warn!(
-                "Délai d'arrêt dépassé : des tâches étaient encore en cours — elles seront reprises au prochain démarrage"
+                "Délai d'arrêt dépassé : des tâches étaient encore en cours - elles seront reprises au prochain démarrage"
             ),
         }
     }
@@ -139,7 +139,7 @@ pub async fn start(db: DbPool, registry: Arc<JobRegistry>, cfg: JobRunnerConfig)
     };
 
     if registry.is_empty() {
-        tracing::warn!("Aucun type de tâche enregistré — l'exécuteur ne démarre pas");
+        tracing::warn!("Aucun type de tâche enregistré - l'exécuteur ne démarre pas");
         return handle;
     }
 
@@ -152,7 +152,7 @@ pub async fn start(db: DbPool, registry: Arc<JobRegistry>, cfg: JobRunnerConfig)
     spawn_recovery_loop(db.clone(), cfg.clone(), shutdown_rx.clone());
 
     tracing::info!(
-        "Exécuteur de tâches démarré : {} en parallèle, {} type(s) — {}",
+        "Exécuteur de tâches démarré : {} en parallèle, {} type(s) - {}",
         cfg.concurrency,
         registry.len(),
         registry.job_types().join(", ")
@@ -180,7 +180,7 @@ async fn dispatch_loop(
             break;
         }
 
-        // Wait for a free slot — but stay interruptible.
+        // Wait for a free slot - but stay interruptible.
         let permit = tokio::select! {
             biased;
             _ = shutdown_rx.changed() => break,
@@ -195,7 +195,7 @@ async fn dispatch_loop(
                 let Some(handler) = registry.get(&job.job_type) else {
                     // Only registered types are claimed, so this cannot happen
                     // unless the registry changed under us.
-                    tracing::error!(job_type = %job.job_type, "Tâche réclamée sans gestionnaire — remise en file");
+                    tracing::error!(job_type = %job.job_type, "Tâche réclamée sans gestionnaire - remise en file");
                     let _ = portable::fail(&db, &job, "Aucun gestionnaire pour ce type de tâche").await;
                     drop(permit);
                     continue;
@@ -266,7 +266,7 @@ async fn execute(
             Ok(FailOutcome::Retry { delay, attempts_left }) => {
                 tracing::warn!(
                     job_id = %job.id, job_type = %job.job_type, erreur = %error,
-                    "Tâche en échec (tentative {}/{}) — nouvelle tentative dans {}s ({} restante(s))",
+                    "Tâche en échec (tentative {}/{}) - nouvelle tentative dans {}s ({} restante(s))",
                     job.attempts, job.max_attempts, delay.as_secs(), attempts_left
                 );
             }
@@ -282,11 +282,11 @@ async fn execute(
 }
 
 /// `LISTEN kubuno_jobs` on a dedicated connection, reconnecting on error.
-/// Every notification simply wakes the dispatcher up — the payload carries no
+/// Every notification simply wakes the dispatcher up - the payload carries no
 /// authority, the claim query decides what actually runs.
 fn spawn_listener(db: DbPool, wake: Arc<tokio::sync::Notify>, mut shutdown_rx: watch::Receiver<bool>) {
     // Only PostgreSQL has `LISTEN`/`NOTIFY`. On MySQL/SQLite there is nothing to
-    // listen on, so the dispatcher's safety poll is the only wake path — start
+    // listen on, so the dispatcher's safety poll is the only wake path - start
     // no listener task there.
     let Some(pg) = db.as_pg().cloned() else {
         return;
@@ -299,7 +299,7 @@ fn spawn_listener(db: DbPool, wake: Arc<tokio::sync::Notify>, mut shutdown_rx: w
             let mut listener = match PgListener::connect_with(&pg).await {
                 Ok(l) => l,
                 Err(e) => {
-                    tracing::error!(error = %e, "Écoute du canal des tâches impossible — nouvelle tentative dans 5s");
+                    tracing::error!(error = %e, "Écoute du canal des tâches impossible - nouvelle tentative dans 5s");
                     tokio::select! {
                         _ = shutdown_rx.changed() => return,
                         _ = tokio::time::sleep(Duration::from_secs(5)) => continue,
@@ -307,7 +307,7 @@ fn spawn_listener(db: DbPool, wake: Arc<tokio::sync::Notify>, mut shutdown_rx: w
                 }
             };
             if let Err(e) = listener.listen(JOB_CHANNEL).await {
-                tracing::error!(error = %e, "LISTEN {JOB_CHANNEL} échoué — nouvelle tentative dans 5s");
+                tracing::error!(error = %e, "LISTEN {JOB_CHANNEL} échoué - nouvelle tentative dans 5s");
                 tokio::select! {
                     _ = shutdown_rx.changed() => return,
                     _ = tokio::time::sleep(Duration::from_secs(5)) => continue,
@@ -325,7 +325,7 @@ fn spawn_listener(db: DbPool, wake: Arc<tokio::sync::Notify>, mut shutdown_rx: w
                     recv = listener.recv() => match recv {
                         Ok(_) => wake.notify_one(),
                         Err(e) => {
-                            tracing::warn!(error = %e, "Connexion d'écoute des tâches perdue — reconnexion");
+                            tracing::warn!(error = %e, "Connexion d'écoute des tâches perdue - reconnexion");
                             break;
                         }
                     },

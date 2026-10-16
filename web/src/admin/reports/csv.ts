@@ -11,11 +11,11 @@ import type { ReportModel } from './model'
  *
  *   1. **A byte-order mark.** Excel reads a BOM-less file as the machine's
  *      legacy code page, which turns every accented character into rubbish. The
- *      file below starts with U+FEFF for that single reason — written as an
+ *      file below starts with U+FEFF for that single reason - written as an
  *      escape, never as the character itself, which is invisible in source and
  *      is exactly the kind of thing a well-meaning editor strips.
  *   2. **The separator matches the decimal mark.** A locale that writes `12,5`
- *      cannot also use `,` between fields — the shares would split in half, one
+ *      cannot also use `,` between fields - the shares would split in half, one
  *      column per digit. So the separator is CHOSEN from the locale: `;` where
  *      the decimal mark is a comma, `,` everywhere else. This is why French
  *      spreadsheets expect semicolons, and it is not a preference.
@@ -26,9 +26,9 @@ import type { ReportModel } from './model'
  * ## What the file contains
  *
  * The whole document, not just its tables: the instance, the report, the window,
- * who produced it and when, then the figures, then the tables — series,
+ * who produced it and when, then the figures, then the tables - series,
  * breakdown, and the RECORDS behind them. A CSV detached from its header is a
- * column of numbers nobody can date — which is the failure this entire feature
+ * column of numbers nobody can date - which is the failure this entire feature
  * exists to fix, and it would be odd to reintroduce it in the export.
  *
  * The export carries the same truncation notices as the page. A file that
@@ -40,7 +40,7 @@ import type { ReportModel } from './model'
 /** A row of the file: cells, or `null` for a blank separating line. */
 export type CsvRow = string[] | null
 
-/** The decimal mark this locale writes — and therefore the separator to avoid. */
+/** The decimal mark this locale writes - and therefore the separator to avoid. */
 function decimalComma(locale: string): boolean {
   try {
     return (1.1).toLocaleString(locale).includes(',')
@@ -200,9 +200,9 @@ export function reportRows(
   //
   // The export carries them for the same reason the page does: a spreadsheet of
   // aggregates is a spreadsheet nobody can sort by account. Cells go out
-  // exactly as the page prints them — the instants already spelt in the
-  // document's zone — except that a missing value is an EMPTY cell rather than
-  // an em dash: a spreadsheet filters on empty, and "—" is a value.
+  // exactly as the page prints them - the instants already spelt in the
+  // document's zone - except that a missing value is an EMPTY cell rather than
+  // an em dash: a spreadsheet filters on empty, and "-" is a value.
   if (model.detail !== null) {
     rows.push(null, [words.detail])
     if (model.detail.rows.length === 0) {
@@ -216,7 +216,7 @@ export function reportRows(
       }
     }
   } else if (words.detailNone) {
-    // No table, but a stated reason — which belongs in the file too: a reader
+    // No table, but a stated reason - which belongs in the file too: a reader
     // who finds no records must be able to tell "none were listed" from "none
     // exist", and the answer is the same sentence the page prints.
     rows.push(null, [words.detail], [words.detailNone])
@@ -230,7 +230,7 @@ export function reportRows(
  *
  * An object URL rather than a `data:` one: a `data:` URL of a few hundred
  * kilobytes is refused outright by more than one browser, and a report of a
- * thousand accounts reaches that easily. Revoked on the next frame — kept alive
+ * thousand accounts reaches that easily. Revoked on the next frame - kept alive
  * only as long as the click needs it.
  */
 export function downloadCsv(filename: string, text: string): void {

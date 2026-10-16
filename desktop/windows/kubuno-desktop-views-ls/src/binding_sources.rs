@@ -1,9 +1,9 @@
 //! The **binding source schema** of a view (`vskubuno/docs/DESIGNER.md`, "Data bindings"): what a
 //! `{Binding …}` of an element can name, read from the view and its Rust code-behind without
-//! building anything — the designer's binding picker, the language server's completion,
+//! building anything - the designer's binding picker, the language server's completion,
 //! diagnostics, hover and go-to-definition all answer from it.
 //!
-//! - **Data context** — the members the view's own view model answers:
+//! - **Data context** - the members the view's own view model answers:
 //!   - a `#[kubuno_desktop::view("x.kbview")]` form class: its `#[bind]` fields (`#[bind("Path")]` names
 //!     one), and the paths of its `#[data_context]` field's type (the arms of that type's
 //!     `impl ViewModel`);
@@ -13,14 +13,14 @@
 //!
 //!   A context is **open** when it may answer paths the scan cannot list (a `_ =>` arm that
 //!   delegates, a data context type the scan cannot find): unknown paths are then not reported.
-//! - **Item** — inside the template of an element that has an `ItemsSource` (a `<Repeater>`'s
+//! - **Item** - inside the template of an element that has an `ItemsSource` (a `<Repeater>`'s
 //!   item, a `<DataTable>`'s `<Column>`), the fields of a row: the keys of the `d:ItemsSource`
 //!   sample file, the columns of a binding source, and the `Row::new().with("Key", Value::…)`
 //!   chain of the code-behind that best matches the paths the template binds.
-//! - **Data components** — the view's named `BindingSource` (columns from its adapter's
+//! - **Data components** - the view's named `BindingSource` (columns from its adapter's
 //!   `SelectCommand`, and its navigation members), `ErrorProvider`, `DbConnection`.
-//! - **Resources** — the `.kbres` keys (`{Res key}`).
-//! - **Converters** — the built-in ones and the project's (`#[value_converter]`,
+//! - **Resources** - the `.kbres` keys (`{Res key}`).
+//! - **Converters** - the built-in ones and the project's (`#[value_converter]`,
 //!   `register_converter("…")`).
 //!
 //! Like [`crate::code_behind`], the Rust side is read with a small scanner, never by guessing:

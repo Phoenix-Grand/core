@@ -5,7 +5,7 @@ import { ViewBase } from './ContextMenu.kbview'
 /** Gallery page: ContextMenu (MenuItem children, check marks, ItemsSource commands). */
 export class ContextMenu extends ViewBase {
   @bind accessor hidden = false
-  @bind accessor last = '—'
+  @bind accessor last = '-'
 
   readonly extra = [
     { Kind: 'Separator' },
@@ -14,7 +14,7 @@ export class ContextMenu extends ViewBase {
   ]
 
   get status(): string {
-    return `Last: ${this.last} — hidden files: ${this.hidden}`
+    return `Last: ${this.last} - hidden files: ${this.hidden}`
   }
 
   open_click(sender: ElementHandle): void {

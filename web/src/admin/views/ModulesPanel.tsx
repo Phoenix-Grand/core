@@ -148,7 +148,7 @@ export class ModulesPanel extends ViewBase {
       },
     },
     // Two columns, like the list this one is modelled on: what the service is,
-    // and whether it is on. The version is not a column of its own — it is a
+    // and whether it is on. The version is not a column of its own - it is a
     // detail OF the service, and a third column would have pushed the one fact
     // the page exists for off to the side.
     {

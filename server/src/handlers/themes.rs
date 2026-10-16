@@ -17,7 +17,7 @@ use serde_json::{json, Value};
 use std::collections::{HashMap, HashSet};
 use std::io::Read;
 
-// IDs of the themes shipped with the application — protected from replacement and
+// IDs of the themes shipped with the application - protected from replacement and
 // deletion. There are no longer any compiled-in builtins (the former "Kubuno
 // Light" / "Kubuno Dark" were removed); themes now live entirely in themes_dir.
 const BUILTIN_IDS: &[&str] = &[];
@@ -173,14 +173,14 @@ async fn save_trusted(db: &DbPool, trusted: &HashSet<String>) -> Result<(), AppE
 
 // ── Routes ─────────────────────────────────────────────────────────────────────
 
-/// GET /api/v1/themes — list every available theme (public, no auth).
+/// GET /api/v1/themes - list every available theme (public, no auth).
 pub async fn list_themes(State(state): State<AppState>) -> Result<Json<Value>, AppError> {
     let trusted = load_trusted(&state.db).await;
     let themes = load_all_themes(&state.settings.server.themes_dir, &trusted);
     Ok(Json(json!({ "themes": themes })))
 }
 
-/// POST /api/v1/admin/themes — import a vars-only theme as JSON (admin only).
+/// POST /api/v1/admin/themes - import a vars-only theme as JSON (admin only).
 /// Kept for backward compatibility with the simple JSON theme editor/upload.
 pub async fn create_theme(
     State(state): State<AppState>,
@@ -244,7 +244,7 @@ fn mirror_themes(state: &AppState) {
     tokio::spawn(async move { crate::handlers::theme_mirror::sync(&st).await });
 }
 
-/// POST /api/v1/admin/themes/import — import a bundled theme as a `.zip` (admin).
+/// POST /api/v1/admin/themes/import - import a bundled theme as a `.zip` (admin).
 /// The archive must contain a `theme.json` manifest at its root plus any
 /// referenced CSS/JS/asset files. Extraction is strictly validated.
 pub async fn import_theme_zip(
@@ -279,7 +279,7 @@ pub async fn import_theme_zip(
         zip_bytes.ok_or_else(|| AppError::Validation("Champ 'file' (archive .zip) manquant".into()))?;
     let themes_dir = state.settings.server.themes_dir.clone();
 
-    // The `zip` crate is synchronous and extraction touches the filesystem — run
+    // The `zip` crate is synchronous and extraction touches the filesystem - run
     // it off the async runtime to avoid blocking the executor.
     let manifest = tokio::task::spawn_blocking(move || extract_theme_zip(zip_bytes, &themes_dir))
         .await
@@ -401,7 +401,7 @@ fn extract_theme_zip(zip_bytes: Vec<u8>, themes_dir: &str) -> Result<ThemeManife
     Ok(manifest)
 }
 
-/// GET /api/v1/themes/:id/*path — serve a bundled theme's asset (public).
+/// GET /api/v1/themes/:id/*path - serve a bundled theme's asset (public).
 /// Scoped to the theme's own directory; rejects path traversal.
 pub async fn serve_theme_asset(
     State(state): State<AppState>,
@@ -452,7 +452,7 @@ pub struct TrustDto {
     pub scripts_enabled: bool,
 }
 
-/// PATCH /api/v1/admin/themes/:id/trust — allow or forbid a theme to run its JS
+/// PATCH /api/v1/admin/themes/:id/trust - allow or forbid a theme to run its JS
 /// overrides in users' browsers (admin only). CSS is always applied regardless.
 pub async fn set_theme_trust(
     State(state): State<AppState>,
@@ -466,7 +466,7 @@ pub async fn set_theme_trust(
         return Err(AppError::Validation("ID de thème invalide".into()));
     }
     if BUILTIN_IDS.contains(&id.as_str()) {
-        // Built-ins carry no scripts — nothing to trust.
+        // Built-ins carry no scripts - nothing to trust.
         return Err(AppError::Validation(
             "Les thèmes intégrés n'exécutent aucun script".into(),
         ));
@@ -487,7 +487,7 @@ pub async fn set_theme_trust(
     );
 
     // Granting a theme the right to run JavaScript in every user's browser is
-    // one of the most consequential switches in the console — it belongs in the
+    // one of the most consequential switches in the console - it belongs in the
     // trail with an explicit before/after.
     audit
         .record(
@@ -503,7 +503,7 @@ pub async fn set_theme_trust(
     Ok(Json(json!({ "id": id, "scripts_enabled": dto.scripts_enabled })))
 }
 
-/// DELETE /api/v1/admin/themes/:id — delete a custom theme (admin only).
+/// DELETE /api/v1/admin/themes/:id - delete a custom theme (admin only).
 /// Built-in themes cannot be deleted. Handles both bundle dirs and legacy files.
 pub async fn delete_theme(
     State(state): State<AppState>,

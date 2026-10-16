@@ -1,7 +1,7 @@
 export { cn, clsx, type ClassValue } from './cn'
 import type { ComponentType } from 'react'
 
-// Theme override registry — the indirection that lets a theme replace a
+// Theme override registry - the indirection that lets a theme replace a
 // component's markup/behaviour (globally or per module), exposed to modules too.
 export { ComponentRegistry, ThemeScopeContext, ThemePreviewContext, themed, useThemeVersion } from './themeRegistry'
 // Optional portal host: confine overlay primitives (FloatingWindow / AnchoredPopover)
@@ -232,7 +232,7 @@ export { useSaveShortcut } from './useSaveShortcut'
 export { MobileSheet, MobileSheetItem, MobileSheetSeparator } from './MobileSheet'
 
 // ── Admin/data primitives (Card, EmptyState, Callout, ProgressBar, Combobox,
-//    Stepper, Toast, DataTable) — types, hooks and helpers. The components
+//    Stepper, Toast, DataTable) - types, hooks and helpers. The components
 //    themselves are exported as themeable wrappers above. ──
 export type { CardProps } from './Card'
 export type { EmptyStateProps, EmptyStateVariant, EmptyStateAction } from './EmptyState'
@@ -250,7 +250,7 @@ export type {
   DataTableProps, DataTableColumn, DataTableSort, DataTableBulkAction,
   DataTableRowAction, SortDirection, SortableValue, PaginationProps,
 } from './DataTable'
-// Text folding used by the Combobox filter — reusable by any module that needs
+// Text folding used by the Combobox filter - reusable by any module that needs
 // accent-insensitive local search.
 export { foldText, foldIncludes, uiT, UI_FALLBACK } from './uiText'
 

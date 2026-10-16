@@ -65,7 +65,7 @@ pub const JOB_DEAD_LETTER: &str = "jobs.dead_letter";
 ///
 /// Distinct from the health check `continuity.backup`, and the split is
 /// deliberate: the check answers "does a recent backup exist?" and goes critical
-/// when the answer is no — which the `health.critical_check` producer already
+/// when the answer is no - which the `health.critical_check` producer already
 /// turns into an alert, so "no successful backup for N days" is covered without
 /// a second kind saying the same thing twice. This one answers "the last attempt
 /// broke, and here is the message", which the check cannot carry and an operator
@@ -84,8 +84,8 @@ pub const QUOTA_EXCEEDED: &str = "storage.quota_exceeded";
 ///
 /// Distinct from [`MODULE_UNAVAILABLE`], which says the module is not answering
 /// at all. This one fires for a module that is up and serving requests but has
-/// stopped declaring: its slice of the storage breakdown is still drawn — it is
-/// the last thing known to be true — and is quietly ageing. A module that has
+/// stopped declaring: its slice of the storage breakdown is still drawn - it is
+/// the last thing known to be true - and is quietly ageing. A module that has
 /// **never** declared raises nothing: it promised nothing, and alerting on every
 /// module that does not store bytes is how an operator learns to ignore the
 /// queue.
@@ -109,7 +109,7 @@ pub const RULE_ACTION_FAILED: &str = "rules.action_failed";
 /// The only kind in this catalogue that is raised on a **successful, authorised
 /// operation**. It is here because nothing about the request itself
 /// distinguishes a legitimate export from one triggered through a stolen
-/// administrator session, so the control cannot be a check — it is the fact that
+/// administrator session, so the control cannot be a check - it is the fact that
 /// every other administrator sees it happen, while the archive is still held and
 /// can still be cancelled. See `crate::data_export::notify`.
 pub const DATA_EXPORT_STARTED: &str = "security.data_export_started";
@@ -136,7 +136,7 @@ pub const ALL_KINDS: &[&str] = &[
 /// The privilege that governs *reading* an alert of this kind.
 ///
 /// The queue is filtered with it, so a delegated operator sees the alerts they
-/// can act on rather than a list of somebody else's problems — the same rule the
+/// can act on rather than a list of somebody else's problems - the same rule the
 /// health report follows. Holding `core.alerts.read` is necessary for all of
 /// them (the layer checks it once); this narrows it further.
 pub fn read_privilege(kind: &str) -> &'static str {
@@ -159,7 +159,7 @@ pub fn read_privilege(kind: &str) -> &'static str {
         // is that administrators who cannot themselves export are the ones
         // watching those who can.
         DATA_EXPORT_STARTED => keys::DATA_EXPORT_READ,
-        // What a rule did is readable by whoever may read the rules — otherwise
+        // What a rule did is readable by whoever may read the rules - otherwise
         // the queue would explain an automatic suspension to an operator who
         // cannot see the rule that caused it.
         RULE_MATCHED | RULE_FEEDBACK_LOOP | RULE_ACTION_FAILED => keys::RULES_READ,
@@ -369,7 +369,7 @@ pub fn actions_for(kind: &str, payload: &Value, alert_id: Uuid) -> Vec<Action> {
         ],
 
         // Two actions, in the order an operator actually needs them: try again
-        // now (most failures are transient — a full volume that has since been
+        // now (most failures are transient - a full volume that has since been
         // freed, a destination that has since been created), then read what the
         // policy is pointing at. The retry is claimed by the page itself.
         BACKUP_FAILED => vec![
@@ -392,7 +392,7 @@ pub fn actions_for(kind: &str, payload: &Value, alert_id: Uuid) -> Vec<Action> {
         // The two things somebody who did not ask for this export needs, in the
         // order they need them: stop it while the hold is still running, then
         // read who asked and for what. The cancellation is a WRITE, offered only
-        // to somebody who holds the execute key — an operator who merely watches
+        // to somebody who holds the execute key - an operator who merely watches
         // is shown the page and the audit trail, never a button that would 403.
         DATA_EXPORT_STARTED => {
             let mut out = Vec::new();
@@ -449,7 +449,7 @@ pub fn actions_for(kind: &str, payload: &Value, alert_id: Uuid) -> Vec<Action> {
             let mut out = Vec::new();
             if let Some(uid) = str_of(payload, "user_id") {
                 // The quota is edited on the ACCOUNT SHEET, in place, like every
-                // other field of an account — the storage page used to carry its
+                // other field of an account - the storage page used to carry its
                 // own dialog, which made three surfaces for one value. The link
                 // below still points at the storage page: it lands on the
                 // consumption that justifies the change, and the verb it carries
@@ -480,7 +480,7 @@ pub fn actions_for(kind: &str, payload: &Value, alert_id: Uuid) -> Vec<Action> {
         }
 
         // A user disowned one of their own devices. Everything they could do
-        // themselves has already happened — every session revoked, a password
+        // themselves has already happened - every session revoked, a password
         // change forced. What remains is the operator's half: look at what that
         // device did, and at the account it reached.
         DEVICE_DISOWNED => {
@@ -507,7 +507,7 @@ pub fn actions_for(kind: &str, payload: &Value, alert_id: Uuid) -> Vec<Action> {
         // ── Rule engine ─────────────────────────────────────────────────────
         // Every one of these points at the rule first. The question an operator
         // asks when an account is suspended by a machine is never "what
-        // happened" — the alert already says that — it is "which rule, and who
+        // happened" - the alert already says that - it is "which rule, and who
         // wrote it", and the answer is one click away or the feature is hostile.
         RULE_MATCHED | RULE_ACTION_FAILED | RULE_FEEDBACK_LOOP => {
             let rule_id = str_of(payload, "rule_id");
@@ -599,7 +599,7 @@ mod tests {
     fn every_kind_ships_at_least_one_action() {
         let id = Uuid::nil();
         for kind in ALL_KINDS {
-            // A payload rich enough for every kind — the actions that need a
+            // A payload rich enough for every kind - the actions that need a
             // field simply skip it when it is absent, and the fallback link
             // must still be there.
             let payload = json!({

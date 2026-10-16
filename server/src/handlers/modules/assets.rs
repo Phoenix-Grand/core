@@ -23,7 +23,7 @@ pub fn module_disk_dir(settings: &crate::config::Settings, id: &str) -> std::pat
 
 /// Jeton de cache-busting du bundle UI d'un module = hash court du CONTENU de
 /// `entry.js`. `entry.js`/`entry.css` ont un nom FIXE (le host les charge sans
-/// connaître de hash) et sont servis en `no-store` — mais iOS Safari resert un
+/// connaître de hash) et sont servis en `no-store` - mais iOS Safari resert un
 /// module ES périmé depuis son cache indexé par URL tant que l'URL reste stable.
 /// On suffixe donc `?v=<hash>` : l'URL change dès que le contenu change (bust
 /// précis, sans faux positif comme un mtime préservé). Renvoie `None` si le
@@ -93,7 +93,7 @@ fn resolve_entry_alias(asset_path: &str) -> std::borrow::Cow<'_, str> {
 /// Public URL of the brand logo for a registry id, when the host ships one.
 ///
 /// The app launcher and the desktop gallery want a real brand image, not only a
-/// lucide glyph (`icon`) — for a whole module (`id` = the module id) and for its
+/// lucide glyph (`icon`) - for a whole module (`id` = the module id) and for its
 /// launchable sub-apps (`id` = the sidebar item id, e.g. `office-documents`,
 /// `paintsharp-vertex`). Those PNGs live with the HOST frontend
 /// (`core/frontend/public/<id>-logo.png`, served at `/<id>-logo.png`), so the

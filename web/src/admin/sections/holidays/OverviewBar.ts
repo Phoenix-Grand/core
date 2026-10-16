@@ -79,7 +79,7 @@ export class OverviewBar extends ViewBase {
 
   get hol_dataset_version() {
     if (!(!(!this.data))) return undefined as never
-    return this.data.dataset_loaded ?? '—'
+    return this.data.dataset_loaded ?? '-'
   }
 
   get part1_props() {

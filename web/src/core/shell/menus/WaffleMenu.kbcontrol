@@ -1,8 +1,8 @@
 <!--
   The app launcher (user control WaffleMenu, shared contract vskubuno docs/SHELL-CONTROLS.md §1): the favourites
-  card, whose header band holds « Vos favoris » and its pencil — or, while editing, « Annuler », « OK » and the
-  help line — over every other app (AppTileGrid), then « Plus de modules » for whoever may manage the marketplace,
-  scrolling as one. 360 wide. The host (WaffleButton) gives it its chrome — a popover above the page — caps its
+  card, whose header band holds « Vos favoris » and its pencil - or, while editing, « Annuler », « OK » and the
+  help line - over every other app (AppTileGrid), then « Plus de modules » for whoever may manage the marketplace,
+  scrolling as one. 360 wide. The host (WaffleButton) gives it its chrome - a popover above the page - caps its
   height, and acts on its events.
 -->
 <UserControl x:Props="WaffleMenuProps" DesignWidth="360" DesignHeight="580" OnLoad="waffle_menu_load">

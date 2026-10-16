@@ -1,4 +1,4 @@
-<!-- Figure — converted from Figure.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- Figure - converted from Figure.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="FigureProps">
   <Panel Class="min-w-0">
     <Label HtmlTag="Div" Text="{Binding props.label}" ForeColor="TextTertiary" InheritFontSize="true" Class="[font-size:var(--kb-text-meta)]"/>

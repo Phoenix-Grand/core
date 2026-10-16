@@ -1,7 +1,7 @@
 import { adminUrl } from '../adminAction'
 
 /**
- * The address of a REPORT — the printable document behind a dashboard panel.
+ * The address of a REPORT - the printable document behind a dashboard panel.
  *
  * ## Why this is one module and not one per dashboard
  *
@@ -16,7 +16,7 @@ import { adminUrl } from '../adminAction'
  *
  *     /admin/reports/<panel_id>?source=<dashboard|security>&period=<window>
  *
- * The panel is the PLACE — the document is about that panel and nothing else —
+ * The panel is the PLACE - the document is about that panel and nothing else -
  * so it goes in the path, declared as the `reports` section's entity in
  * `adminNav.ts`. The period and the source identify no place: one is a window
  * the reader may change without leaving the document, the other says which
@@ -30,7 +30,7 @@ import { adminUrl } from '../adminAction'
  * report that guessed would print the general dashboard's wording over the
  * security overview's figures roughly half the time. The reader tolerates its
  * absence (an address typed by hand, an old bookmark) by looking the id up in
- * the general catalogue first, then in the security one — a fallback, never the
+ * the general catalogue first, then in the security one - a fallback, never the
  * normal path.
  */
 

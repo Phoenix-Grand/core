@@ -2,7 +2,7 @@
 // FLOATING popover (portal to <body>, fixed-positioned next to the swatch).
 // Like the context menu, the popover is ALWAYS kept fully on-screen: its real
 // rendered size is measured, then the position is clamped to the viewport on every
-// edge (and recomputed on resize). Usable by every module — `t`/`C` are optional.
+// edge (and recomputed on resize). Usable by every module - `t`/`C` are optional.
 import { useState, useRef, useLayoutEffect, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import type { TFunction } from 'i18next'

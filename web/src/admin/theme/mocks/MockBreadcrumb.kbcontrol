@@ -1,4 +1,4 @@
-<!-- MockBreadcrumb — converted from MockBreadcrumb.tsx by @kubuno/views-migrate. -->
+<!-- MockBreadcrumb - converted from MockBreadcrumb.tsx by @kubuno/views-migrate. -->
 <UserControl>
   <Panel HtmlTag="Nav" Class="flex items-center min-w-0">
     <Panel HtmlTag="Ol" Class="inline-flex items-center gap-1.5 flex-wrap min-w-0">

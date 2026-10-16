@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 
 import { flattenTree, initiallyExpanded, itemText, itemValue, moveIndex, select, treeArrow, typeAhead, visibleRange, scrollToShow } from './listCore'
 
-describe('listCore — keyboard moves', () => {
+describe('listCore - keyboard moves', () => {
   it('moves one row, a page, to the ends, and clamps', () => {
     expect(moveIndex('ArrowDown', 2, 10, 4)).toBe(3)
     expect(moveIndex('ArrowUp', 0, 10, 4)).toBe(0)
@@ -34,7 +34,7 @@ describe('listCore — keyboard moves', () => {
   })
 })
 
-describe('listCore — selection modes', () => {
+describe('listCore - selection modes', () => {
   const none = { selected: new Set<number>(), anchor: -1 }
   it('One replaces, None ignores', () => {
     expect([...select('One', none, 3).selected]).toEqual([3])
@@ -56,7 +56,7 @@ describe('listCore — selection modes', () => {
   })
 })
 
-describe('listCore — virtualisation', () => {
+describe('listCore - virtualisation', () => {
   it('renders the viewport plus the overscan only', () => {
     expect(visibleRange(0, 320, 32, 10_000, 6)).toEqual({ start: 0, end: 16 })
     expect(visibleRange(3200, 320, 32, 10_000, 6)).toEqual({ start: 94, end: 116 })
@@ -69,7 +69,7 @@ describe('listCore — virtualisation', () => {
   })
 })
 
-describe('listCore — trees', () => {
+describe('listCore - trees', () => {
   const roots = [
     { text: 'A', expanded: true, items: [{ text: 'A1' }, { text: 'A2', items: [{ text: 'A2a' }] }] },
     { Text: 'B', Items: [{ Text: 'B1' }] },

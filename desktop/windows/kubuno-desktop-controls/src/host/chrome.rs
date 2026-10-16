@@ -103,7 +103,7 @@ pub fn take_window_events() -> Vec<WindowEvent> {
 }
 
 /// The title band of this window this frame, with its three regions sized for `slots` (the width
-/// of the page's controls in each), in client DIP — `None` when the window has no Kubuno band
+/// of the page's controls in each), in client DIP - `None` when the window has no Kubuno band
 /// (`Chrome::System`/`Custom`, `FormBorderStyle::None`). Calling it declares the widths: the host
 /// writes the title between the regions and hit-tests the band accordingly. A page placing
 /// interactive controls in the band also declares them with [`super::add_title_bar_hole`], or
@@ -117,7 +117,7 @@ pub fn title_bar_layout(slots: SlotWidths) -> Option<ChromeLayout> {
     })
 }
 
-/// The band's height this frame, `0` without a Kubuno band — also when the page extends under it.
+/// The band's height this frame, `0` without a Kubuno band - also when the page extends under it.
 pub fn title_bar_height() -> f32 {
     STATE.with(|s| s.borrow().context.as_ref().map_or(0.0, |c| c.style.band_height()))
 }

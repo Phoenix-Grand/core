@@ -14,7 +14,7 @@ it owns the accounts. Every other app borrows them.
   to the UI thread with the facade's `UiDispatcher`: it belongs to the UI workspace (`desktop/windows`),
   not to `desktop/common`, whose crates never link the UI stack.
 - Its network and disk parts use the platform-neutral common crates only (`kubuno-desktop-account`: the broker, the
-  paths; `kubuno-desktop-api-client`: the HTTP client) — not `kubuno-sync`, the file-sync engine, which an app does not
+  paths; `kubuno-desktop-api-client`: the HTTP client) - not `kubuno-sync`, the file-sync engine, which an app does not
   need for its header.
 - It depends on no app crate, and no app depends on another (module isolation, vskubuno `docs/VIEWS-SPEC.md`).
 - The pure parts the shell had (`parse_modules`, `module_label`, `migrate_favorites`, `initials_of`, the tile of

@@ -18,7 +18,7 @@ function isInsideMenu(target: EventTarget | null): boolean {
  * Escape always closes, even from inside.
  *
  * Outside *clicks* are deliberately NOT handled here: each menu already closes on them,
- * and a generic handler would fight the trigger buttons — the pointerdown would close the
+ * and a generic handler would fight the trigger buttons - the pointerdown would close the
  * menu, then the trigger's click would reopen it, so toggling would look broken.
  */
 export function useMenuDismiss(active: boolean, onClose: () => void) {

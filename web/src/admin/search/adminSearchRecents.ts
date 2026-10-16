@@ -6,13 +6,13 @@ import { ADMIN_HOME, tabFromPath } from '../adminRoute'
  *
  * An admin console is used in bursts on the same handful of screens: an empty
  * field that offers nothing is a dead end, while one that offers "where you were
- * a minute ago" removes a navigation entirely. Local only — it is a convenience,
+ * a minute ago" removes a navigation entirely. Local only - it is a convenience,
  * not a record, and it must never leave the machine.
  *
  * ── Scoped to the account, deliberately ──────────────────────────────────────
  * The key carries the signed-in user's id. A shared workstation is the norm in
- * administration, and an unscoped list would show the next operator — possibly a
- * delegate with far fewer privileges — the trail of the previous one: "Reset a
+ * administration, and an unscoped list would show the next operator - possibly a
+ * delegate with far fewer privileges - the trail of the previous one: "Reset a
  * password", "Admin roles"… Naming a target is already telling someone it
  * exists, so the trail follows the account, not the browser.
  *

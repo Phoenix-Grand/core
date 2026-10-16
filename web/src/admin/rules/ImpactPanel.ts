@@ -133,7 +133,7 @@ export class ImpactPanel extends ViewBase {
 
   get callout_text3() {
     if (!(!(!this.props.ruleId)) || !(this.row?.status === 'failed')) return undefined as never
-    return this.row.error ?? '—'
+    return this.row.error ?? '-'
   }
 
   get show_row_status_done() {
@@ -230,7 +230,7 @@ export class ImpactPanel extends ViewBase {
       if (!(!(!this.props.ruleId)) || !(this.row?.status === 'done') || !((this.report.by_day?.length ?? 0) > 0)) return undefined as never
       return (this.report.by_day ?? []).map((d) => {
       const peak = Math.max(...(this.report.by_day ?? []).map(x => x.count), 1)
-      return { d, peak, tooltip: ((!(!this.props.ruleId)) && (this.row?.status === 'done') && ((this.report.by_day?.length ?? 0) > 0)) ? (`${d.day} — ${d.count}`) : undefined, part2_props: ((!(!this.props.ruleId)) && (this.row?.status === 'done') && ((this.report.by_day?.length ?? 0) > 0)) ? ({ d: d, peak: peak }) : undefined, span_text: ((!(!this.props.ruleId)) && (this.row?.status === 'done') && ((this.report.by_day?.length ?? 0) > 0)) ? (d.day.slice(5)) : undefined, key: d.day }
+      return { d, peak, tooltip: ((!(!this.props.ruleId)) && (this.row?.status === 'done') && ((this.report.by_day?.length ?? 0) > 0)) ? (`${d.day} - ${d.count}`) : undefined, part2_props: ((!(!this.props.ruleId)) && (this.row?.status === 'done') && ((this.report.by_day?.length ?? 0) > 0)) ? ({ d: d, peak: peak }) : undefined, span_text: ((!(!this.props.ruleId)) && (this.row?.status === 'done') && ((this.report.by_day?.length ?? 0) > 0)) ? (d.day.slice(5)) : undefined, key: d.day }
     })
     })
   }

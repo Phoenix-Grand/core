@@ -18,7 +18,7 @@
 //!
 //! Copying the core's own data happens while the core still runs on the source.
 //! Adopting the target means reconnecting the process's own pool, which only a
-//! restart does cleanly — so the core copy persists the new settings and reports
+//! restart does cleanly - so the core copy persists the new settings and reports
 //! `restart_required`. The module copy restarts the module through the
 //! supervisor and needs no core restart.
 
@@ -290,7 +290,7 @@ pub async fn get_job(
 // The core main-database switch
 // ─────────────────────────────────────────────────────────────────────────────
 
-/// `POST /admin/database/migrate` — copy the whole core database onto another
+/// `POST /admin/database/migrate` - copy the whole core database onto another
 /// engine and persist the new settings; a core restart finalises it.
 pub async fn migrate_core_database(
     State(state): State<AppState>,
@@ -365,7 +365,7 @@ pub async fn migrate_core_database(
                     crate::modules::db_registry::CORE_SCOPE, &creds, p, None, true,
                 ).await;
                 tracing::warn!(from = %source_engine, to = %dto.engine, tables, rows,
-                    "Base principale copiée vers le nouveau moteur — redémarrage du core requis");
+                    "Base principale copiée vers le nouveau moteur - redémarrage du core requis");
                 record_core_switch(
                     &audit, &state.db, &source_engine, &dto.engine, Ok((tables, rows)),
                 ).await;
@@ -535,7 +535,7 @@ pub(crate) fn persist_core_settings(creds: &DbCredentials, backend: Backend) -> 
     let patched = config_file::patch(&config_file::source_text(&target), &assigns);
     // A `url` outranks the discrete fields (kubuno-db and the credentials handed to
     // the modules both read it first when present): left in place, it would keep
-    // pointing the modules — and, depending on the fields, the core — at the
+    // pointing the modules - and, depending on the fields, the core - at the
     // database being left.
     let patched = config_file::remove_key(&patched, "database", "url");
     config_file::write_atomic(&target, &patched).map_err(AppError::Internal)?;
@@ -583,7 +583,7 @@ pub(crate) fn ensure_switchable_config(target: Backend) -> Result<(), AppError> 
 // The per-module switch (with data copy)
 // ─────────────────────────────────────────────────────────────────────────────
 
-/// `POST /admin/modules/:id/database/migrate` — point a module at another engine
+/// `POST /admin/modules/:id/database/migrate` - point a module at another engine
 /// AND carry its existing data across.
 ///
 /// Unlike the core, the core cannot build a module's tables (its migrations live
@@ -692,7 +692,7 @@ async fn record_module_switch(
     audit.record(db, entry).await;
 }
 
-/// Copies a module's data onto `dto` and leaves the module running there — or,
+/// Copies a module's data onto `dto` and leaves the module running there - or,
 /// when anything fails, puts the module back exactly where it was. The copy
 /// re-points the module at the target first, and a failure after that point
 /// used to leave it there (stopped, or crash-looping on a half-built target)
@@ -807,7 +807,7 @@ pub(crate) async fn upsert_module_override(
     upsert_override_on(&state.db, &state.settings.auth.jwt_secret, module_id, dto, prefix).await
 }
 
-/// [`upsert_module_override`] against any core database — the running one, or a
+/// [`upsert_module_override`] against any core database - the running one, or a
 /// switch target being prepared before the core adopts it.
 pub(crate) async fn upsert_override_on(
     db: &DbPool,
@@ -911,7 +911,7 @@ pub(crate) async fn restore_override(
 }
 
 /// Polls the registry until the module has registered with the core after
-/// `since` — i.e. it started on its new database and finished migrating it.
+/// `since` - i.e. it started on its new database and finished migrating it.
 pub(crate) async fn wait_for_registration(
     state: &AppState,
     module_id: &str,

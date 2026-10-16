@@ -147,7 +147,7 @@ export default function AvatarCropModal({ initialSrc, initialCrop, saving, onCan
               className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-text-tertiary hover:text-primary transition-colors"
             >
               {loadError ? <ImageOff size={36} /> : <ImagePlus size={36} />}
-              <span className="text-sm">{loadError ? 'Image illisible — importez-en une' : 'Importer une image'}</span>
+              <span className="text-sm">{loadError ? 'Image illisible - importez-en une' : 'Importer une image'}</span>
             </button>
           )}
           {/* Masque circulaire */}

@@ -1,4 +1,4 @@
-//! The password policy — the seven keys of migration `000115`, resolved.
+//! The password policy - the seven keys of migration `000115`, resolved.
 //!
 //! Same contract as [`super::directory`]: the policy is read in **one** place
 //! and through the scope engine, so that a value posted on an organisational
@@ -25,7 +25,7 @@
 //!
 //! ## What it deliberately does not govern
 //!
-//! Accounts whose credential is held elsewhere — a directory bind, an identity
+//! Accounts whose credential is held elsewhere - a directory bind, an identity
 //! provider. There is no local hash to judge, and refusing a sign-in because a
 //! password this instance never stored is "too short" would be a claim it
 //! cannot substantiate.
@@ -34,7 +34,7 @@
 //!
 //! Judging an *existing* password against a *new* policy is impossible from an
 //! argon2id hash: length and character classes are exactly what a hash destroys.
-//! The alternative — storing the length of every password — narrows an offline
+//! The alternative - storing the length of every password - narrows an offline
 //! attack for no gain. The sign-in handler already holds the plaintext the
 //! person just typed, so the evaluation happens there, once, and nothing about
 //! the password is persisted.
@@ -83,8 +83,8 @@ pub struct PasswordPolicy {
 
 impl Default for PasswordPolicy {
     /// What the instance did before migration `000115`: eight characters, no
-    /// other demand. This is the value used when a key resolves to nothing —
-    /// an instance whose migration has not run — so an upgrade never tightens
+    /// other demand. This is the value used when a key resolves to nothing -
+    /// an instance whose migration has not run - so an upgrade never tightens
     /// or loosens anything on its own.
     fn default() -> Self {
         Self {
@@ -142,7 +142,7 @@ impl PasswordPolicy {
     /// resolves at [`SettingScope::user`] so that account → groups → unit →
     /// ancestors → instance all apply, while an account that does not exist yet
     /// (administrative creation, public sign-up) resolves at the unit it is
-    /// about to land in — which is the most specific level that can be known
+    /// about to land in - which is the most specific level that can be known
     /// before the row exists.
     pub async fn resolve(db: &DbPool, scope: &SettingScope) -> Result<Self, AppError> {
         let d = Self::default();
@@ -179,7 +179,7 @@ impl PasswordPolicy {
     }
 
     /// Resolves for an account that does not exist yet, from the unit it is
-    /// being created in. `None` — an instance whose tree is not reachable —
+    /// being created in. `None` - an instance whose tree is not reachable -
     /// falls back to the instance scope rather than to the factory default.
     pub async fn for_new_account(
         db: &DbPool,
@@ -223,7 +223,7 @@ impl PasswordPolicy {
     /// An account with no recorded date is treated as **not** expired: the
     /// column is backfilled by migration `000115` for every account that holds
     /// a hash, so a NULL here means an account that has no local password at
-    /// all — nothing to expire.
+    /// all - nothing to expire.
     pub fn is_expired(&self, changed_at: Option<chrono::DateTime<chrono::Utc>>) -> bool {
         if self.expiry_days <= 0 {
             return false;
@@ -295,7 +295,7 @@ fn is_trivial_run(candidate: &str) -> bool {
 
 /// Refuses a password the account has already used.
 ///
-/// No-op when the policy allows reuse — the history is still *written* in that
+/// No-op when the policy allows reuse - the history is still *written* in that
 /// case, so that turning the rule back on is immediately effective instead of
 /// starting from an empty memory.
 pub async fn reject_reuse(
@@ -359,7 +359,7 @@ pub async fn reject_reuse(
 /// Remembers a hash and trims the account's history to `depth` entries.
 ///
 /// Takes an executor so it runs inside the caller's transaction: a history that
-/// commits without the password change — or the reverse — is exactly the
+/// commits without the password change - or the reverse - is exactly the
 /// disagreement the reuse rule cannot survive.
 ///
 /// The trim keeps `depth` rows even when reuse is currently allowed, so the
@@ -416,7 +416,7 @@ pub async fn remember(
 /// the answer of `POST /auth/forgot-password` is unchanged in every branch: the
 /// route returns the same body whether the address is unknown, known, or known
 /// and governed by a policy that forbids the link. A database failure reads as
-/// `true` — the behaviour the route had before this key existed — because the
+/// `true` - the behaviour the route had before this key existed - because the
 /// alternative is a silent, instance-wide loss of the recovery path on a
 /// transient error.
 pub async fn self_service_recovery_allowed(db: &DbPool, user_id: Uuid) -> bool {
@@ -447,7 +447,7 @@ mod tests {
 
     #[test]
     fn length_is_counted_in_characters_not_bytes() {
-        // Eight accented characters are eight characters, not sixteen bytes —
+        // Eight accented characters are eight characters, not sixteen bytes -
         // and not the other way round either: a policy that counted bytes would
         // silently accept a five-character password written in French.
         let p = policy(8, false);

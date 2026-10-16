@@ -154,7 +154,7 @@ export function kebabCase(name: string): string {
   return name.replace(/[A-Z]/g, (c, i: number) => (i > 0 ? '-' : '') + c.toLowerCase())
 }
 
-/** 64-bit FNV-1a, hex — the desktop export's `version` algorithm (a cache key, not a checksum). */
+/** 64-bit FNV-1a, hex - the desktop export's `version` algorithm (a cache key, not a checksum). */
 export function fnv1aHex(text: string): string {
   let hash = 0xcbf29ce484222325n
   const prime = 0x100000001b3n
@@ -170,7 +170,7 @@ function snakeKey(key: string): string {
 }
 
 /**
- * Recursively converts an object's keys to snake_case (`propMap` entries, adapters) — except the
+ * Recursively converts an object's keys to snake_case (`propMap` entries, adapters) - except the
  * keys of a `values` table, which are `.kbview` enum values and stay as written.
  */
 function snake(value: unknown): unknown {

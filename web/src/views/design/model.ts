@@ -1,6 +1,6 @@
 /**
  * What the design surface knows of the elements: the catalog (host registry + project registries + user
- * controls — read at run time, never a hard-coded list) and the plan being shown (element id → node, literal
+ * controls - read at run time, never a hard-coded list) and the plan being shown (element id → node, literal
  * attribute values). Pure: no DOM.
  */
 import type { PlanNode, ViewPlan } from '../plan'
@@ -153,7 +153,7 @@ export function planModules(plan: ViewPlan): Map<string, Set<string>> {
 /** How a container lays out its children, as far as the surface's gestures are concerned. */
 export type ContainerKind = 'leaf' | 'flow' | 'dock' | 'absolute' | 'single' | 'list'
 
-/** The container kind of an element (an id the plan does not know — a property element — is a `list`). */
+/** The container kind of an element (an id the plan does not know - a property element - is a `list`). */
 export function containerKind(nodes: ReadonlyMap<string, NodeInfo>, catalog: Catalog, id: string): ContainerKind {
   const n = nodes.get(id)
   if (!n) return 'list'
@@ -174,7 +174,7 @@ export function isAbsoluteChild(nodes: ReadonlyMap<string, NodeInfo>, catalog: C
 }
 
 /**
- * What the surface shows: a `page` (`.kbview`: a page, window or dialog — designed on a white sheet, its boundary
+ * What the surface shows: a `page` (`.kbview`: a page, window or dialog - designed on a white sheet, its boundary
  * dashed) or a `control` (`.kbcontrol`: a user control, on the canvas in Visual Studio's colours). The file's
  * extension decides; without a file yet, the plan's kind does; with neither, the canvas keeps Visual Studio's colours.
  */

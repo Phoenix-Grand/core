@@ -1,4 +1,4 @@
-<!-- RoomStatsTab — converted from RoomStatsTab.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- RoomStatsTab - converted from RoomStatsTab.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl>
   <Panel Class="contents">
     <Stack Direction="LeftToRight" Gap="0" Justify="Center" Visible="{Binding show_case_1}" Class="py-16">

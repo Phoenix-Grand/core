@@ -21,7 +21,7 @@ const EVENT_ICON = {
 } as const
 
 function translateValue(t: ReturnType<typeof useTranslation>['t'], raw: string | null): string {
-  if (!raw) return '—'
+  if (!raw) return '-'
   const known = ['new', 'acknowledged', 'resolved', 'ignored']
   if (known.includes(raw)) return statusLabel(t, raw as AlertStatus)
   if (['critical', 'warning', 'info'].includes(raw)) return severityLabel(t, raw as 'critical')

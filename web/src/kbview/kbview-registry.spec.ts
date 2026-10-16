@@ -8,8 +8,8 @@
  *    allowlisted with a reason. The JSON diff report is written to `KBVIEW_CONFORMANCE_REPORT`
  *    (default: `kbview-conformance-report.json` in the OS temp directory).
  *
- * The desktop side is the committed snapshot of the real export, or — `KUBUNO_DESKTOP_REGISTRY=<path>`
- * — a fresh full export (`view_embed --export-registry`).
+ * The desktop side is the committed snapshot of the real export, or - `KUBUNO_DESKTOP_REGISTRY=<path>`
+ * - a fresh full export (`view_embed --export-registry`).
  */
 import { readFileSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
@@ -49,7 +49,7 @@ function desktopSnapshot(): DesktopSnapshot {
   return JSON.parse(readFileSync(here('./__fixtures__/desktop-registry.snapshot.json'), 'utf8')) as DesktopSnapshot
 }
 
-describe('kbview registry — JSON shape', () => {
+describe('kbview registry - JSON shape', () => {
   const registry = buildWebRegistry()
   const byName = new Map(registry.components.map(c => [c.name, c]))
 
@@ -128,7 +128,7 @@ describe('kbview registry — JSON shape', () => {
   })
 })
 
-describe('kbview registry — typography matches the host CSS', () => {
+describe('kbview registry - typography matches the host CSS', () => {
   const typography = buildWebRegistry().typography
   const indexCss = readFileSync(here('../index.css'), 'utf8')
   const themeCss = readFileSync(here('../theme.css'), 'utf8')
@@ -168,14 +168,14 @@ describe('kbview registry — typography matches the host CSS', () => {
   })
 })
 
-describe('kbview registry — committed file', () => {
+describe('kbview registry - committed file', () => {
   it('src/ui/kbview-registry.web.json is up to date (npm run build:registry)', () => {
     const committed = readFileSync(here('../ui/kbview-registry.web.json'), 'utf8')
     expect(committed === webRegistryText(), 'run `npm run build:registry`').toBe(true)
   })
 })
 
-describe('kbview registry — conformance with the desktop export', () => {
+describe('kbview registry - conformance with the desktop export', () => {
   it('has no difference outside the allowlist, and no stale allowlist entry', () => {
     const report = checkConformance(buildWebRegistry(), desktopSnapshot(), KBVIEW_ALLOWLIST)
     const out = process.env.KBVIEW_CONFORMANCE_REPORT ?? join(tmpdir(), 'kbview-conformance-report.json')

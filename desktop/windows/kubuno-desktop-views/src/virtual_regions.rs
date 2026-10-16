@@ -1,15 +1,15 @@
 //! Virtual regions (`vskubuno/docs/DESKTOP-MIGRATION.md`, lot F3): a node that lays out its own
-//! sub-elements — a `<Ribbon>`'s tabs, groups and buttons — declares, every frame, `(element id,
+//! sub-elements - a `<Ribbon>`'s tabs, groups and buttons - declares, every frame, `(element id,
 //! rectangle, component)` for each of them. The designer then records them in its layout map (they
 //! are selected, outlined and dropped into like any element), and the input router routes the
 //! pointer to them (MouseEnter/Leave, MouseDown, hover, tooltips) and raises their events through
 //! their own class instance, with their own `Sender`.
 //!
 //! A sub-element is an ordinary element of the `.kbview` (its id is its stable id), so its
-//! attributes are read like any element's — a `{Binding …}` included — and a named one is a named
+//! attributes are read like any element's - a `{Binding …}` included - and a named one is a named
 //! component of the view (`self.bold` in the code-behind).
 //!
-//! Two design-time helpers live here too: the designer's current selection (what a ribbon shows —
+//! Two design-time helpers live here too: the designer's current selection (what a ribbon shows -
 //! the selected tab is the active one) and the late paint of what a node draws over its siblings
 //! in the designer (a ribbon's inline drop-down).
 
@@ -197,7 +197,7 @@ pub fn paint_smart_tag(c: &dyn ControlCanvas, rect: Rect) {
 pub type Caption = (windows::Win32::Graphics::Direct2D::Common::D2D1_COLOR_F, windows::Win32::Graphics::Direct2D::Common::D2D1_COLOR_F);
 
 /// The colours the designed window's caption takes this frame (a ribbon's tab strip, which the
-/// title bar continues — what kubuno_desktop_controls::host::set_caption_colors does at run time).
+/// title bar continues - what kubuno_desktop_controls::host::set_caption_colors does at run time).
 pub fn set_design_caption(colors: Caption) {
     DESIGN_CAPTION.with(|c| c.set(Some(colors)));
 }

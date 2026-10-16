@@ -1,6 +1,6 @@
 //! The shared machinery an interactive column needs.
 //!
-//! The gallery's pages are otherwise stateless — each is a `fn(&Canvas, &Frame)`
+//! The gallery's pages are otherwise stateless - each is a `fn(&Canvas, &Frame)`
 //! that paints a fixed exposition. An interactive column adds two things: it
 //! remembers what the user did between frames (a toggle stays on), and it reads
 //! the live input to light hover, press and click and to take keys. This module
@@ -29,7 +29,7 @@ use kubuno_desktop_ui::{Canvas, Rect, WidgetState};
 ///
 /// This used to be a plain `const`, but the shell now hosts a splitter whose
 /// grip lets the user tune the column's width. The pages still lay out against
-/// « the right slab of the window », so they keep asking for that width — the
+/// « the right slab of the window », so they keep asking for that width - the
 /// answer just varies per frame. The shell writes it in [`set_panel_w`] before
 /// each frame, and reads it out of [`PANEL_W`] on the way back.
 pub const DEFAULT_PANEL_W: f32 = 440.0;
@@ -45,7 +45,7 @@ thread_local! {
 /// width before it calls the page, and drops back to the default outside of a
 /// paint. The old `const PANEL_W` name is kept as a `fn` at call sites so no
 /// page has to be touched, using a `PANEL_W` fn on a module reads the same as
-/// a `const` at the point of call. Yes it looks like a constant on read — that
+/// a `const` at the point of call. Yes it looks like a constant on read - that
 /// is the point.
 #[allow(non_snake_case)]
 pub fn PANEL_W() -> f32 { PANEL_W_CELL.with(|c| c.get()) }
@@ -61,7 +61,7 @@ thread_local! {
     static PANEL_RECT_CELL: std::cell::Cell<Rect> = const { std::cell::Cell::new(Rect { left: 0.0, top: 0.0, right: 0.0, bottom: 0.0 }) };
 }
 
-/// Called from `main.rs` once per frame with the splitter's pane 2 — the real
+/// Called from `main.rs` once per frame with the splitter's pane 2 - the real
 /// interactive column, in the caller's coordinates. The pages keep asking for
 /// [`panel_rect`], but the answer now IS the splitter's pane, not a synthetic
 /// rectangle recomputed from `f.size` and `PANEL_W`.
@@ -91,7 +91,7 @@ pub fn focus_reset() {
     FOCUS.with(|r| r.borrow_mut().reset());
 }
 
-/// Direct access to the page's ring — programmatic focus, `focus_visibly`,
+/// Direct access to the page's ring - programmatic focus, `focus_visibly`,
 /// `keep_focus_in` for an open popup, `set_blur_on_escape`…
 pub fn with_focus<R>(f: impl FnOnce(&mut FocusRing) -> R) -> R {
     FOCUS.with(|r| f(&mut r.borrow_mut()))
@@ -140,7 +140,7 @@ impl Live {
         r.contains(self.mouse.0, self.mouse.1)
     }
 
-    /// A click landed inside `r` this frame — the edge a toggle or button acts on.
+    /// A click landed inside `r` this frame - the edge a toggle or button acts on.
     pub fn hit(&self, r: Rect) -> bool {
         self.clicked && self.hover(r)
     }
@@ -161,7 +161,7 @@ impl Live {
         WidgetState::REST.hot(h).pressed(h && self.down)
     }
 
-    /// Wheel travel in DIP (100 per notch), `.1 > 0` = scroll down — only
+    /// Wheel travel in DIP (100 per notch), `.1 > 0` = scroll down - only
     /// when the pointer is over `r`, `(0, 0)` otherwise.
     ///
     /// A non-zero answer CLAIMS the wheel ([`host::claim_wheel`]): the control
@@ -225,7 +225,7 @@ impl Live {
     }
 }
 
-/// The interactive column's rectangle — the splitter's pane 2, published by
+/// The interactive column's rectangle - the splitter's pane 2, published by
 /// `main.rs` every frame through [`set_panel_rect`]. The `size` argument is
 /// ignored, but the signature is kept so the 15 pages that call this from
 /// their `interactive_column` don't need to be touched. Before the first frame
@@ -236,9 +236,9 @@ pub fn panel_rect(_size: (f32, f32)) -> Rect {
 }
 
 /// Paints the column as a `Panel` (`Surface::Layer`, LG padding), draws the
-/// heading « Interactif — souris » and the hairline under it, and returns a
+/// heading « Interactif - souris » and the hairline under it, and returns a
 /// cursor at the first row. Uses the framework's container instead of hand
-/// drawing a background — one theme, one set of tokens, no drift.
+/// drawing a background - one theme, one set of tokens, no drift.
 ///
 /// Returns `(content_left, first_y, content_right)`.
 pub fn panel(c: &dyn Canvas, r: Rect) -> (f32, f32, f32) {
@@ -255,7 +255,7 @@ pub fn panel(c: &dyn Canvas, r: Rect) -> (f32, f32, f32) {
         .with_padding(Padding::all(kubuno_desktop_ui::metrics::space::LG));
     panel.paint(c, r, WidgetState::REST);
 
-    // The inner rectangle the Panel leaves after its padding — the row every
+    // The inner rectangle the Panel leaves after its padding - the row every
     // caller then lays out inside.
     let inset = kubuno_desktop_ui::metrics::space::LG;
     let left = r.left + inset;
@@ -265,7 +265,7 @@ pub fn panel(c: &dyn Canvas, r: Rect) -> (f32, f32, f32) {
     let t = c.theme();
     let f = c.formats();
     c.text(
-        "Interactif — souris",
+        "Interactif - souris",
         &Rect::new(left, y, right, y + 24.0),
         &f.heading,
         &t.text_primary,

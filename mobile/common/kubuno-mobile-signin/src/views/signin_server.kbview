@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  Sign-in · Server — shared by every Kubuno mobile app (derived from Drive's onboarding ServerScreen): the app's name,
+  Sign-in · Server - shared by every Kubuno mobile app (derived from Drive's onboarding ServerScreen): the app's name,
   the address of the Kubuno server, and Continue. The flow (kubuno-mobile-signin) binds the app name, the error line and
   the busy line; Enter in the field or Continue checks the server (GET /health). Light theme, logical px.
 -->

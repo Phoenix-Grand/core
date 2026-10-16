@@ -14,7 +14,7 @@ interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement
    *
    * When enabled the field cannot stay a native `<textarea>` (it cannot hold
    * chip elements): it switches INTERNALLY to a multi-line contenteditable that
-   * looks identical. ⚠️ SEMANTIC SHIFT — the value is then HTML, not plain text:
+   * looks identical. ⚠️ SEMANTIC SHIFT - the value is then HTML, not plain text:
    * seed it via `value` (HTML) and read it back via `onMentionsChange(html)`.
    * The native `onChange` is not called in this mode.
    */
@@ -55,7 +55,7 @@ export function Textarea({
       className={cn(cn(
         // `h-36` is the default height and `twMerge` lets a caller override it
         // with its own `h-*`. The floor must therefore NOT be the same value:
-        // `min-h-36` made the default unoverridable — a field asking for
+        // `min-h-36` made the default unoverridable - a field asking for
         // `h-20` still rendered at 144 px, because the two are different
         // properties and only the first one merged. The floor is what a
         // textarea needs to stay usable when dragged small, nothing more.

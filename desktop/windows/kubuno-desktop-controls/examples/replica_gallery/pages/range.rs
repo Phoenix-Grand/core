@@ -1,4 +1,4 @@
-//! `06-range` — ScrollBar, TrackBar, UpDownBase.
+//! `06-range` - ScrollBar, TrackBar, UpDownBase.
 
 use kubuno_desktop_controls::range::{
     DomainUpDown, HScrollBar, NumericUpDown, TickStyle, TrackBar, VScrollBar,
@@ -20,7 +20,7 @@ fn assign(what: &str, r: Result<(), kubuno_desktop_controls::range::OutOfRange>)
 }
 
 /// `LargeChange` decides the thumb's proportion, and the highest reachable
-/// `Value` is `Maximum - LargeChange + 1` — the trap the reference calls out.
+/// `Value` is `Maximum - LargeChange + 1` - the trap the reference calls out.
 /// The bars are the one control the reference does NOT auto-size: their
 /// thickness is a system metric, and asking them to fit their (absent) content
 /// would collapse them.
@@ -41,7 +41,7 @@ fn scroll_bars() -> Group {
     assign("VScrollBar.Value", v.set_value(40));
 
     group(
-        "ScrollBar — thumb ∝ LargeChange",
+        "ScrollBar - thumb ∝ LargeChange",
         300.0,
         vec![horizontal(20, 30), horizontal(50, 0), kid(v).h(120.0).fixed()],
     )
@@ -55,7 +55,7 @@ fn track_bars() -> Group {
         kid(t).w(240.0)
     };
     group(
-        "TrackBar — TickStyle",
+        "TrackBar - TickStyle",
         300.0,
         vec![
             track(4, TickStyle::BottomRight),

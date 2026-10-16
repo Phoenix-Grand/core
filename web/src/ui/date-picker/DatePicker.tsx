@@ -48,7 +48,7 @@ export function DatePicker({
   const rangeStart   = useMemo(() => parseDateValue(startValue, 'date'), [startValue])
   const rangeEnd     = useMemo(() => parseDateValue(endValue,   'date'), [endValue])
 
-  // Time state (hours / minutes — kept in local state, committed on every change)
+  // Time state (hours / minutes - kept in local state, committed on every change)
   const [hours,   setHoursLocal]   = useState(() => selectedDate?.getHours()   ?? 0)
   const [minutes, setMinutesLocal] = useState(() => selectedDate?.getMinutes() ?? 0)
 
@@ -118,8 +118,8 @@ export function DatePicker({
   //
   // ⚠️ In the CAPTURE phase, and that is not a detail. React attaches its
   // listeners at the root container, so a `stopPropagation()` in any ancestor's
-  // `onMouseDown` — a floating window stops one, to decide which window a press
-  // raises — kills the native event before `document` ever sees it. Listening in
+  // `onMouseDown` - a floating window stops one, to decide which window a press
+  // raises - kills the native event before `document` ever sees it. Listening in
   // the bubble phase meant the panel simply never closed inside a window: it
   // stayed open, and the field stayed lit, which reads as a field that will not
   // let go. Capture runs from the document down, so nothing below can silence it.
@@ -255,7 +255,7 @@ export function DatePicker({
             'w-full flex items-center gap-2 px-3 rounded border bg-white text-left',
             'transition-colors kb-field-focus',
             /* Open by mouse: the trigger has the focus but not `:focus-visible`,
-               so the stroke has to be asked for explicitly — the panel below is
+               so the stroke has to be asked for explicitly - the panel below is
                this field's, and the field must say so. */
             open && 'kb-field-focus--on',
             error ? 'border-danger kb-field-focus-danger' : 'border-border',

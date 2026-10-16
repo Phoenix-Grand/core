@@ -1,6 +1,6 @@
 //! Crash safety: the engine runs in a **child process** (this test binary run again on `crash_child`), stops at a
 //! named failpoint, and the parent kills it hard (`TerminateProcess` on Windows, `SIGKILL` elsewhere, through
-//! `tokio::process::Child::kill`) — no destructor, no flush. Then the parent reopens the database and checks:
+//! `tokio::process::Child::kill`) - no destructor, no flush. Then the parent reopens the database and checks:
 //! integrity, cursor never ahead of the applied rows, the op present or applied exactly once (the fake server counts
 //! executions per idempotency key), and that a normal run completes the work.
 

@@ -84,7 +84,7 @@ export class ScopeHeadline extends ViewBase {
             parent: this.parent
               ? this.parent.name
               : this.tr('admin.m_scope_instance', { defaultValue: "Toute l'instance" }),
-            defaultValue: `— un réglage non remplacé suit ${this.parent ? this.parent.name : "toute l'instance"}`,
+            defaultValue: `- un réglage non remplacé suit ${this.parent ? this.parent.name : "toute l'instance"}`,
           })
   }
 

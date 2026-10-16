@@ -130,7 +130,7 @@ export class CalendarDetail extends ViewBase {
       cell: r => (
         r.dates.length === 0
           // Not an error: a rule bounded by its years, or a date list that has
-          // run out, legitimately produces nothing this year — and saying so is
+          // run out, legitimately produces nothing this year - and saying so is
           // more useful than an empty cell.
           ? <span className="text-text-tertiary">{this.tr('admin.hol_no_date_this_year')}</span>
           : (

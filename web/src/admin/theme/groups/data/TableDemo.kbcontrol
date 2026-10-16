@@ -1,4 +1,4 @@
-<!-- TableDemo — converted from TableDemo.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- TableDemo - converted from TableDemo.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl>
   <Stack Gap="12">
     <Stack Direction="LeftToRight" Gap="6" CrossAlign="Center" WrapContents="true">

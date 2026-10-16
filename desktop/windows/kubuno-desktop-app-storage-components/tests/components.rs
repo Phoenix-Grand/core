@@ -1,5 +1,5 @@
 //! The storage components are registered as non-visual components (the component tray, the Toolbox tab
-//! "Storage"), views using them validate and compile, and a view's bindings read and write the shared settings —
+//! "Storage"), views using them validate and compile, and a view's bindings read and write the shared settings -
 //! all on in-memory back-ends (nothing here touches the user's profile, the Registry or the credential store).
 
 extern crate kubuno_desktop_app_storage_components as _;

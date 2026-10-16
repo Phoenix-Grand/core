@@ -31,7 +31,7 @@
 //! **Deviations.** `invoke` from the UI thread itself does not run inline (the view model is
 //! already mutably borrowed by whoever is running there): it returns
 //! [`DispatchError::OnUiThread`] at once instead of deadlocking. Calling `invoke` from a worker
-//! while the UI thread blocks waiting for that worker is a deadlock, as in WinForms — prefer
+//! while the UI thread blocks waiting for that worker is a deadlock, as in WinForms - prefer
 //! `begin_invoke`. After the view closed, queued closures are dropped (their [`AsyncResult`]s
 //! report [`DispatchError::Closed`]) and new ones are refused the same way.
 

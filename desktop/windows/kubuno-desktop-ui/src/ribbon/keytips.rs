@@ -44,7 +44,7 @@ pub fn assign(entries: &[(Option<&str>, &str)], two_letters: bool) -> Vec<String
 }
 
 /// Pairs of explicit tips that collide (equal, or one a prefix of the other): `(a, b, tip)` by
-/// entry name — "two KeyTips collide within one tab".
+/// entry name - "two KeyTips collide within one tab".
 pub fn conflicts(tips: &[(String, String)]) -> Vec<(String, String, String)> {
     let mut out = Vec::new();
     for (i, (a, ta)) in tips.iter().enumerate() {

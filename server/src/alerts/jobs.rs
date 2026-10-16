@@ -21,7 +21,7 @@ use crate::jobs::queue::{self, NewJob};
 use crate::jobs::registry::JobRegistry;
 
 /// Recurring analysis pass. Its `done_at` is also what the console reads as
-/// "last checked" — see [`super::producers::last_scan_at`].
+/// "last checked" - see [`super::producers::last_scan_at`].
 pub const SCAN: &str = "core.alerts.scan";
 
 /// Fallback cadence when the setting is missing or absurd.
@@ -70,7 +70,7 @@ pub fn register(registry: &mut JobRegistry, settings: Arc<Settings>) {
 }
 
 /// Arms the scan at startup. Idempotent across restarts and across several core
-/// processes — `ensure_scheduled` refuses to pile up duplicates.
+/// processes - `ensure_scheduled` refuses to pile up duplicates.
 pub async fn schedule(db: &DbPool) {
     match queue::ensure_scheduled(db, NewJob::new(SCAN)).await {
         Ok(Some(id)) => tracing::info!(job_id = %id, "Analyse du centre d'alertes planifiée"),

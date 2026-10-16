@@ -1,4 +1,4 @@
-<!-- AdminRolesPanel — converted from AdminRolesPanel.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- AdminRolesPanel - converted from AdminRolesPanel.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <Panel Class="contents">
   <!-- TODO(views-migrate): <AdminForbidden> is no .kbview element (./AdminForbidden#default) -->
   <ReactHost Component="{Binding AdminForbidden}" Props="{Binding admin_forbidden_props}" Visible="{Binding show_case_1}"/>

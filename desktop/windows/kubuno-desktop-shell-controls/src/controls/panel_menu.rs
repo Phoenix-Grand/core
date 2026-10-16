@@ -1,10 +1,10 @@
 //! The two pieces of the account panel (the web's `UserPanel`) no primitive draws:
 //!
-//! * [`PanelMenu`] — a white card of clickable rows (`overflow-hidden rounded-[20px]`): a tinted
+//! * [`PanelMenu`] - a white card of clickable rows (`overflow-hidden rounded-[20px]`): a tinted
 //!   circle carrying a glyph, or an account's initials, then a label and an optional second line;
 //!   a row lights up under the pointer (a plain rectangle the card's corners cut) and the rows may
 //!   be divided (`divide-y`, inset by their padding).
-//! * [`AccentPill`] — « Gérer votre compte »: an outlined accent pill, not a `Button` (the web
+//! * [`AccentPill`] - « Gérer votre compte »: an outlined accent pill, not a `Button` (the web
 //!   writes it as a link with its own `rounded-full`).
 //!
 //! A `PanelMenu`'s rows are its `Items` property (a binding to a `Shared<Vec<MenuRow>>`, as
@@ -18,7 +18,7 @@ use kubuno_desktop::ui::{Canvas, Rect, Size, Widget, WidgetState};
 use kubuno_desktop::views::component::{AccessiblePart, Component as _, Control, ControlCore, EventCx, HasControlCore, PaintEventCx, Shared};
 use kubuno_desktop::views::events::{EmptyEventArgs, Event, MouseEventArgs};
 
-/// A row: `px-4 py-3` around a 32 circle — 56.6 measured.
+/// A row: `px-4 py-3` around a 32 circle - 56.6 measured.
 pub const ROW_H: f32 = 56.6;
 const ROW_PAD_X: f32 = 16.0;
 const CARD_RADIUS: f32 = 20.0;
@@ -147,7 +147,7 @@ impl Control for PanelMenu {
         let c: &dyn Canvas = e.graphics;
         let t = c.theme().clone();
         let f = c.formats();
-        // `bg-white`: the opaque card over the translucent panel — the application theme's surface,
+        // `bg-white`: the opaque card over the translucent panel - the application theme's surface,
         // not the ambient colour of the panel (its tint, which a free `BackColor` hands its children).
         c.fill_rounded(&r, CARD_RADIUS, &kubuno_desktop::Application::theme().layer_background);
         // `overflow-hidden`: a row's hover is a plain rectangle the card's corners cut.

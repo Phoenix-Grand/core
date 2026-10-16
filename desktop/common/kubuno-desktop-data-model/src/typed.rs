@@ -84,11 +84,11 @@ pub struct RowPlan {
     /// `SELECT … WHERE key = @key` (a key is declared).
     pub select_by_key: Option<Statement>,
     /// `INSERT` of the insertable columns; `RETURNING` the row except on MySQL (the caller reads
-    /// the generated id) — tables only.
+    /// the generated id) - tables only.
     pub insert: Option<Statement>,
-    /// `UPDATE … SET <non-key columns> WHERE key` — tables with a key and a writable column.
+    /// `UPDATE … SET <non-key columns> WHERE key` - tables with a key and a writable column.
     pub update: Option<Statement>,
-    /// `DELETE … WHERE key` — tables with a key.
+    /// `DELETE … WHERE key` - tables with a key.
     pub delete: Option<Statement>,
 }
 

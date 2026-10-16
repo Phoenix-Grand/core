@@ -17,7 +17,7 @@ import type { DirectoryPolicy } from './useDirectoryPolicy'
  * other settings screen.
  */
 
-/** Every control writes on the click — none of these values is free text. */
+/** Every control writes on the click - none of these values is free text. */
 export interface RowProps {
   setting:  ResolvedSetting | undefined
   policy:   DirectoryPolicy

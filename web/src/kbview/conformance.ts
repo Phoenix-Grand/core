@@ -84,7 +84,7 @@ function snapEvent(e: EventJson): SnapshotEvent {
 /**
  * Reduces a full desktop export (`{version, components}`, several MB because every element
  * repeats its inherited members) to the snapshot: built-in elements only, each inherited member
- * stored once under its level. Throws when two elements disagree on an inherited member — the
+ * stored once under its level. Throws when two elements disagree on an inherited member - the
  * snapshot would then not be faithful.
  */
 export function normalizeDesktopExport(raw: DesktopExport, producedBy: string): DesktopSnapshot {

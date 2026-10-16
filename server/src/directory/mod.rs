@@ -5,7 +5,7 @@
 //! `kubuno-seccomp` refuses `execve`, so `ldapsearch` and every other helper
 //! binary are impossible by construction, not merely discouraged. This is a
 //! pure-Rust LDAPv3 client (`ldap3`) talking BER over a socket the core opens
-//! itself, with rustls for the transport — the same rustls 0.23 + ring provider
+//! itself, with rustls for the transport - the same rustls 0.23 + ring provider
 //! the HTTPS listener, the database driver and the mail relay already use.
 //!
 //! ## The map

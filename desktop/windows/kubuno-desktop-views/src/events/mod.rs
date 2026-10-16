@@ -66,7 +66,7 @@ pub use dispatcher::{AsyncResult, DispatchError, UiDispatcher};
 pub use executor::{delay, spawn_local, yield_now, Cancelled, Delay, JoinHandle, UiHandle, YieldNow};
 pub use timer::Timer;
 
-/// `#[derive(EventArgs)]` — see the macro's own documentation for its
+/// `#[derive(EventArgs)]` - see the macro's own documentation for its
 /// `#[args(handled, cancel, extends = …, legacy = …)]` options.
 pub use kubuno_desktop_views_macros::EventArgs;
 
@@ -141,7 +141,7 @@ impl dyn EventArgs {
     }
 
     /// Whether `name` is this type or one of its ancestors
-    /// ([`EventArgs::type_chain`]) — the test a handler declared with args
+    /// ([`EventArgs::type_chain`]) - the test a handler declared with args
     /// type `name` must pass to be bound to this event.
     pub fn is_a(&self, name: &str) -> bool {
         self.type_chain().contains(&name)

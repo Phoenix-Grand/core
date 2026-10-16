@@ -1,6 +1,6 @@
 // Shared @ui primitive: a phone-number field, Google-Contacts style. A leading
 // handset icon, a country dial-code selector (flag + searchable dropdown), the
-// Material number field, and — optionally — an editable "Libellé" combobox
+// Material number field, and - optionally - an editable "Libellé" combobox
 // (free text + preset suggestions like Domicile / Professionnel / Mobile). The
 // value is structured: { country (ISO-2), number (local), label? }; the full
 // international number is `+<dial><number>`.
@@ -23,7 +23,7 @@ export interface PhoneFieldProps {
   value: PhoneValue
   onChange: (v: PhoneValue) => void
   primaryColor: string
-  /** Leading icon; defaults to a handset. Pass `null` to omit it — e.g. when the
+  /** Leading icon; defaults to a handset. Pass `null` to omit it - e.g. when the
    * consumer already provides its own icon gutter (a contact editor), otherwise
    * two icons stack. */
   icon?: ReactNode

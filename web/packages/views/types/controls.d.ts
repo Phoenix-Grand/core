@@ -84,7 +84,7 @@ export declare function registerControls(specifier: string, controls: Record<str
 export type DialogResult = 'OK' | 'Cancel' | 'Yes' | 'No' | 'None';
 export type MessageBoxButtons = 'OK' | 'OKCancel' | 'YesNo';
 export type MessageBoxIcon = 'None' | 'Information' | 'Warning' | 'Error' | 'Question';
-/** `await MessageBox.show(text, caption, buttons, icon)` — rendered with the host's `ConfirmDialog`. */
+/** `await MessageBox.show(text, caption, buttons, icon)` - rendered with the host's `ConfirmDialog`. */
 export declare const MessageBox: {
     show(text: string, caption?: string, buttons?: MessageBoxButtons, icon?: MessageBoxIcon): Promise<DialogResult>;
 };

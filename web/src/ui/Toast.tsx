@@ -16,7 +16,7 @@ export interface ToastOptions {
   message:  ReactNode
   title?:   ReactNode
   variant?: ToastVariant
-  /** Lifetime in ms. `0` keeps it until dismissed — use it for failures the
+  /** Lifetime in ms. `0` keeps it until dismissed - use it for failures the
    *  user must acknowledge. Defaults to 4000 (6000 for `danger`). */
   duration?: number
   /** One inline action: "Undo", "See details", "Retry". */
@@ -71,7 +71,7 @@ const PLACEMENT: Record<NonNullable<ToastProviderProps['placement']>, string> = 
 }
 
 /**
- * ToastProvider — the transient-notification host.
+ * ToastProvider - the transient-notification host.
  *
  * It replaces the eight copies of "set a flag, `setTimeout` it away, flip a
  * button label" scattered across the admin and settings panels, each with its
@@ -83,7 +83,7 @@ const PLACEMENT: Record<NonNullable<ToastProviderProps['placement']>, string> = 
  * warning/danger. Placing them in separate containers is what lets a failure
  * jump the queue while a "Saved" stays polite.
  *
- * Timers pause while the pointer is over the stack or the focus is inside it —
+ * Timers pause while the pointer is over the stack or the focus is inside it -
  * otherwise a toast carrying an "Undo" can expire under the cursor on its way
  * to the button.
  *
@@ -96,7 +96,7 @@ export function ToastProvider({ children, max = 4, placement = 'bottom-right', t
   const isMobile = useIsMobile()
   const { host } = usePortalHost()
   const paused = useRef(false)
-  // Remaining lifetime per toast, ticked down by a single interval — a
+  // Remaining lifetime per toast, ticked down by a single interval - a
   // per-toast `setTimeout` cannot be paused without being rebuilt.
   const left = useRef<Map<string, number>>(new Map())
 
@@ -245,7 +245,7 @@ export function useToast(): ToastApi {
   const ctx = useContext(ToastContext)
   const fallback = useMemo<ToastApi>(() => {
     const noop = () => {
-      if (import.meta.env?.DEV) console.warn('[useToast] no <ToastProvider> above this component — toast dropped.')
+      if (import.meta.env?.DEV) console.warn('[useToast] no <ToastProvider> above this component - toast dropped.')
       return ''
     }
     return { toast: noop, info: noop, success: noop, warning: noop, error: noop, dismiss: () => {}, dismissAll: () => {} }

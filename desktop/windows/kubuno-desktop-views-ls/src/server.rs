@@ -1,13 +1,13 @@
 //! The `lsp-server` `Connection` main loop: initialize handshake, then
 //! dispatch `textDocument/{completion,hover,documentSymbol,definition}`
 //! requests and `textDocument/{didOpen,didChange,didClose}` notifications
-//! (full text sync — see [`crate::documents`]'s doc comment) until
+//! (full text sync - see [`crate::documents`]'s doc comment) until
 //! `shutdown`/`exit`.
 //!
 //! Takes `&Connection` rather than owning it so the same loop drives both a
 //! real stdio server ([`Connection::stdio`], from `main.rs`) and the
 //! in-memory harness the round-trip tests in `tests/` use
-//! ([`Connection::memory`]) — the whole point of choosing `lsp-server` per
+//! ([`Connection::memory`]) - the whole point of choosing `lsp-server` per
 //! this crate's `Cargo.toml` doc comment.
 
 use lsp_server::{Connection, ErrorCode, Message, Notification, Request, RequestId, Response};
@@ -32,7 +32,7 @@ use crate::sources;
 use crate::{completion, definition, diagnostics, hover, symbols};
 
 /// A boxed error covering both `lsp-server`'s protocol errors and
-/// `serde_json`'s — the one error type this whole module's `Result`s use, so
+/// `serde_json`'s - the one error type this whole module's `Result`s use, so
 /// `?` works across both sources without a hand-written `From` impl per call
 /// site.
 type DynError = Box<dyn std::error::Error + Send + Sync>;
@@ -223,7 +223,7 @@ fn server_capabilities() -> ServerCapabilities {
         // F2 on a handler name in the XML renames the handler (EVT-5, `handlers::rename`).
         rename_provider: Some(OneOf::Right(RenameOptions { prepare_provider: Some(true), work_done_progress_options: Default::default() })),
         // No `document_formatting_provider`: see `lib.rs`'s module doc,
-        // "Formatting — deliberately not implemented".
+        // "Formatting - deliberately not implemented".
         ..Default::default()
     }
 }
@@ -331,14 +331,14 @@ fn handle_request(documents: &DocumentStore, req: Request) -> Response {
             if locations.is_empty() { None } else { Some(GotoDefinitionResponse::Array(locations)) }
         }),
         // Custom methods for the visual designer (`vskubuno/docs/DESIGNER.md`,
-        // work package DSG-2 — see its "DSG-2 protocol" section for the wire
+        // work package DSG-2 - see its "DSG-2 protocol" section for the wire
         // shapes). All three degrade to an empty/`None` result for a `uri`
         // this server has no open document for, rather than an error: a
         // designer gesture racing the document's own open/close is not
         // exceptional.
         // `kubuno/registry` (work package DSG-1, `vskubuno/docs/DESIGNER.md`
         // §5/§8): the whole component registry, JSON-exported by
-        // `kubuno_desktop_views::registry::export` — see that module's own doc for
+        // `kubuno_desktop_views::registry::export` - see that module's own doc for
         // the wire shape. Takes no params (unlike the DSG-2 methods below),
         // so it bypasses `respond`'s params-deserialization step entirely.
         "kubuno/registry" => match serde_json::to_value(kubuno_desktop_views::registry::export::export()) {
@@ -441,7 +441,7 @@ fn handle_request(documents: &DocumentStore, req: Request) -> Response {
 }
 
 /// Deserializes `req`'s params as `P`, calls `f`, and serializes the result
-/// back into a [`Response`] — the one place every request handler above
+/// back into a [`Response`] - the one place every request handler above
 /// converts a typed `(params) -> result` function into the untyped
 /// `Request -> Response` shape `lsp-server` moves over the wire, so a
 /// malformed params payload from the client becomes a proper JSON-RPC
@@ -492,7 +492,7 @@ fn handle_notification(
                 connection.sender.send(Message::Notification(Notification::new("textDocument/publishDiagnostics".to_string(), params)))?;
             }
         }
-        // `initialized`, `$/cancelRequest`, etc. — nothing this phase needs
+        // `initialized`, `$/cancelRequest`, etc. - nothing this phase needs
         // to react to.
         _ => {}
     }

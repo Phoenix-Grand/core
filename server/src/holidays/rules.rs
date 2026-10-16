@@ -1,6 +1,6 @@
 //! The expander: a rule plus a range gives dates.
 //!
-//! No database, no clock, no locale — pure arithmetic, which is why this file
+//! No database, no clock, no locale - pure arithmetic, which is why this file
 //! carries the tests that matter. Every property the feature promises is
 //! decided here: that a rule answers for a year nobody generated in advance,
 //! that Orthodox Easter is not Western Easter, that "the last Monday of May"
@@ -19,7 +19,7 @@ pub struct Expansion {
     pub observed_from: Option<NaiveDate>,
 }
 
-/// Western Easter — the anonymous Gregorian algorithm.
+/// Western Easter - the anonymous Gregorian algorithm.
 ///
 /// Reproduced here rather than pulled from a crate on purpose: it is twenty
 /// lines, it has been stable since 1582, and it is the single arithmetic the
@@ -181,7 +181,7 @@ pub fn expand(
     out
 }
 
-/// The dates a rule produces in one year, shift included — what the console's
+/// The dates a rule produces in one year, shift included - what the console's
 /// preview column shows.
 pub fn preview(rule: &Rule, observance: Observance, year: i32) -> Vec<Expansion> {
     let (from, to) = (
@@ -228,7 +228,7 @@ mod tests {
 
     #[test]
     fn easter_relative_days_land_where_they_should() {
-        // Good Friday, Easter Monday, Ascension, Whit Monday — 2026.
+        // Good Friday, Easter Monday, Ascension, Whit Monday - 2026.
         let good_friday = Rule::Easter { offset: -2, basis: EasterBasis::Gregorian };
         let easter_monday = Rule::Easter { offset: 1, basis: EasterBasis::Gregorian };
         let ascension = Rule::Easter { offset: 39, basis: EasterBasis::Gregorian };
@@ -249,7 +249,7 @@ mod tests {
 
     #[test]
     fn an_nth_weekday_that_does_not_exist_produces_nothing() {
-        // February 2026 has four Sundays, so "the fifth Sunday" is not a date —
+        // February 2026 has four Sundays, so "the fifth Sunday" is not a date -
         // and must not silently become the first of March.
         let ghost = Rule::NthWeekday { month: 2, weekday: 7, nth: 5 };
         assert!(dates(&ghost, Observance::None, 2026).is_empty());
@@ -298,7 +298,7 @@ mod tests {
     fn a_shift_across_the_new_year_is_still_returned_by_a_january_query() {
         // 1 January 2028 is a Saturday; an instance shifting to the next
         // workday takes Monday the 3rd. A query over January 2028 must contain
-        // it — the case a naive "iterate over the query's years" loop drops
+        // it - the case a naive "iterate over the query's years" loop drops
         // when the base date belongs to the previous year instead.
         let new_year = Rule::Fixed { month: 1, day: 1 };
         let found = expand(
@@ -332,7 +332,7 @@ mod tests {
             dates: vec![day(2026, 3, 20), day(2027, 3, 9)],
         };
         assert_eq!(dates(&eid, Observance::None, 2026), vec![day(2026, 3, 20)]);
-        // Past the list, nothing — never a guessed date.
+        // Past the list, nothing - never a guessed date.
         assert!(dates(&eid, Observance::None, 2030).is_empty());
     }
 

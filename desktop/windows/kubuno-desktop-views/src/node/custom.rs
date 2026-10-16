@@ -3,11 +3,11 @@
 //!
 //! - [`CustomControlNode`]: a control of the application written from a level
 //!   (`#[kubuno(extends = Control)]`): painted by its class's `on_paint_background` / `on_paint`,
-//!   sized by its `get_preferred_size`. (A class extending a built-in class — `extends = Button`
-//!   — reuses that class's node: `<Button>`'s node paints through the class's `on_paint`.)
+//!   sized by its `get_preferred_size`. (A class extending a built-in class - `extends = Button`
+//!   - reuses that class's node: `<Button>`'s node paints through the class's `on_paint`.)
 //! - [`UserControlNode`]: a user control, `<RatingBar/>`: its own `.kbview` (embedded by
 //!   `#[derive(UserControl)]`), compiled once and painted inside the element with the user
-//!   control's instance as the view model — its bindings read its properties, its handlers are
+//!   control's instance as the view model - its bindings read its properties, its handlers are
 //!   its methods.
 //! - [`NonVisualNode`] / [`TimerNode`]: components that paint nothing (the designer lists them in
 //!   its component tray); a `<Timer>` raises `Tick` every `Interval` milliseconds while `Enabled`.
@@ -114,7 +114,7 @@ impl ViewNode for CustomControlNode {
 
     fn paint(&mut self, cx: &mut PaintCx<'_>, bounds: Rect) {
         // Invoked by an accessibility client (the window's `AccessAction::Click`): a click of the
-        // control, through its class (`on_click`) then the element's handler — as a real click would.
+        // control, through its class (`on_click`) then the element's handler - as a real click would.
         if cx.activate && cx.control.as_deref().is_some_and(|c| c.enabled()) {
             let mut args = crate::events::MouseEventArgs { button: crate::events::MouseButton::Left, clicks: 1, ..Default::default() };
             cx.fire_quiet("OnClick", self.on_click.as_deref(), &mut args);
@@ -143,7 +143,7 @@ impl ViewNode for CustomControlNode {
         let as_canvas: &dyn Canvas = canvas;
         self.preferred.set(Some(control.get_preferred_size(as_canvas, Size { width: bounds.right - bounds.left, height: bounds.bottom - bounds.top })));
         // Background (unless OPAQUE), paint (raising Paint to the element's handler), the paint
-        // buffer — crate::component::paint.
+        // buffer - crate::component::paint.
         let handler = self.on_paint.as_deref();
         let mut sink = crate::node::QuietSink { handlers: &mut *cx.handlers, vm: &mut *cx.vm, sender: &cx.sender, focus_id, handler };
         crate::component::paint_control(control, canvas, bounds, state, Some(&mut sink), handler.is_some());
@@ -193,8 +193,8 @@ impl ViewNode for CustomControlNode {
 // ── PaintBox ────────────────────────────────────────────────────────────────────────────────
 
 /// `<PaintBox>` (EVT-8): a surface its `OnPaint` handler draws on with the Graphics API. Painted
-/// through its class (`controls::PaintBox`) like a custom control — background (`BackColor`) then
-/// `on_paint`, which raises `Paint` with the surface lent — and never buffered while it has a
+/// through its class (`controls::PaintBox`) like a custom control - background (`BackColor`) then
+/// `on_paint`, which raises `Paint` with the surface lent - and never buffered while it has a
 /// handler (the handler reads the view model, which may change at any frame).
 pub struct PaintBoxNode {
     on_paint: Option<String>,
@@ -386,7 +386,7 @@ impl ViewNode for UserControlNode {
             return;
         };
         let designing = cx.design.is_some();
-        // Load, once, before its first paint (WinForms `UserControl.OnLoad`) — in the designer too,
+        // Load, once, before its first paint (WinForms `UserControl.OnLoad`) - in the designer too,
         // as Windows Forms does: the user control's own code runs there with `design_mode()` true
         // (sample data for the designer), while the handlers of the view using it never run there.
         if !self.loaded {
@@ -546,7 +546,7 @@ impl ViewNode for NonVisualNode {
 }
 
 /// `<Timer Interval="1000" Enabled="true" OnTick="…"/>` (WinForms `Timer`): raises `Tick` every
-/// `Interval` milliseconds while `Enabled` — never in the designer. The view keeps running
+/// `Interval` milliseconds while `Enabled` - never in the designer. The view keeps running
 /// frames for it (the host is woken for the next tick, minimised included).
 pub struct TimerNode {
     pub interval: PropSource<f32>,

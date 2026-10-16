@@ -1,4 +1,4 @@
-// English — the language the installer opens in, and the fallback for every
+// English - the language the installer opens in, and the fallback for every
 // language whose wizard translation is missing.
 export default {
   header: { installation: 'Installation', language: 'Language' },
@@ -33,7 +33,7 @@ export default {
 
   admin: {
     title: 'Your administrator account',
-    lead: 'This account administers the instance — it is the most privileged one.',
+    lead: 'This account administers the instance - it is the most privileged one.',
     pitchTitle: 'You hold the keys',
     pitch: 'No account exists before this one, and nobody else can create it: the password you choose is known to you alone.',
     username: 'Username', email: 'Email address', password: 'Password', confirm: 'Confirmation',
@@ -53,11 +53,11 @@ export default {
     logoChosen: 'Logo chosen',
     logoHint: 'PNG, JPEG, WebP or SVG · 200 KB maximum',
     logoTypes: 'PNG, JPEG, WebP or SVG only.',
-    logoTooBig: 'File too heavy — 200 KB maximum.',
+    logoTooBig: 'File too heavy - 200 KB maximum.',
     logoUnreadable: 'The file could not be read.',
     remove: 'Remove',
     light: 'light', dark: 'dark',
-    footnote: 'Logo and theme are optional — you can change them at any time in the administration console.',
+    footnote: 'Logo and theme are optional - you can change them at any time in the administration console.',
   },
 
   install: {

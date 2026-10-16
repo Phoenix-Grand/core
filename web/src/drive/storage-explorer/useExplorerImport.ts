@@ -1,6 +1,6 @@
 /**
  * Import side of the explorer: tracked uploads, the shared conflict pipeline
- * (any imported file OR folder whose name already exists prompts the user —
+ * (any imported file OR folder whose name already exists prompts the user -
  * overwrite / keep both / cancel, at any depth), the hidden <input> triggers and
  * the « Nouveau dossier » entry point (rich modal or prompt).
  */
@@ -46,7 +46,7 @@ export function useExplorerImport({ src, caps, effectiveFolderId, invalidate, t,
   })
 
   const handleFileInput = (e: ChangeEvent<HTMLInputElement>) => { const files = Array.from(e.target.files ?? []); e.target.value = ''; void importFiles(files, effectiveFolderId) }
-  // Import d'un DOSSIER (<input webkitdirectory>) — arborescence + conflits gérés par le hook.
+  // Import d'un DOSSIER (<input webkitdirectory>) - arborescence + conflits gérés par le hook.
   const handleFolderInput = (e: ChangeEvent<HTMLInputElement>) => { const files = Array.from(e.target.files ?? []); e.target.value = ''; if (caps.mkdir) void importWebkitFolder(files, effectiveFolderId) }
 
   // Nouveau dossier (modale locale ou prompt distant).

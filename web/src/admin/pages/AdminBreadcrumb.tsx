@@ -4,7 +4,7 @@
 //
 // The trail comes from `ADMIN_NAV` through `NAV_INDEX`: adding a section to that
 // declarative list gives it a correct breadcrumb with no further work, and a
-// section moved from one group to another — as Domaines and Jours fériés were —
+// section moved from one group to another - as Domaines and Jours fériés were -
 // cannot end up announcing the branch it left. The only hand-written part is
 // what a *detail* page appends (an account, a domain, a rule), and it appends it
 // through `useAdminCrumbs` rather than by rebuilding the trail.
@@ -14,7 +14,7 @@
 // The reference console omits its non-navigable menu groups from the trail,
 // because in its tree the intermediate levels happen to be real pages. Ours are
 // expand-only, so following that rule literally would leave a single segment on
-// nearly every page — the trail would say "Domaines" and never "Instance ›
+// nearly every page - the trail would say "Domaines" and never "Instance ›
 // Domaines", losing exactly the context it exists to give. Instead a group
 // segment leads to its first visible leaf, which is what clicking it in the
 // collapsed rail already does. It names a place *and* goes somewhere, which is
@@ -47,12 +47,12 @@ const useCrumbStore = create<CrumbStore>(set => ({
 }))
 
 /**
- * Appends segments while a detail view is on screen — "Marie Dupont" under
+ * Appends segments while a detail view is on screen - "Marie Dupont" under
  * Utilisateurs, "exemple.fr" under Domaines.
  *
  * Cleared on unmount, and that is the whole contract: a trail left behind by a
  * sheet somebody closed would claim they are somewhere they are not. Pass a
- * stable array (or memoise it) — the effect re-runs on identity change.
+ * stable array (or memoise it) - the effect re-runs on identity change.
  */
 export function useAdminCrumbs(extra: Crumb[]) {
   const setExtra = useCrumbStore(s => s.setExtra)
@@ -81,7 +81,7 @@ export default function AdminBreadcrumb({ tab }: { tab: string }) {
 
   // Leaving through the trail asks the same question as leaving through a
   // sheet's own control. A detail sheet that edits in place has no dialog to
-  // close, so the trail is one of the ways a half-typed field can vanish — and
+  // close, so the trail is one of the ways a half-typed field can vanish - and
   // it was the unguarded one. `onClick` is called INSTEAD of following `href`
   // (the component prevents it), so the departure is entirely ours to hold back.
   const go = (id: string) => {
@@ -101,8 +101,8 @@ export default function AdminBreadcrumb({ tab }: { tab: string }) {
   const current = t(meta.item.labelKey)
   const items: Crumb[] = [
     ...ancestors,
-    // The section stays a link while a detail view is open — that is how you get
-    // back to the list — and becomes the last, unlinked segment otherwise.
+    // The section stays a link while a detail view is open - that is how you get
+    // back to the list - and becomes the last, unlinked segment otherwise.
     extra.length > 0 ? { label: current, title: current, ...go(tab) } : { label: current, title: current },
     ...extra,
   ]
@@ -114,17 +114,17 @@ export default function AdminBreadcrumb({ tab }: { tab: string }) {
       ariaLabel={t('admin.breadcrumb')}
       // Discreet on purpose: the trail is context, the title below it is the
       // page. The shared component ships a 14px MEDIUM link; the weight is what
-      // made it compete with the 22px heading below, not the size — so only the
+      // made it compete with the 22px heading below, not the size - so only the
       // weight and the colour are toned down here, and the body size (14px) is
       // kept: a path one reads to navigate has no business being metadata-sized.
       //
       // Written as descendant variants (`[&_a]`) so the override wins on
-      // specificity — a second utility on the same element would be settled by
+      // specificity - a second utility on the same element would be settled by
       // the stylesheet's order, not by ours.
       // `no-print`: a trail is a way of NAVIGATING back, and a sheet of paper
       // has nowhere to go. It matters most above a printed report, where the
       // document carries its own head, but it is noise on every printed admin
-      // page — so it is suppressed here rather than per section.
+      // page - so it is suppressed here rather than per section.
       className="no-print min-h-5
                  [&_a]:text-[length:var(--kb-text-body)] [&_a]:font-normal
                  [&_a]:text-text-tertiary [&_a:hover]:text-primary

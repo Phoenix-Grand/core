@@ -99,7 +99,7 @@ impl BindingFormat {
 }
 
 /// One `Key=Value` (or bare) part of a `{Binding …}` expression, with its byte ranges in the
-/// attribute value as written — what the language server underlines, completes and navigates.
+/// attribute value as written - what the language server underlines, completes and navigates.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BindingPart {
     /// The key (`Mode`), `None` for a bare part (the path, first).
@@ -211,7 +211,7 @@ pub fn unquote(v: &str) -> String {
     }
 }
 
-/// Whether `s` is a `{Binding …}` expression by shape alone (`{` … `}`) — the
+/// Whether `s` is a `{Binding …}` expression by shape alone (`{` … `}`) - the
 /// same test [`crate::validate`] (and `kubuno_desktop_views::validate`) uses to skip static type-checking. Shared
 /// rather than duplicated: both modules must agree on what "this is a
 /// binding, not a literal" means.
@@ -243,7 +243,7 @@ pub struct BindingSyntax {
 }
 
 /// Parses a `{Binding Path}` / `{Binding Path, Mode=TwoWay}` / `{Res key}` attribute value. `None`
-/// for anything that is not one of these shapes at all — a caller that already checked
+/// for anything that is not one of these shapes at all - a caller that already checked
 /// [`is_binding_expr`] treats `None` here as a malformed binding, not "not a binding".
 pub fn parse_binding_syntax(raw: &str) -> Option<BindingSyntax> {
     let inner = raw.strip_prefix('{')?.strip_suffix('}')?.trim();

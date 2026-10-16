@@ -1,4 +1,4 @@
-//! (mirror of `EventArgs.cs`) — payloads for the breadcrumb trail's events.
+//! (mirror of `EventArgs.cs`) - payloads for the breadcrumb trail's events.
 //!
 //! The C# `record class`es also carry WinUI references (`BreadcrumbBarItem`,
 //! `MenuFlyout`, `PointerRoutedEventArgs?`) with no equivalent in the

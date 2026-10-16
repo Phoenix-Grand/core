@@ -4,7 +4,7 @@
 // admin panel binds its sliders + live preview to it before saving.
 
 export interface AnimParams {
-  sigma:      number // fold softness (blur) — kernel sigma, fraction of height
+  sigma:      number // fold softness (blur) - kernel sigma, fraction of height
   gain:       number // overall brightness
   amp:        number // undulation height multiplier
   speed:      number // animation speed multiplier
@@ -13,7 +13,7 @@ export interface AnimParams {
   shift:      number // vertical position offset
 }
 
-// Values tuned live by the user (2026-07) — mirrored in migration 000031.
+// Values tuned live by the user (2026-07) - mirrored in migration 000031.
 export const ANIM_DEFAULTS: AnimParams = {
   sigma: 0.004,
   gain: 4.7,

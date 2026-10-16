@@ -40,7 +40,7 @@ export default function ConfirmDialog({
 
   // The footer belongs to the window now: a confirmation is a dialog like any
   // other, and it was the last one still drawing two full-width filled buttons
-  // of its own — the shape every other dialog had just stopped using.
+  // of its own - the shape every other dialog had just stopped using.
   return (
     <FloatingWindow
       title={title}

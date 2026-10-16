@@ -65,12 +65,12 @@ impl Modify for SecurityAddon {
     }
 }
 
-/// GET /api/v1/openapi.json — sert la spec OpenAPI du core (public).
+/// GET /api/v1/openapi.json - sert la spec OpenAPI du core (public).
 pub async fn openapi_json() -> impl IntoResponse {
     Json(ApiDoc::openapi())
 }
 
-/// GET /api/v1/docs — documentation interactive (Redoc).
+/// GET /api/v1/docs - documentation interactive (Redoc).
 ///
 /// Redoc s'auto-initialise depuis l'élément `<redoc>` : aucun script inline,
 /// donc compatible avec la CSP stricte du host (script-src autorise jsdelivr).

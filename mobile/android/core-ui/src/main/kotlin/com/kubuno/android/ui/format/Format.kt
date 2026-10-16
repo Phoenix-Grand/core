@@ -7,7 +7,7 @@ import java.util.Locale
 
 /**
  * Size formatting mirrors the web (drive/frontend/src/api/format.ts): base 1024,
- * one decimal for KB/MB, two for GB, none for bytes. Units are localized —
+ * one decimal for KB/MB, two for GB, none for bytes. Units are localized -
  * French uses o/Ko/Mo/Go, not B/KB/MB/GB.
  */
 fun formatSize(bytes: Long, units: SizeUnits): String = when {
@@ -23,7 +23,7 @@ private val dateFormatter: DateTimeFormatter =
     DateTimeFormatter.ofPattern("dd MMM yyyy")
 
 /**
- * Server timestamps are ISO-8601 UTC. The web drops dates at or before 1971 —
+ * Server timestamps are ISO-8601 UTC. The web drops dates at or before 1971 -
  * that value is the "no date" sentinel, not a real modification time.
  */
 fun formatModified(isoTimestamp: String?): String? {

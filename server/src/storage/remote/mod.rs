@@ -1,4 +1,4 @@
-//! Connecteurs de stockage distant — CENTRALISÉS dans le core.
+//! Connecteurs de stockage distant - CENTRALISÉS dans le core.
 //! Un montage distant (webdav, nextcloud, owncloud, sftp, ftp, smb, nfs, gdrive,
 //! dropbox) est exposé via le trait `RemoteConnector`. Le frontend (module drive)
 //! y accède en proxifiant vers le core. Cf. [[project_storage_centralization]].

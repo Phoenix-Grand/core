@@ -1,8 +1,8 @@
 //! Keyboard, wheel, cursor, clipboard and timer services of the host.
 //!
 //! [`super::Frame`] must stay `Copy` (every page takes it by reference and
-//! several store it), so the variable-length part of a frame's input — the
-//! keys pressed and the text typed since the previous frame — does not travel
+//! several store it), so the variable-length part of a frame's input - the
+//! keys pressed and the text typed since the previous frame - does not travel
 //! in it. It sits in a thread-local queue instead, filled by the window
 //! procedure and handed over at the start of each frame:
 //!
@@ -23,14 +23,14 @@
 //! nobody consumed yet. This is how layers cooperate without knowing each
 //! other: the gallery shell takes `Ctrl+Tab` before the page runs, a focus
 //! manager takes `Tab`, an open menu takes the arrows and `Escape`, and a text
-//! field takes whatever text is left — the web's `preventDefault` +
+//! field takes whatever text is left - the web's `preventDefault` +
 //! `stopPropagation`, in paint order.
 //!
 //! ## IME composition
 //!
 //! While an input method composes (Japanese, Chinese, Korean…), the host
-//! reports the in-progress string as [`InputEvent::Composition`] — `text` and
-//! the IME's `caret` in it — every time it changes, and an empty `text` when
+//! reports the in-progress string as [`InputEvent::Composition`] - `text` and
+//! the IME's `caret` in it - every time it changes, and an empty `text` when
 //! the composition ends or is cancelled. [`composition`] peeks at the latest
 //! state of the frame. The committed result still arrives as ordinary
 //! [`InputEvent::Text`], and the IME's own composition window still shows, so
@@ -48,7 +48,7 @@ use windows::Win32::Graphics::Direct2D::Common::D2D1_COLOR_F;
 ///
 /// The values are Win32's `VK_*`; they are restated here as plain `u16` so a
 /// page never needs the `windows` crate to read a key. Letters and digits are
-/// their ASCII upper-case code (`b'A' as u16`, `b'0' as u16`) — see
+/// their ASCII upper-case code (`b'A' as u16`, `b'0' as u16`) - see
 /// [`vk::letter`] and [`vk::digit`].
 pub mod vk {
     pub const BACK: u16 = 0x08;
@@ -74,7 +74,7 @@ pub mod vk {
     pub const DELETE: u16 = 0x2E;
     pub const LWIN: u16 = 0x5B;
     pub const RWIN: u16 = 0x5C;
-    /// The context-menu key (`VK_APPS`) — opens a context menu like Shift+F10.
+    /// The context-menu key (`VK_APPS`) - opens a context menu like Shift+F10.
     pub const APPS: u16 = 0x5D;
     pub const F1: u16 = 0x70;
     pub const F2: u16 = 0x71;
@@ -134,7 +134,7 @@ impl Modifiers {
         !self.ctrl && !self.shift && !self.alt
     }
 
-    /// The web's "command" modifier on this platform — Ctrl on Windows. What a
+    /// The web's "command" modifier on this platform - Ctrl on Windows. What a
     /// Ctrl+C / Ctrl+Z shortcut tests, so the intent reads in the code.
     pub fn command(self) -> bool {
         self.ctrl
@@ -164,7 +164,7 @@ impl Modifiers {
 }
 
 /// One discrete input event of a frame. Pointer motion, buttons and wheel are
-/// NOT here — they are state, carried by [`super::Frame`].
+/// NOT here - they are state, carried by [`super::Frame`].
 ///
 /// `#[non_exhaustive]`: match with a trailing `_ => {}` arm, new kinds of
 /// events may be added (IME composition was).
@@ -177,7 +177,7 @@ pub enum InputEvent {
     /// `Text("a")`. System keys (Alt chords, F10) are reported too, and still
     /// reach Windows afterwards so Alt+F4 and Alt+Space keep working.
     Key { vk: u16, down: bool, repeat: bool, mods: Modifiers },
-    /// Text typed — one or more characters, already combined (surrogate pairs,
+    /// Text typed - one or more characters, already combined (surrogate pairs,
     /// dead keys, AltGr, IME results). Control characters (Backspace, Tab,
     /// Enter, Escape, Ctrl+letter) are never text: read them as [`Self::Key`].
     Text(String),
@@ -188,7 +188,7 @@ pub enum InputEvent {
     /// `compositionupdate`): `text` is the whole composition string as it
     /// stands (`GCS_COMPSTR`), `caret` the IME's cursor in it, in `char`s. An
     /// EMPTY `text` means the composition ended or was cancelled
-    /// (`compositionend`) — stop drawing it.
+    /// (`compositionend`) - stop drawing it.
     ///
     /// Informational: the committed result still arrives as [`Self::Text`],
     /// and the IME's own composition window still shows. An editor may draw
@@ -209,7 +209,7 @@ pub enum InputEvent {
     FilesDropped { x: i32, y: i32, files: Vec<String> },
 }
 
-/// Why the host window is closing — carried by [`InputEvent::CloseRequested`]
+/// Why the host window is closing - carried by [`InputEvent::CloseRequested`]
 /// (WinForms `CloseReason`, the values a host can tell apart).
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Hash)]
 pub enum CloseReason {
@@ -271,16 +271,16 @@ impl InputEvent {
     }
 }
 
-/// The pointer shapes a page may ask for with [`set_cursor`] — the CSS
+/// The pointer shapes a page may ask for with [`set_cursor`] - the CSS
 /// `cursor` values the web design system uses.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Hash)]
 pub enum Cursor {
     /// `default`.
     #[default]
     Arrow,
-    /// `text` — over editable text.
+    /// `text` - over editable text.
     IBeam,
-    /// `pointer` — over a link or a clickable card.
+    /// `pointer` - over a link or a clickable card.
     Hand,
     /// `ew-resize` / `col-resize`.
     ResizeEW,
@@ -296,11 +296,11 @@ pub enum Cursor {
     NotAllowed,
     /// `wait` / `progress`.
     Wait,
-    /// `crosshair` — over a 2-D picking surface (a colour area).
+    /// `crosshair` - over a 2-D picking surface (a colour area).
     Crosshair,
 }
 
-/// Mouse-wheel travel of one notch, in DIP — what a page scrolls by per
+/// Mouse-wheel travel of one notch, in DIP - what a page scrolls by per
 /// notch unless it has a better idea (Chromium on Windows scrolls 100 px per
 /// notch at the default three lines).
 pub const WHEEL_NOTCH_DIP: f32 = 100.0;
@@ -354,12 +354,12 @@ fn ui_windows() -> std::sync::MutexGuard<'static, Vec<UiWindow>> {
 pub const WM_KUBUNO_WAKE: u32 = windows::Win32::UI::WindowsAndMessaging::WM_APP + 0x4B51;
 
 /// A `Send + Sync` handle that wakes the host window of one UI thread from
-/// any thread: the next frame runs soon — even while the window is minimised
+/// any thread: the next frame runs soon - even while the window is minimised
 /// or hidden, when no `WM_PAINT` would come (the host then renders directly).
 /// What `kubuno_desktop_views`' `UiDispatcher` and async executor use after posting
 /// work for the UI thread (WinForms' `Control.BeginInvoke` wake-up).
 ///
-/// Create it on the UI thread with [`ui_waker`] — before or after the window
+/// Create it on the UI thread with [`ui_waker`] - before or after the window
 /// exists: it finds the thread's host window when it wakes. Waking before the
 /// window exists, or after it is gone, does nothing. Several wake-ups before
 /// the window processes the first one are coalesced into one message.
@@ -612,7 +612,7 @@ pub(crate) fn main_hwnd() -> Option<HWND> {
 }
 
 /// Replaces this thread's frame input with `events` (none consumed), as the host does when a
-/// frame starts — for the tests of code that reads keys and text from this module ([`consume`],
+/// frame starts - for the tests of code that reads keys and text from this module ([`consume`],
 /// [`take_key`]…) without a window. Not for application code: a real window's frame input is
 /// the host's.
 #[doc(hidden)]
@@ -627,11 +627,11 @@ pub fn events() -> Vec<InputEvent> {
     events_unconsumed()
 }
 
-/// Marks this frame's wheel travel as used — the web's `preventDefault` on a
+/// Marks this frame's wheel travel as used - the web's `preventDefault` on a
 /// wheel event. A control that scrolls (a list, a slider stepping on the wheel)
 /// claims it, so the scrolled area around it does not ALSO scroll.
 /// Paints the Kubuno caption (`Chrome::Kubuno`) in `band` with `ink` for its
-/// title and buttons — and the window border with it — instead of the theme's
+/// title and buttons - and the window border with it - instead of the theme's
 /// accent. Asked for EVERY frame by whatever owns the top of the window (a
 /// ribbon whose tab strip must continue into the caption); a frame that does
 /// not ask gets the accent back.
@@ -687,7 +687,7 @@ pub fn consume(mut pred: impl FnMut(&InputEvent) -> bool) -> Vec<InputEvent> {
 }
 
 /// Consumes EVERY key-down of `vk` with exactly `mods` this frame (repeats
-/// included) and returns how many there were — `0` when the key was not
+/// included) and returns how many there were - `0` when the key was not
 /// pressed. The matching key-ups are left alone.
 pub fn take_key(vk: u16, mods: Modifiers) -> usize {
     consume(|e| e.is_key_down(vk, mods)).len()
@@ -742,7 +742,7 @@ pub fn set_cursor(cursor: Cursor) {
 }
 
 /// Asks for one more frame in about `ms` milliseconds, even if no input
-/// arrives — a caret blink, a spinner, a small animation. Several calls in one
+/// arrives - a caret blink, a spinner, a small animation. Several calls in one
 /// frame keep the shortest delay; the request is re-armed by asking again on
 /// the frame it produces (it is one-shot).
 pub fn request_repaint_after(ms: u32) {
@@ -825,7 +825,7 @@ pub fn cancel_close() {
     CLOSE_CANCELLED.with(|c| c.set(true));
 }
 
-/// Asks the host window to close with `reason` — [`close_window`] with a
+/// Asks the host window to close with `reason` - [`close_window`] with a
 /// reason a deferring page ([`defer_close`]) receives in its
 /// [`InputEvent::CloseRequested`] (WinForms `Application.Exit` is
 /// [`CloseReason::ApplicationExitCall`]). Asynchronous (posted). A no-op
@@ -866,7 +866,7 @@ extern "system" {
 }
 
 /// Asks the host window to close, exactly as its caption's close button
-/// does (`WM_CLOSE`): the message loop ends once the window is gone — unless
+/// does (`WM_CLOSE`): the message loop ends once the window is gone - unless
 /// a close handler (`host::set_close_handler`) cancels it; `host::quit` does
 /// not ask. A no-op before the window exists.
 pub fn close_window() {

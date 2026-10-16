@@ -1,7 +1,7 @@
-//! # `kubuno-desktop-views-model` — the element registry model of `.kbview` views
+//! # `kubuno-desktop-views-model` - the element registry model of `.kbview` views
 //!
 //! The platform-neutral half of the element registry (`vskubuno/docs/WEB-VIEWS.md` WV-1,
-//! `docs/VIEWS-SPEC.md` §10): no renderer, no Windows API, no `kubuno_desktop_ui` — it builds for every
+//! `docs/VIEWS-SPEC.md` §10): no renderer, no Windows API, no `kubuno_desktop_ui` - it builds for every
 //! desktop OS and for `wasm32-unknown-unknown`, so the web compiler, the Vite plugin and the
 //! language server's web profile share it with the desktop.
 //!

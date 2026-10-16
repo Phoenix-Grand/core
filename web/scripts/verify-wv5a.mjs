@@ -94,16 +94,16 @@ for (const dir of ['ltr', 'rtl']) {
 
 // ── Accordion: Open two-way, OnToggled ──
 await open('Accordion')
-check('Accordion: bound section open at load (first = true)', (await text('first:')).startsWith('first: true — toggles: 0'), await text('first:'))
+check('Accordion: bound section open at load (first = true)', (await text('first:')).startsWith('first: true - toggles: 0'), await text('first:'))
 await clickText('Bound: Open two-way')
 await sleep(300)
-check('Accordion: closing the bound section writes Open back and raises OnToggled(false)', (await text('first:')) === 'first: false — toggles: 1 (closed)', await text('first:'))
+check('Accordion: closing the bound section writes Open back and raises OnToggled(false)', (await text('first:')) === 'first: false - toggles: 1 (closed)', await text('first:'))
 await clickText('Bound: Open two-way')
 await sleep(300)
-check('Accordion: reopening raises OnToggled(true)', (await text('first:')) === 'first: true — toggles: 2 (opened)', await text('first:'))
+check('Accordion: reopening raises OnToggled(true)', (await text('first:')) === 'first: true - toggles: 2 (opened)', await text('first:'))
 await clickText('Literal: Open=true')
 await sleep(300)
-check('Accordion: an unbound section raises OnToggled too', (await text('first:')) === 'first: true — toggles: 3 (closed)', await text('first:'))
+check('Accordion: an unbound section raises OnToggled too', (await text('first:')) === 'first: true - toggles: 3 (closed)', await text('first:'))
 
 // ── ContextMenu: CheckOnClick, RadioGroup, ItemsSource, hidden item ──
 await open('ContextMenu')
@@ -113,7 +113,7 @@ const items = await evaluate(`[...document.querySelectorAll('[data-kb-menu] butt
 check('ContextMenu: MenuItem children then ItemsSource commands, the hidden one left out', items.includes('Rename') && items.includes('Move to trash') && !items.includes('Not shown') && items.indexOf('Delete') < items.indexOf('Rename'), items.join(' / '))
 await clickText('Show hidden files')
 await sleep(200)
-check('ContextMenu: CheckOnClick toggles, writes Checked back, raises OnCheckedChanged(true)', (await text('Last:')) === 'Last: OnCheckedChanged true — hidden files: true', await text('Last:'))
+check('ContextMenu: CheckOnClick toggles, writes Checked back, raises OnCheckedChanged(true)', (await text('Last:')) === 'Last: OnCheckedChanged true - hidden files: true', await text('Last:'))
 await openMenu()
 await clickText('Grid')
 await sleep(200)

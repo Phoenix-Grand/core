@@ -1,9 +1,9 @@
 //! Code-behind of the user control `WaffleButton` (`waffle_button.kbcontrol`, see its comment): the
 //! header's waffle, which opens the app launcher ([`crate::WaffleMenu`]) in a
-//! [`kubuno_desktop::popup::Popup`] — a floating window of its own, so the launcher may extend beyond a small
+//! [`kubuno_desktop::popup::Popup`] - a floating window of its own, so the launcher may extend beyond a small
 //! app window.
 //!
-//! Drop it in a view's header and give it the app's [`LauncherService`] — once for every button of
+//! Drop it in a view's header and give it the app's [`LauncherService`] - once for every button of
 //! the thread with [`set_default_launcher`], or per button with [`WaffleButton::set_service`]. The
 //! service lists the apps and the favourites, opens an app and saves the favourites; the panel closes
 //! after a launch, on Escape (an edit is abandoned first) and on a click outside.

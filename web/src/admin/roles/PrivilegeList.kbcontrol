@@ -1,4 +1,4 @@
-<!-- PrivilegeList — converted from PrivilegeList.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- PrivilegeList - converted from PrivilegeList.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="PrivilegeListProps">
   <Panel Class="contents">
     <Label Text="{Res admin.priv_none}" Overflow="Wrap" ForeColor="TextTertiary" Visible="{Binding show_case_1}" Class="py-3"/>

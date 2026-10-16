@@ -1,64 +1,64 @@
-//! Component family `choice` — declared with the `component!` table (see
+//! Component family `choice` - declared with the `component!` table (see
 //! `../macros.rs`) plus, in this same file, the view nodes those components
 //! build. Compiled only with the `family-choice` feature while the families are
 //! being written in parallel; the feature is on by default once integrated.
 //!
 //! Five components, read straight off the real builder API in
 //! `kubuno-desktop-ui/src/buttons.rs` (`IconButton`, `CheckBox`, `RadioButton`) and
-//! `kubuno-desktop-ui/src/range.rs` (`Slider`, `NumericField`) — the same "the tag
+//! `kubuno-desktop-ui/src/range.rs` (`Slider`, `NumericField`) - the same "the tag
 //! name IS the builder's name, an attribute IS a fluent setter" rule the five
 //! phase-2a components (`../components.rs`) already follow. Property names
 //! are `PascalCase`; enum values are the real Rust variant names.
 //!
 //! ## What each node does for real interaction
 //!
-//! * [`IconButtonNode`] — press/release like `ButtonNode`, but hit-tested as a
+//! * [`IconButtonNode`] - press/release like `ButtonNode`, but hit-tested as a
 //!   disc (`IconButton::hit_test` is already circular; this node never
 //!   re-derives that geometry, it just calls it).
-//! * [`CheckBoxNode`] — a two-state bindable `Checked`, written back and
+//! * [`CheckBoxNode`] - a two-state bindable `Checked`, written back and
 //!   `OnCheckedChanged`-dispatched on a completed click, exactly the shape
 //!   `SwitchNode` already proves (same-frame write-back visibility included).
-//!   The replica's three-state cycle (`Indeterminate`) is not modelled — see
+//!   The replica's three-state cycle (`Indeterminate`) is not modelled - see
 //!   the module's "Deliberately deferred" note below.
-//! * [`RadioButtonNode`] — mutual exclusion falls out of ordinary binding: a
+//! * [`RadioButtonNode`] - mutual exclusion falls out of ordinary binding: a
 //!   radio does not own a private `Checked` flag, it compares its own `Value`
 //!   against a **shared** `SelectedValue` path. Two `<RadioButton Group="…"
 //!   SelectedValue="{Binding Theme, Mode=TwoWay}">` elements bound to the same
 //!   path exclude each other for free, with no group registry in the
-//!   interpreter — `Group` itself is advisory (and doubles as a stable
+//!   interpreter - `Group` itself is advisory (and doubles as a stable
 //!   `FocusId` seed when no `x:Name` is given); see the property's own doc.
-//! * [`SliderNode`] — drags with the real `Slider::drag_to` (itself
+//! * [`SliderNode`] - drags with the real `Slider::drag_to` (itself
 //!   "wherever the pointer is, clamped", not a grab-offset drag), live
 //!   two-way write-back every frame the value actually moves, matching
 //!   `TextFieldNode`'s "fire on every change, not just on release".
-//! * [`NumericFieldNode`] — the two step buttons are real, hit-tested,
+//! * [`NumericFieldNode`] - the two step buttons are real, hit-tested,
 //!   pressed/released and two-way bound exactly like a click anywhere else in
 //!   this crate. Free-text typing (`NumericField::begin_edit`/`commit`, the
 //!   `NumericEdit` caret/selection machinery `TextFieldNode` has an analogue
-//!   of for `TextField`) is **not** wired — see "Deliberately deferred".
+//!   of for `TextField`) is **not** wired - see "Deliberately deferred".
 //!
 //! ## Deliberately deferred
 //!
-//! * `CheckBox`'s three-state cycle (`ThreeState`/`Indeterminate`) — every
+//! * `CheckBox`'s three-state cycle (`ThreeState`/`Indeterminate`) - every
 //!   worked example this phase targets is a plain on/off check box; a
 //!   dedicated `CheckState` enum property is mechanical to add later and would
 //!   be speculative metadata today (the same posture the crate's own top-level
 //!   doc takes toward Dock/Anchor layout).
 //! * `NumericField`'s free-text typing, `DecimalPlaces`, `Hexadecimal` and
-//!   `ThousandsSeparator` — the field always shows its non-editing
+//!   `ThousandsSeparator` - the field always shows its non-editing
 //!   `display_text()`; only the spin buttons and their two-way write-back are
 //!   wired. Typing would need the same `EditInput`/focus-text plumbing
 //!   `TextFieldNode` already has, applied to `NumericField::begin_edit`/
-//!   `commit` — a real feature, just not one either worked example here needs,
+//!   `commit` - a real feature, just not one either worked example here needs,
 //!   and out of scope for one family's slice of this crate.
 //! * `RadioButton`'s keyboard roving tabindex (arrow-key navigation between
 //!   options in a group, `kubuno_desktop_ui::buttons::radio_arrow_target`/
-//!   `radio_tab_stop`) — those two free functions are exactly what a future
+//!   `radio_tab_stop`) - those two free functions are exactly what a future
 //!   pass would drive from a per-`Group` `FocusRing` extension; this phase
 //!   gets mutual exclusion (the part every worked example needs) from the
 //!   shared `SelectedValue` binding alone, with no keyboard grouping.
 //! * `Slider`'s tick marks (`TickStyle`/`TickFrequency`) and value bubble
-//!   (`Slider::paint_value_bubble`) — the bubble is a floating overlay
+//!   (`Slider::paint_value_bubble`) - the bubble is a floating overlay
 //!   (`host::overlay`) the interpreter has no concept of yet (`PaintCx` paints
 //!   one rectangle, not a layered popup), and no worked example asks for
 //!   ticks.
@@ -78,8 +78,8 @@ use crate::registry::macros::component;
 use crate::registry::ComponentMeta;
 
 // `press_release` (press-then-release-inside is a click) and event dispatch
-// (`InteractCx::fire`) are shared with every other family now — see
-// `crate::node`/`crate::icon`'s module docs — rather than each re-derived
+// (`InteractCx::fire`) are shared with every other family now - see
+// `crate::node`/`crate::icon`'s module docs - rather than each re-derived
 // here.
 
 /// Resolves an `Icon="…"` value to the `&'static str` glyph name
@@ -117,7 +117,7 @@ impl IconButtonNode {
         b
     }
 
-    /// See `ButtonNode::interact` (`crate::node`) — the same press/release
+    /// See `ButtonNode::interact` (`crate::node`) - the same press/release
     /// shape, over a circular hit target instead of a rectangular one.
     pub(crate) fn interact(&mut self, ix: &mut InteractCx<'_>, bounds: Rect) -> WidgetState {
         let btn = self.build(ix.vm);
@@ -141,7 +141,7 @@ impl ViewNode for IconButtonNode {
         self.build(vm).measure(c)
     }
 
-    /// A fixed-`Diameter` circle, not a `w-full` widget — see
+    /// A fixed-`Diameter` circle, not a `w-full` widget - see
     /// `display::BadgeNode::intrinsic_width`'s doc, the same reasoning here:
     /// without this a `<Stack>` column hands it a full-width block and the
     /// circle paints centred somewhere far from the row's left edge instead
@@ -201,7 +201,7 @@ impl CheckBoxNode {
         b.check(state)
     }
 
-    /// See `SwitchNode::interact` (`crate::node`) — the exact same two-way
+    /// See `SwitchNode::interact` (`crate::node`) - the exact same two-way
     /// write-back / `OnToggled`-style dispatch shape, over `Checked` instead
     /// of `On`.
     pub(crate) fn interact(&mut self, ix: &mut InteractCx<'_>, bounds: Rect) -> WidgetState {
@@ -263,7 +263,7 @@ impl ViewNode for CheckBoxNode {
 }
 
 // ─────────────────────────────────────────────────────────────────────────
-// RadioButton — mutual exclusion via a SHARED `SelectedValue` binding; see
+// RadioButton - mutual exclusion via a SHARED `SelectedValue` binding; see
 // the module doc.
 // ─────────────────────────────────────────────────────────────────────────
 
@@ -288,10 +288,10 @@ impl RadioButtonNode {
         KRadioButton::new(&text).description(&self.description.resolve(vm)).selected(selected)
     }
 
-    /// Selected is not a flag this node owns — it is `resolve(SelectedValue)
+    /// Selected is not a flag this node owns - it is `resolve(SelectedValue)
     /// == resolve(Value)`, so two radios bound to the same `SelectedValue`
     /// path are mutually exclusive without the interpreter ever tracking
-    /// "siblings". A click on an ALREADY selected radio is a no-op — a radio
+    /// "siblings". A click on an ALREADY selected radio is a no-op - a radio
     /// does not toggle off, the same rule `kubuno_desktop_controls::buttons::
     /// select_radio` encodes for the replica.
     pub(crate) fn interact(&mut self, ix: &mut InteractCx<'_>, bounds: Rect) -> WidgetState {
@@ -350,7 +350,7 @@ pub struct SliderNode {
     pub large_step: PropSource<f32>,
     pub focus_id: Option<FocusId>,
     pub on_value_changed: Option<String>,
-    /// Whether a drag started on this slider is still in progress — kept
+    /// Whether a drag started on this slider is still in progress - kept
     /// across frames for the same reason `ButtonNode::pressed` is: the
     /// pointer may wander outside `bounds` mid-drag and the slider must keep
     /// following it, exactly like `Slider::drag_to`'s own contract (it does
@@ -374,7 +374,7 @@ impl SliderNode {
 
     /// Drags with the real `Slider::drag_to` every frame the pointer is down
     /// and either the drag already started or the press landed on the
-    /// slider's hit target (`Slider::hit_test`, wider than the rail — see
+    /// slider's hit target (`Slider::hit_test`, wider than the rail - see
     /// that type's own doc). Live write-back on every value change, the same
     /// "fire on every change, not just on release" `TextFieldNode` uses for
     /// typing.
@@ -422,7 +422,7 @@ impl ViewNode for SliderNode {
 }
 
 // ─────────────────────────────────────────────────────────────────────────
-// NumericField — spin buttons only; see the module doc's "Deliberately
+// NumericField - spin buttons only; see the module doc's "Deliberately
 // deferred" for why free-text typing is not wired.
 // ─────────────────────────────────────────────────────────────────────────
 
@@ -437,9 +437,9 @@ pub struct NumericFieldNode {
     pub thousands: bool,
     pub focus_id: Option<FocusId>,
     pub on_value_changed: Option<String>,
-    /// The step button held down, across frames — see `ButtonNode::pressed`.
+    /// The step button held down, across frames - see `ButtonNode::pressed`.
     pressed_part: Option<SpinPart>,
-    /// The step button the pointer is over — persisted so `paint`'s freshly
+    /// The step button the pointer is over - persisted so `paint`'s freshly
     /// rebuilt field (a SEPARATE instance from `interact`'s, per this crate's
     /// "rebuilt every frame" rule) still paints the right one lit.
     hover_part: Option<SpinPart>,
@@ -459,7 +459,7 @@ impl NumericFieldNode {
     }
 
     /// Press/release over whichever step button (`SpinPart::Up`/`Down`) the
-    /// pointer is on, using the real `NumericField::spin_part_at`/`step` — a
+    /// pointer is on, using the real `NumericField::spin_part_at`/`step` - a
     /// completed click steps the value by the real `Increment`, clamped by
     /// the replica itself (`NumericUpDown::up_button`/`down_button`), then
     /// writes back and dispatches exactly like every other node here.
@@ -531,7 +531,7 @@ component! {
             "Diameter of the button, in pixels.",
         ),
         PropertyMeta::new("Glyph", PropKind::F32, "18", "Size of the icon inside the button, in pixels."),
-        // Note: A resting tint (`surface-2`) instead of no background at rest — the waffle pencil's look.
+        // Note: A resting tint (`surface-2`) instead of no background at rest - the waffle pencil's look.
         PropertyMeta::new("Filled", PropKind::Bool, "false",
             "Gives the button a tinted background.",
         ),
@@ -620,7 +620,7 @@ component! {
 component! {
     mod_name: radio_button,
     name: "RadioButton",
-    // Note: A mutually-exclusive option (`kubuno_desktop_ui::buttons::RadioButton` replica). Selection is not a flag this element owns: it is `SelectedValue == Value`, so several `<RadioButton>` elements bound to the SAME `SelectedValue` path exclude each other with no group registry — see this family's module doc.
+    // Note: A mutually-exclusive option (`kubuno_desktop_ui::buttons::RadioButton` replica). Selection is not a flag this element owns: it is `SelectedValue == Value`, so several `<RadioButton>` elements bound to the SAME `SelectedValue` path exclude each other with no group registry - see this family's module doc.
     doc: "An option button: only one option of a group can be selected.",
     ctor: kubuno_desktop_ui::buttons::RadioButton::new("Clair"),
     children: ChildrenModel::None,
@@ -629,7 +629,7 @@ component! {
         PropertyMeta::new("Text", PropKind::String, "", "Text displayed next to the option."),
         PropertyMeta::new("Description", PropKind::String, "", "Secondary text displayed under the label."),
         PropertyMeta::new("Value", PropKind::String, "", "Value this option stands for."),
-        // Note: Advisory grouping id: not enforced by the interpreter (exclusion comes from the shared `SelectedValue` binding alone), but used together with `Value` to seed a stable `FocusId` when the element carries no `x:Name` — read as a plain literal, never as a `{Binding …}`, since only stability across frames matters here.
+        // Note: Advisory grouping id: not enforced by the interpreter (exclusion comes from the shared `SelectedValue` binding alone), but used together with `Value` to seed a stable `FocusId` when the element carries no `x:Name` - read as a plain literal, never as a `{Binding …}`, since only stability across frames matters here.
         PropertyMeta::new("Group", PropKind::String, "",
             "Name of the group this option belongs to.",
         ),
@@ -820,7 +820,7 @@ mod tests {
     }
 
     /// Everything an [`InteractCx`] borrows from, owned across several
-    /// frames — see `crate::node::tests::Harness`, which this mirrors (that
+    /// frames - see `crate::node::tests::Harness`, which this mirrors (that
     /// one is private to `crate::node`).
     struct Harness {
         vm: MapViewModel,
@@ -860,7 +860,7 @@ mod tests {
     // ── Compiling from XML: defaults, diagnostics with line/column ─────
 
     /// `CompiledView`'s `Ok` side is not `Debug` (a compiled widget tree has
-    /// no useful textual form — see `crate::compile::tests`' own note), so
+    /// no useful textual form - see `crate::compile::tests`' own note), so
     /// `Result::unwrap_err` is not reachable here; this extracts the `Err`
     /// side directly instead, mirroring that module's private helper.
     fn expect_err(src: &str) -> Vec<crate::syntax::Diagnostic> {
@@ -930,7 +930,7 @@ mod tests {
         };
         let mut h = Harness::new(MapViewModel::new());
         h.handlers = handlers;
-        // A 36 DIP circle at the origin — its centre (18, 18) is on it.
+        // A 36 DIP circle at the origin - its centre (18, 18) is on it.
         let bounds = Rect::new(0.0, 0.0, 36.0, 36.0);
 
         h.frame(bounds, (18.0, 18.0), true, |ix, b| node.interact(ix, b));
@@ -960,7 +960,7 @@ mod tests {
         let bounds = Rect::new(0.0, 0.0, 36.0, 36.0);
 
         // (2, 2) is in the bounding SQUARE's corner but outside the inscribed
-        // circle — a click there must not register.
+        // circle - a click there must not register.
         h.frame(bounds, (2.0, 2.0), true, |ix, b| node.interact(ix, b));
         h.frame(bounds, (2.0, 2.0), false, |ix, b| node.interact(ix, b));
         assert_eq!(h.vm.get("Hit"), None, "the corner of the square is outside the circle");
@@ -1066,7 +1066,7 @@ mod tests {
         assert_eq!(h.vm.get("Theme"), Some(Value::Str("Light".to_string())));
         assert_eq!(h.events.len(), 1);
         assert!(matches!(h.events[0].kind, ViewEventKind::Changed(ref v) if v == "Light"));
-        // "Dark" resolves unselected purely from the shared path — no group
+        // "Dark" resolves unselected purely from the shared path - no group
         // registry involved.
         assert_ne!(dark.selected_value.resolve(&h.vm), dark.value.resolve(&h.vm));
     }
@@ -1125,7 +1125,7 @@ mod tests {
         assert!(!h.events.is_empty(), "at least one OnValueChanged-worthy change while dragging");
 
         // Releasing outside the rail: dragging still tracks the pointer,
-        // clamped — `Slider::drag_to` does not require the point to be
+        // clamped - `Slider::drag_to` does not require the point to be
         // inside the rail.
         h.frame(bounds, (600.0, 12.0), false, |ix, b| node.interact(ix, b));
         match h.vm.get("Volume") {
@@ -1138,7 +1138,7 @@ mod tests {
     fn slider_measure_does_not_panic_without_a_live_canvas_dependent_path() {
         // `Slider::measure` only reads `TrackBar::preferred_size` and this
         // family's own tick/thumb-reach geometry, none of which needs a live
-        // `Canvas` — mirrors `compile::tests`' own note on why this crate's
+        // `Canvas` - mirrors `compile::tests`' own note on why this crate's
         // tests never construct one.
         let node = SliderNode {
             min: PropSource::Literal(0.0),

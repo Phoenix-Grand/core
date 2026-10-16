@@ -2,8 +2,8 @@
 //! properties that make the model correct rather than merely present.
 //!
 //! Exercises migration `000060` (the table, the chain function, the two mirror
-//! triggers) together with `crate::settings` — resolution policy, "revert =
-//! delete", lock enforcement — against a real database.
+//! triggers) together with `crate::settings` - resolution policy, "revert =
+//! delete", lock enforcement - against a real database.
 
 mod common;
 
@@ -16,7 +16,7 @@ use uuid::Uuid;
 
 // The store's write helpers take (`&DbPool` for reads, `&mut DbTx` for the
 // write). These wrappers open a short transaction, run the write, and commit
-// only on success — reproducing the autocommit semantics the tests relied on
+// only on success - reproducing the autocommit semantics the tests relied on
 // when they used a pooled connection.
 async fn set_value(
     db: &DbPool,
@@ -62,7 +62,7 @@ async fn clear_value(
 // The suite runs in parallel against ONE database, so every test owns its own
 // setting key and its own subtree. Sharing a real key (`security.max_sessions`)
 // made the tests fight over the instance row and fail in whichever order they
-// happened to interleave — a flake that says nothing about the code.
+// happened to interleave - a flake that says nothing about the code.
 
 struct Tree {
     root:  Uuid,
@@ -141,7 +141,7 @@ async fn cleanup(db: &DbPool, tree: &Tree) {
     let _ = db.execute("DELETE FROM core.settings WHERE key = $1", params![&tree.key]).await;
 }
 
-/// Writes straight to the table — the fixture path, deliberately bypassing the
+/// Writes straight to the table - the fixture path, deliberately bypassing the
 /// store so the store's own guards can be tested against it.
 async fn put(db: &DbPool, key: &str, scope: &SettingScope, value: Value, locked: bool) {
     db.execute(
@@ -202,7 +202,7 @@ async fn an_inherited_scope_holds_no_row_and_reverting_is_a_deletion() {
 
     put(&db, &t.key, &SettingScope::org_unit(t.zone), json!(10), false).await;
 
-    // The child inherits — and stores nothing. This is the invariant the whole
+    // The child inherits - and stores nothing. This is the invariant the whole
     // feature rests on: materialising here would freeze the value.
     let r = chain::resolve_for(&db, &t.key, &team_scope).await.expect("résolution");
     assert_eq!(r.value, Some(json!(10)));
@@ -370,7 +370,7 @@ async fn the_migration_preserved_every_effective_value() {
     let Some(db) = common::test_pool().await else { return };
 
     // After 000060 the effective instance value of every declared key must equal
-    // what `core.settings.value` holds — that column is the mirror, and any
+    // what `core.settings.value` holds - that column is the mirror, and any
     // divergence would be a silent behaviour change for the twenty call sites
     // still reading it.
     let mismatches: i64 = db

@@ -10,7 +10,7 @@
 //! hash file without restarting the server. The header then carries the hash of
 //! the *previous* import map, the browser blocks the inline script, and every
 //! bare specifier a module bundle imports (`@ui`, `react`, `@kubuno/sdk`…)
-//! becomes unresolvable — silently emptying the app launcher and the sidebar
+//! becomes unresolvable - silently emptying the app launcher and the sidebar
 //! while the host shell itself keeps working (it references its chunks by URL).
 //!
 //! So the value is recomputed whenever the hash file's mtime or length changes.
@@ -75,7 +75,7 @@ fn read_hash(path: &Path) -> Option<String> {
 }
 
 /// Builds the policy. Without a hash the inline import map is simply not
-/// allowed — that is the correct behaviour for a build that emits none.
+/// allowed - that is the correct behaviour for a build that emits none.
 fn build_header(hash: Option<&str>) -> HeaderValue {
     let script_src = match hash {
         Some(h) => format!("script-src 'self' https://cdn.jsdelivr.net 'unsafe-eval' '{h}'"),

@@ -1,4 +1,4 @@
-<!-- QuotaPolicyCard — converted from QuotaPolicyCard.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- QuotaPolicyCard - converted from QuotaPolicyCard.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="QuotaPolicyCardProps">
   <Card Title="{Res admin.sto_policy_title}" Subtitle="{Res admin.sto_policy_sub}">
     <Card.Actions>

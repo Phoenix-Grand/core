@@ -10,7 +10,7 @@ use serde::Serialize;
 use uuid::Uuid;
 
 /// Functional area a check belongs to. The console groups by this, and the
-/// order below is the order the page paints — most damaging first.
+/// order below is the order the page paints - most damaging first.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
 #[serde(rename_all = "snake_case")]
 pub enum Block {
@@ -60,7 +60,7 @@ pub enum Severity {
 
 impl Severity {
     /// Weight in the score. A critical failure must not be offset by three
-    /// informational passes — that is precisely the arithmetic that produces a
+    /// informational passes - that is precisely the arithmetic that produces a
     /// reassuring 85 % on an instance with a default password.
     pub const fn weight(self) -> u32 {
         match self {
@@ -87,7 +87,7 @@ pub enum Status {
     Ok,
     /// Actionable, and the console knows where to send the operator.
     Todo,
-    /// Genuinely wrong, but nothing in the administration console can fix it —
+    /// Genuinely wrong, but nothing in the administration console can fix it -
     /// it needs the command line, the configuration file or a decision that
     /// does not exist yet as a feature. Kept visible rather than hidden: a gap
     /// the product has is still a gap the instance has.
@@ -117,7 +117,7 @@ impl Status {
 
     /// Does this status take part in the score at all? An ignored or
     /// inapplicable check leaves the denominator, so silencing a check raises
-    /// the score to exactly what it would be if the check did not exist —
+    /// the score to exactly what it would be if the check did not exist -
     /// never above it.
     pub const fn is_scored(self) -> bool {
         matches!(self, Status::Ok | Status::Todo | Status::Blocked)
@@ -127,7 +127,7 @@ impl Status {
 /// The observed value, in a form the console can render in the reader's
 /// language.
 ///
-/// A check that inspects a secret reports a VERDICT here — never the value.
+/// A check that inspects a secret reports a VERDICT here - never the value.
 /// There is no variant carrying opaque bytes on purpose.
 #[derive(Debug, Clone, Serialize)]
 pub struct Observed {
@@ -149,7 +149,7 @@ impl Observed {
 /// Where the console must send the operator to deal with the finding.
 ///
 /// `tab` is a navigable leaf of the admin menu and `verb` the deep action the
-/// section understands — together they form `/admin?tab=<tab>&action=<verb>`,
+/// section understands - together they form `/admin?tab=<tab>&action=<verb>`,
 /// the convention the whole console uses for addressable actions.
 #[derive(Debug, Clone, Serialize)]
 pub struct Action {
@@ -184,7 +184,7 @@ pub struct Check {
     pub status: Status,
     /// English title; the console prefers `admin.hc_<id>_title`.
     pub title: &'static str,
-    /// One sentence saying why it matters. Not a restatement of the title —
+    /// One sentence saying why it matters. Not a restatement of the title -
     /// the consequence of leaving it undone.
     pub why: &'static str,
     pub value: Observed,
@@ -213,7 +213,7 @@ pub struct Counts {
     pub blocked: usize,
     pub ignored: usize,
     pub not_applicable: usize,
-    /// Failing checks that are `critical` — what the global banner keys off.
+    /// Failing checks that are `critical` - what the global banner keys off.
     pub critical: usize,
     pub warning: usize,
     pub info: usize,
@@ -223,7 +223,7 @@ pub struct Counts {
 #[derive(Debug, Clone, Serialize)]
 pub struct Report {
     /// 0-100, weighted by severity. `None` when the caller may see no check at
-    /// all — a delegate is not shown a score computed over things they cannot
+    /// all - a delegate is not shown a score computed over things they cannot
     /// read.
     pub score: Option<u32>,
     pub generated_at: DateTime<Utc>,
@@ -238,7 +238,7 @@ pub struct Report {
 ///
 /// Ignored and inapplicable checks are excluded from both terms, so silencing a
 /// finding can only bring the score back to where it would be without the
-/// check — it can never push it higher than a genuine pass would.
+/// check - it can never push it higher than a genuine pass would.
 pub fn score_of(checks: &[Check]) -> Option<u32> {
     let mut total = 0u32;
     let mut earned = 0u32;
@@ -332,7 +332,7 @@ mod tests {
     #[test]
     fn a_critical_failure_dominates_informational_passes() {
         // One critical failure against five informational passes: the score has
-        // to read as broken, not as "83 % — almost there".
+        // to read as broken, not as "83 % - almost there".
         let mut checks = vec![check("bad", Severity::Critical, Status::Todo)];
         checks.extend((0..5).map(|_| check("ok", Severity::Info, Status::Ok)));
         let score = score_of(&checks).expect("scoreable");

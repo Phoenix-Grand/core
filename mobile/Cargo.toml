@@ -37,10 +37,10 @@ kubuno-mobile-signin  = { path = "common/kubuno-mobile-signin" }
 
 # The account / network base (M2): it reuses the desktop's typed HTTP client (../desktop), which is TLS via
 # rustls (no OpenSSL) so it cross-compiles to Android and iOS, and adds the mobile token owner (holds its own
-# refresh token in the OS secret store — no broker) and the sign-in flow.
+# refresh token in the OS secret store - no broker) and the sign-in flow.
 kubuno-desktop-api-client = { path = "../desktop/common/kubuno-desktop-api-client" }
 
-# The shared .kbview/.kbcontrol grammar — the SAME parser the web and desktop use (platform-neutral,
+# The shared .kbview/.kbcontrol grammar - the SAME parser the web and desktop use (platform-neutral,
 # builds for wasm32/Linux/macOS, no UI/Windows dependency). It lives in the desktop workspace
 # (../desktop), so it is referenced by relative path rather than published. This is the whole point of
 # the mobile Rust client: one view language, parsed by one grammar, rendered by native renderers.

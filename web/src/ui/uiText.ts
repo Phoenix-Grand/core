@@ -13,7 +13,7 @@ import type { TFunction } from 'i18next'
  * readable, never blank, and never crashes outside an i18n tree.
  */
 
-/** English fallbacks — also the reference wording for the `ui.*` catalogue. */
+/** English fallbacks - also the reference wording for the `ui.*` catalogue. */
 export const UI_FALLBACK: Record<string, string> = {
   // Generic
   'ui.close':        'Close',
@@ -91,7 +91,7 @@ export function uiT(t?: TFunction): (key: string, vars?: Record<string, unknown>
 /**
  * Fold a string for local, human-friendly matching: Unicode-decomposed, stripped
  * of diacritics, lower-cased. This is what makes typing "unites" match "Unités"
- * — and, symmetrically, "Unités" match "unites". Decomposition (NFD) splits an
+ * - and, symmetrically, "Unités" match "unites". Decomposition (NFD) splits an
  * accented letter into base + combining mark, and the mark is then removed.
  */
 export function foldText(value: string): string {

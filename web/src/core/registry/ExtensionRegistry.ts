@@ -8,7 +8,7 @@
  * chargé, les enregistrements restent simplement inertes (et inversement).
  *
  * Exemple : calendar expose `'calendar.calendar-overlay'` et affiche les items
- * fournis ; tasks s'y branche pour superposer ses échéances — calendar ne contient
+ * fournis ; tasks s'y branche pour superposer ses échéances - calendar ne contient
  * aucune référence à tasks.
  */
 const points = new Map<string, Map<string, unknown>>()

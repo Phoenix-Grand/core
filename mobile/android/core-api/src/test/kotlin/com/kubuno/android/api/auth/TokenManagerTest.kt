@@ -26,7 +26,7 @@ import org.junit.Assert.fail
 import org.junit.Test
 import retrofit2.Response
 
-/** JWT with the given exp claim — unsigned, the client never verifies. */
+/** JWT with the given exp claim - unsigned, the client never verifies. */
 private fun jwt(expEpochSeconds: Long): String {
     val enc = Base64.getUrlEncoder().withoutPadding()
     val header = enc.encodeToString("""{"alg":"HS256"}""".toByteArray())
@@ -127,7 +127,7 @@ class TokenManagerTest {
     @Test
     fun `pair rotated less than 5 minutes ago is adopted, not rotated again`() = runBlocking {
         // Access expired but the pair is "fresh": still no rotation on the
-        // second concurrent path — the store re-read adopts it. Here we check
+        // second concurrent path - the store re-read adopts it. Here we check
         // the direct path: fresh + usable access short-circuits.
         val access = jwt(nowS() + HOUR_S)
         val store = FakeStore(StoredTokens(access, "r1", nowMs - 60_000)) // rotated 1 min ago
@@ -206,7 +206,7 @@ class TokenManagerTest {
         val store = FakeStore(StoredTokens(usable, "r2", nowMs))
         val api = FakeApi()
         val tm = TokenManager(api, store, clock)
-        // The failed request carried an older token — the cached one is newer.
+        // The failed request carried an older token - the cached one is newer.
         assertEquals(usable, tm.refreshAfter401("some-older-token"))
         assertEquals(0, api.refreshCalls.get())
     }

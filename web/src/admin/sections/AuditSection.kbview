@@ -1,4 +1,4 @@
-<!-- AuditSection — converted from AuditSection.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- AuditSection - converted from AuditSection.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <Panel x:Props="AdminSectionProps" Class="bg-white rounded-xl border border-border overflow-hidden">
   <Panel Class="flex flex-wrap items-baseline gap-2 px-5 py-4 border-b border-border">
     <Label HtmlTag="H2" Text="{Res admin.audit_title}" FontWeight="Medium" Overflow="Wrap" ForeColor="TextPrimary" Class="text-base"/>

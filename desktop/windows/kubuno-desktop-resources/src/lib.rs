@@ -1,4 +1,4 @@
-//! Resources of Kubuno desktop applications — the equivalent of Windows Forms' `Resources.resx`
+//! Resources of Kubuno desktop applications - the equivalent of Windows Forms' `Resources.resx`
 //! and its strongly typed `Properties.Resources` class (`vskubuno/docs/RESOURCES.md`).
 //!
 //! ```ignore
@@ -173,14 +173,14 @@ pub fn lookup_first_in(scope: Option<&str>, set: Option<&str>, names: &[&str], c
 }
 
 /// The text of string resource `name` in the current culture, searched in every set (`""` when
-/// there is none) — the dynamic counterpart of the generated accessors, e.g. for keys computed at
+/// there is none) - the dynamic counterpart of the generated accessors, e.g. for keys computed at
 /// run time (Drive's `tr("Home")`).
 pub fn string(name: &str) -> String {
     lookup(None, None, name).and_then(|v| v.text()).unwrap_or_default()
 }
 
 /// The text of string resource `key` (of `set`, else of any registered set) in the current culture, with
-/// arguments — what `{Res key, Count={Binding n}, Name=…}` shows (`vskubuno/docs/WEB-VIEWS.md` §2.4, WV-6),
+/// arguments - what `{Res key, Count={Binding n}, Name=…}` shows (`vskubuno/docs/WEB-VIEWS.md` §2.4, WV-6),
 /// with i18next's semantics ([`model::plural`]): with a `count`, the plural form (`key_zero` for 0, then
 /// `key_<CLDR category>`, then `key`, all tried in a culture before the next one of the fallback chain); then every `{{name}}`
 /// placeholder is filled from `args` (`(name, text)`; `Count` fills `{{count}}`). `None` when no candidate
@@ -205,7 +205,7 @@ pub fn text_with_in(set: Option<&str>, key: &str, count: Option<f64>, args: &[(S
 /// The URI scheme of resource images.
 pub const URI_SCHEME: &str = "kbres:";
 
-/// `kbres:<set>/<name>` — what an image property holds for a resource.
+/// `kbres:<set>/<name>` - what an image property holds for a resource.
 pub fn uri(set: &str, name: &str) -> String {
     if set.is_empty() {
         format!("{URI_SCHEME}{name}")

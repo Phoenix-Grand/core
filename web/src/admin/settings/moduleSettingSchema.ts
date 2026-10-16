@@ -5,7 +5,7 @@
 // Everything after `editable_by_user` is PRESENTATION metadata declared by the
 // module and forwarded verbatim by the core. All of it is optional: a module
 // that declares none renders exactly as it did before these fields existed.
-// That is the whole point of the pattern — a knob added in a `module.toml`
+// That is the whole point of the pattern - a knob added in a `module.toml`
 // shows up in the console, in the filter box and in the validation without a
 // line of code changing on this side.
 
@@ -16,7 +16,7 @@
  * A group sits ABOVE `category`: it is an entry of the admin menu under the
  * module and an address of its own (`/admin/modules/<module>/<id>`), and the
  * `category` of each of its settings becomes a tab inside it. `id` is a stable,
- * UNTRANSLATED slug because it travels in the URL — an address may not change
+ * UNTRANSLATED slug because it travels in the URL - an address may not change
  * shape with the interface language.
  *
  * A module that declares none keeps the single page it has always had.
@@ -39,11 +39,11 @@ interface GroupCarrier {
 }
 
 /**
- * The declared pages of a module, in menu order — `[]` when it declares none.
+ * The declared pages of a module, in menu order - `[]` when it declares none.
  *
  * Tolerant of both field names the API may use and of a core that sends
  * neither: the module then reads as ungrouped, which is exactly the panel it
- * had before pages existed. An entry with no id is dropped rather than kept —
+ * had before pages existed. An entry with no id is dropped rather than kept -
  * it could not be addressed, so it could not be opened.
  */
 export function groupsOf(module: GroupCarrier | null | undefined): ModuleSettingGroup[] {
@@ -60,7 +60,7 @@ export interface SettingItem {
   key: string; scope: Scope; type: ValueType; values: EnumOption[] | null
   label: string | null; description: string | null; category: string
   /**
-   * Which PAGE of the module's panel this belongs to — a `[[setting_groups]]`
+   * Which PAGE of the module's panel this belongs to - a `[[setting_groups]]`
    * id of the same module. `null` (or absent) means ungrouped, which is what
    * every module declared before groups existed and what most still declare.
    */
@@ -71,7 +71,7 @@ export interface SettingItem {
   advanced?: boolean
   /** How loudly to warn before this changes. `danger` also asks to confirm. */
   risk?: Risk | null
-  /** Bounds for `int`. Also enforced by the API — this is only the fast no. */
+  /** Bounds for `int`. Also enforced by the API - this is only the fast no. */
   min?: number | null
   max?: number | null
   /** Suffix shown after the field: "Mo", "s", "min", "‰". */
@@ -103,7 +103,7 @@ export function normOptions(values: EnumOption[] | null): { value: unknown; labe
 /**
  * Is this value outside the bounds the module declared?
  *
- * An empty field is not "out of range", it is unfinished — reported as invalid
+ * An empty field is not "out of range", it is unfinished - reported as invalid
  * all the same, because an int setting saved as `""` would land in the database
  * as a string. Anything that is not an integer is refused for the same reason.
  */
@@ -122,7 +122,7 @@ export function outOfRange(item: SettingItem, value: unknown): boolean {
  * Non-empty entries of a list value.
  *
  * One per line is what the field asks for, but a value stored before the field
- * became multiline — or pasted from a configuration file — separates with
+ * became multiline - or pasted from a configuration file - separates with
  * commas, and every module that reads such a list accepts both. The count has
  * to agree with what the module will actually read: showing "1 entrée" beside
  * `a.example,b.example` would simply be false.
@@ -143,7 +143,7 @@ export function countEntries(value: unknown): number {
  * SHORTER when a feature is switched off, otherwise turning something off makes
  * the page no easier to read. A `depends_on` that points at a setting this
  * account cannot see (a `global` one, for a non-admin) is ignored rather than
- * treated as false — never hide a row for a reason the reader cannot check.
+ * treated as false - never hide a row for a reason the reader cannot check.
  */
 export function isVisible(
   item: SettingItem,

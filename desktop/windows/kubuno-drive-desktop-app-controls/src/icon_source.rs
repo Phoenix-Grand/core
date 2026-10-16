@@ -3,11 +3,11 @@
 //! Every control paints its icon through `Canvas::vector_icon(name, …)`, whose `name` is a
 //! `&'static str`. Besides a glyph of the embedded set (`"Save"`), that name may be:
 //!
-//! * an image file — `C:\app\images\save.svg`, `images/logo.png` (SVG, PNG, JPEG, BMP, GIF, ICO,
+//! * an image file - `C:\app\images\save.svg`, `images/logo.png` (SVG, PNG, JPEG, BMP, GIF, ICO,
 //!   TIFF, WebP): the painters that know images (`kubuno_desktop_controls`' host painter) draw it in place
 //!   of a glyph, at the size asked for;
 //! * either of those followed by drawing options, after [`OPTIONS_SEPARATOR`]:
-//!   `Save\u{1}tint=Accent;size=24x24;scaling=Fit;mirror` — an explicit tint, a size that
+//!   `Save\u{1}tint=Accent;size=24x24;scaling=Fit;mirror` - an explicit tint, a size that
 //!   overrides the control's, how a non-square image fills its box, and a horizontal flip (a
 //!   right-to-left layout). [`compose`] writes that form, [`parse`] reads it back.
 //!
@@ -63,7 +63,7 @@ impl IconScaling {
     }
 
     /// Where an image of `image` (width, height) goes in a box of `bounds` (width, height), as
-    /// `(x, y, width, height)` relative to the box's top-left corner — it may overflow the box
+    /// `(x, y, width, height)` relative to the box's top-left corner - it may overflow the box
     /// ([`IconScaling::Fill`], [`IconScaling::None`]); the caller clips. Pure.
     pub fn place(self, image: (f32, f32), bounds: (f32, f32)) -> (f32, f32, f32, f32) {
         let (iw, ih) = (image.0.max(0.01), image.1.max(0.01));

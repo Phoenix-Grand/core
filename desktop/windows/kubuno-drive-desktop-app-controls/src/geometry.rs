@@ -1,4 +1,4 @@
-//! Rectangle in DIP — the geometric primitive shared by every control
+//! Rectangle in DIP - the geometric primitive shared by every control
 //! (counterpart of the `Rect`/`Point` types from WinUI in `Files.App.Controls`).
 
 use windows::Win32::Graphics::Direct2D::Common::D2D_RECT_F;

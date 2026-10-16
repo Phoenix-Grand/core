@@ -38,9 +38,9 @@ interface ConnectionsResponse {
 }
 
 function fmtDate(iso: string | null): string {
-  if (!iso) return '—'
+  if (!iso) return '-'
   const d = new Date(iso)
-  return Number.isNaN(d.getTime()) ? '—' : d.toLocaleString()
+  return Number.isNaN(d.getTime()) ? '-' : d.toLocaleString()
 }
 
 export type KnownConnectionsCardProps = {

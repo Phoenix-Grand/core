@@ -185,16 +185,16 @@ impl Store {
     /// Removes a folder from the index, together with every folder and file
     /// beneath it.
     ///
-    /// The server trashes a folder by cascade — its whole subtree goes with it —
+    /// The server trashes a folder by cascade - its whole subtree goes with it -
     /// but the index used to drop only the one row. The descendants were then
     /// orphans: present in `folders`/`files`, absent from disk and from the
-    /// server, and — because their own parent was now gone and untracked — no
+    /// server, and - because their own parent was now gone and untracked - no
     /// longer detectable as deletions. That is the state that made « delete a
     /// folder, sync, nothing happens » reproducible. Cascading here keeps the
     /// index honest.
     pub fn remove_folder(&self, id: &str) -> Result<()> {
         // The subtree is identified by path prefix: the folder's own path, then
-        // anything under `<path>/`. Ids alone will not do — `folders` has no
+        // anything under `<path>/`. Ids alone will not do - `folders` has no
         // parent column.
         let path: Option<String> = self
             .conn
@@ -293,7 +293,7 @@ mod tests {
     use super::*;
 
     fn mem(tag: &str) -> Store {
-        // A store on a throwaway temp file, unique per test — a shared path would
+        // A store on a throwaway temp file, unique per test - a shared path would
         // let one test see another's rows. `Store::open` runs the schema.
         let path = std::env::temp_dir().join(format!(
             "kbstore-{}-{}.db",
@@ -305,7 +305,7 @@ mod tests {
     }
 
     /// Trashing a folder must clear its whole subtree from the index, not just
-    /// its own row — otherwise the descendants become orphans that no later
+    /// its own row - otherwise the descendants become orphans that no later
     /// scan can detect as deleted (the reported « delete does nothing » bug).
     #[test]
     fn remove_folder_cascades_over_the_subtree() {

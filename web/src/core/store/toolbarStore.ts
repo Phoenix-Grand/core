@@ -7,7 +7,7 @@ import type React from 'react'
  *  - `number`  → px, uniforme (ex. `24`)
  *  - `string`  → raccourci CSS `padding` (ex. `"1.5rem"`, `"1rem 2rem"`, `"0 24px"`)
  *  - objet     → par côté (nombre = px, chaîne = valeur CSS libre)
- * La marge n'entoure QUE le contenu défilant — pas la barre d'outils du module.
+ * La marge n'entoure QUE le contenu défilant - pas la barre d'outils du module.
  */
 export type ModuleAreaPadding =
   | number

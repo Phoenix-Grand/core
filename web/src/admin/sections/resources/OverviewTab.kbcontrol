@@ -1,4 +1,4 @@
-<!-- OverviewTab — converted from OverviewTab.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- OverviewTab - converted from OverviewTab.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="OverviewTabProps">
   <Panel Class="contents">
     <Stack Direction="LeftToRight" Gap="0" Justify="Center" Visible="{Binding show_case_1}" Class="py-10">

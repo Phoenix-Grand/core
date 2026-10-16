@@ -49,7 +49,7 @@ impl<'a> Lexer<'a> {
     fn push(&mut self, tokens: &mut Vec<LexToken>, kind: SyntaxKind, start: u32, end: u32) {
         debug_assert!(start <= end);
         if start == end {
-            return; // Never emit an empty token — it cannot move `pos` forward.
+            return; // Never emit an empty token - it cannot move `pos` forward.
         }
         tokens.push(LexToken { kind, range: TextRange::new(TextSize::from(start), TextSize::from(end)) });
         self.pos = end;
@@ -102,7 +102,7 @@ impl<'a> Lexer<'a> {
 
     /// Scans from `from` for `needle`; returns the offset right after it, or
     /// end-of-input when `needle` never appears (an unterminated comment /
-    /// CDATA section — still one token, covering the rest of the file, so
+    /// CDATA section - still one token, covering the rest of the file, so
     /// the tree stays total).
     fn find_or_eof(&self, from: u32, needle: &str) -> u32 {
         match self.text.get(from as usize..).and_then(|rest| rest.find(needle)) {
@@ -116,8 +116,8 @@ impl<'a> Lexer<'a> {
     fn lex_tag_content(&mut self, tokens: &mut Vec<LexToken>) {
         let start = self.pos;
         let Some(c) = self.at(start) else {
-            // Unreachable in practice — `run()`'s loop only calls this while
-            // `pos < len()` — but advancing `pos` to end-of-input rather than
+            // Unreachable in practice - `run()`'s loop only calls this while
+            // `pos < len()` - but advancing `pos` to end-of-input rather than
             // panicking keeps the "no `unwrap`/`expect` outside tests" rule
             // (`CLAUDE.md` §7) true even for a case that cannot happen today.
             self.pos = self.len();
@@ -150,7 +150,7 @@ impl<'a> Lexer<'a> {
             return;
         }
         // A stray '>' while `pi_mode` (a malformed `<?xml ... >` missing its
-        // `?`) still ends the tag — better recovery than swallowing the rest
+        // `?`) still ends the tag - better recovery than swallowing the rest
         // of the file looking for a `?>` that was never coming.
         if self.pi_mode && c == b'>' {
             self.push(tokens, SyntaxKind::R_ANGLE, start, start + 1);
@@ -174,7 +174,7 @@ impl<'a> Lexer<'a> {
                 }
             }
             // `end` now covers either the closing quote (found) or the rest
-            // of the file (unterminated — the parser flags this by checking
+            // of the file (unterminated - the parser flags this by checking
             // whether the token's last byte matches its first).
             self.push(tokens, SyntaxKind::STRING, start, end);
             return;
@@ -190,7 +190,7 @@ impl<'a> Lexer<'a> {
         }
 
         // Anything else inside a tag (stray punctuation, or a non-ASCII byte
-        // that is not part of a well-formed name) — one error token, then
+        // that is not part of a well-formed name) - one error token, then
         // keep scanning so a single bad byte does not blank the file. Must
         // consume a whole UTF-8 character, not a fixed one byte: `start` is
         // always a char boundary here (every other branch above only ever
@@ -207,7 +207,7 @@ fn is_ident_start(b: u8) -> bool {
     b.is_ascii_alphabetic() || b == b'_'
 }
 
-/// Letters, digits, `_`, `-`, `.` and `:` — enough for `Panel`, `x:Name`,
+/// Letters, digits, `_`, `-`, `.` and `:` - enough for `Panel`, `x:Name`,
 /// `data-foo`, `Header.Icon`-style names without pulling in the full XML
 /// `Name` production.
 fn is_ident_continue(b: u8) -> bool {

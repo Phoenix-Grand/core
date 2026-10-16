@@ -14,7 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 
 /**
  * A confirm dialog (ConfirmDialog.tsx): a title, a message, a ghost cancel and a
- * primary — or danger — confirm, built from the shared Kubuno buttons.
+ * primary - or danger - confirm, built from the shared Kubuno buttons.
  */
 @Composable
 fun KubunoConfirmDialog(

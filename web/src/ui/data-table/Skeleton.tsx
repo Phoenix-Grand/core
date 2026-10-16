@@ -2,7 +2,7 @@ import type { TFunction } from 'i18next'
 import { uiT } from '../uiText'
 
 /**
- * Loading state — a SKELETON, not a spinner.
+ * Loading state - a SKELETON, not a spinner.
  *
  * A spinner says "something is happening somewhere"; a skeleton says "a table
  * with these columns is arriving here", so the layout does not jump when the

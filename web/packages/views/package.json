@@ -1,7 +1,7 @@
 {
   "name": "@kubuno/views",
   "version": "0.1.4",
-  "description": "Kubuno .kbview views runtime (@kubuno/views) — the code-behind model (View, @bind, element handles, event args), the renderer of compiled views and the runtime elements (Repeater, Timer, Query, Mutation, MessageBox, Dialog). Provided by the host at runtime via the import map; this package ships the type surface.",
+  "description": "Kubuno .kbview views runtime (@kubuno/views) - the code-behind model (View, @bind, element handles, event args), the renderer of compiled views and the runtime elements (Repeater, Timer, Query, Mutation, MessageBox, Dialog). Provided by the host at runtime via the import map; this package ships the type surface.",
   "license": "AGPL-3.0-or-later",
   "homepage": "https://github.com/kubuno/core/tree/main/web/packages/views",
   "repository": {

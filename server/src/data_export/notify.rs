@@ -4,15 +4,15 @@
 //!
 //! An export is the one administrative act that concentrates everything the
 //! instance holds about everyone into a single file. The realistic attack is not
-//! somebody breaking the archive format — it is somebody arriving with a valid
+//! somebody breaking the archive format - it is somebody arriving with a valid
 //! administrator session (stolen cookie, borrowed laptop, a colleague's
 //! unlocked screen) and pressing the button.
 //!
 //! Nothing about the request itself distinguishes that from a legitimate one, so
 //! the defence cannot be a check. It has to be **visibility**: the instant an
 //! export is requested, every administrator sees it, named, with the account
-//! that asked. Combined with `data_export.hold_hours` — during which the archive
-//! exists but cannot be downloaded — that turns a silent exfiltration into a
+//! that asked. Combined with `data_export.hold_hours` - during which the archive
+//! exists but cannot be downloaded - that turns a silent exfiltration into a
 //! two-day window in which somebody else can cancel it.
 //!
 //! The two halves only work together. A hold nobody is told about protects
@@ -22,7 +22,7 @@
 //! ## Why the alert centre, and not an email
 //!
 //! Because that is where this console puts facts an administrator must see:
-//! `security.privilege_granted` — an event of exactly the same class — has lived
+//! `security.privilege_granted` - an event of exactly the same class - has lived
 //! there since the centre existed. An alert is deduplicated, assignable,
 //! commentable and closable, it survives an unread inbox, and it cannot be
 //! filtered away by a rule in somebody's mail client. An instance whose SMTP
@@ -60,7 +60,7 @@ pub async fn announce(
     // English, like every other string this catalogue ships: the console owns the
     // wording in thirteen languages, keyed on the alert kind, and falls back to
     // what the server said. Writing French here would make the fallback the odd
-    // one out — see `alerts/labels.ts`.
+    // one out - see `alerts/labels.ts`.
     let scope_words = if scope == "instance" {
         "the whole instance".to_string()
     } else if accounts == 1 {
@@ -105,7 +105,7 @@ pub async fn announce(
         Err(e) => tracing::error!(
             error = %e,
             export_id = %export_id,
-            "export: alerte de démarrage non levée — les administrateurs ne sont pas prévenus"
+            "export: alerte de démarrage non levée - les administrateurs ne sont pas prévenus"
         ),
     }
 }

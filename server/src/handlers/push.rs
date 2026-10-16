@@ -19,7 +19,7 @@ pub struct RegisterDeviceDto {
     pub locale:       Option<String>,
 }
 
-/// POST /api/v1/me/push/devices — register (or refresh) a device.
+/// POST /api/v1/me/push/devices - register (or refresh) a device.
 pub async fn register_device(
     State(state): State<AppState>,
     AuthUser(user): AuthUser,
@@ -87,7 +87,7 @@ pub async fn register_device(
     Ok(Json(json!({ "id": id })))
 }
 
-/// DELETE /api/v1/me/push/devices/:id — unregister a device.
+/// DELETE /api/v1/me/push/devices/:id - unregister a device.
 pub async fn delete_device(
     State(state): State<AppState>,
     AuthUser(user): AuthUser,
@@ -107,7 +107,7 @@ pub async fn delete_device(
     Ok(Json(json!({ "message": "Device supprimé" })))
 }
 
-/// GET /api/v1/me/push/preferences — list opt-out preferences.
+/// GET /api/v1/me/push/preferences - list opt-out preferences.
 pub async fn list_preferences(
     State(state): State<AppState>,
     AuthUser(user): AuthUser,
@@ -136,7 +136,7 @@ pub struct SetPreferenceDto {
     pub enabled:    bool,
 }
 
-/// PATCH /api/v1/me/push/preferences — upsert one preference.
+/// PATCH /api/v1/me/push/preferences - upsert one preference.
 pub async fn set_preference(
     State(state): State<AppState>,
     AuthUser(user): AuthUser,

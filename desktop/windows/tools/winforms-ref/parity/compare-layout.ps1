@@ -4,8 +4,8 @@
 # the WinForms rectangle, the port's rectangle and the delta. Exits non-zero if
 # any delta exceeds the tolerance (0.5 DIP by default).
 #
-# WHY NUMBERS AND NOT PIXELS. The port paints in the Kubuno design system —
-# rounded corners, its own palette, its own face — so a pixel diff of appearance
+# WHY NUMBERS AND NOT PIXELS. The port paints in the Kubuno design system -
+# rounded corners, its own palette, its own face - so a pixel diff of appearance
 # would only re-measure a difference we already know about. What must match
 # exactly is the geometry: the same container, the same children with the same
 # Dock/Anchor/Margin/Padding/MinimumSize/MaximumSize, the same numbers out.
@@ -16,8 +16,8 @@
 # to the origin). With zero padding the two coincide. With padding they differ
 # by a constant, and reporting that constant as a geometry error on every child
 # of a padded container would bury the real defects. So each row is judged in
-# DISPLAY-RELATIVE space — each side's rectangle minus its own container's
-# display origin — and the origin convention is reported ONCE per container, in
+# DISPLAY-RELATIVE space - each side's rectangle minus its own container's
+# display origin - and the origin convention is reported ONCE per container, in
 # its own section. `-Absolute` turns that normalisation off and compares the raw
 # numbers instead.
 #
@@ -36,7 +36,7 @@ $ErrorActionPreference = 'Stop'
 
 foreach ($p in @($WinForms, $Port)) {
     if (-not (Test-Path $p)) {
-        Write-Error "missing: $p  (run the two probes first — see the header of this script)"
+        Write-Error "missing: $p  (run the two probes first - see the header of this script)"
         exit 2
     }
 }
@@ -89,7 +89,7 @@ foreach ($wc in $wfDoc.cases) {
     foreach ($ch in $pc.children) { $portByPath[$ch.path] = $ch }
 
     # The container's own display rect. A difference here is the origin
-    # convention, not a child's geometry — reported once, not per child.
+    # convention, not a child's geometry - reported once, not per child.
     for ($k = 0; $k -lt 4; $k++) {
         if ([Math]::Abs($wc.display[$k] - $pc.display[$k]) -gt $Tolerance) {
             $originNotes.Add([pscustomobject]@{
@@ -158,7 +158,7 @@ foreach ($wc in $wfDoc.cases) {
 
 $space = if ($Absolute) { 'absolute (raw Bounds)' } else { 'display-relative (each side minus its own container origin)' }
 Write-Output ''
-Write-Output "Layout parity — WinForms $($wfDoc.meta.framework) @ $($wfDoc.meta.deviceDpi) DPI (AnchorLayoutV2=$($wfDoc.meta.anchorLayoutV2))  vs  $($portDoc.meta.crate)"
+Write-Output "Layout parity - WinForms $($wfDoc.meta.framework) @ $($wfDoc.meta.deviceDpi) DPI (AnchorLayoutV2=$($wfDoc.meta.anchorLayoutV2))  vs  $($portDoc.meta.crate)"
 Write-Output "Comparison space: $space.  Tolerance: $Tolerance DIP.  Rectangles are left,top,right,bottom."
 Write-Output ''
 

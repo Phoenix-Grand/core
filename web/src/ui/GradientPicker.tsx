@@ -24,7 +24,7 @@ const FALLBACK: Record<string, string> = {
   gradient_add_stop: 'Ajouter un arrêt',
 }
 
-// Colour sampled along the gradient at position `p` (0..1) — used when inserting
+// Colour sampled along the gradient at position `p` (0..1) - used when inserting
 // a stop, so the new stop blends in instead of jumping.
 function sampleStop(stops: GradientStop[], p: number): GradientStop {
   const s = [...stops].sort((a, b) => a.position - b.position)
@@ -185,7 +185,7 @@ export function GradientPicker({ t, value, onChange, onClose, C: CProp }: {
 }
 
 // Swatch button (shows the gradient) that opens the GradientPicker in a floating,
-// always-on-screen popover — same clamp behaviour as ColorField.
+// always-on-screen popover - same clamp behaviour as ColorField.
 export function GradientField({ t, C: CProp, value, onChange, className, style, width = 32, height = 24 }: {
   t?: TFunction
   C?: PickerTheme

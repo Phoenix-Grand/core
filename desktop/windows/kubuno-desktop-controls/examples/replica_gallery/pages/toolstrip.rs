@@ -1,4 +1,4 @@
-//! `09-toolstrip` — MenuStrip, ToolStrip, StatusStrip.
+//! `09-toolstrip` - MenuStrip, ToolStrip, StatusStrip.
 
 use kubuno_desktop_controls::toolstrip::{
     MenuStrip, Shortcut, StatusStrip, StripItem, ToolStrip, ToolStripButton, ToolStripComboBox,
@@ -57,7 +57,7 @@ fn tools() -> Group {
     toggled.check_on_click = true;
     t.items.push(StripItem::Button(toggled));
 
-    group("ToolStrip — button / separator / combo", 460.0, vec![kid(t).w(420.0)])
+    group("ToolStrip - button / separator / combo", 460.0, vec![kid(t).w(420.0)])
 }
 
 fn status() -> Group {

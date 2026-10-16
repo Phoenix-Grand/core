@@ -249,7 +249,7 @@ export const CONTROL_PROPERTIES: readonly PropertyMeta<never>[] = [
     docFr: "Web uniquement, aide à la migration : classes Tailwind ajoutées à l'élément. Signalé par le serveur de langage ; utilisez plutôt les jetons du thème et les éléments de disposition.",
     to: { runtime: 'class' },
   },
-  // Web only (WV-5a): the interaction states and the outline of any element, with theme tokens — what the
+  // Web only (WV-5a): the interaction states and the outline of any element, with theme tokens - what the
   // hand-written screens write as `hover:bg-surface-1`, `rounded-[20px]`, `border border-border`, `shadow-md`.
   // Proposed for the desktop (its controls paint their own hover and pressed states today).
   {
@@ -346,7 +346,7 @@ export const CONTROL_EVENTS: readonly EventMeta<never>[] = [
     docFr: 'Se produit quand des données glissées sur le contrôle le quittent ou que le glissement est annulé.' },
 ]
 
-/** `View`'s properties — accepted on the view's root element only. */
+/** `View`'s properties - accepted on the view's root element only. */
 export const VIEW_PROPERTIES: readonly PropertyMeta<never>[] = [
   {
     name: 'Title', kind: 'String', default: '', category: 'Appearance', bindable: true, localizable: true,
@@ -356,7 +356,7 @@ export const VIEW_PROPERTIES: readonly PropertyMeta<never>[] = [
   },
 ]
 
-/** `View`'s events — accepted on the view's root element only. */
+/** `View`'s events - accepted on the view's root element only. */
 export const VIEW_EVENTS: readonly EventMeta<never>[] = [
   { name: 'OnLoad', category: 'Behavior', args: 'EventArgs', from: { runtime: 'view-load', args: 'none' },
     doc: 'Occurs before the view is shown for the first time.', docFr: 'Se produit avant le premier affichage de la vue.' },
@@ -369,7 +369,7 @@ export const VIEW_EVENTS: readonly EventMeta<never>[] = [
 ]
 
 /**
- * `IconSize`, `IconScaling`, `IconColor` — the own properties every element with an icon has on
+ * `IconSize`, `IconScaling`, `IconColor` - the own properties every element with an icon has on
  * the desktop. On the web the `icon-node` converter of the element's `Icon` applies them.
  */
 export const ICON_PROPERTIES: readonly PropertyMeta<never>[] = [
@@ -431,7 +431,7 @@ export const WEB_ONLY_INHERITED = new Set([
 ])
 
 /**
- * `HostStrings` — web only: the element's own strings (a close button's name, a default « Cancel », a table's
+ * `HostStrings` - web only: the element's own strings (a close button's name, a default « Cancel », a table's
  * pager) come from the host's catalogue instead of the English defaults of `@ui`: the views runtime gives the
  * component the host's translator as its `t` (what a TSX screen does with `t={t}`). Spread into the elements
  * whose component takes a `t`.
@@ -444,7 +444,7 @@ export const HOST_STRINGS = {
 } as const
 
 /**
- * `FieldClass` — web only: Tailwind classes of the field itself (the `<input>` / `<textarea>`), where the `@ui`
+ * `FieldClass` - web only: Tailwind classes of the field itself (the `<input>` / `<textarea>`), where the `@ui`
  * component puts its `className` (`Class` styles the element's root, around the label and the help line). Tolerated
  * during the migration like `Class`.
  */

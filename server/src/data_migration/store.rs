@@ -3,7 +3,7 @@
 //! Two disciplines run through every query here.
 //!
 //! **The credential is never selected by accident.** No read enumerates `*`;
-//! `secret_enc` appears in exactly two statements — the insert that writes it
+//! `secret_enc` appears in exactly two statements - the insert that writes it
 //! and [`secret_of`], which the background job calls and no handler does. The
 //! struct the console gets back has no field able to hold it.
 //!
@@ -110,7 +110,7 @@ struct TallyRow {
     total:       i64,
 }
 
-/// One tally per campaign, in a single pass — a per-row count would be N+1
+/// One tally per campaign, in a single pass - a per-row count would be N+1
 /// queries on a page whose whole point is to be glanced at.
 pub async fn tallies(db: &DbPool) -> Result<HashMap<Uuid, CampaignTally>, AppError> {
     // `COUNT(*) FILTER (WHERE ...)` is PostgreSQL-only, so the conditional
@@ -193,7 +193,7 @@ struct ModuleIdRow {
 ///
 /// Answered from the registry rather than from a list in the code, so an
 /// instance that has not installed the mail module is never offered a mail
-/// migration — and so adding a module later needs no change here.
+/// migration - and so adding a module later needs no change here.
 pub async fn available_services(db: &DbPool) -> Result<Vec<(ServiceKind, bool)>, AppError> {
     let rows = db
         .fetch_all_as::<ModuleIdRow>(
@@ -394,7 +394,7 @@ pub async fn retry_account(db: &DbPool, campaign_id: Uuid, account_id: Uuid) -> 
 
 pub async fn delete_campaign(tx: &mut DbTx, id: Uuid) -> Result<(), AppError> {
     // The accounts go with it (ON DELETE CASCADE), and with them the sealed
-    // credentials — a finished campaign must not keep an organisation's
+    // credentials - a finished campaign must not keep an organisation's
     // passwords alive for ever.
     tx.execute("DELETE FROM core.migration_campaigns WHERE id = $1", params![id])
         .await
@@ -446,7 +446,7 @@ pub async fn reclaim_stalled(db: &DbPool) -> Result<u64, AppError> {
 ///
 /// Ordered by `updated_at` so a worker shares itself fairly between the
 /// accounts of a campaign rather than finishing the first mailbox before
-/// touching the second — an operator watching two hundred rows needs to see all
+/// touching the second - an operator watching two hundred rows needs to see all
 /// of them move, and a source server throttles a single login long before it
 /// throttles the connection.
 ///
@@ -529,7 +529,7 @@ pub async fn claim_next(db: &DbPool) -> Result<Option<ClaimedAccount>, AppError>
 
 /// Records what one chunk achieved.
 ///
-/// `copied` is a DELTA — what this chunk moved — because the module is
+/// `copied` is a DELTA - what this chunk moved - because the module is
 /// stateless between calls and only the ledger knows the running total.
 pub async fn record_chunk(
     db: &DbPool,
@@ -663,7 +663,7 @@ pub async fn close_finished(db: &DbPool) -> Result<Vec<Uuid>, AppError> {
 }
 
 /// Is there anything at all for the job to do? Decides whether the chain
-/// re-arms — an idle instance must not poll for ever.
+/// re-arms - an idle instance must not poll for ever.
 pub async fn has_work(db: &DbPool) -> Result<bool, AppError> {
     // `EXISTS(...)` decoded straight into `bool` is not portable, so the boolean
     // is folded to `1`/`0` and read as `i64`, keeping the short-circuit.

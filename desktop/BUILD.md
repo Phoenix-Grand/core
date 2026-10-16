@@ -1,4 +1,4 @@
-# Kubuno Desktop — build guide
+# Kubuno Desktop - build guide
 
 ## Layout
 
@@ -44,7 +44,7 @@ under that folder, for tests that must not touch the real profile.
 Every program of the workspace (shell, the gallery, the
 tools) links the design system (`kubuno-desktop-ui`, with the host `kubuno-desktop-controls` and
 the painting surface `kubuno-drive-desktop-app-controls`) and Rust's `std` **statically**: an
-exe runs from a folder that holds only itself — no `kubuno_desktop_ui` DLL, no
+exe runs from a folder that holds only itself - no `kubuno_desktop_ui` DLL, no
 `std-*.dll`, nothing to stage after a build. `kubuno-desktop-ui` is an ordinary rlib and
 the workspace sets no `rustflags`.
 
@@ -52,8 +52,8 @@ Why (product decision of 2026-10-03): the apps are released from their own
 per-module repositories, each on its own schedule, so no Rust DLL may be shared
 between them (a Rust dylib has no stable ABI: it would tie every app to one
 build of it). Kubuno Desktop (the shell) stays mandatory on every PC, but as a
-**service** dependency — the account/token broker over its named pipe, the sync,
-the launcher — never as a binary one.
+**service** dependency - the account/token broker over its named pipe, the sync,
+the launcher - never as a binary one.
 
 What this replaced: until 2026-10-02 `kubuno-desktop-ui` was a Rust `dylib`
 (`kubuno_desktop_ui-<hash>.dll`, one file name per build, with a link shim in its
@@ -141,7 +141,7 @@ writes plain databases as before.
 |---|---|---|
 | Windows (MSVC) | `bundled-sqlcipher-vendored-openssl` | a **native Perl** (Strawberry Perl; Git Bash/MSYS Perl is not enough: `Locale::Maketext::Simple` missing, MSYS paths) through `PERL=C:\…\perl.exe` or the `PATH`; **NASM** strongly recommended (without it `openssl-src` adds `no-asm`: no AES-NI, encryption 3 to 4 times slower); the MSVC tools (already required) |
 | Linux | `bundled-sqlcipher-vendored-openssl` | `perl` and `make` (on the usual build images) |
-| macOS | `bundled-sqlcipher` | nothing: SQLCipher uses CommonCrypto (Security framework) — builds on a Mac (the Apple SDK is needed: no cross check from Windows) |
+| macOS | `bundled-sqlcipher` | nothing: SQLCipher uses CommonCrypto (Security framework) - builds on a Mac (the Apple SDK is needed: no cross check from Windows) |
 
 Everything works offline once the crates are vendored (`cargo vendor`): OpenSSL's sources come from the
 `openssl-src` crate. First OpenSSL build: ~12 min on the dev VM (nmake is sequential), then cached in `target/`.

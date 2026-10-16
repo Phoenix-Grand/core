@@ -36,7 +36,7 @@ pub enum AppEvent {
     /// The value itself is deliberately absent: this event reaches every module
     /// and the WebSocket hub, and some settings hold credentials. Subscribers
     /// that need the new value re-read it through the resolver for the scope
-    /// they care about — which is also the only way to get inheritance right.
+    /// they care about - which is also the only way to get inheritance right.
     SettingChanged {
         key:        String,
         scope_type: String,

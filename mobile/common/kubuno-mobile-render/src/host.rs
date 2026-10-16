@@ -1,7 +1,7 @@
 //! Host controls: elements of a `.kbview` the renderer does not draw itself, supplied by the app.
 //!
 //! The renderer paints the shared control vocabulary (`Panel`, `Stack`, `Label`, `Button`…). A module's app adds its
-//! own controls — Maps' `MapView`, for instance — by implementing [`HostControl`] and registering it under the
+//! own controls - Maps' `MapView`, for instance - by implementing [`HostControl`] and registering it under the
 //! element name it answers to ([`register_host_control`]), from its [`crate::App::setup`]. The renderer then lays
 //! the element out like any other, asks the control to paint itself through a [`HostCanvas`], and routes the
 //! shell's touch gestures to it ([`pan`], [`zoom`], [`reset`]). The renderer itself stays free of any module's

@@ -1,4 +1,4 @@
-<!-- ClientsTab — converted from ClientsTab.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- ClientsTab - converted from ClientsTab.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl>
   <Panel Class="max-w-3xl space-y-10">
     <Panel HtmlTag="Section">

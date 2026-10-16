@@ -146,7 +146,7 @@ export class DomainsSection extends ViewBase {
       sortValue: r => r.account_count,
       cell: r => (
         <span className={r.account_count === 0 ? 'text-text-tertiary' : 'text-text-secondary'}>
-          {r.account_count || '—'}
+          {r.account_count || '-'}
         </span>
       ),
     },

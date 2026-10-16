@@ -1,5 +1,5 @@
 /**
- * `@kubuno/sdk` — surface stable exposée par le core aux modules.
+ * `@kubuno/sdk` - surface stable exposée par le core aux modules.
  *
  * Un module (en arbre OU tiers, chargé à l'exécution) importe UNIQUEMENT depuis
  * `@kubuno/sdk` (+ `@ui`, `react`, `lucide-react`…). Au build d'un module ces
@@ -61,7 +61,7 @@ export { SidebarNavItem } from '../core/shell/pages/SidebarNavItem'
 export { useUiStore } from '../core/store/uiStore'
 export { default as HeaderActions } from '../core/shell/controls/HeaderActions'
 export { useChromelessHeader } from '../core/shell/useChromelessHeader'
-// Chrome standard des apps avancées (topbar unifiée) — partagé par les modules
+// Chrome standard des apps avancées (topbar unifiée) - partagé par les modules
 // WorkspaceShell (keestore, office, paintsharp…). `MenuItem` est ré-exposé sous
 // `WorkspaceMenuItem` car `@ui` exporte déjà un `MenuItem` dans le chunk partagé.
 export { WorkspaceShell, MenuBar, WORKSPACE_DARK, WORKSPACE_LIGHT, WORKSPACE_OFFICE, DockArea } from '../core/shell/workspace'
@@ -73,12 +73,12 @@ export { useDebouncedAutosave } from '../core/hooks/useAutosave'
 export { formatSize } from '../core/utils/format'
 export { useDraggable } from '../core/hooks/useDraggable'
 export { prompt } from '../core/store/promptStore'
-// Image picker — THE way to insert or upload an image anywhere in the app.
+// Image picker - THE way to insert or upload an image anywhere in the app.
 export { openImagePicker, openImagePickerMany, pickImageFile, pickImageFiles } from '../core/store/imagePickerStore'
 export type { ImagePickResult, ImagePickerOptions } from '../core/store/imagePickerStore'
 // Modules add their own source tab (e.g. photos) here.
 export { ImageSourceRegistry } from '../core/registry/ImageSourceRegistry'
-// Sharing — THE way to share anything; modules add sections via ShareRegistry.
+// Sharing - THE way to share anything; modules add sections via ShareRegistry.
 export { openShare, useShareStore } from '../core/store/shareStore'
 export type { ShareApi, ShareOptions, ShareRecipient, ShareCollaborator } from '../core/store/shareStore'
 export { ShareRegistry, ShareRecipientKinds } from '../core/registry/ShareRegistry'
@@ -90,7 +90,7 @@ export { default as PdfViewerModal } from '../core/components/PdfViewerLazy'
 export { useWidgetSize, WidgetSizeContext } from '../core/widgets/WidgetSizeContext'
 export { useWsStore } from '../core/store/wsStore'
 export { getIcon, ICON_MAP } from '../core/utils/iconMap'
-// Registre d'override de composants (thèmes "skins") — un module peut enregistrer
+// Registre d'override de composants (thèmes "skins") - un module peut enregistrer
 // ses propres clés thématisables et/ou des overrides ; les scripts de thème
 // reçoivent ce registre via l'API de thème au chargement.
 export { ComponentRegistry, ThemeScopeContext, ThemePreviewContext, themed } from '../ui/themeRegistry'
@@ -112,7 +112,7 @@ export type { VoiceSession, VoiceCallbacks, VoiceErrorCode } from '../core/shell
  *
  * ⚠️ Ce handshake ne suffit PAS à lui seul : un export retiré/renommé fait
  * échouer la LIAISON ES du bundle du module (« does not provide an export named
- * 'X' ») AVANT que ce garde-fou ne s'exécute — le module bâti contre l'ancienne
+ * 'X' ») AVANT que ce garde-fou ne s'exécute - le module bâti contre l'ancienne
  * surface disparaissait alors en silence. Deux filets complètent donc ce
  * numéro :
  *   1. tout retrait d'export doit s'accompagner d'un bump ici ET d'un bridge de

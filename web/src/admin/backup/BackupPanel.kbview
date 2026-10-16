@@ -1,4 +1,4 @@
-<!-- BackupPanel — converted from BackupPanel.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- BackupPanel - converted from BackupPanel.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <Panel Class="contents">
   <Stack Direction="LeftToRight" Gap="0" Justify="Center" Visible="{Binding show_case_2}" Class="py-10">
     <Spinner/>

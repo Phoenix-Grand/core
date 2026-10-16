@@ -122,9 +122,9 @@ export class DeviceDetail extends ViewBase {
     return this.memo('callout_text', [this.tr, this.device, this.i18n, this.isLoading, this.isError, this.data], () => {
       if (!(!(this.isLoading)) || !(!(this.isError || !this.data)) || !(this.device.approval === 'blocked')) return undefined as never
       return this.tr('devices.blocked_body', {
-            who:  this.device.approval_label ?? '—',
-            when: this.device.approval_at ? formatWhen(this.device.approval_at, this.i18n.language) : '—',
-          }) + String(this.device.approval_reason ? ` — ${this.device.approval_reason}` : '')
+            who:  this.device.approval_label ?? '-',
+            when: this.device.approval_at ? formatWhen(this.device.approval_at, this.i18n.language) : '-',
+          }) + String(this.device.approval_reason ? ` - ${this.device.approval_reason}` : '')
     })
   }
 

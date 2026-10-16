@@ -1,11 +1,11 @@
-/* Kubuno (référence) — reproduction fidèle de l'apparence du core via les tokens.
+/* Kubuno (référence) - reproduction fidèle de l'apparence du core via les tokens.
    Le thème reprend les variables par défaut : l'aspect est identique à Kubuno tel
    quel. Ce fichier est le point de départ éditable pour re-skinner la coquille. */
 
-/* Barre de recherche (objet core 'shell.search') — pilule arrondie. */
+/* Barre de recherche (objet core 'shell.search') - pilule arrondie. */
 :root { --kbn-search-radius: 9999px; }
 
-/* Item de navigation actif (objet core 'shell.nav-item') — pilule colorée.
+/* Item de navigation actif (objet core 'shell.nav-item') - pilule colorée.
    Reproduit le comportement par défaut ; éditez la couleur pour re-styler. */
 /* (les classes utilitaires Tailwind du shell consomment déjà --color-primary-light
    et --color-text-nav-active ; surcharger ces variables suffit à re-skinner.) */

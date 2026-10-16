@@ -13,7 +13,7 @@ export interface SearchConfig {
   placeholderKey?: string
   // Appelé à chaque frappe dans le champ de recherche core
   onSearch?:       (query: string) => void
-  // Remplacement complet de la SearchBar — le module contrôle toute l'UI de recherche
+  // Remplacement complet de la SearchBar - le module contrôle toute l'UI de recherche
   // Si absent, on utilise le champ par défaut avec le placeholder ci-dessus
   SearchComponent?: React.ComponentType
   // Contenu du dropdown de filtres (injected par le module actif)
@@ -32,7 +32,7 @@ export interface SearchConfig {
  * A request from a module to the SHELL to open (or close) its search surface.
  *
  * The shell owns the magnifier and the search mode it expands into, so a module
- * cannot open it by itself — and its own search component is not even mounted
+ * cannot open it by itself - and its own search component is not even mounted
  * while the mode is closed, which is exactly when a global shortcut has to work.
  * `seq` makes each request distinct, so asking twice in a row is honoured twice.
  */
@@ -41,7 +41,7 @@ export interface SearchOpenSignal { seq: number; open: boolean }
 interface SearchState {
   configs:   SearchConfig[]
   // Current text of the shell search field (controlled). Modules can seed it
-  // (e.g. restoring a search from the URL after a refresh) via setQuery — this
+  // (e.g. restoring a search from the URL after a refresh) via setQuery - this
   // only updates the field; running the search stays the caller's job.
   query:     string
   setQuery:  (q: string) => void

@@ -24,7 +24,7 @@ pub struct ClipboardItem {
 }
 
 /// Push a clip. The server computes the fingerprint (dedup) and enforces the
-/// size cap — a client is never trusted with either.
+/// size cap - a client is never trusted with either.
 #[derive(Debug, Deserialize, Validate)]
 pub struct PushClipboardDto {
     #[validate(length(min = 1, max = 100, message = "Module: 1-100 caractères"))]

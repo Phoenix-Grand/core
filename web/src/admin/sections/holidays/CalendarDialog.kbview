@@ -1,4 +1,4 @@
-<!-- CalendarDialog — converted from CalendarDialog.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- CalendarDialog - converted from CalendarDialog.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <Panel x:Props="CalendarDialogProps" OnMouseDown="panel_mouse_down">
   <FloatingWindow ConfirmText="{Res admin.hol_save}"
                   ConfirmEnabled="{Binding enabled_unless_create_is_pending_name}"

@@ -7,7 +7,7 @@
 //!
 //! The table is checked against the real traits: a test renders every member with [`stub`] into
 //! `overrides_fixture.rs` form and compares it with that file, which is compiled as a class
-//! overriding everything — a signature that drifts from its trait breaks the build.
+//! overriding everything - a signature that drifts from its trait breaks the build.
 
 /// One overridable member.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]

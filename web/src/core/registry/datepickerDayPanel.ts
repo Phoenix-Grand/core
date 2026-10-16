@@ -1,8 +1,8 @@
 /**
  * Datepicker day-panel extension point.
  *
- * When at least one provider is registered here — in practice, when the calendar
- * module is installed — the shared <DatePicker> grows a right-hand column that
+ * When at least one provider is registered here - in practice, when the calendar
+ * module is installed - the shared <DatePicker> grows a right-hand column that
  * lists the selected/hovered day's events. The column also folds in whatever sits
  * on CALENDAR_OVERLAY (e.g. tasks due that day), so it shows « events OR tasks ».
  *

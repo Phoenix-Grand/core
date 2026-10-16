@@ -43,7 +43,7 @@ async fn maybe_mysql() -> Option<DbPool> {
             Some(connect(&s, SCHEMA).await.expect("mysql connect"))
         }
         None => {
-            eprintln!("KUBUNO_MYSQL_TEST_URL absent — MySQL ignoré");
+            eprintln!("KUBUNO_MYSQL_TEST_URL absent - MySQL ignoré");
             None
         }
     }
@@ -96,7 +96,7 @@ async fn count(pool: &DbPool, table: &str) -> i64 {
 }
 
 /// Inserts a distinctive settings row (JSON value), to prove custom data flows
-/// through the dump — not only the migration seeds.
+/// through the dump - not only the migration seeds.
 async fn insert_marker(pool: &DbPool, key: &str) {
     pool.execute(
         "INSERT INTO core.settings (\"key\", value) VALUES ($1, $2)",

@@ -27,7 +27,7 @@ cargo build --release -p kubuno-core     # → target/release/kubuno-core and ta
 | Module | Responsibility |
 |---|---|
 | `router` | assembles the Axum router: `/api/v1/*`, `/internal/*` (module → core), `/mcp`, the proxied module routes and the static web host |
-| `handlers` | the HTTP handlers — `auth`, `users`, `admin/*` (one file per console section), `modules`, `themes`, `labels`, `clipboard`, `storage_*`, `push`, `ws`, `mcp`… |
+| `handlers` | the HTTP handlers - `auth`, `users`, `admin/*` (one file per console section), `modules`, `themes`, `labels`, `clipboard`, `storage_*`, `push`, `ws`, `mcp`… |
 | `middleware` | cross-cutting HTTP middleware |
 | `websocket` | the per-user WebSocket hub that pushes events to connected clients |
 | `collab` | the generic real-time collaboration service (Yjs) the editors share |
@@ -56,7 +56,7 @@ cargo build --release -p kubuno-core     # → target/release/kubuno-core and ta
 
 | Module | Responsibility |
 |---|---|
-| `settings` | scoped settings — one value per key and scope, inherited down the organisational-unit tree, lockable |
+| `settings` | scoped settings - one value per key and scope, inherited down the organisational-unit tree, lockable |
 | `setup` | the first-run installation |
 | `health`, `alerts`, `rules` | instance health checks, the alert centre, the "when x happens, do y" rule engine |
 | `backup`, `data_export`, `data_migration` | backup policy and runs, data export archives, imports from another provider |
@@ -95,9 +95,9 @@ kubuno <module>:<command>       routed to the module's own CLI binary
 ```
 
 The `users:*`, `groups:*` and `org-units:*` commands are not a second
-implementation of the directory: they run the console's own operations —
+implementation of the directory: they run the console's own operations -
 `kubuno_core::accounts`, `kubuno_core::groups`, `kubuno_core::org_units`, which
-the `/admin/*` handlers also call — as `Actor::System`. Password policies,
+the `/admin/*` handlers also call - as `Actor::System`. Password policies,
 quotas, the "never remove the last super-administrator" guard and the audit
 entries are therefore identical; a change made at the prompt is recorded with the
 "system" origin, and account events reach the running server over the database
@@ -105,10 +105,10 @@ notification channel.
 
 ## Workspace crates it relies on
 
-- [`kubuno-db`](../common/kubuno-db/README.md) — one binary over PostgreSQL, MySQL/MariaDB or SQLite
-- [`kubuno-storage`](../common/kubuno-storage/README.md) — the storage backend
-- [`kubuno-modauth`](../common/kubuno-modauth/README.md) — the signed identity token the proxy mints for each module
-- [`kubuno-mcp`](../common/kubuno-mcp/README.md) — the Model Context Protocol server core
+- [`kubuno-db`](../common/kubuno-db/README.md) - one binary over PostgreSQL, MySQL/MariaDB or SQLite
+- [`kubuno-storage`](../common/kubuno-storage/README.md) - the storage backend
+- [`kubuno-modauth`](../common/kubuno-modauth/README.md) - the signed identity token the proxy mints for each module
+- [`kubuno-mcp`](../common/kubuno-mcp/README.md) - the Model Context Protocol server core
 
 ## Tests
 

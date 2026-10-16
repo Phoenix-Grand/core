@@ -1,4 +1,4 @@
-<!-- MockFileRow — converted from MockFileRow.tsx by @kubuno/views-migrate. -->
+<!-- MockFileRow - converted from MockFileRow.tsx by @kubuno/views-migrate. -->
 <UserControl x:Props="MockFileRowProps">
   <Panel Class="{Binding div_class}">
     <Stack Direction="LeftToRight"

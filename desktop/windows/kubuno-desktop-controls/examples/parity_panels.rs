@@ -1,4 +1,4 @@
-//! Numeric parity probe — the PORT side.
+//! Numeric parity probe - the PORT side.
 //!
 //! Reads the very same `tools/winforms-ref/parity/panels-cases.txt` the WinForms
 //! probe reads, runs each case through `kubuno_desktop_controls::layout_panels`, and
@@ -15,11 +15,11 @@
 //!
 //! `Canvas` is the paint surface: its `TextFormats` are DirectWrite objects a
 //! `Renderer` owns, so there is no way to build one without a device. Everything
-//! measured here is therefore taken from the family's **pure** surface —
+//! measured here is therefore taken from the family's **pure** surface -
 //! `flow_layout`, `resolve_tracks` (through `column_widths`/`row_heights`),
 //! `place_cells` (through `placements`), `cell_rect_in`, `clamp_distance`,
 //! `split_layout`, `adjusted_distance`, `tab_strip`, `tab_rows`,
-//! `tab_strip_thickness`, `tab_display_rect` — which is exactly the arithmetic
+//! `tab_strip_thickness`, `tab_display_rect` - which is exactly the arithmetic
 //! the parity run is about.
 //!
 //! Two places need a canvas in the library and are therefore **transcribed**
@@ -31,7 +31,7 @@
 //!
 //! ## The one rule of this file
 //!
-//! It measures. It never adjusts a number so the diff comes out clean — a
+//! It measures. It never adjusts a number so the diff comes out clean - a
 //! mismatch is the result, not a bug in the harness.
 
 use std::fmt::Write as _;
@@ -49,7 +49,7 @@ use kubuno_desktop_controls::layout_panels::{
 use kubuno_desktop_controls::Rect;
 
 // ═════════════════════════════════════════════════════════════════════════════
-// The shared case model — one field per token of panels-cases.txt
+// The shared case model - one field per token of panels-cases.txt
 // ═════════════════════════════════════════════════════════════════════════════
 
 #[derive(Clone, Copy)]
@@ -66,7 +66,7 @@ struct ChildSpec {
     /// own `Dock`/`Anchor`. A table cell is a miniature container: `fill`
     /// stretches the child to the cell, `topleft` leaves it at its natural size
     /// pinned to the cell's corner. The placement itself is not reproduced here
-    /// — [`place_in_cell`] is called, so the harness cannot drift from the rule
+    /// - [`place_in_cell`] is called, so the harness cannot drift from the rule
     /// the library actually applies.
     dock: DockStyle,
     anchor: AnchorStyles,
@@ -291,7 +291,7 @@ fn track(kind: &str, value: f32) -> TrackStyle {
 // ═════════════════════════════════════════════════════════════════════════════
 
 /// One emitted metric: a name and the numbers behind it. Rectangles are
-/// `[x, y, width, height]` — WinForms' `Bounds`, so the two files line up
+/// `[x, y, width, height]` - WinForms' `Bounds`, so the two files line up
 /// component by component.
 type Metric = (String, Vec<f32>);
 
@@ -374,7 +374,7 @@ fn measure_table(c: &Case) -> Vec<Metric> {
     let placements = t.placements();
 
     // TRANSCRIBED from `TableLayoutPanel::measure_auto_tracks`, which needs a
-    // canvas only to call `preferred_size` on auto-sizing children — and every
+    // canvas only to call `preferred_size` on auto-sizing children - and every
     // child in these cases carries an explicit size. The rule the library
     // documents: a child spanning several tracks contributes to none of them.
     let mut n_cols = c.cols as usize;
@@ -525,7 +525,7 @@ fn measure_tab(c: &Case) -> Vec<Metric> {
     let display = tab_display_rect(local, c.alignment, thickness);
 
     // `ItemSize` RESOLVES in `Normal` mode rather than staying at its unset
-    // 0 × 0 — the width it reports is the first tab's.
+    // 0 × 0 - the width it reports is the first tab's.
     let item_size = if c.item_size.width > 0.0 && c.item_size.height > 0.0 {
         c.item_size
     } else {
@@ -590,7 +590,7 @@ fn main() {
                 if k > 0 {
                     json.push_str(", ");
                 }
-                // Four decimals, trailing zeros trimmed — the same shape the
+                // Four decimals, trailing zeros trimmed - the same shape the
                 // WinForms probe writes, so the files diff cleanly by eye too.
                 let s = format!("{v:.4}");
                 let s = s.trim_end_matches('0').trim_end_matches('.');

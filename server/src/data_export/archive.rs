@@ -3,7 +3,7 @@
 //!
 //! ## Why a staging directory rather than one long-lived ZIP writer
 //!
-//! An export runs across MANY invocations of the job — a handful of accounts
+//! An export runs across MANY invocations of the job - a handful of accounts
 //! each time, so it never approaches `jobs.job_timeout_s` and so a restart
 //! costs one batch rather than the whole run. A ZIP writer cannot survive that:
 //! the central directory is written at the end, and a half-written archive
@@ -15,7 +15,7 @@
 //! all three are worth the temporary disk:
 //!
 //!   * a crash leaves a staging directory, which is visibly incomplete and is
-//!     removed by the cancellation path — never something that looks like a
+//!     removed by the cancellation path - never something that looks like a
 //!     finished export;
 //!   * a module answers with its own ZIP, which is expanded into the tree, so
 //!     the per-file ceiling and the path checks apply to real entries rather
@@ -42,7 +42,7 @@
 //!
 //! ## What is refused, and why it is refused HERE
 //!
-//! Entry paths come from a module — a separate process this crate does not
+//! Entry paths come from a module - a separate process this crate does not
 //! audit. Expanding them without checking is a directory-traversal primitive
 //! with a download button on it, so [`safe_entry_path`] refuses, entry by entry:
 //! an absolute path, any `..` component, a Windows drive letter or backslash, an
@@ -70,7 +70,7 @@ const PARTIAL_SUFFIX: &str = ".part";
 
 /// Directory holding runs in progress. A dot-prefixed name inside the
 /// destination, so an operator listing the directory sees their archives and not
-/// the plumbing — and so [`is_export_file`] can never mistake it for output.
+/// the plumbing - and so [`is_export_file`] can never mistake it for output.
 const STAGING_DIR: &str = ".staging";
 
 /// Longest single path segment admitted into the archive. Well under every
@@ -81,7 +81,7 @@ const MAX_SEGMENT: usize = 120;
 /// The name an archive produced at `at` for run `id` receives.
 ///
 /// Sortable as text, and carrying nothing but a timestamp and the first block of
-/// the run id — never the instance name, never a host, never an account.
+/// the run id - never the instance name, never a host, never an account.
 pub fn file_name_for(at: DateTime<Utc>, id: Uuid) -> String {
     let short = id.simple().to_string();
     let short = short.get(..8).unwrap_or("00000000");
@@ -123,7 +123,7 @@ pub fn staging_root(destination: &Path, export_id: Uuid) -> PathBuf {
 /// The folder one account receives inside the archive.
 ///
 /// Derived from the username, reduced to characters that survive being extracted
-/// on any desktop, and made unique against `taken` — two accounts whose
+/// on any desktop, and made unique against `taken` - two accounts whose
 /// usernames differ only by an accent must not land in the same directory, which
 /// would silently interleave two people's data.
 pub fn folder_for(username: &str, user_id: Uuid, taken: &mut HashSet<String>) -> String {
@@ -328,7 +328,7 @@ fn merge_blocking(
 
         let raw = entry.name().to_string();
         // The declared size is what the entry HEADER claims. It is checked here
-        // to refuse cheaply, and again below on the bytes actually read — a
+        // to refuse cheaply, and again below on the bytes actually read - a
         // header is written by the module and a zip bomb is exactly a header
         // that lies.
         if entry.size() > max_file_bytes {

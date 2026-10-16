@@ -1,4 +1,4 @@
-# Kubuno — Mobile foundation
+# Kubuno - Mobile foundation
 
 The libraries every Kubuno mobile app shares: the API client, the device accounts, the UI component library, the
 in-app viewers and the conformance-vector runner. The apps themselves live in their module's repository, under
@@ -26,11 +26,11 @@ override. The Kotlin/JVM libraries all sit in `android/` today (the conversion t
 ## Rust engine and shells (Visual Studio)
 
 Alongside the Kotlin libraries, `mobile/` hosts the **shared engine of the Rust mobile apps**, built from Visual
-Studio exactly like Kubuno Desktop (one Cargo workspace, `.rsproj` per crate, `common/` + per-OS folders) — Path B of
+Studio exactly like Kubuno Desktop (one Cargo workspace, `.rsproj` per crate, `common/` + per-OS folders) - Path B of
 the study `vskubuno/docs/MOBILE-RUST-FEASIBILITY.md`: the UI is a set of `.kbview` screens rendered by a portable Rust
-engine, no Java/Kotlin UI, no webview — the same "one view language, native renderers" identity as web and desktop.
+engine, no Java/Kotlin UI, no webview - the same "one view language, native renderers" identity as web and desktop.
 It holds **no app**: each module's mobile app lives in that module's repository (`<module>/mobile`, laid out like its
-desktop app: `common/`, `android/`, `ios/`) — Drive, Mail, Photos, Maps, Chat, Office Documents.
+desktop app: `common/`, `android/`, `ios/`) - Drive, Mail, Photos, Maps, Chat, Office Documents.
 
 ```
 mobile/Cargo.toml                                    the mobile Rust workspace (independent of desktop/, server/)
@@ -48,7 +48,7 @@ mobile/Cargo.toml                                    the mobile Rust workspace (
 **How a module's app plugs in.** Its `common` crate declares an `App { id, label, views, setup }` (the screens, in
 order) and, in `setup`, registers what the renderer does not provide itself: its own controls as **host controls**
 (`HostControl` + `register_host_control`: the app paints them through a `HostCanvas`, can be a full-bleed background
-layer under the floating content, draw an overlay above everything, and receives the shell's pan / pinch gestures —
+layer under the floating content, draw an overlay above everything, and receives the shell's pan / pinch gestures -
 Maps' interactive map, for instance) and the **images** its screens show (`register_image`). Its `android` crate is
 the APK (its `android_main` calls `kubuno_mobile_shell_android::run(app, APP)`, and its Cargo metadata carries the
 package id, label and launcher icon); its `ios` crate's `main` calls `kubuno_mobile_shell_ios::run(APP)`.
@@ -142,7 +142,7 @@ A published version is immutable: never republish over an existing version, bump
 `.github/workflows/mobile.yml` builds and tests the libraries on every change under `mobile/` and on a `mobile-v*`
 tag.
 
-## Phase 2 — Kotlin Multiplatform and iOS
+## Phase 2 - Kotlin Multiplatform and iOS
 
 Phase 1 (done) was structural: the libraries moved here and each app moved to its module, with their history, and
 everything still builds as Android Kotlin. Phase 2 makes `common/` real.

@@ -140,7 +140,7 @@ pub async fn totp_verify(
     // Consuming a backup code is audited for *every* account, not just
     // administrators: it is a rare, deliberate act, so it cannot be used to flood
     // the trail, and it is exactly what an operator looks for after a phone is
-    // lost — or stolen. The code itself never appears, in any form.
+    // lost - or stolen. The code itself never appears, in any form.
     if let Cleared::BackupCode(remaining) = cleared {
         let ctx = login_context(&headers, client_ip, &user);
         ctx.record(

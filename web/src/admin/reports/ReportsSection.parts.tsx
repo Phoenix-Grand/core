@@ -28,7 +28,7 @@ function OneReport({
   const instanceName = useInstanceName()
   const user = useAuthStore(s => s.user)
   // The same key the query hook gates on. Checked here too, because a query
-  // that is disabled resolves to nothing at all — and "nothing at all" on a
+  // that is disabled resolves to nothing at all - and "nothing at all" on a
   // report page is a blank sheet, which reads as "there was nothing to report".
   const mayRead = can(reportPrivilege(source))
 
@@ -95,7 +95,7 @@ function OneReport({
       // The host name is a poor name for an instance and a much better one than
       // an empty line at the top of a printed page.
       instance={instanceName ?? window.location.host}
-      author={user?.display_name || user?.username || user?.email || '—'}
+      author={user?.display_name || user?.username || user?.email || '-'}
     />
   )
 }

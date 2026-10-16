@@ -17,7 +17,7 @@ export interface TooltipProps {
   disabled?: boolean
 }
 
-/** Shared bubble styling — also used by the shell's `title` interceptor. */
+/** Shared bubble styling - also used by the shell's `title` interceptor. */
 export const TOOLTIP_STYLE: React.CSSProperties = {
   position:      'fixed',
   background:    'rgba(60, 64, 67, 0.95)',

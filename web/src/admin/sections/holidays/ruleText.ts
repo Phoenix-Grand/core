@@ -1,6 +1,6 @@
 // Turning a rule back into a sentence.
 //
-// The table shows "14 juillet", "Pâques + 39 jours", "dernier lundi de mai" —
+// The table shows "14 juillet", "Pâques + 39 jours", "dernier lundi de mai" -
 // not `{"month":5,"weekday":1,"nth":-1}`. This is the whole reason the
 // referential stores rules rather than dates: a rule can be *read*, and an
 // administrator who cannot read it cannot judge whether it is right.
@@ -51,7 +51,7 @@ function ofMonth(t: TFunction, locale: string, month: string): string {
  *
  * `dates` is the honest case: there is no sentence for "the Islamic new year",
  * only the list the dataset computed, so the line says how many dates are known
- * and over which years — which is exactly the limit a reader needs to see.
+ * and over which years - which is exactly the limit a reader needs to see.
  */
 export function ruleText(
   t: TFunction,
@@ -79,7 +79,7 @@ export function ruleText(
       const weekday = weekdayName(locale, rule.weekday ?? 1)
       const month   = ofMonth(t, locale, monthName(locale, rule.month ?? 1))
       const rank    = t(`admin.hol_rank_${rule.nth === -1 ? 'last' : (rule.nth ?? 1)}`)
-      // "1er lundi de mai" / "1st Monday of May" — the rank comes from the same
+      // "1er lundi de mai" / "1st Monday of May" - the rank comes from the same
       // labels the editor's dropdown shows, so the table and the form agree.
       return t('admin.hol_rule_nth_weekday', { rank, weekday, month })
     }
@@ -98,7 +98,7 @@ export function ruleText(
   }
 }
 
-/** The weekend shift, in the same register — empty when the day never moves. */
+/** The weekend shift, in the same register - empty when the day never moves. */
 export function observanceText(t: TFunction, observance: Observance): string {
   return observance === 'none' ? '' : t(`admin.hol_obs_${observance}`)
 }

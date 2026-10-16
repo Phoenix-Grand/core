@@ -3,7 +3,7 @@
 //! # Why the proxy is the only honest vantage point
 //!
 //! A module owns its own PostgreSQL schema and the core never reads it, so the
-//! core cannot ask a module how much it was used — and a module that has to
+//! core cannot ask a module how much it was used - and a module that has to
 //! *declare* its own attendance is a module that can forget to, or never
 //! implement it. But every browser call to every module crosses
 //! [`crate::modules::proxy`]: the account is resolved there (to forward
@@ -14,7 +14,7 @@
 //! # What is counted, and what is deliberately not
 //!
 //! One number per `(day, module, account)`. **No URL, no path, no method, no IP
-//! address, no payload** — see the preamble of migration `000123`, which states
+//! address, no payload** - see the preamble of migration `000123`, which states
 //! the rule the schema enforces. The day is stamped in the instance's time zone
 //! at the moment of the hit, so the counter cannot be resolved back into a
 //! timetable, only into "this account used drive on Tuesday".
@@ -113,7 +113,7 @@ impl UsageMeter {
             return;
         };
 
-        // One short String is copied per hit — the price of a borrowed key in a
+        // One short String is copied per hit - the price of a borrowed key in a
         // map that outlives the request. It is nothing next to what it replaces:
         // a round trip to PostgreSQL on every call to every module.
         let key = (day, module_id.to_owned(), user_id);
@@ -159,7 +159,7 @@ impl UsageMeter {
 /// the day's figure is the sum, never the last writer's.
 ///
 /// Accounts erased between the hit and the flush are filtered out in SQL rather
-/// than allowed to fail the batch on the foreign key — losing a whole minute of
+/// than allowed to fail the batch on the foreign key - losing a whole minute of
 /// attendance because one account was purged would be a poor trade.
 pub async fn flush(db: &DbPool, meter: &UsageMeter) {
     let batch = meter.drain();

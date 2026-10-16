@@ -1,5 +1,5 @@
-//! [`FileStore`]: the app's own files — isolated data, a cache with eviction, temporary files
-//! (`docs/STORAGE-COMPONENTS.md` §3.4, lot ST-2) — and the location of its local databases ([`local_database_path`]).
+//! [`FileStore`]: the app's own files - isolated data, a cache with eviction, temporary files
+//! (`docs/STORAGE-COMPONENTS.md` §3.4, lot ST-2) - and the location of its local databases ([`local_database_path`]).
 //!
 //! | Kind | Folder | Lifetime |
 //! |---|---|---|

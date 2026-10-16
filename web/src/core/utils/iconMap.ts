@@ -10,7 +10,7 @@ import {
   Activity, HardDrive, KeyRound, UserCircle, ShieldCheck, Gauge,
   // Names modules use for their admin pages (`[[setting_groups]]`). A name
   // missing here renders WITHOUT a glyph, which reads as a broken row next to
-  // its siblings — so this set has to cover what an admin page is plausibly
+  // its siblings - so this set has to cover what an admin page is plausibly
   // about, not just what one module happens to declare today.
   Server, Lock, Filter, SlidersHorizontal, Globe, Bell, Database, Plug,
   AtSign, Mails, ShieldOff, Signature, Route, Gavel, Wrench, Key, FileCog,
@@ -39,7 +39,7 @@ export function getIcon(name: string): LucideIcon {
 }
 
 /**
- * Same lookup WITHOUT the fallback — for places where an unknown name must show
+ * Same lookup WITHOUT the fallback - for places where an unknown name must show
  * nothing rather than a stand-in.
  *
  * A sidebar entry has to be clickable, so `getIcon` owes it a glyph. A decorative

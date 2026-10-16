@@ -1,4 +1,4 @@
-<!-- AudienceSheet — converted from AudienceSheet.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- AudienceSheet - converted from AudienceSheet.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="AudienceSheetProps">
   <Panel Class="contents">
     <Label Text="{Res common.loading}" Overflow="Wrap" ForeColor="TextTertiary" Visible="{Binding show_case_1}" Class="p-6"/>

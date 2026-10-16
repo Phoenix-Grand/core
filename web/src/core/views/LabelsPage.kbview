@@ -1,4 +1,4 @@
-<!-- LabelsPage — converted from LabelsPage.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- LabelsPage - converted from LabelsPage.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <Stack Direction="LeftToRight" Gap="0" BackColor="Surface" Class="h-full overflow-hidden">
   <Panel HtmlTag="Aside" Class="w-72 flex-shrink-0 border-r border-border flex flex-col">
     <Panel Class="px-4 pt-5 pb-3">

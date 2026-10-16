@@ -25,6 +25,6 @@ syn         = { version = "2", features = ["full"] }
 kubuno-desktop-data-model = { workspace = true }
 # The expansion of sqlx's `query!`/`query_as!` (the same code sqlx's own macros run: offline cache
 # `.sqlx`, `DATABASE_URL`, `SQLX_OFFLINE`), called directly so that the generated code can reach sqlx
-# through `kubuno_desktop_data::sqlx` — the application needs no `sqlx` dependency. The crate is semver
+# through `kubuno_desktop_data::sqlx` - the application needs no `sqlx` dependency. The crate is semver
 # exempt: a caret requirement lets Cargo unify it with the exact version `sqlx` itself pins.
 sqlx-macros-core = { version = "0.8.6", default-features = false, features = ["macros", "_rt-tokio", "chrono", "uuid", "json"] }

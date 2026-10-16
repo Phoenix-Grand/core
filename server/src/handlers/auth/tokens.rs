@@ -26,10 +26,10 @@ use serde::Deserialize;
 /// ([`crate::devices`]): the request is correlated to a device row, the row is
 /// refreshed with what the request observed, and the freshly issued session
 /// points at it. Doing it here rather than in each sign-in handler is what makes
-/// password, 2FA and backup-code sign-ins land in the same inventory — three
+/// password, 2FA and backup-code sign-ins land in the same inventory - three
 /// call sites, one correlation.
 // Eight parameters because signing in genuinely depends on eight distinct
-// things, and the alternative — a context struct — would be assembled at three
+// things, and the alternative - a context struct - would be assembled at three
 // call sites and taken apart here, hiding which of them actually vary.
 #[allow(clippy::too_many_arguments)]
 pub(super) async fn issue_full_tokens(

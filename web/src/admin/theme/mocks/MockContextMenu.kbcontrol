@@ -1,4 +1,4 @@
-<!-- MockContextMenu — converted from MockContextMenu.tsx by @kubuno/views-migrate. -->
+<!-- MockContextMenu - converted from MockContextMenu.tsx by @kubuno/views-migrate. -->
 <UserControl>
   <Panel Class="w-52 py-1 rounded-lg bg-white border border-border [box-shadow:0_2px_6px_2px_rgba(0,0,0,.12),_0_1px_2px_rgba(0,0,0,.18)]">
     <Panel Class="{Binding item}">

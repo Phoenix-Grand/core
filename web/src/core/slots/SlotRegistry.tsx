@@ -25,7 +25,7 @@ export function useSlotRegistryVersion(): number {
 }
 
 // Core reserves these well-known slot names. Modules may use any string as a slot
-// name for inter-module contributions (e.g. "files-open-with") — those are defined
+// name for inter-module contributions (e.g. "files-open-with") - those are defined
 // and consumed entirely within module code, not in the core.
 export type SlotName =
   // Core shell slots
@@ -52,7 +52,7 @@ export type SlotName =
   | (string & Record<never, never>) // allow module-defined slot names without losing autocomplete
 
 /**
- * Slot name of a module's own admin page — `/admin/modules/<id>`.
+ * Slot name of a module's own admin page - `/admin/modules/<id>`.
  *
  * The name CARRIES the module id rather than being one shared slot filtered at
  * render time, for two reasons. First, the core must not know that `mail` (or
@@ -60,7 +60,7 @@ export type SlotName =
  * the id in the URL, so discovery stays purely dynamic and no module is ever
  * named in core code. Second, a shared `module-admin` slot would render every
  * contributor on every module's page unless the consumer filtered them, and a
- * filter that is easy to forget is a leak waiting to happen — here a wrong id
+ * filter that is easy to forget is a leak waiting to happen - here a wrong id
  * simply means nothing is registered under that name.
  *
  * A module registers with its own id on both sides:
@@ -75,14 +75,14 @@ export const moduleAdminSlot = (moduleId: string): SlotName => `module-admin:${m
  * `module-admin:<id>` alone answers "who renders something here"; it cannot
  * answer "on which page, and under which tab", which is the only question left
  * once a module's panel is more than one page. The module is the one that knows
- * — it declared those pages itself, in its manifest — so it says so here, with
+ * - it declared those pages itself, in its manifest - so it says so here, with
  * the same vocabulary: `group` is a `[[setting_groups]]` id of that module.
  *
  * ── The two ways a section shows up ──────────────────────────────────────────
- *  • WITHOUT a label — rendered inline at the top of its group's page, above
+ *  • WITHOUT a label - rendered inline at the top of its group's page, above
  *    the tabs. That is for what has to be read before anything is changed: a
  *    diagnostic, a status. It competes with nothing.
- *  • WITH a label — a tab of its own, sitting next to the tabs the settings'
+ *  • WITH a label - a tab of its own, sitting next to the tabs the settings'
  *    `category` produce. That is for a surface as large as a settings page and
  *    as unrelated to it as a key store.
  *
@@ -90,12 +90,12 @@ export const moduleAdminSlot = (moduleId: string): SlotName => `module-admin:${m
  * A section naming a group the module does not declare, or naming none at all,
  * is not dropped: it renders on the module's FIRST page. Losing a diagnostic
  * because a manifest was renamed would be far worse than showing it one page
- * early — and the module keeps working while its two halves are out of step.
+ * early - and the module keeps working while its two halves are out of step.
  */
 export interface ModuleAdminSection {
   /** The contributing module. Its page is `/admin/modules/<moduleId>`. */
   moduleId: string
-  /** Stable, untranslated id — unique per module. Also the tab id. */
+  /** Stable, untranslated id - unique per module. Also the tab id. */
   id:       string
   /** `[[setting_groups]]` id of that module. Absent = its first page. */
   group?:   string
@@ -169,7 +169,7 @@ export const SlotRegistry = {
     return registry.get(slot) ?? []
   },
 
-  /** Whether at least one ACTIVE module contributes to `slot` — the same
+  /** Whether at least one ACTIVE module contributes to `slot` - the same
    *  filtering `<Slot>` applies, exposed so a page can decide its layout BEFORE
    *  rendering (e.g. not claiming a module has nothing to configure when it
    *  does contribute a section of its own). */
@@ -309,7 +309,7 @@ export const NotificationRegistry = {
 interface SlotProps {
   name: SlotName
   fallback?: React.ReactNode
-  /* Rendering context passed to the modules' contributions — notably `dark`, so
+  /* Rendering context passed to the modules' contributions - notably `dark`, so
    * that a top bar button adapts to the tinted bars of ribbon applications instead
    * of drawing unreadable dark text there. A module ignoring these props is not
    * affected. */
@@ -317,7 +317,7 @@ interface SlotProps {
   [prop: string]: any
 }
 
-/** Reactive counterpart of `SlotRegistry.hasActive` — re-evaluated whenever the
+/** Reactive counterpart of `SlotRegistry.hasActive` - re-evaluated whenever the
  *  active module list changes, so a page laid out around a contribution follows
  *  a module being switched off. */
 export function useHasSlot(name: SlotName): boolean {
@@ -327,7 +327,7 @@ export function useHasSlot(name: SlotName): boolean {
 }
 
 /**
- * The sections `moduleId` contributes to its own admin page — `[]` while the
+ * The sections `moduleId` contributes to its own admin page - `[]` while the
  * module is switched off, like every other slot: a disabled module's bundle may
  * still be loaded in this tab, and rendering its panel would say it is running.
  */

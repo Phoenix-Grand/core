@@ -12,7 +12,7 @@ use crate::schema::{self, ColumnNode, TableNode};
 use crate::targets::{open, OpenOptions};
 
 /// Quotes one identifier for `provider`. Any name a catalog can hold is accepted (spaces, dashes,
-/// accents…) — the quote character inside it is doubled — except an empty one, a name with control
+/// accents…) - the quote character inside it is doubled - except an empty one, a name with control
 /// characters (NUL, newlines) or an absurdly long one.
 pub fn quote_ident(provider: ProviderName, name: &str) -> ToolResult<String> {
     if name.is_empty() || name.chars().count() > 256 || name.chars().any(char::is_control) {

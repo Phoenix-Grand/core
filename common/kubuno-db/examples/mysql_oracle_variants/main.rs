@@ -7,7 +7,7 @@
 //! Reads `<root>/mysql/*.sql` in version order, applies the line-level rewrite
 //! of [`compat`] (the constructs MariaDB accepts and Oracle MySQL refuses), and
 //! lists every file the rewrite changes. With `--write`, each changed file is
-//! written under `<root>/mysql-oracle/` with the same name — a flavour variant
+//! written under `<root>/mysql-oracle/` with the same name - a flavour variant
 //! (see `kubuno_db::MySqlVariants`). An existing variant is never overwritten.
 //!
 //! The output is a draft: review it, then apply the module's migrations on a

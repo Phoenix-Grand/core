@@ -7,11 +7,11 @@ import { useAuthStore } from '../../core/store/authStore'
  * An administration console has fifteen sections and something like sixty
  * pages, and any given operator works in four of them. The reference console
  * this one takes its shape from answers that with a short, hand-curated list at
- * the very top of the menu — the pages you chose, above the tree you have to
+ * the very top of the menu - the pages you chose, above the tree you have to
  * walk. This is that list.
  *
  * ── What is stored, and where ────────────────────────────────────────────────
- * Nothing but tab ids (`users`, `domains`) — the same ids `ADMIN_NAV` declares,
+ * Nothing but tab ids (`users`, `domains`) - the same ids `ADMIN_NAV` declares,
  * so a pin is re-resolved against the live tree on every render: a section that
  * is renamed follows, one that disappears simply stops being shown, and a pin
  * can never point at a page this administrator may not open (the tree is
@@ -21,8 +21,8 @@ import { useAuthStore } from '../../core/store/authStore'
  *
  * ── Scoped to the account, deliberately ─────────────────────────────────────
  * The key carries the signed-in user's id. A shared workstation is the norm in
- * administration, and an unscoped list would show the next operator — possibly
- * a delegate with far fewer privileges — the shortcuts of the previous one.
+ * administration, and an unscoped list would show the next operator - possibly
+ * a delegate with far fewer privileges - the shortcuts of the previous one.
  */
 
 const PREFIX = 'kb.admin.nav.pins'
@@ -61,7 +61,7 @@ export interface AdminPins {
   isPinned: (tab: string) => boolean
   /** Pins an unpinned tab (unless the list is full) or unpins a pinned one. */
   toggle:   (tab: string) => void
-  /** False once the list is full — the pin control is then offered on pinned rows only. */
+  /** False once the list is full - the pin control is then offered on pinned rows only. */
   canPin:   boolean
 }
 

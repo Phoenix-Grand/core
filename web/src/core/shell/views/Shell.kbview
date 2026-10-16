@@ -1,4 +1,4 @@
-<!-- Shell — converted from Shell.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- Shell - converted from Shell.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <Panel BackColor="Background" DataAttributes="app-shell" Class="h-screen flex flex-col overflow-hidden [height:100dvh]">
   <!-- TODO(views-migrate): <TitleTooltips> is no .kbview element (./TitleTooltips#default) -->
   <ReactHost Component="{Binding TitleTooltips}"/>

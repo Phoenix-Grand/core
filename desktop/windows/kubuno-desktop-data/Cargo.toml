@@ -17,7 +17,7 @@ postgres = ["sqlx/postgres", "sqlx/tls-native-tls", "sqlx/uuid", "sqlx/chrono", 
 macros = ["dep:kubuno-desktop-data-macros", "sqlx/macros", "sqlx/chrono", "sqlx/uuid", "sqlx/json"]
 # MySQL / MariaDB (DATA-3), through sqlx. Not in the defaults: sqlx's MySQL driver brings the `rsa`
 # crate (RUSTSEC-2023-0071, a timing side channel in RSA decryption used by the
-# `caching_sha2_password` exchange over non-TLS connections) — TLS is required for remote servers.
+# `caching_sha2_password` exchange over non-TLS connections) - TLS is required for remote servers.
 mysql = ["sqlx/mysql", "sqlx/tls-native-tls", "sqlx/chrono", "sqlx/json", "kubuno-desktop-data-macros?/mysql"]
 # SQL Server (DATA-3), through `tiberius` (pure Rust TDS, TLS through SChannel, Windows integrated
 # authentication) with a small pool of its own on the data runtime.

@@ -5,7 +5,7 @@ import { KIND_ICON } from "./useAdminSearchSources"
 import { type RowProps } from './AdminSearchPanel'
 
 /**
- * The result surface of the admin search — presentation only.
+ * The result surface of the admin search - presentation only.
  *
  * It paints from the FLAT, keyboard-ordered list and inserts a heading whenever
  * the category changes. Grouping by category and painting separately would let

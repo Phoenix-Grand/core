@@ -8,8 +8,8 @@ import ReportBlock from './ReportBlock'
  *
  * ## The method, in one sentence
  *
- * Assembled from the three facts the server states about its own query — the
- * table, the predicate, and how rows become one number — rather than from a
+ * Assembled from the three facts the server states about its own query - the
+ * table, the predicate, and how rows become one number - rather than from a
  * paragraph written by hand next to each panel. Prose would have to be
  * translated into thirteen languages and, worse, would go on describing the
  * query it was written for long after somebody changed it. These three fields
@@ -21,7 +21,7 @@ import ReportBlock from './ReportBlock'
  *
  * ## The caveats, which matter more here than on the card
  *
- * A caveat is a limit of the MEASUREMENT — the country database that may not be
+ * A caveat is a limit of the MEASUREMENT - the country database that may not be
  * installed, the failed sign-ins recorded for administrators only, the log
  * purged after thirty days. On the dashboard it sits three centimetres under the
  * chart it qualifies. On a sheet of paper handed to somebody else it is the only

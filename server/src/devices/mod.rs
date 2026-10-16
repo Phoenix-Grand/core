@@ -5,7 +5,7 @@
 //! Kubuno will never ship fleet management, and nothing in this module can
 //! erase, lock or inspect a personal machine. There is no agent to install and
 //! no route that would talk to one. What it does is answer the question a
-//! self-hosted operator — and every one of their users — actually needs
+//! self-hosted operator - and every one of their users - actually needs
 //! answered: *which machines currently hold a credential for this account, and
 //! what do we honestly know about them?*
 //!
@@ -17,7 +17,7 @@
 //!   declared   what a native application states: disk encryption, screen
 //!              lock, platform version.  Shown as "declared by the device",
 //!              never as "verified".  Off by default (`crate::devices::declared`).
-//!   attested   hardware/OS attestation.  OUT OF SCOPE — the enum value exists
+//!   attested   hardware/OS attestation.  OUT OF SCOPE - the enum value exists
 //!              so a future implementation needs no migration, and nothing in
 //!              the core produces it.
 //! ```
@@ -30,11 +30,11 @@
 //!
 //! ```text
 //!   user_agent  normalisation of a User-Agent into device/platform/browser
-//!   geoip       OPTIONAL local country database — no outgoing request, ever
+//!   geoip       OPTIONAL local country database - no outgoing request, ever
 //!   correlate   which device a request belongs to; the SECRET correlation id
 //!   store       reads and writes, one shape for the operator and the user
 //!   declared    the opt-in declaration route's logic and its settings
-//!   model       value types, chiefly `Tri` — "unknown" never satisfies "yes"
+//!   model       value types, chiefly `Tri` - "unknown" never satisfies "yes"
 //! ```
 //!
 //! ## Two invariants worth stating once

@@ -1,4 +1,4 @@
-//! `POST /api/v1/auth/tickets` — mints signed download / stream tickets.
+//! `POST /api/v1/auth/tickets` - mints signed download / stream tickets.
 //!
 //! See [`crate::auth::tickets`] for the format and the validation side.
 
@@ -33,7 +33,7 @@ pub struct TicketRequest {
     /// `HEAD`) is issued today.
     #[serde(default)]
     pub method: Option<String>,
-    /// `view` (default), `download`, `stream`, `socket` — decides the lifetime.
+    /// `view` (default), `download`, `stream`, `socket` - decides the lifetime.
     #[serde(default)]
     #[schema(value_type = Option<String>)]
     pub purpose: Option<Purpose>,

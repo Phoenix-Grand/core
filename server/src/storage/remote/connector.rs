@@ -37,7 +37,7 @@ pub enum RemoteError {
     /// The mount's stored config could not be decrypted. Its key derives from
     /// `server.internal_secret`, which is therefore the only way back: once that
     /// secret is rotated, every config sealed with the previous one is lost for
-    /// good. Kept apart from [`RemoteError::Auth`] on purpose — nothing was sent
+    /// good. Kept apart from [`RemoteError::Auth`] on purpose - nothing was sent
     /// to the remote here, and the only way forward is to reconnect the mount.
     #[error("Identifiants du montage illisibles")]
     ConfigUnreadable,
@@ -91,7 +91,7 @@ pub(crate) const MAX_LIST_PAGES: u32 = 100;
 pub(crate) enum PageStep {
     /// Fetch the next page using this cursor/token.
     Next(String),
-    /// The provider reported no further pages — the listing is complete.
+    /// The provider reported no further pages - the listing is complete.
     Done,
     /// The provider still advertises more pages but we must stop: either the
     /// hard page cap was reached or no cursor was supplied to fetch them. The

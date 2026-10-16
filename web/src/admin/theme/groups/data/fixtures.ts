@@ -59,7 +59,7 @@ export const DEMO_MEMBERS: DemoMember[] = RAW.map(([name, unit, role, used, max,
   active,
 }))
 
-/** Long list for the Combobox — the case `Dropdown` cannot serve. */
+/** Long list for the Combobox - the case `Dropdown` cannot serve. */
 export const DEMO_UNITS: Array<{ value: string; label: string; group: string; description?: string }> = [
   { value: 'unites',    label: 'Unités & mesures',      group: 'Métier',   description: 'Étalonnage, conversions' },
   { value: 'rh',        label: 'Ressources humaines',   group: 'Métier',   description: 'Contrats, congés' },

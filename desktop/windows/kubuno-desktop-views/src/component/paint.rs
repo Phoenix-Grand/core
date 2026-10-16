@@ -5,14 +5,14 @@
 //!
 //! - nothing at all when `USER_PAINT` is cleared (the control's look is not its own `on_paint`: a
 //!   built-in node paints it);
-//! - `on_paint_background` (the `BackColor`/`BackgroundImage` by default) unless `OPAQUE` —
+//! - `on_paint_background` (the `BackColor`/`BackgroundImage` by default) unless `OPAQUE` -
 //!   always in the paint pass, as with `ALL_PAINTING_IN_WM_PAINT` (Kubuno has no separate erase);
 //! - `on_paint`, whose base behaviour raises `Paint` with the surface lent to the handlers.
 //!
 //! **Double buffering.** Every Kubuno frame is composed off screen (Direct2D, swap chain), so no
 //! control ever flickers. On top of that, a control with `OPTIMIZED_DOUBLE_BUFFER` (the default,
-//! WinForms' `DoubleBuffered`) keeps its paint in a **buffer** — the display list its `Graphics`
-//! recorded — and the next frames replay the buffer instead of calling its paint methods again, as
+//! WinForms' `DoubleBuffered`) keeps its paint in a **buffer** - the display list its `Graphics`
+//! recorded - and the next frames replay the buffer instead of calling its paint methods again, as
 //! long as the control stays **valid**: no `invalidate()`/`refresh()`, the same bounds, interaction
 //! state, DPI scale and theme, and no property change (the view runtime invalidates a control whose
 //! bound properties changed; [`super::ControlHost`] one it lent mutably). A paint that drew on the raw
@@ -42,7 +42,7 @@ struct BufferKey {
 pub struct PaintBuffer {
     list: Option<DisplayList>,
     key: Option<BufferKey>,
-    /// How many times the paint methods ran (not replayed) — diagnostics and tests.
+    /// How many times the paint methods ran (not replayed) - diagnostics and tests.
     pub repaints: u64,
     /// How many frames replayed the buffer.
     pub replays: u64,

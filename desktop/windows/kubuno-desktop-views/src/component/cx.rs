@@ -7,8 +7,8 @@
 //! handler its `OnClick="…"` attribute names, which needs the frame's view model. That second
 //! audience is the [`RaiseSink`] an `EventCx` carries: the caller that invokes `on_click` (the
 //! input router, a node, [`super::ControlHost`]) lends it for the duration of the call, so an
-//! override stays a one-argument method — `fn on_click(&mut self, e: &mut EventCx<'_,
-//! MouseEventArgs>)` — and `self.base_mut().on_click(e)` raises exactly like WinForms'
+//! override stays a one-argument method - `fn on_click(&mut self, e: &mut EventCx<'_,
+//! MouseEventArgs>)` - and `self.base_mut().on_click(e)` raises exactly like WinForms'
 //! `base.OnClick(e)`.
 
 use std::ops::{Deref, DerefMut};
@@ -113,7 +113,7 @@ impl<'a, A: ?Sized + EventArgs + AsDynArgs> EventCx<'a, A> {
         EventCx { args: &mut *self.args, sink: reborrow_sink(&mut self.sink), event: self.event, origin: self.origin }
     }
 
-    /// Raises the event to the sink, then to `owner`'s Rust subscribers — what every default
+    /// Raises the event to the sink, then to `owner`'s Rust subscribers - what every default
     /// `on_…` method ends with. `default_event` is the attribute name raised when the caller
     /// did not name the event ([`EventCx::named`]). A handler that marks the args handled
     /// stops the raise, as in [`crate::events::Event::raise`].
@@ -180,7 +180,7 @@ impl AsDynArgs for dyn EventArgs {
     }
 }
 
-/// The one raise: the sink first (the `.kbview` handler — WinForms' designer-generated
+/// The one raise: the sink first (the `.kbview` handler - WinForms' designer-generated
 /// subscription, made in `InitializeComponent`, runs first), then the Rust subscribers, unless the
 /// sink's handler marked the args handled.
 fn raise_to(owner: &dyn Component, origin: Option<&'static str>, event: &'static str, args: &mut dyn EventArgs, sink: &mut Option<&mut dyn RaiseSink>) {
@@ -207,7 +207,7 @@ fn raise_to(owner: &dyn Component, origin: Option<&'static str>, event: &'static
 }
 
 /// The argument of `on_paint` / `on_paint_background` / `on_print`: the drawing surface (WinForms'
-/// `e.Graphics`: a [`Graphics`] — lines, rectangles, ellipses, arcs, paths, gradients, pens, text
+/// `e.Graphics`: a [`Graphics`] - lines, rectangles, ellipses, arcs, paths, gradients, pens, text
 /// layout, images, clip, transforms, saved states), the rectangle to paint (`e.ClipRectangle`, the
 /// control's bounds in the surface's coordinates), and the interaction state the host observed.
 ///
@@ -256,7 +256,7 @@ impl<'a> PaintEventCx<'a> {
         self.clip_rectangle
     }
 
-    /// The control's client area in its own coordinates: `(0, 0, width, height)` — draw with it
+    /// The control's client area in its own coordinates: `(0, 0, width, height)` - draw with it
     /// after `e.graphics.translate_transform(e.bounds().left, e.bounds().top)`.
     pub fn client_rectangle(&self) -> Rect {
         let r = self.clip_rectangle;
@@ -274,7 +274,7 @@ impl<'a> PaintEventCx<'a> {
     }
 
     /// Raises `Paint` (its [`PaintEventArgs`], lending the surface) to the sink and `owner`'s Rust
-    /// subscribers — the end of the default `on_paint`.
+    /// subscribers - the end of the default `on_paint`.
     pub fn raise<C: Component + ?Sized>(&mut self, owner: &C, event: &'static str) {
         let graphics = self.graphics;
         let clip = self.clip_rectangle;

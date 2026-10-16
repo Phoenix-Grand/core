@@ -9,7 +9,7 @@ use crate::errors::AppError;
 ///
 /// Le catalogue a quitté `www.kubuno.com/api/v1` pour son propre service, sur
 /// `api.kubuno.com/v1` : l'ancienne adresse répond désormais 404. Elle est
-/// surchargeable par `KUBUNO_MARKETPLACE_URL`, ce qui sert à deux choses —
+/// surchargeable par `KUBUNO_MARKETPLACE_URL`, ce qui sert à deux choses -
 /// éprouver un core contre un catalogue local, et permettre à une instance de
 /// suivre un catalogue qui n'est pas celui de kubuno.com.
 const CATALOG_DEFAULT: &str = "https://api.kubuno.com/v1/modules";
@@ -96,7 +96,7 @@ pub struct MarketModule {
     pub artifacts: Vec<CatalogArtifact>,
     /// Ce que le catalogue recommande d'installer **pour la plateforme annoncée
     /// dans la requête**. Le choix appartient au catalogue : il peut ainsi
-    /// changer de règle — préférer le format unique à un paquet système — sans
+    /// changer de règle - préférer le format unique à un paquet système - sans
     /// qu'aucune instance déjà déployée n'ait à être mise à jour.
     #[serde(default)]
     pub artifact: Option<CatalogArtifact>,
@@ -118,7 +118,7 @@ pub(super) fn client() -> Result<reqwest::Client, AppError> {
 /// Plateforme du core, telle qu'annoncée au catalogue.
 ///
 /// Sans elle, le catalogue renverrait les artefacts de tous les systèmes et il
-/// reviendrait à chaque core de trier — ce qu'il faisait, mal, en devinant
+/// reviendrait à chaque core de trier - ce qu'il faisait, mal, en devinant
 /// d'après un suffixe de nom de fichier.
 fn platform_query() -> String {
     // Les noms de la bibliothèque standard sont déjà ceux qu'attend le catalogue.

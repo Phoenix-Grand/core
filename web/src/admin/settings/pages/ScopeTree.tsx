@@ -25,7 +25,7 @@ const childrenOf = (units: OrgUnit[], parentId: string | null) =>
 export interface ScopeTreeProps {
   scope:    ActiveScope
   onChange: (next: ActiveScope) => void
-  /** Units holding their own value for at least one setting of this page —
+  /** Units holding their own value for at least one setting of this page -
    *  marked with a dot, so a branch that diverges is findable without opening
    *  it. Empty is the normal case and shows nothing. */
   overriding?: Set<string>

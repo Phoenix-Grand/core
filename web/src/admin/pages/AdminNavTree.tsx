@@ -18,12 +18,12 @@ import * as __parts from './AdminNavTree.parts.tsx'
 import { StateGlyph, PinButton } from './AdminNavTree.parts.tsx'
 
 interface DynamicNavChild {
-  /** Record id — the segment after the section (`/admin/modules/<id>`). */
+  /** Record id - the segment after the section (`/admin/modules/<id>`). */
   id:    string
   /** Already-translated label: a display name, not a translation key. */
   label: string
   /**
-   * The module's own glyph, as it appears everywhere else in the product — a
+   * The module's own glyph, as it appears everywhere else in the product - a
    * row of twenty-odd names reads as a list; the same row with each
    * application's icon reads as the applications the operator already knows.
    *
@@ -324,11 +324,11 @@ export class AdminNavTree extends ViewBase {
     return children.map(child => {
       // A LEAF, whichever of its pages is open: the pages are not rows of this
       // tree, so the module's own row is the only thing that can say "you are
-      // in here" — and it must keep saying it on every page inside.
+      // in here" - and it must keep saying it on every page inside.
       const isActive   = tab === this.active && this.place.entity === child.id
       const notable    = child.state === 'disabled' || child.state === 'unreachable'
       const stateLabel = this.tr(LIVE_STATE_KEY[child.state])
-      const title      = notable ? `${child.label} — ${stateLabel}` : child.label
+      const title      = notable ? `${child.label} - ${stateLabel}` : child.label
       // Its first page, when it has any: the record's bare address heals to that
       // page anyway, and a menu row that redirects on arrival flickers.
       const target     = adminPath(tab, child.id, child.firstPane)
@@ -413,7 +413,7 @@ export class AdminNavTree extends ViewBase {
         <div key={item.id}>
           {isGroup ? (
             // Expand-only: it names no address, so the anchor is the sidebar's
-            // "pure action" form — href="#" plus preventDefault, or the page
+            // "pure action" form - href="#" plus preventDefault, or the page
             // jumps to the top and the URL grows a stray hash. The WHOLE row
             // toggles, the caret at its head only says which way.
             <a
@@ -428,7 +428,7 @@ export class AdminNavTree extends ViewBase {
             <div style={{ paddingLeft: padLeft }} className={this.rowClass(isActive || holdsRecord, false)}>
               {/* Both a place and a branch: the caret unfolds its records, the
                   link opens the section. Nesting the button inside the anchor
-                  would be invalid markup and would trap the keyboard — hence
+                  would be invalid markup and would trap the keyboard - hence
                   two controls sharing one row, the caret first. */}
               {isHybrid ? (
                 <button

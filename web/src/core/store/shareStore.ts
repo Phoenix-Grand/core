@@ -15,7 +15,7 @@ export interface ShareCollaborator extends ShareRecipient {
 }
 
 /**
- * The calls the dialog needs. Each module wires its own routes — the core never
+ * The calls the dialog needs. Each module wires its own routes - the core never
  * guesses a URL, it only knows the shape of the conversation.
  */
 export interface ShareApi {
@@ -37,12 +37,12 @@ export interface ShareOptions {
   /**
    * Shareable URL. Optional: the dialog always offers "Copier le lien" and
    * falls back to the current page. Pass it when the useful link is NOT where
-   * the user stands — a form's public link rather than its editor URL.
+   * the user stands - a form's public link rather than its editor URL.
    */
   link?: string
   /**
    * Who may open the resource through its link. Every shareable thing has this
-   * question, so the dialog renders it itself — the module only says what the
+   * question, so the dialog renders it itself - the module only says what the
    * current scope is and how to change it.
    */
   linkAccess?: {

@@ -1,5 +1,5 @@
 //! `Control` (WinForms `System.Windows.Forms.Control`): the level every visual component
-//! derives from — bounds, visibility, focus, the control styles, and the overridable `on_…`
+//! derives from - bounds, visibility, focus, the control styles, and the overridable `on_…`
 //! family, each of whose base behaviour raises the matching event.
 
 use std::ops::{BitOr, Deref, DerefMut};
@@ -399,16 +399,16 @@ macro_rules! accessors {
 }
 
 /// A visual component (WinForms `Control`). Implemented by `#[derive(Component)]` (empty) unless
-/// the class lists `Control` in `overrides(…)` — then `impl Control for MyControl { … }` holds the
+/// the class lists `Control` in `overrides(…)` - then `impl Control for MyControl { … }` holds the
 /// methods it overrides.
 ///
 /// Three kinds of methods:
 /// - **properties and operations** (`bounds`, `set_text`, `focus`, `invalidate`,
-///   `perform_layout`…) — provided, not meant to be overridden;
+///   `perform_layout`…) - provided, not meant to be overridden;
 /// - **overridable behaviour** (`on_click`, `on_paint`, `process_cmd_key`, `is_input_key`,
-///   `get_preferred_size`, `wnd_proc`…) — override them; the default delegates to the base
+///   `get_preferred_size`, `wnd_proc`…) - override them; the default delegates to the base
 ///   object, and at the root raises the event (`on_click` raises `Click`);
-/// - **event accessors** (`click()`, `key_down()`…) — the handle Rust code subscribes to.
+/// - **event accessors** (`click()`, `key_down()`…) - the handle Rust code subscribes to.
 #[diagnostic::on_unimplemented(
     message = "`{Self}` is not a control class",
     label = "not a `Control`",
@@ -558,7 +558,7 @@ pub trait Control: Component + ControlLink {
         self.control_core_mut().buffer.clear();
     }
 
-    /// `Control.InvokePaint(c, e)`: runs `child`'s `on_paint` with this paint's args — what a
+    /// `Control.InvokePaint(c, e)`: runs `child`'s `on_paint` with this paint's args - what a
     /// composite control that draws its children itself calls.
     fn invoke_paint(&mut self, child: &mut dyn Control, e: &mut PaintEventCx<'_>) {
         child.on_paint(e);
@@ -607,13 +607,13 @@ pub trait Control: Component + ControlLink {
 
     /// `Control.DoDragDrop(data, allowedEffects)`: starts dragging `data` from this control, right
     /// after the current frame (a drag is a modal loop and never runs inside a paint). The returned
-    /// operation completes with the effect the drop target chose (`NONE` when cancelled) — poll it
+    /// operation completes with the effect the drop target chose (`NONE` when cancelled) - poll it
     /// or `.await` it in an async handler.
     fn do_drag_drop(&mut self, data: crate::events::DataObject, allowed: crate::events::DragDropEffects) -> crate::dnd::DragOperation {
         crate::dnd::do_drag_drop(data, allowed)
     }
 
-    /// `Control.Update()`: paint the invalidated area now — in Kubuno, at the very next frame.
+    /// `Control.Update()`: paint the invalidated area now - in Kubuno, at the very next frame.
     fn update(&mut self) {
         self.control_core_mut().update_requested = true;
     }
@@ -688,9 +688,9 @@ pub trait Control: Component + ControlLink {
 
     /// Paints the background before [`Control::on_paint`] (WinForms `OnPaintBackground`); not
     /// called for a control with the `OPAQUE` style. The root behaviour paints the control's
-    /// `BackColor` (nothing when unset: the parent's surface shows through) — a colour with alpha
+    /// `BackColor` (nothing when unset: the parent's surface shows through) - a colour with alpha
     /// over the parent's background when the class has `SUPPORTS_TRANSPARENT_BACK_COLOR`, made
-    /// opaque otherwise — then its `BackgroundImage` laid out by `BackgroundImageLayout`. It raises
+    /// opaque otherwise - then its `BackgroundImage` laid out by `BackgroundImageLayout`. It raises
     /// no event (WinForms has none either).
     fn on_paint_background(&mut self, e: &mut PaintEventCx<'_>) {
         if let Some(base) = self.base_control_mut() {
@@ -718,7 +718,7 @@ pub trait Control: Component + ControlLink {
     }
 
     /// The parts a screen reader lists under the control, in its own coordinates (WinForms'
-    /// `AccessibleObject.GetChild`): a grid's tiles, a menu's rows — what it paints itself and no
+    /// `AccessibleObject.GetChild`): a grid's tiles, a menu's rows - what it paints itself and no
     /// element of the view stands for. None by default.
     fn accessible_parts(&self) -> Vec<AccessiblePart> {
         match self.base_control() {
@@ -797,7 +797,7 @@ pub trait Control: Component + ControlLink {
     }
 
     /// A command key (a shortcut) seen before anything else handles the key (WinForms
-    /// `ProcessCmdKey`): return `true` to consume it — no KeyDown, KeyPress or navigation
+    /// `ProcessCmdKey`): return `true` to consume it - no KeyDown, KeyPress or navigation
     /// follows. Called on the focused control, then on each ancestor that is a control.
     fn process_cmd_key(&mut self, msg: &mut Message, key: Keys) -> bool {
         match self.base_control_mut() {

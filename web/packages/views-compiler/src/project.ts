@@ -131,7 +131,7 @@ export function userControlsOf(root: string, views: readonly string[]): UserCont
     const cb = codeBehindOf(v)
     const props = extractUserControlProps(v, cb)
     // A control is always exposed (pass-through when it has no x:Props, as before). A view is exposed only when it
-    // declares an x:Props — that is the signal that it is meant to be used as a typed component, not just a screen.
+    // declares an x:Props - that is the signal that it is meant to be used as a typed component, not just a screen.
     if (isView && !(props && props.length > 0)) continue
     const module = cb ? cb.replace(/\.(ts|tsx)$/, '') : v
     const ref: UserControlRef = { name: viewStem(v), module: '/' + projectPath(root, module) }
@@ -145,11 +145,11 @@ export function userControlsOf(root: string, views: readonly string[]): UserCont
 export const EXTERNAL_DIR = '_external'
 
 /**
- * The path of a view's generated files relative to {@link GENERATED_DIR}, `/`-separated — always inside it.
+ * The path of a view's generated files relative to {@link GENERATED_DIR}, `/`-separated - always inside it.
  *
  * A view under the project root keeps its root-relative path (`src/A.kbview`). A view outside it (a sibling
  * folder, another drive) goes under `_external/` followed by its absolute path's segments: a leading `\\?\`
- * removed, empty and `.` segments dropped, `:` removed (`C:` → `C`), `..` → `_up` — so neither `..` nor a drive
+ * removed, empty and `.` segments dropped, `:` removed (`C:` → `C`), `..` → `_up` - so neither `..` nor a drive
  * letter can lead out of the folder. The language server (`kubuno-views-ls`, `web/project.rs`) applies the same
  * rule, byte for byte.
  */

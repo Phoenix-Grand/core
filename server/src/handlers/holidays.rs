@@ -4,7 +4,7 @@
 //! ## Open to every signed-in account, on purpose
 //!
 //! A public holiday is public. `core.holidays.read` gates the administration
-//! console — "who may see and edit the referential" — and has no business
+//! console - "who may see and edit the referential" - and has no business
 //! gating the answer to "is the 14th of July a working day". A calendar that
 //! showed holidays to administrators only would be a bug wearing a policy's
 //! clothes, so the only guard here is authentication.
@@ -14,7 +14,7 @@
 //! With no `calendars` parameter the route resolves them itself
 //! ([`crate::holidays::resolve`]) and *says how* it did: `source: "setting"`
 //! when somebody posted the value, `"timezone"` when it was deduced. A module
-//! renders "Jours fériés — France (d'après votre fuseau horaire)" from that and
+//! renders "Jours fériés - France (d'après votre fuseau horaire)" from that and
 //! offers a correction, instead of silently showing the wrong country.
 
 use axum::{
@@ -43,8 +43,8 @@ use crate::{
 ///
 /// Five years, and the reason is the expansion: every rule of every requested
 /// calendar is walked year by year, so an unbounded range is an unbounded
-/// response. Five covers every real caller — a year view, a planning horizon,
-/// an export — and a module that wants a century asks twenty times, visibly.
+/// response. Five covers every real caller - a year view, a planning horizon,
+/// an export - and a module that wants a century asks twenty times, visibly.
 const MAX_SPAN_DAYS: i64 = 366 * 5;
 
 #[derive(Debug, Deserialize)]
@@ -55,7 +55,7 @@ pub struct FeedParams {
     to: Option<String>,
     /// Overrides the resolution: `FR`, `FR-6AE,BE`.
     calendars: Option<String>,
-    /// `public,bank` — empty means every category.
+    /// `public,bank` - empty means every category.
     categories: Option<String>,
     /// Overrides the reader's language for the returned names.
     locale: Option<String>,
@@ -79,7 +79,7 @@ fn parse_categories(raw: Option<&str>) -> Result<Vec<Category>, AppError> {
     }
 }
 
-/// The unit the reader belongs to — what the organisational overlay is applied
+/// The unit the reader belongs to - what the organisational overlay is applied
 /// for. A reader outside the tree simply gets the instance's answer.
 async fn org_unit_of(db: &DbPool, user_id: Uuid) -> Option<Uuid> {
     match db
@@ -194,7 +194,7 @@ pub struct LocaleParams {
     locale: Option<String>,
 }
 
-/// `GET /api/v1/holidays/applicable` — what applies to the caller, and how the
+/// `GET /api/v1/holidays/applicable` - what applies to the caller, and how the
 /// instance knows.
 ///
 /// Its own route rather than a field of the feed: a settings screen needs the
@@ -253,11 +253,11 @@ pub async fn applicable(
 #[derive(Debug, Deserialize)]
 pub struct CalendarListParams {
     search: Option<String>,
-    /// Countries only — what a picker offers first.
+    /// Countries only - what a picker offers first.
     countries_only: Option<bool>,
 }
 
-/// `GET /api/v1/holidays/calendars` — the territories on offer, for a picker.
+/// `GET /api/v1/holidays/calendars` - the territories on offer, for a picker.
 ///
 /// Only the enabled ones: an instance that turned a country off has said it does
 /// not want it proposed, and a picker still offering it would make that decision

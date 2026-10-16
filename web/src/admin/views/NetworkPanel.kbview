@@ -1,4 +1,4 @@
-<!-- NetworkPanel — converted from NetworkPanel.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- NetworkPanel - converted from NetworkPanel.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <Panel Class="max-w-4xl space-y-6">
   <Panel HtmlTag="Header">
     <Panel HtmlTag="H1" ForeColor="TextPrimary" Class="flex items-center gap-2 text-2xl font-semibold">

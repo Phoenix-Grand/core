@@ -1,4 +1,4 @@
-<!-- ScopeEditor — converted from ScopeEditor.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- ScopeEditor - converted from ScopeEditor.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="Props">
   <Stack Gap="20" Class="min-w-0">
     <Callout Variant="Warning" Body="{Res admin.rl_scope_directory_denied}" Visible="{Binding props.dir.denied}"/>

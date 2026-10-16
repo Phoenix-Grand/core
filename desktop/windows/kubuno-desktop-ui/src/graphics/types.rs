@@ -4,7 +4,7 @@
 use kubuno_drive_desktop_app_controls::Rect;
 use windows::Win32::Graphics::Direct2D::Common::D2D1_COLOR_F;
 
-/// A colour with straight (not premultiplied) alpha, each channel in `0..=1` — WinForms'
+/// A colour with straight (not premultiplied) alpha, each channel in `0..=1` - WinForms'
 /// `System.Drawing.Color`, built from bytes (`Color::rgb(0x33, 0x66, 0xFF)`) or read from the
 /// theme (`Color::from(theme.accent)`).
 #[derive(Debug, Clone, Copy, PartialEq, Default)]

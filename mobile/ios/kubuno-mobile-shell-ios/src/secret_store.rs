@@ -1,7 +1,7 @@
 //! The iOS secret store: the Keychain wrapper the shell installs for the account layer.
 //!
 //! Each secret (a refresh token, the account book, the device key) is a Keychain generic password of the service
-//! `com.kubuno.<app id>.secrets`, under the secret's key as account name — encrypted and protected by iOS, kept apart
+//! `com.kubuno.<app id>.secrets`, under the secret's key as account name - encrypted and protected by iOS, kept apart
 //! per app. Pure Rust over the Security framework.
 
 use kubuno_mobile_account::{SecretError, SecretStore};

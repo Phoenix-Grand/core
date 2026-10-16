@@ -252,7 +252,7 @@ async fn an_empty_scope_list_is_refused_with_an_explanation() {
         .await
         .expect_err("une liste vide doit être refusée");
     assert!(matches!(err, AppError::Validation(_)));
-    // Whitespace-only entries collapse to the same refusal — no accidental
+    // Whitespace-only entries collapse to the same refusal - no accidental
     // "one scope" that is in fact none.
     assert!(policy::validate_requested(&db, &["   ".into()], &ctx).await.is_err());
 

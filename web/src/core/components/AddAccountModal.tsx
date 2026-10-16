@@ -59,7 +59,7 @@ export default function AddAccountModal({ open, onClose, prefillEmail, slot }: P
 
   /** The freshly signed-in account becomes the active one: hard reload, like a switch. */
   const enterNewAccount = () => {
-    announceAccountSwitched() // the other tabs share the cookie — reload them too
+    announceAccountSwitched() // the other tabs share the cookie - reload them too
     window.location.href = '/'
   }
 

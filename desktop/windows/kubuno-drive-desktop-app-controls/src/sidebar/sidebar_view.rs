@@ -5,7 +5,7 @@
 //! IGNORED machinery. This file houses the PURE core: pane width thresholds,
 //! mode calculation (`UpdateDisplayModeForPaneWidth`), and the port's
 //! rendering snapshot (`SidebarView` + `draw`, invented by the port for lack
-//! of an equivalent `.cs` — WinUI renders via the template).
+//! of an equivalent `.cs` - WinUI renders via the template).
 
 use super::sidebar_display_mode::SidebarMode;
 use super::sidebar_item::{RowIcon, SidebarRowView};
@@ -72,7 +72,7 @@ use crate::geometry::Rect;
 use crate::themes::shape::{pill, radius};
 use crate::Canvas;
 
-// Fallback glyphs (Segoe Fluent Icons) — a control carries its own glyphs.
+// Fallback glyphs (Segoe Fluent Icons) - a control carries its own glyphs.
 const GLYPH_CHEVRON_DOWN: &str = "\u{E70D}";
 const GLYPH_CHEVRON_RIGHT: &str = "\u{E76C}";
 
@@ -90,7 +90,7 @@ pub struct SidebarView<'a> {
     pub rows: Vec<SidebarRowView<'a>>,
 }
 
-/// Draws the sidebar through a [`Canvas`] — direct port of `draw_sidebar`.
+/// Draws the sidebar through a [`Canvas`] - direct port of `draw_sidebar`.
 pub fn draw(c: &dyn Canvas, v: &SidebarView) {
     let t = c.theme();
     let f = c.formats();
@@ -105,7 +105,7 @@ pub fn draw(c: &dyn Canvas, v: &SidebarView) {
     c.push_clip(&v.clip);
 
     for row in &v.rows {
-        // Web nav row: a full pill (`rounded-full`) — `SIDEBAR_ROW_CORNER`,
+        // Web nav row: a full pill (`rounded-full`) - `SIDEBAR_ROW_CORNER`,
         // recomputed from the row's own height so the Compact rail (40x36)
         // still reads as a centered stadium.
         let corner = pill(row.rect.bottom - row.rect.top);
@@ -126,9 +126,9 @@ pub fn draw(c: &dyn Canvas, v: &SidebarView) {
 
         match &row.icon {
             RowIcon::Bitmap(b) => c.image(b, &icon_rect, 16.0),
-            // A `Vector` icon arrives with its final colour — either DATA
+            // A `Vector` icon arrives with its final colour - either DATA
             // colour (a tag's own colour) or the active/rest state already
-            // resolved by the caller — so it is never re-tinted here.
+            // resolved by the caller - so it is never re-tinted here.
             RowIcon::Vector { name, color } => c.vector_icon(name, &icon_rect, 16.0, color),
             RowIcon::Glyph { text, color } => {
                 let color = if row.selected { &t.accent } else { color };

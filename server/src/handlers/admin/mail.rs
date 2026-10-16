@@ -2,7 +2,7 @@
 //!
 //! The password is the one value with asymmetric handling: it goes **in** in
 //! clear (over the authenticated admin channel, once), is stored encrypted, and
-//! never comes back out. `GET` reports `has_password: true`, nothing else — not
+//! never comes back out. `GET` reports `has_password: true`, nothing else - not
 //! a masked form of the value, not its length, since both leak.
 //!
 //! `POST /admin/mail/test` is the only synchronous send in the whole module.
@@ -94,7 +94,7 @@ impl std::fmt::Debug for UpdateMailSettingsDto {
     }
 }
 
-/// Very small syntactic check — enough to reject a typo, not a claim that the
+/// Very small syntactic check - enough to reject a typo, not a claim that the
 /// mailbox exists. `lettre` parses the address for real when the message is
 /// built; this only stops garbage from reaching the settings table.
 fn validate_address(value: &str) -> Result<(), AppError> {
@@ -156,7 +156,7 @@ fn validate_public_url(value: &str) -> Result<(), AppError> {
 ///
 /// The whole point of routing through `redact::setting` is that
 /// `mail.smtp_password` is *not* on the value whitelist, so its entry records
-/// that the key changed with «rédigé» on both sides — the reader learns a
+/// that the key changed with «rédigé» on both sides - the reader learns a
 /// credential rotated without learning it.
 async fn write_setting(
     tx: &mut crate::audit::AuditTx,
@@ -318,7 +318,7 @@ pub async fn update_mail_settings(
         write_setting(&mut tx, admin_id, config::KEY_PUBLIC_URL, json!(trimmed), &mut entries).await?;
     }
 
-    // `AuditTx` cannot be committed without an entry — a PATCH that changed
+    // `AuditTx` cannot be committed without an entry - a PATCH that changed
     // nothing has nothing to write either.
     let Some(last) = entries.pop() else {
         return Ok(Json(json!({ "message": "Aucun réglage modifié", "updated": 0 })));
@@ -338,12 +338,12 @@ pub async fn update_mail_settings(
 
 #[derive(Debug, Deserialize)]
 pub struct TestMailDto {
-    /// Recipient of the probe. Defaults to the administrator's own address —
+    /// Recipient of the probe. Defaults to the administrator's own address -
     /// the only address we know for certain they can read.
     pub to: Option<String>,
 }
 
-/// POST /admin/mail/test — sends one message, synchronously, and reports the
+/// POST /admin/mail/test - sends one message, synchronously, and reports the
 /// relay's own answer.
 pub async fn test_mail(
     State(state): State<AppState>,
@@ -427,7 +427,7 @@ pub async fn test_mail(
         }
         Err(err) => {
             audit
-                .record(&state.db, base.failed(format!("{} — {}", err.stage, err.raw)))
+                .record(&state.db, base.failed(format!("{} - {}", err.stage, err.raw)))
                 .await;
             // 200 with `ok: false`, not a 5xx: the request itself succeeded, and
             // the screen needs the payload to display the diagnosis.
@@ -447,7 +447,7 @@ pub async fn test_mail(
 }
 
 /// Turns the most common failures into the one sentence that fixes them.
-/// Purely advisory — the raw relay answer is always shown next to it.
+/// Purely advisory - the raw relay answer is always shown next to it.
 fn hint_for(err: &send::SendError, cfg: &MailConfig) -> Option<String> {
     let raw = err.raw.to_lowercase();
     if raw.contains("connection refused") || raw.contains("refused") {

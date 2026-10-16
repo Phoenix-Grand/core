@@ -1,7 +1,7 @@
 // Editable "Libellé" combobox shared by the composite fields (PhoneField,
 // DateField…): a Material outlined field whose value is FREE TEXT, plus a
 // dropdown of preset suggestions that narrow as you type. A combobox, not a
-// closed select — a custom label is always kept.
+// closed select - a custom label is always kept.
 import { useEffect, useRef, useState } from 'react'
 import { OutlinedField } from './OutlinedField'
 

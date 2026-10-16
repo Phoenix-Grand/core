@@ -52,11 +52,11 @@ export interface ModuleAdminSettingsProps {
   moduleId: string
   /** The page being shown. `null` = the module declares none (single stack). */
   group?:   string | null
-  /** Every page the module declares — what the filter names its hits by. */
+  /** Every page the module declares - what the filter names its hits by. */
   groups?:  ModuleSettingGroup[]
   /** The module's own views that asked for a tab on THIS page. */
   extraTabs?: ModuleAdminSection[]
-  /** WHO the values on screen belong to — chosen in the page's side card. */
+  /** WHO the values on screen belong to - chosen in the page's side card. */
   scope?:   ActiveScope
 }
 
@@ -799,7 +799,7 @@ export class ModuleAdminSettings extends ViewBase {
               />
               {/* Going back to following the parent is one of the three things
                   this page can do to a value, so it is a button under the
-                  sentence that states the value's origin — not an entry of a
+                  sentence that states the value's origin - not an entry of a
                   menu the operator has to go looking for. */}
               {resolved.has_own_value && !resolved.locked_above && (
                 <button
@@ -842,7 +842,7 @@ export class ModuleAdminSettings extends ViewBase {
     const overriding = this.scoped && here.some(k => !this.resolvedByKey.get(k)?.has_own_value)
     // "Autres" is a name given RELATIVE to other sections. When the page holds a
     // single unnamed run of settings there is nothing to be other than, and the
-    // page heading above already says what they are — so it carries no title.
+    // page heading above already says what they are - so it carries no title.
     const synthetic = category === this.tr('admin.m_other_settings', { defaultValue: 'Autres' })
     return (
       <SettingSectionCard

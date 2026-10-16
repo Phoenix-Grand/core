@@ -10,8 +10,8 @@ import { adminUrl } from '../../../admin/adminAction'
 import AppearanceDialog from '../dialogs/AppearanceDialog'
 
 /* Header settings menu (⚙). Replaces the old plain "go to settings" button with a
- * Google-style dropdown. Permanent entries — Paramètres, Apparence, Imprimer,
- * Télécharger des modules complémentaires — are always present; Corbeille and any
+ * Google-style dropdown. Permanent entries - Paramètres, Apparence, Imprimer,
+ * Télécharger des modules complémentaires - are always present; Corbeille and any
  * custom items come from the active module via ModuleMenuRegistry. */
 export default function SettingsMenu({
   triggerClassName, iconSize, ariaLabel,

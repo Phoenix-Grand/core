@@ -6,7 +6,7 @@ import type { PickerView } from './types'
 
 /**
  * Floating panel of the picker: calendar, time columns and the footer used by
- * the time-bearing modes. Purely presentational — every value and handler is
+ * the time-bearing modes. Purely presentational - every value and handler is
  * owned by `DatePicker`.
  */
 export function PickerPopover({
@@ -60,7 +60,7 @@ export function PickerPopover({
       style={{ position: 'absolute', top: pos.top, left: pos.left, width, zIndex: 9999 }}
       className="bg-white rounded-xl shadow-2xl border border-border flex items-stretch"
     >
-      {/* Calendar (+ time) column — fixed width when a day panel sits beside it. */}
+      {/* Calendar (+ time) column - fixed width when a day panel sits beside it. */}
       <div className="p-3 select-none flex-shrink-0" style={dayPanel ? { width: 284 } : undefined}>
         {showCalendar && (
           <CalendarView

@@ -40,7 +40,7 @@ pub fn init(settings: &LoggingSettings) -> LogGuards {
 
     if let Err(e) = std::fs::create_dir_all(&settings.log_dir) {
         eprintln!(
-            "kubuno: impossible de créer le répertoire de logs '{}': {e} — écriture fichiers désactivée",
+            "kubuno: impossible de créer le répertoire de logs '{}': {e} - écriture fichiers désactivée",
             settings.log_dir
         );
         return init_stdout_only(&filter_str, &settings.format);
@@ -51,7 +51,7 @@ pub fn init(settings: &LoggingSettings) -> LogGuards {
     let access_appender = match build_appender(&settings.log_dir, "access", rotation.clone(), settings.max_log_files as usize) {
         Ok(a) => a,
         Err(e) => {
-            eprintln!("kubuno: impossible d'initialiser access.log: {e} — écriture fichiers désactivée");
+            eprintln!("kubuno: impossible d'initialiser access.log: {e} - écriture fichiers désactivée");
             return init_stdout_only(&filter_str, &settings.format);
         }
     };
@@ -59,7 +59,7 @@ pub fn init(settings: &LoggingSettings) -> LogGuards {
     let error_appender = match build_appender(&settings.log_dir, "error", rotation, settings.max_log_files as usize) {
         Ok(a) => a,
         Err(e) => {
-            eprintln!("kubuno: impossible d'initialiser error.log: {e} — écriture fichiers désactivée");
+            eprintln!("kubuno: impossible d'initialiser error.log: {e} - écriture fichiers désactivée");
             return init_stdout_only(&filter_str, &settings.format);
         }
     };
@@ -145,7 +145,7 @@ fn init_stdout_only(filter_str: &str, format: &LogFormat) -> LogGuards {
     LogGuards { _access: None, _error: None }
 }
 
-/// Middleware Axum — enregistre chaque requête HTTP au format Apache Combined Log.
+/// Middleware Axum - enregistre chaque requête HTTP au format Apache Combined Log.
 /// Les lignes sont émises sur le target "access_log" pour être routées vers access.log.
 pub async fn apache_log_middleware(req: Request<Body>, next: Next) -> Response {
     let method    = req.method().to_string();

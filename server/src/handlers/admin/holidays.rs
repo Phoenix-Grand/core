@@ -2,22 +2,22 @@
 //!
 //! ## Three verbs, and what each one really means
 //!
-//! * **disable** a day or a calendar — the ordinary answer. Nothing is lost, the
+//! * **disable** a day or a calendar - the ordinary answer. Nothing is lost, the
 //!   next dataset upgrade still corrects the row, and turning it back on returns
 //!   exactly what was there. This is why `enabled` never raises
 //!   `is_overridden`.
-//! * **edit** a day — the row stops following the shipped dataset
+//! * **edit** a day - the row stops following the shipped dataset
 //!   (`is_overridden`), and says so in the console. That is a promise, not a
 //!   side effect: somebody who fixed a wrong date must not have it re-broken by
 //!   an upgrade.
-//! * **delete** a day — allowed only for what this instance created. Deleting a
+//! * **delete** a day - allowed only for what this instance created. Deleting a
 //!   shipped row would achieve nothing: the seeder recreates it on the next
 //!   version, because a missing key is indistinguishable from a new one. The
 //!   route says so instead of doing it and letting the row come back.
 //!
 //! ## Per-unit adjustments are an overlay, never a copy
 //!
-//! A unit stores its *difference* — this calendar off here, that day on there.
+//! A unit stores its *difference* - this calendar off here, that day on there.
 //! Correcting the instance referential therefore reaches every unit that had not
 //! overridden the row, which is the whole point of an inheritance model and the
 //! reason nothing here duplicates a day into a unit.
@@ -103,7 +103,7 @@ pub struct DetailParams {
     locale: Option<String>,
 }
 
-/// `GET /admin/holidays/calendars/:id` — the calendar, its own days, the ones it
+/// `GET /admin/holidays/calendars/:id` - the calendar, its own days, the ones it
 /// inherits, and the dates each produces in one year.
 ///
 /// The preview is computed **server-side** although the console could do it in
@@ -174,7 +174,7 @@ struct OverviewCounts {
     unit_prefs:         i64,
 }
 
-/// `GET /admin/holidays/overview` — what is loaded, and how much of it.
+/// `GET /admin/holidays/overview` - what is loaded, and how much of it.
 pub async fn overview(
     State(state): State<AppState>,
     _admin: AdminUser,
@@ -204,7 +204,7 @@ pub async fn overview(
             AppError::Database(e)
         })?;
 
-    // The whole stored JSON value as text — PostgreSQL's `value #>> '{}'`.
+    // The whole stored JSON value as text - PostgreSQL's `value #>> '{}'`.
     let loaded_sql = format!(
         "SELECT {} FROM core.settings WHERE \"key\" = 'intl.holidays_dataset'",
         state.db.backend().json_text("value", &[]),
@@ -580,7 +580,7 @@ pub async fn delete_holiday(
     Ok(Json(json!({ "ok": true })))
 }
 
-/// `POST /admin/holidays/days/:id/reset` — back to what the dataset ships.
+/// `POST /admin/holidays/days/:id/reset` - back to what the dataset ships.
 pub async fn reset_holiday(
     State(state): State<AppState>,
     _admin: AdminUser,
@@ -666,7 +666,7 @@ pub struct CalendarDto {
     enabled: Option<bool>,
 }
 
-/// `POST /admin/holidays/calendars` — a list this organisation keeps for itself
+/// `POST /admin/holidays/calendars` - a list this organisation keeps for itself
 /// (closure days, a site's own calendar).
 pub async fn create_calendar(
     State(state): State<AppState>,
@@ -768,7 +768,7 @@ pub async fn update_calendar(
     let mut tx = audit.begin(&state.db).await?;
     // Renaming detaches the wording from the dataset; switching the calendar off
     // does not. The `is_overridden` flip therefore rides on whether a new name
-    // was supplied — decided in Rust, so the statement needs no NULL-typed cast.
+    // was supplied - decided in Rust, so the statement needs no NULL-typed cast.
     let override_clause = if name.is_some() {
         ", is_overridden = CASE WHEN is_builtin THEN TRUE ELSE is_overridden END"
     } else {
@@ -808,7 +808,7 @@ pub async fn update_calendar(
     Ok(Json(json!({ "ok": true })))
 }
 
-/// `DELETE /admin/holidays/calendars/:id` — only what this instance created.
+/// `DELETE /admin/holidays/calendars/:id` - only what this instance created.
 pub async fn delete_calendar(
     State(state): State<AppState>,
     _admin: AdminUser,
@@ -976,7 +976,7 @@ pub struct UnitPrefDto {
     calendar_id: Option<Uuid>,
     #[serde(default)]
     holiday_id: Option<Uuid>,
-    /// `null` clears the adjustment — the unit goes back to inheriting, which is
+    /// `null` clears the adjustment - the unit goes back to inheriting, which is
     /// a *deletion* and never a stored copy of what it was inheriting.
     #[serde(default)]
     enabled: Option<bool>,
@@ -1003,7 +1003,7 @@ pub async fn set_unit_pref(
         None => {
             // NOTE (multi-engine): `IS NOT DISTINCT FROM` is a null-safe equality
             // PostgreSQL supports directly; MySQL spells it `<=>` and SQLite `IS`.
-            // Kept PostgreSQL-shaped for now — flagged for the dialect layer.
+            // Kept PostgreSQL-shaped for now - flagged for the dialect layer.
             tx.execute(
                 "DELETE FROM core.holiday_unit_prefs \
                   WHERE org_unit_id = $1 \
@@ -1023,7 +1023,7 @@ pub async fn set_unit_pref(
             // NOTE (multi-engine): the `ON CONFLICT (...) WHERE ...` inference
             // predicate is PostgreSQL-only (a partial unique index cannot be
             // named through `Backend::upsert`, which emits no predicate). Kept
-            // PostgreSQL-shaped for now — flagged for the dialect layer.
+            // PostgreSQL-shaped for now - flagged for the dialect layer.
             let statement = if dto.calendar_id.is_some() {
                 r#"INSERT INTO core.holiday_unit_prefs (id, org_unit_id, calendar_id, holiday_id, enabled, created_by)
                    VALUES ($1, $2, $3, $4, $5, $6)
@@ -1079,7 +1079,7 @@ pub struct PreviewDto {
     years: Option<Vec<i32>>,
 }
 
-/// `POST /admin/holidays/preview` — the dates a rule being written produces.
+/// `POST /admin/holidays/preview` - the dates a rule being written produces.
 ///
 /// The editor calls this on every change: it is what turns "Easter plus 39" from
 /// a form into a date somebody can recognise, before saving anything.
@@ -1110,7 +1110,7 @@ pub async fn preview(
     Ok(Json(json!({ "dates": dates })))
 }
 
-/// `POST /admin/holidays/reload` — re-apply the shipped dataset now.
+/// `POST /admin/holidays/reload` - re-apply the shipped dataset now.
 ///
 /// Forced: it rewrites every row that is not overridden, which is how an
 /// administrator brings back days they deleted before understanding that

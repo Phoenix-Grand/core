@@ -1,4 +1,4 @@
-<!-- ResourceDialog — converted from ResourceDialog.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- ResourceDialog - converted from ResourceDialog.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <Panel x:Props="ResourceDialogProps" OnMouseDown="panel_mouse_down">
   <FloatingWindow ConfirmText="{Res admin.res_save}"
                   ConfirmEnabled="{Binding enabled_unless_busy_no_buildings}"

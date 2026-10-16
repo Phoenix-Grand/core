@@ -56,7 +56,7 @@ export class ActivityTab extends ViewBase {
     const rows = useMemo(() => {
       const merged = new Map<number, AuditEntry>()
       for (const e of [...(asTarget.data?.entries ?? []), ...(asActor.data?.entries ?? [])]) {
-        // Exact ownership test — `q` above is only a pre-filter.
+        // Exact ownership test - `q` above is only a pre-filter.
         if (e.target_id === this.props.user.id || e.actor_id === this.props.user.id) merged.set(e.id, e)
       }
       return [...merged.values()].sort(
@@ -154,7 +154,7 @@ export class ActivityTab extends ViewBase {
       minWidth: 120,
       defaultHidden: true,
       sortValue: e => e.ip_address ?? '',
-      cell: e => <span className="whitespace-nowrap font-mono text-text-tertiary">{e.ip_address ?? '—'}</span>,
+      cell: e => <span className="whitespace-nowrap font-mono text-text-tertiary">{e.ip_address ?? '-'}</span>,
     },
     {
       id: 'detail',
@@ -166,7 +166,7 @@ export class ActivityTab extends ViewBase {
       cell: (e) => {
         const expanded = open === e.id
         const hasBody = e.detail != null || e.before != null || e.after != null
-        if (!hasBody) return <span className="text-text-tertiary">—</span>
+        if (!hasBody) return <span className="text-text-tertiary">-</span>
         return (
           // Capped: a cell is sized by its content, so an unbounded <pre> would
           // widen the table and push the other columns out of view.

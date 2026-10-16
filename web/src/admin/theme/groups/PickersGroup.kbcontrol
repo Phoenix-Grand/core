@@ -1,4 +1,4 @@
-<!-- PickersGroup — converted from PickersGroup.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- PickersGroup - converted from PickersGroup.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="PickersGroupProps">
   <Stack Direction="LeftToRight" Gap="20" CrossAlign="Start" WrapContents="true">
     <Stack Gap="6">

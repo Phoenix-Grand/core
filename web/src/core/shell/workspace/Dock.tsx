@@ -1,7 +1,7 @@
 // Core primitive: a draggable / dockable panel system shared by advanced editors
 // (PaintSharp sub-editors, the App builder, …). Panels are tabs that can be
 // re-docked left/right, merged into a tab group, split top/bottom, torn off as
-// floating windows, resized, closed and reopened — with a single ghost rectangle
+// floating windows, resized, closed and reopened - with a single ghost rectangle
 // showing the exact landing zone during a drag.
 //
 // The host supplies a panel registry { id → { label, render } } and a default
@@ -50,7 +50,7 @@ export type DockController = {
 }
 export type DockTheme = {
   panel:string; header:string; border:string; text:string; textDim:string; accent?:string
-  // ── Material-refined chrome (Direction A) — all optional, sensible defaults
+  // ── Material-refined chrome (Direction A) - all optional, sensible defaults
   // are derived from the base tokens, so existing consumers get the new look
   // without passing anything. ──
   ground?:string       // neutral behind the floating panel cards + gutters
@@ -60,7 +60,7 @@ export type DockTheme = {
 }
 
 // Derived from the core semantic tokens (theme.css) so the default dock chrome
-// follows the active theme — light, dark or an admin skin — instead of being
+// follows the active theme - light, dark or an admin skin - instead of being
 // pinned to light hex. Hex fallbacks keep it correct when a module runs
 // standalone (outside the shell that defines --color-*).
 const DEFAULT_THEME: DockTheme = {
@@ -119,7 +119,7 @@ function openPanel(layout: DockLayout, id: PanelId): DockLayout {
   // SURFACE it, never add a second copy (an editor revealing a visible panel, a
   // stale reopen menu, a double click). Two copies would render the same panel
   // twice and fight over which one is active. Surfacing means: become the active
-  // tab of its group, and unroll a floating window rolled up to its title bar —
+  // tab of its group, and unroll a floating window rolled up to its title bar -
   // otherwise "opening" it would change nothing on screen.
   if (isDocked(layout, id)) {
     const unroll = (arr: DockGroup[]) => arr.map(g => g.panels.includes(id) ? { ...g, rolled:false } : g)
@@ -150,7 +150,7 @@ function reconcile(layout: DockLayout, known: Set<PanelId>): DockLayout {
   for (const side of sides) {
     out[side] = layout[side]
       .map(g => {
-        // Unknown panels go; already-placed ones go too — first occurrence wins,
+        // Unknown panels go; already-placed ones go too - first occurrence wins,
         // whether the repeat sits in the same group or another one.
         const panels = g.panels.filter(p => {
           if (!known.has(p) || present.has(p)) return false
@@ -417,7 +417,7 @@ export function DockArea({
   const tabActiveBg = theme.tabActiveBg ?? `color-mix(in srgb, ${accent} 12%, ${theme.panel})`
   const cardShadow = '0 1px 3px rgba(16,24,40,.08), 0 1px 2px rgba(16,24,40,.06)'
   // Handle colours derive from the SAME DockTheme tokens as the cards, so the
-  // handle follows the panels' theme (light or dark) — no mismatched grip.
+  // handle follows the panels' theme (light or dark) - no mismatched grip.
   const gripLine = `color-mix(in srgb, ${accent} 55%, ${theme.border})`
   const gripBorder = `color-mix(in srgb, ${accent} 40%, ${theme.border})`
 

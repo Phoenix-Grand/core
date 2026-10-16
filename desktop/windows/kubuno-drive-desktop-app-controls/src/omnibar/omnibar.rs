@@ -18,7 +18,7 @@ const GLYPH_CLOSE_SMALL: &str = "\u{E894}";
 /// `OmnibarDefaultHeight`. The web search field is 48 tall; the port keeps 38
 /// because the toolbar strip is only 48 (see `ui/layout.rs`).
 pub const HEIGHT: f32 = 38.0;
-/// Pill, like the web search field (`rounded-full`) — `shape::pill(HEIGHT)`.
+/// Pill, like the web search field (`rounded-full`) - `shape::pill(HEIGHT)`.
 pub const CORNER_RADIUS: f32 = HEIGHT / 2.0;
 /// `OmnibarBorderThicknessUnfocused` / `Focused`. Focus = a 2 DIP accent ring,
 /// the web's `focus:border-primary`.
@@ -53,7 +53,7 @@ pub fn mode_button_rects(bar: &Rect, count: usize) -> Vec<Rect> {
 }
 
 /// Left/right padding of the TextBox so the text doesn't overlap the mode
-/// buttons — transcription of `Omnibar.cs::ChangeMode`.
+/// buttons - transcription of `Omnibar.cs::ChangeMode`.
 pub fn content_padding(count: usize, active_index: usize) -> (f32, f32) {
     let (c, i) = (count as f32, active_index as f32);
     let left = (i + 1.0) * MODE_SLOT_WIDTH + SEPARATOR_SLOT_WIDTH * i;
@@ -83,7 +83,7 @@ pub struct OmnibarView {
     pub separator: Option<Rect>,
 }
 
-/// Draws the Omnibar through a [`Canvas`] — the control's DRAWING now lives
+/// Draws the Omnibar through a [`Canvas`] - the control's DRAWING now lives
 /// WITH the control (mirror of `Files.App.Controls`'s `Omnibar`).
 pub fn draw(c: &dyn Canvas, v: &OmnibarView) {
     let t = c.theme();

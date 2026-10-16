@@ -59,7 +59,7 @@ export class FeaturesTab extends ViewBase {
       minWidth: 260,
       sortValue: r => (r.description ?? '').toLowerCase(),
       cell: r => (
-        <span className="text-text-secondary">{r.description ?? '—'}</span>
+        <span className="text-text-secondary">{r.description ?? '-'}</span>
       ),
     },
     {

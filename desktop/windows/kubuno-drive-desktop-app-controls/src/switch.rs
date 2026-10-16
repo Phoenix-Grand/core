@@ -3,7 +3,7 @@
 //!
 //! Geometry and colours come from the web's `toggleCanvas.ts`: a 36x20 track
 //! with a 6px radius, a 14px thumb inset by 3 with a 4px radius, and a thumb
-//! that stays WHITE in both states — the switch reads by its track, not its
+//! that stays WHITE in both states - the switch reads by its track, not its
 //! knob.
 
 use windows::Win32::Graphics::Direct2D::Common::D2D1_COLOR_F;
@@ -17,7 +17,7 @@ const THUMB: f32 = 14.0;
 const THUMB_RADIUS: f32 = 4.0;
 const INSET: f32 = 3.0;
 
-/// The same colour at a different alpha — how a disabled control dims.
+/// The same colour at a different alpha - how a disabled control dims.
 pub fn fade(color: &D2D1_COLOR_F, alpha: f32) -> D2D1_COLOR_F {
     D2D1_COLOR_F { a: color.a * alpha, ..*color }
 }

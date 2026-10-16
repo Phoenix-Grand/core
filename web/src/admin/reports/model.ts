@@ -6,7 +6,7 @@ import type { PanelDef, PanelPeriod } from '../panels/types'
 import type { PanelDetail, ReportPanel } from './api'
 
 /**
- * The report, as a described document — before anything is drawn.
+ * The report, as a described document - before anything is drawn.
  *
  * ## Why the model exists at all
  *
@@ -14,7 +14,7 @@ import type { PanelDetail, ReportPanel } from './api'
  * and once as a CSV file. Those two renderings must carry the same rows, the
  * same totals and the same labels, or an operator who exports what they printed
  * ends up with a spreadsheet that disagrees with the paper on their desk. Built
- * separately they would drift on the first detail — a share rounded here and
+ * separately they would drift on the first detail - a share rounded here and
  * truncated there, a bucket named one way in a cell and another in a column.
  *
  * So the figures are assembled once, here, and the two renderers only decide how
@@ -25,14 +25,14 @@ import type { PanelDetail, ReportPanel } from './api'
  * A share of a total that is zero, a percentage against a previous window that
  * counted nothing, a variation for a panel whose past nobody recorded. Each of
  * those comes back `null` and the renderers print a sentence instead of a
- * number — the same rule the cards obey, for the same reason: "+100 %" and
+ * number - the same rule the cards obey, for the same reason: "+100 %" and
  * "0 %" are both false readings of "there was nothing to compare against", and
  * on a printed page nobody is left to ask.
  */
 
 /** One row of the chronological table. */
 export interface SeriesRow {
-  /** The instant, spelt in full — a report is read away from its window. */
+  /** The instant, spelt in full - a report is read away from its window. */
   label: string
   /** The same instant, as short as the axis needs it. */
   axis:  string
@@ -60,7 +60,7 @@ export interface BreakdownRow {
  *
  * Cells are already spelt: an instant is formatted in the zone the document
  * names (never the reader's), everything else is printed exactly as the server
- * stored it. `null` survives as `null` — the page prints an em dash for it and
+ * stored it. `null` survives as `null` - the page prints an em dash for it and
  * the CSV leaves the cell empty, which are two correct renderings of the same
  * "this record does not carry that".
  */
@@ -77,7 +77,7 @@ export interface DetailModel {
 }
 
 export interface ReportModel {
-  /** Formats a figure in the panel's unit — counts, or bytes. */
+  /** Formats a figure in the panel's unit - counts, or bytes. */
   fmt:   (v: number) => string
   bytes: boolean
 
@@ -92,7 +92,7 @@ export interface ReportModel {
   snapshot: boolean
 
   series:   SeriesRow[]
-  /** Sum of the series — stated only when it can be added up (see below). */
+  /** Sum of the series - stated only when it can be added up (see below). */
   seriesTotal: number | null
 
   breakdown:      BreakdownRow[]
@@ -103,7 +103,7 @@ export interface ReportModel {
   /** The records behind the figure. `null` when the source has none to give. */
   detail: DetailModel | null
   /**
-   * Why there are none, as the server's own reason — `snapshot`, `distinct`,
+   * Why there are none, as the server's own reason - `snapshot`, `distinct`,
    * `aggregated`, `breakdown`, `withheld`. `null` when the panel HAS records,
    * or when the server never said anything about them.
    */
@@ -119,13 +119,13 @@ export interface ReportModel {
 }
 
 /**
- * An instant, spelt in full — the window bounds, and the moment of generation.
+ * An instant, spelt in full - the window bounds, and the moment of generation.
  *
  * ## Read in the INSTANCE's zone, not the reader's
  *
  * These are true instants (the server sends them with their offset), so a
  * browser in Montréal would otherwise print a window an administrator in Paris
- * had never asked for — while the line right beside it says "Europe/Paris". A
+ * had never asked for - while the line right beside it says "Europe/Paris". A
  * document that names a zone and then states its dates in another one is worse
  * than one that names none, because it looks checked.
  *
@@ -159,7 +159,7 @@ export function formatInstant(iso: string, locale: string, timeZone?: string): s
  * The instant of ONE RECORD, in a table of them.
  *
  * Short date and seconds, where the window bounds get a long date and no
- * seconds — because the two answer different questions. A header states a
+ * seconds - because the two answer different questions. A header states a
  * stretch of time somebody has to be able to check; a detail row states when
  * one event happened, next to two thousand others, and a burst of failed
  * sign-ins inside the same minute is exactly what the reader is looking for.
@@ -172,8 +172,8 @@ export function formatStamp(iso: string, locale: string, timeZone?: string): str
 /**
  * The heading of a detail column.
  *
- * Most columns are concepts the console already names elsewhere — an actor, an
- * outcome, a severity — and they take THAT wording rather than a second one:
+ * Most columns are concepts the console already names elsewhere - an actor, an
+ * outcome, a severity - and they take THAT wording rather than a second one:
  * two headings for one concept is how a console starts to read as two products.
  * Everything with no existing home gets its own `rep_col_*` key, and an id this
  * build has never heard of is printed verbatim, which is ugly and true.
@@ -233,7 +233,7 @@ function buildDetail(
  * `def` says what the panel is called and how its keys are spelt; `panel` is
  * what the server counted; `period` is the window both were read over.
  * `labelSlice` overrides the wording of one breakdown key when the name is a
- * fact this build has to look up rather than a translation — a module's display
+ * fact this build has to look up rather than a translation - a module's display
  * name, say. It is the same hook the cards take, so a legend printed on paper
  * and the legend on screen cannot end up naming things differently.
  */
@@ -255,7 +255,7 @@ export function useReportModel(
   /**
    * The breakdown key, spelt for a human.
    *
-   * The fallback is the key ITSELF, never a placeholder — exactly as on the
+   * The fallback is the key ITSELF, never a placeholder - exactly as on the
    * card. An id this build has no wording for is printed verbatim, which is ugly
    * and true, rather than folded into "autre", which is tidy and false.
    */
@@ -303,7 +303,7 @@ export function useReportModel(
      * The sum of the buckets, and when it may be printed.
      *
      * A series of counts adds up to the period's total; a series of DISTINCT
-     * values does not — the same person signing in on Monday and on Tuesday is
+     * values does not - the same person signing in on Monday and on Tuesday is
      * counted in both buckets and once in the total. Adding those columns would
      * print a number larger than the total right above it, with no explanation
      * on the page. So the sum is stated only when the two agree, which is

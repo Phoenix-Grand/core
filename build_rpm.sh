@@ -2,7 +2,7 @@
 # Build a Kubuno Core RPM package (Fedora / RHEL / openSUSE).
 #
 # Mirrors build_deb.sh: same FHS layout (/usr/bin, /usr/share/kubuno, /etc/kubuno),
-# same systemd unit, same postinst/prerm behaviour — expressed as an RPM .spec.
+# same systemd unit, same postinst/prerm behaviour - expressed as an RPM .spec.
 #
 # Usage:
 #   bash build_rpm.sh            # build the core RPM into dist/
@@ -64,7 +64,7 @@ README_SRC="$([[ -f README.md ]] && echo "$SRCDIR/README.md" || echo "$TOP/SOURC
 # systemd unit (identique au .deb) → déposé dans SOURCES
 cat > "$TOP/SOURCES/kubuno.service" << 'SYSTEMD'
 [Unit]
-Description=Kubuno Core — plateforme cloud self-hosted
+Description=Kubuno Core - plateforme cloud self-hosted
 Documentation=https://github.com/kubuno/core
 After=network.target postgresql.service
 Wants=postgresql.service
@@ -105,7 +105,7 @@ cat > "$SPEC" << SPEC
 Name:           kubuno-core
 Version:        ${VERSION}
 Release:        ${RELEASE}%{?dist}
-Summary:        Kubuno Core — plateforme cloud self-hosted
+Summary:        Kubuno Core - plateforme cloud self-hosted
 
 License:        AGPL-3.0-or-later
 URL:            https://github.com/kubuno/core
@@ -185,8 +185,8 @@ exit 0
 
 %post
 # Store des modules : c'est là que le core et « kubuno modules:install »
-# déballent les .kbpkg. Absent, le premier qui écrit en devient propriétaire —
-# root quand l'installation passe par sudo — et le service ne peut plus rien y
+# déballent les .kbpkg. Absent, le premier qui écrit en devient propriétaire -
+# root quand l'installation passe par sudo - et le service ne peut plus rien y
 # installer ensuite. Le créer ici le donne au compte de service dès le départ.
 mkdir -p /var/lib/kubuno/files /var/lib/kubuno/themes /var/lib/kubuno/modules-store
 # Destination par défaut des sauvegardes. 0700 : le fichier contient les

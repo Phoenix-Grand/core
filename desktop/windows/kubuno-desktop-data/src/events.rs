@@ -1,6 +1,6 @@
 //! The event args of the data components, and how they are raised ([`emit`]): to the Rust
 //! subscribers at once, then to the handler the component's element names in the view
-//! (`OnCurrentChanged="…"`) — synchronously when the view runtime or a binding called the
+//! (`OnCurrentChanged="…"`) - synchronously when the view runtime or a binding called the
 //! component, else queued for the runtime (`vskubuno/docs/DATA.md` §7, DATA-2).
 
 use kubuno_desktop_views::component::{ComponentCore, Site};
@@ -117,7 +117,7 @@ pub struct DataErrorEventArgs {
 }
 
 /// Raises an event of a data component: first to its Rust subscribers (`event`, sender: the
-/// component), then to the `.kbview` handler its element names — synchronously when the component
+/// component), then to the `.kbview` handler its element names - synchronously when the component
 /// is being called through a binding or the view runtime (`kubuno_desktop_views::scope::raise_now`: a
 /// cancelable event can be cancelled by its XML handler), else queued on the component for the
 /// runtime to deliver (only for a component of a view, i.e. one with a site). Returns the args as

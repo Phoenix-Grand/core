@@ -38,7 +38,7 @@ function CreateUserModal({ onClose }: { onClose: () => void }) {
   const [error, setError] = useState('')
 
   // Organisational unit. Without it the account lands outside the tree, where
-  // NO org-unit-scoped privilege reaches it — a delegated administrator would
+  // NO org-unit-scoped privilege reaches it - a delegated administrator would
   // create someone they can no longer see. Defaults to the caller's own unit,
   // falling back to the root.
   const { data: units } = useQuery({
@@ -51,7 +51,7 @@ function CreateUserModal({ onClose }: { onClose: () => void }) {
   const [ouId, setOuId] = useState<string | null>(null)
   const [ouPicker, setOuPicker] = useState(false)
   const effectiveOu = ouId ?? orgUnitId ?? root?.id ?? null
-  const ouName = (units ?? []).find(u => u.id === effectiveOu)?.name ?? '—'
+  const ouName = (units ?? []).find(u => u.id === effectiveOu)?.name ?? '-'
 
   const create = useMutation({
     mutationFn: (data: CreateUserForm) =>
@@ -215,7 +215,7 @@ export function Part1({ canBulk, allOnPage, togglePage, t, can, data, openUser, 
                 </thead>
                 <tbody className="divide-y divide-border">
                   {data?.users.map((u) => (
-                    // The whole row opens the account sheet — the list is an index,
+                    // The whole row opens the account sheet - the list is an index,
                     // the sheet is where an account is actually looked at.
                     <tr
                       key={u.id}
@@ -241,7 +241,7 @@ export function Part1({ canBulk, allOnPage, togglePage, t, can, data, openUser, 
                       {can(PRIV.ORG_UNITS_READ) && (
                         <td className="px-4 py-3 text-text-secondary text-sm whitespace-nowrap">
                           {unitName(u.org_unit_id) ?? (
-                            // Not "—": an account outside the tree is a problem, and
+                            // Not "-": an account outside the tree is a problem, and
                             // reads as one only if the list says so.
                             <span className="text-warning">{t('admin.ou_none')}</span>
                           )}
@@ -269,7 +269,7 @@ export function Part1({ canBulk, allOnPage, togglePage, t, can, data, openUser, 
                       {/* Row actions must not also trigger the row's own navigation. */}
                       <td className="px-4 py-3" onClick={(e) => e.stopPropagation()}>
                         <div className="flex items-center gap-2">
-                          {/* Opens the sheet, which is where an account is edited —
+                          {/* Opens the sheet, which is where an account is edited -
                               the pencil no longer has a form of its own. */}
                           <button
                             onClick={() => openUser(u)}

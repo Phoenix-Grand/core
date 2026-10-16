@@ -1,5 +1,5 @@
 <!--
-  The settings page: one card of six rows — the theme, the sync interval, the notifications, the
+  The settings page: one card of six rows - the theme, the sync interval, the notifications, the
   start with Windows, the forced offline mode and the outgoing proxy. Each change is raised as
   SettingChanged (name, value) and persisted at once by the window: there is no « Save » button, so a
   setting that did not stick would be silent data loss. The proxy is saved when its field loses the

@@ -54,7 +54,7 @@ public class Win {
     AttachThreadInput(fgThread, mine, true);
     // Raise it to the front WITHOUT making it sticky-topmost. The old code set
     // HWND_TOPMOST (-1) and never cleared it, so the captured window stayed
-    // pinned above everything else long after the shot — a real annoyance. The
+    // pinned above everything else long after the shot - a real annoyance. The
     // TOPMOST-then-NOTOPMOST pair forces it to the front for this instant and
     // leaves it in the normal z-order.
     SetWindowPos(h, (IntPtr)(-1), 0, 0, 0, 0, 0x1 | 0x40);   // TOPMOST | NOSIZE | SHOWWINDOW

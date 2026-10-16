@@ -15,7 +15,7 @@ use windows::Win32::Graphics::Direct2D::ID2D1Bitmap1;
 
 use super::sidebar_item_drop_position::SidebarItemDropPosition;
 
-// Row dimensions — Kubuno design system (web sidebar nav row), no longer
+// Row dimensions - Kubuno design system (web sidebar nav row), no longer
 // `SidebarStyles.xaml`.
 /// Height of a nav row (`shape::height::SIDEBAR_ROW`).
 pub const SIDEBAR_ROW_HEIGHT: f32 = crate::themes::shape::height::SIDEBAR_ROW;

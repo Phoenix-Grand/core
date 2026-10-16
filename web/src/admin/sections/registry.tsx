@@ -55,7 +55,7 @@ export interface AdminSectionProps {
    * What the address says, as parameters: the query string, PLUS the record and
    * the pane the path carries, republished under the names they had when they
    * were parameters. `/admin/marketplace/drive` reads as `related=drive`,
-   * `/admin/users/<id>/security` as `user=<id>&pane=security` — so a section
+   * `/admin/users/<id>/security` as `user=<id>&pane=security` - so a section
    * keeps asking `params.get('user')` and never learns where its id is spelt
    * (see `adminRoute.ts`).
    */
@@ -75,7 +75,7 @@ export interface AdminSection {
 /**
  * A subsystem's page and that subsystem's settings, as two tabs.
  *
- * The settings of a subsystem belong WITH the surface that shows what they do —
+ * The settings of a subsystem belong WITH the surface that shows what they do -
  * an alert threshold with the alert queue, a retention with the log it prunes.
  * They used to be stacked below the content, which left a narrow settings block
  * marooned under a full-width table; now the two share a tab bar, each taking
@@ -87,7 +87,7 @@ export interface AdminSection {
  * `isDetail` is what suppresses the tabs entirely: when one record's sheet has
  * taken over the page, the subsystem's knobs are not what the operator came for
  * and a tab bar over a record sheet would read as belonging to the record. The
- * active tab rides in `?view=settings` — an undeclared parameter the router
+ * active tab rides in `?view=settings` - an undeclared parameter the router
  * keeps in the query string, so a refresh or a shared link lands on the same
  * tab without any address-shape change.
  */
@@ -108,7 +108,7 @@ function TabbedSubsystem({
   isDetail?: (params: URLSearchParams) => boolean
 } & AdminSectionProps) {
   const { t } = useTranslation()
-  // A record sheet is a place of its own — no tabs. The first panel is the one
+  // A record sheet is a place of its own - no tabs. The first panel is the one
   // that owns records (for `withSettings`, the section itself).
   if (isDetail?.(params)) {
     const First = panels[0].Panel
@@ -126,7 +126,7 @@ function TabbedSubsystem({
       <Tabs
         tabs={tabs}
         value={current}
-        // The first tab is the default, so it drops the parameter — a clean URL
+        // The first tab is the default, so it drops the parameter - a clean URL
         // for the page as it opens.
         onChange={id => navigate(adminUrlWith(tab, params, { view: id === ids[0] ? null : id }))}
         className="mb-6"
@@ -146,7 +146,7 @@ const settingsPanel = (tab: string): TabbedPanel => ({
 /**
  * A subsystem page as tabs. `content` are the content tabs in order; the
  * settings tab is appended when the subsystem has scoped keys. The active tab
- * rides in `?view=<id>` — an undeclared parameter the router keeps in the query
+ * rides in `?view=<id>` - an undeclared parameter the router keeps in the query
  * string, so a refresh or a shared link lands on the same tab with no
  * address-shape change. `isDetail` suppresses the whole tab bar: over a record
  * sheet it would read as belonging to the record.
@@ -164,10 +164,10 @@ function tabbed(
 
 /**
  * The common case: a subsystem whose page is one surface (an inventory, a queue)
- * plus its settings. Two tabs — the surface, then "Réglages".
+ * plus its settings. Two tabs - the surface, then "Réglages".
  *
  * The settings of a subsystem belong WITH the surface that shows what they do,
- * and used to be stacked below it — a narrow block marooned under a full-width
+ * and used to be stacked below it - a narrow block marooned under a full-width
  * table. Now they share a tab bar, each taking the whole width, and the settings
  * tab flows its categories into columns. `settingsMap.ts` stays the only place
  * that says which keys those are.
@@ -203,26 +203,26 @@ export const ADMIN_SECTIONS: Record<string, AdminSection> = {
   // The settings block sits under the LANDING only: inside one country, an
   // instance-wide scope bar would read as governing that country.
   'holidays':      { Component: withSettings(HolidaysSection, 'holidays', p => !!p.get('calendar')), ownHeader: true },
-  // La liste, ou la fiche d'un domaine — chacune avec son propre en-tête. Le
+  // La liste, ou la fiche d'un domaine - chacune avec son propre en-tête. Le
   // réglage d'inscription vit sous la LISTE : à l'intérieur d'un domaine, il
   // se lirait comme s'appliquant à celui-là seul.
   'domains':       { Component: withSettings(DomainsSection, 'domains', p => !!p.get('domain')), ownHeader: true },
-  // La liste des campagnes, ou la fiche de l'une d'elles — chacune avec son
+  // La liste des campagnes, ou la fiche de l'une d'elles - chacune avec son
   // propre en-tête. Pas de `withSettings` : la section ne possède aucun réglage
   // d'instance, tout ce qu'elle configure appartient à une campagne.
   'data-migration': { Component: DataMigrationSection, ownHeader: true },
   // Le miroir : faire sortir les données. `withSettings`, parce que la
   // section possède bien des réglages d'instance (le délai de sécurité, la
-  // rétention, les prérequis) — et `isDetail` sur l'export ouvert, pour que la
+  // rétention, les prérequis) - et `isDetail` sur l'export ouvert, pour que la
   // liste des comptes couverts ne se lise pas sous une barre d'onglets qui
   // parle de la page entière.
   'data-export':   { Component: withSettings(DataExportSection, 'data-export', p => !!p.get('export')) },
-  // Paints its own title, its framing callout and its scope bar — and is made
+  // Paints its own title, its framing callout and its scope bar - and is made
   // entirely of scoped settings, so no `withSettings` wrapper: the page would
   // otherwise end with a second scope bar governing the same keys.
   'directory-settings': { Component: DirectorySettingsSection, ownHeader: true },
   // The inventory, or one module's administration page. Which one is decided by
-  // the address — `/admin/modules` vs `/admin/modules/<id>` — and both paint
+  // the address - `/admin/modules` vs `/admin/modules/<id>` - and both paint
   // their own title, so `ownHeader`.
   'modules':       { Component: (props) => (
     props.params.get('module') ? <ModuleAdminPage {...props} /> : <ModulesPanel {...props} />
@@ -240,7 +240,7 @@ export const ADMIN_SECTIONS: Record<string, AdminSection> = {
   'ldap':          { Component: withSettings(LdapSection, 'ldap') },
   'security-health': { Component: HealthSection },
   // The overview: a grid of panels, a period selector beside the title and a
-  // customisation mode — so it paints its own header rather than inheriting the
+  // customisation mode - so it paints its own header rather than inheriting the
   // generic one, which would leave the selector orphaned below the title.
   'security-dashboard': { Component: SecurityDashboardSection, ownHeader: true },
   // Renders the queue or one alert's sheet, each with its own header; the
@@ -248,14 +248,14 @@ export const ADMIN_SECTIONS: Record<string, AdminSection> = {
   'alerts':        { Component: withSettings(AlertsSection, 'alerts', p => !!p.get('alert')), ownHeader: true },
   // Renders its own breadcrumb header.
   'admin-roles':   { Component: AdminRolesPanel, ownHeader: true },
-  // What identifies the instance — plus anything no page has claimed yet.
+  // What identifies the instance - plus anything no page has claimed yet.
   'settings':      { Component: () => <><SettingsMovedNotice /><SettingsGroupPanel tab="settings" /></> },
   // Pages made ENTIRELY of settings: the block is the page, so no embedded
   // heading and the scope bar keeps its sticky position at the top.
   'session-policy':     { Component: () => <SettingsGroupPanel tab="session-policy" /> },
   'access-data':        { Component: () => <SettingsGroupPanel tab="access-data" /> },
   'service-protection': { Component: () => <SettingsGroupPanel tab="service-protection" /> },
-  // The backup policy, its run history and the manual trigger — then the knobs
+  // The backup policy, its run history and the manual trigger - then the knobs
   // that govern them (and the job runner), as the "Réglages" tab.
   'background-jobs':    { Component: withSettings(() => <BackupPanel />, 'background-jobs') },
   // The core's own database: change the schema prefix at run time, or switch the
@@ -271,7 +271,7 @@ export const ADMIN_SECTIONS: Record<string, AdminSection> = {
   'email':         { Component: MailSettingsPanel },
   // HTTP/HTTPS termination: certificate + live status + the `network.*` toggles.
   'network':       { Component: NetworkPanel, ownHeader: true },
-  // Voice search — a core capability, not a module. See `adminNav` core-features.
+  // Voice search - a core capability, not a module. See `adminNav` core-features.
   'voice-search':   { Component: SpeechToTextPanel },
   // Renders the inventory or one device's sheet, each with its own header.
   'device-sessions': { Component: withSettings(DevicesSection, 'device-sessions', p => !!p.get('device')), ownHeader: true },
@@ -279,11 +279,11 @@ export const ADMIN_SECTIONS: Record<string, AdminSection> = {
   'audit':         { Component: withSettings(AuditSection, 'audit') },
   'event-log':     { Component: EventLogSection },
   // The catalogue of printable reports, or one report. A report paints its own
-  // document head — the instance, the subject, the window, the timestamp — and a
+  // document head - the instance, the subject, the window, the timestamp - and a
   // generic `<h1>` above it would be a second, contextless title on the sheet.
   'reports':       { Component: ReportsSection, ownHeader: true },
-  // Renders the inventory, the editor or one rule's sheet — each with its own
-  // header — and the run log as a sibling place.
+  // Renders the inventory, the editor or one rule's sheet - each with its own
+  // header - and the run log as a sibling place.
   'rules':         { Component: withSettings(RulesSection, 'rules', p => !!p.get('rule') || p.get('new') === '1'), ownHeader: true },
   'rules-log':     { Component: withSettings(RulesLogSection, 'rules-log'), ownHeader: true },
   // Renders the catalogue or one detector's editor, each with its own header.
@@ -291,7 +291,7 @@ export const ADMIN_SECTIONS: Record<string, AdminSection> = {
   // Capacity: the page paints its own title and intro.
   'storage':       { Component: StorageSection, ownHeader: true },
   // The licence the software is held under, what this installation IS, and the
-  // support contract — if any. Paints its own title and framing callout, hence
+  // support contract - if any. Paints its own title and framing callout, hence
   // `ownHeader`. Deliberately NOT wrapped in `withSettings`: the page governs
   // no setting, and a "Réglages" tab would suggest there is a knob here.
   'subscription':  { Component: SubscriptionSection, ownHeader: true },

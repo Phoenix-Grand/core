@@ -49,18 +49,18 @@ export interface ComboboxProps {
 interface Pos { left: number; top: number; width: number }
 
 /**
- * Combobox — selection in a LONG list: a trigger, a filter field and a listbox.
+ * Combobox - selection in a LONG list: a trigger, a filter field and a listbox.
  *
  * `Dropdown` is the right control for a handful of fixed choices; it has no
  * filter, so it collapses on real data (the admin currently feeds it the ~600
  * IANA timezones). This component adds the search field, keyboard navigation,
- * and — the part that is routinely got wrong — DIACRITIC-INSENSITIVE matching:
+ * and - the part that is routinely got wrong - DIACRITIC-INSENSITIVE matching:
  * typing `unites` finds « Unités », and typing `Unités` finds `unites`, because
  * both sides are folded through NFD + diacritic stripping (see `foldText`).
  *
  * Accessibility follows the ARIA 1.2 combobox pattern: the FILTER INPUT owns
  * `role="combobox"`, the popup is a `role="listbox"`, and the active option is
- * pointed at by `aria-activedescendant` — focus never leaves the input, so what
+ * pointed at by `aria-activedescendant` - focus never leaves the input, so what
  * the user types keeps going to the field while the arrow keys move the
  * highlight. Options are `role="option"` with `aria-selected`.
  *
@@ -107,7 +107,7 @@ export function Combobox({
     )
   }, [options, query])
 
-  // Index of the first selectable row — the highlight never rests on a disabled one.
+  // Index of the first selectable row - the highlight never rests on a disabled one.
   const firstEnabled = useCallback((from: number, dir: 1 | -1): number => {
     if (filtered.length === 0) return -1
     let i = from
@@ -273,7 +273,7 @@ export function Combobox({
           onChange={e => setQuery(e.target.value)}
           onKeyDown={onKeyDown}
           // ARIA 1.2 combobox: the input owns the role, the popup is its listbox,
-          // and the highlighted row is named here — never focused — so the
+          // and the highlighted row is named here - never focused - so the
           // caret stays in the field.
           role="combobox"
           aria-expanded

@@ -1,4 +1,4 @@
-//! The resource-file format of Kubuno desktop applications — the equivalent of Windows Forms'
+//! The resource-file format of Kubuno desktop applications - the equivalent of Windows Forms'
 //! `.resx` files (`vskubuno/docs/RESOURCES.md`).
 //!
 //! | Module | What |

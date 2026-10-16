@@ -35,7 +35,7 @@ async fn insert(
     let ip_owned = ctx.ip.map(|ip| ip.to_string());
     // Server-set timestamp, chosen here (not by the column default) so the exact
     // value that is stored is the one the hash covers. Truncated to microseconds
-    // — PostgreSQL `timestamptz` keeps only microseconds, so hashing the raw
+    // - PostgreSQL `timestamptz` keeps only microseconds, so hashing the raw
     // nanosecond `now()` would not match the value read back at verification.
     let occurred_at = chrono::Utc::now();
     let occurred_at =
@@ -45,7 +45,7 @@ async fn insert(
     // Only when the key is installed (it is not in unit tests / tools, and then
     // the hash columns stay NULL). The advisory lock serialises appenders so two
     // concurrent writers cannot read the same tip and both link to it; it is an
-    // xact lock, released at commit — both call sites run inside a transaction.
+    // xact lock, released at commit - both call sites run inside a transaction.
     let (prev_hash, row_hash): (Option<Vec<u8>>, Option<Vec<u8>>) = match chain::audit_key() {
         Some(key) => {
             // PostgreSQL advisory locks have no portable equivalent: SQLite
@@ -153,7 +153,7 @@ impl AuditContext {
     ///
     /// Reserved for events that have nothing to commit alongside: refusals,
     /// failed sign-ins, and work performed by a detached task. Never use it to
-    /// "log after" a mutation — that is what [`AuditTx`] exists to prevent.
+    /// "log after" a mutation - that is what [`AuditTx`] exists to prevent.
     ///
     /// Best-effort by design: an audit failure must not turn a refusal into a
     /// 500. The error is logged loudly instead.
@@ -190,8 +190,8 @@ impl AuditContext {
 /// ## Why this bridge exists
 ///
 /// The administration rule engine ([`crate::rules`]) reacts to events. The facts
-/// an administrator most wants to react to — a refused sign-in, a denied
-/// administrative call — are precisely the ones that were only ever written to
+/// an administrator most wants to react to - a refused sign-in, a denied
+/// administrative call - are precisely the ones that were only ever written to
 /// the trail and nowhere else. Rather than sprinkling a `publish` beside every
 /// such call site (and forgetting one), the *escape hatch of the trail itself*
 /// becomes an event source: whatever gets recorded outside a mutation is
@@ -204,7 +204,7 @@ impl AuditContext {
 ///   administrative refusal delivered to everybody would be a leak far worse
 ///   than the missing trigger. The WebSocket and push workers drop these.
 /// * **Structural fields only.** Actor, target, outcome, address. The `before`
-///   and `after` snapshots — the only part that can hold anything sensitive —
+///   and `after` snapshots - the only part that can hold anything sensitive -
 ///   are deliberately left out.
 ///
 /// Best-effort: a publication failure never turns an audited refusal into a 500.

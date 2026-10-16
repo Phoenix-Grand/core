@@ -1,5 +1,5 @@
 /**
- * filesShared — éléments communs aux deux navigateurs de fichiers
+ * filesShared - éléments communs aux deux navigateurs de fichiers
  * (`FilesApp` et `ModuleFileBrowser`) : palette de couleurs de dossier, icône de
  * fichier par type, et les sous-menus contextuels « Ouvrir avec » et « Organiser ».
  *
@@ -80,7 +80,7 @@ export function OpenWithSubmenu({ file, onClose }: { file: FileItem; onClose: ()
   const activeIds         = new Set(activeModules.map(m => m.module_id))
   // Ne garder que les contributeurs actifs ET réellement applicables au fichier
   // (un contributeur sans prédicat est supposé toujours applicable). C'est cette
-  // liste — et non le simple nombre d'enregistrements — qui détermine si le
+  // liste - et non le simple nombre d'enregistrements - qui détermine si le
   // sous-menu aura du contenu, donc s'il faut griser « Ouvrir avec ».
   const contributors      = SlotRegistry.getSlot('files-open-with')
     .filter(e => activeIds.has(e.moduleId))
@@ -288,7 +288,7 @@ export function OrganiserSubmenu({
 // ── Sous-menus NATIFS (type 'submenu' du MenuDropdown) ───────────────────────────
 // Ces helpers remplacent les composants `custom` ci-dessus : le MenuDropdown rend
 // alors « Ouvrir avec » / « Organiser » avec le MÊME style que les autres items
-// (icône/police/espacement) et déploie le sous-menu dans son propre portal — donc
+// (icône/police/espacement) et déploie le sous-menu dans son propre portal - donc
 // jamais rogné par le défilement du menu parent. Source unique pour les deux
 // navigateurs de fichiers (StorageExplorer + module Drive).
 

@@ -4,7 +4,7 @@
  * N'importe quel module peut superposer des items datés sur la grille du
  * module calendar en enregistrant un `CalendarOverlayProvider` via
  * `ExtensionRegistry.register(CALENDAR_OVERLAY, '<moduleId>', provider)`.
- * Calendar lit `ExtensionRegistry.getAll(CALENDAR_OVERLAY)` et affiche les items —
+ * Calendar lit `ExtensionRegistry.getAll(CALENDAR_OVERLAY)` et affiche les items -
  * sans aucune connaissance des modules contributeurs.
  *
  * Le contrat vit dans le core (lieu neutre) pour que calendar et les modules

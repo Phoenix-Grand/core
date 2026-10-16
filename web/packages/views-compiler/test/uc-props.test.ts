@@ -1,6 +1,6 @@
 /**
- * WV-7: extracting a user control's `x:Props` type from its code-behind — non-function fields become
- * bindable properties, function fields become events — and threading the schema through `userControlsOf`.
+ * WV-7: extracting a user control's `x:Props` type from its code-behind - non-function fields become
+ * bindable properties, function fields become events - and threading the schema through `userControlsOf`.
  */
 import { mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'

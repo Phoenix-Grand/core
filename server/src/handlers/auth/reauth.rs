@@ -1,7 +1,7 @@
 //! Step-up re-authentication endpoints.
 //!
-//! - `GET  /auth/reauth/challenge` — which proofs this account can offer.
-//! - `POST /auth/reauth`           — offer one, receive a short-lived proof.
+//! - `GET  /auth/reauth/challenge` - which proofs this account can offer.
+//! - `POST /auth/reauth`           - offer one, receive a short-lived proof.
 //!
 //! Both refuse a personal API token outright ([`HumanUser`]): a program holding a
 //! long-lived credential has no second factor and nobody at the keyboard, so it
@@ -33,7 +33,7 @@ pub struct ReauthChallenge {
     pub token_ttl_seconds: i64,
     /// How long afterwards sensitive actions pass unchallenged.
     pub grace_seconds: i64,
-    /// End of an already-open grace window, when there is one — the client can
+    /// End of an already-open grace window, when there is one - the client can
     /// then skip the dialog entirely.
     pub grace_active_until: Option<chrono::DateTime<chrono::Utc>>,
     /// Unused backup codes left, so the dialog can warn before offering that path.
@@ -61,7 +61,7 @@ fn entry(action: &str, user: &crate::models::user::User) -> AuditEntry {
 
 /// Records a failed challenge and returns the (deliberately vague) error.
 ///
-/// The caller is already authenticated, so there is nothing to enumerate — but a
+/// The caller is already authenticated, so there is nothing to enumerate - but a
 /// message naming the factor that failed is the kind of detail that ends up in a
 /// screenshot pasted into a support thread.
 async fn deny(
@@ -158,7 +158,7 @@ pub async fn reauth(
                     ctx.record(
                         &state.db,
                         entry("core.auth.backup_code.used", &user).detail(format!(
-                            "réauthentification — {remaining} code(s) de secours restant(s)"
+                            "réauthentification - {remaining} code(s) de secours restant(s)"
                         )),
                     )
                     .await;

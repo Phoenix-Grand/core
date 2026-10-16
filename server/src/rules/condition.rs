@@ -7,7 +7,7 @@
 //! five times from outside the office" is a little expression language. It is
 //! also the wrong way. A parser is a surface: it has to be sandboxed, its
 //! failure modes are runtime, and reviewing a rule means reading a program. The
-//! vocabulary below is an enum instead — [`Condition`] and [`Operator`]. serde
+//! vocabulary below is an enum instead - [`Condition`] and [`Operator`]. serde
 //! rejects anything outside it before the engine ever sees it, `cargo test`
 //! covers every branch, and a rule can be rendered back as a sentence because
 //! there is a finite set of sentences.
@@ -24,7 +24,7 @@
 //!
 //! Depth and leaf count are checked on **every write** ([`validate`]), not at
 //! evaluation time. A rule that would take a millisecond per event to evaluate
-//! is refused when it is saved, once, by the person who can fix it — rather than
+//! is refused when it is saved, once, by the person who can fix it - rather than
 //! discovered on the hot path by the instance it is slowing down.
 //!
 //! ## String comparisons are case-insensitive
@@ -122,7 +122,7 @@ impl Operator {
     }
 
     /// Does this operator read the `value` field at all? The unary ones do not,
-    /// and a rule that supplies one is not wrong — it is ignored.
+    /// and a rule that supplies one is not wrong - it is ignored.
     pub const fn is_unary(self) -> bool {
         matches!(
             self,
@@ -137,7 +137,7 @@ impl Operator {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(tag = "type", rename_all = "snake_case")]
 pub enum Condition {
-    /// Every child must hold. An empty `all` matches — a rule with no condition
+    /// Every child must hold. An empty `all` matches - a rule with no condition
     /// fires on every occurrence of its trigger, which is a legitimate thing to
     /// want and must not be expressed as a trick.
     All { of: Vec<Condition> },
@@ -155,7 +155,7 @@ pub enum Condition {
     },
     /// "This content carries sensitive data of a named kind."
     ///
-    /// The one leaf that reads content rather than facts — and it still carries
+    /// The one leaf that reads content rather than facts - and it still carries
     /// no logic: a catalogue key and three thresholds
     /// ([`super::detect::DetectorLeaf`]). The pattern lives in the detector, a
     /// row an administrator manages on its own screen, tested on its own screen,
@@ -165,7 +165,7 @@ pub enum Condition {
     /// it.
     ///
     /// Outside the synchronous gate there is no content, so this leaf answers
-    /// `false` — see [`Condition::matches`].
+    /// `false` - see [`Condition::matches`].
     Detector(DetectorLeaf),
 }
 
@@ -248,7 +248,7 @@ impl Condition {
     /// Does the tree hold for `facts`, with no content inspected?
     ///
     /// The asynchronous path: the bus carries an event, not a document, so every
-    /// detector leaf answers `false`. That is deliberate rather than a gap — a
+    /// detector leaf answers `false`. That is deliberate rather than a gap - a
     /// data-protection rule is a rule about content, and content only exists on
     /// the synchronous gate. Silently matching on a *fact* that happened to be
     /// named `body` would be far worse than not matching.
@@ -694,7 +694,7 @@ mod tests {
     #[test]
     fn a_detector_leaf_never_matches_without_content() {
         // The asynchronous path. A rule about content is inert on the bus, and
-        // `not detector` is therefore true there — which is exactly why
+        // `not detector` is therefore true there - which is exactly why
         // `matches` is documented rather than merely implemented.
         let f = facts();
         let leaf: Condition =

@@ -1,4 +1,4 @@
-//! Component family `text` — declared with the `component!` table (see
+//! Component family `text` - declared with the `component!` table (see
 //! `../macros.rs`) plus, in this same file, the view nodes those components
 //! build. Compiled only with the `family-text` feature while the families are
 //! being written in parallel; the feature is on by default once integrated.
@@ -8,18 +8,18 @@
 //! `TextArea`, `SearchField`, `MaskedField` (`kubuno_desktop_ui::text`), `Dropdown`
 //! (`kubuno_desktop_ui::editors`), `ComboBox` (`kubuno_desktop_ui::lists`), `DatePicker`
 //! (`kubuno_desktop_ui::datetime`), `ColorField` and `GradientField`
-//! (`kubuno_desktop_ui::color`) — read off
+//! (`kubuno_desktop_ui::color`) - read off
 //! those modules' real public builder API, the same way `registry::components`
 //! reads `Button`/`Switch`/`TextField`/`Card`/`Stack` off `kubuno-desktop-ui`.
 //!
 //! ## Options: a child element, or an `ItemsSource` binding
 //!
 //! `Dropdown` and `ComboBox` both take their item list as `<Option Value=".."
-//! Label=".."/>` children (`ChildrenModel::List`) — read straight off each
+//! Label=".."/>` children (`ChildrenModel::List`) - read straight off each
 //! `<Option>` child through [`crate::ast::Element`] at build time
 //! (`read_options`) rather than recursing through [`crate::props::Props::
 //! build_children`]: an `Option` is data, never built into a live
-//! [`crate::node::ViewNode`] of its own — **or** an `ItemsSource="{Binding
+//! [`crate::node::ViewNode`] of its own - **or** an `ItemsSource="{Binding
 //! Path}"` to a [`crate::binding::Value::List`], re-read every frame
 //! (`resolve_bound_options`), with `DisplayMember`/`ValueMember` naming which
 //! row field is the label/value (defaults `"Label"`/`"Value"`, matching
@@ -28,13 +28,13 @@
 //! wrong shape leaves the static (or, absent any `<Option>` at all, empty)
 //! list alone. `Option` is registered as its OWN [`crate::registry::
 //! ComponentMeta`] too (`validate` rejects any child element name it cannot
-//! look up — see `crate::validate`'s `walk`), but it has no real `kubuno_desktop_ui`
+//! look up - see `crate::validate`'s `walk`), but it has no real `kubuno_desktop_ui`
 //! counterpart to drive a `component!` `ctor`/`smoke` pair against, so its
 //! metadata is hand-built below instead of going through the macro (see
 //! [`option`]'s doc).
 //!
-//! The selection itself is a two-way `SelectedValue="{Binding …}"` string —
-//! an `<Option>`'s `Value`, or `""` for "nothing selected" — rather than an
+//! The selection itself is a two-way `SelectedValue="{Binding …}"` string -
+//! an `<Option>`'s `Value`, or `""` for "nothing selected" - rather than an
 //! index, so the view model never has to know the list's order.
 //!
 //! ## Floating parts
@@ -76,7 +76,7 @@ use crate::registry::{ChildrenModel, ComponentMeta, EventMeta, PropKind, Propert
 // `press_release` and `PaintCx::fire` are shared with every other family now
 // (`crate::node`, both `pub(crate)`) rather than reimplemented per file.
 
-/// Grows `r` by `by` on every side — `crate::node`'s containers have no
+/// Grows `r` by `by` on every side - `crate::node`'s containers have no
 /// equivalent helper `pub(crate)`, and `kubuno_desktop_ui`'s own `inflate`s (in
 /// `editors`/`lists`) are private to their module.
 fn inflate(r: Rect, by: f32) -> Rect {
@@ -84,18 +84,18 @@ fn inflate(r: Rect, by: f32) -> Rect {
 }
 
 /// `panel` in the local space of a popup painted at `pb` (`pb`'s top-left is
-/// the popup canvas's origin) — the same translation the gallery's own
+/// the popup canvas's origin) - the same translation the gallery's own
 /// `rebase`/`local` helpers do for `host::popup`'s paint closure.
 fn local_in(panel: Rect, pb: Rect) -> Rect {
     Rect::new(panel.left - pb.left, panel.top - pb.top, panel.right - pb.left, panel.bottom - pb.top)
 }
 
-/// `<Option Value=".." Label=".."/>` children of `el`, in document order —
+/// `<Option Value=".." Label=".."/>` children of `el`, in document order -
 /// what `Dropdown`/`ComboBox` populate their item list from (see this
 /// module's doc, "Options: a child element, not a binding"). A child with no
 /// `Label` falls back to its `Value` (so `<Option Value="fr"/>` alone is a
 /// valid, self-labelling option); anything that is not literally named
-/// `Option` is ignored rather than erroring — `crate::validate` already
+/// `Option` is ignored rather than erroring - `crate::validate` already
 /// refuses any OTHER unregistered element name, so this only guards a
 /// defensive double-check.
 fn read_options(el: &Element) -> Vec<(String, String)> {
@@ -126,10 +126,10 @@ fn sort_options(options: &mut [(String, String)]) {
 
 /// The `ItemsSource`-bound twin of [`read_options`]: `(Value, Label)` per row
 /// of a bound `crate::binding::Value::List`, read through `DisplayMember`/
-/// `ValueMember` (each row's named field — see [`DropdownNode`]/
+/// `ValueMember` (each row's named field - see [`DropdownNode`]/
 /// [`ComboBoxNode`]'s own docs and their `ItemsSource` property). `None`
 /// under the same conditions `registry::families::data::resolve_item_labels`
-/// documents (no binding, or it does not currently resolve to a list) — the
+/// documents (no binding, or it does not currently resolve to a list) - the
 /// caller's cue to keep its existing, static-`<Option>`-built option list.
 /// A label that resolves to empty text falls back to the value, mirroring
 /// [`read_options`]'s own `<Option>` fallback.
@@ -159,13 +159,13 @@ fn options_of(rows: &[crate::binding::Row], display_member: &str, value_member: 
 }
 
 // ─────────────────────────────────────────────────────────────────────────
-// Option — a data-only element, not a paintable widget (see the module doc)
+// Option - a data-only element, not a paintable widget (see the module doc)
 // ─────────────────────────────────────────────────────────────────────────
 
 /// `<Option>`'s metadata, hand-built rather than through [`component`]:
 /// that macro's `ctor`/`smoke` pair exists specifically to guard against
 /// drift from a REAL `kubuno_desktop_ui` constructor (`registry/mod.rs`'s module
-/// doc), and there is no `kubuno_desktop_ui` widget an `<Option>` corresponds to —
+/// doc), and there is no `kubuno_desktop_ui` widget an `<Option>` corresponds to -
 /// it is pure data `Dropdown`/`ComboBox` read directly off the parsed
 /// element (`read_options`), never built into a widget of its own. Giving it
 /// a fabricated `ctor` just to fit the macro would be exactly the kind of
@@ -203,7 +203,7 @@ mod option {
     };
 }
 
-/// The no-op [`ViewNode`] a standalone `<Option>` would build into — see
+/// The no-op [`ViewNode`] a standalone `<Option>` would build into - see
 /// [`option`]'s doc.
 struct OptionNode;
 
@@ -261,7 +261,7 @@ component! {
 }
 
 /// A [`UiTextArea`] replica held live, its caret/selection/undo history real
-/// state a rebuild-from-nothing would erase every frame — the same shape as
+/// state a rebuild-from-nothing would erase every frame - the same shape as
 /// `crate::node::TextFieldNode`, whose `Deref` target (`TextField`) this
 /// widget itself derefs to, so `update`/`paint`/`display`/`reset_text` are
 /// literally the same calls.
@@ -272,7 +272,7 @@ pub struct TextAreaNode {
     pub focus_id: Option<FocusId>,
     pub on_changed: Option<String>,
     field: UiTextArea,
-    /// See `crate::node::TextFieldNode::synced` — the same reconciliation
+    /// See `crate::node::TextFieldNode::synced` - the same reconciliation
     /// rule: only overwrite the live buffer from the binding before the
     /// field has taken its first edit, or while it is not focused.
     synced: bool,
@@ -399,7 +399,7 @@ impl ViewNode for TextAreaNode {
 component! {
     mod_name: search_field,
     name: "SearchField",
-    // Note: A search pill (`kubuno_desktop_ui::text::SearchField`) — a leading glyph and a clear "x" shown while it holds text.
+    // Note: A search pill (`kubuno_desktop_ui::text::SearchField`) - a leading glyph and a clear "x" shown while it holds text.
     doc: "A search box with a clear button.",
     ctor: kubuno_desktop_ui::text::SearchField::new(),
     children: ChildrenModel::None,
@@ -455,7 +455,7 @@ impl ViewNode for SearchFieldNode {
     }
 
     /// `SearchField::measure` (`kubuno_desktop_ui::text`) is content-sized (glyph +
-    /// text/placeholder width + the reserved ✕ column) — not `w-full` — but
+    /// text/placeholder width + the reserved ✕ column) - not `w-full` - but
     /// `SearchField::paint` fills its pill across whatever `bounds` it is
     /// given, same as `Badge`: without this a `<Stack>` column stretches
     /// that pill's subtle fill across the FULL row, reading as barely
@@ -514,7 +514,7 @@ component! {
             "Input mask, for example 00/00/0000 for a date.",
         ),
         PropertyMeta::new("Text", PropKind::String, "", "Text in the field."),
-        // Note: Turns the border and the focus outline to the danger colour — a natural driver is `!mask_completed()`, left to the caller.
+        // Note: Turns the border and the focus outline to the danger colour - a natural driver is `!mask_completed()`, left to the caller.
         PropertyMeta::new("Invalid", PropKind::Bool, "false",
             "Shows the field in the error colour.",
         ),
@@ -545,7 +545,7 @@ pub struct MaskedFieldNode {
     pub focus_id: Option<FocusId>,
     pub on_changed: Option<String>,
     field: UiMaskedField,
-    /// The last `Mask` value applied to [`Self::field`] — `set_mask` resets
+    /// The last `Mask` value applied to [`Self::field`] - `set_mask` resets
     /// the whole buffer, so it must only run when the mask text actually
     /// changed, never every frame.
     applied_mask: String,
@@ -618,7 +618,7 @@ impl ViewNode for MaskedFieldNode {
 }
 
 // ─────────────────────────────────────────────────────────────────────────
-// Dropdown — a real `host::popup` list, exactly as
+// Dropdown - a real `host::popup` list, exactly as
 // `kubuno-desktop-ui/examples/gallery/pages/editors.rs`'s own interactive column
 // drives one (`Dropdown::place_drop_down` / `drop_down_paint_bounds` /
 // `paint_drop_down_at`, its list in a popup of its own).
@@ -627,13 +627,13 @@ impl ViewNode for MaskedFieldNode {
 component! {
     mod_name: dropdown,
     name: "Dropdown",
-    // Note: A selector with a floating list (`kubuno_desktop_ui::editors::Dropdown`) — items are <Option Value=".." Label=".."/> children.
+    // Note: A selector with a floating list (`kubuno_desktop_ui::editors::Dropdown`) - items are <Option Value=".." Label=".."/> children.
     doc: "A drop-down list for choosing one option. Add the options as Option children.",
     ctor: kubuno_desktop_ui::editors::Dropdown::new(),
     children: ChildrenModel::List(&["Option"]),
     default_event: "OnSelectedValueChanged",
     props: [
-        // Note: The selected <Option>'s Value, or empty for no selection — see the family's module doc.
+        // Note: The selected <Option>'s Value, or empty for no selection - see the family's module doc.
         PropertyMeta::new("SelectedValue", PropKind::String, "",
             "Value of the selected option. Empty when nothing is selected.",
         ),
@@ -706,7 +706,7 @@ pub struct DropdownNode {
     value_member: PropSource<String>,
     pub focus_id: Option<FocusId>,
     pub on_changed: Option<String>,
-    /// `(Value, Label)` per `<Option>` — literal (from static children) until
+    /// `(Value, Label)` per `<Option>` - literal (from static children) until
     /// `items_source` resolves at least once, after which it follows the
     /// bound row list every frame it changes (see [`ViewNode::paint`]).
     options: Vec<(String, String)>,
@@ -755,7 +755,7 @@ impl DropdownNode {
 
     /// Re-reads `items_source` (if bound) and, when the resolved options
     /// differ from what is already shown, resyncs both [`Self::options`] and
-    /// the live widget's item list — see [`resolve_bound_options`].
+    /// the live widget's item list - see [`resolve_bound_options`].
     fn resync_bound_options(&mut self, vm: &dyn ViewModel) {
         let display_member = self.display_member.resolve(vm);
         let value_member = self.value_member.resolve(vm);
@@ -781,7 +781,7 @@ impl DropdownNode {
         self.options.iter().position(|(v, _)| v == value)
     }
 
-    /// Applies `value` to the widget's selection — `-1` (none) when it does
+    /// Applies `value` to the widget's selection - `-1` (none) when it does
     /// not match any `<Option>`, including an empty binding.
     fn apply_selection(&mut self, value: &str) {
         let index = self.index_of(value).map(|i| i as i32).unwrap_or(-1);
@@ -865,7 +865,7 @@ impl ViewNode for DropdownNode {
             cx.fire("OnSelectedValueChanged", self.focus_id, self.on_changed.as_deref(), ViewEventKind::Changed(value), &mut args);
         }
 
-        // Re-resolved AFTER interaction, for same-frame feedback — the same
+        // Re-resolved AFTER interaction, for same-frame feedback - the same
         // technique `crate::node::SwitchNode`/`TextFieldNode` use.
         let bound_value = self.selected_value.resolve(cx.vm);
         self.apply_selection(&bound_value);
@@ -897,7 +897,7 @@ impl ViewNode for DropdownNode {
 }
 
 // ─────────────────────────────────────────────────────────────────────────
-// ComboBox — the same real popup treatment as Dropdown, over
+// ComboBox - the same real popup treatment as Dropdown, over
 // `kubuno_desktop_ui::lists::ComboBox` instead (a select-only ARIA combobox; see
 // `kubuno-desktop-ui/examples/gallery/pages/lists.rs`'s own interactive column).
 // ─────────────────────────────────────────────────────────────────────────
@@ -905,13 +905,13 @@ impl ViewNode for DropdownNode {
 component! {
     mod_name: combo_box,
     name: "ComboBox",
-    // Note: A select-only combo box with a floating list (`kubuno_desktop_ui::lists::ComboBox`) — items are <Option Value=".." Label=".."/> children.
+    // Note: A select-only combo box with a floating list (`kubuno_desktop_ui::lists::ComboBox`) - items are <Option Value=".." Label=".."/> children.
     doc: "A list box that drops down, for choosing one option. Add the options as Option children.",
     ctor: kubuno_desktop_ui::lists::ComboBox::new(),
     children: ChildrenModel::List(&["Option"]),
     default_event: "OnSelectedValueChanged",
     props: [
-        // Note: The selected <Option>'s Value, or empty for no selection — see the family's module doc.
+        // Note: The selected <Option>'s Value, or empty for no selection - see the family's module doc.
         PropertyMeta::new("SelectedValue", PropKind::String, "",
             "Value of the selected option. Empty when nothing is selected.",
         ),
@@ -955,7 +955,7 @@ component! {
     },
 }
 
-/// This frame's combo-navigation keys, read from the host queue — the same
+/// This frame's combo-navigation keys, read from the host queue - the same
 /// mapping `kubuno-desktop-ui`'s own gallery (`lists.rs`' `take_combo_keys`) applies,
 /// rebuilt against the public [`host::take_key`] one key at a time instead of
 /// that example's `host::consume` closure (not reachable from here: examples
@@ -1059,7 +1059,7 @@ impl ComboBoxNode {
         self.widget.set_selected_index(index);
     }
 
-    /// See [`DropdownNode::resync_bound_options`] — the same resync, over
+    /// See [`DropdownNode::resync_bound_options`] - the same resync, over
     /// `UiComboBox::items` instead of `UiDropdown::items`/`icons` (a select-
     /// only combo box has no per-option icon to keep aligned).
     fn resync_bound_options(&mut self, vm: &dyn ViewModel) {
@@ -1190,7 +1190,7 @@ impl ViewNode for ComboBoxNode {
 }
 
 // ─────────────────────────────────────────────────────────────────────────
-// DatePicker — the calendar panel in a real `host::popup`, via
+// DatePicker - the calendar panel in a real `host::popup`, via
 // `DatePicker::popup_drop_down` itself (it does its own `.clone()` +
 // `host::popup`, exactly as `kubuno-desktop-ui/examples/gallery/pages/datetime.rs`'s
 // interactive column relies on).
@@ -1211,7 +1211,7 @@ component! {
             "How the date is shown: long date, short date, or a time.",
         ),
         PropertyMeta::new("Invalid", PropKind::Bool, "false", "Shows the field in the error colour."),
-        // Note: Overrides the dropped panel's « today » marker (ISO `YYYY-MM-DD`) — for a test or a screenshot that needs a fixed date; empty (the default) reads the real local date every frame (`crate::clock::today`).
+        // Note: Overrides the dropped panel's « today » marker (ISO `YYYY-MM-DD`) - for a test or a screenshot that needs a fixed date; empty (the default) reads the real local date every frame (`crate::clock::today`).
         PropertyMeta::new("Today", PropKind::String, "",
             "Date treated as today, in the form YYYY-MM-DD. Leave empty to use the current date.",
         ),
@@ -1261,7 +1261,7 @@ fn parse_iso_date(s: &str) -> Option<Date> {
 
 /// Handles a click on the field: the check box toggles, a spin button steps
 /// the selected segment, the value selects the segment under the pointer and
-/// — when the field has a panel — toggles it. The exact behaviour
+/// - when the field has a panel - toggles it. The exact behaviour
 /// `kubuno-desktop-ui`'s own gallery (`datetime.rs`'s `click_field`) drives the real
 /// widget with; reproduced here rather than reached through (examples are
 /// not part of the crate's public API).
@@ -1318,7 +1318,7 @@ impl ViewNode for DatePickerNode {
         self.widget.viewport = Some(cx.frame.screen_area());
         self.widget.invalid = self.invalid.resolve(cx.vm);
         // Never left at the replica's `DEFAULT_TODAY` (`2000-01-01`)
-        // sentinel — see `crate::clock`'s own doc.
+        // sentinel - see `crate::clock`'s own doc.
         let today = parse_iso_date(&self.today.resolve(cx.vm)).unwrap_or_else(crate::clock::today);
         self.widget.calendar.set_today_date(today);
         let format = parse_date_format(&self.format.resolve(cx.vm));
@@ -1333,7 +1333,7 @@ impl ViewNode for DatePickerNode {
         let (down_now, clicked) = press_release(&mut self.pressed, hot, cx.frame.mouse_down);
         let focus_state = self.focus_id.map(|id| cx.focus.register(id, field)).unwrap_or_default();
 
-        // Only pull the bound value in while the field is not being edited —
+        // Only pull the bound value in while the field is not being edited -
         // the same reconciliation `crate::node::TextFieldNode` applies to its
         // own live buffer.
         if !focus_state.focused {
@@ -1408,7 +1408,7 @@ impl ViewNode for DatePickerNode {
 }
 
 // ─────────────────────────────────────────────────────────────────────────
-// ColorField — the swatch and its floating ColorPicker, as `ColorField.tsx`:
+// ColorField - the swatch and its floating ColorPicker, as `ColorField.tsx`:
 // a click toggles a popover (placed by `ColorField::popover_rect`, to the
 // LEFT of the swatch when there is room, clamped to the monitor) holding the
 // full `ColorPicker`, driven by the picker's own interaction loop
@@ -1420,7 +1420,7 @@ impl ViewNode for DatePickerNode {
 component! {
     mod_name: color_field,
     name: "ColorField",
-    // Note: A colour swatch (`kubuno_desktop_ui::color::ColorField`) that opens the full `ColorPicker` in a floating popover — hue ring, SV area in three shapes, harmonies, hex, RGB/HSV/HSL/CMYK/GRAY channels, chips, recent colours, eyedropper.
+    // Note: A colour swatch (`kubuno_desktop_ui::color::ColorField`) that opens the full `ColorPicker` in a floating popover - hue ring, SV area in three shapes, harmonies, hex, RGB/HSV/HSL/CMYK/GRAY channels, chips, recent colours, eyedropper.
     doc: "A colour swatch that opens a colour picker.",
     ctor: kubuno_desktop_ui::color::ColorField::new(kubuno_desktop_ui::color::Color::default()),
     children: ChildrenModel::None,
@@ -1617,7 +1617,7 @@ impl ViewNode for ColorFieldNode {
 }
 
 // ─────────────────────────────────────────────────────────────────────────
-// GradientField — `GradientField` in `GradientPicker.tsx`: a swatch showing
+// GradientField - `GradientField` in `GradientPicker.tsx`: a swatch showing
 // the gradient that opens a `GradientPicker` (with its ✕) in the same kind
 // of popover. The value is the web's own serialisation, `gradientToCss`
 // (`linear-gradient(90deg, rgba(…) 0%, …)` / `radial-gradient(circle, …)`),
@@ -1627,7 +1627,7 @@ impl ViewNode for ColorFieldNode {
 component! {
     mod_name: gradient_field,
     name: "GradientField",
-    // Note: A gradient swatch (`kubuno_desktop_ui::color::GradientField`) that opens a `GradientPicker` — linear/radial, draggable stops, angle, per-stop colour/position/opacity — in a floating popover.
+    // Note: A gradient swatch (`kubuno_desktop_ui::color::GradientField`) that opens a `GradientPicker` - linear/radial, draggable stops, angle, per-stop colour/position/opacity - in a floating popover.
     doc: "A gradient swatch that opens a gradient picker.",
     ctor: kubuno_desktop_ui::color::GradientField::new(kubuno_desktop_ui::color::Gradient::default()),
     children: ChildrenModel::None,

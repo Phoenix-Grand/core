@@ -20,7 +20,7 @@ export interface ThemeDef {
   vars:               Record<string, string>
   /** Global skin (applies everywhere). */
   global?:            ThemeAsset
-  /** Per-module skins — only the listed modules are affected. */
+  /** Per-module skins - only the listed modules are affected. */
   modules?:           Record<string, ThemeAsset>
   builtin?:           boolean
   /** True if the bundle ships JS overrides. */
@@ -55,7 +55,7 @@ const THEME_API_VERSION = 1
 // ── Runtime bookkeeping (module-level: survives store recreation) ──────────────
 
 let currentTheme: ThemeDef | null = null
-// CSS variable names set by the current theme — cleared when switching away.
+// CSS variable names set by the current theme - cleared when switching away.
 const appliedVarNames = new Set<string>()
 // `${themeId}:${moduleId}` for module scripts already imported (idempotence).
 const loadedModuleScripts = new Set<string>()
@@ -66,7 +66,7 @@ function scriptsAllowed(theme: ThemeDef): boolean {
   if (!theme.scripts_enabled) return false
   const v = theme.theme_api_version ?? THEME_API_VERSION
   if (v !== THEME_API_VERSION) {
-    console.warn(`[theme] ${theme.id} : theme_api v${v} ≠ host v${THEME_API_VERSION} — scripts ignorés`)
+    console.warn(`[theme] ${theme.id} : theme_api v${v} ≠ host v${THEME_API_VERSION} - scripts ignorés`)
     return false
   }
   return true
@@ -111,7 +111,7 @@ async function loadThemeScript(url: string, api: ReturnType<typeof makeThemeApi>
     const mod = await import(/* @vite-ignore */ url)
     const reg = (mod.register ?? mod.default) as ((api: unknown) => void) | undefined
     if (typeof reg === 'function') reg(api)
-    else console.warn(`[theme] ${url} : pas d'export register() — ignoré`)
+    else console.warn(`[theme] ${url} : pas d'export register() - ignoré`)
   } catch (err) {
     console.error(`[theme] échec du script ${url}`, err)
   }
@@ -219,7 +219,7 @@ export const useThemeStore = create<ThemeState>((set, get) => ({
   loadThemePreview: (theme: ThemeDef) => {
     ComponentRegistry.clearPreview()
     // Colours/vars are previewed via scoped inline styles in the pane; here we
-    // only load the theme's component overrides — and only if trusted (opt-in JS).
+    // only load the theme's component overrides - and only if trusted (opt-in JS).
     if (!theme.assets_base || !scriptsAllowed(theme)) return
     const urls: string[] = []
     if (theme.global?.script) urls.push(`${theme.assets_base}/${theme.global.script}`)

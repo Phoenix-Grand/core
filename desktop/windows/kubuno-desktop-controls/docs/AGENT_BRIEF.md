@@ -1,4 +1,4 @@
-# Control-library brief — the shared contract
+# Control-library brief - the shared contract
 
 Everyone implementing a control family works from this file. It exists so that
 ten families, written independently, come out as **one** library rather than ten
@@ -11,7 +11,7 @@ Never guess a property, a default or a metric that one of them can answer.
 
 | Artefact | Path | What it answers |
 |---|---|---|
-| Property catalogue | `C:\kubuno-build\winforms-ref\out\winforms-catalog.json` | Every control type, its inheritance chain, and every designer-visible property it **declares** — with type, settability, category, declared default and the docs' own description. |
+| Property catalogue | `C:\kubuno-build\winforms-ref\out\winforms-catalog.json` | Every control type, its inheritance chain, and every designer-visible property it **declares** - with type, settability, category, declared default and the docs' own description. |
 | Hierarchy map | `C:\kubuno-build\winforms-ref\out\winforms-hierarchy.txt` | The full tree with the count of properties each level adds. |
 | Reference sheets | `C:\kubuno-build\winforms-ref\shots\NN-family.png` | The real controls, painted by the real toolkit, in the states that change their painting. |
 
@@ -23,7 +23,7 @@ cd C:\kubuno-build\winforms-ref\gallery ; dotnet build ; .\bin\Debug\net9.0-wind
 ```
 
 Microsoft's own documentation (learn.microsoft.com) is the right source for
-*semantics* — what a property means, how two of them interact, what order they
+*semantics* - what a property means, how two of them interact, what order they
 must be set in. Use it, and cite the behaviour in a comment when it is
 surprising. One real example already found: `NumericUpDown.Value` throws if it
 falls outside the current `Minimum`/`Maximum`, so `Maximum` must be set first.
@@ -32,7 +32,7 @@ falls outside the current `Minimum`/`Maximum`, so `Maximum` must be set first.
 
 This is the single most important rule. `Control` declares **52 settable
 properties** inherited by all 64 other types. `ButtonBase` adds 19 shared by
-`Button`, `CheckBox` and `RadioButton` — and `Button` itself declares **two**.
+`Button`, `CheckBox` and `RadioButton` - and `Button` itself declares **two**.
 
 The chain is mirrored with **composition + `Deref`**, so each type owns exactly
 what its .NET counterpart *declares*:
@@ -50,7 +50,7 @@ pub struct Button { base: ButtonBase, /* the 2 */ }
 ```
 
 Before writing a property, check the catalogue for which type **declares** it.
-If it is declared on a base, it belongs on the base — even if only your control
+If it is declared on a base, it belongs on the base - even if only your control
 happens to use it today.
 
 ### The re-declaration trap
@@ -60,7 +60,7 @@ change an attribute (a new default, a new designer category, a `Browsable`
 flag). `ButtonBase` re-declares `Text`, `BackColor` and `AutoSize`; `Button`
 re-declares `AutoSizeMode`; `RadioButton` re-declares `TabStop`. These appear in
 the catalogue's `declaredProperties` for the subclass, but they are **not new
-storage** — the value still lives on `ControlBase`, reached through `Deref`.
+storage** - the value still lives on `ControlBase`, reached through `Deref`.
 
 So: a re-declared property gets **no field**. What it may get is a different
 **default** in that type's `Default` impl (`RadioButton.TabStop` starts `false`
@@ -90,15 +90,15 @@ Rules that hold for every control:
 
 * **Paint only through `Canvas`.** Colours come from `c.theme()` and text
   formats from `c.formats()`. A hard-coded colour, font family or point size is
-  a defect — the library is themed and DPI-aware.
+  a defect - the library is themed and DPI-aware.
 * **Never multiply a metric by `c.scale()`.** `Renderer` calls
   `ctx.SetDpi(dpi, dpi)`, so the Direct2D space is **already DIP**: a rectangle
-  at `y = 10.0` lands at 10 DIP, which is 17.5 physical pixels at 175 % — with
+  at `y = 10.0` lands at 10 DIP, which is 17.5 physical pixels at 175 % - with
   no arithmetic from you. `kubuno-drive-desktop-app-controls` scales in exactly **zero**
   places, and so should a control. Multiplying makes everything 1.75× too big
   at 175 % and *invisible at 100 %*, which is how it slips past tests.
   `c.scale()` is legitimate only when you want a **physical-pixel** thickness,
-  and then you divide (`1.0 / c.scale()`) — but `stroke_rounded` already draws
+  and then you divide (`1.0 / c.scale()`) - but `stroke_rounded` already draws
   crisp hairlines, so in practice you need it nowhere.
 * **Glyphs are geometry, not text.** Arrows, chevrons, ticks and check marks go
   through `c.vector_icon(name, …)`. The embedded face has no `◄ ► ▲ ▼ ✓`
@@ -107,7 +107,7 @@ Rules that hold for every control:
 * **No timer, thread, I/O or global state.** A control is a value that knows how
   to measure and paint itself.
 * **Geometry stays pure.** Anything a test could check without a window must be
-  a free function or a method that takes no canvas — the way `layout::layout`
+  a free function or a method that takes no canvas - the way `layout::layout`
   resolves `Dock` then `Anchor`.
 * **Honour or declare.** A property you do not yet honour is documented as such
   in a doc comment on the field. It is never silently treated as another value,
@@ -118,7 +118,7 @@ Rules that hold for every control:
 ## 4. Comments and language
 
 Source comments and doc comments are **in English**, and they explain *why*, not
-*what* — matching the house style of `control.rs` and `layout.rs`. Read those two
+*what* - matching the house style of `control.rs` and `layout.rs`. Read those two
 files first; write code that looks like them. User-visible strings in demo forms
 are in French, like the rest of the product.
 

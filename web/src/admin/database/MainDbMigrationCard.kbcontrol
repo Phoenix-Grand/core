@@ -1,4 +1,4 @@
-<!-- MainDbMigrationCard — converted from MainDbMigrationCard.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- MainDbMigrationCard - converted from MainDbMigrationCard.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl>
   <Card Title="{Res admin.db_manage_title}"
         IconSize="16"

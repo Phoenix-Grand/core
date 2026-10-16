@@ -1,4 +1,4 @@
-//! Numeric parity probe — the PORT half.
+//! Numeric parity probe - the PORT half.
 //!
 //! Replays every case in `tools/winforms-ref/parity/range-cases.txt` through the
 //! `kubuno-desktop-controls` range family and writes `range-port.json` beside it, in the
@@ -17,7 +17,7 @@
 //! WinForms signals an out-of-range assignment by throwing
 //! `ArgumentOutOfRangeException`; the port returns
 //! [`kubuno_desktop_controls::range::OutOfRange`]. Both are recorded as status `err`
-//! with the mechanism in `detail`, and the comparer compares only the status —
+//! with the mechanism in `detail`, and the comparer compares only the status -
 //! so the *shape* of the refusal is allowed to differ while the *decision* is
 //! not. A case where one side accepts what the other refuses is a mismatch.
 //!
@@ -44,8 +44,8 @@ struct Case {
     steps: Vec<String>,
 }
 
-/// Parses the shared case file. The grammar is deliberately tiny — `id | kind |
-/// step; step` — so this parser and the .NET one can be read as twins.
+/// Parses the shared case file. The grammar is deliberately tiny - `id | kind |
+/// step; step` - so this parser and the .NET one can be read as twins.
 fn load_cases(text: &str) -> Result<Vec<Case>, String> {
     let mut cases = Vec::new();
     for raw in text.lines() {
@@ -173,7 +173,7 @@ impl Port {
             // The counterpart of the reference's `numTics`. Context only, not
             // compared: the native control drops marks it has no pixels for on
             // an unsized bar, so its count is a rendering artefact for wide
-            // ranges rather than a semantic — see the report.
+            // ranges rather than a semantic - see the report.
             Port::Track(t) => vec![("tickCount".to_string(), t.tick_count().to_string())],
             _ => Vec::new(),
         }
@@ -199,7 +199,7 @@ fn apply_scrollbar(s: &mut ScrollBar, op: &str, arg: Option<&str>) -> Result<(),
         "value" => s.set_value(int(arg)?).map_err(|e| e.to_string())?,
         // The four user gestures, plus the two ends. `first`/`last` are
         // `scroll_to` at the extremes, which is what the native bar's SB_LEFT /
-        // SB_RIGHT do — and `last` is how the reachable ceiling is measured.
+        // SB_RIGHT do - and `last` is how the reachable ceiling is measured.
         "lineup" => s.line_up(),
         "linedown" => s.line_down(),
         "pageup" => s.page_up(),
@@ -251,7 +251,7 @@ fn apply_domain(d: &mut DomainUpDown, op: &str, arg: Option<&str>) -> Result<(),
         "sorted" => d.set_sorted(flag_of(arg)),
         "wrap" => d.set_wrap(flag_of(arg)),
         // `UpButton` walks toward the start of the list and `DownButton` toward
-        // the end — the direction the toolkit uses, verified by the reference.
+        // the end - the direction the toolkit uses, verified by the reference.
         "up" => d.select_previous(),
         "down" => d.select_next(),
         other => return Err(format!("step '{other}' is not defined for DomainUpDown")),
@@ -260,7 +260,7 @@ fn apply_domain(d: &mut DomainUpDown, op: &str, arg: Option<&str>) -> Result<(),
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Value rendering — must agree with the .NET probe's, digit for digit
+// Value rendering - must agree with the .NET probe's, digit for digit
 // ─────────────────────────────────────────────────────────────────────────────
 
 fn int(arg: Option<&str>) -> Result<i32, String> {

@@ -1,4 +1,4 @@
-<!-- MockTopbar — converted from MockTopbar.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- MockTopbar - converted from MockTopbar.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl>
   <Stack Direction="LeftToRight" Gap="12" CrossAlign="Center" Class="h-14 px-4 bg-white border border-border rounded-xl">
     <!-- TODO(views-migrate): <KubunoLogo> is no .kbview element (@ui#KubunoLogo) -->

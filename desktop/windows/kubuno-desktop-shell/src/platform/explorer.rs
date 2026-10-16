@@ -1,7 +1,7 @@
 //! Windows Explorer navigation-pane integration.
 //!
 //! Registers each instance's sync folder as a shell *namespace extension* so it
-//! shows up as a root node in Explorer's left navigation pane — the same
+//! shows up as a root node in Explorer's left navigation pane - the same
 //! per-user registry technique Nextcloud / ownCloud / OneDrive use. No admin
 //! rights are needed (everything lives under `HKEY_CURRENT_USER`).
 //!
@@ -94,7 +94,7 @@ pub fn sync(instances: &[(String, String, PathBuf)]) {
     //
     // Ownership cannot rest on the `KubunoInstanceId` marker alone: entries
     // written by an earlier build carry no marker, so they would be invisible
-    // to pruning and sit in the navigation pane for ever — the very duplicate
+    // to pruning and sit in the navigation pane for ever - the very duplicate
     // this is meant to prevent. The display name is the second signal, exactly
     // as for the CloudFiles sync roots.
     //

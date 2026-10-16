@@ -13,7 +13,7 @@ import { axisTicks } from '../DashboardCharts'
  *
  *   • It resolves its theme variables when it paints (see the note at the top of
  *     this file). Under a dark theme the axis labels are painted in the dark
- *     theme's pale ink — and printing does not repaint a canvas, so a print
+ *     theme's pale ink - and printing does not repaint a canvas, so a print
  *     stylesheet forcing black text has no effect whatsoever on it. The chart
  *     comes out as pale grey on white, or invisible.
  *   • It is rasterised at the screen's pixel ratio, then scaled to the printer's
@@ -21,14 +21,14 @@ import { axisTicks } from '../DashboardCharts'
  *     visibly soft.
  *
  * SVG has neither problem: it is part of the document, so `@media print` reaches
- * it, and it is resolution-independent. The interactive charts stay on canvas —
+ * it, and it is resolution-independent. The interactive charts stay on canvas -
  * they are hovered, animated and redrawn constantly, which is the one thing
- * canvas is better at — and reports take this one.
+ * canvas is better at - and reports take this one.
  *
  * ## No measurement, deliberately
  *
  * There is no `ResizeObserver` here. The drawing is laid out in a fixed
- * `viewBox` and scaled by CSS, so it needs no width to render — which matters
+ * `viewBox` and scaled by CSS, so it needs no width to render - which matters
  * because the browser lays a page out again for the printer, and a chart that
  * waits for an observer to fire can be measured at zero on the sheet it is being
  * printed onto.

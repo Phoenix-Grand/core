@@ -1,4 +1,4 @@
-<!-- AppHeader — converted from AppHeader.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- AppHeader - converted from AppHeader.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl>
   <Panel HtmlTag="Header" BackColor="Background" DataAttributes="app-chrome" Class="relative flex-shrink-0 h-16 z-50 flex items-center gap-0">
     <Stack Direction="LeftToRight" Gap="0" CrossAlign="Center" Class="flex-shrink-0 lg:w-64">

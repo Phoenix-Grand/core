@@ -8,7 +8,7 @@ export class Tabs extends ViewBase {
   @bind accessor changes = 0
 
   get status(): string {
-    return `SelectedIndex: ${this.tab} — changes: ${this.changes}`
+    return `SelectedIndex: ${this.tab} - changes: ${this.changes}`
   }
 
   tabs_selection_changed(_sender: ElementHandle, _e: ValueChangedEventArgs): void {

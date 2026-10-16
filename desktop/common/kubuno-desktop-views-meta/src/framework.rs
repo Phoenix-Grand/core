@@ -3,7 +3,7 @@
 //! The tools look for an application's controls in its folder dependencies (a library of controls such as
 //! `kubuno-desktop-shell-controls = { path = "…" }`): the `#[kubuno_desktop::view]` macro, the language server's project scan and,
 //! in Visual Studio, the design build's Toolbox tab and its "out of date" watch. The framework's crates are not such
-//! a library — their elements are the built-in and library ones — so they are skipped, **by this explicit list and
+//! a library - their elements are the built-in and library ones - so they are skipped, **by this explicit list and
 //! never by a `kubuno` prefix**: third-party and application crates are named `kubuno-…` too.
 //!
 //! The crates were renamed `kubuno-desktop-…` (`kubuno-web-…` for the web compiler) on 2026-10-03: the old names follow

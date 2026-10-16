@@ -8,14 +8,14 @@ import type { User } from '../../../core/types'
 import { formatWhen } from '../format'
 
 /**
- * "This password is suspect" — deliberately not the same control as
+ * "This password is suspect" - deliberately not the same control as
  * `PasswordResetCard`, which says "this password is gone".
  *
  * Arming the flag alone leaves the account signed in and its password working
  * exactly once more; the next sign-in ends on the forced-change screen, and
  * every write stays closed until the person picks a new password. An
  * administrator who suspects a password was shared over a chat does not want to
- * invent one, phone the person and dictate it — which is what the reset makes
+ * invent one, phone the person and dictate it - which is what the reset makes
  * them do.
  *
  * The card also states when the current password was chosen. Without that date

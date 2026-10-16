@@ -1,4 +1,4 @@
-<!-- Topbar — converted from Topbar.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- Topbar - converted from Topbar.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl>
   <Panel HtmlTag="Header"
          Class="fixed top-0 left-0 right-0 h-14 z-50 flex items-center px-4 gap-4 bg-white [border-bottom:1px_solid_#dadce0] [box-shadow:0_1px_2px_rgba(0,0,0,0.06)]">

@@ -1,11 +1,11 @@
 //! Resource sets: what a lookup reads. Two kinds:
 //!
-//! - [`StaticSet`] — what `resources!` generates: the neutral file and its satellites embedded as
+//! - [`StaticSet`] - what `resources!` generates: the neutral file and its satellites embedded as
 //!   text (`include_str!`), linked files embedded as bytes (`include_bytes!`). A culture's file is
 //!   parsed the first time it is needed, then kept for the life of the process (like Drive's
 //!   localisation: a process uses one or two cultures), which is what lets the generated accessors
 //!   return `&'static str`.
-//! - [`LoadedSet`] — files read at run time (the Visual Studio designer previewing a project's
+//! - [`LoadedSet`] - files read at run time (the Visual Studio designer previewing a project's
 //!   resources, a tool): parsed eagerly, linked files read from disk.
 
 use crate::types::{Bytes, ResolvedValue};
@@ -34,7 +34,7 @@ pub trait Source: Send + Sync {
     }
 }
 
-/// The embedded files of a set — what `resources!` generates.
+/// The embedded files of a set - what `resources!` generates.
 #[derive(Debug)]
 pub struct EmbeddedSet {
     pub name: &'static str,

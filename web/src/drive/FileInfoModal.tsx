@@ -269,7 +269,7 @@ function OpenWithSelect({
   )
 }
 
-// ── MetaField — champ éditable avec auto-save ──────────────────────────────────
+// ── MetaField - champ éditable avec auto-save ──────────────────────────────────
 
 function MetaField({
   label, value, placeholder, onSave,
@@ -443,7 +443,7 @@ export function FileInfoContent({ target }: { target: NonNullable<Props['target'
             <>
               <div className="mb-4">
                 {generalRows.map((r, i) => <Row key={i} label={r.label} value={r.value} />)}
-                {/* S'ouvre avec — uniquement pour les fichiers */}
+                {/* S'ouvre avec - uniquement pour les fichiers */}
                 {isFile && (
                   <Row label={t('info.opens_with')}>
                     <OpenWithSelect

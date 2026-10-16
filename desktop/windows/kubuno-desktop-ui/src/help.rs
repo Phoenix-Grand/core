@@ -1,10 +1,10 @@
-//! Family — **help**: the accent [`HelpBubble`] and the « ? » [`HelpButton`]
+//! Family - **help**: the accent [`HelpBubble`] and the « ? » [`HelpButton`]
 //! that opens it.
 //!
 //! A port of `@ui/HelpBubble` (`core/frontend/src/ui/HelpBubble.tsx`) and of the
 //! trigger the admin console wraps it in (`core/admin/AdminHelp.tsx`). Where the
 //! web reaches for a portal and `getBoundingClientRect`, the desktop gets a pure
-//! [`place`] and a painter that takes its result — the split
+//! [`place`] and a painter that takes its result - the split
 //! [`crate::display::Tooltip`] makes too, so every placement rule is a unit test
 //! rather than a screenshot.
 //!
@@ -12,7 +12,7 @@
 //!
 //! A white card on a white panel is another panel: it reads as more of the form
 //! rather than as an answer to the question just asked. A bubble in the accent
-//! reads as a remark someone made — plainly not part of the page — and its arrow
+//! reads as a remark someone made - plainly not part of the page - and its arrow
 //! says which control it is about, which matters where several « ? » sit close.
 //!
 //! ## Placement
@@ -41,8 +41,8 @@
 //! contract through the pure [`HelpBubble::key`]: Escape closes, Enter or Space
 //! press the focused button, Tab / Shift+Tab cycle between the buttons (the
 //! bubble keeps the focus while it is open, like a dialog). A caller opening
-//! the bubble focuses [`HelpBubble::initial_focus`] — « OK », the web's
-//! `autoFocus` — and paints the focused button's ring with
+//! the bubble focuses [`HelpBubble::initial_focus`] - « OK », the web's
+//! `autoFocus` - and paints the focused button's ring with
 //! [`HelpBubble::paint_placed_focused`]. The « ? » itself opens on Enter or
 //! Space, as any `<button>` does, and takes the focus back when the bubble
 //! closes.
@@ -65,7 +65,7 @@ use crate::metrics::{pill, radius, space, ShadowLayer};
 use crate::{Widget, WidgetState};
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Metrics — each one named after the web constant or class it comes from
+// Metrics - each one named after the web constant or class it comes from
 // ─────────────────────────────────────────────────────────────────────────────
 
 /// `width = 320`, the web default. `AdminHelp` asks for 360.
@@ -78,7 +78,7 @@ pub const PAD: f32 = space::LG;
 pub const RADIUS: f32 = radius::LG;
 /// `TIP`: how far the arrow shows beyond the bubble's edge. The web turns a
 /// 14 px square by 45° and lets only its corner out, so what shows is a
-/// right-angled tip — as tall as it is half-wide.
+/// right-angled tip - as tall as it is half-wide.
 pub const ARROW: f32 = 5.0;
 /// `GAP = TIP + 3`: anchor ↔ bubble, tip included.
 pub const GAP: f32 = ARROW + 3.0;
@@ -109,7 +109,7 @@ pub const FOCUS_RING: f32 = 2.0;
 
 /// Tailwind's `shadow-xl`, verbatim:
 /// `0 20px 25px -5px rgb(0 0 0 / .1), 0 8px 10px -6px rgb(0 0 0 / .1)`.
-/// Pure black, as Tailwind writes it — hence [`SHADOW_BLACK`].
+/// Pure black, as Tailwind writes it - hence [`SHADOW_BLACK`].
 pub const SHADOW_XL: [ShadowLayer; 2] = [
     ShadowLayer { dy: 20.0, blur: 25.0, spread: -5.0, opacity: 0.10 },
     ShadowLayer { dy: 8.0, blur: 10.0, spread: -6.0, opacity: 0.10 },
@@ -117,7 +117,7 @@ pub const SHADOW_XL: [ShadowLayer; 2] = [
 const SHADOW_BLACK: (f32, f32, f32) = (0.0, 0.0, 0.0);
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Placement — pure
+// Placement - pure
 // ─────────────────────────────────────────────────────────────────────────────
 
 /// Where a bubble ended up.
@@ -127,7 +127,7 @@ const SHADOW_BLACK: (f32, f32, f32) = (0.0, 0.0, 0.0);
 #[derive(Clone, Copy)]
 pub struct HelpPlacement {
     pub rect: Rect,
-    /// Which side of the ANCHOR the bubble sits on — so the arrow is on the
+    /// Which side of the ANCHOR the bubble sits on - so the arrow is on the
     /// bubble's opposite edge (a bubble `Bottom` of its anchor points up).
     pub side: Side,
     /// The arrow's position along the anchor-facing edge, measured from that
@@ -136,15 +136,15 @@ pub struct HelpPlacement {
 }
 
 impl HelpPlacement {
-    /// This placement moved by `(dx, dy)` — to repaint it in a popup window
+    /// This placement moved by `(dx, dy)` - to repaint it in a popup window
     /// whose origin is not the page's.
     pub fn offset(self, dx: f32, dy: f32) -> Self {
         let r = self.rect;
         Self { rect: Rect::new(r.left + dx, r.top + dy, r.right + dx, r.bottom + dy), ..self }
     }
 
-    /// Everything the bubble paints — the bubble, its arrow and its
-    /// [`SHADOW_XL`] — which is what a popup window hosting it must cover, or
+    /// Everything the bubble paints - the bubble, its arrow and its
+    /// [`SHADOW_XL`] - which is what a popup window hosting it must cover, or
     /// the shadow is cut at the window's edge. The shadow reaches 7.5 DIP to the
     /// sides and 27.5 below (it is offset down); the arrow at most [`ARROW`].
     pub fn paint_bounds(&self) -> Rect {
@@ -163,7 +163,7 @@ const ORDER: [Side; 4] = [Side::Bottom, Side::Top, Side::Right, Side::Left];
 /// the other axis, then pushed back inside the viewport ([`EDGE`] off it). The
 /// arrow sits at the anchor's centre, held [`ARROW_MIN`] from either corner.
 ///
-/// Pure: no canvas, no window — the same arithmetic as the web's `place()`,
+/// Pure: no canvas, no window - the same arithmetic as the web's `place()`,
 /// with the viewport as a rectangle (the web's host offset folded in).
 pub fn place(anchor: Rect, size: Size, prefer: Side, viewport: Rect) -> HelpPlacement {
     let (w, h) = (size.width, size.height);
@@ -224,13 +224,13 @@ pub enum HelpPart {
     Ok,
     /// The optional second action, left of the dismiss button.
     Action,
-    /// Anywhere else on the bubble or its arrow — swallowed.
+    /// Anywhere else on the bubble or its arrow - swallowed.
     Bubble,
     /// Off the bubble: the web's backdrop, which closes it.
     Outside,
 }
 
-/// What a key does to an open bubble — see [`HelpBubble::key`].
+/// What a key does to an open bubble - see [`HelpBubble::key`].
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum HelpKey {
     /// Close the bubble (Escape, or Enter/Space on the dismiss button).
@@ -244,7 +244,7 @@ pub enum HelpKey {
     Ignored,
 }
 
-/// The bubble — `@ui/HelpBubble`.
+/// The bubble - `@ui/HelpBubble`.
 ///
 /// Its model is a [`kc::Label`] holding the body text (so `text` and `enabled`
 /// are the replica's); the title, the button labels, the width and the side
@@ -253,7 +253,7 @@ pub struct HelpBubble {
     inner: kc::Label,
     /// The bold opening line. Optional: a bubble may be one paragraph.
     pub title: Option<String>,
-    /// The dismiss button's label — « OK » by default.
+    /// The dismiss button's label - « OK » by default.
     pub ok_label: String,
     /// An optional second action's label, shown left of the dismiss button.
     pub action: Option<String>,
@@ -335,7 +335,7 @@ impl HelpBubble {
         place(anchor, self.measure(canvas), self.prefer, viewport)
     }
 
-    /// The dismiss button's rectangle and, when there is one, the action's —
+    /// The dismiss button's rectangle and, when there is one, the action's -
     /// right-aligned on the bubble's last row. The paint pass and
     /// [`HelpBubble::part_at`] both read them from here, so a click can never
     /// land on a different button than the one drawn under the pointer.
@@ -395,7 +395,7 @@ impl HelpBubble {
     }
 
     /// What `key` (a key-down with `mods`) does to the open bubble whose
-    /// focused button is `focus`. Pure — the caller takes the key from the
+    /// focused button is `focus`. Pure - the caller takes the key from the
     /// host queue only when the answer is not [`HelpKey::Ignored`].
     pub fn key(&self, key: u16, mods: Modifiers, focus: Option<HelpPart>) -> HelpKey {
         match key {
@@ -420,7 +420,7 @@ impl HelpBubble {
     }
 
     /// [`HelpBubble::paint_placed`] with the keyboard focus ring on the button
-    /// `focus` names — pass it only while the ring should show
+    /// `focus` names - pass it only while the ring should show
     /// (`:focus-visible`).
     pub fn paint_placed_focused(&self, canvas: &dyn Canvas, p: &HelpPlacement, hot: Option<HelpPart>, focus: Option<HelpPart>) {
         let fill = canvas.theme().accent;
@@ -436,7 +436,7 @@ impl HelpBubble {
         let f = canvas.formats();
         // `text-white` on `--color-primary`: the accent's own foreground, which
         // is white in the light palette and the dark ink the dark palette pairs
-        // with its lighter accent — never a literal white.
+        // with its lighter accent - never a literal white.
         let ink = t.accent_foreground;
         let quiet = fade(ink, BODY_ALPHA);
 
@@ -495,7 +495,7 @@ impl Widget for HelpBubble {
         Size::new(self.width, PAD + title_h + body * LINE + ACTIONS_GAP + BUTTON_H + PAD)
     }
 
-    /// The bubble alone, without its arrow — the `Widget` contract knows a
+    /// The bubble alone, without its arrow - the `Widget` contract knows a
     /// rectangle and not which side of what it is on. A caller with a
     /// [`HelpPlacement`] uses [`HelpBubble::paint_placed`].
     fn paint(&self, canvas: &dyn Canvas, bounds: Rect, state: WidgetState) {
@@ -584,17 +584,17 @@ fn fade(c: D2D1_COLOR_F, alpha: f32) -> D2D1_COLOR_F {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// HelpButton — the « ? »
+// HelpButton - the « ? »
 // ─────────────────────────────────────────────────────────────────────────────
 
-/// The « ? » that opens a [`HelpBubble`] — `AdminHelp`'s trigger: a
+/// The « ? » that opens a [`HelpBubble`] - `AdminHelp`'s trigger: a
 /// `HelpCircle` glyph in a round `p-1` hit area, tertiary at rest, primary on
 /// hover (over surface-2) and in the accent while its bubble is open.
 pub struct HelpButton {
     inner: replica::Button,
     /// The glyph: 16 beside a page title, 14 inline in a label.
     pub glyph: f32,
-    /// Whether its bubble is open — the button then stays in the accent.
+    /// Whether its bubble is open - the button then stays in the accent.
     pub open: bool,
 }
 
@@ -670,7 +670,7 @@ impl Widget for HelpButton {
         canvas.vector_icon("HelpCircle", &bounds, self.glyph, &colour);
         if state.show_focus_ring() {
             // The keyboard focus ring every Kubuno control draws: 2 DIP in the
-            // accent, following the round shape — on `:focus-visible` only, so
+            // accent, following the round shape - on `:focus-visible` only, so
             // a click does not leave a ring behind.
             canvas.stroke_rounded_w(&bounds, pill(bounds.bottom - bounds.top), &t.accent, FOCUS_RING);
         }
@@ -683,7 +683,7 @@ impl Widget for HelpButton {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Tests — the placement rules, one per clause of the web's `place()`
+// Tests - the placement rules, one per clause of the web's `place()`
 // ─────────────────────────────────────────────────────────────────────────────
 
 #[cfg(test)]

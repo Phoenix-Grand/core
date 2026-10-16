@@ -37,7 +37,7 @@ pub fn pill(height: f32) -> f32 {
 pub mod height {
     /// `Button size="sm"` (h-8).
     pub const BUTTON_SM: f32 = 32.0;
-    /// `Button size="md"` (h-9) and `Input` — the default.
+    /// `Button size="md"` (h-9) and `Input` - the default.
     pub const BUTTON_MD: f32 = 36.0;
     /// `Button size="lg"` (h-11).
     pub const BUTTON_LG: f32 = 44.0;
@@ -71,7 +71,7 @@ pub mod text {
     /// `--kb-text-meta` (11.5 px; also the host's `text-xs`): metadata,
     /// captions, section labels.
     pub const META: f32 = 11.5;
-    /// `--kb-text-body` (13.5 px; also the host's `text-sm`): the default —
+    /// `--kb-text-body` (13.5 px; also the host's `text-sm`): the default -
     /// labels, fields, menus, tabs. It used to be the OS form size (12); the
     /// desktop now follows the web's body step like every other role.
     pub const BODY: f32 = 13.5;
@@ -106,7 +106,7 @@ pub mod space {
 }
 
 /// One layer of a CSS `box-shadow`: vertical offset, blur radius, SPREAD and
-/// opacity — in that order, as they are written in CSS.
+/// opacity - in that order, as they are written in CSS.
 ///
 /// `spread` is the fourth value and it is easy to skip: it inflates the shape
 /// BEFORE the blur, so dropping it makes a shadow markedly tighter than the
@@ -132,7 +132,7 @@ pub const SHADOW_FLOAT: [ShadowLayer; 4] = [
     ShadowLayer { dy: 32.0, blur: 40.0, spread: 0.0, opacity: 0.05 },
 ];
 
-/// Google's own elevation 2 — what its menus and dropdowns actually wear,
+/// Google's own elevation 2 - what its menus and dropdowns actually wear,
 /// verbatim from the CSS its web apps serve:
 /// `0 1px 2px 0 rgba(60,64,67,.3), 0 2px 6px 2px rgba(60,64,67,.15)`.
 /// Note the `2px` SPREAD on the second layer: it is what gives the shadow its
@@ -148,7 +148,7 @@ pub const SHADOW_GREY: (f32, f32, f32) = (60.0 / 255.0, 64.0 / 255.0, 67.0 / 255
 
 /// The waffle panel's own shadow, verbatim from the style it sets inline:
 /// `0 4px 8px 3px rgba(0,0,0,.15), 0 1px 3px rgba(0,0,0,.3)`. This one really is
-/// pure BLACK, not [`SHADOW_GREY`] — hence the colour being a parameter.
+/// pure BLACK, not [`SHADOW_GREY`] - hence the colour being a parameter.
 pub const SHADOW_WAFFLE: [ShadowLayer; 2] = [
     ShadowLayer { dy: 4.0, blur: 8.0, spread: 3.0, opacity: 0.15 },
     ShadowLayer { dy: 1.0, blur: 3.0, spread: 0.0, opacity: 0.30 },

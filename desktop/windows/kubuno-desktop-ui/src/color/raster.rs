@@ -5,7 +5,7 @@
 //! `ColorPicker.tsx`, supersampled ×3 and scaled down by CSS) and lets the
 //! browser rasterise the conic ring. Both are reproduced here the same way: a
 //! Direct2D bitmap is filled pixel by pixel at the surface's own resolution,
-//! each pixel averaging a 3×3 grid of samples — which is also what gives the
+//! each pixel averaging a 3×3 grid of samples - which is also what gives the
 //! shapes their anti-aliased edges. The bitmaps are cached per device, size
 //! and hue, so a frame that changes nothing rebuilds nothing.
 //!
@@ -24,7 +24,7 @@ use super::hsv_to_rgb;
 use super::picker::SvShape;
 use crate::graphics::{Graphics, Image};
 
-/// Samples per pixel along each axis — the web's `SS = 3`.
+/// Samples per pixel along each axis - the web's `SS = 3`.
 const SS: usize = 3;
 
 /// What a raster shows.

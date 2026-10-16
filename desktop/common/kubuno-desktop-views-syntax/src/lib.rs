@@ -1,4 +1,4 @@
-//! # `kubuno-desktop-views-syntax` — the `.kbview` grammar
+//! # `kubuno-desktop-views-syntax` - the `.kbview` grammar
 //!
 //! The platform-neutral half of `kubuno-desktop-views` (`vskubuno/docs/WEB-VIEWS.md` WV-1): the lossless
 //! parser, the typed tree, the surgical edits and the grammars of attribute values, with no renderer,

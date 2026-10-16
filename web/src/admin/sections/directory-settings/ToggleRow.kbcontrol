@@ -1,4 +1,4 @@
-<!-- ToggleRow — converted from ToggleRow.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- ToggleRow - converted from ToggleRow.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="RowProps">
   <Panel Visible="{Binding show_main}" Class="py-3">
     <Switch On="{Binding on}"

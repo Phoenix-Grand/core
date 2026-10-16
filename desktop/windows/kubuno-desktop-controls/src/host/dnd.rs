@@ -1,12 +1,12 @@
-//! Drag and drop — WinForms' `AllowDrop` / `DoDragDrop` over OLE.
+//! Drag and drop - WinForms' `AllowDrop` / `DoDragDrop` over OLE.
 //!
 //! **As a target.** A page that has a drop target this frame calls [`accept_drops`]; the host then
 //! registers the window with OLE (`RegisterDragDrop`, once). When something is dragged over the
-//! window — files from the Explorer, text from a browser, data from another Kubuno window or from
-//! this one — OLE calls the window's drop target, which records the drag ([`DragFrame`]: its
+//! window - files from the Explorer, text from a browser, data from another Kubuno window or from
+//! this one - OLE calls the window's drop target, which records the drag ([`DragFrame`]: its
 //! phase, data, allowed effects, pointer and keys) and **renders a frame at once**, so the page's
 //! `DragEnter`/`DragOver`/`DragDrop`/`DragLeave` handlers run and answer with [`set_effect`] before
-//! OLE is answered — the cursor shows what a drop would do while the pointer is still moving.
+//! OLE is answered - the cursor shows what a drop would do while the pointer is still moving.
 //!
 //! **As a source.** [`do_drag_drop`] asks for a drag of a [`DataObject`]: it starts right after the
 //! frame that asked (never inside a paint: OLE runs a modal loop, during which this window keeps
@@ -90,7 +90,7 @@ impl DragDropEffects {
         Self(e)
     }
 
-    /// The one effect a drop performs, among `self`, for the keys held — Windows' convention:
+    /// The one effect a drop performs, among `self`, for the keys held - Windows' convention:
     /// Ctrl copies, Shift moves, Ctrl+Shift links, otherwise move when allowed, else copy, else link.
     pub fn pick(self, mods: Modifiers) -> Self {
         let choice = match (mods.ctrl, mods.shift) {

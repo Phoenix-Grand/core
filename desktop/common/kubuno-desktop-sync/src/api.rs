@@ -13,7 +13,7 @@ use serde::{Deserialize, Serialize};
 ///
 /// - `Genuine`: the session is over (the core rejected the refresh token, the account was signed out, or the
 ///   instance belongs to no signed-in account): the user must sign in again. Nothing local is deleted.
-/// - `Transient`: a network error, timeout, rate-limit (429), 5xx, or the shell's broker not reachable — **no new
+/// - `Transient`: a network error, timeout, rate-limit (429), 5xx, or the shell's broker not reachable - **no new
 ///   token was issued and the session is still valid**. We must NOT tell the user "session expired"; just retry.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum AuthFailure {
@@ -24,7 +24,7 @@ pub enum AuthFailure {
 impl std::fmt::Display for AuthFailure {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            AuthFailure::Genuine => write!(f, "session rejetée — reconnexion nécessaire"),
+            AuthFailure::Genuine => write!(f, "session rejetée - reconnexion nécessaire"),
             AuthFailure::Transient => write!(f, "rafraîchissement temporairement indisponible"),
         }
     }
@@ -35,7 +35,7 @@ impl std::error::Error for AuthFailure {}
 /// The `User-Agent` every request from this client carries.
 ///
 /// Without it, reqwest sends its own default and the server logged our uploads
-/// against a blank UA — the sync burst that started this whole thread could
+/// against a blank UA - the sync burst that started this whole thread could
 /// only be pinned to the desktop client by its IP. Every other Kubuno client
 /// announces itself (`Kubuno-Maps/…`, `Kubuno-Build/…`, the mobile app's
 /// okhttp), so this one does too. The OS is read at runtime rather than hard-
@@ -125,7 +125,7 @@ pub struct User {
     /// Server-relative avatar path (e.g. `/api/v1/users/<id>/avatar`).
     #[serde(default)]
     pub avatar_url:   Option<String>,
-    /// Storage, for the desktop header's gauge — the same two numbers the web
+    /// Storage, for the desktop header's gauge - the same two numbers the web
     /// header shows. Absent on an older server, hence the defaults.
     #[serde(default)]
     pub used_bytes:   u64,
@@ -195,7 +195,7 @@ pub struct AdminUser {
     pub org_unit_id:   Option<String>,
 }
 
-/// One organisational unit — used both to resolve a user's unit id to its name
+/// One organisational unit - used both to resolve a user's unit id to its name
 /// and to draw the units tree (its parent and description).
 #[derive(Deserialize, Serialize, Clone, Default)]
 pub struct OrgUnit {
@@ -270,7 +270,7 @@ pub struct AdminModule {
     pub installed_at: Option<String>,
 }
 
-/// One instance setting. `value` stays raw JSON — a setting is a bool, a number
+/// One instance setting. `value` stays raw JSON - a setting is a bool, a number
 /// or a string depending on the key, and the console shows them all.
 #[derive(Deserialize, Serialize, Clone, Default)]
 pub struct AdminSetting {
@@ -303,7 +303,7 @@ pub struct StorageCategory {
     pub held:         bool,
 }
 
-/// The filesystem volume the instance's data sits on — the only hard ceiling.
+/// The filesystem volume the instance's data sits on - the only hard ceiling.
 #[derive(Deserialize, Serialize, Clone, Default)]
 pub struct StorageVolume {
     #[serde(default)]
@@ -473,7 +473,7 @@ impl Api {
         Ok(resp.json()?)
     }
 
-    /// The instance's activated modules (`GET /api/v1/modules`), as raw JSON —
+    /// The instance's activated modules (`GET /api/v1/modules`), as raw JSON -
     /// the shape (envelope or bare array) is the caller's business.
     pub fn modules(&mut self) -> Result<serde_json::Value> {
         let resp = self.get("/api/v1/modules")?;
@@ -515,7 +515,7 @@ impl Api {
 
     /// A generic authenticated request that keeps what the other helpers throw away: any method, the
     /// caller's own headers (`If-Match`, `Idempotency-Key`…), and the reply's status, body and headers
-    /// whatever the status — a 412 or a 413 must reach the caller as such, not as an error string.
+    /// whatever the status - a 412 or a 413 must reach the caller as such, not as an error string.
     /// One auto-refresh retry on 401, like the other helpers; transport failures are errors.
     pub fn request(&mut self, method: &str, path: &str, headers: &[(String, String)], body: Option<Vec<u8>>) -> Result<RawResponse> {
         let url = format!("{}{}", self.base, path);
@@ -578,7 +578,7 @@ impl Api {
         Ok(())
     }
 
-    /// An authenticated GET returning raw bytes — the profile photo, whose URL
+    /// An authenticated GET returning raw bytes - the profile photo, whose URL
     /// the server hands out as a path rather than as data.
     pub fn get_bytes(&mut self, path: &str) -> Result<Vec<u8>> {
         let resp = self.get(path)?;
@@ -735,7 +735,7 @@ impl Api {
         Ok(resp.json::<Env>()?.settings)
     }
 
-    /// The path the instance opens on — the `navigation.default_module` setting,
+    /// The path the instance opens on - the `navigation.default_module` setting,
     /// e.g. `/drive`. `None` when unset. The web reads the same key to badge the
     /// default module in the list.
     pub fn admin_default_module(&mut self) -> Result<Option<String>> {
@@ -750,7 +750,7 @@ impl Api {
     /// The storage overview (`GET /api/v1/admin/storage/overview`).
     ///
     /// The server nests the per-category breakdown under `by_module.categories`
-    /// and reports the used total at the top level as `used_bytes` — flattened
+    /// and reports the used total at the top level as `used_bytes` - flattened
     /// here so the console gets one tidy struct.
     pub fn admin_storage(&mut self) -> Result<StorageOverview> {
         #[derive(Deserialize, Default)]
@@ -992,7 +992,7 @@ impl Api {
 
     /// Move a file to the server trash (used for local deletions).
     /// Moves a FOLDER to the server's trash. Its contents go with it, so a
-    /// child already trashed answers 404 — which is the goal state, not an
+    /// child already trashed answers 404 - which is the goal state, not an
     /// error, exactly as for a file.
     pub fn trash_folder(&mut self, folder_id: &str, idem: &str) -> Result<()> {
         let url = format!("{}/api/v1/drive/folders/{folder_id}/trash", self.base);
@@ -1026,7 +1026,7 @@ impl Api {
             self.refresh()?;
             resp = { let token = self.bearer()?; attempt(&self.http, &token)? };
         }
-        // A file already gone server-side (404) is fine — the goal state is reached.
+        // A file already gone server-side (404) is fine - the goal state is reached.
         if !resp.status().is_success() && resp.status() != reqwest::StatusCode::NOT_FOUND {
             bail!("trash {file_id} : HTTP {}", resp.status());
         }

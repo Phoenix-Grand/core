@@ -1,5 +1,5 @@
 //! The non-visual components (EVT-7b of `vskubuno/docs/EVENTS.md`, WinForms' component tray):
-//! elements a view declares that paint nothing — the designer lists them under its surface.
+//! elements a view declares that paint nothing - the designer lists them under its surface.
 
 #[allow(unused_imports)] // Used by the `component!` invocation below.
 use crate::registry::macros::component;

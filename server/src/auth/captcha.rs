@@ -1,4 +1,4 @@
-//! Self-hosted sign-in CAPTCHA — several kinds of human test, all generated and
+//! Self-hosted sign-in CAPTCHA - several kinds of human test, all generated and
 //! verified here.
 //!
 //! # Why this exists
@@ -13,18 +13,18 @@
 //!
 //! The charter proscribes any Google reference and any third-party service:
 //! reCAPTCHA, hCaptcha and the like are all out. So every challenge is drawn (as
-//! a PNG the core rasterises itself — no image crate, no font file), stored and
+//! a PNG the core rasterises itself - no image crate, no font file), stored and
 //! checked here, and the answer never leaves the server.
 //!
 //! # Kinds ([`CaptchaKind`])
 //!
-//! * **Text** — warped characters to retype. The distortion and noise are
+//! * **Text** - warped characters to retype. The distortion and noise are
 //!   tunable; the letters exist only as warped pixels (never as markup or
 //!   vector geometry), so the answer cannot be read off the response.
-//! * **Slider** — a jigsaw piece to drag into the gap it was cut from. The
+//! * **Slider** - a jigsaw piece to drag into the gap it was cut from. The
 //!   answer is the horizontal position; a tolerance decides how precise the drop
 //!   must be.
-//! * **Math** — a small sum to solve. The lightest option, for instances that
+//! * **Math** - a small sum to solve. The lightest option, for instances that
 //!   only want a token gate.
 //!
 //! All are short-lived and single-use: the first verification attempt consumes
@@ -276,7 +276,7 @@ fn build_slider() -> (String, Value) {
 
     // A couple of DECOY gaps, darkened exactly like the real one, so the true
     // slot is not simply the darkest piece-shaped region a script can scan for.
-    // They are only drawn on the background — no piece is cut from them, so they
+    // They are only drawn on the background - no piece is cut from them, so they
     // do not help a human either way, but they defeat the trivial "find the
     // darkest notch" auto-solver (kubuno-security review).
     for _ in 0..2 {
@@ -312,7 +312,7 @@ fn build_slider() -> (String, Value) {
 
 /// Verify an answer and consume the challenge.
 ///
-/// The row is consumed on the FIRST attempt regardless of the answer — one guess
+/// The row is consumed on the FIRST attempt regardless of the answer - one guess
 /// per challenge. Returns `true` only when a live, unconsumed challenge existed
 /// and the answer satisfied its kind. Fails **closed** on a database error: a
 /// broken store must not let the gate be bypassed.
@@ -405,7 +405,7 @@ pub async fn verify(db: &DbPool, id: Uuid, given: &str) -> bool {
 /// The 5×7 dot-matrix pattern of a glyph: seven rows, the low five bits each.
 /// `None` for a character not in [`ALPHABET`]. Drawing from a bitmap into a
 /// raster (rather than SVG text or shapes) is what keeps the answer out of the
-/// response — the client gets warped pixels, not letters or decodable geometry.
+/// response - the client gets warped pixels, not letters or decodable geometry.
 fn glyph(ch: char) -> Option<[u8; 7]> {
     let rows = match ch {
         'A' => [0x0E, 0x11, 0x11, 0x1F, 0x11, 0x11, 0x11],

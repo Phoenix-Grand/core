@@ -1,13 +1,13 @@
 import { useEffect, useRef } from 'react'
 
-// "Membranes de soie" — Canvas 2D rendering matching the reference clip: a few
+// "Membranes de soie" - Canvas 2D rendering matching the reference clip: a few
 // large translucent films, each bounded by TWO independent bright wavy edges
 // that can cross (the ribbon twists → luminous pinch points). The interior is
 // nearly transparent, denser toward both edges (nested translucent bands), and
 // additive blending + bloom make overlaps and folds glow. Edges travel
 // horizontally at different speeds so the folds continuously reshape.
 //
-// Rollback: LoginPage previously imported ./LoginAnimation (strands style) —
+// Rollback: LoginPage previously imported ./LoginAnimation (strands style) -
 // swap the import back to restore it.
 
 interface EdgeSpec {
@@ -23,7 +23,7 @@ interface EdgeSpec {
 
 // Interior fold: a soft luminous crease crossing the film DIAGONALLY (its
 // position sweeps from one edge toward the other along x), bright at the crest
-// with an asymmetric falloff — sharp on one side, long melt on the other — and
+// with an asymmetric falloff - sharp on one side, long melt on the other - and
 // fading in/out along its length. This is the "light catching a fold of the 3D
 // fabric" feature of the reference.
 interface FoldSpec {
@@ -156,7 +156,7 @@ export default function LoginAnimation3D({ yShift = 0 }: { yShift?: number }) {
     // Column-gradient rendering: each vertical strip of the membrane is filled
     // with ONE true LinearGradient spanning edge→center→edge. The profile peaks
     // AT each edge, melts to a near-transparent center (~3-5%), and is smooth at
-    // pixel precision — no stacked bands, no visible steps. Edge brightness
+    // pixel precision - no stacked bands, no visible steps. Edge brightness
     // waxes/wanes along x (animated) like the reference. Adjacent strips share
     // exact boundaries, so antialiasing leaves no seams.
     function drawMembrane(
@@ -177,7 +177,7 @@ export default function LoginAnimation3D({ yShift = 0 }: { yShift?: number }) {
         // Compose the full alpha profile as a CONTINUOUS function of the film
         // fraction f (baseline edge→center→edge + one asymmetric bump per fold),
         // then sample it at fixed offsets. Sampling a smooth function keeps
-        // adjacent columns coherent — merging discrete stop lists caused hard
+        // adjacent columns coherent - merging discrete stop lists caused hard
         // steps whenever fold stops crossed each other or the structural stops.
         const folds = m.folds.map((fd) => ({
           ff: fd.f0 + (fd.f1 - fd.f0) * xm + fd.bend * Math.sin(TWO * 0.4 * xm + fd.ph + 0.10 * time),
@@ -230,7 +230,7 @@ export default function LoginAnimation3D({ yShift = 0 }: { yShift?: number }) {
       const g = film.x
       g.clearRect(0, 0, W, H)
       // Each membrane is rendered alone with source-over into the scratch layer
-      // (adjacent column strips blend seamlessly — no additive self-overlap, so
+      // (adjacent column strips blend seamlessly - no additive self-overlap, so
       // no vertical seams), then composited additively so MEMBRANES brighten
       // each other where they overlap, like real translucent films.
       MEMBRANES.forEach((m, mi) => {

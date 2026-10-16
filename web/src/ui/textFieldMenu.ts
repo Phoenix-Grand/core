@@ -1,12 +1,12 @@
 /* Editing primitives behind the default context menu of text entry areas.
- * Kept out of the React host so the clipboard handling can be read on its own —
+ * Kept out of the React host so the clipboard handling can be read on its own -
  * it is where nearly all the browser-specific caveats live. */
 
 export type TextTarget =
   | { kind: 'field'; el: HTMLInputElement | HTMLTextAreaElement }
   | { kind: 'rich';  el: HTMLElement }
 
-/* Input types that hold editable text. `number` is included on purpose — it is a text
+/* Input types that hold editable text. `number` is included on purpose - it is a text
  * entry area for the user even though it has no selection API (see `selectionOf`).
  * Excluded: checkbox, radio, range, color, file, button, submit, reset, image, hidden
  * and the date/time family, whose native pickers own their interaction. */
@@ -27,7 +27,7 @@ export function findTextTarget(node: EventTarget | null): TextTarget | null {
   }
   /* `closest` rather than a direct check: a right-click inside a rich editor lands on
    * whatever inline element is under the cursor, not on the editable host itself.
-   * `isContentEditable` is the reliable test — it is false for `contenteditable="false"`
+   * `isContentEditable` is the reliable test - it is false for `contenteditable="false"`
    * and true for a child inheriting editability. */
   const rich = node.closest<HTMLElement>('[contenteditable]')
   return rich?.isContentEditable ? { kind: 'rich', el: rich } : null
@@ -71,7 +71,7 @@ function selectedText(target: TextTarget): string {
 }
 
 /** True when the clipboard can be READ. Writing has an execCommand fallback, reading
- *  has none — and `navigator.clipboard` is absent outside a secure context (plain HTTP
+ *  has none - and `navigator.clipboard` is absent outside a secure context (plain HTTP
  *  on anything other than localhost), so Paste has to be offered conditionally. */
 export function canReadClipboard(): boolean {
   return typeof navigator !== 'undefined' && !!navigator.clipboard?.readText
@@ -130,7 +130,7 @@ export async function pasteInto(target: TextTarget, plain: boolean): Promise<voi
         break
       }
     } catch {
-      // Permission refused, or no HTML flavour — fall through to plain text.
+      // Permission refused, or no HTML flavour - fall through to plain text.
     }
   }
   const text = await navigator.clipboard.readText()

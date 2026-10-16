@@ -1,10 +1,10 @@
-//! **Which authentication methods an account may use** — an administrator's
+//! **Which authentication methods an account may use** - an administrator's
 //! decision, resolved per organisational unit.
 //!
 //! ## The decision is configuration, not a heuristic
 //!
 //! There is no "try the directory, fall back to local". An administrator states
-//! which methods an instance — or a branch of the organisation — accepts, and
+//! which methods an instance - or a branch of the organisation - accepts, and
 //! the sign-in path enforces exactly that. `auth.methods` is a
 //! [`crate::settings`] key like any other, so it inherits down the
 //! organisational tree (`instance → unit → sub-unit → group → account`), the
@@ -24,12 +24,12 @@
 //! ## The inverted order at the sign-in screen, and how it is resolved
 //!
 //! The method depends on the account's unit, and at the sign-in screen there is
-//! no account yet — that is the whole difficulty. Three ways out were available:
+//! no account yet - that is the whole difficulty. Three ways out were available:
 //!
 //! 1. **Resolve after the login field is typed.** Rejected. The screen would
 //!    become a function of the account: whether it exists, and which unit it is
 //!    in. That is a directory-enumeration oracle on a public page, and the
-//!    project rule is explicit — nothing observable may distinguish "no such
+//!    project rule is explicit - nothing observable may distinguish "no such
 //!    account" from "wrong password".
 //! 2. **Derive the unit from the address domain.** Rejected. There is no
 //!    domain → unit mapping in the model, and inventing one would be a guess
@@ -38,7 +38,7 @@
 //!    unit's own rule after identification.** Chosen.
 //!
 //! What an anonymous visitor sees therefore depends on instance-wide
-//! configuration only ([`active_anywhere`]) — never on whether a login exists,
+//! configuration only ([`active_anywhere`]) - never on whether a login exists,
 //! never on which unit it belongs to. The per-unit rule is applied once the
 //! account is known, and a refusal at that point returns the same
 //! "Identifiants invalides" as every other failure, so it leaks nothing either.
@@ -47,7 +47,7 @@
 //!
 //! ## Accounts with no unit
 //!
-//! They exist — an account created before the tree, or one an operator never
+//! They exist - an account created before the tree, or one an operator never
 //! placed. `core.setting_chain` anchors on `core.users.org_unit_id`, which is
 //! `NULL` for them, so their chain is `default → instance` and nothing else.
 //! They obey the instance value, which is the only sensible answer and needs no
@@ -160,7 +160,7 @@ impl MethodSet {
     /// an unreadable policy must not be interpreted as "nobody may sign in".
     /// That failure direction is deliberate and is the opposite of the one
     /// [`crate::directory::model::OnMissing`] takes, for the same reason in
-    /// mirror — there, the unreadable case must not deactivate people; here, it
+    /// mirror - there, the unreadable case must not deactivate people; here, it
     /// must not lock them out.
     pub fn parse(value: Option<&Value>) -> Self {
         let Some(Value::Array(items)) = value else {
@@ -210,7 +210,7 @@ impl MethodSet {
         }
         if set.is_empty() {
             return Err(AppError::Validation(
-                "auth.methods : au moins une méthode doit rester acceptée — une liste vide fermerait la porte à tout le monde".into(),
+                "auth.methods : au moins une méthode doit rester acceptée - une liste vide fermerait la porte à tout le monde".into(),
             ));
         }
         Ok(set)
@@ -231,7 +231,7 @@ pub async fn resolve(db: &DbPool, scope: &SettingScope) -> MethodSet {
     match chain::resolve_for(db, KEY_METHODS, scope).await {
         Ok(r) => MethodSet::parse(r.value.as_ref()),
         Err(_) => {
-            // Already logged by the resolver. Fail open — see `parse`.
+            // Already logged by the resolver. Fail open - see `parse`.
             MethodSet::all()
         }
     }
@@ -342,8 +342,8 @@ pub struct StrandedAdmin {
 /// in.
 ///
 /// Called **after** the write, inside the audited transaction that performed it,
-/// so what is checked is the policy as it would really be — chain, inheritance,
-/// locks and all — rather than a simulation that could drift from the resolver.
+/// so what is checked is the policy as it would really be - chain, inheritance,
+/// locks and all - rather than a simulation that could drift from the resolver.
 /// Returning `Err` rolls the transaction back and nothing was ever written.
 ///
 /// The rule is per administrator, not "at least one somewhere": the whole point
@@ -355,7 +355,7 @@ pub struct StrandedAdmin {
 /// role assignment, directly or through a group. A delegated administrator is
 /// `role = 'user'` by construction (see `crate::authz`), so checking the column
 /// alone would leave exactly the population the delegation model exists for
-/// unprotected — and they are the ones confined to one unit, which is the unit a
+/// unprotected - and they are the ones confined to one unit, which is the unit a
 /// per-unit policy can close.
 pub async fn ensure_no_administrator_is_stranded(db: &DbPool) -> Result<(), AppError> {
     // `NOW()` is bound from Rust so the comparison is engine-agnostic; the two
@@ -454,7 +454,7 @@ pub async fn ensure_no_administrator_is_stranded(db: &DbPool) -> Result<(), AppE
         .collect();
 
     Err(AppError::Validation(format!(
-        "Refusé : {} administrateur(s) — délégués compris — ne pourraient plus se connecter : {}. \
+        "Refusé : {} administrateur(s) - délégués compris - ne pourraient plus se connecter : {}. \
          Laissez-leur une méthode utilisable pour leur unité, ou gardez le secours local des \
          administrateurs actif. En dernier recours, depuis la machine : \
          kubuno auth:recover <compte> --local-access",

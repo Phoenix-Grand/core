@@ -2,7 +2,7 @@
  * Per-folder view memory: each directory remembers the view mode AND the
  * details-table settings (column widths + visibility) that were active the last
  * time it was displayed, in a localStorage map keyed by source + folder id.
- * Mobile is excluded — it has its own grid/list toggle and must not clobber the
+ * Mobile is excluded - it has its own grid/list toggle and must not clobber the
  * desktop preference.
  */
 import { useCallback, useEffect, useRef, useState } from 'react'
@@ -33,7 +33,7 @@ export function useViewPrefs(dirKey: string, isMobile: boolean) {
   const [details, setDetails] = useState<DetailsSettings>(DETAILS_DEFAULT)
 
   // Restore the folder's remembered view mode AND details settings when
-  // entering it (read-only — writes happen in the change/persist helpers below,
+  // entering it (read-only - writes happen in the change/persist helpers below,
   // so restore and persist never race). Unseen folders fall back to defaults.
   useEffect(() => {
     if (isMobile) return

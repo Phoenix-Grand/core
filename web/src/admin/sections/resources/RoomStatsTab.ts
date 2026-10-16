@@ -274,7 +274,7 @@ export class RoomStatsTab extends ViewBase {
 
   pct(n: number | null | undefined) {
     return n === null || n === undefined
-      ? '—'
+      ? '-'
       : new Intl.NumberFormat(this.i18n.language, { style: 'percent', maximumFractionDigits: 1 }).format(n)
   }
 

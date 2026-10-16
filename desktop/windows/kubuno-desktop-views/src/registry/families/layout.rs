@@ -1,4 +1,4 @@
-//! Component family `layout` — `<TableLayoutPanel>`, WinForms' grid container, over the
+//! Component family `layout` - `<TableLayoutPanel>`, WinForms' grid container, over the
 //! arithmetic of `kubuno_desktop_controls::layout_panels` (`resolve_tracks`, `place_cells`: the toolkit's
 //! own track sizing and cell placement, measured against WinForms). Compiled with the
 //! `family-layout` feature (on by default through `all-families`).

@@ -17,7 +17,7 @@ function errMessage(err: unknown): string | undefined {
 }
 
 /**
- * What the audience is called and what it says it is — edited on the sheet.
+ * What the audience is called and what it says it is - edited on the sheet.
  *
  * The counters live in each field's `hint` rather than in a message after a
  * refusal: 40 and 150 characters are short enough to reach by accident, and a
@@ -25,7 +25,7 @@ function errMessage(err: unknown): string | undefined {
  * characters, like the server: a byte count would refuse a French name of forty
  * accented letters.
  *
- * The seeded "everyone" audience never gets a pencil — the server refuses to
+ * The seeded "everyone" audience never gets a pencil - the server refuses to
  * rename it, and a button whose only outcome is an error is worse than none.
  */
 export default function IdentityCard({
@@ -59,7 +59,7 @@ export default function IdentityCard({
   const submit = () => {
     if (nameError || descError) return
     // `PATCH /admin/audiences/:id` takes both fields together, so the unchanged
-    // one is echoed — but only ever when the other actually moved.
+    // one is echoed - but only ever when the other actually moved.
     update.mutate(
       {
         id:          audience.id,

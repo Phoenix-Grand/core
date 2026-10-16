@@ -1,6 +1,6 @@
 /**
  * Accepted differences of the WV-5b navigation elements (`Toolbar`, `Sidebar`, `StatusBar`, `Splitter`,
- * `SearchField`, `MaskedField`, `PaintBox`) — spread into `KBVIEW_ALLOWLIST`. Every entry says why the web differs.
+ * `SearchField`, `MaskedField`, `PaintBox`) - spread into `KBVIEW_ALLOWLIST`. Every entry says why the web differs.
  */
 import type { AllowEntry } from './conformance.ts'
 

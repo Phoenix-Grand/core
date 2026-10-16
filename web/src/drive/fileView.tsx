@@ -37,7 +37,7 @@ interface ViewMenuProps {
   onChange:     (v: ViewMode) => void
   showHidden:   boolean
   onShowHidden: (v: boolean) => void
-  /** Traducteur (namespace 'files') — `t(key, { defaultValue })`. */
+  /** Traducteur (namespace 'files') - `t(key, { defaultValue })`. */
   t:            (key: string, opts?: Record<string, unknown>) => string
 }
 
@@ -46,7 +46,7 @@ export function ViewMenu({ value, onChange, showHidden, onShowHidden, t }: ViewM
     <div className="flex items-center gap-1.5">
       {/* Segmented switch: the four modes are visible at once, so changing view
           is one click instead of open-menu-then-pick. The active segment carries
-          a tick — the icon alone reads as "available", not as "current". */}
+          a tick - the icon alone reads as "available", not as "current". */}
       <div role="group" className="inline-flex items-center rounded-md border border-border overflow-hidden">
         {MODES.map((m, i) => {
           const active = value === m.value
@@ -72,7 +72,7 @@ export function ViewMenu({ value, onChange, showHidden, onShowHidden, t }: ViewM
       </div>
 
       {/* One option, so it is the control itself rather than a menu holding a
-          single line — and it leaves the row free for what comes next. */}
+          single line - and it leaves the row free for what comes next. */}
       <button
         onClick={() => onShowHidden(!showHidden)}
         title={t('view.hidden', { defaultValue: 'Éléments masqués' })}

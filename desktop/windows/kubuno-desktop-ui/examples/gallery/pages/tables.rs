@@ -1,4 +1,4 @@
-//! Gallery page — **tables**: [`DataTable`] in its four bodies, then fully live.
+//! Gallery page - **tables**: [`DataTable`] in its four bodies, then fully live.
 //!
 //! The page is built fresh every frame from plain values, so everything the
 //! exposition shows is a function of the model and of the pointer: the hovered
@@ -78,7 +78,7 @@ fn rows() -> Vec<ListViewItem> {
         .collect()
 }
 
-/// The role as a badge — what the web column's `cell` renderer draws.
+/// The role as a badge - what the web column's `cell` renderer draws.
 fn role_badge(role: &str) -> Badge {
     let v = match role {
         "Administratrice" | "Administrateur" => BadgeVariant::Primary,
@@ -115,7 +115,7 @@ fn columns(name: i32, role: i32, seen: i32, quota: i32) -> Vec<kubuno_desktop_ui
     ]
 }
 
-/// A table whose « Nom » column takes what the three metadata columns leave —
+/// A table whose « Nom » column takes what the three metadata columns leave -
 /// the columns are declared, as everywhere in this crate, because
 /// `table-layout: auto`'s content-driven distribution has no counterpart here.
 fn base(width: f32) -> DataTable {
@@ -160,7 +160,7 @@ pub fn draw(c: &dyn Canvas, f: &Frame) {
     let right = page.area.right - MARGIN;
 
     // ── The full table ───────────────────────────────────────────────────
-    page.section("DataTable — tableau complet");
+    page.section("DataTable - tableau complet");
     page.caption(
         "tri · sélection partielle · actions groupées · badges (cellPainter) · ellipse · \
          curseur clavier (anneau focus-visible) · pagination",
@@ -179,7 +179,7 @@ pub fn draw(c: &dyn Canvas, f: &Frame) {
     page.advance(rect.bottom - rect.top);
 
     // ── The three other bodies, side by side ─────────────────────────────
-    page.section("DataTable — état vide · squelette · cartes");
+    page.section("DataTable - état vide · squelette · cartes");
     page.caption(
         "trois boîtes étroites : les deux premières forcent le tableau, la troisième bascule \
          seule en cartes (largeur < cardsBelow = 700)",
@@ -229,11 +229,11 @@ pub fn draw(c: &dyn Canvas, f: &Frame) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-//  Interactive column — one live DataTable driven by the real pointer and keys.
+//  Interactive column - one live DataTable driven by the real pointer and keys.
 // ─────────────────────────────────────────────────────────────────────────────
 
 /// The live table's box: toolbar (48 at its tallest, the bulk bar) + gap 8 +
-/// header 40 + a body of about five rows + footer 44 — shorter than its page
+/// header 40 + a body of about five rows + footer 44 - shorter than its page
 /// of 8, so the body scrolls under a sticky header.
 const TABLE_H: f32 = 48.0 + 8.0 + 40.0 + 5.5 * 40.0 + 44.0;
 
@@ -293,7 +293,7 @@ fn live_table() -> DataTable {
     t
 }
 
-/// A stable focus id per focusable part — the stop list changes as the bulk
+/// A stable focus id per focusable part - the stop list changes as the bulk
 /// bar comes and goes, so ids are named, not positional.
 fn focus_id(part: FocusPart) -> FocusId {
     match part {
@@ -436,7 +436,7 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
                 if !keep {
                     ui.menu = None;
                 }
-                // The click never reaches what is under the menu — except a
+                // The click never reaches what is under the menu - except a
                 // right click, which re-opens the copy menu where it lands.
                 live.clicked = false;
             }

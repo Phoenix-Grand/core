@@ -2,7 +2,7 @@
 //!
 //! The toggles (enable HTTPS, ports, HSTS, minimum TLS version) are ordinary
 //! `network.*` settings, edited through the generic scoped-settings routes; this
-//! handler owns only what settings cannot hold — the certificate material — and
+//! handler owns only what settings cannot hold - the certificate material - and
 //! the runtime status the console shows next to it.
 //!
 //! Like the SMTP password, the private key goes IN in clear over the
@@ -33,7 +33,7 @@ fn min_version_str(v: TlsMinVersion) -> &'static str {
     }
 }
 
-/// GET /admin/network — current configuration, the active certificate's
+/// GET /admin/network - current configuration, the active certificate's
 /// metadata (never its key) and the live serving status.
 pub async fn get_network(
     State(state): State<AppState>,
@@ -93,7 +93,7 @@ pub async fn get_network(
     })))
 }
 
-/// POST /admin/network/acme/request — obtain or renew the certificate over ACME
+/// POST /admin/network/acme/request - obtain or renew the certificate over ACME
 /// now. Synchronous: the response carries the outcome so the operator sees the
 /// authority's own answer on failure. May take up to a minute.
 pub async fn request_acme(
@@ -145,7 +145,7 @@ pub async fn request_acme(
     })))
 }
 
-/// DELETE /admin/network/certificate/:id — remove a stored certificate.
+/// DELETE /admin/network/certificate/:id - remove a stored certificate.
 ///
 /// Deleting the active one is refused while HTTPS is enabled (see
 /// [`cert::delete`]): the instance would be left configured to serve TLS with no
@@ -189,7 +189,7 @@ pub struct UploadCertDto {
     pub key_pem: String,
 }
 
-/// POST /admin/network/certificate — install a certificate + key as the active
+/// POST /admin/network/certificate - install a certificate + key as the active
 /// one. Hot-reloads the live HTTPS listener when there is one; otherwise reports
 /// that a restart is needed to start serving it.
 pub async fn upload_certificate(
@@ -223,7 +223,7 @@ pub async fn upload_certificate(
     )
     .await?;
 
-    // Metadata only in the trail — never the chain, never the key.
+    // Metadata only in the trail - never the chain, never the key.
     let entry = AuditEntry::new("core.network.certificate.upload")
         .target_kind(
             "network.certificate",

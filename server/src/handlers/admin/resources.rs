@@ -2,7 +2,7 @@
 //!
 //! ## What problem this solves
 //!
-//! An organisation shares places and objects — meeting rooms, a projector on a
+//! An organisation shares places and objects - meeting rooms, a projector on a
 //! trolley, two service bicycles. Until they exist somewhere, each is booked by
 //! message, nobody can list what exists, and two meetings land in the same room.
 //! This is the inventory that turns "the room upstairs" into something a
@@ -15,7 +15,7 @@
 //! usage. Several modules consume it and none owns it; housing it in the first
 //! module that needed it would make every other one depend on that module, which
 //! the architecture forbids. The core publishes it read-only on
-//! `/internal/directory/resources` and names no module anywhere — a caller
+//! `/internal/directory/resources` and names no module anywhere - a caller
 //! proves itself with the internal secret, and that is all the core knows.
 //!
 //! ## The generated name
@@ -31,7 +31,7 @@
 //!
 //! It is never typed and never accepted from a request body. It is *stored*
 //! rather than recomputed on read so that sorting, searching and exporting all
-//! operate on exactly the string that is displayed — and it is rewritten by
+//! operate on exactly the string that is displayed - and it is rewritten by
 //! [`refresh_names`] on every write that could change it: the resource itself,
 //! its building's key, one of its floors' names, or the name of a feature it
 //! carries. A derived value that is only refreshed when its *own* row is touched
@@ -68,7 +68,7 @@ use crate::{
 // PostgreSQL composed the floor list and a resource's feature lists with a
 // native array (`ARRAY(SELECT …)`), decoded as `Vec<String>`. Native arrays
 // exist on no other engine, and a `Vec<String>` column only decodes on
-// PostgreSQL — so the lists travel as a JSON array instead, aggregated with the
+// PostgreSQL - so the lists travel as a JSON array instead, aggregated with the
 // engine's own JSON function and read back through `#[sqlx(json)] Vec<String>`.
 //
 // FLAG (multi-engine): the MySQL/SQLite spellings below are written from the
@@ -126,7 +126,7 @@ const MAX_USER_NOTE:     usize = 1000;
 /// A building with more floors than this is a data-entry accident, not a tower:
 /// the list is edited as one ordered field and stops being readable long before.
 const MAX_FLOORS:        usize = 200;
-/// Seats. The ceiling exists only to catch a typed extra digit — a room for
+/// Seats. The ceiling exists only to catch a typed extra digit - a room for
 /// 50 000 is somebody who meant 5 000, and the number is offered as a filter.
 const MAX_CAPACITY:      i32   = 100_000;
 
@@ -148,7 +148,7 @@ fn clean(raw: &str) -> String {
     raw.split_whitespace().collect::<Vec<_>>().join(" ")
 }
 
-/// `clean`, then `None` for what is left empty — an optional field that arrived
+/// `clean`, then `None` for what is left empty - an optional field that arrived
 /// as `""` must be stored as absent, not as a blank string that renders as a
 /// mysterious empty line.
 fn clean_opt(raw: Option<&str>) -> Option<String> {
@@ -173,7 +173,7 @@ fn max_len(value: &str, limit: usize, field: &str) -> Result<(), AppError> {
 /// definition of the format, it is called from every write path, and it is the
 /// only part of this file that can be tested without a database.
 ///
-/// `resource_type` doubles as the category discriminator — it is `Some` exactly
+/// `resource_type` doubles as the category discriminator - it is `Some` exactly
 /// when the resource is not a room (the column carries a `CHECK` saying so). A
 /// room has no type because it *is* the type, and its head segment is separated
 /// from the name by a space rather than a hyphen, which is what makes
@@ -222,7 +222,7 @@ fn generated_name(
 /// transaction.
 ///
 /// Takes explicit ids rather than a predicate so that it also works *after* the
-/// rows that would have matched are gone — deleting a feature cascades its links
+/// rows that would have matched are gone - deleting a feature cascades its links
 /// away, so the resources to refresh have to be collected before the delete and
 /// passed in here.
 async fn refresh_names(db: &mut DbTx, ids: &[Uuid]) -> Result<(), AppError> {
@@ -232,7 +232,7 @@ async fn refresh_names(db: &mut DbTx, ids: &[Uuid]) -> Result<(), AppError> {
 
     // A transaction has no multi-row read, so each resource is read on its own
     // (the caller passes at most a building's worth of ids). The feature list
-    // travels as a JSON array — the portable replacement for the old native one.
+    // travels as a JSON array - the portable replacement for the old native one.
     let features = json_text_subquery(
         db.backend(),
         "SELECT f.name AS v \
@@ -288,7 +288,7 @@ async fn refresh_names(db: &mut DbTx, ids: &[Uuid]) -> Result<(), AppError> {
     Ok(())
 }
 
-/// Ids of every resource in a building — what a change to the building's key or
+/// Ids of every resource in a building - what a change to the building's key or
 /// to one of its floors invalidates.
 async fn resources_of_building(db: &DbPool, building_id: Uuid) -> Result<Vec<Uuid>, AppError> {
     let rows = db
@@ -304,7 +304,7 @@ async fn resources_of_building(db: &DbPool, building_id: Uuid) -> Result<Vec<Uui
     Ok(rows.into_iter().map(|(id,)| id).collect())
 }
 
-/// Ids of every resource carrying a feature — what renaming or removing that
+/// Ids of every resource carrying a feature - what renaming or removing that
 /// feature invalidates.
 async fn resources_with_feature(db: &DbPool, feature_id: Uuid) -> Result<Vec<Uuid>, AppError> {
     let rows = db
@@ -402,7 +402,7 @@ fn validate_building(dto: &BuildingDto) -> Result<CleanBuilding, AppError> {
         .all(|c| c.is_ascii_alphanumeric() || c == '.' || c == '_' || c == '-')
     {
         return Err(AppError::Validation(
-            "L'identifiant du bâtiment n'accepte que des lettres non accentuées, des chiffres, un point, un tiret ou un tiret bas — il compose le nom des ressources.".into(),
+            "L'identifiant du bâtiment n'accepte que des lettres non accentuées, des chiffres, un point, un tiret ou un tiret bas - il compose le nom des ressources.".into(),
         ));
     }
 
@@ -489,12 +489,12 @@ fn validate_building(dto: &BuildingDto) -> Result<CleanBuilding, AppError> {
 /// rather than "delete everything, then reinsert": a floor that is kept must
 /// never cease to exist mid-transaction, because resources point at it through a
 /// composite foreign key, and the delete would refuse a change that is in fact
-/// legal — a reorder, or an added floor.
+/// legal - a reorder, or an added floor.
 ///
 /// The list is a **set of names**: a floor has no identity of its own here, so
 /// "rename 5A to 5B" is indistinguishable from "remove 5A, add 5B" and is
 /// refused while 5A still holds resources. That is the correct outcome rather
-/// than a limitation to work around — following a rename without an identity
+/// than a limitation to work around - following a rename without an identity
 /// would mean guessing, and guessing wrong would move rooms between floors
 /// without saying so. Reordering and adding are unaffected.
 async fn write_floors(db: &mut DbTx, building_id: Uuid, floors: &[String]) -> Result<(), AppError> {
@@ -575,7 +575,7 @@ fn building_json(r: &BuildingRow) -> Value {
 }
 
 /// The one query every building listing uses. `$1`/`$2` carry the same optional
-/// id filter (bound twice — a placeholder is never reused), so the read after a
+/// id filter (bound twice - a placeholder is never reused), so the read after a
 /// write returns exactly the same shape as the list.
 fn buildings_select(backend: Backend) -> String {
     let floors = json_text_subquery(
@@ -687,7 +687,7 @@ pub async fn create_building(
 /// `PATCH /admin/buildings/:id`
 ///
 /// A full replacement of the editable fields, floors included. The floor list is
-/// an ordered whole — "add one" has no answer to "where?" — so it is sent
+/// an ordered whole - "add one" has no answer to "where?" - so it is sent
 /// entire, exactly as the form shows it.
 pub async fn update_building(
     State(state): State<AppState>,
@@ -778,7 +778,7 @@ pub async fn update_building(
 ///
 /// Refused while the building still holds resources. A cascade here would delete
 /// rooms that appear in people's calendars, from a screen that says "delete
-/// building" — the two acts are not the same and must not share one click.
+/// building" - the two acts are not the same and must not share one click.
 pub async fn delete_building(
     State(state): State<AppState>,
     audit: AdminAudit,
@@ -1014,7 +1014,7 @@ pub async fn update_feature(
 
 /// `DELETE /admin/resource-features/:id`
 ///
-/// Allowed even while resources carry it — unlike a building, a feature is an
+/// Allowed even while resources carry it - unlike a building, a feature is an
 /// annotation, and losing it degrades a description rather than deleting
 /// something people booked. The links cascade; the resources whose generated
 /// name loses that word are collected *before* the delete and refreshed after.
@@ -1243,7 +1243,7 @@ pub struct ResourceQuery {
     pub building_id: Option<Uuid>,
 }
 
-/// A resource row with its building and feature lists — one shape for the
+/// A resource row with its building and feature lists - one shape for the
 /// console, the internal endpoint and the read-after-write.
 #[derive(sqlx::FromRow)]
 struct ResourceRow {
@@ -1270,7 +1270,7 @@ struct ResourceRow {
     feature_names:      Vec<String>,
 }
 
-/// Reads a [`ResourceRow`] from a hand-mapped row — the shape a transaction's
+/// Reads a [`ResourceRow`] from a hand-mapped row - the shape a transaction's
 /// read-after-write returns, where only single-row reads are available.
 fn resource_row_from_dbrow(r: &kubuno_db::DbRow) -> Result<ResourceRow, sqlx::Error> {
     Ok(ResourceRow {
@@ -1299,7 +1299,7 @@ fn resource_row_from_dbrow(r: &kubuno_db::DbRow) -> Result<ResourceRow, sqlx::Er
 /// One query for the console, the internal endpoint and the read-after-write, so
 /// that a field added for one of them cannot be missing from the others.
 /// `$1`/`$2` carry the id filter and `$3`/`$4` the building filter (each bound
-/// twice — a placeholder is never reused).
+/// twice - a placeholder is never reused).
 fn resources_select(backend: Backend) -> String {
     let ids = json_text_subquery(
         backend,
@@ -1458,7 +1458,7 @@ pub async fn create_resource(
         return Err(tx.abort(&state.db, refuse(), e).await);
     }
 
-    // Read back inside the transaction — it must see the just-written row.
+    // Read back inside the transaction - it must see the just-written row.
     let sel = resources_select(tx.backend());
     let after = match tx
         .fetch_optional_row(
@@ -1570,7 +1570,7 @@ pub async fn update_resource(
         return Err(tx.abort(&state.db, refuse(), e).await);
     }
 
-    // Read back inside the transaction — it must see the just-written changes.
+    // Read back inside the transaction - it must see the just-written changes.
     let sel = resources_select(tx.backend());
     let after = match tx
         .fetch_optional_row(
@@ -1674,7 +1674,7 @@ struct ResourceOverview {
 /// The gaps are the point of the screen. Counting rows says the inventory
 /// exists; naming the buildings that hold nothing, the resources nobody can
 /// picture because they carry no visible description, and the features attached
-/// to nothing, says whether it is *finished* — which is the question an
+/// to nothing, says whether it is *finished* - which is the question an
 /// administrator actually arrives with, and the one a bare total never answers.
 pub async fn overview(
     State(state): State<AppState>,
@@ -1724,11 +1724,11 @@ pub async fn overview(
 
 // ── Room usage ───────────────────────────────────────────────────────────────
 
-/// `GET /admin/resources/room-stats?from=…&to=…` — how the rooms were used.
+/// `GET /admin/resources/room-stats?from=…&to=…` - how the rooms were used.
 ///
 /// The console asks here, but the figures are NOT the core's to compute: the
 /// bookings are rows of the calendar module's own schema, and the core does not
-/// read another component's schema — that is what keeps a module replaceable.
+/// read another component's schema - that is what keeps a module replaceable.
 /// So this forwards the question to whichever module holds the bookings and
 /// passes the answer through.
 ///
@@ -1743,7 +1743,7 @@ pub async fn overview(
 pub struct RoomStatsQuery {
     pub from: String,
     pub to:   String,
-    /// The zone the day and hour buckets are cut in — passed straight through,
+    /// The zone the day and hour buckets are cut in - passed straight through,
     /// unread. Which hour of the day a booking belongs to is a question about a
     /// clock somewhere, and the module that owns the bookings answers it.
     #[serde(default)]
@@ -1822,11 +1822,11 @@ pub async fn room_stats(
 
 // ── The internal catalogue ───────────────────────────────────────────────────
 
-/// `GET /internal/directory/resources` — the bookable catalogue, for modules.
+/// `GET /internal/directory/resources` - the bookable catalogue, for modules.
 ///
 /// Read-only, and deliberately the *only* door: a module that could write here
 /// would be a module deciding what the directory contains, which is the
-/// administrator's job. It carries no notion of who is calling — the internal
+/// administrator's job. It carries no notion of who is calling - the internal
 /// secret proves the caller is inside the instance, and nothing in this file
 /// names a module, so any module that needs places and objects reads the same
 /// answer.

@@ -1,7 +1,7 @@
 //! The Kubuno mobile account / network base (M2).
 //!
 //! This is the layer the mobile apps' real behaviour stands on: how a phone signs in, keeps a session alive, and
-//! talks to its Kubuno server. It is portable Rust with no platform API of its own — the shell injects the one
+//! talks to its Kubuno server. It is portable Rust with no platform API of its own - the shell injects the one
 //! platform-specific piece, the OS secret store ([`SecretStore`]).
 //!
 //! - **Transport.** The typed Kubuno API client is the desktop's [`kubuno_desktop_api_client`], reused as-is: it does
@@ -9,8 +9,8 @@
 //!   build one for a server.
 //! - **Sign-in.** [`login`] (native client: the refresh token comes back in the body, not a cookie) and, for an
 //!   account with a second factor, [`verify_totp`].
-//! - **Session.** [`TokenOwner`] holds the account's own refresh token in the secret store — there is no broker, the
-//!   phone is the owner — and is the [`TokenSource`] the API client refreshes access tokens from, with rotation and
+//! - **Session.** [`TokenOwner`] holds the account's own refresh token in the secret store - there is no broker, the
+//!   phone is the owner - and is the [`TokenSource`] the API client refreshes access tokens from, with rotation and
 //!   single-flight.
 //!
 //! - **Phone state.** A per-installation device key and the book of accounts signed in here ([`device_key`],

@@ -1,5 +1,5 @@
 /**
- * Progressive loading (client windowing) — only the top window of the ordered
+ * Progressive loading (client windowing) - only the top window of the ordered
  * list (folders first, then files) is mounted; it grows as the sentinel at the
  * bottom enters view: first to fill the visible area, then as the user scrolls.
  * Purely client-side, so it applies to every source uniformly. Selection and
@@ -37,7 +37,7 @@ export function useProgressiveWindow({ totalItems, resetKey, containerRef, isLoa
     return () => io.disconnect()
   }, [hasMore, isLoading, rootResolved]) // eslint-disable-line react-hooks/exhaustive-deps
   // While the sentinel sits inside the viewport (area not yet full, or the scroll
-  // reached the bottom), grow the window — filling first, then on scroll.
+  // reached the bottom), grow the window - filling first, then on scroll.
   useEffect(() => {
     if (!sentinelVisible || !hasMore) return
     const id = requestAnimationFrame(() => setVisibleCount(c => c + WINDOW_BATCH))

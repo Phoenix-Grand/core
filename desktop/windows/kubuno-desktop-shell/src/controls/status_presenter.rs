@@ -1,5 +1,5 @@
 //! Code-behind of the user control `StatusPresenter` (`status_presenter.kbcontrol`): what a page says
-//! when it has no content yet — loading, nothing here, or that failed.
+//! when it has no content yet - loading, nothing here, or that failed.
 //!
 //! Each page used to say these with a line of grey text, each with its own wording, colour and
 //! place. `kubuno-desktop-ui` ships a `Spinner`, an `EmptyState` and a `Callout`; this control puts the

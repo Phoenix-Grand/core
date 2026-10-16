@@ -4,12 +4,12 @@
 # `kubuno-desktop-controls` reproduction), case by case, and exits NON-ZERO on any
 # mismatch. What it compares:
 #
-#   * the OUTCOME of every step — `ok` or `err`. WinForms throws
+#   * the OUTCOME of every step - `ok` or `err`. WinForms throws
 #     `ArgumentOutOfRangeException` where the port returns `Err(OutOfRange)`;
 #     those are the same decision expressed two ways, so only the status is
 #     compared and the mechanism is printed. A case where one side ACCEPTS what
 #     the other REFUSES is a mismatch, and is called out as such.
-#   * every key of `state` — the resulting Value / Text / SelectedIndex and the
+#   * every key of `state` - the resulting Value / Text / SelectedIndex and the
 #     properties around them, as strings, exactly as each side rendered them.
 #
 # `extra` is never compared: it holds observations only one side can make (the
@@ -79,7 +79,7 @@ $prtById = @{}
 foreach ($c in $prt.cases) { $prtById[$c.id] = $c }
 
 Write-Host ''
-Write-Host 'Range family — numeric parity' -ForegroundColor Cyan
+Write-Host 'Range family - numeric parity' -ForegroundColor Cyan
 Write-Host ("  reference : {0}  ({1} cases, culture {2})" -f $WinForms, $ref.cases.Count, $ref.culture)
 Write-Host ("  port      : {0}  ({1} cases, culture {2})" -f $Port, $prt.cases.Count, $prt.culture)
 if ($ref.decimalSeparator -ne $prt.decimalSeparator -or $ref.groupSeparator -ne $prt.groupSeparator) {
@@ -116,7 +116,7 @@ foreach ($c in $ref.cases) {
             continue
         }
         if ($rs.op -ne $ps.op) {
-            $problems += "step $i op '$($rs.op)' vs '$($ps.op)' — the probes have drifted"
+            $problems += "step $i op '$($rs.op)' vs '$($ps.op)' - the probes have drifted"
             continue
         }
         if ($rs.status -ne $ps.status) {

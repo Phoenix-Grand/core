@@ -1,4 +1,4 @@
-<!-- ConditionTester — converted from ConditionTester.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- ConditionTester - converted from ConditionTester.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="Props">
   <Panel Class="min-w-0">
     <Label Text="{Res admin.rl_test_help}"

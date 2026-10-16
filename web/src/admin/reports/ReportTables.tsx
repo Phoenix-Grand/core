@@ -51,7 +51,7 @@ export function useSeriesItem(model: ReportModel): FlowItem {
     ),
     // The busiest interval is marked rather than left to be found: it is the one
     // row of ninety a reader is actually looking for, and "En bref" names it
-    // above — the mark is what lets them land on it.
+    // above - the mark is what lets them land on it.
     rows: model.series.map(row => (
       <tr key={row.label} data-peak={peak > 0 && row.value === peak ? '' : undefined}>
         <td className={CELL}>{row.label}</td>
@@ -59,7 +59,7 @@ export function useSeriesItem(model: ReportModel): FlowItem {
       </tr>
     )),
     // The sum is stated only when the buckets actually add up to the period's
-    // total — see `seriesTotal` in the model.
+    // total - see `seriesTotal` in the model.
     foot: model.seriesTotal === null ? undefined : (
       <tr>
         <th scope="row" className={`${CELL} text-left font-medium`}>{t('admin.rep_total')}</th>
@@ -70,13 +70,13 @@ export function useSeriesItem(model: ReportModel): FlowItem {
 }
 
 /**
- * One row of the breakdown — with the colour of its slice and a bar for its
+ * One row of the breakdown - with the colour of its slice and a bar for its
  * share.
  *
  * The swatch is not decoration: it is the SAME colour the chart gave that entry,
  * which is what lets a reader move between the two without counting positions.
  * The bar says at a glance what a column of percentages says only after
- * arithmetic — and it is drawn from `share`, the figure printed beside it, so
+ * arithmetic - and it is drawn from `share`, the figure printed beside it, so
  * the picture and the number cannot disagree.
  */
 function BreakdownRowCells({ row, quotas, fmt, lang, tone }: {
@@ -102,7 +102,7 @@ function BreakdownRowCells({ row, quotas, fmt, lang, tone }: {
       </td>
       <td className={`${CELL} text-right tabular-nums`}>{row.text}</td>
       <td className={`${CELL} tabular-nums`}>
-        {row.share === null ? <span className="block text-right">—</span> : (
+        {row.share === null ? <span className="block text-right">-</span> : (
           <span className="flex items-center justify-end gap-2">
             <span data-share-track aria-hidden className="hidden sm:block">
               <span data-share-fill style={{ width: `${Math.max(2, Math.min(100, row.share))}%`, backgroundColor: tone }} />
@@ -114,10 +114,10 @@ function BreakdownRowCells({ row, quotas, fmt, lang, tone }: {
       {quotas && (
         <>
           <td className={`${CELL} text-right tabular-nums`}>
-            {row.capacity === null ? '—' : fmt(row.capacity)}
+            {row.capacity === null ? '-' : fmt(row.capacity)}
           </td>
           <td className={`${CELL} text-right tabular-nums`}>
-            {row.used === null ? '—' : pct(row.used)}
+            {row.used === null ? '-' : pct(row.used)}
           </td>
         </>
       )}
@@ -125,7 +125,7 @@ function BreakdownRowCells({ row, quotas, fmt, lang, tone }: {
   )
 }
 
-/** Every slice of the breakdown — the whole of it, not the head of it. */
+/** Every slice of the breakdown - the whole of it, not the head of it. */
 export function useBreakdownItem(model: ReportModel, tones: (key: string, i: number) => string): FlowItem {
   const { t, i18n } = useTranslation()
 

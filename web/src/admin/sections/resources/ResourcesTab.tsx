@@ -108,7 +108,7 @@ export class ResourcesTab extends ViewBase {
       sortValue: r => r.feature_names.length,
       cell: r => (
         <span className="text-text-secondary" style={{ fontSize: 'var(--kb-text-meta)' }}>
-          {r.feature_names.length > 0 ? r.feature_names.join(' · ') : '—'}
+          {r.feature_names.length > 0 ? r.feature_names.join(' · ') : '-'}
         </span>
       ),
     },

@@ -1,8 +1,8 @@
 // Shared @ui primitive. A composite answer: several labelled text sub-fields stacked under ONE shared
-// icon (Google-Contacts style — a "Name" block, an "Organisation" block…). The
+// icon (Google-Contacts style - a "Name" block, an "Organisation" block…). The
 // icon sits on the left, centred on the first row; a chevron on the right
 // reveals/hides the "advanced" sub-fields (Plus / Moins). Each sub-field is a
-// plain Material field WITHOUT its own icon — the group owns the icon.
+// plain Material field WITHOUT its own icon - the group owns the icon.
 import { useState, type ReactNode } from 'react'
 import { ChevronDown, ChevronUp } from 'lucide-react'
 import { OutlinedField } from './OutlinedField'
@@ -29,7 +29,7 @@ export function FieldGroup({ icon, fields, value, onChange, primaryColor, large 
   const shown = expanded ? fields : fields.filter(f => !f.advanced)
 
   // Icon and chevron are centred on the FIRST field's row; the field's own box
-  // height (padding + line) is roughly this — kept as a constant so the two
+  // height (padding + line) is roughly this - kept as a constant so the two
   // gutters line up without measuring the DOM.
   const rowH = large ? 56 : 48
   const gutter: React.CSSProperties = {

@@ -8,7 +8,7 @@
 //
 // Why numbers: the port paints in the Kubuno design system, so a pixel diff of
 // APPEARANCE would only re-measure a difference we already know about. What has
-// to match exactly is the GEOMETRY — given the same container and the same
+// to match exactly is the GEOMETRY - given the same container and the same
 // children, every child rectangle must come out with the same numbers.
 //
 // Three details are load-bearing:
@@ -21,7 +21,7 @@
 //     simply never applied, and the harness would report a phantom match. The
 //     switch's state is recorded in the file's `meta` so a future reader knows
 //     which implementation produced the numbers.
-//  3. Properties are set in a fixed order — MinimumSize/MaximumSize, then
+//  3. Properties are set in a fixed order - MinimumSize/MaximumSize, then
 //     Bounds, then Dock/Anchor. WinForms' MinimumSize setter clamps the bounds
 //     on the spot, so the reverse order would feed the two probes different
 //     inputs. The Rust probe uses the same order.
@@ -42,7 +42,7 @@ internal static class Program
         // An exception raised inside a control's `WndProc` does not surface at
         // the call that provoked it: WinForms routes it to
         // `Application.OnThreadException`, which shows a modal dialog and waits
-        // — which hangs an unattended probe. `ThrowException` makes it
+        // - which hangs an unattended probe. `ThrowException` makes it
         // propagate so the caller can record it. Must precede the first window.
         Application.SetUnhandledExceptionMode(UnhandledExceptionMode.ThrowException);
 
@@ -164,7 +164,7 @@ internal static class Program
     /// <summary>
     /// Builds one child (and, recursively, its own children). Every node is a
     /// Panel so that a leaf and a container differ only in whether they have
-    /// children — no control-specific preferred size can leak into the numbers.
+    /// children - no control-specific preferred size can leak into the numbers.
     /// </summary>
     private static Panel BuildChild(JsonNode spec)
     {
@@ -217,8 +217,8 @@ internal static class Program
     }
 
     /// <summary>
-    /// Walks the tree in collection order — which is add order, and therefore
-    /// the same index a child has in the port's `Vec` — and records each
+    /// Walks the tree in collection order - which is add order, and therefore
+    /// the same index a child has in the port's `Vec` - and records each
     /// child's Bounds plus, for a container, its DisplayRectangle.
     /// </summary>
     private static void Emit(Control parent, string prefix, JsonArray sink)

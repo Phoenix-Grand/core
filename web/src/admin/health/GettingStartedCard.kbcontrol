@@ -1,4 +1,4 @@
-<!-- GettingStartedCard — converted from GettingStartedCard.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- GettingStartedCard - converted from GettingStartedCard.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl>
   <Panel Class="contents">
     <Panel ForeColor="TextSecondary" Visible="{Binding show_case_2}" Class="mb-4 flex items-center gap-2 [font-size:var(--kb-text-body)]">

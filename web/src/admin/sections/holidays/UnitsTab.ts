@@ -166,7 +166,7 @@ export class UnitsTab extends ViewBase {
       return (this.prefs ?? []).map((pref) => {
       return { pref, span_text: ((!(!this.unitId)) && (!(this.isLoading)) && (!((this.prefs ?? []).length === 0))) ? (pref.calendar_id
                   ? `${pref.calendar_name} (${pref.calendar_code})`
-                  : `${pref.holiday_name} — ${pref.holiday_calendar_code}`) : undefined, part6_props: ((!(!this.unitId)) && (!(this.isLoading)) && (!((this.prefs ?? []).length === 0)) && (this.props.canManage)) ? ({ t: this.tr, setError: this.memo("setError:bound", [], () => this.setError.bind(this)), setPref: this.setPref, pref: pref, fail: this.memo("fail:bound", [], () => this.fail.bind(this)) }) : undefined, key: pref.id }
+                  : `${pref.holiday_name} - ${pref.holiday_calendar_code}`) : undefined, part6_props: ((!(!this.unitId)) && (!(this.isLoading)) && (!((this.prefs ?? []).length === 0)) && (this.props.canManage)) ? ({ t: this.tr, setError: this.memo("setError:bound", [], () => this.setError.bind(this)), setPref: this.setPref, pref: pref, fail: this.memo("fail:bound", [], () => this.fail.bind(this)) }) : undefined, key: pref.id }
     })
     })
   }

@@ -7,7 +7,7 @@
 //!
 //! Property names are `PascalCase`, matching `XML_VIEWS.md` §1 ("attributes
 //! are the builder's fluent setters" as XML sees them, e.g. `Dense="true"`,
-//! `Text="Ok"`) — not the Rust setters' own `snake_case` spelling.
+//! `Text="Ok"`) - not the Rust setters' own `snake_case` spelling.
 
 use super::macros::component;
 use super::ComponentMeta;
@@ -192,7 +192,7 @@ component! {
     children: ChildrenModel::List(&[]),
     layout: LayoutKind::Flow,
     props: [
-        // Note: The axis blocks run along — the real `FlowDirection` variant names (the design note's friendlier `Horizontal`/`Vertical` aliases are an interpreter-level naming convenience, not modelled yet; see the crate's top-level docs' deviation list).
+        // Note: The axis blocks run along - the real `FlowDirection` variant names (the design note's friendlier `Horizontal`/`Vertical` aliases are an interpreter-level naming convenience, not modelled yet; see the crate's top-level docs' deviation list).
         PropertyMeta::new("Direction",
             PropKind::Enum(&["LeftToRight", "TopDown", "RightToLeft", "BottomUp"]),
             "TopDown",
@@ -234,7 +234,7 @@ component! {
     },
 }
 
-/// Every declared component, in declaration order — the source [`super::all`]
+/// Every declared component, in declaration order - the source [`super::all`]
 /// hands back.
 pub const ALL: &[ComponentMeta] =
     &[button::META, switch::META, text_field::META, card::META, stack::META];

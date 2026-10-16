@@ -10,7 +10,7 @@
 //! than left to callers:
 //!
 //! * **The radius is not overridable.** `Button.tsx` says so in a comment and
-//!   its stylesheet order makes it true — a caller appending `rounded-full`
+//!   its stylesheet order makes it true - a caller appending `rounded-full`
 //!   still renders at 4. So [`RADIUS`] is a constant and no variant changes it.
 //! * **Buttons are never emboldened.** Colour and fill carry the hierarchy; the
 //!   label is always regular weight at 14/20.
@@ -23,7 +23,7 @@ use windows::Win32::Graphics::Direct2D::Common::D2D1_COLOR_F;
 use crate::themes::Theme;
 use crate::{Canvas, Rect};
 
-/// `rounded-md`, which this design system resolves to 4. Never overridable —
+/// `rounded-md`, which this design system resolves to 4. Never overridable -
 /// see the module docs.
 pub const RADIUS: f32 = 4.0;
 
@@ -36,7 +36,7 @@ pub enum Variant {
     Secondary,
     /// No fill until hovered.
     Ghost,
-    /// The accent WITHOUT a fill — a dialog's confirming action next to a
+    /// The accent WITHOUT a fill - a dialog's confirming action next to a
     /// `Ghost` cancel.
     Text,
     /// Filled danger.
@@ -101,7 +101,7 @@ pub struct Button<'a> {
     pub icon:    Option<&'static str>,
     pub variant: Variant,
     pub size:    Size,
-    /// Overrides the size's horizontal padding — the one metric the web lets a
+    /// Overrides the size's horizontal padding - the one metric the web lets a
     /// caller change.
     pub pad_x:   Option<f32>,
 }
@@ -160,7 +160,7 @@ fn paint_for(b: &Button, t: &Theme, state: State) -> Paint {
     let pressed = matches!(state, State::Active);
     let p = match b.variant {
         Variant::Primary => Paint {
-            // `hover:bg-primary-hover active:bg-primary-hover` — one colour for
+            // `hover:bg-primary-hover active:bg-primary-hover` - one colour for
             // both, as the web writes it.
             fill:   Some(if hovered || pressed { t.accent_hover } else { t.accent }),
             label:  t.accent_foreground,
@@ -223,7 +223,7 @@ fn paint_for(b: &Button, t: &Theme, state: State) -> Paint {
     p
 }
 
-/// The button's intrinsic width: padding, the icon and its gap, then the label —
+/// The button's intrinsic width: padding, the icon and its gap, then the label -
 /// the same content-driven sizing the web has. Measured, so it tracks the real
 /// font: the web's « Annuler » comes to 88.9 and its « OK » to 67.3.
 pub fn width(c: &dyn Canvas, b: &Button) -> f32 {
@@ -284,7 +284,7 @@ pub fn draw(c: &dyn Canvas, rect: &Rect, b: &Button, state: State) {
     }
 }
 
-/// A round icon button — the header's 36px controls and the waffle's 40px
+/// A round icon button - the header's 36px controls and the waffle's 40px
 /// pencil. These ARE circles on the web (`rounded-full`), unlike the text
 /// buttons; the two shapes are easy to mix up, so they live in one place.
 pub struct IconButton {

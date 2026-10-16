@@ -6,7 +6,7 @@
 // the console evaluates `Scope::covers` over the accounts it was able to load
 // (200 at most) and reports `partial` when the instance holds more. A count
 // presented as a measurement when it is a sample is exactly the kind of number
-// an operator over-trusts — so the caveat travels with the number.
+// an operator over-trusts - so the caveat travels with the number.
 
 import { useMemo } from 'react'
 import { useGroupMembers, useGroupsLite, useOrgUnits, useUsersLite } from './api'
@@ -22,7 +22,7 @@ export interface Directory {
   unitName:  (id: string) => string | undefined
   groupName: (id: string) => string | undefined
   userName:  (id: string) => string | undefined
-  /** Ancestor chain of a unit, itself first — mirrors `Subject::unit_chain`. */
+  /** Ancestor chain of a unit, itself first - mirrors `Subject::unit_chain`. */
   unitChain: (id: string | null) => string[]
   isLoading: boolean
   /** The caller may not read the directory (403): names degrade to raw ids. */

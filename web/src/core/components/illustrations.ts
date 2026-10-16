@@ -1,5 +1,5 @@
 /**
- * Kubuno's own illustration set — the pictures offered as a profile photo when
+ * Kubuno's own illustration set - the pictures offered as a profile photo when
  * someone would rather not upload one.
  *
  * They are COMPOSED here rather than shipped as image files: a handful of
@@ -128,7 +128,7 @@ const RECIPES: readonly Recipe[] = [
 ]
 
 export interface Illustration {
-  /** `<recipe>-<palette>`, stable — it is the file name once picked. */
+  /** `<recipe>-<palette>`, stable - it is the file name once picked. */
   id: string
   collection: Recipe['collection']
   keywords: string[]

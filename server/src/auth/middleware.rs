@@ -17,13 +17,13 @@ use axum::{
 use kubuno_db::params;
 use uuid::Uuid;
 
-/// How the caller proved who they are — **and what that proof authorises**.
+/// How the caller proved who they are - **and what that proof authorises**.
 ///
 /// [`AuthUser`] happily accepts a JWT *or* a personal API token and yields the
 /// same `User` either way, which erases the difference between a human clicking
 /// in the console and a script running unattended. This record is inserted into
-/// the request extensions during extraction so downstream consumers — the audit
-/// trail, and now the authorisation layer — can tell the two apart.
+/// the request extensions during extraction so downstream consumers - the audit
+/// trail, and now the authorisation layer - can tell the two apart.
 ///
 /// The [`grant`](Self::grant) field is the substantive half of the fix: before
 /// it, the two paths were genuinely indistinguishable *after* extraction, so no
@@ -86,7 +86,7 @@ impl FromRequestParts<AppState> for AuthUser {
         }
 
         // The header first. Without one, a signed ticket (`?kt=`) bound to this
-        // exact path — that is how a browser-performed download of an archive
+        // exact path - that is how a browser-performed download of an archive
         // reaches its owner (see `crate::auth::tickets`). The deprecated
         // `access_token` cookie comes last, and only while the compatibility
         // switch is on.
@@ -149,7 +149,7 @@ impl FromRequestParts<AppState> for AuthUser {
         // Attempt 2: personal API token (`kubuno_` prefix).
         //
         // Resolution refuses a revoked, expired or unknown token, a token whose
-        // owner has been deactivated, and a legacy token past its grace window —
+        // owner has been deactivated, and a legacy token past its grace window -
         // the last one with a distinguishable code so the holder knows to reissue
         // rather than to retry.
         let grant = token_scope::resolve_grant(&state.db, token).await?;
@@ -186,7 +186,7 @@ impl FromRequestParts<AppState> for AuthUser {
 ///
 /// Admits either an **instance administrator** (`users.role = 'admin'`, the
 /// denormalised cache of "holds an instance-scoped superuser role") or a
-/// **delegated administrator** — someone holding at least one administrative
+/// **delegated administrator** - someone holding at least one administrative
 /// privilege through `crate::authz`, whose `role` stays `'user'` on purpose so
 /// their power does not travel to the modules through `X-Kubuno-User-Role`.
 ///
@@ -199,8 +199,8 @@ impl FromRequestParts<AppState> for AuthUser {
 /// Scope of the `must_change_password` lock: an account that still carries the
 /// password it was seeded with keeps read access (so the operator can see the
 /// instance and reach `/me/password`), but every administrative *write* is
-/// refused. That is where the damage would be done — creating users, flipping
-/// settings, installing modules — and it stays closed even if the frontend
+/// refused. That is where the damage would be done - creating users, flipping
+/// settings, installing modules - and it stays closed even if the frontend
 /// guard is bypassed. Client-detectable via the `PASSWORD_CHANGE_REQUIRED` code.
 pub struct AdminUser(pub User);
 
@@ -231,7 +231,7 @@ impl FromRequestParts<AppState> for AdminUser {
         // Refusals are audited here rather than in each handler: this is the one
         // choke point every administrative route goes through, so a route added
         // tomorrow is covered without anyone remembering to instrument it. Only
-        // *identified* callers are recorded — an anonymous 401 carries no actor
+        // *identified* callers are recorded - an anonymous 401 carries no actor
         // and would let a stranger flood the trail.
         if user.role != "admin" {
             // Delegated administrators are `role = 'user'`; ask the privilege
@@ -245,7 +245,7 @@ impl FromRequestParts<AppState> for AdminUser {
         }
         // Instance requirement: an administrator without a second factor loses the
         // console once their grace window closes. Checked here, at the single
-        // choke point, for the same reason as the refusals above — and *after* the
+        // choke point, for the same reason as the refusals above - and *after* the
         // role check, so a non-administrator never arms a deadline it will never
         // need. Read and write are both refused: the account can still reach
         // Paramètres → Sécurité, which is not an administrative route.

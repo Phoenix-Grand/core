@@ -1,5 +1,5 @@
 //! Code-behind of the user control `AdminSectionHeader` (`admin_section_header.kbcontrol`, see its
-//! comment): the head of every section of the administration console — a breadcrumb, the title, an
+//! comment): the head of every section of the administration console - a breadcrumb, the title, an
 //! inline count and an optional introduction, all set as properties by the section that uses it.
 
 use kubuno_desktop::views::prelude::*;
@@ -72,7 +72,7 @@ mod tests {
         let mut h = AdminSectionHeader { parent: "Annuaire".into(), ..AdminSectionHeader::default() };
         h.parts_changed();
         assert!(h.has_trail && !h.has_intro);
-        h.intro = "Réglages de l'instance — lecture seule.".into();
+        h.intro = "Réglages de l'instance - lecture seule.".into();
         h.parts_changed();
         assert!(h.has_intro);
         assert_eq!(height(false), 60.0);

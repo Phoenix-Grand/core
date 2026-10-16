@@ -1,4 +1,4 @@
-<!-- ModuleSettingRow — converted from ModuleSettingRow.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- ModuleSettingRow - converted from ModuleSettingRow.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="ModuleSettingRowProps">
   <Panel Class="{Binding div_class}">
     <Stack Direction="LeftToRight" Gap="12" CrossAlign="Start" Visible="{Binding inline}">

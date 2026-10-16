@@ -28,7 +28,7 @@ import MockTopbar from './mocks/MockTopbar'
 /**
  * The gallery body: one accordion group per family of objects. It is rendered by
  * PreviewFrame's nested React root (inside the shadow DOM), so its hooks and
- * event handlers all live in that root — clicks, toggles, slider/resize drags
+ * event handlers all live in that root - clicks, toggles, slider/resize drags
  * resolve correctly. Accordion panels stay mounted, so each group owns its own
  * demo state; only the gradient is shared (fields ↔ pickers) and therefore lifted
  * here.
@@ -72,7 +72,7 @@ export default function GalleryBody({ theme }: { theme: ThemeDef }) {
         { id: 'ribbon', title: t('admin.t_prev_ribbon', { defaultValue: 'Ruban (Office)' }), content: (<>
           <p className="text-[11px] text-text-tertiary mb-2.5">
             {t('admin.t_prev_ribbon_hint', {
-              defaultValue: 'Chrome des éditeurs (bande d’onglets, groupes, barre de statut) — re-skinnée par le thème via les variables workspace.',
+              defaultValue: 'Chrome des éditeurs (bande d’onglets, groupes, barre de statut) - re-skinnée par le thème via les variables workspace.',
             })}
           </p>
           <div className="max-w-xl"><MockRibbon /></div>

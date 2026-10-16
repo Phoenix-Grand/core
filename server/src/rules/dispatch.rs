@@ -4,7 +4,7 @@
 //!
 //! The engine enqueues one job per match ([`ACTION_JOB`]) and returns. Suspending
 //! an account, revoking sessions and calling a module are all things that can be
-//! slow, fail, or need retrying — and none of them should be able to stall the
+//! slow, fail, or need retrying - and none of them should be able to stall the
 //! bus the rest of the instance depends on. The existing runner
 //! ([`crate::jobs`]) already has claiming, exponential backoff and crash
 //! recovery; the engine borrows all four rather than growing its own.
@@ -12,7 +12,7 @@
 //! ## A replay never doubles an action
 //!
 //! Every action carries an idempotency key derived from `(execution, index,
-//! action)`, claimed in `core.idempotency_keys` — the **existing** table, the
+//! action)`, claimed in `core.idempotency_keys` - the **existing** table, the
 //! same one that protects an offline client replaying a mutation. A job retried
 //! after a crash therefore re-runs the actions that had not been claimed and
 //! skips those that had. Two suspensions of the same account for the same event
@@ -23,7 +23,7 @@
 //!
 //! A module's action is a POST to the internal endpoint it declared. The core's
 //! own actions run in process ([`super::actions`]) instead of the core calling
-//! itself over HTTP — which would mean a loopback connection, its own TLS
+//! itself over HTTP - which would mean a loopback connection, its own TLS
 //! configuration, and a failure mode ("the instance cannot reach itself") that
 //! exists for no reason. Everything else is shared: declaration, validation,
 //! selection by key, idempotency, logging.
@@ -68,8 +68,8 @@ const MODULE_TIMEOUT: Duration = Duration::from_secs(20);
 ///
 /// Note what is **not** here: the facts. The values a rule inspected do not
 /// travel into the job queue, where they would be persisted, replayed and read
-/// by anybody with database access. What travels is the structural reference —
-/// which account, which resource — plus the parameters the rule's author typed.
+/// by anybody with database access. What travels is the structural reference -
+/// which account, which resource - plus the parameters the rule's author typed.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ActionJob {
     pub execution_id: i64,
@@ -106,7 +106,7 @@ pub struct ActionVerdict {
     pub action: String,
     /// `ok` | `failed` | `skipped_replay` | `skipped_after_failure` | `unknown`
     pub status: &'static str,
-    /// English one-liner. Never carries a value the rule inspected — only the
+    /// English one-liner. Never carries a value the rule inspected - only the
     /// reason the action itself gave.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub error: Option<String>,
@@ -127,7 +127,7 @@ pub struct DispatchOutcome {
 /// job runner deliberately carries nothing but a pool. The whole settings block
 /// travels rather than one string because calling a module means presenting the
 /// secret **of that module** ([`ServerSettings::module_secret`]), which is only
-/// derivable from the master — see [`call_module`].
+/// derivable from the master - see [`call_module`].
 pub async fn run_all(db: &DbPool, job: &ActionJob, server: &ServerSettings) -> DispatchOutcome {
     let mut outcome = DispatchOutcome::default();
     let mut halted = false;
@@ -232,7 +232,7 @@ async fn run_one(
     // A module's action, over its declared internal endpoint.
     let Some(endpoint) = resolved.endpoint.clone() else {
         tracing::error!(action = %spec.action,
-            "rules: action sans endpoint et inconnue du core — déclaration incohérente");
+            "rules: action sans endpoint et inconnue du core - déclaration incohérente");
         return ("failed", Some("no endpoint declared".into()), blocking);
     };
     match call_module(db, job, spec, &resolved.module_id, &endpoint, server).await {
@@ -302,7 +302,7 @@ async fn call_module(
         .header("X-Internal-Secret", secret_for(server, module_id))
         // The feedback counter travels with the call. A module that emits an
         // event as a consequence must echo it, or its own chain is invisible to
-        // the guard — documented in the module contract, and the only part of
+        // the guard - documented in the module contract, and the only part of
         // the loop protection the core cannot enforce alone.
         .header("X-Kubuno-Rule-Depth", (job.depth + 1).to_string())
         .header("X-Kubuno-Rule-Id", job.rule_id.to_string())
@@ -325,8 +325,8 @@ async fn call_module(
 /// The `X-Internal-Secret` value a call to `module_id` must carry.
 ///
 /// One line, but a named one: it is the single place the engine decides which
-/// secret leaves the process, and the regression it guards against — sending the
-/// master secret, i.e. the key to every module — is silent when it happens.
+/// secret leaves the process, and the regression it guards against - sending the
+/// master secret, i.e. the key to every module - is silent when it happens.
 fn secret_for(server: &ServerSettings, module_id: &str) -> String {
     server.module_secret(module_id)
 }
@@ -391,7 +391,7 @@ async fn release(db: &DbPool, execution_id: i64, index: usize, action: &str) {
         // The action will be skipped on retry. Worth an error line: the effect
         // did not happen and nothing will make it happen.
         tracing::error!(error = %e, action = %action,
-            "rules: libération de la clé d'idempotence impossible — l'action ne sera pas retentée");
+            "rules: libération de la clé d'idempotence impossible - l'action ne sera pas retentée");
     }
 }
 
@@ -451,7 +451,7 @@ mod tests {
     }
 
     /// A module listed as exempt keeps the shared secret even with derivation
-    /// on — it talks to its peers directly and compares for equality.
+    /// on - it talks to its peers directly and compares for equality.
     #[test]
     fn an_exempt_module_keeps_the_shared_secret() {
         let mut server = server(true);

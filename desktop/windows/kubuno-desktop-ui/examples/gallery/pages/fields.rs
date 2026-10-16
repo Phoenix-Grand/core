@@ -1,4 +1,4 @@
-//! Gallery page — the form-field family.
+//! Gallery page - the form-field family.
 //!
 //! `OutlinedField` is the base every form field is built on (`@ui/OutlinedField`).
 //! The exposition shows it in every state the web distinguishes and a few the
@@ -15,7 +15,7 @@
 //!
 //! Under the fields, the help family: the « ? » [`HelpButton`] in its states
 //! (the ring only on keyboard focus) and two [`HelpBubble`]s placed against
-//! it — one below, one above with a second action and its focus ring.
+//! it - one below, one above with a second action and its focus ring.
 //!
 //! The right-hand column is live and fully editable: typing, selection with
 //! the mouse (drag, double and triple click, Shift+click) and the keyboard
@@ -163,28 +163,28 @@ pub fn draw(c: &dyn Canvas, f: &Frame) {
     let mut p = Page::new(c, f.size.0 - interact::PANEL_W(), f.size.1);
     let focused = WidgetState::REST.focused(true).focus_visible(true);
 
-    p.section("OutlinedField — la base de tous les champs de formulaire");
+    p.section("OutlinedField - la base de tous les champs de formulaire");
     let mut g = Grid::new(sheet::MARGIN, p.area.right - sheet::MARGIN, p.y);
 
-    g.field(c, "au repos — le libellé est l'indice", &OutlinedField::new("Nom"), WidgetState::REST);
-    g.field(c, "focus — libellé flotté, encoche, curseur", &OutlinedField::new("Adresse e-mail"), focused);
-    g.field(c, "rempli — le libellé reste flotté", &filled("Nom", "Ada Lovelace"), WidgetState::REST);
+    g.field(c, "au repos - le libellé est l'indice", &OutlinedField::new("Nom"), WidgetState::REST);
+    g.field(c, "focus - libellé flotté, encoche, curseur", &OutlinedField::new("Adresse e-mail"), focused);
+    g.field(c, "rempli - le libellé reste flotté", &filled("Nom", "Ada Lovelace"), WidgetState::REST);
 
     let mut sel = filled("Adresse e-mail", "ada@kubuno.com");
     sel.select_range(0, 3);
     g.field(c, "sélection (Maj+flèches, glisser)", &sel, focused);
     let mut ph = OutlinedField::new("Téléphone");
     ph.placeholder_text = "+33 6 12 34 56 78".into();
-    g.field(c, "placeholder — seulement au focus", &ph, focused);
+    g.field(c, "placeholder - seulement au focus", &ph, focused);
     g.field(c, "icône de tête, hors de la boîte", &filled("Adresse e-mail", "ada@kubuno.com").with_leading("AtSign"), WidgetState::REST);
 
     let mut trigger = filled("Trier par", "Date de modification").with_trailing("ChevronDown");
     trigger.read_only = true;
-    g.field(c, "glyphe de fin — déclencheur (lecture seule)", &trigger, WidgetState::REST);
-    g.field(c, "requis — astérisque en danger", &OutlinedField::new("Titre").required(true), focused);
+    g.field(c, "glyphe de fin - déclencheur (lecture seule)", &trigger, WidgetState::REST);
+    g.field(c, "requis - astérisque en danger", &OutlinedField::new("Titre").required(true), focused);
     g.field(
         c,
-        "débordement — valeur coupée, libellé en « … »",
+        "débordement - valeur coupée, libellé en « … »",
         &filled(
             "Adresse de facturation complète (rue, code postal, ville)",
             "12 rue de la République prolongée, bâtiment C, 69002 Lyon",
@@ -194,29 +194,29 @@ pub fn draw(c: &dyn Canvas, f: &Frame) {
 
     let mut pwd = filled("Mot de passe", "correct horse");
     pwd.use_system_password_char = true;
-    g.field(c, "mot de passe — masqué, jamais copié", &pwd, WidgetState::REST);
+    g.field(c, "mot de passe - masqué, jamais copié", &pwd, WidgetState::REST);
     let mut invalid = filled("Adresse e-mail", "pas-un-email");
     invalid.invalid = true;
-    g.field(c, "invalide — bordure et libellé en danger", &invalid, WidgetState::REST);
-    g.field(c, "désactivé — opacité 60 %", &filled("Champ verrouillé", "lecture seule"), WidgetState::REST.disabled(true));
+    g.field(c, "invalide - bordure et libellé en danger", &invalid, WidgetState::REST);
+    g.field(c, "désactivé - opacité 60 %", &filled("Champ verrouillé", "lecture seule"), WidgetState::REST.disabled(true));
 
-    g.field(c, "grand — une question par écran", &OutlinedField::new("Question").large(true), focused);
+    g.field(c, "grand - une question par écran", &OutlinedField::new("Question").large(true), focused);
     let mut multi = OutlinedField::new("Réponse");
     multi.multiline = true;
     multi.set_value(
         "Une réponse longue, qui passe à la ligne aux espaces comme une zone de texte du web, \
          puis défile verticalement.",
     );
-    g.field(c, "multiligne — retour à la ligne, défilement", &multi, WidgetState::REST);
+    g.field(c, "multiligne - retour à la ligne, défilement", &multi, WidgetState::REST);
     let mut multi_sel = OutlinedField::new("Notes");
     multi_sel.multiline = true;
     multi_sel.set_value("Première ligne\nDeuxième ligne sélectionnée\nTroisième");
     multi_sel.select_range(9, 30);
-    g.field(c, "multiligne — sélection sur deux lignes", &multi_sel, focused);
+    g.field(c, "multiligne - sélection sur deux lignes", &multi_sel, focused);
     let mut combo = LabelCombobox::new("Libellé", PRESETS);
     combo.field.set_value("Mobile");
     let ch = combo.measure(c).height;
-    g.cell(c, "LabelCombobox — libellé libre", 1, ch, |r| {
+    g.cell(c, "LabelCombobox - libellé libre", 1, ch, |r| {
         combo.paint(c, Rect::new(r.left, r.top, r.left + combo.width().min(r.right - r.left), r.bottom), WidgetState::REST);
     });
     g.next_row();
@@ -225,7 +225,7 @@ pub fn draw(c: &dyn Canvas, f: &Frame) {
     // (painted in place here; live, it is a popup), the floating checks.
     let group = FieldGroup::new(Some("UserRound")).field("first", "Prénom").field("last", "Nom").advanced("middle", "Deuxième prénom");
     let gh = group.measure(c).height;
-    g.cell(c, "FieldGroup — une icône pour le groupe, le chevron révèle le reste", 2, gh, |r| {
+    g.cell(c, "FieldGroup - une icône pour le groupe, le chevron révèle le reste", 2, gh, |r| {
         group.paint_parts(c, r, &|_| WidgetState::REST, WidgetState::REST.hot(true));
     });
     let mut open = LabelCombobox::new("Libellé", PRESETS);
@@ -233,14 +233,14 @@ pub fn draw(c: &dyn Canvas, f: &Frame) {
     open.open = true;
     open.active = Some(1);
     let list_h = open.list_size(0.0).height;
-    g.cell(c, "LabelCombobox — la liste se filtre, flèches", 1, ch + 4.0 + list_h, |r| {
+    g.cell(c, "LabelCombobox - la liste se filtre, flèches", 1, ch + 4.0 + list_h, |r| {
         let fr = Rect::new(r.left, r.top, r.left + open.width().min(r.right - r.left), r.top + ch);
         open.paint(c, fr, focused);
         let bx = open.field.box_rect(fr);
         let list = LabelCombobox::place_list(bx, open.list_size(bx.right - bx.left), Rect::new(r.left - LIST_EDGE, r.top, r.right, r.bottom + LIST_EDGE));
         open.paint_list(c, list, None);
     });
-    g.cell(c, "FloatCheckbox — repos · survol · coché · focus", 1, CARD_H, |r| float_checks(c, r));
+    g.cell(c, "FloatCheckbox - repos · survol · coché · focus", 1, CARD_H, |r| float_checks(c, r));
     g.next_row();
 
     p.y = g.top;
@@ -272,7 +272,7 @@ fn help_exposition(c: &dyn Canvas, area: Rect) {
     let mid = area.left + ((area.right - area.left) / 2.0).max(help::WIDTH + 24.0);
     let open = HelpButton::new().open(true);
 
-    // Left: below its « ? » — the default side.
+    // Left: below its « ? » - the default side.
     let q1 = labelled_help(c, area.left, area.top, "Quota de stockage", &open, WidgetState::REST);
     let b1 = HelpBubble::new(
         "Chaque fichier compte une seule fois, même partagé avec d'autres. \
@@ -318,7 +318,7 @@ fn help_exposition(c: &dyn Canvas, area: Rect) {
     b2.paint_placed_focused(c, &p2, Some(HelpPart::Action), Some(HelpPart::Ok));
 }
 
-/// The live column's bubble — built in one place so the column (which places
+/// The live column's bubble - built in one place so the column (which places
 /// it and routes its clicks and keys) and the popup (which paints it) agree.
 fn live_bubble() -> HelpBubble {
     HelpBubble::new(
@@ -496,7 +496,7 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
         // An open bubble takes the pointer and the keys first, as the web's
         // full-window backdrop and its capturing `keydown` do: a click on
         // « OK » or anywhere off the bubble closes it, on the action counts, on
-        // the bubble itself does nothing — and nothing underneath sees that
+        // the bubble itself does nothing - and nothing underneath sees that
         // click, nor lights up under the pointer while it is open.
         if ui.help_open {
             let mut close_to_trigger = bubble_keys(&mut ui);
@@ -529,7 +529,7 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
         // The combobox's open list: a press on a row picks it (on mousedown,
         // as the web's `onMouseDown`), a press elsewhere on the list is
         // swallowed, a press anywhere else closes it (the web's capturing
-        // `mousedown` listener — that press still reaches what is under it).
+        // `mousedown` listener - that press still reaches what is under it).
         // While the pointer is over the list, nothing underneath lights up.
         let mut picked = false;
         if let Some(list) = ui.combo_list {
@@ -563,7 +563,7 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
 
         // A FieldGroup: its sub-fields are ordinary live fields; its chevron
         // is a focusable button (Enter / Space, or a click, toggles).
-        y = interact::caption(c, left, right, y, "FieldGroup — le chevron révèle « Deuxième prénom »");
+        y = interact::caption(c, left, right, y, "FieldGroup - le chevron révèle « Deuxième prénom »");
         let gh = ui.group.measure(c).height;
         let gr = Rect::new(left, y, right, y + gh);
         let layout = ui.group.layout(gr);
@@ -597,8 +597,8 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
 
         let captions = [
             "Icône de tête, placeholder au focus",
-            "Requis — le bouton bascule l'astérisque",
-            "Multiligne — retour à la ligne, molette",
+            "Requis - le bouton bascule l'astérisque",
+            "Multiligne - retour à la ligne, molette",
         ];
         let required = ui.required;
         ui.fields[1].required = required;
@@ -622,7 +622,7 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
 
         // The « Libellé » combobox, then a button that flips the « Titre »
         // field's required flag (Tab, then Enter or Space).
-        y = interact::caption(c, left, right, y, "LabelCombobox — tapez pour filtrer, ↑ ↓ Entrée Échap");
+        y = interact::caption(c, left, right, y, "LabelCombobox - tapez pour filtrer, ↑ ↓ Entrée Échap");
         let ch = ui.combo.measure(c).height;
         let cr = Rect::new(left, y, left + ui.combo.width().min(right - left), y + ch);
         combo_frame(c, f, &ff, &live, &mut ui, cr, picked);
@@ -644,7 +644,7 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
         // SCREEN and hosted in an interactive popup window of its own: it sits
         // above everything and may hang past the window's edges, while its
         // hover and clicks still come back through `Frame`.
-        y = interact::caption(c, left, right, y, "HelpBubble — clic, Entrée ou Espace sur le « ? »");
+        y = interact::caption(c, left, right, y, "HelpBubble - clic, Entrée ou Espace sur le « ? »");
         let q = HelpButton::new().open(ui.help_open);
         let d = q.measure(c);
         let label = "Adresse de récupération";

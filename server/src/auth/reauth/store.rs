@@ -1,7 +1,7 @@
 //! Persistence of re-authentication grants: revocation and the grace window.
 //!
 //! A grant row is written when a challenge is passed. It is what makes the
-//! stateless token revocable, and what carries the grace window — the reason a
+//! stateless token revocable, and what carries the grace window - the reason a
 //! working session is not interrogated at every gesture.
 
 use chrono::{DateTime, Duration as ChronoDuration, Utc};

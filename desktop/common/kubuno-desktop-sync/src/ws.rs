@@ -2,7 +2,7 @@
 //!
 //! Runs in its own thread (blocking `tungstenite`). It connects to
 //! `ws(s)://host/ws?token=<access>` and, on a drive change event, signals the
-//! daemon to pull immediately — so a change on another device shows up in
+//! daemon to pull immediately - so a change on another device shows up in
 //! seconds instead of waiting for the periodic poll. The poll stays as a
 //! fallback for when the socket is down.
 //!

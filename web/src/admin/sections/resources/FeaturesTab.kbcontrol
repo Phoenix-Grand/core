@@ -1,4 +1,4 @@
-<!-- FeaturesTab — converted from FeaturesTab.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- FeaturesTab - converted from FeaturesTab.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="FeaturesTabProps">
   <Panel Class="min-w-0">
     <Label Text="{Binding error}"

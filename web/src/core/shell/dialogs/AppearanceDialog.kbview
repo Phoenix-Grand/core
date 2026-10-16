@@ -1,4 +1,4 @@
-<!-- AppearanceDialog — converted from AppearanceDialog.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- AppearanceDialog - converted from AppearanceDialog.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <Stack x:Props="AppearanceDialogProps"
        Direction="LeftToRight"
        Gap="0"

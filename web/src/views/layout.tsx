@@ -66,7 +66,7 @@ interface ContainerBase {
   autoSize?: boolean
   /** Web `DataAttributes`: `data-*` attributes of the element (`app-chrome; panel=right`), read by styles and scripts. */
   dataAttributes?: string
-  /** @internal — given by the renderer to every element of `@kubuno/views`. */
+  /** @internal - given by the renderer to every element of `@kubuno/views`. */
   __view?: Internals
   /** @internal */
   __id?: string
@@ -395,7 +395,7 @@ export const Panel = forwardRef<HTMLElement, PanelProps>(function Panel(props, r
 })
 
 /**
- * `<UserControl>`: the root of a `.kbcontrol` — a dock container that fills the room its host gives it
+ * `<UserControl>`: the root of a `.kbcontrol` - a dock container that fills the room its host gives it
  * (it shrinks with a capped host, so a `Dock="Fill"` child can scroll).
  */
 export const UserControl = forwardRef<HTMLElement, PanelProps>(function UserControl(props, ref) {

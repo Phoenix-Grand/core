@@ -2,7 +2,7 @@
 // family gathers the controls that SHARE a base, because that base is what the
 // port implements once (ButtonBase, TextBoxBase, ListControl, ScrollableControl).
 //
-// Every control is shown in the states that change its painting — default,
+// Every control is shown in the states that change its painting - default,
 // disabled, checked/selected, read-only, and the flag combinations named on the
 // control itself (FlatStyle, Appearance, CheckAlign, BorderStyle…). A state that
 // the toolkit paints differently is a state the port must reproduce.
@@ -48,7 +48,7 @@ static class Families
 
     /// A labelled group: the caption states exactly which properties are set, so
     /// a screenshot is self-documenting when an agent compares against it. The
-    /// group grows to fit its children — no clipped captions at high DPI.
+    /// group grows to fit its children - no clipped captions at high DPI.
     /// `w`/`h` are kept as MINIMUM sizes only.
     static GroupBox Box(string caption, int w, int h, params Control[] kids)
     {
@@ -66,14 +66,14 @@ static class Families
             k.Margin = new Padding(4);
             // Let each control size itself to the DPI-scaled font. Without this
             // the toolkit scales the FONT but keeps the design-time bounds, and
-            // the text overflows a box that is too short — which would make the
+            // the text overflows a box that is too short - which would make the
             // reference sheet lie about the control's real metrics. Controls
             // that ignore AutoSize (ListBox, DataGridView…) keep the explicit
             // size they were given.
             //
             // ScrollBar is the exception that must NOT be auto-sized: its
             // metrics come from the system, and asking it to fit its (absent)
-            // content collapses it to a sliver — which would misreport exactly
+            // content collapses it to a sliver - which would misreport exactly
             // the geometry the port has to reproduce.
             if (k is not ScrollBar) k.AutoSize = true;
             inner.Controls.Add(k);
@@ -96,18 +96,18 @@ static class Families
     {
         var flow = Sheet(f);
 
-        flow.Controls.Add(Box("Button — FlatStyle", 300, 190,
+        flow.Controls.Add(Box("Button - FlatStyle", 300, 190,
             new Button { Text = "Standard", Width = 120, FlatStyle = FlatStyle.Standard },
             new Button { Text = "Flat", Width = 120, FlatStyle = FlatStyle.Flat },
             new Button { Text = "Popup", Width = 120, FlatStyle = FlatStyle.Popup },
             new Button { Text = "System", Width = 120, FlatStyle = FlatStyle.System }));
 
-        flow.Controls.Add(Box("Button — states", 300, 160,
+        flow.Controls.Add(Box("Button - states", 300, 160,
             new Button { Text = "Disabled", Width = 120, Enabled = false },
             new Button { Text = "Default (accept)", Width = 140 },
             new Button { Text = "AutoSize", AutoSize = true }));
 
-        flow.Controls.Add(Box("CheckBox — Appearance / CheckState", 300, 190,
+        flow.Controls.Add(Box("CheckBox - Appearance / CheckState", 300, 190,
             new CheckBox { Text = "Unchecked", Width = 160 },
             new CheckBox { Text = "Checked", Checked = true, Width = 160 },
             new CheckBox { Text = "Indeterminate", ThreeState = true, CheckState = CheckState.Indeterminate, Width = 160 },
@@ -118,7 +118,7 @@ static class Families
             new RadioButton { Text = "Option B", Width = 160 },
             new RadioButton { Text = "Disabled", Enabled = false, Width = 160 }));
 
-        flow.Controls.Add(Box("ButtonBase — TextAlign / Image", 300, 130,
+        flow.Controls.Add(Box("ButtonBase - TextAlign / Image", 300, 130,
             new Button { Text = "TopLeft", TextAlign = ContentAlignment.TopLeft, Width = 140, Height = 40 },
             new Button { Text = "BottomRight", TextAlign = ContentAlignment.BottomRight, Width = 140, Height = 40 }));
     }
@@ -128,18 +128,18 @@ static class Families
     {
         var flow = Sheet(f);
 
-        flow.Controls.Add(Box("TextBox — BorderStyle", 320, 160,
+        flow.Controls.Add(Box("TextBox - BorderStyle", 320, 160,
             new TextBox { Text = "Fixed3D (default)", Width = 260, BorderStyle = BorderStyle.Fixed3D },
             new TextBox { Text = "FixedSingle", Width = 260, BorderStyle = BorderStyle.FixedSingle },
             new TextBox { Text = "None", Width = 260, BorderStyle = BorderStyle.None }));
 
-        flow.Controls.Add(Box("TextBox — states", 320, 190,
+        flow.Controls.Add(Box("TextBox - states", 320, 190,
             new TextBox { Text = "ReadOnly", Width = 260, ReadOnly = true },
             new TextBox { Text = "Disabled", Width = 260, Enabled = false },
             new TextBox { Text = "Password", Width = 260, UseSystemPasswordChar = true },
             new TextBox { PlaceholderText = "PlaceholderText", Width = 260 }));
 
-        flow.Controls.Add(Box("TextBox — Multiline / ScrollBars", 320, 130,
+        flow.Controls.Add(Box("TextBox - Multiline / ScrollBars", 320, 130,
             new TextBox
             {
                 Multiline = true, Width = 260, Height = 80, ScrollBars = ScrollBars.Vertical,
@@ -167,14 +167,14 @@ static class Families
         cbList.Items.AddRange(items); cbList.SelectedIndex = 1;
         var cbSimple = new ComboBox { Width = 240, Height = 80, DropDownStyle = ComboBoxStyle.Simple };
         cbSimple.Items.AddRange(items); cbSimple.SelectedIndex = 2;
-        flow.Controls.Add(Box("ComboBox — DropDownStyle", 300, 220, cbDrop, cbList, cbSimple));
+        flow.Controls.Add(Box("ComboBox - DropDownStyle", 300, 220, cbDrop, cbList, cbSimple));
 
         var lb = new ListBox { Width = 240, Height = 110 };
         lb.Items.AddRange(items); lb.SelectedIndex = 1;
         var lbMulti = new ListBox { Width = 240, Height = 110, SelectionMode = SelectionMode.MultiExtended };
         lbMulti.Items.AddRange(items);
         lbMulti.SelectedIndices.Add(0); lbMulti.SelectedIndices.Add(2); lbMulti.SelectedIndices.Add(3);
-        flow.Controls.Add(Box("ListBox — SelectionMode", 300, 270, lb, lbMulti));
+        flow.Controls.Add(Box("ListBox - SelectionMode", 300, 270, lb, lbMulti));
 
         var clb = new CheckedListBox { Width = 240, Height = 120, CheckOnClick = true };
         clb.Items.AddRange(items);
@@ -191,7 +191,7 @@ static class Families
         var panel = new Panel { Width = 260, Height = 90, BorderStyle = BorderStyle.FixedSingle, AutoScroll = true };
         panel.Controls.Add(new Button { Text = "inside panel", Location = new Point(8, 8), Width = 120 });
         panel.Controls.Add(new Label { Text = "AutoScroll content →", Location = new Point(8, 44), Width = 300 });
-        flow.Controls.Add(Box("Panel — BorderStyle / AutoScroll", 300, 140, panel));
+        flow.Controls.Add(Box("Panel - BorderStyle / AutoScroll", 300, 140, panel));
 
         var gb = new GroupBox { Text = "GroupBox caption", Width = 260, Height = 90 };
         gb.Controls.Add(new RadioButton { Text = "grouped A", Location = new Point(10, 24), Checked = true });
@@ -200,11 +200,11 @@ static class Families
 
         var flp = new FlowLayoutPanel { Width = 260, Height = 90, BorderStyle = BorderStyle.FixedSingle, FlowDirection = FlowDirection.LeftToRight, WrapContents = true };
         for (var i = 1; i <= 6; i++) flp.Controls.Add(new Button { Text = $"b{i}", Width = 70 });
-        flow.Controls.Add(Box("FlowLayoutPanel — wrap", 300, 140, flp));
+        flow.Controls.Add(Box("FlowLayoutPanel - wrap", 300, 140, flp));
 
         var tlp = new TableLayoutPanel { Width = 260, Height = 90, ColumnCount = 3, RowCount = 2, CellBorderStyle = TableLayoutPanelCellBorderStyle.Single };
         for (var i = 0; i < 6; i++) tlp.Controls.Add(new Label { Text = $"cell {i}", AutoSize = true });
-        flow.Controls.Add(Box("TableLayoutPanel — cell borders", 300, 140, tlp));
+        flow.Controls.Add(Box("TableLayoutPanel - cell borders", 300, 140, tlp));
 
         var tabs = new TabControl { Width = 260, Height = 100 };
         tabs.TabPages.Add(new TabPage("First") { BackColor = SystemColors.Window });
@@ -224,7 +224,7 @@ static class Families
     {
         var flow = Sheet(f);
 
-        flow.Controls.Add(Box("Label — BorderStyle / align", 300, 170,
+        flow.Controls.Add(Box("Label - BorderStyle / align", 300, 170,
             new Label { Text = "AutoSize label", AutoSize = true },
             new Label { Text = "Fixed3D border", BorderStyle = BorderStyle.Fixed3D, Width = 200 },
             new Label { Text = "MiddleCenter", TextAlign = ContentAlignment.MiddleCenter, BorderStyle = BorderStyle.FixedSingle, Width = 200, Height = 40 },
@@ -232,7 +232,7 @@ static class Families
 
         var ll = new LinkLabel { Text = "Visit the documentation page", Width = 240 };
         ll.LinkVisited = true;
-        flow.Controls.Add(Box("LinkLabel — LinkBehavior", 300, 140,
+        flow.Controls.Add(Box("LinkLabel - LinkBehavior", 300, 140,
             new LinkLabel { Text = "AlwaysUnderline", Width = 240, LinkBehavior = LinkBehavior.AlwaysUnderline },
             new LinkLabel { Text = "HoverUnderline", Width = 240, LinkBehavior = LinkBehavior.HoverUnderline },
             ll));
@@ -245,9 +245,9 @@ static class Families
             g.FillEllipse(Brushes.White, 12, 8, 40, 32);
         }
         pb.Image = img;
-        flow.Controls.Add(Box("PictureBox — SizeMode=Zoom", 300, 130, pb));
+        flow.Controls.Add(Box("PictureBox - SizeMode=Zoom", 300, 130, pb));
 
-        flow.Controls.Add(Box("ProgressBar — Style", 300, 160,
+        flow.Controls.Add(Box("ProgressBar - Style", 300, 160,
             new ProgressBar { Width = 240, Value = 45 },
             new ProgressBar { Width = 240, Value = 70, Style = ProgressBarStyle.Continuous },
             new ProgressBar { Width = 240, Style = ProgressBarStyle.Marquee }));
@@ -260,18 +260,18 @@ static class Families
 
         // Explicit sizes: a scrollbar's thickness is a system metric, and the
         // long axis is whatever the host gives it. `LargeChange` is shown too
-        // because it decides the thumb's proportion — and because the highest
+        // because it decides the thumb's proportion - and because the highest
         // reachable Value is `Maximum - LargeChange + 1`, not `Maximum`.
-        // The thickness is a SYSTEM metric, already DPI-correct — the port must
+        // The thickness is a SYSTEM metric, already DPI-correct - the port must
         // read it the same way rather than hard-code 17 px.
         var hThick = SystemInformation.HorizontalScrollBarHeight;
         var vThick = SystemInformation.VerticalScrollBarWidth;
-        flow.Controls.Add(Box($"ScrollBar — thumb ∝ LargeChange (thickness {hThick}/{vThick} px)", 300, 130,
+        flow.Controls.Add(Box($"ScrollBar - thumb ∝ LargeChange (thickness {hThick}/{vThick} px)", 300, 130,
             new HScrollBar { Width = 240, Height = hThick, Minimum = 0, Maximum = 100, LargeChange = 20, Value = 30 },
             new HScrollBar { Width = 240, Height = hThick, Minimum = 0, Maximum = 100, LargeChange = 50, Value = 0 },
             new VScrollBar { Width = vThick, Height = 120, Minimum = 0, Maximum = 100, LargeChange = 10, Value = 40 }));
 
-        flow.Controls.Add(Box("TrackBar — TickStyle", 300, 200,
+        flow.Controls.Add(Box("TrackBar - TickStyle", 300, 200,
             new TrackBar { Width = 240, Value = 4, TickStyle = TickStyle.BottomRight },
             new TrackBar { Width = 240, Value = 6, TickStyle = TickStyle.Both },
             new TrackBar { Width = 240, Value = 2, TickStyle = TickStyle.None }));
@@ -280,7 +280,7 @@ static class Families
             new NumericUpDown { Width = 200, Value = 42 },
             new NumericUpDown { Width = 200, Value = 3.5m, DecimalPlaces = 2, Increment = 0.25m },
             // Maximum BEFORE Value: the setter clamps against the current range
-            // and throws outside it — an ordering the port must reproduce.
+            // and throws outside it - an ordering the port must reproduce.
             new NumericUpDown { Width = 200, Maximum = 4095, Value = 255, Hexadecimal = true },
             new NumericUpDown { Width = 200, Maximum = 100000, Value = 10000, ThousandsSeparator = true }));
 
@@ -296,13 +296,13 @@ static class Families
         var flow = Sheet(f);
         var d = new System.DateTime(2026, 6, 15, 14, 30, 0);
 
-        flow.Controls.Add(Box("DateTimePicker — Format", 320, 200,
+        flow.Controls.Add(Box("DateTimePicker - Format", 320, 200,
             new DateTimePicker { Width = 260, Value = d, Format = DateTimePickerFormat.Long },
             new DateTimePicker { Width = 260, Value = d, Format = DateTimePickerFormat.Short },
             new DateTimePicker { Width = 260, Value = d, Format = DateTimePickerFormat.Time, ShowUpDown = true },
             new DateTimePicker { Width = 260, Value = d, Format = DateTimePickerFormat.Custom, CustomFormat = "yyyy-MM-dd HH:mm" }));
 
-        flow.Controls.Add(Box("DateTimePicker — ShowCheckBox", 320, 90,
+        flow.Controls.Add(Box("DateTimePicker - ShowCheckBox", 320, 90,
             new DateTimePicker { Width = 260, Value = d, ShowCheckBox = true, Checked = false }));
 
         flow.Controls.Add(Box("MonthCalendar", 320, 230,
@@ -322,7 +322,7 @@ static class Families
         root.Nodes.Add("Invités");
         tv.ExpandAll();
         tv.SelectedNode = a;
-        flow.Controls.Add(Box("TreeView — lines / selection", 300, 200, tv));
+        flow.Controls.Add(Box("TreeView - lines / selection", 300, 200, tv));
 
         var lv = new ListView { Width = 380, Height = 160, View = View.Details, FullRowSelect = true, GridLines = true };
         lv.Columns.Add("Nom", 140);
@@ -331,11 +331,11 @@ static class Families
         lv.Items.Add(new ListViewItem(new[] { "Admin", "admin", "10 Go" }) { Selected = true });
         lv.Items.Add(new ListViewItem(new[] { "Alice", "user", "5 Go" }));
         lv.Items.Add(new ListViewItem(new[] { "Bob", "user", "5 Go" }));
-        flow.Controls.Add(Box("ListView — View=Details", 420, 200, lv));
+        flow.Controls.Add(Box("ListView - View=Details", 420, 200, lv));
 
         var lvIcons = new ListView { Width = 380, Height = 110, View = View.List };
         for (var i = 1; i <= 8; i++) lvIcons.Items.Add($"élément {i}");
-        flow.Controls.Add(Box("ListView — View=List", 420, 150, lvIcons));
+        flow.Controls.Add(Box("ListView - View=List", 420, 150, lvIcons));
     }
 
     // ── ToolStrip family ─────────────────────────────────────────────────────
@@ -363,7 +363,7 @@ static class Families
         combo.SelectedIndex = 0;
         ts.Items.Add(combo);
         ts.Items.Add(new ToolStripButton("Activé") { Checked = true, CheckOnClick = true });
-        flow.Controls.Add(Box("ToolStrip — button / separator / combo", 460, 80, ts));
+        flow.Controls.Add(Box("ToolStrip - button / separator / combo", 460, 80, ts));
 
         var status = new StatusStrip { Width = 420, Dock = DockStyle.None, SizingGrip = true };
         status.Items.Add(new ToolStripStatusLabel("Prêt") { Spring = true, TextAlign = ContentAlignment.MiddleLeft });
@@ -394,7 +394,7 @@ static class Families
         dgv.Rows.Add("Alice", "alice@kubuno.local", true, "user");
         dgv.Rows.Add("Bob", "bob@kubuno.local", false, "guest");
         dgv.Rows[1].Selected = true;
-        flow.Controls.Add(Box("DataGridView — text / checkbox / combo columns", 600, 240, dgv));
+        flow.Controls.Add(Box("DataGridView - text / checkbox / combo columns", 600, 240, dgv));
 
         var pg = new PropertyGrid { Width = 300, Height = 200, SelectedObject = new Button { Text = "sample" } };
         flow.Controls.Add(Box("PropertyGrid", 340, 240, pg));

@@ -1,4 +1,4 @@
-<!-- ReportsSection — converted from ReportsSection.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- ReportsSection - converted from ReportsSection.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <Panel x:Props="AdminSectionProps" Class="contents">
   <!-- TODO(views-migrate): <ReportIndex> is no .kbview element (a local or dynamic component) -->
   <ReactHost Component="{Binding ReportIndex}" Props="{Binding report_index_props}" Visible="{Binding show_case_1}"/>

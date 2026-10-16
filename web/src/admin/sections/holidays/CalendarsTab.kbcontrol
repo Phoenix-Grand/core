@@ -1,4 +1,4 @@
-<!-- CalendarsTab — converted from CalendarsTab.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- CalendarsTab - converted from CalendarsTab.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="CalendarsTabProps">
   <Stack Gap="12" Class="min-w-0">
     <Stack Direction="LeftToRight" Gap="12" CrossAlign="Center" WrapContents="true">

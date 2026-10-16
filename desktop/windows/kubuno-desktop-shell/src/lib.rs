@@ -1,4 +1,4 @@
-//! Kubuno Desktop for Windows — the native shell, written like a Windows Forms application.
+//! Kubuno Desktop for Windows - the native shell, written like a Windows Forms application.
 //!
 //! The app itself is portable (`desktop/common/kubuno-desktop-shell-common`: start-up, accounts and token broker,
 //! the sync engine's door and its offline sample, the activity log); this crate is its Windows face and
@@ -14,17 +14,17 @@
 //! The sources are grouped by role (vskubuno `docs/DESKTOP-MIGRATION.md`, "Source layout"), each
 //! view next to its code-behind of the same name:
 //!
-//! - `views/` — the top-level views (`.kbview`): the window, its flyouts and its dialogs;
-//! - `pages/` — the window's pages (`.kbcontrol`) and the item templates their lists repeat;
-//! - `admin/` — the administration console, a feature big enough for a folder of its own;
-//! - `controls/` — the custom-drawn controls and the user controls several views place;
-//! - `model/` — what the views show and raise, pure (`view_model`, `events`);
-//! - `services/` — the work behind the views: `backend` (the sync engine, or the offline sample) and
+//! - `views/` - the top-level views (`.kbview`): the window, its flyouts and its dialogs;
+//! - `pages/` - the window's pages (`.kbcontrol`) and the item templates their lists repeat;
+//! - `admin/` - the administration console, a feature big enough for a folder of its own;
+//! - `controls/` - the custom-drawn controls and the user controls several views place;
+//! - `model/` - what the views show and raise, pure (`view_model`, `events`);
+//! - `services/` - the work behind the views: `backend` (the sync engine, or the offline sample) and
 //!   `session` (both from the common app), `sync`, `apps`, `activity`, `settings`, `favorites`, `options`;
-//! - `platform/` — the parts that make this a Windows sync client: `cloudfiles`, `explorer`,
-//!   `tray`, the folder picker, the browser — which the views do not touch — and the Windows
+//! - `platform/` - the parts that make this a Windows sync client: `cloudfiles`, `explorer`,
+//!   `tray`, the folder picker, the browser - which the views do not touch - and the Windows
 //!   implementations of the common app's extension points (`system`) and interface (`ui_host`);
-//! - `resources/` — the strings and icons (`resources.kbres`, `resources.fr.kbres`).
+//! - `resources/` - the strings and icons (`resources.kbres`, `resources.fr.kbres`).
 //!
 //! There is no web view anywhere: a module opens in the user's browser.
 
@@ -53,7 +53,7 @@ pub use views::confirm_dialog::ConfirmDialog;
 pub use views::shell_window::{Page, ShellWindow};
 pub use views::signout_dialog::SignOutDialog;
 
-// `Resources::app_title()`, `Resources::nav_home()`… — the strings of `resources/resources.kbres`
+// `Resources::app_title()`, `Resources::nav_home()`… - the strings of `resources/resources.kbres`
 // (neutral English) and `resources/resources.fr.kbres`, in the current UI culture; `{Res key}` in the views.
 kubuno_desktop::resources!(pub Resources, "resources/resources.kbres");
 
@@ -65,7 +65,7 @@ pub const AUMID: &str = "com.kubuno.desktop";
 /// Posted by the background sync thread once a cycle ends (`WM_APP + 2`).
 pub const WM_SYNC_DONE: u32 = windows::Win32::UI::WindowsAndMessaging::WM_APP + 2;
 
-/// Summary handed over by the sync thread — a message only carries integers, so the text is
+/// Summary handed over by the sync thread - a message only carries integers, so the text is
 /// parked here for the UI thread to pick up.
 static LAST_SUMMARY: std::sync::Mutex<String> = std::sync::Mutex::new(String::new());
 

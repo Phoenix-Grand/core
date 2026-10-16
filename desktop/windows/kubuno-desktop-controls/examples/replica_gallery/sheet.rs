@@ -9,7 +9,7 @@
 //! Nothing here draws a control. Every pixel comes from the library: the frame
 //! and caption from [`GroupBox::paint`], the packing from
 //! [`kubuno_desktop_controls::layout_panels::flow_layout`], the sizes from each
-//! control's own `preferred_size`. That is the whole point of the demo — a
+//! control's own `preferred_size`. That is the whole point of the demo - a
 //! hand-drawn stand-in would prove nothing about the port.
 
 use kubuno_desktop_controls::containers::GroupBox;
@@ -35,7 +35,7 @@ const KID_MARGIN: Padding = Padding::all(4.0);
 
 /// The measuring line a top-down flow is laid out against. `flow_layout` still
 /// compares each cell against the display box even when `wrap` is off, so the
-/// measuring box must be big enough that nothing can break — the group's real
+/// measuring box must be big enough that nothing can break - the group's real
 /// height is whatever the column comes out to.
 const UNBOUNDED: f32 = 100_000.0;
 
@@ -80,7 +80,7 @@ impl Kid {
         self
     }
 
-    /// The controls the reference notes ignore `AutoSize` — `ScrollBar`,
+    /// The controls the reference notes ignore `AutoSize` - `ScrollBar`,
     /// `ListBox`, `ListView`, `TreeView`, and anything given an explicit box.
     /// They keep exactly the size they were designed at.
     pub fn fixed(mut self) -> Self {
@@ -88,7 +88,7 @@ impl Kid {
         self
     }
 
-    /// Both axes at once, fixed — the shape of every `Width = …, Height = …` in
+    /// Both axes at once, fixed - the shape of every `Width = …, Height = …` in
     /// the reference.
     pub fn size(self, w: f32, h: f32) -> Self {
         self.w(w).h(h).fixed()
@@ -117,7 +117,7 @@ impl Kid {
     }
 }
 
-/// A captioned group of controls — the reference's `Box(caption, w, h, …)`.
+/// A captioned group of controls - the reference's `Box(caption, w, h, …)`.
 pub struct Group {
     caption:   String,
     min_width: f32,
@@ -185,7 +185,7 @@ impl Sheet {
 }
 
 /// A group whose children are placed and whose outer size is known. The children
-/// are positioned in the group's own local space and stay there — the sheet only
+/// are positioned in the group's own local space and stay there - the sheet only
 /// ever moves the group itself.
 struct Measured {
     group:  GroupBox,
@@ -200,7 +200,7 @@ fn measure(g: Group, c: &dyn Canvas) -> Measured {
 
     // The grouped controls are laid out in the group box's CLIENT space: their
     // bounds are parent-relative, and `local_display_rect` already carries the
-    // frame and the caption band in its origin — so the measuring box is that
+    // frame and the caption band in its origin - so the measuring box is that
     // origin plus the inner flow's own padding. Neither metric is restated here.
     let d = gb.local_display_rect();
     let display = Rect::new(
@@ -227,7 +227,7 @@ fn measure(g: Group, c: &dyn Canvas) -> Measured {
 
     // The group measures its own frame, caption and padding around the children
     // it now owns. What it cannot know is the trailing space the inner flow adds
-    // after the last child — that padding belongs to the sheet, not to the box.
+    // after the last child - that padding belongs to the sheet, not to the box.
     let p = gb.preferred_size(c);
     let size = Size::new(
         (p.width + INNER_PADDING.right + KID_MARGIN.right).max(g.min_width),

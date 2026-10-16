@@ -51,9 +51,9 @@ pub struct UsersData {
     pub page: u32,
 }
 
-/// Who an account is: its display name, else its username, else « — ».
+/// Who an account is: its display name, else its username, else « - ».
 fn name_of(u: &kubuno_desktop_sync::AdminUser) -> String {
-    u.display_name.as_deref().filter(|s| !s.trim().is_empty()).or(u.username.as_deref()).filter(|s| !s.trim().is_empty()).unwrap_or("—").to_string()
+    u.display_name.as_deref().filter(|s| !s.trim().is_empty()).or(u.username.as_deref()).filter(|s| !s.trim().is_empty()).unwrap_or("-").to_string()
 }
 
 /// The role's wording, as the web writes it; an unknown role is shown raw.
@@ -63,7 +63,7 @@ pub fn role_label(role: Option<&str>) -> String {
         Some("user") => Resources::users_role_user().to_string(),
         Some("guest") => Resources::users_role_guest().to_string(),
         Some(other) if !other.is_empty() => other.to_string(),
-        _ => "—".to_string(),
+        _ => "-".to_string(),
     }
 }
 
@@ -124,7 +124,7 @@ pub fn load(id: &str, request: &SectionRequest) -> anyhow::Result<UsersData> {
             id: u.id.clone(),
             name: name_of(u),
             email: u.email.clone(),
-            unit: u.org_unit_id.as_ref().and_then(|id| units.get(id)).cloned().unwrap_or_else(|| "—".into()),
+            unit: u.org_unit_id.as_ref().and_then(|id| units.get(id)).cloned().unwrap_or_else(|| "-".into()),
             role: u.role.clone(),
             active: u.is_active,
             quota: format!("{} / {}", crate::model::view_model::format_size(u.used_bytes), crate::model::view_model::format_size(u.quota_bytes)),
@@ -328,7 +328,7 @@ mod tests {
         assert_eq!(role_variant(Some("user")), BadgeVariant::Primary);
         assert_eq!(role_variant(Some("guest")), BadgeVariant::Default);
         assert_eq!(role_label(Some("auditor")), "auditor");
-        assert_eq!(role_label(None), "—");
+        assert_eq!(role_label(None), "-");
     }
 
     #[test]

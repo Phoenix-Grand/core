@@ -151,7 +151,7 @@ export class EventLogSection extends ViewBase {
       sortValue: e => sourceModule(e) ?? '',
       cell: (e) => {
         const mod = sourceModule(e)
-        if (!mod) return <span className="text-text-tertiary">—</span>
+        if (!mod) return <span className="text-text-tertiary">-</span>
         return (
           <span className="flex items-center gap-1.5">
             <span className="truncate text-text-primary">{mod}</span>

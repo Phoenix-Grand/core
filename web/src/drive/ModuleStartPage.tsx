@@ -31,7 +31,7 @@ export interface ModuleStartPageBrowse {
 export interface ModuleStartPageProps {
   recentTitle?: string
   recentIcon?:  ReactNode
-  /** Récents de repli (avant résolution du dossier) — sinon dérivés des fichiers. */
+  /** Récents de repli (avant résolution du dossier) - sinon dérivés des fichiers. */
   recentItems?: StartPageRecentItem[]
   recentEmpty?: ReactNode
   browse:       ModuleStartPageBrowse
@@ -49,7 +49,7 @@ export default function ModuleStartPage({
   const pendingDel = usePendingDeletionStore(s => s.pending)
 
   // RÉCENTS CENTRALISÉS : journal des ouvertures tenu par le drive (recentApi),
-  // filtré sur cette application — au lieu d'un tri local par date de modification.
+  // filtré sur cette application - au lieu d'un tri local par date de modification.
   const { data: recentData } = useQuery({
     queryKey: ['recent-opens', browse.fileTypeModuleId ?? ''],
     queryFn:  () => recentApi.list({ module: browse.fileTypeModuleId, limit: 12 }),

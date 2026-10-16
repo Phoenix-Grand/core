@@ -25,13 +25,13 @@ export interface ModuleSettingRowProps {
    *
    * False on a unit, where it would be a trap: staging the factory value there
    * and saving does not clear the unit's row, it WRITES the factory value into
-   * it — the unit stops following its parent while looking as if it had been
+   * it - the unit stops following its parent while looking as if it had been
    * put back. On a unit the honest action is "hériter", which the panel renders
    * under the provenance sentence instead.
    */
   showFactoryReset?: boolean
   /**
-   * The at-a-glance state of the value beside the label — inherited, overridden
+   * The at-a-glance state of the value beside the label - inherited, overridden
    * here, locked. Passed in rather than derived: the row knows the module's
    * declaration, only the panel knows which scope is on screen.
    */

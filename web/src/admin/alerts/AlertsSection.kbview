@@ -1,4 +1,4 @@
-<!-- AlertsSection — converted from AlertsSection.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- AlertsSection - converted from AlertsSection.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <Panel x:Props="AdminSectionProps" Class="contents">
   <AlertDetail Id="{Binding alertDetailId}" OnBack="alert_detail_back" Visible="{Binding show_case_1}"/>
   <Panel Visible="{Binding show_main}" Class="min-w-0">

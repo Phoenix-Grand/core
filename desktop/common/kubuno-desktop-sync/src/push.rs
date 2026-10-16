@@ -3,7 +3,7 @@
 //! Runs BEFORE the pull so local edits are sent (with `If-Match`) before the
 //! pull could overwrite them. Detected changes are recorded in the SQLite outbox
 //! and then drained to the server; an op that fails (offline) stays queued and
-//! is replayed on the next sync — the offline-first guarantee.
+//! is replayed on the next sync - the offline-first guarantee.
 //!
 //! Conflict handling (Nextcloud-style): if the server changed a file since we
 //! last saw it, `put_content` returns 412; we rename the local edit to
@@ -52,7 +52,7 @@ const MASS_DELETE_FLOOR: usize = 50;
 /// The rule used to be « its immediate parent must still exist ». That was
 /// wrong, and it is why deleting a folder could vanish into thin air: removing
 /// a whole subtree removes the parent too, and a parent is only in the index if
-/// the pull once saw it (or a file was pushed into it) — a folder created
+/// the pull once saw it (or a file was pushed into it) - a folder created
 /// locally and left empty is tracked nowhere. So the parent was gone AND
 /// untracked, nothing queued its deletion, and the tracked child was rejected
 /// by this very guard. The server kept both for ever.
@@ -94,7 +94,7 @@ fn detect(store: &Store, cfg: &Config) -> Result<()> {
     let tracked = store.all_files()?;
     if !tracked.is_empty() && std::fs::read_dir(&cfg.sync_root).is_err() {
         anyhow::bail!(
-            "dossier de synchronisation inaccessible ({}) — détection annulée",
+            "dossier de synchronisation inaccessible ({}) - détection annulée",
             cfg.sync_root.display()
         );
     }
@@ -111,7 +111,7 @@ fn detect(store: &Store, cfg: &Config) -> Result<()> {
         .collect();
 
     // Content still present under ANOTHER tracked path is a server-side reorg
-    // (move/copy), never a user deletion — and must never be pushed as a trash.
+    // (move/copy), never a user deletion - and must never be pushed as a trash.
     // A protected-folder repath on the server left same-blob twins in two
     // folders that had collided onto one local path; moving one deleted the
     // shared file on disk, and trashing the survivor's now-missing entry wiped
@@ -142,7 +142,7 @@ fn detect(store: &Store, cfg: &Config) -> Result<()> {
         } else if is_online_only(p) {
             // Online-only ("virtual") placeholder: its content isn't on disk, so
             // it can't have local edits. Reading it to hash would needlessly
-            // hydrate (download) it — skip.
+            // hydrate (download) it - skip.
         } else if Some(&hash_file(p)?) != etag.as_ref() {
             store.enqueue(&OutboxOp {
                 key: new_key(), op: "modify".into(),
@@ -175,14 +175,14 @@ fn detect(store: &Store, cfg: &Config) -> Result<()> {
 
     // Mass-deletion guard: an implausible share of the store vanishing in one
     // scan means the FOLDER was unavailable, not that the user deleted it all.
-    // Folders count towards it too — losing the root makes both look deleted.
+    // Folders count towards it too - losing the root makes both look deleted.
     let gone = deletions.len() + folder_deletions.len();
     let known = tracked.len() + folders.len();
     let massive =
         gone >= MASS_DELETE_FLOOR && (gone as f64) > (known as f64) * MASS_DELETE_RATIO;
     if massive {
         eprintln!(
-            "  ⚠ {gone} élément(s) sur {known} semblent supprimés d'un coup — suppression NON synchronisée (protection anti-suppression massive). Si c'est voulu, supprime-les côté serveur."
+            "  ⚠ {gone} élément(s) sur {known} semblent supprimés d'un coup - suppression NON synchronisée (protection anti-suppression massive). Si c'est voulu, supprime-les côté serveur."
         );
     } else {
         for id in deletions {
@@ -438,7 +438,7 @@ mod tests {
     use super::*;
     use std::fs;
 
-    /// A folder that IS on disk is never a deletion candidate — the caller only
+    /// A folder that IS on disk is never a deletion candidate - the caller only
     /// asks `subtree_really_gone` once `local` is confirmed missing, but the
     /// ancestor walk must still stop at the first existing, readable ancestor.
     #[test]
@@ -454,7 +454,7 @@ mod tests {
 
     /// The bug: a whole subtree deleted at once removes the intermediate parent
     /// too. The nearest ancestor that still exists is the sync root itself,
-    /// which is readable — so the deletion IS real, where the old
+    /// which is readable - so the deletion IS real, where the old
     /// « immediate parent must exist » rule reported nothing.
     #[test]
     fn a_deleted_subtree_is_still_a_deletion_when_the_parent_went_with_it() {
@@ -472,7 +472,7 @@ mod tests {
     }
 
     /// The safety half: if the sync root itself is missing, nothing is « really
-    /// gone » — the drive is unavailable, not emptied. (`detect` also bails at
+    /// gone » - the drive is unavailable, not emptied. (`detect` also bails at
     /// the top for this; the guard is defence in depth.)
     #[test]
     fn nothing_is_gone_when_the_root_is_gone() {
@@ -503,7 +503,7 @@ mod tests {
     /// The data-loss bug: a server-side reorg (a protected-folder repath) leaves
     /// two files sharing one blob. When they had collided onto one local path,
     /// moving one deleted the shared file, and the survivor's now-missing entry
-    /// was pushed as a TRASH — wiping real user data on the server. Here the
+    /// was pushed as a TRASH - wiping real user data on the server. Here the
     /// Forge twin is missing from disk but the PaintSharp twin (same etag) is
     /// present: it was reorganised, not deleted, so NO deletion may be queued.
     #[test]
@@ -538,8 +538,8 @@ mod tests {
         );
     }
 
-    /// The control: a genuinely deleted file — unique content, gone from disk,
-    /// no surviving twin — IS still queued as a deletion. The guard must not
+    /// The control: a genuinely deleted file - unique content, gone from disk,
+    /// no surviving twin - IS still queued as a deletion. The guard must not
     /// swallow real deletions.
     #[test]
     fn a_uniquely_deleted_file_is_still_trashed() {

@@ -26,7 +26,7 @@ pub(super) async fn find_oauth_user(
     }
 
     // 2. Link a pre-existing local account with the same email. MySQL has no
-    // UPDATE ... RETURNING, so the link is done in a transaction — find the row,
+    // UPDATE ... RETURNING, so the link is done in a transaction - find the row,
     // stamp it, then read it back by id.
     let mut tx = db.begin().await?;
     let uid: Option<uuid::Uuid> = tx
@@ -71,7 +71,7 @@ pub(super) async fn create_oauth_user(
     let username = unique_username(db, base_username).await?;
 
     // The identity provider does not place people in the tree, so this account
-    // goes to the root — which is a place, unlike the NULL it used to get. An
+    // goes to the root - which is a place, unlike the NULL it used to get. An
     // account outside the tree is invisible to every DELEGATED administrator and
     // resolves `auth.methods` at INSTANCE level, skipping every unit-level value:
     // a policy that does not list `sso` there would lock out, the next day,
@@ -133,12 +133,12 @@ pub(super) async fn apply_claimed_groups(
     );
 
     for name in claimed {
-        // A claim value can be anything the provider felt like sending —
+        // A claim value can be anything the provider felt like sending -
         // `/ventes`, a URN, a UUID. Trimmed and bounded; not otherwise
         // interpreted, because guessing at somebody else's naming scheme is how
         // two different groups end up merged.
         // `core.user_groups.name` is VARCHAR(100), and a colliding claim gets a
-        // « (provider) » suffix below — so the base is cut short enough for that
+        // « (provider) » suffix below - so the base is cut short enough for that
         // suffix to still fit.
         let budget = 100usize.saturating_sub(provider.chars().count() + 12).max(8);
         let name: String = name.trim().trim_start_matches('/').chars().take(budget).collect();
@@ -148,7 +148,7 @@ pub(super) async fn apply_claimed_groups(
 
         // ⚠️ Matched on (provider, name) and NEVER on the name alone. Adopting a
         // group by name would let an identity provider claim `Administrateurs`
-        // and drop whoever signed in into the seeded administrators group — a
+        // and drop whoever signed in into the seeded administrators group - a
         // privilege escalation with a one-line claim. A group this provider does
         // not already own is created fresh, under a name that is free.
         let existing = db
@@ -258,7 +258,7 @@ pub(super) async fn apply_claimed_groups(
     // Only what this provider granted, and only for this person. The DELETE ...
     // USING form is PostgreSQL-only, so the join becomes a portable subquery;
     // when nothing is claimed (`ids` empty) every directory membership for this
-    // provider is removed — the `NOT IN` clause is simply omitted, matching the
+    // provider is removed - the `NOT IN` clause is simply omitted, matching the
     // old `NOT (... = ANY('{}'))` which was true for every row.
     let mut delete_sql = String::from(
         "DELETE FROM core.user_group_members \
@@ -314,6 +314,6 @@ async fn unique_username(db: &DbPool, base: &str) -> Result<String, AppError> {
         }
     }
 
-    // Extremely rare case — short UUID suffix.
+    // Extremely rare case - short UUID suffix.
     Ok(format!("{base}_{}", uuid::Uuid::new_v4().simple().to_string().get(..6).unwrap_or("xxx")))
 }

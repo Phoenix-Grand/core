@@ -1,6 +1,6 @@
 <!--
   The directory's groups (the web's GroupsPanel): how many there are and « Nouveau groupe » (the web console)
-  on the title's line, then one GroupRow per group — a Repeater whose items are the groups' headers, each
+  on the title's line, then one GroupRow per group - a Repeater whose items are the groups' headers, each
   followed by its details while it is expanded. Creating, editing and member management open the web console.
 -->
 <UserControl xmlns="https://kubuno.com/views" xmlns:x="https://kubuno.com/views/x" xmlns:d="https://kubuno.com/views/design" x:Class="GroupsSection" DesignWidth="936" DesignHeight="688" OnLoad="groups_section_load">

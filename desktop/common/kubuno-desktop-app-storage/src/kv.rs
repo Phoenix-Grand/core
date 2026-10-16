@@ -1,5 +1,5 @@
-//! [`KeyValueStore`]: small untyped values of an app (`docs/STORAGE-COMPONENTS.md` §3.3, lot ST-2) — a last-opened
-//! folder, a dismissed tip, a cached server answer with a time to live — without declaring a schema.
+//! [`KeyValueStore`]: small untyped values of an app (`docs/STORAGE-COMPONENTS.md` §3.3, lot ST-2) - a last-opened
+//! folder, a dismissed tip, a cached server answer with a time to live - without declaring a schema.
 //!
 //! One JSON file per store: `<user_data_dir>/<app>/kv/<store>.json` (account-scoped:
 //! `<user_data_dir>/accounts/<key>/<app>/kv/<store>.json`), written like the settings files (an exclusive lock, read

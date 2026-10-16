@@ -1,5 +1,5 @@
 /**
- * `kbres-convert` — i18next dictionaries → `.kbres` sets, verified by reading them back (see `i18n-convert.ts`).
+ * `kbres-convert` - i18next dictionaries → `.kbres` sets, verified by reading them back (see `i18n-convert.ts`).
  *
  *   kbres-convert --json <locales dir> --ns <namespace> --out <set.kbres> [--neutral en]
  *       <locales dir>/<lang>/<namespace>.json → set.kbres (the neutral language) + set.<lang>.kbres

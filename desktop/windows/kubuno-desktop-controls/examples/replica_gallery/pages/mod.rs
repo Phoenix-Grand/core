@@ -24,7 +24,7 @@ mod views;
 /// A page: the reference sheet's file name, the label its switcher tab carries,
 /// and the builder that produces the sheet.
 pub struct Page {
-    /// The reference sheet's stem — `--page` takes this, or its family part.
+    /// The reference sheet's stem - `--page` takes this, or its family part.
     pub id:    &'static str,
     /// The switcher's caption (French, like the rest of the product).
     pub label: &'static str,

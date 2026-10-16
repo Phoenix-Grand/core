@@ -1,4 +1,4 @@
-//! Gallery page — the date family.
+//! Gallery page - the date family.
 //!
 //! Neither [`DatePicker`] nor [`MonthCalendar`] has a hand-written predecessor
 //! in `kubuno-drive-desktop-app-controls`, so there is no [`super::sheet::pair`] here: there is
@@ -18,8 +18,8 @@
 //! The interactive column is the live version: the calendar takes the
 //! keyboard (arrows, PageUp/PageDown, Home/End, Enter), the date field edits
 //! by segment (←/→, ↑/↓, digits, Alt+↓ / F4 / Enter to open) and drops its
-//! calendar in a `host::popup` placed against the SCREEN — it flips above the
-//! field near the bottom of the monitor and may hang out of the window — and
+//! calendar in a `host::popup` placed against the SCREEN - it flips above the
+//! field near the bottom of the monitor and may hang out of the window - and
 //! the time field steps with the keyboard, the wheel or its spin buttons.
 
 use std::cell::RefCell;
@@ -40,8 +40,8 @@ const LABEL_H: f32 = 16.0;
 /// The narrow cell the long date is squeezed into, to show the ellipsis.
 const NARROW_W: f32 = 120.0;
 
-/// The day every cell is seeded with. The replica has no clock — `TodayDate`
-/// and `Value` are set explicitly, which is what [`DEFAULT_TODAY`] exists for —
+/// The day every cell is seeded with. The replica has no clock - `TodayDate`
+/// and `Value` are set explicitly, which is what [`DEFAULT_TODAY`] exists for -
 /// so the page pins a date and every capture is reproducible.
 ///
 /// [`DEFAULT_TODAY`]: kubuno_desktop_controls::datetime::DEFAULT_TODAY
@@ -93,7 +93,7 @@ pub fn draw(c: &dyn Canvas, f: &Frame) {
     unset.checked = false;
     fields.push((unset, WidgetState::REST, "ShowCheckBox", None));
 
-    // A time field IS the same control — `Format = Time` plus the spinner the
+    // A time field IS the same control - `Format = Time` plus the spinner the
     // toolkit puts there instead of a calendar.
     let mut spin = clock();
     spin.hot_part = Some(FieldPart::SpinUp);
@@ -113,7 +113,7 @@ pub fn draw(c: &dyn Canvas, f: &Frame) {
             y += field_h + LABEL_H + GAP;
         }
         let cell = Rect::new(x, y, x + w, y + field_h);
-        // The pointer lights whichever field it is over — `field_at` is the
+        // The pointer lights whichever field it is over - `field_at` is the
         // call a host makes before it dispatches the click.
         let hot = state.hot || picker.field_at(cell, mx, my).is_some();
         // Painted WITHOUT the panel: an « open » field in a row of fields
@@ -136,7 +136,7 @@ pub fn draw(c: &dyn Canvas, f: &Frame) {
         "panneau déroulé (MinDate/MaxDate, curseur clavier) · calendrier complet · dimanche",
     );
 
-    // 1 — a dropped picker. Its window is a week wide on either side of the
+    // 1 - a dropped picker. Its window is a week wide on either side of the
     //     value, so a third of the month greys out; the keyboard cursor sits
     //     two days after the value, ringed.
     let mut picker = DatePicker::short()
@@ -158,7 +158,7 @@ pub fn draw(c: &dyn Canvas, f: &Frame) {
     let picker_state = WidgetState::REST.hot(picker.field_at(picker_cell, mx, my).is_some());
     picker.paint(c, picker_cell, picker_state);
 
-    // 2 — a standalone calendar, with everything the replica models turned on.
+    // 2 - a standalone calendar, with everything the replica models turned on.
     let mut cal = MonthCalendar::new().on(Date::new(2026, 8, 10));
     cal.first_day_of_week = Day::Monday;
     cal.show_week_numbers = true;
@@ -171,7 +171,7 @@ pub fn draw(c: &dyn Canvas, f: &Frame) {
     cal.annually_bolded_dates.push(Date::new(2000, 8, 15));
     cal.monthly_bolded_dates.push(Date::new(2000, 1, 1));
 
-    // 3 — the same month with the week starting on SUNDAY, so the rotation of
+    // 3 - the same month with the week starting on SUNDAY, so the rotation of
     //     both the weekday strip and the grid is visible, and with no today
     //     footer: the two `Show*` flags a picker's panel turns off.
     let mut sunday = MonthCalendar::new().on(TODAY);
@@ -180,7 +180,7 @@ pub fn draw(c: &dyn Canvas, f: &Frame) {
     sunday.set_today_date(TODAY);
     sunday.max_selection_count = 1;
 
-    // Both panels are placed only while there is room to their right — the same
+    // Both panels are placed only while there is room to their right - the same
     // clamp the lists page applies to its cascaded submenu. The dropped panel's
     // shadow reaches ~26 DIP to its right, so the next panel keeps clear of it.
     let (_, _, shadow_r, _) = kubuno_desktop_ui::datetime::shadow_outset(&kubuno_desktop_ui::datetime::SHADOW_2XL);
@@ -203,7 +203,7 @@ pub fn draw(c: &dyn Canvas, f: &Frame) {
 
 /// What the interactive column remembers between frames.
 struct Ui {
-    /// Seeded on the first frame — a `Default` `MonthCalendar`/`DatePicker` has
+    /// Seeded on the first frame - a `Default` `MonthCalendar`/`DatePicker` has
     /// no `TODAY`, so the widgets are built once with the page's fixed date.
     ready:     bool,
     calendar:  MonthCalendar,
@@ -213,7 +213,7 @@ struct Ui {
     /// Last frame's field rectangles: an open panel is hit-tested against the
     /// geometry it was shown with, BEFORE anything else sees the click.
     date_bounds: Rect,
-    /// Whether each field held the focus last frame — losing it commits the
+    /// Whether each field held the focus last frame - losing it commits the
     /// typed digits and closes the panel.
     date_focused:  bool,
     clock_focused: bool,
@@ -262,8 +262,8 @@ thread_local! {
 }
 
 /// Handles a click on a field: the check box toggles, a spin button steps the
-/// selected segment, the value selects the segment under the pointer and —
-/// when the field has a panel — toggles it, the way the web trigger does.
+/// selected segment, the value selects the segment under the pointer and -
+/// when the field has a panel - toggles it, the way the web trigger does.
 fn click_field(c: &dyn Canvas, picker: &mut DatePicker, bounds: Rect, x: f32, y: f32) {
     match picker.field_at(bounds, x, y) {
         Some(FieldPart::CheckBox) => picker.checked = !picker.checked,
@@ -300,7 +300,7 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
         // It is its own popup window, stacked over the column: a click inside
         // it is the calendar's and nothing underneath sees it; a click outside
         // it (and outside the field, which toggles it itself) closes it and
-        // then goes on to whatever it landed on — the web has no backdrop.
+        // then goes on to whatever it landed on - the web has no backdrop.
         let mut over_panel = false;
         if ui.picker.open {
             let bounds = ui.date_bounds;
@@ -350,7 +350,7 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
             left,
             right,
             y,
-            "MonthCalendar — clic, flèches, PgPréc/PgSuiv, Début/Fin, Entrée",
+            "MonthCalendar - clic, flèches, PgPréc/PgSuiv, Début/Fin, Entrée",
         );
         let cal_size = ui.calendar.panel_size();
         let cal_rect = Rect::new(left, y, left + cal_size.width, y + cal_size.height);
@@ -396,7 +396,7 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
             left,
             right,
             y,
-            "DatePicker — ←/→, ↑/↓, chiffres, Alt+↓ ouvre, Échap ferme",
+            "DatePicker - ←/→, ↑/↓, chiffres, Alt+↓ ouvre, Échap ferme",
         );
         let field_w = ui.picker.measure(c).width.max(160.0);
         let date_rect = Rect::new(left, y, left + field_w, y + ui.picker.field_height());
@@ -434,7 +434,7 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
             left,
             right,
             y,
-            "TimePicker — ←/→, ↑/↓, chiffres, molette, flèches",
+            "TimePicker - ←/→, ↑/↓, chiffres, molette, flèches",
         );
         let clock_w = ui.clock.measure(c).width;
         let clock_rect = Rect::new(left, y, left + clock_w, y + ui.clock.field_height());

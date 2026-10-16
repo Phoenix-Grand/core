@@ -1,5 +1,5 @@
 //! Typed binding conversions (`vskubuno/docs/DATA.md` §7, lot DATA-2): what a `{Binding …}` does
-//! between the value a view model (or a data component) holds and the value a property wants —
+//! between the value a view model (or a data component) holds and the value a property wants -
 //! WinForms' `Binding.Format`/`Parse` with `FormatString`, `NullValue` and `FormatInfo`.
 //!
 //! ```text

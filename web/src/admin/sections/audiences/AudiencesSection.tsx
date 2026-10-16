@@ -98,14 +98,14 @@ export class AudiencesSection extends ViewBase {
     {
       id: 'description',
       header: this.tr('admin.aud_description', { defaultValue: 'Description' }),
-      cell: (a: Audience) => <span className="truncate text-text-secondary">{a.description ?? '—'}</span>,
+      cell: (a: Audience) => <span className="truncate text-text-secondary">{a.description ?? '-'}</span>,
     },
     {
       id: 'members',
       header: this.tr('admin.aud_members', { defaultValue: 'Membres' }),
       align: 'right',
       sortValue: a => a.member_count,
-      cell: (a: Audience) => (a.is_everyone ? '—' : a.member_count),
+      cell: (a: Audience) => (a.is_everyone ? '-' : a.member_count),
     },
     {
       id: 'reach',

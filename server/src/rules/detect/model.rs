@@ -103,7 +103,7 @@ pub struct Detector {
 /// It carries **thresholds, not logic**. There is no pattern here, no operator
 /// and nothing to interpret: the leaf names a detector from the catalogue and
 /// states how much of it is enough. That is what keeps the promise the engine
-/// was built on — the vocabulary stays a serde enum, and adding content
+/// was built on - the vocabulary stays a serde enum, and adding content
 /// inspection did not add an expression language through the back door.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct DetectorLeaf {

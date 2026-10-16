@@ -158,7 +158,7 @@ impl FloatingPanel {
 /// rounded by default since 2026-10-02 (product owner).
 pub const DEFAULT_CORNER_RADIUS: f32 = 8.0;
 
-/// Windows 11's small rounded corners (`DWMWCP_ROUNDSMALL`), in DIP — `--radius-sm`.
+/// Windows 11's small rounded corners (`DWMWCP_ROUNDSMALL`), in DIP - `--radius-sm`.
 pub const SMALL_CORNER_RADIUS: f32 = 4.0;
 
 /// The corners of a window, as a preset (`CornerPreference`); [`FormOptions::corner_radius`] sets
@@ -214,7 +214,7 @@ pub fn parse_corner_radius(text: &str) -> Option<f32> {
 /// Whether the resize grip shows (`Form.SizeGripStyle`).
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum SizeGripStyle {
-    /// On a resizable window — the web `FloatingWindow` shows its grip whenever it is resizable.
+    /// On a resizable window - the web `FloatingWindow` shows its grip whenever it is resizable.
     #[default]
     Auto,
     Show,

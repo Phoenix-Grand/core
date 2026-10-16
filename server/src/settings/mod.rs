@@ -3,7 +3,7 @@
 //!
 //! ## The model in one paragraph
 //!
-//! `core.settings` is the **schema** — key, value type, enum domain, owning
+//! `core.settings` is the **schema** - key, value type, enum domain, owning
 //! module, factory default, label, public visibility. `core.setting_values`
 //! holds the values, indexed by (key, scope type, scope id), across four scopes:
 //! instance, organisational unit, group, user. Resolution runs from the most
@@ -19,7 +19,7 @@
 //! `DELETE` ([`store::clear_value`]), and that is exactly what makes the setting
 //! follow its parent again: writing the inherited value into the child would
 //! freeze it, and the link would break silently the day the parent moved. Every
-//! function here is built around that invariant — [`chain::Resolution`] reports
+//! function here is built around that invariant - [`chain::Resolution`] reports
 //! `inherited_value` by *recomputing* the chain without the child's row, never
 //! by reading a stored copy.
 //!
@@ -32,30 +32,30 @@
 //!
 //! ## Compatibility with the pre-`000060` readers
 //!
-//! About twenty call sites — the mailer, the health report, the job runner, the
-//! anti-DDoS limiter, the auth layer, `handlers/themes.rs` — read
+//! About twenty call sites - the mailer, the health report, the job runner, the
+//! anti-DDoS limiter, the auth layer, `handlers/themes.rs` - read
 //! `core.settings.value` with hand-written SQL. That column is **kept** as a
 //! mirror of the instance scope, maintained in both directions by the triggers
 //! shipped with migration `000060`: a legacy `UPDATE core.settings SET value`
 //! still lands in the scoped table, and a scoped write at instance level still
-//! updates the mirror. Nothing inherited is ever mirrored — the instance level
+//! updates the mirror. Nothing inherited is ever mirrored - the instance level
 //! is a stored level, not an inherited one.
 //!
 //! New code should use [`instance_value`] (a single accessor, no SQL at the call
 //! site) or [`chain::resolve_for`] when a scope is involved. The callers that
-//! genuinely resolve *per user* — `handlers/modules.rs` — have been migrated to
+//! genuinely resolve *per user* - `handlers/modules.rs` - have been migrated to
 //! the resolver; the rest read instance-level configuration where a scope has no
 //! meaning (SMTP relay, JWT lifetimes, job concurrency), and moving them would
 //! add a chain walk to answer a question that has one answer.
 
 pub mod chain;
 /// The directory policy (migration `000110`), resolved through the chain above
-/// rather than read off `core.settings` — see the module's own preamble.
+/// rather than read off `core.settings` - see the module's own preamble.
 pub mod directory;
 pub mod intl;
 /// The password policy (migration `000115`), resolved through the chain: what a
 /// local password must satisfy, how long it stays valid, and whether the
-/// forgotten-password link may be issued — per organisational unit.
+/// forgotten-password link may be issued - per organisational unit.
 pub mod password_policy;
 pub mod schema;
 pub mod scope;

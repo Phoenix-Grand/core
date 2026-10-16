@@ -1,21 +1,21 @@
-//! Kubuno primitives — **display**: [`Label`], [`LinkLabel`], [`Badge`],
+//! Kubuno primitives - **display**: [`Label`], [`LinkLabel`], [`Badge`],
 //! [`Icon`], [`Tooltip`], [`Separator`].
 //!
 //! None of these is interactive the way a button is: they *show* something.
 //! What they share is that the toolkit already knows how to model and place
-//! them — so this module owns almost no state. `Label`, `LinkLabel` and `Icon`
+//! them - so this module owns almost no state. `Label`, `LinkLabel` and `Icon`
 //! wrap the replicas in [`kubuno_desktop_controls::labels`] and reach `text`,
 //! `enabled`, `padding`, `text_align`, `auto_size`, `use_mnemonic`,
 //! `image_align`, `border_style`, `size_mode`… through [`Deref`]. `Badge`,
 //! `Tooltip` and `Separator` have no counterpart in WinForms (a `ToolTip` is a
 //! *component* there, not a control), so they compose the closest replica that
-//! carries the properties a layout needs — an empty [`kubuno_desktop_controls::labels::Label`]
-//! — rather than declaring a rival property block.
+//! carries the properties a layout needs - an empty [`kubuno_desktop_controls::labels::Label`]
+//! - rather than declaring a rival property block.
 //!
 //! ## Where the pixels come from
 //!
 //! There is no desktop predecessor for this family, so the reference is the
-//! **web** design system, read (not measured — none of these surfaces was
+//! **web** design system, read (not measured - none of these surfaces was
 //! reachable from this machine):
 //!
 //! | primitive | web source |
@@ -45,8 +45,8 @@
 //! ## The trap this module is tested against
 //!
 //! A primitive paints into the `bounds` **argument**, never into its model's
-//! own rectangle. The two are different spaces — the argument is in canvas
-//! coordinates, `ControlBase::bounds` is parent-relative — and reading the
+//! own rectangle. The two are different spaces - the argument is in canvas
+//! coordinates, `ControlBase::bounds` is parent-relative - and reading the
 //! field has been shipped, found and fixed three times already (`Label`,
 //! `PictureBox`, `LinkLabel`). The test
 //! `no_paint_path_reads_the_models_own_rectangle` greps this very file and
@@ -68,7 +68,7 @@ use crate::metrics::{control, pill, radius, space, text as type_size, SHADOW_GRE
 use crate::{Widget, WidgetState};
 
 // ─────────────────────────────────────────────────────────────────────────────
-// The typographic role — what Kubuno adds on top of a replica label
+// The typographic role - what Kubuno adds on top of a replica label
 // ─────────────────────────────────────────────────────────────────────────────
 
 /// The web type scale, as a role a label can be asked for.
@@ -81,35 +81,35 @@ use crate::{Widget, WidgetState};
 /// different questions, so two different enums; a primitive answers this one.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
 pub enum Role {
-    /// `--kb-text-micro` (10.5) — badges, counters.
+    /// `--kb-text-micro` (10.5) - badges, counters.
     Micro,
-    /// `--kb-text-meta` (11.5) — metadata, captions, section labels.
+    /// `--kb-text-meta` (11.5) - metadata, captions, section labels.
     Meta,
-    /// `--kb-text-body` (13.5) — the default: labels, fields, menus, tabs.
+    /// `--kb-text-body` (13.5) - the default: labels, fields, menus, tabs.
     #[default]
     Body,
-    /// `--kb-text-heading` (15.5) — section headers, card and window titles.
+    /// `--kb-text-heading` (15.5) - section headers, card and window titles.
     Heading,
     /// `--kb-text-title` (21.5).
     Title,
-    /// `--kb-text-page` (22.5) — the title heading a page (the web's `h1`).
+    /// `--kb-text-page` (22.5) - the title heading a page (the web's `h1`).
     Page,
     /// `--kb-text-page` inside the administration console (`.kb-admin`, 27.5).
     PageAdmin,
-    /// `--kb-text-badge` (10) — initials and counters inside small avatar and
+    /// `--kb-text-badge` (10) - initials and counters inside small avatar and
     /// count pills (the web's `text-[10px]`).
     Badge,
-    /// `--kb-text-caption` (11) — small pills and chips (the web's `text-[11px]`).
+    /// `--kb-text-caption` (11) - small pills and chips (the web's `text-[11px]`).
     Caption,
-    /// `--kb-text-subtitle` (16) — a group title a step above `Heading` (the
+    /// `--kb-text-subtitle` (16) - a group title a step above `Heading` (the
     /// web's `text-base`).
     Subtitle,
-    /// `--kb-text-display` (24) — a large greeting or display line (the web's
+    /// `--kb-text-display` (24) - a large greeting or display line (the web's
     /// `text-2xl`).
     Display,
 }
 
-/// Every role, in scale order — for the gallery and for the tests.
+/// Every role, in scale order - for the gallery and for the tests.
 pub const ROLES: [Role; 11] = [
     Role::Badge,
     Role::Micro,
@@ -142,14 +142,14 @@ impl Role {
         }
     }
 
-    /// The **line box** the role occupies — what an auto-sized label is tall.
+    /// The **line box** the role occupies - what an auto-sized label is tall.
     ///
     /// The web never publishes these as tokens; they are the line-heights its
     /// utilities emit, and two of them are confirmed against surfaces that
     /// state their own arithmetic:
     ///
     /// * `Meta` → **16**: `TOOLTIP_STYLE` in `@ui/Tooltip` sets
-    ///   `fontSize: 12, lineHeight: '16px'` — which is also Tailwind's own
+    ///   `fontSize: 12, lineHeight: '16px'` - which is also Tailwind's own
     ///   `text-xs` pair.
     /// * `Body` → **20**: `shape::height::MENU_ITEM` is documented as
     ///   « 5px + **20px line** + 5px » (`MenuDropdown` sets `lineHeight: 20px`
@@ -160,9 +160,9 @@ impl Role {
     ///   metadata it sits next to.
     /// * `Title` → **30**: no Tailwind pair covers 21.5 (the web writes it as
     ///   an arbitrary size, so the browser's `normal` leading applies). It
-    ///   holds the face's own design line spacing — the 2724/2048 ≈ 1.33008
+    ///   holds the face's own design line spacing - the 2724/2048 ≈ 1.33008
     ///   ratio `kubuno_desktop_controls::labels::UI_LINE_SPACING` documents, ceiled the
-    ///   way `Font.Height` is: `ceil(21.5 × 1.33008) = 29` — with one DIP to
+    ///   way `Font.Height` is: `ceil(21.5 × 1.33008) = 29` - with one DIP to
     ///   spare; kept at 30 so title rows did not move when the scale was
     ///   aligned on the web.
     /// * `Page` → **32** and `PageAdmin` → **38**: the same design line spacing
@@ -212,14 +212,14 @@ impl Role {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Shared geometry — pure, so every cell of it is a test and not a screenshot
+// Shared geometry - pure, so every cell of it is a test and not a screenshot
 // ─────────────────────────────────────────────────────────────────────────────
 
 /// What a border eats on each side, in DIP.
 ///
 /// TRAP: this is **not** the replica's inset. WinForms reserves two pixels for
 /// `Fixed3D` because it paints a two-tone *bevel*; the Kubuno design system has
-/// no bevel at all — a bordered surface is one hairline in `card_stroke`. So
+/// no bevel at all - a bordered surface is one hairline in `card_stroke`. So
 /// both border styles reserve the same single DIP here, and `Fixed3D` means
 /// « bordered », not « sunken ».
 pub const fn border_inset(style: BorderStyle) -> f32 {
@@ -229,7 +229,7 @@ pub const fn border_inset(style: BorderStyle) -> f32 {
     }
 }
 
-/// `bounds` deflated by the border and then by padding — where content goes.
+/// `bounds` deflated by the border and then by padding - where content goes.
 ///
 /// Takes the rectangle as an argument for the reason the module doc gives: the
 /// caller's rectangle and the model's own are different spaces.
@@ -251,7 +251,7 @@ pub fn content_rect(bounds: Rect, style: BorderStyle, padding: Padding) -> Rect 
 /// The fractions come from the replica ([`ContentAlignment::fractions`] returns
 /// 0.0/0.5/1.0 per axis), so the nine cells cannot disagree with the toolkit's.
 /// A box larger than the space it is placed in is pinned to the top-left rather
-/// than pushed out — `max` on the available extent, exactly as the replica's
+/// than pushed out - `max` on the available extent, exactly as the replica's
 /// own vertical band does.
 pub fn aligned_box(content: Rect, alignment: ContentAlignment, size: Size) -> Rect {
     let (hf, vf) = alignment.fractions();
@@ -265,7 +265,7 @@ pub fn aligned_box(content: Rect, alignment: ContentAlignment, size: Size) -> Re
 /// The one-line band a label's text sits in: full content width, `line_h` tall,
 /// placed at the alignment's vertical third.
 ///
-/// Only the vertical axis is resolved here — the horizontal one is handed to
+/// Only the vertical axis is resolved here - the horizontal one is handed to
 /// DirectWrite through [`h_alignment`], which is what makes trimmed and
 /// right-aligned text land correctly instead of being laid out twice.
 pub fn text_band(content: Rect, alignment: ContentAlignment, line_h: f32) -> Rect {
@@ -296,7 +296,7 @@ pub fn label_size(text_extent: Size, padding: Padding, style: BorderStyle) -> Si
 ///
 /// [`Canvas::measure`] returns DirectWrite's exact advance width, which is
 /// fractional. Reserving exactly that much then laying the run out in it makes
-/// the trimming pass fire on the last glyph — a bubble reading « au-desso… »
+/// the trimming pass fire on the last glyph - a bubble reading « au-desso… »
 /// for a label that fits. One DIP of ceiling costs nothing and removes the
 /// class of bug entirely, so every measurement here goes through this.
 fn text_width(canvas: &dyn Canvas, text: &str, format: &IDWriteTextFormat) -> f32 {
@@ -312,7 +312,7 @@ fn text_width(canvas: &dyn Canvas, text: &str, format: &IDWriteTextFormat) -> f3
 /// hundredth of a DIP is reported as overflowing and gets a spurious « … ».
 const FIT_EPSILON: f32 = 0.5;
 
-/// Breaks `text` into the lines a box `max_width` wide shows — the pure core
+/// Breaks `text` into the lines a box `max_width` wide shows - the pure core
 /// of every wrapping surface here, because the shared DirectWrite formats are
 /// all `NO_WRAP` and a layout that wraps behind the caller's back could not be
 /// measured.
@@ -324,7 +324,7 @@ const FIT_EPSILON: f32 = 0.5;
 /// * runs of spaces collapse to one, and a line never starts or ends with one;
 /// * lines break greedily between words;
 /// * a single word wider than the box is broken between characters
-///   (`overflow-wrap: anywhere`) — the one deliberate departure from the
+///   (`overflow-wrap: anywhere`) - the one deliberate departure from the
 ///   browser default, which would let it spill out of the box.
 ///
 /// `max_width <= 0` (or not finite) means « no width constraint »: only the
@@ -370,7 +370,7 @@ pub fn wrap_lines(text: &str, max_width: f32, measure: &mut dyn FnMut(&str) -> f
     out
 }
 
-/// Keeps at most `max_lines` of `lines` — the web's `line-clamp`. When lines
+/// Keeps at most `max_lines` of `lines` - the web's `line-clamp`. When lines
 /// are dropped, the last kept line carries the rest of the text joined on, so
 /// the ellipsizing painter ends it with « … » exactly where the box runs out.
 /// Returns whether anything was dropped. `max_lines` is at least one: a box
@@ -399,7 +399,7 @@ fn widest(canvas: &dyn Canvas, lines: &[String], format: &IDWriteTextFormat) -> 
     lines.iter().map(|l| text_width(canvas, l, format)).fold(0.0, f32::max)
 }
 
-/// The colour inert text is painted in — `--color-text-tertiary`, the palest
+/// The colour inert text is painted in - `--color-text-tertiary`, the palest
 /// step of the ramp and the one the web greys disabled controls with.
 fn inert(t: &Theme) -> D2D1_COLOR_F {
     t.text_tertiary
@@ -422,24 +422,24 @@ fn is_inert(model: &kubuno_desktop_controls::ControlBase, state: WidgetState) ->
 /// given: the box clips.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
 pub enum TextOverflow {
-    /// One line per explicit break, an overflowing line ends in « … » — the
+    /// One line per explicit break, an overflowing line ends in « … » - the
     /// web's `truncate` (`overflow: hidden; text-overflow: ellipsis;
     /// white-space: nowrap`), which is what every single-line label in the
     /// web's rows, cards and headers uses.
     #[default]
     Ellipsis,
-    /// One line per explicit break, cut at the box edge with no marker —
+    /// One line per explicit break, cut at the box edge with no marker -
     /// WinForms' own `AutoEllipsis = false`. `auto_ellipsis` still forces the
     /// marker, as it does in the toolkit.
     Clip,
     /// Wrapped on words to the box width (`white-space: normal`), clamped to
     /// the lines the box can hold, the last kept line ending in « … »
     /// (`line-clamp`). An auto-sized label wraps at `MaximumSize.Width` when
-    /// one is set — the WinForms rule for a growing label.
+    /// one is set - the WinForms rule for a growing label.
     Wrap,
 }
 
-/// A Kubuno label — [`kubuno_desktop_controls::labels::Label`] with Kubuno type.
+/// A Kubuno label - [`kubuno_desktop_controls::labels::Label`] with Kubuno type.
 ///
 /// Everything a caller sets is the replica's: `text`, `text_align` (the nine
 /// cells), `auto_size`, `auto_ellipsis`, `use_mnemonic` (`&` handling),
@@ -495,7 +495,7 @@ impl Label {
         self
     }
 
-    /// Builder: shorthand for [`TextOverflow::Wrap`] — a multi-line label.
+    /// Builder: shorthand for [`TextOverflow::Wrap`] - a multi-line label.
     pub fn wrap(self) -> Self {
         self.overflow(TextOverflow::Wrap)
     }
@@ -520,7 +520,7 @@ impl Label {
     }
 
     /// The size this label needs when it is given `width` DIP (frame
-    /// included) — the height-for-width a layout asks a wrapping label. For a
+    /// included) - the height-for-width a layout asks a wrapping label. For a
     /// non-wrapping label the height is one line per explicit break and the
     /// width is capped at `width`.
     pub fn measure_for_width(&self, canvas: &dyn Canvas, width: f32) -> Size {
@@ -545,7 +545,7 @@ impl Label {
     /// Where the host should blit this label's image, if it carries one.
     ///
     /// The replica models images as their natural [`Size`] only (the pixels are
-    /// host-supplied), so the primitive's job is the *placement* — which is
+    /// host-supplied), so the primitive's job is the *placement* - which is
     /// `image_align`, resolved through the same nine-cell [`aligned_box`] the
     /// text uses. Returns a rectangle in the caller's space, like everything
     /// else here.
@@ -564,7 +564,7 @@ impl Widget for Label {
     fn measure(&self, canvas: &dyn Canvas) -> Size {
         // A wrapping label with a `MaximumSize.Width` grows downwards at that
         // width, as an auto-sized WinForms label does; everything else is its
-        // natural extent — one line per explicit break.
+        // natural extent - one line per explicit break.
         let max_w = self.inner.maximum_size.width;
         if self.overflow == TextOverflow::Wrap && max_w > 0.0 {
             return self.measure_for_width(canvas, max_w);
@@ -575,7 +575,7 @@ impl Widget for Label {
             widest(canvas, &lines, fmt),
             lines.len().max(1) as f32 * self.role.line_height(),
         );
-        // `clamp` is the replica's — MinimumSize/MaximumSize behave here
+        // `clamp` is the replica's - MinimumSize/MaximumSize behave here
         // exactly as they do in the toolkit, including « empty means unset ».
         self.inner.clamp(label_size(extent, self.inner.padding, self.inner.border_style))
     }
@@ -583,7 +583,7 @@ impl Widget for Label {
     fn paint(&self, canvas: &dyn Canvas, bounds: Rect, state: WidgetState) {
         let t = canvas.theme();
 
-        // A label is transparent unless it was given a colour — the same rule
+        // A label is transparent unless it was given a colour - the same rule
         // the replica follows, so it sits on whatever surface it is placed on.
         if let Some(bg) = self.inner.back_color {
             canvas.fill_rounded(&bounds, radius::SM, &bg);
@@ -662,7 +662,7 @@ impl Widget for Label {
 // LinkLabel
 // ─────────────────────────────────────────────────────────────────────────────
 
-/// A Kubuno hyperlink — [`kubuno_desktop_controls::labels::LinkLabel`] in the Kubuno
+/// A Kubuno hyperlink - [`kubuno_desktop_controls::labels::LinkLabel`] in the Kubuno
 /// palette.
 ///
 /// The whole link *model* is the replica's: `links` / `link_area` and the
@@ -675,7 +675,7 @@ impl Widget for Label {
 pub struct LinkLabel {
     inner: kc::LinkLabel,
     pub role: Role,
-    /// The link under the pointer, as an index into `resolved_links()` —
+    /// The link under the pointer, as an index into `resolved_links()` -
     /// what makes hover and press **per link** (the web's `:hover` is per
     /// `<a>`). `None` keeps the replica's whole-control reading, where every
     /// link reacts to `WidgetState::hot` together. Resolve it with
@@ -721,20 +721,20 @@ pub fn link_colour(paint: LinkPaint, t: &Theme) -> D2D1_COLOR_F {
     }
 }
 
-/// Metrics of the link's focus ring — `focus-visible:ring-2
+/// Metrics of the link's focus ring - `focus-visible:ring-2
 /// focus-visible:ring-primary rounded-sm` on the web's doc link
 /// (`ui/EmptyState.tsx`).
 mod link_metrics {
     /// `ring-2`: a 2 px box-shadow ring drawn OUTSIDE the element's box.
     pub const FOCUS_RING: f32 = 2.0;
-    /// `rounded-sm` — the element's own corner; the ring's outer corner is
+    /// `rounded-sm` - the element's own corner; the ring's outer corner is
     /// this plus the ring width, as a spread box-shadow's is.
     pub const RADIUS: f32 = crate::metrics::radius::SM;
 }
 
 impl LinkLabel {
-    /// A body-sized link. Underlined on **hover only** — the web's
-    /// `hover:underline` — rather than WinForms' always-underlined
+    /// A body-sized link. Underlined on **hover only** - the web's
+    /// `hover:underline` - rather than WinForms' always-underlined
     /// `SystemDefault`; set `link_behavior` back to taste.
     pub fn new(text: impl Into<String>) -> Self {
         let mut inner = kc::LinkLabel::new();
@@ -756,7 +756,7 @@ impl LinkLabel {
     }
 
     /// Each resolved link's text span, in the caller's space, for a label
-    /// painted into `bounds` — what a page hit-tests, registers with the focus
+    /// painted into `bounds` - what a page hit-tests, registers with the focus
     /// ring and sets the `Hand` cursor over. Clipped to `bounds`, like the
     /// paint.
     pub fn link_rects(&self, canvas: &dyn Canvas, bounds: Rect) -> Vec<Rect> {
@@ -780,7 +780,7 @@ impl LinkLabel {
             .collect()
     }
 
-    /// The enabled link under `(x, y)` — in the same space as `bounds` — as an
+    /// The enabled link under `(x, y)` - in the same space as `bounds` - as an
     /// index into `resolved_links()`. Disabled links never match, exactly as
     /// the toolkit refuses to raise `LinkClicked` for them.
     pub fn link_at(&self, canvas: &dyn Canvas, bounds: Rect, x: f32, y: f32) -> Option<usize> {
@@ -799,7 +799,7 @@ impl LinkLabel {
         self
     }
 
-    /// Marks the (single, implicit) link visited — the replica's `LinkVisited`.
+    /// Marks the (single, implicit) link visited - the replica's `LinkVisited`.
     pub fn visited(mut self, v: bool) -> Self {
         self.inner.link_visited = v;
         self
@@ -891,7 +891,7 @@ impl Widget for LinkLabel {
         canvas.text_aligned(&shown, &band, fmt, &base, DWRITE_TEXT_ALIGNMENT_LEADING);
 
         // …then every link span overpainted in its own colour. Both decisions
-        // — which colour, and whether to underline — are the replica's pure
+        // - which colour, and whether to underline - are the replica's pure
         // functions, fed the Kubuno state converted to a `ControlState`.
         let whole: kubuno_desktop_controls::ControlState = state.into();
         let chars: Vec<char> = shown.chars().collect();
@@ -949,7 +949,7 @@ impl Widget for LinkLabel {
 /// `neutral` the louder one.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
 pub enum BadgeVariant {
-    /// `bg-surface-2 text-text-secondary` — the quiet default.
+    /// `bg-surface-2 text-text-secondary` - the quiet default.
     #[default]
     Default,
     /// `bg-primary-light text-primary`.
@@ -960,7 +960,7 @@ pub enum BadgeVariant {
     Warning,
     /// `bg-danger-light text-danger`.
     Danger,
-    /// `bg-surface-3 text-text-primary` — the loudest neutral.
+    /// `bg-surface-3 text-text-primary` - the loudest neutral.
     Neutral,
 }
 
@@ -975,7 +975,7 @@ pub const BADGE_VARIANTS: [BadgeVariant; 6] = [
 ];
 
 impl BadgeVariant {
-    /// `(ground, text)` — the two classes the web pairs, as tokens.
+    /// `(ground, text)` - the two classes the web pairs, as tokens.
     pub fn colours(self, t: &Theme) -> (D2D1_COLOR_F, D2D1_COLOR_F) {
         match self {
             Self::Default => (t.surface_2, t.text_secondary),
@@ -987,7 +987,7 @@ impl BadgeVariant {
         }
     }
 
-    /// The leading dot's colour — `dotVariants` in `@ui/Badge`, which is a
+    /// The leading dot's colour - `dotVariants` in `@ui/Badge`, which is a
     /// *different* map from the text colour (the dot is the saturated hue even
     /// when the label is not).
     pub fn dot_colour(self, t: &Theme) -> D2D1_COLOR_F {
@@ -1007,7 +1007,7 @@ impl BadgeVariant {
 pub enum BadgeSize {
     /// `text-[10px] px-1.5 py-0.5`.
     Sm,
-    /// `text-xs px-2 py-0.5` — the default.
+    /// `text-xs px-2 py-0.5` - the default.
     #[default]
     Md,
 }
@@ -1022,7 +1022,7 @@ impl BadgeSize {
     }
 }
 
-/// A counting / status pill — `@ui/Badge`.
+/// A counting / status pill - `@ui/Badge`.
 ///
 /// Its model is a [`kubuno_desktop_controls::labels::Label`], so `text`, `padding`,
 /// `enabled`, `bounds`, `dock` and `anchor` are the replica's and a badge drops
@@ -1033,7 +1033,7 @@ pub struct Badge {
     pub size: BadgeSize,
     /// The leading dot (`dot` in the web component).
     pub dot: bool,
-    /// The widest the pill may grow, in DIP — the `max-w-* truncate` a web
+    /// The widest the pill may grow, in DIP - the `max-w-* truncate` a web
     /// caller adds through `className`. Past it (or whenever the caller's
     /// rectangle is narrower than the text) the label ends in « … » inside
     /// the pill instead of running past it. `None` = no cap.
@@ -1053,13 +1053,13 @@ impl DerefMut for Badge {
 }
 
 impl Badge {
-    /// Vertical padding — `py-0.5`, i.e. 2 (`space::XXS`).
+    /// Vertical padding - `py-0.5`, i.e. 2 (`space::XXS`).
     pub const PAD_Y: f32 = space::XXS;
-    /// The dot's diameter — `h-1.5 w-1.5`.
+    /// The dot's diameter - `h-1.5 w-1.5`.
     pub const DOT: f32 = 6.0;
-    /// The gap between the dot and the label — `gap-1` (`space::XS`).
+    /// The gap between the dot and the label - `gap-1` (`space::XS`).
     pub const DOT_GAP: f32 = space::XS;
-    /// The line box a badge's text occupies — `text-xs`, so
+    /// The line box a badge's text occupies - `text-xs`, so
     /// [`Role::Meta::line_height`](Role::line_height).
     pub const LINE: f32 = Role::Meta.line_height();
 
@@ -1099,7 +1099,7 @@ impl Badge {
     }
 }
 
-/// A badge's intrinsic size for a measured text width — `inline-flex` with
+/// A badge's intrinsic size for a measured text width - `inline-flex` with
 /// `gap-1`, so: padding, an optional dot and its gap, then the label.
 ///
 /// The height is the same for both sizes on purpose: the web's `sm` is
@@ -1145,7 +1145,7 @@ impl Widget for Badge {
         let height = bounds.bottom - bounds.top;
 
         // `rounded-full`: the radius is half the height, whatever the caller
-        // made it — a pill that kept a fixed radius stops being a pill the
+        // made it - a pill that kept a fixed radius stops being a pill the
         // moment the row grows.
         canvas.fill_rounded(&bounds, pill(height), &ground);
 
@@ -1217,7 +1217,7 @@ impl Widget for Badge {
 // ─────────────────────────────────────────────────────────────────────────────
 
 /// Names the web uses for a glyph that the embedded geometry files carry under
-/// another name — consulted only when a name is NOT embedded itself. Nothing
+/// another name - consulted only when a name is NOT embedded itself. Nothing
 /// here maps a missing icon to a merely similar one: an entry is a rename of the
 /// very same glyph, and its target must be embedded (the tests check it).
 ///
@@ -1231,7 +1231,7 @@ pub const ICON_ALIASES: [(&str, &str); 0] = [];
 /// The embedded geometry name that draws `name`: the name itself when a file
 /// carries it, else its lucide alias ([`ICON_ALIASES`]), else `None`.
 ///
-/// Cached per name — the lookup scans the embedded geometry files, which is
+/// Cached per name - the lookup scans the embedded geometry files, which is
 /// too slow to repeat for every icon of every frame.
 pub fn resolve_icon(name: &'static str) -> Option<&'static str> {
     use std::collections::HashMap;
@@ -1251,7 +1251,7 @@ pub fn resolve_icon(name: &'static str) -> Option<&'static str> {
     })
 }
 
-/// Says once per name, in debug builds, that an icon has no geometry — the
+/// Says once per name, in debug builds, that an icon has no geometry - the
 /// diagnostic a silently blank glyph never gave. Release builds stay quiet:
 /// the visible placeholder box is the user-facing signal.
 fn report_missing_icon(name: &'static str) {
@@ -1277,7 +1277,7 @@ fn report_missing_icon(name: &'static str) {
 
 /// The missing-glyph placeholder's geometry, as fractions of the glyph box.
 mod icon_metrics {
-    /// The box is 70 % of the glyph square — the proportion of a font's
+    /// The box is 70 % of the glyph square - the proportion of a font's
     /// `.notdef` rectangle to its em, so it reads as « a character goes here »
     /// rather than as a checkbox.
     pub const MISSING_BOX: f32 = 0.7;
@@ -1288,16 +1288,16 @@ mod icon_metrics {
     pub const MISSING_RADIUS: f32 = 2.0;
 }
 
-/// A vector glyph — a [`kubuno_desktop_controls::labels::PictureBox`] whose picture is
+/// A vector glyph - a [`kubuno_desktop_controls::labels::PictureBox`] whose picture is
 /// a named geometry instead of a bitmap.
 ///
 /// RULE: a glyph is **geometry, not text**. Arrows, chevrons and ticks drawn as
-/// characters come out as tofu — the embedded face does not carry them — so
+/// characters come out as tofu - the embedded face does not carry them - so
 /// this paints through [`Canvas::vector_icon`] with a name from
 /// `kubuno-drive-desktop-app-controls/assets/*.txt` and never through a text call.
 ///
 /// Everything else is the replica's, and that is the point: the *size* is
-/// `PictureBox::image` (the picture's natural size — so there is no second
+/// `PictureBox::image` (the picture's natural size - so there is no second
 /// storage for it), and the *placement* is `PictureBox::size_mode` resolved by
 /// the replica's own [`kubuno_desktop_controls::labels::image_rect`], which already
 /// implements all five modes and their letter-boxing.
@@ -1323,7 +1323,7 @@ impl DerefMut for Icon {
 impl Icon {
     /// The default glyph box, in DIP.
     ///
-    /// 20 is what the web's own navigation draws at — `core/frontend/src/core/
+    /// 20 is what the web's own navigation draws at - `core/frontend/src/core/
     /// shell/Sidebar.tsx` renders every module glyph as `<Icon size={20} />`.
     /// The other two sizes that appear there (16 for the collapse chevron, 18
     /// for the « new » plus) are per-call, not a default.
@@ -1337,7 +1337,7 @@ impl Icon {
     /// An icon at an explicit box, in DIP.
     pub fn sized(name: &'static str, px: f32) -> Self {
         let mut inner = kc::PictureBox::new();
-        // The natural size lives on the replica — one storage location, and it
+        // The natural size lives on the replica - one storage location, and it
         // is what `image_rect` and `preferred_size` both read.
         inner.image = Some(Size::new(px, px));
         inner.size_mode = kc::PictureBoxSizeMode::AutoSize;
@@ -1362,7 +1362,7 @@ impl Icon {
         resolve_icon(self.name).is_some()
     }
 
-    /// Where the glyph lands inside a caller rectangle — the replica's own
+    /// Where the glyph lands inside a caller rectangle - the replica's own
     /// size-mode geometry, applied to the content rectangle.
     pub fn glyph_rect(&self, rect: Rect) -> Rect {
         let client = content_rect(rect, self.inner.border_style, self.inner.padding);
@@ -1414,8 +1414,8 @@ impl Widget for Icon {
                 // No geometry under that name: a missing glyph used to paint
                 // NOTHING, which read as a layout bug (an empty gutter before
                 // an accordion title, a button with no icon). Paint the
-                // font world's `.notdef` box instead — visibly « a glyph
-                // belongs here » — and say which name is missing.
+                // font world's `.notdef` box instead - visibly « a glyph
+                // belongs here » - and say which name is missing.
                 report_missing_icon(self.name);
                 let cx = (r.left + r.right) / 2.0;
                 let cy = (r.top + r.bottom) / 2.0;
@@ -1477,17 +1477,17 @@ pub struct Placement {
     pub side: Side,
     /// Where the arrow meets the bubble: the centre of its **base**, on the
     /// edge facing the anchor. The apex is [`Tooltip::ARROW`] further along, in
-    /// the anchor's direction — kept implicit so a caller cannot place the two
+    /// the anchor's direction - kept implicit so a caller cannot place the two
     /// inconsistently.
     pub tip: (f32, f32),
 }
 
-/// The bubble — `@ui/Tooltip`'s `TOOLTIP_STYLE`, with an arrow the web has not
+/// The bubble - `@ui/Tooltip`'s `TOOLTIP_STYLE`, with an arrow the web has not
 /// got.
 ///
 /// Its model is an empty-bordered [`kubuno_desktop_controls::labels::Label`], so `text`,
 /// `padding` and `enabled` are the replica's. A `ToolTip` is a *component* in
-/// WinForms, not a control, so there is no replica to port — only a property
+/// WinForms, not a control, so there is no replica to port - only a property
 /// surface to borrow.
 ///
 /// TRAP: the token pair `tooltip_background` / `tooltip_foreground` is
@@ -1514,11 +1514,11 @@ impl DerefMut for Tooltip {
 }
 
 impl Tooltip {
-    /// Distance from the anchor to the bubble — `TOOLTIP_GAP` in
+    /// Distance from the anchor to the bubble - `TOOLTIP_GAP` in
     /// `ui/tooltipPlacement.ts`, where it is documented as « clears the mouse
     /// cursor itself ». The arrow lives inside this gap.
     pub const GAP: f32 = 14.0;
-    /// Keep-off from the viewport edges — `MARGIN` in the same file.
+    /// Keep-off from the viewport edges - `MARGIN` in the same file.
     pub const MARGIN: f32 = space::SM;
     /// `maxWidth: 280` in `TOOLTIP_STYLE`.
     pub const MAX_WIDTH: f32 = 280.0;
@@ -1528,10 +1528,10 @@ impl Tooltip {
     /// `lineHeight: '16px'`, i.e. [`Role::Meta`]'s line box.
     pub const LINE: f32 = Role::Meta.line_height();
     /// The widest a line of text may be: `maxWidth: 280` minus both paddings,
-    /// because the web's preflight makes every box `border-box` — the 280
+    /// because the web's preflight makes every box `border-box` - the 280
     /// includes the padding.
     pub const TEXT_MAX: f32 = Self::MAX_WIDTH - 2.0 * Self::PAD_X;
-    /// `delay = 400` — how long the pointer must rest on the trigger before
+    /// `delay = 400` - how long the pointer must rest on the trigger before
     /// the bubble appears (`Tooltip.tsx`). See [`TooltipTrigger`].
     pub const DELAY_MS: u64 = 400;
 
@@ -1544,7 +1544,7 @@ impl Tooltip {
     /// design system otherwise paints.
     pub const ARROW: f32 = 6.0;
     /// Half the arrow's base. Equal to [`Tooltip::ARROW`], i.e. a right-angled
-    /// tip — also unsourced, for the same reason.
+    /// tip - also unsourced, for the same reason.
     pub const ARROW_HALF: f32 = 6.0;
 
     pub fn new(text: impl Into<String>) -> Self {
@@ -1558,15 +1558,15 @@ impl Tooltip {
         self
     }
 
-    /// The lines the bubble shows at its natural width — `pre-line` wrapping
+    /// The lines the bubble shows at its natural width - `pre-line` wrapping
     /// at [`Tooltip::TEXT_MAX`].
     pub fn lines(&self, canvas: &dyn Canvas) -> Vec<String> {
         let fmt = &canvas.formats().caption_strong;
         wrap_lines(&self.inner.shown_text(), Self::TEXT_MAX, &mut |s| canvas.measure(s, fmt))
     }
 
-    /// Places this bubble the WEB way — below the pointer, left-aligned with
-    /// it — inside `viewport` (any rectangle: pass `Frame::screen_area()` so
+    /// Places this bubble the WEB way - below the pointer, left-aligned with
+    /// it - inside `viewport` (any rectangle: pass `Frame::screen_area()` so
     /// the bubble may leave the window). Thin wrapper over [`place_at_pointer`].
     pub fn place_at_pointer(&self, canvas: &dyn Canvas, pointer: (f32, f32), viewport: Rect) -> PointerPlacement {
         place_at_pointer(pointer, self.measure(canvas), viewport)
@@ -1590,7 +1590,7 @@ impl Tooltip {
 
     /// The arrow: one anti-aliased triangle through [`Canvas::fill_triangle`].
     ///
-    /// It used to be rasterised here as a stack of one-pixel bands — a hard
+    /// It used to be rasterised here as a stack of one-pixel bands - a hard
     /// staircase that read as jagged and, carrying no shadow of its own, looked
     /// bare and detached on the side the bubble's offset drop shadow leaves
     /// ungrounded (the top). A single filled path is smooth and identical on
@@ -1632,13 +1632,13 @@ impl Tooltip {
 ///    left/right too.
 /// 2. **Gap** = [`Tooltip::GAP`], **viewport keep-off** = [`Tooltip::MARGIN`],
 ///    both verbatim from that file.
-/// 3. **Centred on the anchor**, then clamped into the viewport — the same
+/// 3. **Centred on the anchor**, then clamped into the viewport - the same
 ///    « pull back only if it would overflow » the web does on x.
 /// 4. The **arrow's base** follows the anchor's centre but is kept on the
 ///    bubble's straight edge: no closer to a corner than the corner radius plus
 ///    half the base, so the triangle never grows out of a rounded corner.
 ///
-/// Pure: no canvas, no window — which is what makes each of the four edges a
+/// Pure: no canvas, no window - which is what makes each of the four edges a
 /// unit test instead of a screenshot.
 pub fn place(anchor: Rect, size: Size, preferred: Side, viewport: Size) -> Placement {
     let room = |s: Side| match s {
@@ -1749,7 +1749,7 @@ pub struct PointerPlacement {
 /// `placeTooltip` from `ui/tooltipPlacement.ts`, verbatim: the bubble goes
 /// [`Tooltip::GAP`] **below the pointer and left-aligned with it**, flips
 /// above when the bottom edge is too close, and is pulled back left only when
-/// it would run past the right edge — all with [`Tooltip::MARGIN`] off the
+/// it would run past the right edge - all with [`Tooltip::MARGIN`] off the
 /// viewport's edges.
 ///
 /// Unlike [`place`], the viewport is a rectangle rather than a size rooted at
@@ -1775,7 +1775,7 @@ pub fn place_at_pointer(pointer: (f32, f32), size: Size, viewport: Rect) -> Poin
 /// machine a page drives with the pointer:
 ///
 /// * the bubble appears once the pointer has rested on the trigger for the
-///   delay ([`Tooltip::DELAY_MS`] by default) — `setTimeout(…, delay)` on
+///   delay ([`Tooltip::DELAY_MS`] by default) - `setTimeout(…, delay)` on
 ///   `mouseenter`;
 /// * it is anchored where the pointer was **when it appeared** and does not
 ///   chase the pointer afterwards (the web records the point on move, but
@@ -1785,7 +1785,7 @@ pub fn place_at_pointer(pointer: (f32, f32), size: Size, viewport: Rect) -> Poin
 ///   pointer leaves (`mousedown` → `hide`, and nothing re-arms it before the
 ///   next `mouseenter`);
 /// * [`TooltipTrigger::dismiss`] does the same for Escape or a lost window
-///   activation — the WAI-ARIA tooltip pattern's « Escape dismisses ».
+///   activation - the WAI-ARIA tooltip pattern's « Escape dismisses ».
 #[derive(Debug, Clone, Copy, Default, PartialEq)]
 pub struct TooltipTrigger {
     entered_at: Option<u64>,
@@ -1798,7 +1798,7 @@ pub struct TooltipTrigger {
 pub struct TooltipTick {
     /// The pointer position to anchor the bubble at, when it is visible.
     pub show_at: Option<(f32, f32)>,
-    /// When still waiting out the delay: how many ms until it elapses — ask
+    /// When still waiting out the delay: how many ms until it elapses - ask
     /// the host for a repaint then (`host::request_repaint_after`), or the
     /// bubble only appears on the next mouse move.
     pub repaint_in_ms: Option<u32>,
@@ -1862,7 +1862,7 @@ impl Widget for Tooltip {
         // `caption_strong`: the web bubble is 12 px at `fontWeight: 500`.
         // Wrapped at `TEXT_MAX` on words, explicit breaks honoured
         // (`whiteSpace: 'pre-line'`), so a long label grows DOWN instead of
-        // being trimmed — the bubble is exactly as wide as its widest line.
+        // being trimmed - the bubble is exactly as wide as its widest line.
         let fmt = &canvas.formats().caption_strong;
         let lines = self.lines(canvas);
         let w = widest(canvas, &lines, fmt).min(Self::TEXT_MAX);
@@ -1875,7 +1875,7 @@ impl Widget for Tooltip {
     fn paint(&self, canvas: &dyn Canvas, bounds: Rect, _state: WidgetState) {
         let t = canvas.theme();
         // `SHADOW_MENU`, as the family brief asks. The web bubble's own recipe
-        // is `0 1px 3px rgba(0,0,0,.3), 0 4px 8px rgba(0,0,0,.15)` — the same
+        // is `0 1px 3px rgba(0,0,0,.3), 0 4px 8px rgba(0,0,0,.15)` - the same
         // two-layer shape in pure black; the desktop uses the shared menu ramp
         // (and its grey) so every floating surface in the app casts one shadow.
         canvas.draw_shadow(&bounds, radius::SM, &SHADOW_MENU, SHADOW_GREY);
@@ -1901,7 +1901,7 @@ impl Widget for Tooltip {
         for (i, line) in lines.iter().enumerate() {
             let top = inner.top + i as f32 * Self::LINE;
             // A line that fits within the wrap tolerance is drawn whole in a
-            // band widened by that tolerance — trimming it would turn a
+            // band widened by that tolerance - trimming it would turn a
             // sub-DIP rounding difference into a spurious « … ». Only a real
             // overflow (a clamped tail) is ellipsized.
             let band = Rect::new(inner.left, top, inner.right + FIT_EPSILON, top + Self::LINE);
@@ -1937,7 +1937,7 @@ pub enum Orientation {
     Vertical,
 }
 
-/// A rule — `@ui/Separator`: `bg-border`, `h-px w-full` or `w-px self-stretch`.
+/// A rule - `@ui/Separator`: `bg-border`, `h-px w-full` or `w-px self-stretch`.
 ///
 /// Its model is an empty [`kubuno_desktop_controls::labels::Label`], which is the
 /// toolkit's own idiom for a divider and gives the rule `dock`, `anchor`,
@@ -1982,7 +1982,7 @@ impl Separator {
 /// The hairline rectangle a separator strokes, centred in `bounds`.
 ///
 /// Thickness is `1 / scale`, i.e. exactly ONE physical pixel at any DPI, and
-/// the rectangle is handed to [`Canvas::stroke_rounded`] — which already snaps
+/// the rectangle is handed to [`Canvas::stroke_rounded`] - which already snaps
 /// to pixel centres and strokes at `1 / scale`. Deriving the alignment here
 /// instead would be a second, disagreeing implementation of it.
 pub fn line_rect(bounds: Rect, orientation: Orientation, scale: f32) -> Rect {
@@ -2092,7 +2092,7 @@ mod tests {
 
     #[test]
     fn an_auto_sized_label_is_its_line_box_plus_padding_and_border() {
-        // The width the canvas would measure, injected — so the arithmetic is
+        // The width the canvas would measure, injected - so the arithmetic is
         // checked without a device.
         let text = 80.0;
         for role in ROLES {
@@ -2206,7 +2206,7 @@ mod tests {
     #[test]
     fn geometry_follows_the_argument_and_not_the_models_own_rectangle() {
         // A control whose model thinks it lives at the window origin, painted
-        // somewhere else entirely — the exact shape of the shipped bug.
+        // somewhere else entirely - the exact shape of the shipped bug.
         let mut l = Label::new("x");
         l.set_bounds(Rect::new(0.0, 0.0, 10.0, 10.0));
         l.padding = Padding::all(4.0);
@@ -2227,7 +2227,7 @@ mod tests {
     /// The non-regression gate itself: **no paint path in this file may read
     /// the model's own rectangle**. Reading `self.bounds` (through the deref to
     /// `ControlBase`) instead of the `bounds` argument has been shipped three
-    /// times — `Label`, `PictureBox`, `LinkLabel` — and each time it painted a
+    /// times - `Label`, `PictureBox`, `LinkLabel` - and each time it painted a
     /// container's child near the window origin, where the parent's clip ate
     /// it. A geometry test cannot catch a re-introduction inside a `paint` body
     /// (no headless canvas exists to record calls), so this reads the source.
@@ -2235,7 +2235,7 @@ mod tests {
     /// If it fires: the fix is to take the rectangle from the argument. If a
     /// genuine need for the model's rectangle ever appears (hit-testing in
     /// parent space, as `LinkLabel::link_at_point` does one layer down), it
-    /// belongs in a clearly named method — and this test's allow-list, not in a
+    /// belongs in a clearly named method - and this test's allow-list, not in a
     /// paint body.
     #[test]
     fn no_paint_path_reads_the_models_own_rectangle() {
@@ -2249,7 +2249,7 @@ mod tests {
             for needle in [".bounds", "control().bounds"] {
                 assert!(
                     !code.contains(needle),
-                    "line {}: `{}` reads the model's own rectangle — paint into the \
+                    "line {}: `{}` reads the model's own rectangle - paint into the \
                      `bounds` ARGUMENT (see this test's doc comment)",
                     n + 1,
                     code.trim()
@@ -2316,7 +2316,7 @@ mod tests {
         assert_eq!(icon.image, Some(Size::new(16.0, 16.0)), "one storage location");
         assert_eq!(icon.natural(), Size::new(16.0, 16.0));
 
-        // `AutoSize` draws at native size, top-left of the content rect — the
+        // `AutoSize` draws at native size, top-left of the content rect - the
         // replica's own rule, not a re-derivation.
         let r = icon.glyph_rect(Rect::new(100.0, 100.0, 140.0, 140.0));
         assert_eq!((r.left, r.top, r.right, r.bottom), (100.0, 100.0, 116.0, 116.0));
@@ -2337,7 +2337,7 @@ mod tests {
         icon.border_style = BorderStyle::FixedSingle;
         icon.padding = Padding::all(2.0);
         // A 40×40 box, minus the 1 DIP border and the 2 DIP padding, leaves a
-        // 34×34 client — and `AutoSize` puts the 20 px glyph at its top-left.
+        // 34×34 client - and `AutoSize` puts the 20 px glyph at its top-left.
         let r = icon.glyph_rect(Rect::new(0.0, 0.0, 40.0, 40.0));
         assert_eq!((r.left, r.top), (3.0, 3.0));
         assert_eq!((r.right - r.left, r.bottom - r.top), (20.0, 20.0));
@@ -2615,7 +2615,7 @@ mod tests {
 
     #[test]
     fn no_wrapped_line_is_wider_than_the_box() {
-        let text = "Partage de liens publics — les destinataires voient le dossier sans compte";
+        let text = "Partage de liens publics - les destinataires voient le dossier sans compte";
         for w in [50.0, 91.0, 140.0, 260.0] {
             for l in wrap(text, w) {
                 assert!(mono(&l) <= w + FIT_EPSILON, "{l:?} at {w}");

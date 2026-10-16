@@ -1,12 +1,12 @@
 //! The portable (OS-neutral) Kubuno mobile renderer.
 //!
-//! It lays out and paints a `.kbview`/`.kbcontrol` (parsed with the shared Kubuno grammar) into a CPU pixmap —
-//! [`taffy`] flexbox layout, [`tiny_skia`] rasterisation (see `view`) — then shows it on a `wgpu` surface with a
+//! It lays out and paints a `.kbview`/`.kbcontrol` (parsed with the shared Kubuno grammar) into a CPU pixmap -
+//! [`taffy`] flexbox layout, [`tiny_skia`] rasterisation (see `view`) - then shows it on a `wgpu` surface with a
 //! plain textured full-screen draw. It knows nothing about a window system: the OS shell (`android/`, `ios/`)
 //! creates the window, the wgpu device and the surface, loads a font, and calls [`Painter::paint_view`].
 //!
 //! The presentation step only needs a basic render pipeline (no compute shaders), so it runs on any GPU the
-//! shells meet — including the iOS Simulator, whose Metal lacks the indirect compute dispatch a GPU vector
+//! shells meet - including the iOS Simulator, whose Metal lacks the indirect compute dispatch a GPU vector
 //! renderer needs. The view is re-rasterised only when it (or the surface size) changes.
 //!
 //! This crate is the *shared* engine every Kubuno mobile app runs on; it holds no module's app. A module ships its
@@ -55,7 +55,7 @@ pub struct App {
     pub views: &'static [&'static str],
     /// Called once on the UI thread before the first frame: registers the app's host controls and seeds its state.
     pub setup: fn(),
-    /// Handle a resolved tap — the top-most `x:Name`/evented element under the touch (see [`TapEvent`]) — by mutating
+    /// Handle a resolved tap - the top-most `x:Name`/evented element under the touch (see [`TapEvent`]) - by mutating
     /// the app's own state. `None` keeps the shell's tap-to-advance demo (for an app not wired yet).
     pub on_event: Option<fn(&TapEvent)>,
     /// The index into [`Self::views`] to show now, read from the app's state after each event. `None` keeps the
@@ -379,7 +379,7 @@ impl Painter {
 }
 
 /// The renderer's sample screen, authored as a real `.kbview` file edited in Visual Studio and embedded so the exact
-/// file the developer edits is the one parsed and rendered — one source of truth across designer and device. It
+/// file the developer edits is the one parsed and rendered - one source of truth across designer and device. It
 /// exercises the shared control vocabulary; no module's app lives here (each ships its own in `<module>/mobile`).
 pub const SAMPLE_KBVIEW: &str = include_str!("views/home.kbview");
 

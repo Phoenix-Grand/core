@@ -2,7 +2,7 @@ import { useEffect, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
 
 /**
- * Bottom sheet — the mobile stand-in for a popover/dropdown. Anchored popovers
+ * Bottom sheet - the mobile stand-in for a popover/dropdown. Anchored popovers
  * assume a mouse and enough room beside the trigger; on a phone the same choices
  * belong in a sheet that slides up from the bottom edge, is thumb-reachable and
  * dismissed by tapping the scrim.
@@ -37,7 +37,7 @@ export function MobileSheet({ open, onClose, title, children }: {
                    shadow-[0_-8px_30px_rgba(0,0,0,0.18)] animate-[kb-sheet-up_.2s_ease-out]"
         style={{ paddingBottom: 'calc(12px + env(safe-area-inset-bottom))' }}
       >
-        {/* Grab handle — signals "drag/tap to dismiss" even though we only tap. */}
+        {/* Grab handle - signals "drag/tap to dismiss" even though we only tap. */}
         <div className="flex justify-center pt-2.5 pb-1">
           <div className="h-1 w-10 rounded-full bg-border-strong" />
         </div>

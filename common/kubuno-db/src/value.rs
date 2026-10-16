@@ -7,8 +7,8 @@
 //! the moment of execution (see `exec.rs`).
 //!
 //! Every variant wraps an `Option`, so a `NULL` keeps its column type: binding
-//! `DbValue::Uuid(None)` sends a typed NULL, which PostgreSQL — strict about
-//! parameter types — needs, where a bare untyped NULL of the wrong type would
+//! `DbValue::Uuid(None)` sends a typed NULL, which PostgreSQL - strict about
+//! parameter types - needs, where a bare untyped NULL of the wrong type would
 //! be refused.
 
 use chrono::{DateTime, NaiveDate, Utc};
@@ -96,8 +96,8 @@ impl From<&[u8]> for DbValue {
 //
 // PostgreSQL has `TEXT[]`/`UUID[]`; MySQL and SQLite have no array type at all,
 // so the portable representation of a small list column is a JSON array. These
-// route straight through the existing `DbValue::Json` variant — no new variant,
-// no new `bind_all!` arm — so `params![tags]` works and a `NULL` array is a
+// route straight through the existing `DbValue::Json` variant - no new variant,
+// no new `bind_all!` arm - so `params![tags]` works and a `NULL` array is a
 // typed JSON NULL. The JSON is built element by element (infallibly) and is
 // byte-identical to what `serde_json::to_value` would produce, so a column
 // written here reads back through `JsonVec<T>` (or `#[sqlx(json)] Vec<T>`).
@@ -107,7 +107,7 @@ fn json_string_array<I: IntoIterator<Item = String>>(it: I) -> JsonValue {
     JsonValue::Array(it.into_iter().map(JsonValue::String).collect())
 }
 
-/// A JSON array of the UUIDs as hyphenated strings — the exact spelling `uuid`'s
+/// A JSON array of the UUIDs as hyphenated strings - the exact spelling `uuid`'s
 /// own `Serialize` uses, so `JsonVec<Uuid>` decodes it back.
 fn json_uuid_array<'a, I: IntoIterator<Item = &'a Uuid>>(it: I) -> JsonValue {
     JsonValue::Array(it.into_iter().map(|u| JsonValue::String(u.to_string())).collect())

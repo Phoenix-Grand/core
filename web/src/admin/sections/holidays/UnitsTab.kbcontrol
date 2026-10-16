@@ -1,4 +1,4 @@
-<!-- UnitsTab — converted from UnitsTab.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- UnitsTab - converted from UnitsTab.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="UnitsTabProps">
   <Stack Gap="16" Class="min-w-0">
     <Callout Body="{Res admin.hol_units_intro}"/>

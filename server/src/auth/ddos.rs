@@ -1,16 +1,16 @@
 //! Protections anti-DDoS au niveau applicatif.
 //!
 //! Trois lignes de défense complémentaires, à brancher comme layers Axum :
-//!   1. `concurrency_limit` — plafonne le nombre de requêtes traitées **en
+//!   1. `concurrency_limit` - plafonne le nombre de requêtes traitées **en
 //!      parallèle** ; au-delà on *load-shed* (503) immédiatement plutôt que de
 //!      laisser la file enfler jusqu'à l'OOM. C'est la protection la plus
 //!      efficace contre une saturation brutale (la mémoire/threads restent
 //!      bornés quoi qu'il arrive).
-//!   2. `global_rate_limit` — fenêtre fixe par IP sur **toutes** les routes,
+//!   2. `global_rate_limit` - fenêtre fixe par IP sur **toutes** les routes,
 //!      pour amortir un flood applicatif (beaucoup de requêtes valides depuis
 //!      peu d'IP). La table est bornée en taille pour ne pas devenir elle-même
 //!      un vecteur d'attaque (IP usurpées).
-//!   3. `TimeoutLayer` (branché dans le router) — coupe les requêtes lentes
+//!   3. `TimeoutLayer` (branché dans le router) - coupe les requêtes lentes
 //!      (slowloris applicatif, clients qui n'envoient/lisent jamais le corps).
 //!
 //! La terminaison TLS et les limites de connexions/bande passante restent du
@@ -162,7 +162,7 @@ impl Drop for InflightGuard {
 }
 
 /// Détecte un upgrade WebSocket (connexion longue durée) qu'il ne faut pas
-/// compter dans la limite de concurrence — sinon chaque socket ouvert
+/// compter dans la limite de concurrence - sinon chaque socket ouvert
 /// retiendrait un permit pour toute sa durée de vie et épuiserait le pool.
 fn is_long_lived(req: &Request<Body>) -> bool {
     if req.uri().path() == "/ws" {
@@ -185,7 +185,7 @@ pub async fn concurrency_limit(req: Request<Body>, next: Next) -> Response {
     let current = INFLIGHT.fetch_add(1, Ordering::Relaxed) + 1;
     if current > max {
         INFLIGHT.fetch_sub(1, Ordering::Relaxed);
-        tracing::warn!("concurrency limit reached ({max} max) — shedding request");
+        tracing::warn!("concurrency limit reached ({max} max) - shedding request");
         return too_busy("SERVER_BUSY", "Service momentanément saturé, réessayez");
     }
     let _guard = InflightGuard; // décrémente en fin de scope
@@ -223,7 +223,7 @@ fn window_exceeded(key: String, limit: u32) -> bool {
     }
 }
 
-/// Vérification PARESSEUSE du Bearer (signature HMAC + exp, aucune DB) — appelée
+/// Vérification PARESSEUSE du Bearer (signature HMAC + exp, aucune DB) - appelée
 /// seulement quand la fenêtre IP est dépassée, donc le chemin nominal ne paie rien.
 fn bearer_sub(req: &Request<Body>) -> Option<String> {
     let secret = JWT_SECRET.get()?;
@@ -260,7 +260,7 @@ pub async fn global_rate_limit(req: Request<Body>, next: Next) -> Response {
 
     if window_exceeded(ip, limit) {
         // Fenêtre IP saturée : un utilisateur AUTHENTIFIÉ bascule sur son budget
-        // propre (clé `user:<uuid>`) — une IP de foyer ne s'auto-étrangle plus,
+        // propre (clé `user:<uuid>`) - une IP de foyer ne s'auto-étrangle plus,
         // et un flood anonyme reste bloqué au périmètre IP.
         if let Some(sub) = bearer_sub(&req) {
             let user_limit = RATE_USER_PER_WINDOW.load(Ordering::Relaxed);

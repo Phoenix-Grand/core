@@ -1,4 +1,4 @@
-//! `01-buttonbase` — Button, CheckBox, RadioButton.
+//! `01-buttonbase` - Button, CheckBox, RadioButton.
 
 use kubuno_desktop_controls::buttons::{Button, CheckBox, RadioButton};
 use kubuno_desktop_controls::{Appearance, CheckState, ContentAlignment, FlatStyle};
@@ -25,7 +25,7 @@ fn flat_styles() -> Group {
         kid(b).w(120.0)
     };
     group(
-        "Button — FlatStyle",
+        "Button - FlatStyle",
         300.0,
         vec![
             styled("Standard", FlatStyle::Standard),
@@ -40,7 +40,7 @@ fn states() -> Group {
     let mut disabled = button("Disabled");
     disabled.enabled = false;
     group(
-        "Button — states",
+        "Button - states",
         300.0,
         vec![
             kid(disabled).w(120.0),
@@ -72,7 +72,7 @@ fn check_boxes() -> Group {
     as_button.appearance = Appearance::Button;
 
     group(
-        "CheckBox — Appearance / CheckState",
+        "CheckBox - Appearance / CheckState",
         300.0,
         vec![
             kid(unchecked).w(160.0),
@@ -111,7 +111,7 @@ fn alignment() -> Group {
         kid(b).w(140.0).h(40.0)
     };
     group(
-        "ButtonBase — TextAlign / Image",
+        "ButtonBase - TextAlign / Image",
         300.0,
         vec![
             aligned("TopLeft", ContentAlignment::TopLeft),

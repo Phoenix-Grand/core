@@ -24,7 +24,7 @@ use crate::{
 ///
 /// This used to collapse every variant into `Internal`, so an unreachable NAS,
 /// a renamed directory and credentials that can no longer be decrypted all came
-/// back as the same bare 500 "Erreur interne" — and the last of those is the
+/// back as the same bare 500 "Erreur interne" - and the last of those is the
 /// only one the user can actually do something about.
 fn remote_err(e: RemoteError) -> AppError {
     match e {
@@ -42,12 +42,12 @@ fn remote_err(e: RemoteError) -> AppError {
 ///
 /// Always 422, never 502: nothing has been contacted at this point, so the fault
 /// is in the form. Routing it through [`remote_err`] answered "stockage distant
-/// injoignable" to a mistyped URL — on the very screen where a user reconnects
+/// injoignable" to a mistyped URL - on the very screen where a user reconnects
 /// a broken mount, that sends them debugging their NAS instead of their typo.
 fn config_err(e: RemoteError) -> AppError {
     // Unwrap the variant's own prefix: the connector reports a missing URL as
     // `Auth("URL manquante")`, which would surface as "Données invalides :
-    // Authentification échouée : URL manquante" — three clauses, the middle one
+    // Authentification échouée : URL manquante" - three clauses, the middle one
     // false. Only the reason is worth showing.
     match e {
         RemoteError::Auth(m)
@@ -63,7 +63,7 @@ fn config_err(e: RemoteError) -> AppError {
 ///
 /// `status` otherwise stays frozen at the last success, so a mount that has
 /// become permanently unusable keeps advertising itself as "connected" in the
-/// panel — the one place the owner looks to find out something is wrong.
+/// panel - the one place the owner looks to find out something is wrong.
 async fn connector(
     state: &AppState, id: Uuid, user_id: Uuid,
 ) -> Result<std::sync::Arc<dyn crate::storage::remote::RemoteConnector>, AppError> {
@@ -111,7 +111,7 @@ struct MountListRow {
     created_at:         chrono::DateTime<chrono::Utc>,
 }
 
-/// GET /internal/storage/mounts/:user_id — liste des montages d'un utilisateur.
+/// GET /internal/storage/mounts/:user_id - liste des montages d'un utilisateur.
 pub async fn list(
     _i: InternalRequest,
     State(state): State<AppState>,
@@ -143,7 +143,7 @@ pub async fn list(
     Ok(Json(json!({ "connections": connections })))
 }
 
-/// POST /internal/storage/mounts/:user_id — crée un montage.
+/// POST /internal/storage/mounts/:user_id - crée un montage.
 pub async fn create(
     _i: InternalRequest,
     State(state): State<AppState>,
@@ -175,8 +175,8 @@ pub async fn create(
     Ok((StatusCode::CREATED, Json(json!({ "id": id, "mount_name": mount_name }))))
 }
 
-/// Config keys whose value never leaves the server. Everything else — host,
-/// share, username, domain, paths — is what the owner typed and can be shown
+/// Config keys whose value never leaves the server. Everything else - host,
+/// share, username, domain, paths - is what the owner typed and can be shown
 /// back to them: hiding it would force a full re-entry to change one letter.
 const SECRET_KEYS: &[&str] = &[
     "password", "access_token", "refresh_token", "client_secret", "private_key",
@@ -198,7 +198,7 @@ fn merge_secrets(submitted: &Value, stored: Option<&Value>) -> Value {
     out
 }
 
-/// GET /internal/storage/mounts/:user_id/:id/config — config REDACTED, for the
+/// GET /internal/storage/mounts/:user_id/:id/config - config REDACTED, for the
 /// edit form.
 ///
 /// Returns every non-secret field in clear and merely NAMES the secrets that are
@@ -241,12 +241,12 @@ pub struct SmbSharesDto {
     pub username: Option<String>,
     pub password: Option<String>,
     pub domain:   Option<String>,
-    /// Mount being edited, if any — lets the lookup reuse the password already
+    /// Mount being edited, if any - lets the lookup reuse the password already
     /// on file instead of demanding it be retyped just to browse.
     pub mount_id: Option<Uuid>,
 }
 
-/// POST /internal/storage/smb-shares/:user_id — what shares a server offers.
+/// POST /internal/storage/smb-shares/:user_id - what shares a server offers.
 pub async fn smb_shares(
     _i: InternalRequest,
     State(state): State<AppState>,
@@ -295,7 +295,7 @@ pub struct UpdateMountDto {
     pub config: Option<Value>,
 }
 
-/// PATCH /internal/storage/mounts/:user_id/:id — met à jour un montage.
+/// PATCH /internal/storage/mounts/:user_id/:id - met à jour un montage.
 ///
 /// `config` replaces the stored one, except for the secret keys it omits, which
 /// are carried over (see [`merge_secrets`]). Omit `config` entirely to rename.
@@ -327,7 +327,7 @@ pub async fn update(
     // the next browse, long after the form said it had saved.
     let config_enc = match dto.config.as_ref() {
         Some(config) => {
-            // `None` when the stored config is unreadable — then there is nothing
+            // `None` when the stored config is unreadable - then there is nothing
             // to carry over and every field must have been re-entered anyway.
             let stored = state.remote_mounts.decrypt_config(&row.1);
             let merged = merge_secrets(config, stored.as_ref());
@@ -339,7 +339,7 @@ pub async fn update(
 
     // New credentials reset the verdict: the mount is untested again, and any
     // previous error no longer describes it. Only the columns actually supplied
-    // are written — the former COALESCE/CASE-with-`::bytea` form was PostgreSQL
+    // are written - the former COALESCE/CASE-with-`::bytea` form was PostgreSQL
     // syntax, so the SET list is now assembled from what the request carried.
     if name.is_some() || config_enc.is_some() {
         let mut qb = DbQueryBuilder::new(state.db.backend(), "UPDATE core.remote_mounts SET ");
@@ -368,7 +368,7 @@ pub async fn update(
     Ok(Json(json!({ "ok": true })))
 }
 
-/// DELETE /internal/storage/mounts/:user_id/:id — supprime un montage (+ cache).
+/// DELETE /internal/storage/mounts/:user_id/:id - supprime un montage (+ cache).
 pub async fn delete(
     _i: InternalRequest,
     State(state): State<AppState>,
@@ -388,7 +388,7 @@ pub async fn delete(
     Ok(StatusCode::NO_CONTENT)
 }
 
-/// POST /internal/storage/mounts/:user_id/:id/test — teste la connexion.
+/// POST /internal/storage/mounts/:user_id/:id/test - teste la connexion.
 pub async fn test(
     _i: InternalRequest,
     State(state): State<AppState>,
@@ -442,7 +442,7 @@ async fn list_dir_json(state: &AppState, user_id: Uuid, id: Uuid, path: &str) ->
     Ok(Json(json!({ "items": items })))
 }
 
-/// GET /internal/storage/mounts/:user_id/:id/browse — racine du montage.
+/// GET /internal/storage/mounts/:user_id/:id/browse - racine du montage.
 pub async fn browse_root(
     _i: InternalRequest,
     State(state): State<AppState>,
@@ -463,7 +463,7 @@ pub async fn browse(
 #[derive(Deserialize)]
 pub struct RenameDto { pub to: String }
 
-/// DELETE /internal/storage/mounts/:user_id/:id/entry/*path — supprime fichier/dossier.
+/// DELETE /internal/storage/mounts/:user_id/:id/entry/*path - supprime fichier/dossier.
 pub async fn delete_entry(
     _i: InternalRequest,
     State(state): State<AppState>,
@@ -481,7 +481,7 @@ pub async fn delete_entry(
     Ok(StatusCode::NO_CONTENT)
 }
 
-/// POST /internal/storage/mounts/:user_id/:id/rename/*path { to } — renomme/déplace.
+/// POST /internal/storage/mounts/:user_id/:id/rename/*path { to } - renomme/déplace.
 pub async fn rename_entry(
     _i: InternalRequest,
     State(state): State<AppState>,
@@ -493,7 +493,7 @@ pub async fn rename_entry(
     Ok(Json(json!({ "ok": true })))
 }
 
-/// POST /internal/storage/mounts/:user_id/:id/mkdir/*path — crée un dossier.
+/// POST /internal/storage/mounts/:user_id/:id/mkdir/*path - crée un dossier.
 pub async fn create_dir(
     _i: InternalRequest,
     State(state): State<AppState>,
@@ -504,7 +504,7 @@ pub async fn create_dir(
     Ok(Json(json!({ "ok": true })))
 }
 
-/// POST /internal/storage/mounts/:user_id/:id/upload/*path — écrit un fichier.
+/// POST /internal/storage/mounts/:user_id/:id/upload/*path - écrit un fichier.
 pub async fn upload(
     _i: InternalRequest,
     State(state): State<AppState>,
@@ -519,7 +519,7 @@ pub async fn upload(
     Ok(Json(json!({ "ok": true, "name": entry.name, "path": entry.path })))
 }
 
-/// GET /internal/storage/mounts/:user_id/:id/file/*path — flux du fichier.
+/// GET /internal/storage/mounts/:user_id/:id/file/*path - flux du fichier.
 pub async fn get_file(
     _i: InternalRequest,
     State(state): State<AppState>,

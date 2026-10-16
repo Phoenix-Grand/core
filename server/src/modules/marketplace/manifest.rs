@@ -5,7 +5,7 @@
 //! l'empreinte et l'artefact d'un même geste : le core vérifierait, tout
 //! concorderait, puisque c'est l'attaquant qui aurait calculé les deux.
 //!
-//! Le catalogue publie donc sa liste d'empreintes **signée en bloc** — une seule
+//! Le catalogue publie donc sa liste d'empreintes **signée en bloc** - une seule
 //! signature Ed25519 pour tous les modules, toutes les plateformes. La clé privée
 //! vit sur la machine d'administration, qui n'est jamais déployée ; le serveur
 //! public ne détient que la signature. Une compromission du serveur public peut
@@ -25,8 +25,8 @@ use crate::errors::AppError;
 /// catalogue que celui de kubuno.com.
 const DEFAULT_PUBLIC_KEY: &str = "aYPR5XQemigRP5S0D4h86Ts923u9kbIlwUVILA0o91o=";
 
-/// Une entrée du manifeste. Les champs de plateforme ne servent pas au core —
-/// le catalogue a déjà choisi pour lui — mais ils sont conservés parce qu'ils
+/// Une entrée du manifeste. Les champs de plateforme ne servent pas au core -
+/// le catalogue a déjà choisi pour lui - mais ils sont conservés parce qu'ils
 /// font partie des octets signés, et qu'un manifeste doit rester lisible pour un
 /// humain qui l'inspecte.
 #[derive(Debug, Clone, Deserialize)]
@@ -117,7 +117,7 @@ pub async fn fetch_signed(http: &reqwest::Client, base: &str) -> Option<SignedDi
     if !verify(&body, &sig_b64) {
         // Volontairement sévère : un manifeste dont la signature ne vérifie pas
         // est plus inquiétant qu'un manifeste absent.
-        tracing::error!("Marketplace : signature du manifeste INVALIDE — manifeste ignoré");
+        tracing::error!("Marketplace : signature du manifeste INVALIDE - manifeste ignoré");
         return None;
     }
 
@@ -161,7 +161,7 @@ fn verify(body: &[u8], sig_b64: &str) -> bool {
 }
 
 /// Erreur d'un module déjà signé dont l'artefact n'est plus couvert par le
-/// manifeste — alors que ce manifeste, lui, est bien là et valide.
+/// manifeste - alors que ce manifeste, lui, est bien là et valide.
 pub fn downgrade_error(id: &str) -> AppError {
     AppError::Validation(format!(
         "« {id} » a déjà été installé depuis un catalogue signé, et le manifeste signé actuel ne \
@@ -179,7 +179,7 @@ pub fn unavailable_error(id: &str) -> AppError {
     AppError::Validation(format!(
         "« {id} » a déjà été installé depuis un catalogue signé, mais le manifeste signé du \
          catalogue est momentanément indisponible : impossible de vérifier l'origine de l'artefact. \
-         Installation reportée — réessayez plus tard."
+         Installation reportée - réessayez plus tard."
     ))
 }
 
@@ -206,7 +206,7 @@ mod tests {
         assert!(verify_with(BODY, SIG, PUB));
     }
 
-    /// One byte changed anywhere in the list — a URL, a digest, a file name —
+    /// One byte changed anywhere in the list - a URL, a digest, a file name -
     /// and the signature no longer holds. That is the whole point: the list is
     /// what an attacker would have to rewrite.
     #[test]

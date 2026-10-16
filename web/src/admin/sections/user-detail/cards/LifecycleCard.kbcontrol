@@ -1,4 +1,4 @@
-<!-- LifecycleCard — converted from LifecycleCard.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- LifecycleCard - converted from LifecycleCard.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="LifecycleCardProps">
   <Card Title="{Res admin.ud_card_lifecycle}" IconSize="16" Icon="CalendarClock">
     <!-- TODO(views-migrate): <dl> has no .kbview element yet -->

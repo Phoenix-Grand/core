@@ -27,7 +27,7 @@ interface Props {
   units:    OrgUnit[]
   value:    OrgUnitScope
   onChange: (next: OrgUnitScope) => void
-  /** Accounts per unit, own count only — the panel adds nothing up itself. */
+  /** Accounts per unit, own count only - the panel adds nothing up itself. */
   counts?:  Record<string, number>
   collapsed:          boolean
   onCollapsedChange:  (collapsed: boolean) => void

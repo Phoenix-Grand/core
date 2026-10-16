@@ -1,8 +1,8 @@
-//! Gallery page — the colour family.
+//! Gallery page - the colour family.
 //!
 //! None of these primitives has a hand-written predecessor in
 //! `kubuno-drive-desktop-app-controls`, so there is no [`super::sheet::pair`] here. The page
-//! shows every state the family can be in — a field closed, open, dead,
+//! shows every state the family can be in - a field closed, open, dead,
 //! translucent and focused from the keyboard, and the gradient field; then
 //! the three panels in exactly the state the web's own component gallery
 //! (`core/admin/theme/groups/PickersGroup.tsx`) and the reference captures
@@ -151,7 +151,7 @@ pub fn draw(c: &dyn Canvas, f: &Frame) {
     if page.y + 120.0 > f.size.1 {
         return;
     }
-    page.section("Imbrication — dans un Panel étroit");
+    page.section("Imbrication - dans un Panel étroit");
     let top = page.caption("le panneau rapide réduit à 180 DIP : la grille se resserre, rien ne déborde du Panel");
     let mut narrow = SwatchPicker::new();
     narrow.colors = picker_swatches();
@@ -171,7 +171,7 @@ pub fn draw(c: &dyn Canvas, f: &Frame) {
 // The live column
 // ═════════════════════════════════════════════════════════════════════════════
 
-/// Which floating panel is open — one at a time, as the web's backdrop allows.
+/// Which floating panel is open - one at a time, as the web's backdrop allows.
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
 enum Open {
     None,
@@ -304,7 +304,7 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
         let panel = open_panel(c, f, &ui, colour_rect, highlight_rect, gfield_rect, grect);
 
         // ── The fields ───────────────────────────────────────────────────────
-        caption(c, left, right, fields_caption, "ColorField · GradientField — clic, Entrée ou Espace : panneau flottant");
+        caption(c, left, right, fields_caption, "ColorField · GradientField - clic, Entrée ou Espace : panneau flottant");
 
         let colour = ui.colour;
         if field(c, &under, ID_COLOUR, colour_rect, colour, ui.open == Open::Colour) {
@@ -366,7 +366,7 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
         }
 
         // ── The gradient builder ─────────────────────────────────────────────
-        caption(c, left, right, grad_caption, "GradientPicker — arrêts (glisser, ←/→, ↑/↓), barre, curseurs, cases, couleur");
+        caption(c, left, right, grad_caption, "GradientPicker - arrêts (glisser, ←/→, ↑/↓), barre, curseurs, cases, couleur");
         {
             let Ui { gradient, grad_drag, .. } = &mut *ui;
             let clicked = under.clicked;
@@ -432,7 +432,7 @@ fn text_beside(c: &dyn Canvas, field: Rect, label: &str) {
 }
 
 /// One `ColorField`: registers its focus, paints it, and says whether it was
-/// activated this frame — a click, or Enter / Space while it has the focus.
+/// activated this frame - a click, or Enter / Space while it has the focus.
 fn field(c: &dyn Canvas, live: &Live, id: &str, rect: Rect, colour: Color, open: bool) -> bool {
     let ws = live.focus_state(id, rect);
     if live.hover(rect) {
@@ -506,7 +506,7 @@ fn back_to_grid(ui: &mut Ui) {
     ui.custom.end_edit();
 }
 
-/// The open panel's rectangle this frame, in client DIP — the web's
+/// The open panel's rectangle this frame, in client DIP - the web's
 /// `reposition()`, against the monitor's work area.
 fn open_panel(c: &dyn Canvas, f: &Frame, ui: &Ui, colour: Rect, highlight: Rect, gfield: Rect, grect: Rect) -> Option<Rect> {
     let area = f.screen_area();
@@ -592,7 +592,7 @@ fn picker_of(ui: &mut Ui, slot: PickerSlot) -> &mut ColorPicker {
 /// interaction loop: the pointer, the focus, the keyboard.
 fn run_picker(c: &dyn Canvas, live: &Live, f: &Frame, slot: PickerSlot, ui: &mut Ui, panel: Rect, click: bool) -> PickerEvent {
     let p = picker_of(ui, slot);
-    // Escape closes the popover — unless it cancels an armed eyedropper.
+    // Escape closes the popover - unless it cancels an armed eyedropper.
     if !p.is_picking() && live.take_escape() {
         return PickerEvent::Close;
     }
@@ -826,7 +826,7 @@ fn run_gradient(
     closed
 }
 
-/// The colour most fields on the page show — the design system's accent.
+/// The colour most fields on the page show - the design system's accent.
 fn sample() -> Color {
     parse("#1a73e8").unwrap_or_default()
 }

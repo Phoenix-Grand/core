@@ -54,11 +54,11 @@ pub fn sync(api: &mut Api, store: &Store, cfg: &Config) -> Result<Stats> {
         // pass 1 and cleaned up after the file pass has emptied them (see the
         // block before `set_cursor`). This mirrors the file reconciliation
         // further down; without it, a renamed folder's old tree is left
-        // orphaned on disk and the next push re-uploads it as " (2)" — the same
+        // orphaned on disk and the next push re-uploads it as " (2)" - the same
         // cascade the file fix already closes, one level up.
         let mut moved_from: Vec<PathBuf> = Vec::new();
 
-        // Pass 1 — folders (so file parents exist).
+        // Pass 1 - folders (so file parents exist).
         for ch in &delta.changes {
             trace(ch);
             if ch["kind"] != "folder" {
@@ -88,7 +88,7 @@ pub fn sync(api: &mut Api, store: &Store, cfg: &Config) -> Result<Stats> {
             }
         }
 
-        // Pass 2 — files.
+        // Pass 2 - files.
         for ch in &delta.changes {
             if ch["kind"] != "file" {
                 continue;
@@ -119,7 +119,7 @@ pub fn sync(api: &mut Api, store: &Store, cfg: &Config) -> Result<Stats> {
             // dropped, otherwise it is left orphaned on disk AND untracked (the
             // store below now points the id at the new path). The next push would
             // then walk that stale file, see a path the store doesn't know, treat
-            // it as brand-new and re-upload it — the server appends " (2)" on the
+            // it as brand-new and re-upload it - the server appends " (2)" on the
             // name collision, that copy is pulled back, re-uploaded as
             // " (2) (2)"… an unbounded duplication cascade, and every server-side
             // move gets silently undone. Captured before the write so it survives
@@ -155,7 +155,7 @@ pub fn sync(api: &mut Api, store: &Store, cfg: &Config) -> Result<Stats> {
                     // Don't delete a file another tracked entry still points to:
                     // when two folders collided onto one local path, both ids
                     // shared this file, and removing it for the mover would wipe
-                    // the survivor's bytes on disk — which then read as a delete
+                    // the survivor's bytes on disk - which then read as a delete
                     // and got trashed on the server. The store still holds this
                     // id at `prev` (its upsert is below), so "another id here"
                     // means a genuine second owner.
@@ -167,7 +167,7 @@ pub fn sync(api: &mut Api, store: &Store, cfg: &Config) -> Result<Stats> {
             store.upsert_file(id, folder_id, name, etag, &local.to_string_lossy())?;
         }
 
-        // Pass 3 — tombstones (hard deletes).
+        // Pass 3 - tombstones (hard deletes).
         for ch in &delta.changes {
             if ch["kind"] != "deleted" {
                 continue;
@@ -199,7 +199,7 @@ pub fn sync(api: &mut Api, store: &Store, cfg: &Config) -> Result<Stats> {
     Ok(stats)
 }
 
-/// Removes the directories a server-side folder move left behind — deepest
+/// Removes the directories a server-side folder move left behind - deepest
 /// first, and only when actually empty.
 ///
 /// `remove_dir` (never `remove_dir_all`) is the entire safety guarantee: a
@@ -210,7 +210,7 @@ fn prune_emptied_dirs(dirs: &mut [PathBuf]) {
     dirs.sort_by_key(|p| std::cmp::Reverse(p.components().count()));
     for dir in dirs.iter() {
         // Ignored on purpose: `NotEmpty` means "keep it", `NotFound` means
-        // "already gone" — neither is an error worth failing the sync over.
+        // "already gone" - neither is an error worth failing the sync over.
         let _ = std::fs::remove_dir(dir);
     }
 }
@@ -230,7 +230,7 @@ pub(crate) fn join_rel(root: &Path, rel: &str) -> PathBuf {
             continue;
         }
         // Folder names come from the server too, so they need the same
-        // treatment as file names — a folder called "11:51" is just as
+        // treatment as file names - a folder called "11:51" is just as
         // impossible to create here.
         out.push(sanitize(part));
     }
@@ -259,7 +259,7 @@ const RESERVED: &[&str] = &[];
 /// Path separators and traversal are stripped, then the characters the platform
 /// refuses are replaced. The mapping is DETERMINISTIC and never empty: the
 /// store keys a file by its server id and remembers the local path, so the same
-/// server name must always yield the same local name — otherwise a second sync
+/// server name must always yield the same local name - otherwise a second sync
 /// would download the file again under a different name.
 ///
 /// A name that cannot be written blocks the whole pull (the write error aborts
@@ -307,7 +307,7 @@ mod tests {
     use std::path::PathBuf;
 
     /// The reconciliation of a server-side folder move: the old directory, once
-    /// its children have moved out, is removed — nested first, so a moved parent
+    /// its children have moved out, is removed - nested first, so a moved parent
     /// collapses with its moved child. A directory that still holds an
     /// un-reconciled file is KEPT, never deleted with its contents.
     #[test]

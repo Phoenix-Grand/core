@@ -1,5 +1,5 @@
 //! An open ribbon drop-down (a menu, a gallery) is light-dismiss, as in Office: while it is open the rest of
-//! the view does not see the pointer, so the press that closes it — or picks one of its items over the page —
+//! the view does not see the pointer, so the press that closes it - or picks one of its items over the page -
 //! never reaches the control under it, nor does its release.
 
 use std::cell::RefCell;

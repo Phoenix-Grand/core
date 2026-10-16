@@ -22,7 +22,7 @@ use super::connector::{
 ///
 /// Kept rather than deleted because deleting it would turn "SFTP is offered and
 /// does not work" into "SFTP was never here". A real fix means an in-process SSH
-/// client (`russh`, `ssh2`), not re-enabling a spawn — see the no-host-execution
+/// client (`russh`, `ssh2`), not re-enabling a spawn - see the no-host-execution
 /// rule in `CLAUDE.md`.
 #[allow(dead_code)]
 pub struct SftpConnector {

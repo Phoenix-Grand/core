@@ -1,7 +1,7 @@
 // Per-tab (sessionStorage), per-application persistence of the left/right panel
 // expand state. `sessionStorage` is scoped to a single tab and survives a reload
 // (F5), which matches the requirement: each tab remembers, per application, the
-// last expanded/collapsed state of both panels — restored on reload or when
+// last expanded/collapsed state of both panels - restored on reload or when
 // returning to the application later within the same tab.
 
 const KEY = 'kubuno.panelPrefs.v1'
@@ -13,7 +13,7 @@ const KEY = 'kubuno.panelPrefs.v1'
 export const SIDEBAR_WIDTH = { MIN: 256, MAX: 360, DEFAULT: 256 } as const
 
 /* Right panel width bounds. DEFAULT is the historical fixed 320px. MAX is generous
- * because this panel holds CONTENT (notes, tasks, an agenda), not navigation — the
+ * because this panel holds CONTENT (notes, tasks, an agenda), not navigation - the
  * reason the left rail stops at 360 does not apply here. */
 export const RIGHT_PANEL_WIDTH = { MIN: 280, MAX: 560, DEFAULT: 320 } as const
 

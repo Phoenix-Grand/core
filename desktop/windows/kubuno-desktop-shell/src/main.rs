@@ -1,4 +1,4 @@
-//! Kubuno Desktop for Windows (`kubuno-desktop.exe`) — `Program.cs`: the portable app of desktop/common
+//! Kubuno Desktop for Windows (`kubuno-desktop.exe`) - `Program.cs`: the portable app of desktop/common
 //! (`kubuno_desktop_shell_common::app::run`) with the Windows platform registered and the Win32 window as its
 //! user interface. Everything else is in the library (`lib.rs`) and in the common app.
 //!

@@ -13,7 +13,7 @@ export type ReportHeaderProps = {
   instance:    string
   title:       string
   about:       string
-  /** The window's own name — "30 derniers jours", "mois dernier". */
+  /** The window's own name - "30 derniers jours", "mois dernier". */
   periodLabel: string
   generatedAt: string
   generatedBy: string

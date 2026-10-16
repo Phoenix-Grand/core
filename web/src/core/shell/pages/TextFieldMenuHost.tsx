@@ -8,7 +8,7 @@ import {
   type TextTarget,
 } from '../../../ui/textFieldMenu'
 
-/* Default context menu for every text entry area — the `@ui` primitives (Input,
+/* Default context menu for every text entry area - the `@ui` primitives (Input,
  * Textarea, NumberInput, Editable, RichText), the search bars, and any field a module
  * renders. Mounted once at the app root rather than wired into each primitive: a single
  * document-level listener covers fields the core does not even know about, and cannot

@@ -1,4 +1,4 @@
-<!-- PreviewStage — converted from PreviewStage.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- PreviewStage - converted from PreviewStage.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="PreviewStageProps">
   <Stack Gap="6">
     <Label HtmlTag="Span" Text="{Binding props.title}" Role="Meta" Overflow="Wrap" ForeColor="TextTertiary"/>

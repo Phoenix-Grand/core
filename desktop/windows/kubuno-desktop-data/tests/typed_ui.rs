@@ -1,7 +1,7 @@
 //! Compile-pass / compile-fail tests of `data_source!` (DATA-4), through trybuild.
 //!
 //! trybuild builds the cases in its own package (`<target>/tests/trybuild/kubuno-desktop-data`), where sqlx
-//! looks for the offline cache (`CARGO_MANIFEST_DIR/.sqlx`, then the workspace root's — sqlx 0.8
+//! looks for the offline cache (`CARGO_MANIFEST_DIR/.sqlx`, then the workspace root's - sqlx 0.8
 //! reads `SQLX_OFFLINE_DIR` only from a `.env` file, not from the environment): the committed
 //! fixture cache `kubuno-desktop-data/.sqlx` is copied there first. The cases need `--cfg trybuild`, passed
 //! through `CARGO_ENCODED_RUSTFLAGS`, which cargo ranks above any configured rustflags.

@@ -1,5 +1,5 @@
 //! Diagnostics of a GUI application: where its logs, its `println!`s and its panics go when
-//! there is no console — the Windows Forms model (`OutputType=WinExe`: no console window, even
+//! there is no console - the Windows Forms model (`OutputType=WinExe`: no console window, even
 //! in Debug; `Debug.WriteLine`/trace output in Visual Studio's Output window).
 //!
 //! Kubuno desktop applications are built with `#![windows_subsystem = "windows"]`, so they
@@ -16,17 +16,17 @@
 //! What is routed:
 //!
 //! - **`tracing`** events (a small built-in subscriber, installed as the global default unless
-//!   the application already installed its own; the level is `INFO` — `KUBUNO_LOG` =
+//!   the application already installed its own; the level is `INFO` - `KUBUNO_LOG` =
 //!   `error|warn|info|debug|trace` or [`set_max_level`] changes it; the per-event traces of the
 //!   views (every dispatched event) are `DEBUG`, so they only appear when asked for);
 //! - **`log`** records (a logger, unless one is already set);
 //! - **`println!`/`eprintln!`**: when the process has no standard output/error (no console, no
-//!   pipe from a parent — the usual case of a GUI exe), they are redirected through a pipe to
+//!   pipe from a parent - the usual case of a GUI exe), they are redirected through a pipe to
 //!   the same destination, line by line; a process started with its own pipes (a terminal, a test
 //!   runner) keeps them;
 //! - **panics** (message, location, backtrace). A panic of the UI thread (`main`) of a GUI
 //!   application then shows the Kubuno crash window ([`super::crash`]: the app's name, the message,
-//!   the details, *Open log*, *Copy*, *Close*) and closes the process — never a silent exit, and
+//!   the details, *Open log*, *Copy*, *Close*) and closes the process - never a silent exit, and
 //!   never a panic unwinding out of the window procedure. The window runs on its own thread, so the
 //!   panicking UI thread pumps no message meanwhile; Windows' "not responding" ghosting is turned
 //!   off so the application's window keeps its look. A system message box is the fallback. A
@@ -69,7 +69,7 @@ pub fn disable() {
     DISABLED.store(true, Ordering::Relaxed);
 }
 
-/// Installs the diagnostics sink for the application `app` (the log file's name) — see the
+/// Installs the diagnostics sink for the application `app` (the log file's name) - see the
 /// module doc. Idempotent: the first call wins, later ones return `false`, as does a call after
 /// [`disable`]. `dialog`: show an error dialog when the application panics.
 pub fn install(app: &str, dialog: bool) -> bool {
@@ -118,14 +118,14 @@ pub fn exe_name() -> String {
         .unwrap_or_else(|| "kubuno-app".to_string())
 }
 
-/// `%LOCALAPPDATA%\Kubuno\logs\<app>.log` — where the lines go while no debugger is attached.
+/// `%LOCALAPPDATA%\Kubuno\logs\<app>.log` - where the lines go while no debugger is attached.
 pub fn log_file_path(app: &str) -> Option<PathBuf> {
     let base = std::env::var_os("LOCALAPPDATA")?;
     Some(PathBuf::from(base).join("Kubuno").join("logs").join(format!("{}.log", sanitize(app))))
 }
 
 /// Writes one diagnostic line (`level` like `"INFO"`, `target` the module or source) to the
-/// current destination — the debugger's output or the log file. Does nothing before [`install`].
+/// current destination - the debugger's output or the log file. Does nothing before [`install`].
 pub fn write_line(level: &str, target: &str, message: &str) {
     let Some(sink) = SINK.get() else { return };
     let line = format!("{} [{level}] {target}: {message}\r\n", timestamp());
@@ -180,7 +180,7 @@ fn sanitize(app: &str) -> String {
     }
 }
 
-/// The level [`install`] starts with: `KUBUNO_LOG`, else `INFO` (debug builds included — the
+/// The level [`install`] starts with: `KUBUNO_LOG`, else `INFO` (debug builds included - the
 /// per-event traces would flood the output otherwise).
 fn max_level() -> tracing::Level {
     match std::env::var("KUBUNO_LOG").map(|v| v.to_ascii_lowercase()).as_deref() {
@@ -226,7 +226,7 @@ fn log_filter(level: tracing::Level) -> log::LevelFilter {
     }
 }
 
-/// Changes the diagnostics level at run time (`DEBUG` shows every event the views dispatch) —
+/// Changes the diagnostics level at run time (`DEBUG` shows every event the views dispatch) -
 /// the programmatic twin of `KUBUNO_LOG`. Without effect when the application installed its own
 /// `tracing`/`log` subscriber.
 pub fn set_max_level(level: tracing::Level) {
@@ -507,7 +507,7 @@ fn redirect_std_handles() {
 // ── Win32 ────────────────────────────────────────────────────────────────────
 //
 // Declared directly (raw-dylib), like `input.rs`' clipboard, so the crate's `windows` feature
-// set — and with it the `windows` crate every Kubuno program compiles — is unchanged.
+// set - and with it the `windows` crate every Kubuno program compiles - is unchanged.
 
 const STD_OUTPUT_HANDLE: u32 = -11i32 as u32;
 const STD_ERROR_HANDLE: u32 = -12i32 as u32;

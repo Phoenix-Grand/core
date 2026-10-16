@@ -4,7 +4,7 @@
 //!   1. **Exactly one primary.** Held by a unique index, swapped in one
 //!      transaction, never by two statements a crash could interleave.
 //!   2. **A promotion, not a creation.** A domain becomes primary only if it is
-//!      already declared *and* verified — the same order the reference imposes,
+//!      already declared *and* verified - the same order the reference imposes,
 //!      and for the same reason: the instance's own name is the one thing that
 //!      must never be a claim.
 //!   3. **An alias hangs off a real domain.** Its parent is the primary or a
@@ -91,7 +91,7 @@ impl DomainRow {
 }
 
 /// Every domain, the primary first, then aliases grouped under the domain they
-/// serve — the order the console renders without having to sort.
+/// serve - the order the console renders without having to sort.
 pub async fn list(db: &DbPool) -> Result<Vec<Domain>, AppError> {
     let sql = select_domains(
         db.backend(),
@@ -159,7 +159,7 @@ pub async fn verified_names(db: &DbPool) -> Vec<String> {
     }
 }
 
-/// Declares a domain. Secondary or alias only — the primary is never created,
+/// Declares a domain. Secondary or alias only - the primary is never created,
 /// it is promoted (see [`promote`]).
 pub async fn create(
     tx: &mut DbTx,
@@ -238,7 +238,7 @@ pub async fn create(
 ///
 /// Idempotent and re-runnable: an administrator who publishes the record ten
 /// minutes later presses the same button, and a domain that was verified stays
-/// verified even if a later probe fails — a registrar hiccup must not silently
+/// verified even if a later probe fails - a registrar hiccup must not silently
 /// un-own a domain that accounts already depend on.
 pub async fn verify(db: &DbPool, id: Uuid) -> Result<Domain, AppError> {
     let domain = get(db, id).await?;
@@ -314,8 +314,8 @@ pub async fn refresh_mail(db: &DbPool, id: Uuid) -> Result<Domain, AppError> {
 
 /// Promotes a verified secondary domain to primary, demoting the current one.
 ///
-/// One transaction, because the unique index means the intermediate state — two
-/// primaries, or none — cannot be allowed to exist even for a statement.
+/// One transaction, because the unique index means the intermediate state - two
+/// primaries, or none - cannot be allowed to exist even for a statement.
 pub async fn promote(tx: &mut DbTx, id: Uuid) -> Result<(String, Option<String>), AppError> {
     // The row lock is spelled per engine via `Backend::for_update` (empty on
     // SQLite, whose writes are already serialized).

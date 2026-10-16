@@ -1,4 +1,4 @@
-//! `BarChart` — a mini bar chart of a daily series (the dashboard's « Connexions par jour »): one
+//! `BarChart` - a mini bar chart of a daily series (the dashboard's « Connexions par jour »): one
 //! accent bar per day, its height the day's count over the series' largest, 3 DIP apart. The design
 //! system has no chart primitive; this is the one the console needs.
 

@@ -1,4 +1,4 @@
-<!-- ReportSummary — converted from ReportSummary.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- ReportSummary - converted from ReportSummary.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="ReportSummaryProps">
   <Panel HtmlTag="Section"
          BackColor="Surface"

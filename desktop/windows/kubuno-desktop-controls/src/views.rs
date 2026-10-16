@@ -1,4 +1,4 @@
-//! `TreeView` and `ListView` — the two "view" controls, with their item models.
+//! `TreeView` and `ListView` - the two "view" controls, with their item models.
 //!
 //! ## Why these two share a file
 //!
@@ -7,8 +7,8 @@
 //! rather than a single caption: a `TreeView` owns a tree of `TreeNode`, a
 //! `ListView` owns rows (`ListViewItem` + `ListViewItem.ListViewSubItem`),
 //! `Columns` (`ColumnHeader`) and `Groups` (`ListViewGroup`). Porting them well
-//! means porting those models as *pure, testable values* — which is the bulk of
-//! this module — and only then painting them.
+//! means porting those models as *pure, testable values* - which is the bulk of
+//! this module - and only then painting them.
 //!
 //! ## What is deferred, and why
 //!
@@ -18,17 +18,17 @@
 //! owning struct, never silently treated as something else:
 //!
 //! * **`ImageList` / `StateImageList` / `LargeImageList` / `SmallImageList` /
-//!   `GroupImageList`** — an `ImageList` is a device-bound bitmap collection; a
+//!   `GroupImageList`** - an `ImageList` is a device-bound bitmap collection; a
 //!   control paints images the host resolves for it (`Canvas::image`), so these
 //!   collections are not modelled. The *indices* into them (`ImageIndex`,
 //!   `SelectedImageIndex`, …) are primitives and are kept.
-//! * **`TreeViewNodeSorter` / `ListViewItemSorter`** — an `IComparer` is a
+//! * **`TreeViewNodeSorter` / `ListViewItemSorter`** - an `IComparer` is a
 //!   callback; a pure value cannot hold one. `Sorted`/`Sorting` are honoured by
 //!   comparing node/item `Text`.
-//! * **`DrawMode` / `OwnerDraw`** — owner-draw hands painting back to the host;
+//! * **`DrawMode` / `OwnerDraw`** - owner-draw hands painting back to the host;
 //!   this port always paints itself, so the flag is stored but not acted on.
 //! * **`BackColor` / `ForeColor` / `Text` / `BackgroundImageLayout`** are
-//!   carried by `ControlBase` (ambient) and reached through `Deref` — they are
+//!   carried by `ControlBase` (ambient) and reached through `Deref` - they are
 //!   *not* re-declared here, per the library's "do not re-implement a base"
 //!   rule, even though the catalogue lists them as re-declared on these types.
 //!
@@ -38,18 +38,18 @@
 //! toolkit paints them, not as the Kubuno design system would: the ground is
 //! `Window`, the item text `WindowText`, the selection the system's own
 //! `Highlight` / `HighlightText`, and there is not a rounded corner anywhere.
-//! Every colour comes from [`crate::system::Visuals`] — never a literal, never
+//! Every colour comes from [`crate::system::Visuals`] - never a literal, never
 //! `Canvas::theme()`.
 //!
 //! Two facts were read off the reference sheet (`08-views.png`, captured from
 //! the real `System.Windows.Forms` on this machine) rather than assumed, and
 //! both happen to be system colours *exactly*:
 //!
-//! * the `TreeView`'s dotted connecting lines are `#6D6D6D` — `GrayText`, not
+//! * the `TreeView`'s dotted connecting lines are `#6D6D6D` - `GrayText`, not
 //!   `ControlDark` (`#A0A0A0`);
-//! * the `ListView`'s `GridLines` are `#F0F0F0` — `Control`, not `ControlDark`.
+//! * the `ListView`'s `GridLines` are `#F0F0F0` - `Control`, not `ControlDark`.
 //!
-//! ## The chrome that is not a system colour — asked of the theme
+//! ## The chrome that is not a system colour - asked of the theme
 //!
 //! Three things on the sheet are painted by the *visual-styles theme* rather
 //! than by comctl32, and none of them is any entry of `SystemColors`: the field
@@ -58,7 +58,7 @@
 //! pale gradient, with a `#4B63A7` sign). They used to be approximated with the
 //! classic recipe and documented as the one place this family knowingly differed
 //! from the sheet. They are now the genuine part, rendered by `uxtheme.dll`
-//! through [`crate::theme`] — so they are identical **by construction** rather
+//! through [`crate::theme`] - so they are identical **by construction** rather
 //! than by a colour written down here.
 //!
 //! The classic recipe is still in the file, behind `if !c.draw_theme_part(…)`:
@@ -69,7 +69,7 @@
 //! ## The two parts this family deliberately does **not** ask for
 //!
 //! `LVP_LISTITEM` and `TVP_TREEITEM` are the obvious names for a row's selection
-//! band, and both are wrong here — not "a shade off", but not present at all:
+//! band, and both are wrong here - not "a shade off", but not present at all:
 //! `IsThemePartDefined` answers **false** for them in every state on this
 //! machine's theme, because Windows Vista moved item rendering to the
 //! `Explorer::` subclass and a `ListView`/`TreeView` only gets it after an
@@ -80,7 +80,7 @@
 //! `#828790` frame, so [`ControlCanvas::draw_theme_part`] reports `true` and a
 //! family that trusted it would draw a white framed box over every row. And the
 //! `Explorer::` parts, which *are* defined, render the modern rounded `#CCCCCC`
-//! selection — also not the sheet, which shows the flat `Control` grey.
+//! selection - also not the sheet, which shows the flat `Control` grey.
 //!
 //! So the bands stay the system colours the sheet actually shows, and the
 //! `the_item_parts_are_not_in_this_theme` test pins the measurement: if a future
@@ -89,7 +89,7 @@
 //!
 //! ## Focus
 //!
-//! Selection colours depend on focus in the real toolkit — blue when the control
+//! Selection colours depend on focus in the real toolkit - blue when the control
 //! has it, grey `Control` when it does not (and, when `HideSelection` is set,
 //! nothing at all). The family models that through
 //! [`Control::paint_with_state`]; plain [`Control::paint`] paints the **focused**
@@ -120,54 +120,54 @@ use crate::{Canvas, Rect};
 ///
 /// Re-exported from the Windows SDK's own constants rather than written as
 /// numbers: a part id is exactly the kind of magic number that is copied wrong
-/// once and then looks merely "a bit off" forever — and, worse here, an id that
+/// once and then looks merely "a bit off" forever - and, worse here, an id that
 /// names nothing still *draws* something (see the module docs).
 mod part {
     use windows::Win32::UI::Controls as sdk;
 
-    /// `HEADER` — one column button of the Details header band. It paints the
+    /// `HEADER` - one column button of the Details header band. It paints the
     /// `#FFFFFF` face **and** the `#E5E5E5` rule down its own right edge, which
     /// is the whole of what the sheet shows between two columns.
     ///
     /// **Not** `HP_HEADERITEMLEFT`/`HP_HEADERITEMRIGHT`, whose names suggest the
     /// first and last column: neither is defined in this theme, so both render
-    /// the fallback — a plain white box with **no** rule at all.
+    /// the fallback - a plain white box with **no** rule at all.
     pub const HP_HEADERITEM: i32 = sdk::HP_HEADERITEM.0;
-    /// `HEADER` — the sort triangle. A *TrueSize* part: it draws its own 9×5 at
+    /// `HEADER` - the sort triangle. A *TrueSize* part: it draws its own 9×5 at
     /// 96 DPI centred in whatever rectangle it is given, never stretched.
     pub const HP_HEADERSORTARROW: i32 = sdk::HP_HEADERSORTARROW.0;
-    /// `TREEVIEW` — the expand/collapse glyph. Also TrueSize, and its natural
+    /// `TREEVIEW` - the expand/collapse glyph. Also TrueSize, and its natural
     /// side at 96 DPI is exactly [`super::GLYPH_BOX`], so the box this family
     /// already reserved is the box the theme wants.
     ///
     /// **Not** `TVP_HOTGLYPH`, which is undefined here and renders the fallback.
     pub const TVP_GLYPH: i32 = sdk::TVP_GLYPH.0;
 
-    /// `HP_HEADERITEM` — at rest. The `#FFFFFF` face of the sheet.
+    /// `HP_HEADERITEM` - at rest. The `#FFFFFF` face of the sheet.
     pub const HIS_NORMAL: i32 = sdk::HIS_NORMAL.0;
     // The painter always asks for `HIS_NORMAL`, so these two are reached only by
     // the test that pins their faces. That is deliberate and is not a gap to be
     // filled by wiring `ControlState` in: hotness is per-**column**, and the only
-    // pointer state a control is handed is its own — using it would light every
+    // pointer state a control is handed is its own - using it would light every
     // header at once because the pointer is over a row far below. Measuring them
     // now means the day a `ColumnHeader` carries a hover flag (an item-model
     // change, which this pass may not make) the colours are already known and
     // already guarded against a theme update.
-    /// `HP_HEADERITEM` — the pointer is over this column (`#D9EBF9`).
+    /// `HP_HEADERITEM` - the pointer is over this column (`#D9EBF9`).
     #[allow(dead_code)]
     pub const HIS_HOT: i32 = sdk::HIS_HOT.0;
-    /// `HP_HEADERITEM` — the pointer is down on this column (`#BCDCF4`).
+    /// `HP_HEADERITEM` - the pointer is down on this column (`#BCDCF4`).
     #[allow(dead_code)]
     pub const HIS_PRESSED: i32 = sdk::HIS_PRESSED.0;
 
-    /// `HP_HEADERSORTARROW` — ascending, the triangle pointing up.
+    /// `HP_HEADERSORTARROW` - ascending, the triangle pointing up.
     pub const HSAS_SORTEDUP: i32 = sdk::HSAS_SORTEDUP.0;
-    /// `HP_HEADERSORTARROW` — descending.
+    /// `HP_HEADERSORTARROW` - descending.
     pub const HSAS_SORTEDDOWN: i32 = sdk::HSAS_SORTEDDOWN.0;
 
-    /// `TVP_GLYPH` — a collapsed node: the glyph carries a **plus**.
+    /// `TVP_GLYPH` - a collapsed node: the glyph carries a **plus**.
     pub const GLPS_CLOSED: i32 = sdk::GLPS_CLOSED.0;
-    /// `TVP_GLYPH` — an expanded node: a minus.
+    /// `TVP_GLYPH` - an expanded node: a minus.
     pub const GLPS_OPENED: i32 = sdk::GLPS_OPENED.0;
 }
 
@@ -179,7 +179,7 @@ mod part {
 // discriminants come from the reflection catalogue, and the default is the one
 // the catalogue reports.
 
-/// `System.Windows.Forms.View` — how a `ListView` arranges its items.
+/// `System.Windows.Forms.View` - how a `ListView` arranges its items.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum View {
     #[default]
@@ -190,7 +190,7 @@ pub enum View {
     Tile,
 }
 
-/// `SortOrder` — the direction `ListView.Sorting` applies (also the shape a
+/// `SortOrder` - the direction `ListView.Sorting` applies (also the shape a
 /// column's sort glyph would take).
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum SortOrder {
@@ -200,7 +200,7 @@ pub enum SortOrder {
     Descending,
 }
 
-/// `ColumnHeaderStyle` — whether the Details header is shown and clickable.
+/// `ColumnHeaderStyle` - whether the Details header is shown and clickable.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum ColumnHeaderStyle {
     /// No header band at all (rows start at the top).
@@ -210,7 +210,7 @@ pub enum ColumnHeaderStyle {
     Clickable,
 }
 
-/// `ItemActivation` — how many clicks activate an item. Stored for fidelity;
+/// `ItemActivation` - how many clicks activate an item. Stored for fidelity;
 /// activation is an input concern the host drives, not a paint concern.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum ItemActivation {
@@ -220,7 +220,7 @@ pub enum ItemActivation {
     TwoClick,
 }
 
-/// `ListViewAlignment` — how icons snap in the icon views. The catalogue's
+/// `ListViewAlignment` - how icons snap in the icon views. The catalogue's
 /// default is `Top`.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum ListViewAlignment {
@@ -231,7 +231,7 @@ pub enum ListViewAlignment {
     SnapToGrid,
 }
 
-/// `TreeViewDrawMode` — normal vs owner-draw. Owner-draw is deferred (this port
+/// `TreeViewDrawMode` - normal vs owner-draw. Owner-draw is deferred (this port
 /// always paints itself), so only `Normal` changes anything today.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum TreeViewDrawMode {
@@ -243,7 +243,7 @@ pub enum TreeViewDrawMode {
 
 // `HorizontalAlignment` is NOT declared here: more than one family needs it
 // (`TextBox.TextAlign`, `UpDownBase`, and this file's `ColumnHeader.TextAlign`),
-// so it lives once in `enums.rs` — along with its DirectWrite mapping. Its
+// so it lives once in `enums.rs` - along with its DirectWrite mapping. Its
 // default is `Left`, which is exactly what `ColumnHeader.TextAlign` requires.
 
 // ── Shared paint / geometry constants (DIP) ──────────────────────────────────
@@ -255,7 +255,7 @@ const DEFAULT_INDENT: i32 = 19;
 const DEFAULT_ITEM_HEIGHT: i32 = 19;
 /// Side of the `[+]` / `[-]` expand box.
 ///
-/// Also, measured, the natural side of the theme's own `TVP_GLYPH` at 96 DPI —
+/// Also, measured, the natural side of the theme's own `TVP_GLYPH` at 96 DPI -
 /// the part is TrueSize, so this box is the one it draws into unstretched.
 const GLYPH_BOX: f32 = 9.0;
 /// Side of the box the header's sort triangle is centred in. The part is
@@ -275,13 +275,13 @@ const DEFAULT_COLUMN_WIDTH: i32 = 60;
 const LIST_COLUMN_WIDTH: f32 = 120.0;
 /// Left inset of a Details cell's text, header and body alike.
 const CELL_PAD_LEFT: f32 = 6.0;
-/// Right inset of a Details cell's text — smaller than the left one, as the
+/// Right inset of a Details cell's text - smaller than the left one, as the
 /// header control's own margins are.
 const CELL_PAD_RIGHT: f32 = 4.0;
 /// Left inset of an item's text in `View::List`.
 const LIST_PAD_LEFT: f32 = 4.0;
 /// How far a selection band overhangs the label it wraps. The toolkit highlights
-/// the label's box, not the row, unless `FullRowSelect` is on — so the band has
+/// the label's box, not the row, unless `FullRowSelect` is on - so the band has
 /// to be measured from the text, and this is the breathing space it leaves.
 const LABEL_PAD: f32 = 1.0;
 
@@ -294,22 +294,22 @@ const LABEL_PAD: f32 = 1.0;
 /// and `TopNode` are expressed as stable paths and resolved on demand.
 pub type NodePath = Vec<usize>;
 
-/// `System.Windows.Forms.TreeNode` — one node of a `TreeView`'s tree.
+/// `System.Windows.Forms.TreeNode` - one node of a `TreeView`'s tree.
 ///
 /// `Checked` is deliberately independent of the children: WinForms does **not**
-/// cascade a check to descendants — that is the app's job in `AfterCheck`
+/// cascade a check to descendants - that is the app's job in `AfterCheck`
 /// (verified against Microsoft's docs). [`TreeView::set_node_checked`] therefore
 /// touches exactly one node.
 #[derive(Debug, Clone, PartialEq, Default)]
 pub struct TreeNode {
-    /// `Name` — the key used by `Nodes[string]`.
+    /// `Name` - the key used by `Nodes[string]`.
     pub name: String,
     pub text: String,
-    /// `IsExpanded` — whether this node's children are shown.
+    /// `IsExpanded` - whether this node's children are shown.
     pub expanded: bool,
-    /// `Checked` — the box state when `CheckBoxes` is on. Independent per node.
+    /// `Checked` - the box state when `CheckBoxes` is on. Independent per node.
     pub checked: bool,
-    /// `Tag` — an arbitrary host payload, a string for the same reason as
+    /// `Tag` - an arbitrary host payload, a string for the same reason as
     /// `ControlBase::tag`.
     pub tag: Option<String>,
     /// `ImageIndex` / `SelectedImageIndex` into the (host-owned) image list.
@@ -347,7 +347,7 @@ impl TreeNode {
     }
 }
 
-/// One entry of the flattened, currently-visible tree — the pure result the
+/// One entry of the flattened, currently-visible tree - the pure result the
 /// painter and hit-tester walk. This is the same shape as the admin nav tree
 /// already shipped in the product: a list of (path, indent depth) pairs.
 #[derive(Debug, Clone, PartialEq)]
@@ -360,7 +360,7 @@ pub struct VisibleRow {
     pub checked: bool,
 }
 
-/// Flattens `nodes` to the rows that are visible given the expand state — a pure
+/// Flattens `nodes` to the rows that are visible given the expand state - a pure
 /// function of the tree alone, so it is fully testable without a window. A node
 /// is visible when every ancestor is expanded; a collapsed node contributes its
 /// own row but none of its subtree.
@@ -375,7 +375,7 @@ pub fn visible_rows(nodes: &[TreeNode]) -> Vec<VisibleRow> {
                 expanded: n.expanded,
                 checked: n.checked,
             });
-            // Only descend through an expanded parent — this is exactly what
+            // Only descend through an expanded parent - this is exactly what
             // makes the row list "visible" rather than "all".
             if n.expanded && !n.children.is_empty() {
                 walk(&n.children, prefix, depth + 1, out);
@@ -393,7 +393,7 @@ pub fn visible_rows(nodes: &[TreeNode]) -> Vec<VisibleRow> {
 /// `BackgroundImageLayout`), which are reached through `Deref`.
 ///
 /// `ImageList`/`StateImageList` are not modelled (no `ImageList` port type);
-/// `TreeViewNodeSorter` (an `IComparer`) is not modelled — see the module doc.
+/// `TreeViewNodeSorter` (an `IComparer`) is not modelled - see the module doc.
 // No `Debug`/`PartialEq`: `line_color` is a `D2D1_COLOR_F`, which the drawing
 // layer does not derive them for.
 #[derive(Clone)]
@@ -401,18 +401,18 @@ pub struct TreeView {
     control: ControlBase,
 
     // ── Content ──────────────────────────────────────────────────────────
-    /// `Nodes` — the root nodes.
+    /// `Nodes` - the root nodes.
     pub nodes: Vec<TreeNode>,
     /// `SelectedNode`, as a path (see [`NodePath`]). `None` = nothing selected.
     pub selected_path: Option<NodePath>,
-    /// `TopNode` — the node scrolled to the top, as a path. `None` = the first
+    /// `TopNode` - the node scrolled to the top, as a path. `None` = the first
     /// visible row.
     pub top_path: Option<NodePath>,
 
     // ── Metrics ──────────────────────────────────────────────────────────
-    /// `Indent` — DIP added per level.
+    /// `Indent` - DIP added per level.
     pub indent: i32,
-    /// `ItemHeight` — row height in DIP. Derived from the font in the toolkit;
+    /// `ItemHeight` - row height in DIP. Derived from the font in the toolkit;
     /// see [`DEFAULT_ITEM_HEIGHT`].
     pub item_height: i32,
 
@@ -422,31 +422,31 @@ pub struct TreeView {
     pub show_plus_minus: bool,
     /// `LineColor`. `None` means « the colour the control uses by default »,
     /// which the reference sheet shows is `GrayText` (`#6D6D6D` on this machine)
-    /// — the property's documented default of `Color.Black` is what the
+    /// - the property's documented default of `Color.Black` is what the
     /// *managed* getter reports, not what comctl32 draws with.
     pub line_color: Option<D2D1_COLOR_F>,
 
     // ── Behaviour ────────────────────────────────────────────────────────
     pub check_boxes: bool,
-    /// `HideSelection` — hide the selection when the control loses focus. Stored,
+    /// `HideSelection` - hide the selection when the control loses focus. Stored,
     /// but not simulated: a pure value has no focus, so the painter treats the
     /// tree as focused and always shows the selection.
     pub hide_selection: bool,
     pub full_row_select: bool,
     pub label_edit: bool,
-    /// `HotTracking` — underline nodes on hover. Stored; hover is an input state
+    /// `HotTracking` - underline nodes on hover. Stored; hover is an input state
     /// this value does not carry.
     pub hot_tracking: bool,
     pub scrollable: bool,
     pub show_node_tool_tips: bool,
     pub right_to_left_layout: bool,
-    /// `Sorted` — whether nodes are kept alphabetically by `Text`. This value is
+    /// `Sorted` - whether nodes are kept alphabetically by `Text`. This value is
     /// not auto-maintained on insert (it is a plain `Vec`); call [`TreeView::sort`].
     pub sorted: bool,
     pub border_style: BorderStyle,
-    /// `DrawMode` — owner-draw is deferred (this port always paints itself).
+    /// `DrawMode` - owner-draw is deferred (this port always paints itself).
     pub draw_mode: TreeViewDrawMode,
-    /// `PathSeparator` — the string joining texts in [`TreeView::full_path`].
+    /// `PathSeparator` - the string joining texts in [`TreeView::full_path`].
     pub path_separator: String,
 
     // ── Image indices (the lists themselves are host-resolved) ───────────
@@ -542,7 +542,7 @@ impl TreeView {
             .and_then(|p| Self::node_at(&self.nodes, p))
     }
 
-    /// `TreeNode.FullPath` — every ancestor's `Text` from the root, joined by
+    /// `TreeNode.FullPath` - every ancestor's `Text` from the root, joined by
     /// `PathSeparator`. Returns `None` for an empty or invalid path. The root
     /// text is included, exactly as the toolkit composes it.
     pub fn full_path(&self, path: &[usize]) -> Option<String> {
@@ -568,7 +568,7 @@ impl TreeView {
         }
     }
 
-    /// Sorts nodes recursively by `Text`. Honours `Sorted` only when asked —
+    /// Sorts nodes recursively by `Text`. Honours `Sorted` only when asked -
     /// this value does not intercept inserts the way the collection does.
     pub fn sort(&mut self) {
         fn rec(nodes: &mut [TreeNode]) {
@@ -581,7 +581,7 @@ impl TreeView {
         rec(&mut self.nodes);
     }
 
-    /// The flattened visible rows — [`visible_rows`] over the roots.
+    /// The flattened visible rows - [`visible_rows`] over the roots.
     pub fn visible_rows(&self) -> Vec<VisibleRow> {
         visible_rows(&self.nodes)
     }
@@ -609,7 +609,7 @@ impl TreeView {
         last + 1 < cur.len()
     }
 
-    /// `VisibleCount` — how many whole rows fit in the client height. Read-only
+    /// `VisibleCount` - how many whole rows fit in the client height. Read-only
     /// and derived, as in the toolkit.
     pub fn visible_count(&self) -> i32 {
         let ih = self.item_height.max(1) as f32;
@@ -626,13 +626,13 @@ impl Control for TreeView {
     }
 
     /// The width of the widest visible row (indent + glyph + text) and the total
-    /// height of the visible rows, inflated by `Padding` — the caller adds
+    /// height of the visible rows, inflated by `Padding` - the caller adds
     /// `Margin`.
     ///
     /// Measuring is the one place a family still reaches for `Canvas::formats()`:
     /// `preferred_size` receives a bare [`Canvas`], which carries no
     /// [`crate::system::Visuals`], so the system message font the painter uses is
-    /// simply not reachable from here. The two agree closely enough for layout —
+    /// simply not reachable from here. The two agree closely enough for layout -
     /// and widening the signature would change every family at once.
     fn preferred_size(&self, c: &dyn Canvas) -> Size {
         let rows = self.visible_rows();
@@ -656,7 +656,7 @@ impl Control for TreeView {
         )
     }
 
-    /// Paints the tree as a resting, **focused** control — see the module doc.
+    /// Paints the tree as a resting, **focused** control - see the module doc.
     fn paint(&self, c: &dyn ControlCanvas, bounds: Rect) {
         self.paint_with_state(c, bounds, ControlState { focused: true, ..ControlState::default() });
     }
@@ -665,7 +665,7 @@ impl Control for TreeView {
     ///
     /// Order matters and mirrors the toolkit's: the border first (it reports the
     /// interior everything else is laid out in), then the `Window` ground, then
-    /// per row — connecting lines, expand box, check box, selection band, label.
+    /// per row - connecting lines, expand box, check box, selection band, label.
     /// The selection goes down *after* the lines because the toolkit's highlight
     /// covers the horizontal stub that runs under the label.
     fn paint_with_state(&self, c: &dyn ControlCanvas, bounds: Rect, state: ControlState) {
@@ -673,7 +673,7 @@ impl Control for TreeView {
         let colors = v.colors;
         // The ground is resolved before the frame is drawn: the themed frame
         // repaints its own inner pad, and the colour that ring must take is this
-        // one — see [`paint_border`].
+        // one - see [`paint_border`].
         let ground = self
             .control
             .back_color
@@ -707,7 +707,7 @@ impl Control for TreeView {
             let content_left = interior.left + 2.0 + (row.depth as f32 + 1.0) * indent;
             let connector_x = content_left - indent / 2.0;
             // `ShowRootLines = false` takes the root level's lines AND its expand
-            // boxes away — the toolkit hides both together.
+            // boxes away - the toolkit hides both together.
             let level_has_chrome = row.depth > 0 || self.show_root_lines;
 
             if self.show_lines {
@@ -762,8 +762,8 @@ impl Control for TreeView {
             }
 
             let label = Self::node_at(&self.nodes, &row.path).map(|n| n.text.as_str()).unwrap_or("");
-            // The highlight wraps the LABEL, not the row — unless `FullRowSelect`
-            // says otherwise — so it has to be measured from the text.
+            // The highlight wraps the LABEL, not the row - unless `FullRowSelect`
+            // says otherwise - so it has to be measured from the text.
             let label_rect = if self.full_row_select {
                 Rect::new(interior.left, top, interior.right, bottom)
             } else {
@@ -801,7 +801,7 @@ impl Control for TreeView {
 //  ListView
 // =============================================================================
 
-/// `ListViewItem.ListViewSubItem` — a cell in a Details row past the first
+/// `ListViewItem.ListViewSubItem` - a cell in a Details row past the first
 /// column. Per-sub-item colours/font are deferred (kept simple: a value is its
 /// text); the row's own colours drive painting.
 #[derive(Debug, Clone, PartialEq, Default)]
@@ -821,7 +821,7 @@ impl ListViewSubItem {
     }
 }
 
-/// `System.Windows.Forms.ListViewItem` — a row.
+/// `System.Windows.Forms.ListViewItem` - a row.
 ///
 /// `Text` is the first column; `sub_items` are columns 1.. (the toolkit stores
 /// the item text as `SubItems[0]`, but keeping `text` explicit is clearer and
@@ -831,17 +831,17 @@ pub struct ListViewItem {
     pub name: String,
     pub text: String,
     pub sub_items: Vec<ListViewSubItem>,
-    /// `Checked` — the box state when `CheckBoxes` is on.
+    /// `Checked` - the box state when `CheckBoxes` is on.
     pub checked: bool,
-    /// `Selected` — the toolkit derives `SelectedIndices` from this per-item
+    /// `Selected` - the toolkit derives `SelectedIndices` from this per-item
     /// flag, so the flag is the source of truth here too.
     pub selected: bool,
     pub tag: Option<String>,
     pub image_index: i32,
     pub state_image_index: i32,
-    /// `Group` — index into [`ListView::groups`], or `None` for the default group.
+    /// `Group` - index into [`ListView::groups`], or `None` for the default group.
     pub group: Option<usize>,
-    /// `IndentCount` — Details indent, in whole small-image widths.
+    /// `IndentCount` - Details indent, in whole small-image widths.
     pub indent_count: i32,
 }
 
@@ -880,7 +880,7 @@ impl ListViewItem {
     }
 }
 
-/// `System.Windows.Forms.ColumnHeader` — a Details column.
+/// `System.Windows.Forms.ColumnHeader` - a Details column.
 #[derive(Debug, Clone, PartialEq)]
 pub struct ColumnHeader {
     pub name: String,
@@ -914,13 +914,13 @@ impl Default for ColumnHeader {
     }
 }
 
-/// `System.Windows.Forms.ListViewGroup` — a titled band of items.
+/// `System.Windows.Forms.ListViewGroup` - a titled band of items.
 #[derive(Debug, Clone, PartialEq, Default)]
 pub struct ListViewGroup {
     pub name: String,
     pub header: String,
     pub header_alignment: HorizontalAlignment,
-    /// `Collapsed` — whether the group is folded. Stored; folding is not painted.
+    /// `Collapsed` - whether the group is folded. Stored; folding is not painted.
     pub collapsed: bool,
     pub tag: Option<String>,
 }
@@ -953,7 +953,7 @@ pub struct DetailsGeometry {
 
 impl DetailsGeometry {
     /// The left x of each column, plus a final entry at the right edge of the
-    /// last column — so column `i` spans `xs[i]..xs[i+1]`.
+    /// last column - so column `i` spans `xs[i]..xs[i+1]`.
     pub fn column_x_offsets(&self, columns: &[ColumnHeader]) -> Vec<f32> {
         let mut xs = Vec::with_capacity(columns.len() + 1);
         let mut x = self.content.left;
@@ -1003,7 +1003,7 @@ impl DetailsGeometry {
     }
 }
 
-/// Tiles `item_count` items top-to-bottom then wrapping into the next column —
+/// Tiles `item_count` items top-to-bottom then wrapping into the next column -
 /// the layout `View::List` uses. Pure, so wrapping is testable.
 pub fn list_column_layout(
     item_count: usize,
@@ -1025,7 +1025,7 @@ pub fn list_column_layout(
 
 /// The properties `ListView` itself declares (41 in the catalogue), minus the
 /// four re-declared from `Control` reached through `Deref`. Image lists and
-/// `ListViewItemSorter` are not modelled — see the module doc.
+/// `ListViewItemSorter` are not modelled - see the module doc.
 // No `Debug`: contains no colour, but kept consistent with `TreeView`; it may
 // derive `Clone` freely.
 #[derive(Clone)]
@@ -1049,11 +1049,11 @@ pub struct ListView {
     pub check_boxes: bool,
     /// `FocusedItem` as an index. Settable in the toolkit; stored as an index.
     pub focused_index: Option<usize>,
-    /// `TopItem` — first visible row, as an index.
+    /// `TopItem` - first visible row, as an index.
     pub top_index: Option<usize>,
     pub full_row_select: bool,
     /// `HideSelection` (default *false* for `ListView`, unlike `TreeView`).
-    /// Stored, not simulated — same reasoning as `TreeView`.
+    /// Stored, not simulated - same reasoning as `TreeView`.
     pub hide_selection: bool,
 
     // ── Chrome / behaviour ───────────────────────────────────────────────
@@ -1072,10 +1072,10 @@ pub struct ListView {
     pub right_to_left_layout: bool,
     pub background_image_tiled: bool,
     pub activation: ItemActivation,
-    /// `Sorting` — direction items are kept in by `Text`. Not auto-maintained;
+    /// `Sorting` - direction items are kept in by `Text`. Not auto-maintained;
     /// call [`ListView::sort`].
     pub sorting: SortOrder,
-    /// `OwnerDraw` — deferred; this port always paints itself.
+    /// `OwnerDraw` - deferred; this port always paints itself.
     pub owner_draw: bool,
 
     // ── Virtual mode ─────────────────────────────────────────────────────
@@ -1158,7 +1158,7 @@ impl ListView {
         }
     }
 
-    /// `SelectedIndices` — derived from each item's `Selected` flag.
+    /// `SelectedIndices` - derived from each item's `Selected` flag.
     pub fn selected_indices(&self) -> Vec<usize> {
         self.items
             .iter()
@@ -1168,7 +1168,7 @@ impl ListView {
             .collect()
     }
 
-    /// `CheckedIndices` — derived from each item's `Checked` flag.
+    /// `CheckedIndices` - derived from each item's `Checked` flag.
     pub fn checked_indices(&self) -> Vec<usize> {
         self.items
             .iter()
@@ -1178,7 +1178,7 @@ impl ListView {
             .collect()
     }
 
-    /// `SelectedItems` — the SAME selection as [`ListView::selected_indices`],
+    /// `SelectedItems` - the SAME selection as [`ListView::selected_indices`],
     /// read as items instead of positions.
     ///
     /// An accessor, deliberately not a field: the toolkit's two collections are
@@ -1188,7 +1188,7 @@ impl ListView {
         self.items.iter().filter(|it| it.selected)
     }
 
-    /// `CheckedItems` — the item-valued twin of [`ListView::checked_indices`],
+    /// `CheckedItems` - the item-valued twin of [`ListView::checked_indices`],
     /// for the same reason as [`ListView::selected_items`].
     ///
     /// Note it is a real toolkit member but is **not** in the reflection
@@ -1200,7 +1200,7 @@ impl ListView {
     }
 
     /// Selects (or deselects) an item, enforcing `MultiSelect`: with it off,
-    /// selecting one item clears every other — the toolkit's own rule.
+    /// selecting one item clears every other - the toolkit's own rule.
     pub fn set_selected(&mut self, index: usize, selected: bool) {
         if index >= self.items.len() {
             return;
@@ -1248,7 +1248,7 @@ impl ListView {
 
     // ── Painting helpers, split by view ──────────────────────────────────
 
-    /// The colour a row's text is painted in when it is not selected — the
+    /// The colour a row's text is painted in when it is not selected - the
     /// control's own `ForeColor` if one was set, else `WindowText`, else the one
     /// colour a disabled control greys its text with.
     fn text_color(&self, colors: &SystemColors) -> D2D1_COLOR_F {
@@ -1259,7 +1259,7 @@ impl ListView {
         }
     }
 
-    /// The colour behind everything the control draws — its own `BackColor` if
+    /// The colour behind everything the control draws - its own `BackColor` if
     /// one was set, else `Window`, or `Control` when it is disabled.
     ///
     /// Resolved in one place because three callers must agree on it: the fill,
@@ -1272,7 +1272,7 @@ impl ListView {
             .unwrap_or(if self.enabled { colors.window } else { colors.control })
     }
 
-    /// `View::Details` — the header band, then the rows, then the grid.
+    /// `View::Details` - the header band, then the rows, then the grid.
     ///
     /// ## The header, themed and classic
     ///
@@ -1283,7 +1283,7 @@ impl ListView {
     /// which is why the band used to be `Control` grey with a bevel per column
     /// and is now the real thing.
     ///
-    /// The strip past the last column is part of the header band — the sheet
+    /// The strip past the last column is part of the header band - the sheet
     /// shows it white up to the control's own frame, with **no** rule at its
     /// right edge. It is painted as one more `HP_HEADERITEM` stretched a device
     /// pixel past the band and clipped to it, which puts that item's rule
@@ -1304,7 +1304,7 @@ impl ListView {
     /// The header items are always `HIS_NORMAL`. `HIS_HOT` and `HIS_PRESSED` are
     /// measured and pinned, but nothing can reach them honestly: hotness is
     /// per-**column**, and the only pointer state a control is given is
-    /// [`ControlState`] for the control as a whole — wiring that through would
+    /// [`ControlState`] for the control as a whole - wiring that through would
     /// light every column at once because the pointer is over a row three
     /// hundred pixels below. A `ColumnHeader` gaining a hover flag is an
     /// item-model change, not a rendering one.
@@ -1328,7 +1328,7 @@ impl ListView {
             // The band's own ground, under the columns: one header item stretched
             // one device pixel past the right edge, clipped back to the band, so
             // its rule lands outside. Whether it took is also how the loop below
-            // knows which branch to draw the columns in — one question asked once,
+            // knows which branch to draw the columns in - one question asked once,
             // rather than a themed face under a classic bevel.
             c.push_clip(&band);
             let themed = c.draw_theme_part(
@@ -1343,8 +1343,8 @@ impl ListView {
             }
             for (i, col) in self.columns.iter().enumerate() {
                 let item = Rect::new(xs[i], band.top, xs[i + 1], band.bottom);
-                // The themed item has no bevel at all — its only chrome is the
-                // rule on its last pixel column — so its interior is the item
+                // The themed item has no bevel at all - its only chrome is the
+                // rule on its last pixel column - so its interior is the item
                 // less that one pixel, where the classic raised box gives up two
                 // rings on every side.
                 let inner = if themed {
@@ -1384,7 +1384,7 @@ impl ListView {
             let selected = item.map(|it| it.selected).unwrap_or(false);
 
             // `FullRowSelect` highlights from the first column to the last one's
-            // right edge — NOT to the control's edge; the strip past the columns
+            // right edge - NOT to the control's edge; the strip past the columns
             // stays `Window`. Without it, only the first column's label is
             // highlighted, which is why the band has to be measured.
             let mut selected_fore = None;
@@ -1423,7 +1423,7 @@ impl ListView {
             }
 
             // `GridLines`: `Control`, read off the reference sheet (`#F0F0F0`),
-            // one device pixel — the row's own last scan line horizontally, the
+            // one device pixel - the row's own last scan line horizontally, the
             // next column's first one vertically, exactly as the toolkit lays
             // them.
             if self.grid_lines {
@@ -1435,7 +1435,7 @@ impl ListView {
         }
     }
 
-    /// `View::List` — items tiled top-down then wrapping into the next column,
+    /// `View::List` - items tiled top-down then wrapping into the next column,
     /// each with a label-width highlight.
     fn paint_list(&self, c: &dyn ControlCanvas, content: Rect, state: ControlState) {
         let v = c.visuals();
@@ -1465,7 +1465,7 @@ impl ListView {
 
     /// Icon-ish fallback painter (LargeIcon / SmallIcon / Tile): items in a
     /// simple left-to-right, top-to-bottom flow. The distinct icon metrics of
-    /// each of those three views are not yet differentiated — documented so the
+    /// each of those three views are not yet differentiated - documented so the
     /// caller knows the layout is approximate for icon views.
     fn paint_icons(&self, c: &dyn ControlCanvas, content: Rect, state: ControlState) {
         // Reuse the List tiling but flow horizontally-first would need columns;
@@ -1506,7 +1506,7 @@ impl Control for ListView {
         }
     }
 
-    /// Paints the list as a resting, **focused** control — see the module doc.
+    /// Paints the list as a resting, **focused** control - see the module doc.
     fn paint(&self, c: &dyn ControlCanvas, bounds: Rect) {
         self.paint_with_state(c, bounds, ControlState { focused: true, ..ControlState::default() });
     }
@@ -1521,7 +1521,7 @@ impl Control for ListView {
     fn paint_with_state(&self, c: &dyn ControlCanvas, bounds: Rect, state: ControlState) {
         let colors = c.visuals().colors;
         // Resolved before the frame: the themed frame repaints its own inner pad
-        // in this colour — see [`paint_border`].
+        // in this colour - see [`paint_border`].
         let ground = self.ground(&colors);
         let interior = paint_border(c, bounds, self.border_style, self.enabled, &ground);
         c.fill_rect(&interior, &ground);
@@ -1562,7 +1562,7 @@ fn details_column_align(index: usize, declared: HorizontalAlignment) -> Horizont
 
 /// One **device** pixel, expressed in the DIP the canvas draws in.
 ///
-/// Every line in this family is one device pixel — a connecting line, a grid
+/// Every line in this family is one device pixel - a connecting line, a grid
 /// line and a focus rectangle are hairlines at 100 % and hairlines at 175 %,
 /// which is what makes a `ListView` look like a `ListView` rather than like a
 /// scaled picture of one.
@@ -1575,7 +1575,7 @@ fn device_pixel(c: &dyn Canvas) -> f32 {
 ///
 /// ## Two renderings of `Fixed3D`, both correct
 ///
-/// With visual styles ON — how the reference sheet was captured — a `Fixed3D`
+/// With visual styles ON - how the reference sheet was captured - a `Fixed3D`
 /// view is framed by a flat theme line, `#ABADB3` on a default Windows 11, with
 /// no bevel at all; the sheet shows exactly one such pixel on each side of both
 /// the `TreeView` and the `ListView`. With them OFF it is the classic two-ring
@@ -1583,7 +1583,7 @@ fn device_pixel(c: &dyn Canvas) -> f32 {
 /// approximates the other and no `GetSysColor` index produces the first, which
 /// is what [`crate::theme`] exists for.
 ///
-/// The part is `EP_EDITTEXT`, the same one `TextBoxBase` adopted — so a field
+/// The part is `EP_EDITTEXT`, the same one `TextBoxBase` adopted - so a field
 /// and a list keep reading as the same depth, which is the reason
 /// [`containers::paint_border`] is shared in the first place. It is **not**
 /// `EP_EDITBORDER_NOSCROLL`: measured against the sheet, that one draws Windows
@@ -1595,14 +1595,14 @@ fn device_pixel(c: &dyn Canvas) -> f32 {
 /// one this control wants: under `ETS_DISABLED` the theme tints it (`#B1CEED`
 /// here) where the toolkit shows the control's own ground, because a real
 /// control's client area covers everything but the frame's rings. So the inner
-/// ring is put back explicitly in `ground` — the same colour the caller is about
+/// ring is put back explicitly in `ground` - the same colour the caller is about
 /// to fill the interior with, which for a view is `Window`, `Control` when it is
 /// disabled, or its own `BackColor`. `TextBoxBase` passes `Window` there because
 /// a field's client area is always `Window`; a view has three answers, so it
 /// hands the one it resolved.
 ///
 /// The **interior is unchanged** by the themed path: it is `bounds` deflated by
-/// two device pixels either way — the classic sunken well's two rings, or the
+/// two device pixels either way - the classic sunken well's two rings, or the
 /// theme's one frame pixel plus the pad ring this function repaints. Nothing
 /// that lays content out against it has to know which branch ran.
 ///
@@ -1618,8 +1618,8 @@ fn paint_border(
 ) -> Rect {
     if style == BorderStyle::Fixed3D {
         // The control's real state, not a convenient one. It changes no pixel of
-        // the frame today — the theme draws the same `#ABADB3` line in every
-        // state, which the sheet confirms — but passing a lie because it happens
+        // the frame today - the theme draws the same `#ABADB3` line in every
+        // state, which the sheet confirms - but passing a lie because it happens
         // not to show would be a fact waiting to be wrong.
         let state = if enabled { ETS_NORMAL } else { ETS_DISABLED };
         if c.draw_theme_part(theme::class::EDIT, EP_EDITTEXT, state, bounds, *ground) {
@@ -1631,7 +1631,7 @@ fn paint_border(
 }
 
 /// The sort triangle on a sorted column's header, or nothing when
-/// `Sorting = None` — which is the sheet's case, so this draws no pixel there.
+/// `Sorting = None` - which is the sheet's case, so this draws no pixel there.
 ///
 /// `HP_HEADERSORTARROW`, `HSAS_SORTEDUP` for ascending and `HSAS_SORTEDDOWN` for
 /// descending, measured: the two really are a triangle up and a triangle down,
@@ -1642,8 +1642,8 @@ fn paint_border(
 /// toolkit leaves the glyph to the application (a `ListView` never sets it
 /// itself), so there is no other column it could belong to here.
 ///
-/// The part is TrueSize — it centres its own 9×5 at 96 DPI in whatever it is
-/// given — so it is handed the top band of the header item and left to place
+/// The part is TrueSize - it centres its own 9×5 at 96 DPI in whatever it is
+/// given - so it is handed the top band of the header item and left to place
 /// itself, which is where a real header puts it. There is no classic branch: a
 /// themed-off header has no sort glyph either, because comctl32's is a theme
 /// bitmap and the classic header draws none.
@@ -1683,10 +1683,10 @@ fn draw_sort_arrow(
 ///
 /// The rule is the real one, and it has three cases, not two:
 ///
-/// * **focused** — `Highlight` under `HighlightText`, the system blue;
-/// * **not focused, `HideSelection`** — nothing: the selection is invisible
+/// * **focused** - `Highlight` under `HighlightText`, the system blue;
+/// * **not focused, `HideSelection`** - nothing: the selection is invisible
 ///   until the control gets the focus back (a `TreeView` defaults to this);
-/// * **not focused, not `HideSelection`** — `Control` under `WindowText`, the
+/// * **not focused, not `HideSelection`** - `Control` under `WindowText`, the
 ///   grey band the reference sheet's `ListView` shows.
 ///
 /// ## Why these are system colours and not `LVP_LISTITEM` / `TVP_TREEITEM`
@@ -1696,13 +1696,13 @@ fn draw_sort_arrow(
 /// this machine's theme, because Windows Vista moved item rendering to the
 /// `Explorer::` subclass that a `ListView`/`TreeView` only gets after an
 /// explicit `SetWindowTheme`, which WinForms does not call. Asking anyway does
-/// not fail — an undefined part paints a `#FFFFFF` box in a `#828790` frame and
-/// reports success — so the check has to be a measurement, not a return value.
+/// not fail - an undefined part paints a `#FFFFFF` box in a `#828790` frame and
+/// reports success - so the check has to be a measurement, not a return value.
 ///
 /// The sheet settles it: its unfocused `ListView` band is flat `#F0F0F0`, which
 /// is `Control` exactly, and its focused `TreeView` band is flat `#0078D7`,
 /// which is `Highlight` exactly. `Explorer::LISTVIEW`'s `LISS_SELECTEDNOTFOCUS`
-/// — which *is* defined — is a rounded `#CCCCCC` with `#8B8B8B` edges, and is
+/// - which *is* defined - is a rounded `#CCCCCC` with `#8B8B8B` edges, and is
 /// neither. See [`crate::views`]'s module docs and the test that pins it.
 fn selection_paint(
     colors: &SystemColors,
@@ -1721,7 +1721,7 @@ fn selection_paint(
 /// A Details grid line, horizontal: the one device pixel **ending** at `y`.
 ///
 /// It ends there rather than starting there because the toolkit draws the line
-/// on the row's own last scan line — a line *under* the row would make the last
+/// on the row's own last scan line - a line *under* the row would make the last
 /// row of a full list draw outside itself.
 fn grid_h(c: &dyn ControlCanvas, x0: f32, x1: f32, y: f32, color: &D2D1_COLOR_F) {
     let t = device_pixel(c);
@@ -1740,7 +1740,7 @@ fn grid_v(c: &dyn ControlCanvas, x: f32, y0: f32, y1: f32, color: &D2D1_COLOR_F)
 /// One device pixel on, one off. The comb is anchored to the **device pixel
 /// grid**, not to the segment's own start: a branch is painted as one segment
 /// per row, and a per-segment phase would make consecutive rows fall out of step
-/// wherever a row height is an odd number of pixels — which is exactly what the
+/// wherever a row height is an odd number of pixels - which is exactly what the
 /// reference sheet does *not* show.
 fn dotted_v(c: &dyn ControlCanvas, x: f32, y0: f32, y1: f32, color: &D2D1_COLOR_F) {
     let s = c.scale().max(0.01);
@@ -1758,7 +1758,7 @@ fn dotted_v(c: &dyn ControlCanvas, x: f32, y0: f32, y1: f32, color: &D2D1_COLOR_
     }
 }
 
-/// The toolkit's dotted connecting line, horizontal — see [`dotted_v`].
+/// The toolkit's dotted connecting line, horizontal - see [`dotted_v`].
 fn dotted_h(c: &dyn ControlCanvas, x0: f32, x1: f32, y: f32, color: &D2D1_COLOR_F) {
     let s = c.scale().max(0.01);
     let t = 1.0 / s;
@@ -1775,7 +1775,7 @@ fn dotted_h(c: &dyn ControlCanvas, x0: f32, x1: f32, y: f32, color: &D2D1_COLOR_
     }
 }
 
-/// `DrawFocusRect` — the dotted one-device-pixel rectangle the toolkit puts
+/// `DrawFocusRect` - the dotted one-device-pixel rectangle the toolkit puts
 /// round the focused item's label, over the selection band.
 fn dotted_focus_rect(c: &dyn ControlCanvas, r: &Rect, color: &D2D1_COLOR_F) {
     let t = device_pixel(c);
@@ -1785,7 +1785,7 @@ fn dotted_focus_rect(c: &dyn ControlCanvas, r: &Rect, color: &D2D1_COLOR_F) {
     dotted_v(c, r.right - t, r.top, r.bottom, color);
 }
 
-/// The expand/collapse glyph — the theme's own, falling back to the classic
+/// The expand/collapse glyph - the theme's own, falling back to the classic
 /// `⊞` / `⊟` box.
 ///
 /// ## Themed
@@ -1793,18 +1793,18 @@ fn dotted_focus_rect(c: &dyn ControlCanvas, r: &Rect, color: &D2D1_COLOR_F) {
 /// `TVP_GLYPH`, `GLPS_CLOSED` for a plus and `GLPS_OPENED` for a minus. The
 /// sheet's glyph is a `#919191` outline with `#BABBBC` corners round a four-band
 /// vertical gradient (`#FCFCFC` → `#FAFBFB` → `#EDEDEC` → `#E3E3E3`) and a
-/// `#4B63A7` sign — five colours, none of them a `GetSysColor` index, which is
+/// `#4B63A7` sign - five colours, none of them a `GetSysColor` index, which is
 /// why this could not be reproduced before and needs no colour written down now.
 ///
 /// The part is **TrueSize**: given a larger rectangle it draws its own 9×9 (at
 /// 96 DPI) centred rather than stretching. That is exactly [`GLYPH_BOX`], so the
-/// box this family already reserved is the box the theme wants — the geometry
+/// box this family already reserved is the box the theme wants - the geometry
 /// was right before the rendering was, and neither moves.
 ///
 /// `ground` is the tree's own ground, and it does double duty: the part is
 /// partially transparent (its corners blend), so it is what the corners blend
 /// into, and the blit is opaque over the whole box, so it is also what cleanly
-/// interrupts the dotted connecting lines the glyph sits on top of — which is
+/// interrupts the dotted connecting lines the glyph sits on top of - which is
 /// what the classic branch's `fill_rect` does by hand just below.
 ///
 /// **Not** `TVP_HOTGLYPH`: it is undefined in this theme and renders the
@@ -1814,7 +1814,7 @@ fn dotted_focus_rect(c: &dyn ControlCanvas, r: &Rect, color: &D2D1_COLOR_F) {
 /// ## Classic
 ///
 /// A `ControlDark` square over a `Window` field, with a `WindowText` minus bar
-/// and — when the node is collapsed — the vertical bar that turns it into a
+/// and - when the node is collapsed - the vertical bar that turns it into a
 /// plus. Both bars are one device pixel and inset two device pixels from the
 /// box, as the toolkit's own glyph is, so the mark stays a mark and never
 /// becomes a slab at 175 %.
@@ -1842,8 +1842,8 @@ fn draw_expand_glyph(c: &dyn ControlCanvas, r: &Rect, expanded: bool, ground: &D
     }
 }
 
-/// A node/row check box: the classic sunken well — `DrawEdge(EDGE_SUNKEN)` over
-/// a `Window` field — with a tick in it when set.
+/// A node/row check box: the classic sunken well - `DrawEdge(EDGE_SUNKEN)` over
+/// a `Window` field - with a tick in it when set.
 fn draw_check_box(c: &dyn ControlCanvas, r: &Rect, checked: bool, enabled: bool) {
     let colors = c.visuals().colors;
     let inner = c.draw_edge(r, Border3DStyle::Sunken, Border3DSide::ALL);
@@ -1857,7 +1857,7 @@ fn draw_check_box(c: &dyn ControlCanvas, r: &Rect, checked: bool, enabled: bool)
 /// The tick itself: a short fall meeting a long rise, drawn one device-pixel
 /// column at a time.
 ///
-/// A stroked diagonal is not available — the canvas fills rectangles — and two
+/// A stroked diagonal is not available - the canvas fills rectangles - and two
 /// axis-aligned bars read as an arrow rather than a check. Stepping a column at
 /// a time is what the toolkit's own bitmap does, and it stays crisp at any DPI.
 fn draw_check_mark(c: &dyn ControlCanvas, r: &Rect, color: &D2D1_COLOR_F) {
@@ -1927,7 +1927,7 @@ mod tests {
     }
 
     /// `ColumnHeader.TextAlign` defaults to `Left`, which is what the SHARED
-    /// `HorizontalAlignment::default()` supplies — asserted rather than assumed,
+    /// `HorizontalAlignment::default()` supplies - asserted rather than assumed,
     /// so moving the type into `enums.rs` cannot have changed this default.
     #[test]
     fn column_header_text_align_defaults_to_left() {
@@ -2216,7 +2216,7 @@ mod tests {
     }
 
     /// `SelectedItems`/`CheckedItems` are accessors over the same flags the
-    /// index readings use, so the two can never disagree — the reason neither is
+    /// index readings use, so the two can never disagree - the reason neither is
     /// stored as a second field.
     #[test]
     fn item_and_index_readings_of_a_selection_agree() {
@@ -2247,7 +2247,7 @@ mod tests {
         let mut l = ListView::new();
         l.virtual_mode = true;
         l.virtual_list_size = 5000;
-        assert_eq!(l.item_count(), 5000, "no items fetched — count is the declared size");
+        assert_eq!(l.item_count(), 5000, "no items fetched - count is the declared size");
     }
 
     #[test]
@@ -2273,7 +2273,7 @@ mod tests {
     //
     // Every triple this family adopted was picked by rendering it and sampling
     // it against `C:\kubuno-build\winforms-ref\shots\08-views.png`, never by
-    // reading its name — `HP_HEADERITEMLEFT` and `TVP_HOTGLYPH` both sound
+    // reading its name - `HP_HEADERITEMLEFT` and `TVP_HOTGLYPH` both sound
     // exactly right and are both undefined. These tests pin the result, so a
     // Windows update that moves a part is a failing test rather than a slow
     // drift, and they are the reason no colour above is written down.
@@ -2281,7 +2281,7 @@ mod tests {
     // They render through GDI and stop short of the Direct2D upload, so they
     // need no device, no window and no swap chain. On a machine with visual
     // styles off there is no themed pixel to assert and every one of them is a
-    // documented skip — the classic branch is the whole rendering there.
+    // documented skip - the classic branch is the whole rendering there.
 
     use windows::core::{w, PCWSTR};
     use windows::Win32::Foundation::RECT;
@@ -2295,11 +2295,11 @@ mod tests {
     use windows::Win32::UI::HiDpi::OpenThemeDataForDpi;
 
     /// One rendered part as `w * h` BGRA words, or `None` when visual styles are
-    /// unavailable — which is a **skip**, not a failure.
+    /// unavailable - which is a **skip**, not a failure.
     ///
     /// The pre-fill is `COLOR_BTNFACE` (`#F0F0F0`), the ground the reference
     /// sheet has behind both of these controls, so a sampled pixel compares with
-    /// the sheet directly — and a TrueSize part that does not cover its
+    /// the sheet directly - and a TrueSize part that does not cover its
     /// rectangle leaves it visible, which is how the glyph's sizing is measured.
     fn sample(class: PCWSTR, part: i32, state: i32, w: i32, h: i32) -> Option<Vec<u32>> {
         if !unsafe { IsThemeActive().as_bool() && IsAppThemed().as_bool() } {
@@ -2355,7 +2355,7 @@ mod tests {
         format!("#{:02X}{:02X}{:02X}", (px >> 16) & 0xFF, (px >> 8) & 0xFF, px & 0xFF)
     }
 
-    /// Whether a part exists in the current theme at all — the question that
+    /// Whether a part exists in the current theme at all - the question that
     /// `DrawThemeBackground`'s return value does **not** answer.
     fn defined(class: PCWSTR, part: i32) -> Option<bool> {
         if !unsafe { IsThemeActive().as_bool() && IsAppThemed().as_bool() } {
@@ -2373,14 +2373,14 @@ mod tests {
     /// The finding that closes the header gap: the sheet's Details header is a
     /// `#FFFFFF` face with an `#E5E5E5` rule, and neither is a `SystemColors`
     /// entry. `HP_HEADERITEM` produces both, and produces the rule on its own
-    /// **right edge** — which is why the port draws no separator itself.
+    /// **right edge** - which is why the port draws no separator itself.
     #[test]
     fn the_header_item_is_the_reference_face_and_rule() {
         let (w, h) = (20usize, 39usize);
         let Some(px) =
             sample(w!("HEADER"), part::HP_HEADERITEM, part::HIS_NORMAL, w as i32, h as i32)
         else {
-            eprintln!("[views] visual styles unavailable — themed header not asserted");
+            eprintln!("[views] visual styles unavailable - themed header not asserted");
             return;
         };
         let mid = h / 2;
@@ -2396,7 +2396,7 @@ mod tests {
 
     /// The two states nothing can reach honestly yet are still measured, so the
     /// day a `ColumnHeader` carries a hover flag the colours are already known
-    /// — and so `HIS_NORMAL` is demonstrably a state and not a constant.
+    /// - and so `HIS_NORMAL` is demonstrably a state and not a constant.
     #[test]
     fn a_hot_or_pressed_header_item_has_its_own_face() {
         let (w, h) = (20usize, 39usize);
@@ -2404,7 +2404,7 @@ mod tests {
             sample(w!("HEADER"), part::HP_HEADERITEM, part::HIS_HOT, w as i32, h as i32),
             sample(w!("HEADER"), part::HP_HEADERITEM, part::HIS_PRESSED, w as i32, h as i32),
         ) else {
-            eprintln!("[views] visual styles unavailable — header states not asserted");
+            eprintln!("[views] visual styles unavailable - header states not asserted");
             return;
         };
         let mid = h / 2 * w + w / 2;
@@ -2413,7 +2413,7 @@ mod tests {
     }
 
     /// The sort arrow really points the way its state names, and really is
-    /// TrueSize — it centres a small triangle in a big box rather than
+    /// TrueSize - it centres a small triangle in a big box rather than
     /// stretching, which is why [`SORT_ARROW_BOX`] only has to be big enough.
     #[test]
     fn the_sort_arrow_points_the_way_its_state_says() {
@@ -2428,13 +2428,13 @@ mod tests {
                 h as i32,
             ),
         ) else {
-            eprintln!("[views] visual styles unavailable — sort arrow not asserted");
+            eprintln!("[views] visual styles unavailable - sort arrow not asserted");
             return;
         };
         // Untouched pixels keep the pre-fill, so counting them measures the ink.
         let ink =
             |px: &[u32], row: usize| (0..w).filter(|&x| px[row * w + x] != 0xFFF0_F0F0).count();
-        // The rows the triangle actually occupies, found rather than assumed —
+        // The rows the triangle actually occupies, found rather than assumed -
         // the part centres itself, so where it lands depends on the box.
         let span = |px: &[u32]| {
             let rows: Vec<usize> = (0..h).filter(|&y| ink(px, y) > 0).collect();
@@ -2463,7 +2463,7 @@ mod tests {
     /// `#919191` outline with `#BABBBC` corners, a pale vertical gradient and a
     /// `#4B63A7` sign. Five colours, no `SystemColors` entry among them.
     ///
-    /// `GLPS_CLOSED` is the plus and `GLPS_OPENED` the minus — asserted as the
+    /// `GLPS_CLOSED` is the plus and `GLPS_OPENED` the minus - asserted as the
     /// vertical bar's presence, which is a shape rather than a shade and so
     /// survives a theme that repaints the glyph.
     #[test]
@@ -2473,7 +2473,7 @@ mod tests {
             sample(w!("TREEVIEW"), part::TVP_GLYPH, part::GLPS_CLOSED, n as i32, n as i32),
             sample(w!("TREEVIEW"), part::TVP_GLYPH, part::GLPS_OPENED, n as i32, n as i32),
         ) else {
-            eprintln!("[views] visual styles unavailable — themed glyph not asserted");
+            eprintln!("[views] visual styles unavailable - themed glyph not asserted");
             return;
         };
         let mid = n / 2;
@@ -2485,7 +2485,7 @@ mod tests {
         // The horizontal bar is in both; only the closed glyph has the vertical
         // one that turns a minus into a plus. Two rows above the middle is inside
         // that bar and inside the plain gradient on the opened glyph, so the two
-        // differing there IS the plus — asserted as a shape rather than a shade,
+        // differing there IS the plus - asserted as a shape rather than a shade,
         // since the bar's own ink (`#294272`) is the sign blended into the
         // gradient and would move with it.
         assert_ne!(
@@ -2501,14 +2501,14 @@ mod tests {
     }
 
     /// `TVP_GLYPH` is TrueSize, and its natural side at 96 DPI is exactly
-    /// [`GLYPH_BOX`] — which is why adopting the theme moved no geometry: given
+    /// [`GLYPH_BOX`] - which is why adopting the theme moved no geometry: given
     /// a larger box it centres its 9×9 and leaves the rest as it found it.
     #[test]
     fn the_tree_glyph_draws_its_own_size() {
         let n = 16usize;
         let Some(px) = sample(w!("TREEVIEW"), part::TVP_GLYPH, part::GLPS_OPENED, n as i32, n as i32)
         else {
-            eprintln!("[views] visual styles unavailable — glyph sizing not asserted");
+            eprintln!("[views] visual styles unavailable - glyph sizing not asserted");
             return;
         };
         assert_eq!(px[0], 0xFFF0_F0F0, "a 16 px box keeps its pre-filled corner");
@@ -2519,7 +2519,7 @@ mod tests {
     }
 
     /// The port's own frame, the same `EP_EDITTEXT` line a `TextBox` is framed
-    /// with — one flat `#ABADB3` pixel, which is what the sheet shows round both
+    /// with - one flat `#ABADB3` pixel, which is what the sheet shows round both
     /// views and which no `GetSysColor` index carries.
     #[test]
     fn the_view_frame_is_the_reference_border() {
@@ -2528,7 +2528,7 @@ mod tests {
             sample(w!("EDIT"), EP_EDITTEXT, ETS_NORMAL, w as i32, h as i32),
             sample(w!("EDIT"), EP_EDITTEXT, ETS_DISABLED, w as i32, h as i32),
         ) else {
-            eprintln!("[views] visual styles unavailable — themed frame not asserted");
+            eprintln!("[views] visual styles unavailable - themed frame not asserted");
             return;
         };
         let mid = h / 2;
@@ -2542,19 +2542,19 @@ mod tests {
     /// The measurement that kept the selection bands on `SystemColors`.
     ///
     /// `LVP_LISTITEM` and `TVP_TREEITEM` are the parts this family was expected
-    /// to adopt and they are **not in this theme at all** — nor is
+    /// to adopt and they are **not in this theme at all** - nor is
     /// `TVP_HOTGLYPH`, nor `HP_HEADERITEMLEFT`/`RIGHT`. If a future Windows
     /// defines any of them this test fails, which is the point: the decision is
     /// then revisited against the sheet rather than left to rot.
     ///
-    /// It also pins the trap itself — drawing an undefined part **succeeds** and
-    /// paints a white box in a `#828790` frame — because that is the reason the
+    /// It also pins the trap itself - drawing an undefined part **succeeds** and
+    /// paints a white box in a `#828790` frame - because that is the reason the
     /// check cannot be "did `draw_theme_part` return true".
     #[test]
     fn the_item_parts_are_not_in_this_theme() {
         use windows::Win32::UI::Controls as sdk;
         let Some(_) = defined(w!("TREEVIEW"), part::TVP_GLYPH) else {
-            eprintln!("[views] visual styles unavailable — part table not asserted");
+            eprintln!("[views] visual styles unavailable - part table not asserted");
             return;
         };
         // The adopted ones exist…
@@ -2570,13 +2570,13 @@ mod tests {
             ("HP_HEADERITEMLEFT", w!("HEADER"), sdk::HP_HEADERITEMLEFT.0),
             ("HP_HEADERITEMRIGHT", w!("HEADER"), sdk::HP_HEADERITEMRIGHT.0),
         ] {
-            assert_eq!(defined(class, id), Some(false), "{label} is defined after all — re-measure");
+            assert_eq!(defined(class, id), Some(false), "{label} is defined after all - re-measure");
         }
         // The trap: it draws anyway, and it draws the wrong thing.
         let (w, h) = (40usize, 21usize);
         let Some(px) = sample(w!("LISTVIEW"), sdk::LVP_LISTITEM.0, sdk::LISS_SELECTEDNOTFOCUS.0, w as i32, h as i32)
         else {
-            panic!("an undefined part still draws — that is the whole finding");
+            panic!("an undefined part still draws - that is the whole finding");
         };
         assert_eq!(hex(px[0]), "#828790", "the fallback's frame, not a selection");
         assert_eq!(hex(px[(h / 2) * w + w / 2]), "#FFFFFF", "the fallback's white box");
@@ -2585,7 +2585,7 @@ mod tests {
         assert_eq!(
             selection_paint(&colors, false, false).map(|(b, _)| b.r),
             Some(colors.control.r),
-            "the unfocused band is Control — #F0F0F0 on the sheet"
+            "the unfocused band is Control - #F0F0F0 on the sheet"
         );
     }
 }

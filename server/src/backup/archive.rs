@@ -6,10 +6,10 @@
 //! There are two on-disk formats, one per engine family: PostgreSQL keeps its
 //! `COPY` text ([`super::dump`]), MySQL and SQLite the portable NDJSON
 //! ([`super::portable`]). Both now cover **every Kubuno schema** and both are
-//! **gzip-compressed**, so the pieces that are the same for either — how a file
+//! **gzip-compressed**, so the pieces that are the same for either - how a file
 //! is named, how the retention pass recognises one, how the destination is
 //! listed for the console, how schemas are discovered, and the streaming gzip
-//! writer/reader — live here rather than being copied into each.
+//! writer/reader - live here rather than being copied into each.
 //!
 //! ## Streaming, never buffered
 //!
@@ -39,7 +39,7 @@ pub const SQL_GZ_EXT: &str = ".sql.gz";
 /// Extension of a portable NDJSON archive.
 pub const NDJSON_GZ_EXT: &str = ".ndjson.gz";
 
-/// Every extension the retention pass recognises as one of our own — the two
+/// Every extension the retention pass recognises as one of our own - the two
 /// current compressed forms and the two legacy uncompressed ones, so a
 /// directory written by an earlier version is still rotated and listed.
 pub const KNOWN_EXTS: &[&str] = &[SQL_GZ_EXT, NDJSON_GZ_EXT, ".sql", ".ndjson"];
@@ -53,14 +53,14 @@ const DRAIN_THRESHOLD: usize = 64 * 1024;
 ///
 /// Sortable as text (`kubuno-core-<UTC-stamp><ext>`), so the retention pass
 /// orders the directory without stat-ing anything, and carrying nothing but a
-/// timestamp — never a host, never anything derived from a credential.
+/// timestamp - never a host, never anything derived from a credential.
 pub fn file_name_for(at: DateTime<Utc>, ext: &str) -> String {
     // Millisecond precision, so a safety backup taken in the same second as a
     // scheduled one gets a distinct, still-sortable name.
     format!("{FILE_PREFIX}{}{ext}", at.format("%Y%m%dT%H%M%S%3fZ"))
 }
 
-/// True when `name` is a file this feature produced — used by the retention pass
+/// True when `name` is a file this feature produced - used by the retention pass
 /// and the console listing, which must act only on our own output.
 ///
 /// Accepts both the millisecond stamp `YYYYMMDDThhmmssSSSZ` and the legacy
@@ -100,7 +100,7 @@ pub fn extension_for(backend: Backend) -> &'static str {
 /// `flate2`'s encoder is synchronous, so it compresses into an in-memory `Vec`
 /// which is drained to the async file whenever it grows past [`DRAIN_THRESHOLD`].
 /// The plaintext is fed one line/chunk at a time by the caller, so peak memory
-/// is one chunk plus the compression window — never the whole dump.
+/// is one chunk plus the compression window - never the whole dump.
 pub struct GzFileWriter<W: AsyncWriteExt + Unpin> {
     inner: W,
     enc: GzEncoder<Vec<u8>>,
@@ -224,21 +224,21 @@ pub async fn decompress_to_temp(archive: &Path) -> anyhow::Result<DecompressedTe
 /// True when a bare (prefix-stripped) schema name belongs to Kubuno: exactly a
 /// known primary schema or a module's listed secondary schema (`office_data`…).
 /// The same test the schema admin uses, so a whole-database backup and a prefix
-/// rename see the same set — and neither picks up another instance's schemas on
+/// rename see the same set - and neither picks up another instance's schemas on
 /// a shared server.
 fn schema_is_owned(bare: &str) -> bool {
     kubuno_db::schema::is_kubuno_schema(bare)
 }
 
 /// Every Kubuno-owned schema present for this pool, by its **effective**
-/// (possibly prefixed) name — the name to qualify SQL with directly.
+/// (possibly prefixed) name - the name to qualify SQL with directly.
 ///
 /// * PostgreSQL / MySQL: every server namespace whose prefix-stripped name is a
 ///   Kubuno schema or a module's secondary schema. `public`, `information_schema`
 ///   and the engine's own namespaces never match the ownership test, so they are
 ///   excluded without a hard-coded deny-list.
 /// * SQLite: the schemas attached to the connection (`PRAGMA database_list`),
-///   which is `core` in the standard layout — each module keeps its own file, out
+///   which is `core` in the standard layout - each module keeps its own file, out
 ///   of this connection's reach, so the core backs up what it can actually see.
 pub async fn discover_schemas(db: &DbPool) -> anyhow::Result<Vec<String>> {
     let prefix = db.schema_prefix().as_str().to_string();
@@ -290,8 +290,8 @@ impl QTable {
 }
 
 /// Kahn's algorithm over the whole set of tables, `edges` being `(parent,
-/// child)`. Parents come out before children so foreign keys — including
-/// cross-schema ones (a module row referencing `core.users`) — are satisfied on
+/// child)`. Parents come out before children so foreign keys - including
+/// cross-schema ones (a module row referencing `core.users`) - are satisfied on
 /// load. Self-references are skipped and a genuine cycle degrades into "emit the
 /// rest in the given order" with a warning: an incomplete backup that says
 /// nothing is the one outcome to avoid.
@@ -332,7 +332,7 @@ pub fn topo_order(nodes: &[QTable], edges: &[(QTable, QTable)]) -> Vec<QTable> {
     if ordered.len() < nodes.len() {
         let missing: Vec<QTable> =
             nodes.iter().filter(|n| !ordered.contains(n)).cloned().collect();
-        tracing::warn!(tables = ?missing, "backup: cycle de clés étrangères — ces tables sont traitées en dernier");
+        tracing::warn!(tables = ?missing, "backup: cycle de clés étrangères - ces tables sont traitées en dernier");
         ordered.extend(missing);
     }
     ordered
@@ -343,7 +343,7 @@ pub fn topo_order(nodes: &[QTable], edges: &[(QTable, QTable)]) -> Vec<QTable> {
 /// One backup file present in the destination, as the console lists it.
 #[derive(Debug, Clone, serde::Serialize)]
 pub struct BackupFile {
-    /// Base name only — never a path. The restore endpoint re-joins it to the
+    /// Base name only - never a path. The restore endpoint re-joins it to the
     /// configured destination and refuses anything else.
     pub name: String,
     pub size_bytes: u64,

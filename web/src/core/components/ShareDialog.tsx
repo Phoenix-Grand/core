@@ -7,8 +7,8 @@ import { useShareStore, type ShareRecipient } from '../store/shareStore'
 
 /**
  * The project's share dialog: who owns a thing, who it is shared with, and at
- * which permission. Everything beyond that — link scope, per-module switches,
- * notices — comes from sections modules register in `ShareRegistry`, so the
+ * which permission. Everything beyond that - link scope, per-module switches,
+ * notices - comes from sections modules register in `ShareRegistry`, so the
  * core never has to know what a form or a spreadsheet needs.
  *
  * Opened through `openShare()`; mounted once as `<ShareHost />`.
@@ -68,7 +68,7 @@ export default function ShareDialog() {
   const [search, setSearch]       = useState('')
   const [debounced, setDebounced] = useState('')
   // New collaborators come in at the most permissive level offered; each row
-  // can then be tuned. No selector next to the search field — the reference
+  // can then be tuned. No selector next to the search field - the reference
   // picks the level per person, once they are in the list.
   const perm = PERMS[0]
   const [open, setOpen]           = useState(false)
@@ -191,7 +191,7 @@ export default function ShareDialog() {
           <div className="flex gap-2 items-start">
             {/* Outlined field: the legend notches the border, so the label sits
                 ON the outline instead of above or inside it. `fieldset` does
-                that natively — no faked background behind the text. */}
+                that natively - no faked background behind the text. */}
             <fieldset
               className="flex-1 min-w-0 rounded-lg px-3 pb-2 transition-colors"
               style={{

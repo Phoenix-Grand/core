@@ -54,7 +54,7 @@ impl StorageBackend for S3Storage {
         Err(StorageError::Internal("Backend S3 non configuré".into()))
     }
     async fn create_dir(&self, _path: &str) -> StorageResult<()> {
-        // S3 n'a pas de répertoires — no-op
+        // S3 n'a pas de répertoires - no-op
         Ok(())
     }
     async fn mv_dir(&self, _from: &str, _to: &str) -> StorageResult<()> {

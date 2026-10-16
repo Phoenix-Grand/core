@@ -105,7 +105,7 @@ export class CalendarsTab extends ViewBase {
       sortValue: r => r.subdivision_count,
       cell: r => (
         <span className={r.subdivision_count === 0 ? 'text-text-tertiary' : 'text-text-secondary'}>
-          {r.subdivision_count || '—'}
+          {r.subdivision_count || '-'}
         </span>
       ),
     },
@@ -116,7 +116,7 @@ export class CalendarsTab extends ViewBase {
       sortValue: r => r.overridden_count,
       cell: r => (
         <span className={r.overridden_count === 0 ? 'text-text-tertiary' : 'text-primary'}>
-          {r.overridden_count || '—'}
+          {r.overridden_count || '-'}
         </span>
       ),
     },
@@ -150,8 +150,8 @@ export class CalendarsTab extends ViewBase {
           id: 'delete',
           label: this.tr('admin.hol_action_delete'),
           danger: true,
-          // A shipped territory cannot be deleted — the seeder would bring it
-          // back — so the action is simply absent rather than offered and refused.
+          // A shipped territory cannot be deleted - the seeder would bring it
+          // back - so the action is simply absent rather than offered and refused.
           hidden: (r: CalendarSummary) => r.is_builtin,
           onClick: async (r: CalendarSummary) => {
             const ok = await this.confirm({

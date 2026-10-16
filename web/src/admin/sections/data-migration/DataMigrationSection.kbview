@@ -1,4 +1,4 @@
-<!-- DataMigrationSection — converted from DataMigrationSection.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- DataMigrationSection - converted from DataMigrationSection.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <Panel x:Props="AdminSectionProps" Class="contents">
   <CampaignDetail CampaignId="{Binding campaignId}" CanManage="{Binding canManage}" OnGone="campaign_detail_gone" Visible="{Binding show_case_1}"/>
   <Stack Gap="16" Visible="{Binding show_main}" Class="min-w-0">

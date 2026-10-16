@@ -1,4 +1,4 @@
-//! Kubuno primitives — the button family.
+//! Kubuno primitives - the button family.
 //!
 //! [`Button`], [`IconButton`], [`CheckBox`], [`RadioButton`], [`ToggleButton`]
 //! and [`Switch`]: everything that is clicked once and reports a decision.
@@ -9,7 +9,7 @@
 //! `enabled`, `padding`, `dock`, `anchor`, `min_size`, `check_state`,
 //! `three_state`, `auto_check`, `check_align`, `appearance` and the click
 //! state machines (`perform_click`, the three-state cycle,
-//! [`kubuno_desktop_controls::buttons::select_radio`]) are **the replica's** — there is
+//! [`kubuno_desktop_controls::buttons::select_radio`]) are **the replica's** - there is
 //! no second copy of them here. What this layer adds is what .NET has no
 //! concept of: a [`Variant`], a [`Size`], and Kubuno pixels.
 //!
@@ -30,7 +30,7 @@
 //! the `secondary` outline is `border-border-strong`, the switch's off track is
 //! `--color-surface-3` and a disabled switch is `opacity-50`, and the whole
 //! family paints the web's `focus-visible:ring-2 ring-primary ring-offset-1`
-//! — only when [`WidgetState::show_focus_ring`] says so, so a mouse click
+//! - only when [`WidgetState::show_focus_ring`] says so, so a mouse click
 //! never leaves a ring behind.
 //!
 //! ## Composition rules
@@ -68,7 +68,7 @@ use crate::widget::{Widget, WidgetState};
 //
 // `crate::metrics` re-exports the shape tokens and adds what the web never
 // described. What is left below is what the web DOES describe but the token
-// table does not carry — a button's per-size padding, the switch's track — each
+// table does not carry - a button's per-size padding, the switch's track - each
 // with the file it was read from. Nothing here is multiplied by `Canvas::scale`.
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -76,7 +76,7 @@ use crate::widget::{Widget, WidgetState};
 /// the 6 the Tailwind name suggests.
 ///
 /// Never overridable, and a `const` for that reason: `Button.tsx` says so in a
-/// comment (« rounded-md is FIXED — border radius is never overridable ») and
+/// comment (« rounded-md is FIXED - border radius is never overridable ») and
 /// its stylesheet order makes it true. Identical to
 /// [`kubuno_drive_desktop_app_controls::button::RADIUS`], which a test pins.
 pub const RADIUS: f32 = radius::SM;
@@ -86,7 +86,7 @@ pub const RADIUS: f32 = radius::SM;
 /// edge to edge leaves at least this much room, or the ring is overpainted.
 pub const FOCUS_OUTSET: f32 = focus_metrics::OFFSET + focus_metrics::RING;
 
-/// The alpha `disabled:opacity-50` comes to — `Button.tsx`'s BASE class list,
+/// The alpha `disabled:opacity-50` comes to - `Button.tsx`'s BASE class list,
 /// and `Checkbox.tsx`/`Radio.tsx`/`Toggle.tsx` apply the same 0.5 to their
 /// whole label.
 const DISABLED_ALPHA: f32 = 0.5;
@@ -97,7 +97,7 @@ const DANGER_HOVER_ALPHA: f32 = 0.9;
 const DANGER_ACTIVE_ALPHA: f32 = 0.8;
 
 /// `focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1`
-/// — `Button.tsx`'s BASE, and the canvas element of `Checkbox.tsx`,
+/// - `Button.tsx`'s BASE, and the canvas element of `Checkbox.tsx`,
 /// `Radio.tsx` and `Toggle.tsx`.
 mod focus_metrics {
     pub const RING: f32 = 2.0;
@@ -110,7 +110,7 @@ mod loading_metrics {
     pub const BOX: f32 = 16.0;
     pub const STROKE: f32 = 2.0;
     /// The longest step, in DIP of arc, between two dabs of the rasterised
-    /// ring, as a fraction of the stroke — the value
+    /// ring, as a fraction of the stroke - the value
     /// [`crate::feedback::Spinner::DAB_PITCH`] settled on, for the same reason
     /// (`Canvas` has no arc primitive).
     pub const DAB_PITCH: f32 = 0.5;
@@ -119,7 +119,7 @@ mod loading_metrics {
 /// The glyph controls' text block.
 mod glyph_metrics {
     /// The label's line box. The label is the body size (`text::BODY`, the
-    /// web's 13.5) over a 20 line — the same line height the replica layer
+    /// web's 13.5) over a 20 line - the same line height the replica layer
     /// measures a `Body` role with, and the web's `leading-snug` rounded.
     pub const LINE: f32 = 20.0;
     /// `mt-0.5` between the label and its description (`Checkbox.tsx`).
@@ -128,7 +128,7 @@ mod glyph_metrics {
     /// round the other way: one DIP of slack stops the last glyph from being
     /// trimmed (« Clai|r »).
     pub const SLACK: f32 = 1.0;
-    /// A line « fits » when it overflows the bounds by less than this —
+    /// A line « fits » when it overflows the bounds by less than this -
     /// absorbs float noise from callers that add heights up.
     pub const FIT_EPS: f32 = 0.5;
 
@@ -140,7 +140,7 @@ mod glyph_metrics {
     }
 }
 
-/// The switch's text block — `Toggle.tsx`.
+/// The switch's text block - `Toggle.tsx`.
 mod switch_text_metrics {
     /// `gap-2.5` between the track and the text column.
     pub const GAP: f32 = 10.0;
@@ -158,7 +158,7 @@ mod switch_text_metrics {
 /// `shadowOffsetY 1` (`toggleCanvas.ts`).
 const THUMB_SHADOW: ShadowLayer = ShadowLayer { dy: 1.0, blur: 2.0, spread: 0.0, opacity: 0.12 };
 
-/// The same colour at a different alpha — how this design system dims.
+/// The same colour at a different alpha - how this design system dims.
 /// Identical to the predecessor's private `dim` and to the public
 /// [`kubuno_drive_desktop_app_controls::switch::fade`], which a test pins.
 fn fade(c: D2D1_COLOR_F, alpha: f32) -> D2D1_COLOR_F {
@@ -166,7 +166,7 @@ fn fade(c: D2D1_COLOR_F, alpha: f32) -> D2D1_COLOR_F {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Motion — the check, radio and switch transitions.
+// Motion - the check, radio and switch transitions.
 // ─────────────────────────────────────────────────────────────────────────────
 
 /// `Checkbox.tsx` / `Radio.tsx`: `const DURATION = 100`.
@@ -174,7 +174,7 @@ pub const CHECK_TRANSITION_MS: u32 = 100;
 /// `Toggle.tsx`: `const DURATION = 150`.
 pub const SWITCH_TRANSITION_MS: u32 = 150;
 
-/// Samples `cubic-bezier(x1, y1, x2, y2)` at time fraction `t` — a port of
+/// Samples `cubic-bezier(x1, y1, x2, y2)` at time fraction `t` - a port of
 /// `cubicBezier` in `core/frontend/src/ui/easing.ts` (Newton-Raphson, then
 /// bisection where the curve is flat).
 pub fn cubic_bezier(x1: f32, y1: f32, x2: f32, y2: f32, t: f32) -> f32 {
@@ -227,14 +227,14 @@ pub fn cubic_bezier(x1: f32, y1: f32, x2: f32, y2: f32, t: f32) -> f32 {
     sample_y(u)
 }
 
-/// The design system's standard curve, `cubic-bezier(0.4, 0, 0.2, 1)` —
+/// The design system's standard curve, `cubic-bezier(0.4, 0, 0.2, 1)` -
 /// `easeStandard` in `easing.ts`.
 pub fn ease_standard(t: f32) -> f32 {
     cubic_bezier(0.4, 0.0, 0.2, 1.0, t)
 }
 
 /// A value easing from `from` to `to` over `duration_ms` along
-/// [`ease_standard`] — what `animateTo` in the web's canvas controls does.
+/// [`ease_standard`] - what `animateTo` in the web's canvas controls does.
 ///
 /// The control owns no clock: the caller keeps one of these per animated
 /// control, [`Transition::retarget`]s it when the model changes, and paints
@@ -249,7 +249,7 @@ pub struct Transition {
 }
 
 impl Transition {
-    /// At rest on `value` — the first paint shows the final state outright,
+    /// At rest on `value` - the first paint shows the final state outright,
     /// as the web's `painted` ref ensures.
     pub const fn settled(value: f32) -> Self {
         Self { from: value, to: value, start_ms: 0, duration_ms: 0 }
@@ -285,7 +285,7 @@ impl Transition {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Keyboard — the native `<button>`, `<input type=checkbox|radio>` behaviour.
+// Keyboard - the native `<button>`, `<input type=checkbox|radio>` behaviour.
 // ─────────────────────────────────────────────────────────────────────────────
 
 /// A focused `<button>` is activated by Enter and by Space.
@@ -294,7 +294,7 @@ pub fn is_button_activation(key: u16) -> bool {
 }
 
 /// A focused check box or switch (`<input type=checkbox>`) toggles on Space
-/// only — Enter submits the form instead, it does not toggle.
+/// only - Enter submits the form instead, it does not toggle.
 pub fn is_check_toggle(key: u16) -> bool {
     key == vk::SPACE
 }
@@ -334,7 +334,7 @@ pub fn radio_tab_stop(checked: Option<usize>, enabled: &[bool]) -> Option<usize>
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Variant, Size, State — what Kubuno adds on top of the replica.
+// Variant, Size, State - what Kubuno adds on top of the replica.
 // ─────────────────────────────────────────────────────────────────────────────
 
 /// The web's `VARIANT` map (`core/frontend/src/ui/Button.tsx`).
@@ -347,7 +347,7 @@ pub enum Variant {
     Secondary,
     /// No fill until hovered.
     Ghost,
-    /// The accent WITHOUT a fill — a dialog's confirming action next to a
+    /// The accent WITHOUT a fill - a dialog's confirming action next to a
     /// `Ghost` cancel.
     Text,
     /// Filled danger.
@@ -359,7 +359,7 @@ pub enum Variant {
 }
 
 impl From<Variant> for web_button::Variant {
-    /// So a caller — and the gallery's parity page — can drive the predecessor
+    /// So a caller - and the gallery's parity page - can drive the predecessor
     /// from the same value.
     fn from(v: Variant) -> Self {
         match v {
@@ -393,7 +393,7 @@ impl Size {
     }
 
     /// `px-3 / px-4 / px-5`. The spacing scale has no 20, so the three are
-    /// stated here rather than assembled from `space::*` — two of them would
+    /// stated here rather than assembled from `space::*` - two of them would
     /// be a token and the third a literal, which is worse than three literals
     /// with one source.
     pub fn pad_x(self) -> f32 {
@@ -433,7 +433,7 @@ impl From<Size> for web_button::Size {
     }
 }
 
-/// The four states this family's fill distinguishes — the predecessor's own
+/// The four states this family's fill distinguishes - the predecessor's own
 /// [`kubuno_drive_desktop_app_controls::button::State`], reached from a [`WidgetState`] plus
 /// the model's `enabled`.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
@@ -493,7 +493,7 @@ fn cursor_of(clickable_label: bool, disabled: bool) -> Cursor {
     }
 }
 
-/// The fill, the label colour and the border, for one state — the shape of
+/// The fill, the label colour and the border, for one state - the shape of
 /// the predecessor's private `Paint`.
 struct Ink {
     fill: Option<D2D1_COLOR_F>,
@@ -507,7 +507,7 @@ fn ink_for(variant: Variant, t: &Theme, state: State) -> Ink {
     let hovered = matches!(state, State::Hover);
     let pressed = matches!(state, State::Active);
     let p = match variant {
-        // `hover:bg-primary-hover active:bg-primary-hover` — one colour for
+        // `hover:bg-primary-hover active:bg-primary-hover` - one colour for
         // both, as the web writes it.
         Variant::Primary => Ink {
             fill: Some(if hovered || pressed { t.accent_hover } else { t.accent }),
@@ -515,7 +515,7 @@ fn ink_for(variant: Variant, t: &Theme, state: State) -> Ink {
             border: None,
         },
         // `bg-white border border-border-strong hover:bg-surface-1
-        // active:bg-surface-2` — the STRONG border: « a button is an
+        // active:bg-surface-2` - the STRONG border: « a button is an
         // actionable target and needs a firmer outline than the hairlines ».
         Variant::Secondary => Ink {
             fill: Some(if pressed {
@@ -569,7 +569,7 @@ fn ink_for(variant: Variant, t: &Theme, state: State) -> Ink {
     p
 }
 
-/// `disabled:opacity-50` over the whole control — fill, label and border.
+/// `disabled:opacity-50` over the whole control - fill, label and border.
 fn dim_ink(p: Ink) -> Ink {
     Ink {
         fill: p.fill.map(|f| fade(f, DISABLED_ALPHA)),
@@ -593,8 +593,8 @@ fn paint_focus_ring(c: &dyn Canvas, shape: Rect, corner: f32, colour: &D2D1_COLO
 
 /// A command button.
 ///
-/// The model — `text`, `enabled`, `padding`, `dock`, `anchor`, `min_size`,
-/// `dialog_result`… — is [`kubuno_desktop_controls::buttons::Button`], reached through
+/// The model - `text`, `enabled`, `padding`, `dock`, `anchor`, `min_size`,
+/// `dialog_result`… - is [`kubuno_desktop_controls::buttons::Button`], reached through
 /// [`Deref`]. Only `variant`, `size`, the leading `icon`, the overridable
 /// `pad_x` and the `loading` state are declared here, because .NET has no
 /// concept for any of them.
@@ -611,14 +611,14 @@ pub struct Button {
     /// A leading icon, drawn before the label. `'static` because an icon name
     /// is a compile-time constant, as [`Canvas::vector_icon`] requires.
     pub icon: Option<&'static str>,
-    /// Overrides the size's horizontal padding — the one metric the web lets a
+    /// Overrides the size's horizontal padding - the one metric the web lets a
     /// caller change (the waffle's edit buttons use `px-5` and `px-6`).
     pub pad_x: Option<f32>,
     /// `loading` on the web: the content is replaced by a spinning ring in the
     /// label's colour and the button is disabled (`disabled || loading`).
     pub loading: bool,
     /// Where the loading ring is in its turn, `0.0..1.0` (wraps). The host
-    /// advances it — `animate-spin` is one turn per second, so
+    /// advances it - `animate-spin` is one turn per second, so
     /// `(now_ms % 1000) / 1000` is the web's cadence.
     pub loading_phase: f32,
     /// Room for an image (`ButtonBase.Image`, in DIP) the caller draws itself at
@@ -631,13 +631,13 @@ pub struct Button {
     pub icon_size: Option<f32>,
     /// The gap between the icon (or the image) and the label (`IconSpacing`), instead of the size's.
     pub gap: Option<f32>,
-    /// The icon is laid out like an image — by `ImageAlign` and `TextImageRelation`, see
-    /// [`aligned_face`] — rather than before the label.
+    /// The icon is laid out like an image - by `ImageAlign` and `TextImageRelation`, see
+    /// [`aligned_face`] - rather than before the label.
     pub icon_aligned: bool,
 }
 
 /// Where the text and the image of a button face go when the face is laid out
-/// the WinForms way (`TextAlign`, `ImageAlign`, `TextImageRelation`) — see
+/// the WinForms way (`TextAlign`, `ImageAlign`, `TextImageRelation`) - see
 /// [`aligned_face`].
 #[derive(Clone, Copy)]
 pub struct AlignedFace {
@@ -700,7 +700,7 @@ pub fn aligned_face(
     }
 }
 
-/// Where a button's content lands inside its bounds — see [`face_layout`].
+/// Where a button's content lands inside its bounds - see [`face_layout`].
 #[derive(Clone, Copy)]
 pub struct FaceLayout {
     /// The rectangle the icon glyph is centred in, if there is an icon.
@@ -876,7 +876,7 @@ impl Button {
     }
 
     /// The intrinsic width once the label has been measured: padding, the icon
-    /// and its gap, then the label — the same content-driven sizing the web
+    /// and its gap, then the label - the same content-driven sizing the web
     /// has, and the same sum as [`kubuno_drive_desktop_app_controls::button::width`]. A
     /// loading button holds only its 16 DIP ring, as the web's does.
     ///
@@ -907,25 +907,25 @@ impl Button {
     }
 
     /// Lays the button out at its intrinsic width with its top-left at
-    /// `(x, y)` — [`kubuno_drive_desktop_app_controls::button::rect_at`].
+    /// `(x, y)` - [`kubuno_drive_desktop_app_controls::button::rect_at`].
     pub fn rect_at(&self, c: &dyn Canvas, x: f32, y: f32) -> Rect {
         Rect::new(x, y, x + self.width(c), y + self.size.height())
     }
 
-    /// Lays it out with its top-RIGHT at `(right, y)` —
+    /// Lays it out with its top-RIGHT at `(right, y)` -
     /// [`kubuno_drive_desktop_app_controls::button::rect_ending_at`].
     pub fn rect_ending_at(&self, c: &dyn Canvas, right: f32, y: f32) -> Rect {
         Rect::new(right - self.width(c), y, right, y + self.size.height())
     }
 
     /// The state this button paints in, given what the caller reports and what
-    /// the model says about `enabled` — a loading button is a disabled one.
+    /// the model says about `enabled` - a loading button is a disabled one.
     pub fn state(&self, state: WidgetState) -> State {
         State::of(self.inner.enabled && !self.loading, state)
     }
 
     /// Whether it takes part in keyboard focus (register it with the focus
-    /// ring only when this is true — a disabled `<button>` is skipped by Tab).
+    /// ring only when this is true - a disabled `<button>` is skipped by Tab).
     pub fn focusable(&self) -> bool {
         self.inner.enabled && !self.loading
     }
@@ -945,7 +945,7 @@ struct Face<'a> {
     pad: f32,
     /// `Some(phase)` replaces the content with the loading ring.
     loading: Option<f32>,
-    /// The WinForms layout (`TextAlign`, an image), when the face uses it — see [`aligned_face`].
+    /// The WinForms layout (`TextAlign`, an image), when the face uses it - see [`aligned_face`].
     aligned: Option<AlignedSpec>,
     /// The label's character to underline (a mnemonic, while Alt is held).
     mnemonic: Option<usize>,
@@ -969,7 +969,7 @@ const LABEL_LINE: f32 = 20.0;
 /// check/radio whose `Appearance` is `Button`, so the two cannot disagree about
 /// what a button looks like.
 ///
-/// Fill (only when the variant has one — `bg-transparent` shows the parent),
+/// Fill (only when the variant has one - `bg-transparent` shows the parent),
 /// border, the content per [`face_layout`], then the focus ring.
 fn paint_face(c: &dyn Canvas, rect: Rect, face: &Face, ink: &Ink, ring: bool) {
     let t = c.theme();
@@ -985,7 +985,7 @@ fn paint_face(c: &dyn Canvas, rect: Rect, face: &Face, ink: &Ink, ring: bool) {
     if let Some(phase) = face.loading {
         let centre = ((rect.left + rect.right) / 2.0, (rect.top + rect.bottom) / 2.0);
         // The same three quarters `loading_dabs` samples, drawn as ONE smooth
-        // arc on the stroke's centre line — a row of dots read as a beaded,
+        // arc on the stroke's centre line - a row of dots read as a beaded,
         // shimmering ring once it turned.
         let turn = if phase.is_finite() { phase.rem_euclid(1.0) } else { 0.0 };
         let from = -std::f32::consts::FRAC_PI_4 + turn * std::f32::consts::TAU;
@@ -1092,7 +1092,7 @@ impl DerefMut for Button {
 // IconButton
 // ═════════════════════════════════════════════════════════════════════════════
 
-/// A round icon button — the header's 36 px controls and the waffle's 40 px
+/// A round icon button - the header's 36 px controls and the waffle's 40 px
 /// pencil.
 ///
 /// These ARE circles on the web (`rounded-full`), unlike the text buttons; the
@@ -1110,14 +1110,14 @@ pub struct IconButton {
     pub filled: bool,
 }
 
-/// Whether `(x, y)` lands on a **round** icon button filling `bounds` — the
+/// Whether `(x, y)` lands on a **round** icon button filling `bounds` - the
 /// disc inscribed in it, never the square.
 ///
 /// It is a free function, and not only [`IconButton`]'s `hit_test`, because a
 /// page's hit-testing runs where no button has been built: the shell derives
 /// `edit_rect(row)` and asks whether the pointer is inside it, without ever
 /// constructing the control it is about to paint there. Every one of those
-/// sites was testing the SQUARE, so the corners of a circular button lit up —
+/// sites was testing the SQUARE, so the corners of a circular button lit up -
 /// three separate reviews of the migration reported it independently. Exposing
 /// the rule on its own is what lets those callers agree with the paint.
 ///
@@ -1143,7 +1143,7 @@ impl IconButton {
     }
 
     /// A circle with no resting fill, at a size [`IconButton::header`] does not
-    /// offer — the row actions of the admin lists (28 px over a 15 px glyph).
+    /// offer - the row actions of the admin lists (28 px over a 15 px glyph).
     ///
     /// This constructor exists because the shell asked for it: adopting the
     /// primitive turned six call sites into `tinted(…)` immediately followed by
@@ -1173,8 +1173,8 @@ impl Widget for IconButton {
         ControlSize::new(self.diameter, self.diameter)
     }
 
-    /// The predecessor's `draw_icon_button`: the radius is `pill(height)` — a
-    /// real circle, whatever rectangle the caller passes — hover and press
+    /// The predecessor's `draw_icon_button`: the radius is `pill(height)` - a
+    /// real circle, whatever rectangle the caller passes - hover and press
     /// share `surface_3`, and a resting tinted button sits on `surface_2`. A
     /// resting plain one paints NOTHING behind its glyph, so it sits on its
     /// parent's surface (a Card, a toolbar) rather than on a window-coloured
@@ -1227,7 +1227,7 @@ impl DerefMut for IconButton {
 }
 
 // ═════════════════════════════════════════════════════════════════════════════
-// The labelled controls' text block — shared by CheckBox, RadioButton, Switch.
+// The labelled controls' text block - shared by CheckBox, RadioButton, Switch.
 // ═════════════════════════════════════════════════════════════════════════════
 
 /// One laid-out line of a label + description block, relative to the block's
@@ -1326,7 +1326,7 @@ struct Leading {
 /// `items-start`: the glyph sits `lead` below the block's top (`mt-px` for
 /// the check box and radio, `mt-0.5` for the switch), never centred on a
 /// multi-line block. The whole group is then placed vertically by
-/// `CheckAlign`'s fraction — a single-line control in a taller row sits in
+/// `CheckAlign`'s fraction - a single-line control in a taller row sits in
 /// its middle, which is what a `MiddleLeft` caller expects. `CheckAlign` on
 /// the right mirrors it, the rule the replica's own `split_glyph` has.
 fn place_leading(
@@ -1412,7 +1412,7 @@ fn glyph_paragraphs<'a>(label: &'a str, desc: Option<&'a str>) -> [Paragraph<'a>
 }
 
 /// What a glyph control wants to be: box + gap + text column, at least a line
-/// tall — plus one line per description.
+/// tall - plus one line per description.
 fn glyph_measure_parts(text_width: f32, has_desc: bool) -> ControlSize {
     let text_h = if has_desc {
         glyph_metrics::LINE * 2.0 + glyph_metrics::DESC_GAP
@@ -1489,7 +1489,7 @@ fn glyph_border(t: &Theme, state: State) -> D2D1_COLOR_F {
 /// Everything about *being* a check box is the replica's: `check_state` is the
 /// single source of truth (`checked()` is a projection of it, exactly as in the
 /// toolkit), `three_state` and `auto_check` govern the click, and
-/// `perform_click()` walks the toolkit's own cycle — `Unchecked → Checked →
+/// `perform_click()` walks the toolkit's own cycle - `Unchecked → Checked →
 /// Unchecked`, or `Unchecked → Checked → Indeterminate → Unchecked` when
 /// `three_state` is on. None of that is re-implemented here.
 ///
@@ -1506,7 +1506,7 @@ fn glyph_border(t: &Theme, state: State) -> D2D1_COLOR_F {
 /// `items-start`, `mt-px`, wrapping.
 ///
 /// The one substitution: the web's tick is a bespoke six-point polygon
-/// (`clip-path`), and [`Canvas`] has no polygon primitive — it draws glyphs as
+/// (`clip-path`), and [`Canvas`] has no polygon primitive - it draws glyphs as
 /// geometries by name. The mark is therefore the shared `Check` icon, in the
 /// same 11 DIP square the polygon occupied.
 pub struct CheckBox {
@@ -1518,8 +1518,8 @@ pub struct CheckBox {
     pub accent: Option<D2D1_COLOR_F>,
 }
 
-/// A toggle button IS a check box — `Appearance::Button` is a property of the
-/// same .NET control, not a second one — so this is an alias rather than a
+/// A toggle button IS a check box - `Appearance::Button` is a property of the
+/// same .NET control, not a second one - so this is an alias rather than a
 /// type. Build one with [`CheckBox::toggle_button`].
 pub type ToggleButton = CheckBox;
 
@@ -1531,7 +1531,7 @@ impl CheckBox {
     }
 
     /// The same control, painted as a pressable button
-    /// (`Appearance::Button`) — see [`ToggleButton`].
+    /// (`Appearance::Button`) - see [`ToggleButton`].
     pub fn toggle_button(label: &str) -> Self {
         let mut b = Self::new(label);
         b.inner.appearance = Appearance::Button;
@@ -1549,7 +1549,7 @@ impl CheckBox {
     /// Deliberately NOT called `checked`: the replica already publishes
     /// `checked()` (the getter, a projection of `check_state`) and
     /// `set_checked`, and a builder of the same name would shadow the getter
-    /// through `Deref` — the exact drift this crate's first rule exists to
+    /// through `Deref` - the exact drift this crate's first rule exists to
     /// prevent.
     pub fn check(mut self, state: CheckState) -> Self {
         self.inner.check_state = state;
@@ -1583,7 +1583,7 @@ impl CheckBox {
     }
 
     /// The height this check box needs at `width` to show its whole label and
-    /// description, wrapped — the web's behaviour. Give it that height and it
+    /// description, wrapped - the web's behaviour. Give it that height and it
     /// wraps; give it less and the last visible line is ellipsised.
     pub fn height_for_width(&self, canvas: &dyn Canvas, width: f32) -> f32 {
         if self.inner.appearance == Appearance::Button {
@@ -1592,7 +1592,7 @@ impl CheckBox {
         self.text().height_for_width(canvas, width)
     }
 
-    /// Where the 18 DIP box lands inside `bounds` — for a caller that anchors
+    /// Where the 18 DIP box lands inside `bounds` - for a caller that anchors
     /// something on it (a tooltip, a help bubble).
     pub fn glyph_rect(&self, canvas: &dyn Canvas, bounds: Rect) -> Rect {
         self.text().layout(canvas, bounds, self.inner.check_align).0.glyph
@@ -1647,7 +1647,7 @@ impl CheckBox {
 
 /// The ink a pressed toggle button wears: `bg-primary-light text-primary`.
 ///
-/// Measured off the web's own toggle buttons — `drive/fileView.tsx`'s view-mode
+/// Measured off the web's own toggle buttons - `drive/fileView.tsx`'s view-mode
 /// group and `core/admin/storage/QuotaField.tsx`'s unit group both write
 /// exactly `active ? 'bg-primary-light text-primary' : 'text-text-secondary
 /// hover:bg-surface-…'`. An unpressed one is therefore a [`Variant::Ghost`]
@@ -1684,14 +1684,14 @@ fn paint_check_glyph(c: &dyn Canvas, glyph: Rect, g: &CheckGlyph) {
         control::CHECK_BORDER,
     );
     // An indeterminate box is filled like a checked one, whatever `checked`
-    // says — `paintCheckbox` decides the fill with `indeterminate ? 1 : progress`.
+    // says - `paintCheckbox` decides the fill with `indeterminate ? 1 : progress`.
     let filled = if g.indeterminate { 1.0 } else { g.progress };
     if filled > 0.0 {
         c.fill_rounded(&glyph, control::CHECK_RADIUS, &fade(g.accent, g.alpha * filled));
     }
 
     // The mark is `#ffffff` in the painter, which in a token palette is « what
-    // sits on the accent » — and the dark theme's pale accent needs a dark mark,
+    // sits on the accent » - and the dark theme's pale accent needs a dark mark,
     // which is exactly what `accent_foreground` carries.
     let mark = fade(t.accent_foreground, g.alpha);
     if g.indeterminate {
@@ -1701,7 +1701,7 @@ fn paint_check_glyph(c: &dyn Canvas, glyph: Rect, g: &CheckGlyph) {
         let y = glyph.top + (control::CHECK_BOX - h) / 2.0;
         c.fill_rounded(&Rect::new(x, y, x + w, y + h), h / 2.0, &mark);
     } else if g.progress > 0.0 {
-        // « Tick — scales from the centre, like the CSS transform: scale() ».
+        // « Tick - scales from the centre, like the CSS transform: scale() ».
         c.vector_icon("Check", &glyph, control::CHECK_TICK * g.progress, &mark);
     }
 }
@@ -1713,7 +1713,7 @@ impl Widget for CheckBox {
 
     fn measure(&self, canvas: &dyn Canvas) -> ControlSize {
         match self.inner.appearance {
-            // A toggle button measures like a plain button — the same rule the
+            // A toggle button measures like a plain button - the same rule the
             // replica's own `preferred_size` follows.
             Appearance::Button => {
                 let text_w = canvas.measure(&self.inner.text, &canvas.formats().body);
@@ -1762,7 +1762,7 @@ impl DerefMut for CheckBox {
 ///
 /// As with [`CheckBox`], the model is entirely the replica's: `checked`,
 /// `auto_check`, `check_align`, and a `perform_click()` that selects without
-/// ever un-selecting — a radio does not toggle off, it is cleared by a sibling
+/// ever un-selecting - a radio does not toggle off, it is cleared by a sibling
 /// being chosen. That container rule lives on the models
 /// ([`kubuno_desktop_controls::buttons::select_radio`]) and is deliberately not
 /// restated here. The group's keyboard rules are [`radio_arrow_target`] and
@@ -1772,7 +1772,7 @@ impl DerefMut for CheckBox {
 ///
 /// `core/frontend/src/ui/radioCanvas.ts`: `{ size: 18, ring: 2, dot: 10 }`, the
 /// ring in `--color-border` (`--color-border-strong` hovered) and in the accent
-/// once selected, and a dot that grows from the centre — so a fully selected
+/// once selected, and a dot that grows from the centre - so a fully selected
 /// radio is a 10 DIP accent disc inside a 2 DIP accent ring.
 pub struct RadioButton {
     inner: replica::RadioButton,
@@ -1874,7 +1874,7 @@ impl RadioButton {
 /// Paints the ring and the dot at `progress`.
 ///
 /// The web strokes the ring centred on a path of radius `(size - ring) / 2`,
-/// i.e. the ring occupies the outer 2 DIP of the 18 box —
+/// i.e. the ring occupies the outer 2 DIP of the 18 box -
 /// [`Canvas::stroke_rounded_w`] insets by half the width and shrinks the radius
 /// by the same half, which is the identical shape.
 fn paint_radio_glyph(
@@ -1942,7 +1942,7 @@ impl DerefMut for RadioButton {
 // Switch
 // ═════════════════════════════════════════════════════════════════════════════
 
-/// The switch's two sizes — `Toggle.tsx`'s `size?: 'sm' | 'md'`.
+/// The switch's two sizes - `Toggle.tsx`'s `size?: 'sm' | 'md'`.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum SwitchSize {
     Sm,
@@ -1986,15 +1986,15 @@ impl SwitchSize {
     }
 }
 
-/// The toggle switch — `Toggle.tsx`: a 36×20 track with a 14 thumb (or the
+/// The toggle switch - `Toggle.tsx`: a 36×20 track with a 14 thumb (or the
 /// 28×16 `sm`), and an optional label + description to its right.
 ///
 /// **Its model is a check box**, because that is what a switch is in the
 /// toolkit: a two-state control whose click cycles `Unchecked ↔ Checked`. It
 /// therefore derefs to [`kubuno_desktop_controls::buttons::CheckBox`] and gets
-/// `checked()`, `set_checked`, `auto_check`, `perform_click()` — and `text`,
-/// which is the switch's `label` — with no state machine of its own.
-/// (`three_state` is honoured by the model but has no rendering — keep it off.)
+/// `checked()`, `set_checked`, `auto_check`, `perform_click()` - and `text`,
+/// which is the switch's `label` - with no state machine of its own.
+/// (`three_state` is honoured by the model but has no rendering - keep it off.)
 ///
 /// With no label it paints only its track, centred in `bounds` (so a caller
 /// can hand it a row). With a label the track leads and the text column
@@ -2007,7 +2007,7 @@ pub struct Switch {
 }
 
 impl Switch {
-    /// The `md` track's width — public so a settings row can reserve it
+    /// The `md` track's width - public so a settings row can reserve it
     /// without building a switch.
     pub const WIDTH: f32 = SwitchSize::Md.geometry().width;
     /// The `md` track's height.
@@ -2064,7 +2064,7 @@ impl Switch {
         Self::thumb_at(track, SwitchSize::Md, if on { 1.0 } else { 0.0 })
     }
 
-    /// The thumb at `progress` of its travel (0 = off, 1 = on) — `thumbInset +
+    /// The thumb at `progress` of its travel (0 = off, 1 = on) - `thumbInset +
     /// travel × progress` in `paintToggle`.
     pub fn thumb_at(track: Rect, size: SwitchSize, progress: f32) -> Rect {
         let g = size.geometry();
@@ -2073,7 +2073,7 @@ impl Switch {
         Rect::new(left, track.top + g.inset, left + g.thumb, track.top + g.inset + g.thumb)
     }
 
-    /// Where the switch sits when it is right-aligned on a settings row —
+    /// Where the switch sits when it is right-aligned on a settings row -
     /// [`kubuno_drive_desktop_app_controls::switch::bounds_right_aligned`].
     pub fn bounds_right_aligned(row: Rect, margin: f32) -> Rect {
         let left = row.right - margin - Self::WIDTH;
@@ -2152,7 +2152,7 @@ impl Switch {
         self.layout(canvas, bounds).0.glyph
     }
 
-    /// Paints it with the thumb at `progress` of its travel — `paintToggle`:
+    /// Paints it with the thumb at `progress` of its travel - `paintToggle`:
     /// the off track (`--color-surface-3` filled, `--color-border` outlined),
     /// the on track over it at `progress` alpha, then the thumb with its
     /// 1 DIP drop shadow. [`Widget::paint`] is this at 0 or 1.
@@ -2249,7 +2249,7 @@ impl DerefMut for Switch {
 // Tests
 //
 // Four kinds, in this order: PARITY with the predecessor's geometry,
-// measurement and layout (pure functions over a measuring closure — a `--lib`
+// measurement and layout (pure functions over a measuring closure - a `--lib`
 // test cannot build the COM `TextFormats` a live `Canvas` carries), keyboard
 // and motion, and the state machines the replica owns. The gallery's `buttons`
 // page closes the gap by painting everything from one live canvas.
@@ -2300,8 +2300,8 @@ mod tests {
         }
     }
 
-    /// The intrinsic width is the predecessor's sum — `2·pad + icon + gap +
-    /// label` — in each of its four shapes, and a loading button holds its ring.
+    /// The intrinsic width is the predecessor's sum - `2·pad + icon + gap +
+    /// label` - in each of its four shapes, and a loading button holds its ring.
     #[test]
     fn the_intrinsic_width_is_the_predecessors_sum() {
         let text = 40.0;

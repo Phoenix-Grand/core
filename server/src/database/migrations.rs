@@ -68,7 +68,7 @@ const PG_EXTENSIONS: &[PgExtension] = &[
 ///
 /// Migration 000001 says `CREATE EXTENSION IF NOT EXISTS "uuid-ossp"` without
 /// a schema, so PostgreSQL put the extension in the first schema of the
-/// connection's search_path — `core` (or `<prefix>core`). An extension exists
+/// connection's search_path - `core` (or `<prefix>core`). An extension exists
 /// once per database, so from then on only a connection with that schema on
 /// its path could resolve `uuid_generate_v4()`: every module (search_path
 /// `<module>, public`) failed its first migration on a fresh install, and a

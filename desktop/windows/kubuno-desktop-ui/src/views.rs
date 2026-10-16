@@ -1,4 +1,4 @@
-//! Kubuno primitives — **views**: [`ListView`] and [`TreeView`].
+//! Kubuno primitives - **views**: [`ListView`] and [`TreeView`].
 //!
 //! These two are the only primitives in the crate whose predecessor is not a
 //! control in `kubuno-drive-desktop-app-controls` but a **whole screen of the shipping
@@ -34,7 +34,7 @@
 //!
 //! [`ListView`] is virtual by construction: [`ListView::visible_range`] is
 //! pure arithmetic on the scroll offset and the row pitch, and the painter
-//! walks that range only — 100 000 items cost exactly as much as a screenful.
+//! walks that range only - 100 000 items cost exactly as much as a screenful.
 //! Note this is a **departure** from the replica, whose painter loops
 //! `0..item_count()` and breaks at the bottom edge (correct, but only because
 //! it has no scroll offset to start below row 0).
@@ -42,8 +42,8 @@
 //! [`TreeView`] paints only its visible slice too, but it cannot be fully
 //! virtual: the replica's only flattening, [`kc::TreeView::visible_rows`],
 //! returns a `Vec` and a depth-first walk has to visit every *expanded* row to
-//! number them. Collapsed subtrees are skipped — 100 000 nodes under collapsed
-//! roots cost nothing — but 100 000 *expanded* rows cost one walk per frame.
+//! number them. Collapsed subtrees are skipped - 100 000 nodes under collapsed
+//! roots cost nothing - but 100 000 *expanded* rows cost one walk per frame.
 //! Fixing that means an indexed flattening in the replica, which this family
 //! may not add.
 //!
@@ -57,10 +57,10 @@
 //! header follows `DetailsHeader.tsx`.
 //!
 //! Both views take the keyboard the way the web explorer's
-//! `useExplorerKeyboard.ts` and the WAI-ARIA listbox / tree patterns do —
+//! `useExplorerKeyboard.ts` and the WAI-ARIA listbox / tree patterns do -
 //! arrows, Home/End, PageUp/PageDown, Shift to extend from a fixed anchor,
 //! Ctrl to move without selecting, Space / Ctrl+Space, Ctrl+A, Escape,
-//! type-ahead, Enter, F2, Delete, the menu key — as pure methods
+//! type-ahead, Enter, F2, Delete, the menu key - as pure methods
 //! ([`ListView::key`], [`TreeView::key`], `type_ahead`) plus a `take_input`
 //! that reads the host's per-frame queue. What an action *means* (open,
 //! rename, delete, show a menu) is returned to the caller as a
@@ -97,7 +97,7 @@ pub use kubuno_desktop_controls::views::{
 // They live here rather than in `crate::metrics` because they describe these
 // two views and nothing else, and because `metrics.rs` is shared with eight
 // families being written in parallel. Every one of them names the product file
-// it was read from — none is a guess.
+// it was read from - none is a guess.
 
 /// The Details header band: `file_header` spans `content.top + 8` to
 /// `content.top + 36` in `kubuno-drive-desktop/src/ui/layout.rs`, i.e. 28 DIP tall.
@@ -108,7 +108,7 @@ const HEADER_HEIGHT: f32 = 28.0;
 const ICON_GUTTER: f32 = space::SM;
 const ICON_SIZE: f32 = 20.0;
 
-/// The gap a cell leaves before the next column starts — the `- 8.0` every
+/// The gap a cell leaves before the next column starts - the `- 8.0` every
 /// cell rectangle in `details_layout_page.rs` is built with.
 const CELL_GAP: f32 = space::SM;
 
@@ -117,7 +117,7 @@ const CELL_GAP: f32 = space::SM;
 const SORT_GLYPH: f32 = 12.0;
 
 /// A tile in the icon view: `grid_item_width_for(3)` = 60 + 20×3, then the name
-/// row (`GRID_NAME_ROW` = 44), with `space::MD` between tiles and around them —
+/// row (`GRID_NAME_ROW` = 44), with `space::MD` between tiles and around them -
 /// all four from `shell_view_model.rs` / `ui/layout.rs`.
 const TILE_WIDTH: f32 = 120.0;
 const TILE_NAME_ROW: f32 = 44.0;
@@ -130,7 +130,7 @@ const TILE_ICON_INSET: f32 = 24.0;
 const TILE_SELECTION_BORDER: f32 = 2.0;
 
 /// A check box drawn over a tile or in a row: `CHECKBOX_*` in
-/// `grid_layout_page.rs` — an 18 DIP box with a 2 DIP border at `--radius-sm`,
+/// `grid_layout_page.rs` - an 18 DIP box with a 2 DIP border at `--radius-sm`,
 /// 6 DIP off the preview corner. The 18 is also [`control::CHECK_BOX`].
 const CHECK_BORDER: f32 = 2.0;
 const CHECK_MARGIN: f32 = 6.0;
@@ -164,11 +164,11 @@ const SELECTION_RING: f32 = 2.0;
 
 /// The web explorer's keyboard cursor on a row it did not select:
 /// `inset 3px 0 0 0 rgba(26,115,232,0.4)` (`rowAccentShadow({ focused })` in
-/// `rowStyles.ts`) — the accent at 40 % as a 3 DIP left edge.
+/// `rowStyles.ts`) - the accent at 40 % as a 3 DIP left edge.
 const CURSOR_BAR: f32 = 3.0;
 const CURSOR_BAR_ALPHA: f32 = 0.4;
 
-/// `focus:ring-2` — the accent ring a focused control wears, drawn inward.
+/// `focus:ring-2` - the accent ring a focused control wears, drawn inward.
 /// Same number as `text::FOCUS_RING` and `range`'s field ring.
 const FOCUS_RING: f32 = 2.0;
 
@@ -193,7 +193,7 @@ const CARET_WIDTH: f32 = 1.0;
 const CARET_HEIGHT: f32 = 16.0;
 
 // =============================================================================
-//  Keyboard — shared by both views
+//  Keyboard - shared by both views
 // =============================================================================
 
 /// A key a view reacts to, decoded from a host key event by
@@ -229,7 +229,7 @@ pub enum NavKey {
 impl NavKey {
     /// Decodes a key-down. Alt chords are never navigation (they belong to the
     /// window), and Ctrl only combines with the arrows, Home/End, the page
-    /// keys and Space — plus Ctrl+A, which becomes [`NavKey::SelectAll`].
+    /// keys and Space - plus Ctrl+A, which becomes [`NavKey::SelectAll`].
     pub fn from_vk(code: u16, mods: Modifiers) -> Option<NavKey> {
         if mods.alt {
             return None;
@@ -267,7 +267,7 @@ impl NavKey {
 }
 
 /// The index of the first label, searching from `start` and wrapping around,
-/// that starts with `query` — case-insensitively, the way the APG type-ahead
+/// that starts with `query` - case-insensitively, the way the APG type-ahead
 /// matches. `None` when nothing matches or `query` is empty.
 fn find_prefix<S: AsRef<str>>(labels: &[S], start: usize, query: &str) -> Option<usize> {
     if labels.is_empty() || query.is_empty() {
@@ -313,11 +313,11 @@ impl TypeAhead {
 }
 
 // =============================================================================
-//  Overlay scroll bar — shared by both views
+//  Overlay scroll bar - shared by both views
 // =============================================================================
 
 /// The vertical overlay bar a view wears when its content is taller than the
-/// area it scrolls in — the range family's [`ScrollBar`], resting as the 2 DIP
+/// area it scrolls in - the range family's [`ScrollBar`], resting as the 2 DIP
 /// indicator and unfolding when `hot`, painted OVER the rows like Drive's file
 /// area (`kubuno-drive-desktop-app-controls/src/scrollbar`). `None` when nothing overflows.
 /// `frame` and `radius` are the view's outline: the rail is shortened to stay
@@ -330,7 +330,7 @@ fn overlay_bar(area: Rect, frame: Rect, radius: f32, extent: f32, scroll: f32, h
     Some((rail, bar))
 }
 
-/// The scroll offset that puts the thumb's top edge at `thumb_top` — the
+/// The scroll offset that puts the thumb's top edge at `thumb_top` - the
 /// inverse of [`ScrollBar::thumb_rect`], for a thumb drag.
 fn scroll_for_thumb(bar: &ScrollBar, rail: Rect, thumb_top: f32, max_scroll: f32) -> f32 {
     let thumb = bar.thumb_rect(rail);
@@ -344,7 +344,7 @@ fn scroll_for_thumb(bar: &ScrollBar, rail: Rect, thumb_top: f32, max_scroll: f32
 }
 
 /// The scroll offset that brings the band `top..bottom` (content space) into
-/// a `viewport`-tall window currently at `scroll` — the minimal move, as
+/// a `viewport`-tall window currently at `scroll` - the minimal move, as
 /// `scrollIntoView({ block: 'nearest' })` does in the web explorer.
 fn nearest_scroll(scroll: f32, viewport: f32, top: f32, bottom: f32) -> f32 {
     if top < scroll {
@@ -356,13 +356,13 @@ fn nearest_scroll(scroll: f32, viewport: f32, top: f32, bottom: f32) -> f32 {
     }
 }
 
-/// `color` at `alpha` of its own opacity — a token, faded.
+/// `color` at `alpha` of its own opacity - a token, faded.
 fn faded(color: &D2D1_COLOR_F, alpha: f32) -> D2D1_COLOR_F {
     D2D1_COLOR_F { a: color.a * alpha, ..*color }
 }
 
 /// Text in a cell with the web's `truncate`: aligned as asked while it fits,
-/// ellipsised (from the leading edge) once it does not — a right-aligned
+/// ellipsised (from the leading edge) once it does not - a right-aligned
 /// size that grew wider than its column must not spill into the next one.
 fn cell_text(
     c: &dyn Canvas,
@@ -382,7 +382,7 @@ fn cell_text(
 /// The inline rename box both views open on F2: an `@ui/Input` (ground,
 /// `focus:ring-2` accent ring at `--radius-sm`) holding `text` and, when
 /// `caret` is true, a caret after it. A name longer than the box shows its
-/// END — the part being typed — the way a native input scrolls to its caret.
+/// END - the part being typed - the way a native input scrolls to its caret.
 fn paint_inline_editor(c: &dyn Canvas, rect: Rect, text: &str, caret: bool) {
     let t = c.theme();
     let f = c.formats();
@@ -410,16 +410,16 @@ fn paint_inline_editor(c: &dyn Canvas, rect: Rect, text: &str, caret: bool) {
 
 /// How tall a row is. WinForms derives a row height from the font; the Kubuno
 /// design system picks it from a **density**, exactly as
-/// `shell_view_model::row_height_for` does — which is why this is a field the
+/// `shell_view_model::row_height_for` does - which is why this is a field the
 /// replica has no counterpart for.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum Density {
-    /// `row_height_for(1)` — `FILE_ROW - 8`.
+    /// `row_height_for(1)` - `FILE_ROW - 8`.
     Compact,
-    /// `row_height_for(2)` — [`height::FILE_ROW`], the product's default.
+    /// `row_height_for(2)` - [`height::FILE_ROW`], the product's default.
     #[default]
     Normal,
-    /// `row_height_for(3)` — `FILE_ROW + 4`.
+    /// `row_height_for(3)` - `FILE_ROW + 4`.
     Comfortable,
 }
 
@@ -434,7 +434,7 @@ impl Density {
     }
 }
 
-/// A Kubuno list view — [`kc::ListView`] with the product's pixels.
+/// A Kubuno list view - [`kc::ListView`] with the product's pixels.
 ///
 /// ```text
 ///   ListView
@@ -449,7 +449,7 @@ impl Density {
 pub struct ListView {
     inner: kc::ListView,
 
-    /// The row height's density — see [`Density`].
+    /// The row height's density - see [`Density`].
     pub density: Density,
     /// The **pixel** scroll offset of the body, in DIP.
     ///
@@ -457,7 +457,7 @@ pub struct ListView {
     /// a partially scrolled first row; a smooth-scrolling Kubuno view needs the
     /// finer number, so it is added here rather than approximated.
     pub scroll: f32,
-    /// The row the pointer is over — the product's `Hot::FileRow(i)`. The
+    /// The row the pointer is over - the product's `Hot::FileRow(i)`. The
     /// replica has only `hot_tracking: bool`, which says whether to react, not
     /// to what.
     pub hot_index: Option<usize>,
@@ -478,10 +478,10 @@ pub struct ListView {
     ///
     /// The product tints a selected folder card `selected_folder` and a
     /// selected file card `selected_card` (`grid_layout_page.rs`), and the
-    /// replica's item model carries no "is a directory" bit — so the rule is
+    /// replica's item model carries no "is a directory" bit - so the rule is
     /// declared here rather than guessed from the text.
     pub container_icon: Option<&'static str>,
-    /// The **keyboard cursor** — the web explorer's `cursorId`: the item the
+    /// The **keyboard cursor** - the web explorer's `cursorId`: the item the
     /// arrows move from, which Enter opens and F2 renames. It is distinct from
     /// the selection *anchor* ([`kc::ListView::focused_index`]) so that
     /// Shift+arrows can extend from a fixed anchor, and Ctrl+arrows can move
@@ -490,14 +490,14 @@ pub struct ListView {
     /// The pointer is over the overlay scroll bar's gutter: the bar unfolds
     /// (see [`ScrollBar::expanded`]) and its thumb takes the hover colour.
     pub scrollbar_hot: bool,
-    /// Clip the whole view to this corner radius — for a view laid flush in a
+    /// Clip the whole view to this corner radius - for a view laid flush in a
     /// rounded container (a `Card`), whose corners it would otherwise square
     /// off. `0.0` (the default) is the product's flat file area.
     pub corner_radius: f32,
     typeahead: TypeAhead,
 }
 
-/// What a key, a type-ahead or a gesture did to a [`ListView`] — what the
+/// What a key, a type-ahead or a gesture did to a [`ListView`] - what the
 /// caller has to act on.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive]
@@ -507,9 +507,9 @@ pub enum ListAction {
     /// The selection changed without the cursor moving (Space, Ctrl+A,
     /// Escape).
     SelectionChanged,
-    /// Enter on this item — the web's `openItem`.
+    /// Enter on this item - the web's `openItem`.
     Open(usize),
-    /// F2 on this item — start an inline rename.
+    /// F2 on this item - start an inline rename.
     Rename(usize),
     /// Delete on a non-empty selection; `true` for Shift+Delete, the web's
     /// « delete permanently ».
@@ -555,7 +555,7 @@ impl ListView {
         self.density.row_height()
     }
 
-    /// The header band's height — zero when it is hidden, or when the view is
+    /// The header band's height - zero when it is hidden, or when the view is
     /// not Details (the replica's own rule, in `details_geometry`).
     pub fn header_height(&self) -> f32 {
         if self.inner.header_style == ColumnHeaderStyle::None || self.inner.view != View::Details {
@@ -578,13 +578,13 @@ impl ListView {
         }
     }
 
-    /// The area rows are laid out in — everything under the header.
+    /// The area rows are laid out in - everything under the header.
     pub fn body(&self, bounds: Rect) -> Rect {
         Rect::new(bounds.left, bounds.top + self.header_height(), bounds.right, bounds.bottom)
     }
 
     /// The left x of every column, plus one entry at the right edge of the last
-    /// one — [`kc::DetailsGeometry::column_x_offsets`].
+    /// one - [`kc::DetailsGeometry::column_x_offsets`].
     pub fn column_x_offsets(&self, bounds: Rect) -> Vec<f32> {
         self.geometry(bounds).column_x_offsets(&self.inner.columns)
     }
@@ -594,14 +594,14 @@ impl ListView {
         self.inner.columns.iter().map(|c| c.width.max(0) as f32).sum()
     }
 
-    /// The x of each column **separator** — the draggable edge between column
+    /// The x of each column **separator** - the draggable edge between column
     /// `i` and `i + 1`. There is one per column, the last being the right edge
     /// of the last column, which is what a resize grip needs.
     pub fn separators(&self, bounds: Rect) -> Vec<f32> {
         self.column_x_offsets(bounds).into_iter().skip(1).collect()
     }
 
-    /// The column whose right edge is within `tolerance` of `x` — the hit test
+    /// The column whose right edge is within `tolerance` of `x` - the hit test
     /// a column-resize cursor is driven by. Ties go to the leftmost separator.
     pub fn separator_at(&self, bounds: Rect, x: f32, tolerance: f32) -> Option<usize> {
         self.separators(bounds)
@@ -632,7 +632,7 @@ impl ListView {
         }
     }
 
-    /// How many tiles fit across `bounds` — `((inner + gap) / (tile + gap))`,
+    /// How many tiles fit across `bounds` - `((inner + gap) / (tile + gap))`,
     /// the wrap arithmetic of `ui/layout.rs`. Never zero.
     pub fn tiles_per_row(&self, bounds: Rect) -> usize {
         let (tw, _) = self.tile_size();
@@ -640,7 +640,7 @@ impl ListView {
         (((inner + TILE_GAP) / (tw + TILE_GAP)).floor().max(1.0)) as usize
     }
 
-    /// The number of rows to reason about — [`kc::ListView::item_count`], which
+    /// The number of rows to reason about - [`kc::ListView::item_count`], which
     /// answers `VirtualListSize` in virtual mode.
     fn count(&self) -> usize {
         self.inner.item_count()
@@ -688,7 +688,7 @@ impl ListView {
                 let last = (last_row * per_row).min(count);
                 first.min(last)..last
             }
-            // List, SmallIcon and Tile have no Kubuno layout — see `paint`.
+            // List, SmallIcon and Tile have no Kubuno layout - see `paint`.
             _ => 0..0,
         }
     }
@@ -718,7 +718,7 @@ impl ListView {
         (self.content_height(bounds) - (body.bottom - body.top)).max(0.0)
     }
 
-    /// The rectangle item `index` occupies at `scroll` — a row band in Details,
+    /// The rectangle item `index` occupies at `scroll` - a row band in Details,
     /// a tile in the icon view.
     pub fn item_rect(&self, bounds: Rect, index: usize, scroll: f32) -> Rect {
         let body = self.body(bounds);
@@ -788,7 +788,7 @@ impl ListView {
         }
     }
 
-    /// The column `x` falls in, header band included — the Details column
+    /// The column `x` falls in, header band included - the Details column
     /// arithmetic, so a header click and a cell click agree.
     pub fn column_at(&self, bounds: Rect, x: f32) -> Option<usize> {
         let xs = self.column_x_offsets(bounds);
@@ -810,7 +810,7 @@ impl ListView {
     // The state machine is the replica's: `set_selected` is what enforces
     // `MultiSelect`, and `selected_indices` is what derives the selection from
     // the per-item flag. What is added is the part WinForms implements in its
-    // *input* layer rather than in the control value — the modifier rules.
+    // *input* layer rather than in the control value - the modifier rules.
 
     /// Deselects everything.
     pub fn clear_selection(&mut self) {
@@ -820,7 +820,7 @@ impl ListView {
     }
 
     /// Selects the closed interval between two indices, in either order,
-    /// clearing whatever was selected before — a shift-click's extension.
+    /// clearing whatever was selected before - a shift-click's extension.
     ///
     /// With `MultiSelect` off, only `to` survives, because that is what
     /// [`kc::ListView::set_selected`] enforces.
@@ -839,21 +839,21 @@ impl ListView {
     /// A click on item `index` with the two modifiers that change what it
     /// means.
     ///
-    /// * plain — the item becomes the whole selection, and the anchor;
-    /// * ctrl — the item's own flag flips, the rest is untouched, and it
+    /// * plain - the item becomes the whole selection, and the anchor;
+    /// * ctrl - the item's own flag flips, the rest is untouched, and it
     ///   becomes the anchor;
-    /// * shift — the selection becomes the interval from the anchor to the
+    /// * shift - the selection becomes the interval from the anchor to the
     ///   item, and the **anchor does not move** (so a second shift-click
     ///   re-extends from the same place).
     ///
-    /// The anchor is [`kc::ListView::focused_index`] — the replica's
-    /// `FocusedItem` — rather than a second field, because two places holding
+    /// The anchor is [`kc::ListView::focused_index`] - the replica's
+    /// `FocusedItem` - rather than a second field, because two places holding
     /// "where the selection started" is how the two disagree.
     pub fn click(&mut self, index: usize, ctrl: bool, shift: bool) {
         if index >= self.inner.items.len() {
             return;
         }
-        // Whatever the modifiers, the clicked item takes the keyboard cursor —
+        // Whatever the modifiers, the clicked item takes the keyboard cursor -
         // the web's `focusCursor` on click, so the arrows continue from it.
         self.cursor = Some(index);
         match (shift && self.inner.multi_select, ctrl && self.inner.multi_select) {
@@ -877,7 +877,7 @@ impl ListView {
     /// Sorts the items by [`ListView::sort_column`], in the replica's
     /// `Sorting` direction.
     ///
-    /// Column 0 delegates to [`kc::ListView::sort`] — the replica already
+    /// Column 0 delegates to [`kc::ListView::sort`] - the replica already
     /// orders by `Text`, which *is* column 0. Any other column sorts on
     /// [`kc::ListViewItem::cell`], the replica's own column accessor.
     pub fn sort(&mut self) {
@@ -904,7 +904,7 @@ impl ListView {
 
     /// A right click on item `index`, before its context menu opens: an item
     /// that is already selected keeps the whole selection (the menu acts on
-    /// all of it), any other one becomes the selection — Explorer's rule and
+    /// all of it), any other one becomes the selection - Explorer's rule and
     /// the web explorer's `onContextMenu`.
     pub fn context_click(&mut self, index: usize) {
         if index >= self.inner.items.len() {
@@ -945,9 +945,9 @@ impl ListView {
 
     /// Moves the cursor to `target` the way an arrow key with `mods` does:
     ///
-    /// * plain — `target` becomes the whole selection and the anchor;
-    /// * Shift — the selection becomes anchor…target, the anchor stays;
-    /// * Ctrl — only the cursor moves (Space then toggles the item).
+    /// * plain - `target` becomes the whole selection and the anchor;
+    /// * Shift - the selection becomes anchor…target, the anchor stays;
+    /// * Ctrl - only the cursor moves (Space then toggles the item).
     ///
     /// Then scrolls it into view.
     fn move_cursor(&mut self, bounds: Rect, target: usize, mods: Modifiers) {
@@ -967,7 +967,7 @@ impl ListView {
     /// Reacts to one navigation key, as the web explorer's keyboard hook and
     /// the WAI-ARIA listbox pattern do. Returns what the caller must act on,
     /// or `None` when the key means nothing here (so it stays in the queue
-    /// for someone else — Left/Right in Details, Escape with nothing
+    /// for someone else - Left/Right in Details, Escape with nothing
     /// selected).
     ///
     /// Up/Down move one row (one row of tiles in the icon view, where
@@ -984,7 +984,7 @@ impl ListView {
         let tiles = self.inner.view == View::LargeIcon;
         let step = if tiles { self.tiles_per_row(bounds) } else { 1 };
         let page = self.page_items(bounds);
-        // Without a cursor, every movement key lands on the first item — the
+        // Without a cursor, every movement key lands on the first item - the
         // web's `if (!anchor) focusCursor(orderedIds[0])`.
         let target = match key {
             NavKey::Up => Some(cur.map_or(0, |c| c.saturating_sub(step))),
@@ -1037,8 +1037,8 @@ impl ListView {
     }
 
     /// Type-ahead: `text` typed at `now_ms` extends the search (or starts a
-    /// new one after [`TYPEAHEAD_RESET_MS`]) and moves the cursor — and the
-    /// selection — to the next item whose name starts with it. Typing the
+    /// new one after [`TYPEAHEAD_RESET_MS`]) and moves the cursor - and the
+    /// selection - to the next item whose name starts with it. Typing the
     /// same letter again cycles through the items starting with it.
     pub fn type_ahead(&mut self, bounds: Rect, text: &str, now_ms: u64) -> Option<ListAction> {
         let (query, repeated) = self.typeahead.push(text, now_ms);
@@ -1056,8 +1056,8 @@ impl ListView {
         Some(ListAction::CursorMoved(hit))
     }
 
-    /// Takes this frame's keys and typed text from the host queue — only what
-    /// the view reacts to, the rest is left for the next consumer — and
+    /// Takes this frame's keys and typed text from the host queue - only what
+    /// the view reacts to, the rest is left for the next consumer - and
     /// returns what happened. Call it once per frame while the view holds the
     /// focus, before painting.
     pub fn take_input(&mut self, bounds: Rect) -> Vec<ListAction> {
@@ -1089,7 +1089,7 @@ impl ListView {
 
     // ── Scrolling ────────────────────────────────────────────────────────
 
-    /// Clamps [`ListView::scroll`] into `0..=max_scroll` — after a resize, or
+    /// Clamps [`ListView::scroll`] into `0..=max_scroll` - after a resize, or
     /// after items were removed.
     pub fn clamp_scroll(&mut self, bounds: Rect) {
         self.scroll = self.scroll.clamp(0.0, self.max_scroll(bounds));
@@ -1148,7 +1148,7 @@ impl ListView {
         bar.part_at(rail, x, y)
     }
 
-    /// Scrolls so the thumb's top edge lands at `thumb_top` — a thumb drag,
+    /// Scrolls so the thumb's top edge lands at `thumb_top` - a thumb drag,
     /// where the caller keeps the grab offset.
     pub fn scroll_to_thumb(&mut self, bounds: Rect, thumb_top: f32) {
         if let Some((rail, bar)) = overlay_bar(
@@ -1182,8 +1182,8 @@ impl ListView {
 
     // ── Inline rename and context menu anchors ───────────────────────────
 
-    /// The box item `index`'s name occupies — the Details name cell, or a
-    /// tile's name row — where an F2 rename field goes.
+    /// The box item `index`'s name occupies - the Details name cell, or a
+    /// tile's name row - where an F2 rename field goes.
     pub fn name_rect(&self, bounds: Rect, index: usize) -> Rect {
         let r = self.item_rect(bounds, index, self.scroll);
         match self.inner.view {
@@ -1211,7 +1211,7 @@ impl ListView {
     /// Paints the inline rename field over item `index`'s name, holding
     /// `text`, with a caret when `caret` is true. The caller owns the edit
     /// (typed text, Backspace, Enter to commit, Escape to cancel); this is its
-    /// look — `@ui/Input` with its focus ring — clipped to the body.
+    /// look - `@ui/Input` with its focus ring - clipped to the body.
     pub fn paint_rename(&self, c: &dyn Canvas, bounds: Rect, index: usize, text: &str, caret: bool) {
         c.push_clip(&self.body(bounds));
         paint_inline_editor(c, self.name_rect(bounds, index), text, caret);
@@ -1226,7 +1226,7 @@ impl ListView {
         usize::try_from(idx).ok().and_then(|i| self.image_list.get(i)).copied()
     }
 
-    /// Whether item `index` is a container — see [`ListView::container_icon`].
+    /// Whether item `index` is a container - see [`ListView::container_icon`].
     fn is_container(&self, index: usize) -> bool {
         match (self.container_icon, self.icon_of(index)) {
             (Some(folder), Some(icon)) => folder == icon,
@@ -1310,7 +1310,7 @@ impl ListView {
         c.fill_rounded(&rule, 0.0, &t.card_stroke);
     }
 
-    /// The Details body — **only the visible range**, clipped to it.
+    /// The Details body - **only the visible range**, clipped to it.
     fn paint_details(&self, c: &dyn Canvas, bounds: Rect, state: WidgetState) {
         let t = c.theme();
         let f = c.formats();
@@ -1390,7 +1390,7 @@ impl ListView {
                 let right = (xs[col + 1] - CELL_GAP).max(left);
                 let cell = Rect::new(left, row.top, right, row.bottom);
                 // `FileRow`: the name is 14 / `text_primary`, every metadata
-                // cell is 12 / `text_tertiary` — one step paler.
+                // cell is 12 / `text_tertiary` - one step paler.
                 let (format, colour) =
                     if col == 0 { (&f.body, primary) } else { (&f.caption, &t.text_tertiary) };
                 cell_text(c, item.cell(col), &cell, format, colour, align_of(col, header));
@@ -1410,7 +1410,7 @@ impl ListView {
         c.pop_clip();
     }
 
-    /// The icon view — the product's grid tile, verbatim from
+    /// The icon view - the product's grid tile, verbatim from
     /// `grid_layout_page.rs`: a framed card at `--radius-xl` whose fill says
     /// what the item is and how it is selected, the icon box, the selection
     /// check box, and the name under it.
@@ -1522,8 +1522,8 @@ impl Widget for ListView {
     }
 
     /// Details measures as the declared column widths by the header plus the
-    /// rows. The icon views have no measurement of their own — their layout
-    /// depends on the width they are given — so they fall through to the
+    /// rows. The icon views have no measurement of their own - their layout
+    /// depends on the width they are given - so they fall through to the
     /// replica's answer, which is the control's current box.
     fn measure(&self, canvas: &dyn Canvas) -> Size {
         match self.inner.view {
@@ -1535,11 +1535,11 @@ impl Widget for ListView {
         }
     }
 
-    /// Paints into the `bounds` **argument** — never the model's own rectangle.
+    /// Paints into the `bounds` **argument** - never the model's own rectangle.
     ///
     /// Only `Details` and `LargeIcon` have Kubuno pixels: they are the two
     /// views the product uses. `List`, `SmallIcon` and `Tile` paint the ground
-    /// and nothing else, deliberately — approximating them from the replica's
+    /// and nothing else, deliberately - approximating them from the replica's
     /// WinForms tiling would put layouts on screen the design system has never
     /// described.
     fn paint(&self, canvas: &dyn Canvas, bounds: Rect, state: WidgetState) {
@@ -1575,7 +1575,7 @@ impl Widget for ListView {
             let bs = WidgetState::REST.hot(self.scrollbar_hot).disabled(state.disabled);
             bar.paint(canvas, rail, bs);
         }
-        // `:focus-visible`: the accent ring, inward, around the whole view —
+        // `:focus-visible`: the accent ring, inward, around the whole view -
         // the cursor row alone does not say « this list has the keyboard ».
         if state.show_focus_ring() {
             let inset = FOCUS_RING / 2.0;
@@ -1600,7 +1600,7 @@ impl Widget for ListView {
 /// The alignment a Details cell in column `index` actually paints with.
 ///
 /// Column 0 is forced `Left`: the Win32 header control cannot align its first
-/// column, so WinForms silently ignores `ColumnHeader[0].TextAlign` — the same
+/// column, so WinForms silently ignores `ColumnHeader[0].TextAlign` - the same
 /// rule the replica's painter enforces, kept here so a Kubuno list and a
 /// toolkit list put the same text in the same place.
 fn align_of(index: usize, column: &ColumnHeader) -> HorizontalAlignment {
@@ -1615,7 +1615,7 @@ fn align_of(index: usize, column: &ColumnHeader) -> HorizontalAlignment {
 //  TreeView
 // =============================================================================
 
-/// A Kubuno tree — [`kc::TreeView`] painted as the product's lateral pane.
+/// A Kubuno tree - [`kc::TreeView`] painted as the product's lateral pane.
 ///
 /// The reference is `kubuno-drive-desktop-app-controls/src/sidebar/sidebar_view.rs`, which is
 /// the shipping rendering of exactly this control: a full-pill row, the active
@@ -1625,11 +1625,11 @@ fn align_of(index: usize, column: &ColumnHeader) -> HorizontalAlignment {
 pub struct TreeView {
     inner: kc::TreeView,
 
-    /// The pixel scroll offset — same reason as [`ListView::scroll`].
+    /// The pixel scroll offset - same reason as [`ListView::scroll`].
     pub scroll: f32,
     /// The **visible row** the pointer is over.
     pub hot_row: Option<usize>,
-    /// The vector-icon names a node's `ImageIndex` selects — see
+    /// The vector-icon names a node's `ImageIndex` selects - see
     /// [`ListView::image_list`].
     pub image_list: Vec<&'static str>,
     /// The keyboard cursor (the WAI-ARIA tree's focused `treeitem`): the node
@@ -1641,13 +1641,13 @@ pub struct TreeView {
     /// ([`kc::TreeView::selected_path`]); the extra nodes live in
     /// [`TreeView::selection`]. Off by default, as in WinForms.
     pub multi_select: bool,
-    /// The nodes selected besides `selected_path` in a multiple selection —
+    /// The nodes selected besides `selected_path` in a multiple selection -
     /// see [`TreeView::selected_paths`] for the whole set.
     pub selection: Vec<NodePath>,
     /// The rows that have their own height (a node path → its height, DIP); every
     /// other row is [`TreeView::row_height`] high.
     pub node_heights: std::collections::HashMap<NodePath, f32>,
-    /// The pointer is over the overlay scroll bar — see
+    /// The pointer is over the overlay scroll bar - see
     /// [`ListView::scrollbar_hot`].
     pub scrollbar_hot: bool,
     /// Where a Shift+click or Shift+arrow extends from.
@@ -1669,7 +1669,7 @@ pub enum TreeAction {
     Collapsed(NodePath),
     /// Enter on this node.
     Activate(NodePath),
-    /// F2 on this node — start an inline rename.
+    /// F2 on this node - start an inline rename.
     Rename(NodePath),
     /// Delete on a non-empty selection; `true` for Shift+Delete.
     Delete { permanent: bool },
@@ -1681,7 +1681,7 @@ impl Default for TreeView {
     /// The replica's defaults, with the two metrics the Kubuno system answers
     /// differently: a 36 DIP row (`shape::height::SIDEBAR_ROW`) instead of the
     /// toolkit's font-derived 19, and a 16 DIP indent (`INDENT_PER_LEVEL`)
-    /// instead of 19. Both are the replica's own fields, set — not shadowed.
+    /// instead of 19. Both are the replica's own fields, set - not shadowed.
     fn default() -> Self {
         let mut inner = kc::TreeView::new();
         inner.item_height = TREE_ROW;
@@ -1711,13 +1711,13 @@ impl TreeView {
         Self::default()
     }
 
-    /// The flattened visible rows — [`kc::TreeView::visible_rows`], the
+    /// The flattened visible rows - [`kc::TreeView::visible_rows`], the
     /// replica's own tested flattening.
     pub fn rows(&self) -> Vec<VisibleRow> {
         self.inner.visible_rows()
     }
 
-    /// A row's height — the replica's `ItemHeight`.
+    /// A row's height - the replica's `ItemHeight`.
     pub fn row_height(&self) -> f32 {
         self.inner.item_height.max(1) as f32
     }
@@ -1835,7 +1835,7 @@ impl TreeView {
         self.rows().get(index).map(|r| r.path.clone())
     }
 
-    /// The chevron box of a row at `depth` — a 20 DIP square, vertically
+    /// The chevron box of a row at `depth` - a 20 DIP square, vertically
     /// centred, at the row's own indent level.
     pub fn chevron_rect(&self, row: Rect, depth: usize) -> Rect {
         let x = row.left + TREE_PAD + depth as f32 * self.inner.indent as f32;
@@ -1843,7 +1843,7 @@ impl TreeView {
         Rect::new(x, cy - CHEVRON_BOX / 2.0, x + CHEVRON_BOX, cy + CHEVRON_BOX / 2.0)
     }
 
-    /// The visible row whose **chevron** `(x, y)` lands on — `None` for a leaf,
+    /// The visible row whose **chevron** `(x, y)` lands on - `None` for a leaf,
     /// for a row whose chevron is hidden (`ShowPlusMinus` off) or for a point
     /// anywhere else on the row.
     ///
@@ -1872,7 +1872,7 @@ impl TreeView {
     /// Sets one node's expand flag.
     ///
     /// Collapsing a node that hides the cursor or the primary selection moves
-    /// them onto the collapsed node — WinForms moves `SelectedNode` there, and
+    /// them onto the collapsed node - WinForms moves `SelectedNode` there, and
     /// the ARIA tree keeps its focus on a visible item.
     pub fn set_expanded(&mut self, path: &[usize], value: bool) {
         if let Some(n) = kc::TreeView::node_at_mut(&mut self.inner.nodes, path) {
@@ -1892,7 +1892,7 @@ impl TreeView {
         }
     }
 
-    /// Selects the node at a visible row index (`SelectedNode`) — and makes
+    /// Selects the node at a visible row index (`SelectedNode`) - and makes
     /// it the whole selection, the cursor and the anchor.
     pub fn select_row(&mut self, index: usize) {
         if let Some(p) = self.path_at(index) {
@@ -1912,7 +1912,7 @@ impl TreeView {
         self.cursor = Some(path);
     }
 
-    /// Whether `path` is selected — the primary `SelectedNode` or one of the
+    /// Whether `path` is selected - the primary `SelectedNode` or one of the
     /// extra nodes of a multiple selection.
     pub fn is_path_selected(&self, path: &[usize]) -> bool {
         self.inner.selected_path.as_deref() == Some(path)
@@ -1974,7 +1974,7 @@ impl TreeView {
     }
 
     /// A click on visible row `index` with the two modifiers that change what
-    /// it means — the same rules as [`ListView::click`]: plain selects only it,
+    /// it means - the same rules as [`ListView::click`]: plain selects only it,
     /// Ctrl toggles it, Shift selects the run from the anchor. Without
     /// [`TreeView::multi_select`] every click is a plain one.
     pub fn click(&mut self, index: usize, ctrl: bool, shift: bool) {
@@ -2017,7 +2017,7 @@ impl TreeView {
         rows.iter().position(|r| &r.path == target)
     }
 
-    /// The visible row index of the cursor — see [`TreeView::cursor`].
+    /// The visible row index of the cursor - see [`TreeView::cursor`].
     pub fn cursor_index(&self) -> Option<usize> {
         self.cursor_row(&self.rows())
     }
@@ -2118,7 +2118,7 @@ impl TreeView {
         }
     }
 
-    /// Type-ahead over the visible rows — see [`ListView::type_ahead`].
+    /// Type-ahead over the visible rows - see [`ListView::type_ahead`].
     pub fn type_ahead(&mut self, bounds: Rect, text: &str, now_ms: u64) -> Option<TreeAction> {
         let (query, repeated) = self.typeahead.push(text, now_ms);
         let rows = self.rows();
@@ -2139,7 +2139,7 @@ impl TreeView {
         rows.get(hit).map(|r| TreeAction::CursorMoved(r.path.clone()))
     }
 
-    /// Takes this frame's keys and typed text from the host queue — see
+    /// Takes this frame's keys and typed text from the host queue - see
     /// [`ListView::take_input`].
     pub fn take_input(&mut self, bounds: Rect) -> Vec<TreeAction> {
         let now = host::now_ms();
@@ -2182,7 +2182,7 @@ impl TreeView {
         (self.content_height() - (bounds.bottom - bounds.top)).max(0.0)
     }
 
-    /// Clamps [`TreeView::scroll`] into `0..=max_scroll` — after a collapse,
+    /// Clamps [`TreeView::scroll`] into `0..=max_scroll` - after a collapse,
     /// which can leave it past the end.
     pub fn clamp_scroll(&mut self, bounds: Rect) {
         self.scroll = self.scroll.clamp(0.0, self.max_scroll(bounds));
@@ -2229,7 +2229,7 @@ impl TreeView {
         }
     }
 
-    /// A press on the overlay bar: a page on the track, a row on an arrow —
+    /// A press on the overlay bar: a page on the track, a row on an arrow -
     /// see [`ListView::scrollbar_press`].
     pub fn scrollbar_press(&mut self, bounds: Rect, x: f32, y: f32) -> Option<ScrollPart> {
         let part = self.scrollbar_part_at(bounds, x, y)?;
@@ -2247,7 +2247,7 @@ impl TreeView {
 
     // ── Inline rename and context menu anchors ───────────────────────────
 
-    /// The box visible row `index`'s label occupies — where an F2 rename
+    /// The box visible row `index`'s label occupies - where an F2 rename
     /// field goes.
     pub fn name_rect(&self, bounds: Rect, index: usize) -> Rect {
         let row = self.row_rect(bounds, index, self.scroll);
@@ -2265,7 +2265,7 @@ impl TreeView {
         Some((r.left, r.bottom))
     }
 
-    /// Paints the inline rename field over visible row `index` — see
+    /// Paints the inline rename field over visible row `index` - see
     /// [`ListView::paint_rename`].
     pub fn paint_rename(&self, c: &dyn Canvas, bounds: Rect, index: usize, text: &str, caret: bool) {
         c.push_clip(&bounds);
@@ -2273,7 +2273,7 @@ impl TreeView {
         c.pop_clip();
     }
 
-    /// Where a row's label starts, from the row's left edge — chevron column,
+    /// Where a row's label starts, from the row's left edge - chevron column,
     /// optional check box, icon, gap. Shared by the painter and by anything
     /// measuring a row, so a check box pushes the label rather than landing
     /// under it.
@@ -2312,7 +2312,7 @@ impl Widget for TreeView {
 
     /// The widest visible row (indent + chevron + check + icon + label) by the
     /// total height of the visible rows. Same structure as the replica's
-    /// `preferred_size` — which is where the mistakes are — with the Kubuno
+    /// `preferred_size` - which is where the mistakes are - with the Kubuno
     /// columns instead of the toolkit's 9 DIP glyph box.
     fn measure(&self, canvas: &dyn Canvas) -> Size {
         let f = canvas.formats();
@@ -2338,7 +2338,7 @@ impl Widget for TreeView {
         let t = canvas.theme();
         let f = canvas.formats();
         let rows = self.rows();
-        // The ring marks the keyboard cursor, and only on `:focus-visible` —
+        // The ring marks the keyboard cursor, and only on `:focus-visible` -
         // a click on a nav row leaves no ring behind, a Tab or an arrow does.
         let ring_row = if state.show_focus_ring() { self.cursor_row(&rows) } else { None };
         // `HideSelection`: the toolkit hides the band when the control has lost
@@ -2372,7 +2372,7 @@ impl Widget for TreeView {
             }
 
             // The web nav row is a full pill: the active one keeps its
-            // `accent_light` pastille on hover — the two fills never stack.
+            // `accent_light` pastille on hover - the two fills never stack.
             let corner = crate::metrics::pill(rect.bottom - rect.top);
             let band = if self.inner.full_row_select {
                 rect
@@ -2392,7 +2392,7 @@ impl Widget for TreeView {
             }
 
             // `ShowLines`: the product's nav tree has no branch lines, so the
-            // flag is honoured with the design system's own hairline —
+            // flag is honoured with the design system's own hairline -
             // `divider`, one DIP, at each ancestor level.
             if self.inner.show_lines {
                 for level in 0..=row.depth {
@@ -2486,7 +2486,7 @@ impl Widget for TreeView {
 }
 
 // =============================================================================
-//  Tests — pure geometry and pure state, no device needed.
+//  Tests - pure geometry and pure state, no device needed.
 // =============================================================================
 
 #[cfg(test)]
@@ -2507,7 +2507,7 @@ mod tests {
                 ListViewItem::new(format!("item {i:05}"))
                     .with_sub("hier")
                     .with_sub("Dossier")
-                    .with_sub("—")
+                    .with_sub("-")
             })
             .collect();
         v
@@ -2686,7 +2686,7 @@ mod tests {
             ListViewItem::new("bravo").with_sub("a"),
         ];
         v.sorting = SortOrder::Ascending;
-        v.sort(); // column 0 — delegated to the replica's own `sort()`
+        v.sort(); // column 0 - delegated to the replica's own `sort()`
         assert_eq!(v.items.iter().map(|i| i.text.as_str()).collect::<Vec<_>>(), [
             "alpha", "bravo", "charlie"
         ]);
@@ -2740,7 +2740,7 @@ mod tests {
         // 5 per row, a row pitch of 176: 400 DIP shows rows 0..3.
         assert_eq!(v.visible_range(b, 0.0), 0..15);
         // Scrolled by exactly two pitches: row 1 has just left through the top
-        // edge, so the range starts at row 2 — and a single DIP less keeps it.
+        // edge, so the range starts at row 2 - and a single DIP less keeps it.
         assert_eq!(v.visible_range(b, 352.0).start, 10);
         assert_eq!(v.visible_range(b, 351.0).start, 5, "a partial row is still painted");
         assert!(v.visible_range(b, 352.0).end <= 100);
@@ -2858,7 +2858,7 @@ mod tests {
         assert_eq!(t.chevron_hit(b, 27.9, 18.0), Some(0));
         assert_eq!(t.chevron_hit(b, 28.1, 18.0), None, "past the box is the label");
         assert_eq!(t.chevron_hit(b, 10.0, 5.0), None, "above the box");
-        // The last root is a leaf — no chevron anywhere on it.
+        // The last root is a leaf - no chevron anywhere on it.
         let last = t.rows().len() - 1;
         let y = last as f32 * 36.0 + 18.0;
         assert_eq!(t.node_at(b, 10.0, y), Some(last));

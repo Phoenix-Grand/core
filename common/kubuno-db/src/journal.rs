@@ -27,8 +27,8 @@
 //! * **[`touch`]** is the explicit, portable replacement for the no-op parent
 //!   bump: it assigns the parent a *fresh* seq, so the row genuinely changes on
 //!   every engine.
-//! * **[`changes_since`]** reads the delta from a cursor — live rows and
-//!   tombstones unified and ordered — the shape every module's `delta.rs` needs.
+//! * **[`changes_since`]** reads the delta from a cursor - live rows and
+//!   tombstones unified and ordered - the shape every module's `delta.rs` needs.
 //!
 //! # How a module uses it (the diff from the trigger design)
 //!
@@ -92,7 +92,7 @@ use crate::{params, DbValue};
 pub struct Change {
     /// The row's primary key.
     pub id: Uuid,
-    /// The monotonic sequence at which this change happened — the value a
+    /// The monotonic sequence at which this change happened - the value a
     /// client passes back as its next cursor.
     pub change_seq: i64,
     /// `true` for a tombstone (the row was deleted), `false` for a live row.
@@ -126,7 +126,7 @@ struct ChangeRow {
 ///   n = n + 1 RETURNING n`. The `DO UPDATE` takes a row lock, so two
 ///   concurrent transactions serialise on it and each reads back a distinct `n`.
 /// * **MySQL**: it has no `RETURNING`, so the increment and the read-back are
-///   two statements — but they run on the same [`DbTx`], and the
+///   two statements - but they run on the same [`DbTx`], and the
 ///   `ON DUPLICATE KEY UPDATE` holds an exclusive lock on the row until the
 ///   transaction ends, so no other session can slip between them.
 /// * **SQLite**: additionally, every write transaction already holds the
@@ -165,7 +165,7 @@ pub async fn next_seq(
 
 /// [`next_seq`] on a pool, wrapping its own transaction. The transaction is
 /// what makes the two-statement MySQL path atomic, so this is always safe to
-/// call outside one — but a module that also writes a row should share a single
+/// call outside one - but a module that also writes a row should share a single
 /// transaction with [`next_seq`] instead, so the seq and the row commit as one.
 pub async fn next_seq_on_pool(pool: &DbPool, counter_table: &str, domain: &str) -> Result<i64, sqlx::Error> {
     let mut tx = pool.begin().await?;
@@ -191,7 +191,7 @@ pub async fn record_tombstone(
     seq: i64,
 ) -> Result<(), sqlx::Error> {
     // Only `Incoming` assignments, so `upsert`'s table argument is never
-    // interpolated — an empty `&'static str` is correct here.
+    // interpolated - an empty `&'static str` is correct here.
     let clause = tx.backend().upsert(
         "",
         &["id"],
@@ -206,7 +206,7 @@ pub async fn record_tombstone(
     Ok(())
 }
 
-/// Bumps a parent row to a fresh sequence — the explicit, portable replacement
+/// Bumps a parent row to a fresh sequence - the explicit, portable replacement
 /// for the trigger idiom `UPDATE ... SET change_seq = change_seq`.
 ///
 /// That no-op update exists in the PostgreSQL design only to fire a `BEFORE

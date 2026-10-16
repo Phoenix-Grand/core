@@ -1,6 +1,6 @@
 /**
  * Where the project's tooltip goes: BELOW the mouse pointer and aligned with it
- * on the left, whenever there is room. That is the house rule — it keeps the
+ * on the left, whenever there is room. That is the house rule - it keeps the
  * bubble out of the way of what the pointer is over, and reading always starts
  * at the same spot as the cursor.
  *

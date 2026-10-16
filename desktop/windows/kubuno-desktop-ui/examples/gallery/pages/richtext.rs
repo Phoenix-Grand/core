@@ -1,10 +1,10 @@
-//! Gallery page — the rich text family (`kubuno_desktop_ui::richtext`, web
+//! Gallery page - the rich text family (`kubuno_desktop_ui::richtext`, web
 //! `core/frontend/src/ui/RichText.tsx`).
 //!
-//! The exposition shows the whole `@ui/RichText` box — the toolbar
+//! The exposition shows the whole `@ui/RichText` box - the toolbar
 //! ([`kubuno_desktop_ui::editors::RichTextToolbar`], lit from the caret) over a
 //! word-wrapped document with two heading levels, every inline mark, both
-//! list kinds, a link, inline code and a hard line break — then the box in
+//! list kinds, a link, inline code and a hard line break - then the box in
 //! each state the field family distinguishes (resting with its placeholder,
 //! focused with a selection and the `:focus-visible` outline, disabled,
 //! invalid, read-only, the link row open), and the overflow cases: content
@@ -20,7 +20,7 @@
 //! U, Ctrl+K (the link row), Ctrl+Shift+7 / 8 (lists), Ctrl+A / C / X / V,
 //! Ctrl+Z / Y, and the toolbar with its tooltips in a floating overlay that
 //! may hang past the window. Under it, the live state (marks, block,
-//! selection, undo, the HTML value) and the last input events — the page
+//! selection, undo, the HTML value) and the last input events - the page
 //! doubles as the keyboard harness `C:/kubuno-build/keys-at.ps1` checks.
 
 use std::cell::RefCell;
@@ -101,7 +101,7 @@ fn long_doc() -> Document {
     let mut blocks = Vec::new();
     for i in 1..=8 {
         blocks.push(Block::new(BlockKind::Paragraph).plain(format!(
-            "Paragraphe {i} — un contenu plus haut que la boîte défile dans la zone d'édition."
+            "Paragraphe {i} - un contenu plus haut que la boîte défile dans la zone d'édition."
         )));
     }
     Document::from_blocks(blocks)
@@ -141,10 +141,10 @@ fn exposition() -> Exposition {
 
     let focus = WidgetState::REST.focused(true).focus_visible(true);
     let mut states = vec![
-        ("Au repos — placeholder", rest, WidgetState::REST),
-        ("Focus — sélection, anneau :focus-visible", focused, focus),
+        ("Au repos - placeholder", rest, WidgetState::REST),
+        ("Focus - sélection, anneau :focus-visible", focused, focus),
         ("Désactivé", disabled, WidgetState::REST.disabled(true)),
-        ("Invalide (error) — focus", invalid, focus),
+        ("Invalide (error) - focus", invalid, focus),
         ("Lecture seule", read_only, WidgetState::REST),
         ("Barre de lien ouverte (Ctrl+K)", linking, focus),
     ];
@@ -179,7 +179,7 @@ pub fn draw(c: &dyn Canvas, f: &Frame) {
         let e = cell.get_or_insert_with(exposition);
 
         // ── The whole box ──
-        p.section("Texte enrichi — RichText");
+        p.section("Texte enrichi - RichText");
         let top = p.caption("Éditeur complet : barre d'outils (allumée depuis le curseur), titres, marques, listes, lien, code");
         let width = (right - MARGIN).clamp(1.0, pm::SHOWCASE_MAX_W);
         let hh = e.showcase.height_for_width(c, width);
@@ -317,7 +317,7 @@ fn block_label(k: BlockKind) -> &'static str {
     }
 }
 
-/// The toolbar button's `title`, as a tooltip in a floating overlay — it may
+/// The toolbar button's `title`, as a tooltip in a floating overlay - it may
 /// hang past the window, clamped to the monitor's work area.
 fn tooltip_overlay(c: &dyn Canvas, f: &Frame, anchor: Rect, label: &str) {
     let tip = Tooltip::new(label).side(Side::Bottom);
@@ -361,7 +361,7 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
         ui.log.drain(..excess);
 
         let (left, mut y, right) = interact::panel(c, interact::panel_rect(f.size));
-        y = interact::caption(c, left, right, y, "Éditeur — clavier, souris, presse-papiers, molette");
+        y = interact::caption(c, left, right, y, "Éditeur - clavier, souris, presse-papiers, molette");
         let r = Rect::new(left, y, right, y + pm::LIVE_H);
 
         // Focus first (paint order), then the pointer, then the keys.

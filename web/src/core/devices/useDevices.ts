@@ -83,7 +83,7 @@ export function useSignOutDevice() {
 /**
  * Forgets a device.
  *
- * Erases nothing on the machine — see the copy the console shows before it
+ * Erases nothing on the machine - see the copy the console shows before it
  * runs. Named `forget`, never `wipe`, because the name is the first place the
  * misreading starts.
  */
@@ -123,8 +123,8 @@ export function useSignOutMyDevice() {
 /**
  * "This was not me."
  *
- * Revokes every session of the account — including the one pressing the
- * button — forces a password change and alerts the operator. The caller is
+ * Revokes every session of the account - including the one pressing the
+ * button - forces a password change and alerts the operator. The caller is
  * expected to send the user to the sign-in page immediately afterwards.
  */
 export function useDisownMyDevice() {

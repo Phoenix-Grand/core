@@ -116,7 +116,7 @@ export class RequestStatus extends ViewBase {
     return this.memo('rows_past', [this.past, this.props], () => {
       if (!(this.past.length > 0)) return undefined as never
       return this.past.map((run) => {
-      return { run, span_text: ((this.past.length > 0)) ? (formatDay(run.requested_at, this.props.locale)) : undefined, status_badge_props: ((this.past.length > 0)) ? ({ run: run }) : undefined, span_text2: ((this.past.length > 0)) ? (run.size_bytes ? formatBytes(run.size_bytes) : '—') : undefined, key: run.id }
+      return { run, span_text: ((this.past.length > 0)) ? (formatDay(run.requested_at, this.props.locale)) : undefined, status_badge_props: ((this.past.length > 0)) ? ({ run: run }) : undefined, span_text2: ((this.past.length > 0)) ? (run.size_bytes ? formatBytes(run.size_bytes) : '-') : undefined, key: run.id }
     })
     })
   }

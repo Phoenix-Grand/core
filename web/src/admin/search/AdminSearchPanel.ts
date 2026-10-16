@@ -22,7 +22,7 @@ export interface RowProps {
 export interface PanelProps {
   listId:      string
   optionId:    (index: number) => string
-  /** Flat list in keyboard order — the single source of both orders. */
+  /** Flat list in keyboard order - the single source of both orders. */
   results:     AdminResult[]
   activeIndex: number
   setActive:   (index: number) => void

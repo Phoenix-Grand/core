@@ -6,7 +6,7 @@ use uuid::Uuid;
 use validator::{Validate, ValidationError};
 
 /// Last-resort quota, used only when the `storage.default_quota_bytes` setting
-/// cannot be read at all — a database that is mid-migration, or a key somebody
+/// cannot be read at all - a database that is mid-migration, or a key somebody
 /// deleted. It matches the `core.users.quota_bytes` column default of migration
 /// 000001 and the factory value of the setting, so the three never disagree.
 ///
@@ -21,7 +21,7 @@ pub const DEFAULT_QUOTA_SETTING: &str = "storage.default_quota_bytes";
 /// Bounds a configured default is clamped into.
 ///
 /// A quota of zero locks every new account out of the product on its first day,
-/// and a negative one would violate the column's own CHECK — neither is a policy
+/// and a negative one would violate the column's own CHECK - neither is a policy
 /// somebody meant to write. The ceiling is 1 PiB: past it the number stops
 /// meaning "a quota" and starts meaning "somebody pasted a wrong figure".
 const MIN_QUOTA_BYTES: i64 = 1_048_576; // 1 MiB
@@ -33,7 +33,7 @@ const MAX_QUOTA_BYTES: i64 = 1_125_899_906_842_624; // 1 PiB
 /// point of resolving rather than reading the instance value: the inheritance of
 /// migration 000060 lets an operator give the Marketing unit 50 GiB while the
 /// rest of the instance stays at 10, and a locked value higher in the tree still
-/// wins — the same policy every other scoped setting obeys.
+/// wins - the same policy every other scoped setting obeys.
 ///
 /// The account does not exist yet, so the chain is read from the unit (or from
 /// the instance when there is none). A per-user override of this key would be
@@ -103,10 +103,10 @@ pub struct User {
     pub org_unit_id:    Option<Uuid>,
     /// How the person's name is pronounced (migration `000114`). Free text.
     pub name_pronunciation: Option<String>,
-    /// Pronouns the person goes by. Free text — no closed list is imposed.
+    /// Pronouns the person goes by. Free text - no closed list is imposed.
     pub pronouns:           Option<String>,
     /// Where the person works: site, building, floor, "remote". Not the city
-    /// they live in — that stays a personal preference.
+    /// they live in - that stays a personal preference.
     pub work_location:      Option<String>,
     /// Short self-description shown on the profile.
     pub introduction:       Option<String>,
@@ -115,7 +115,7 @@ pub struct User {
     /// picker answer name, username and photo. This is read on the account's own
     /// profile and on the administration sheet, and nowhere else.
     pub gender:             Option<String>,
-    /// **Personal data.** Same rule as [`Self::gender`] — never disclosed by the
+    /// **Personal data.** Same rule as [`Self::gender`] - never disclosed by the
     /// directory, never carried into the audit trail (`audit::redact` does not
     /// list it).
     pub birthday:           Option<NaiveDate>,
@@ -126,7 +126,7 @@ pub struct User {
     ///
     /// This is a date, not a secret: it says *when*, never anything about the
     /// password itself. It is what makes `security.password_expiry_days`
-    /// enforceable — an argon2id hash cannot be asked how old it is.
+    /// enforceable - an argon2id hash cannot be asked how old it is.
     /// `NULL` for an account that holds no local password at all.
     pub password_changed_at: Option<DateTime<Utc>>,
     pub totp_enabled:        bool,
@@ -142,7 +142,7 @@ pub struct User {
     #[serde(skip_serializing)]
     pub totp_pending_secret: Option<String>,
     /// The directory that governs this account, when one does. Set by
-    /// [`crate::directory`] — a synchronisation, or a first successful sign-in.
+    /// [`crate::directory`] - a synchronisation, or a first successful sign-in.
     ///
     /// This field alone does **not** decide which authenticator applies:
     /// `password_hash` does (see [`crate::directory::auth`]). An account that
@@ -186,7 +186,7 @@ fn validate_http_url(url: &str) -> Result<(), ValidationError> {
 /// A plain `Option<T>` cannot: serde maps an absent key and an explicit `null`
 /// to the same `None`, and the UPDATE statement is then unable to distinguish
 /// *leave this alone* from *erase this*. For the profile fields of migration
-/// `000114` that difference is the feature itself — somebody who once entered a
+/// `000114` that difference is the feature itself - somebody who once entered a
 /// birthday must be able to take it back out, not merely overwrite it with
 /// another one. `Option<Option<T>>` behind this deserializer gives the three
 /// states: `None` absent, `Some(None)` erase, `Some(Some(v))` set.
@@ -210,7 +210,7 @@ const MAX_WORK_LOCATION: usize = 160;
 const MAX_INTRODUCTION: usize = 4000;
 const MAX_GENDER: usize = 80;
 
-/// Oldest birthday this accepts, as `(year, month, day)`. Not an age rule — a
+/// Oldest birthday this accepts, as `(year, month, day)`. Not an age rule - a
 /// typo filter, and the same floor as the column's own CHECK.
 const EARLIEST_BIRTHDAY: (i32, u32, u32) = (1900, 1, 1);
 
@@ -225,7 +225,7 @@ pub struct UpdateUserDto {
     // ── Profile fields of migration `000114` ────────────────────────────────
     //
     // `validator` has no rule that reaches inside `Option<Option<_>>`, so these
-    // are checked by [`UpdateUserDto::tidy_profile`] — which also trims, and
+    // are checked by [`UpdateUserDto::tidy_profile`] - which also trims, and
     // turns a blank string into an explicit erase, because that is what a form
     // sends when somebody empties a box.
     #[serde(default, deserialize_with = "double_option")]
@@ -300,7 +300,7 @@ impl UpdateUserDto {
     }
 
     /// Names of the profile fields this request carries, for the event payload
-    /// and the audit line. **Names only** — a personal datum never travels into
+    /// and the audit line. **Names only** - a personal datum never travels into
     /// a log or a trail entry, which is the whole reason this returns strings
     /// and not values.
     pub fn profile_fields_present(&self) -> Vec<&'static str> {
@@ -390,7 +390,7 @@ mod tests {
 
     #[test]
     fn an_oversized_field_is_refused_by_name_and_counted_in_characters() {
-        // 61 accented characters: 122 bytes, and still just 61 characters — a
+        // 61 accented characters: 122 bytes, and still just 61 characters - a
         // byte-length check would refuse a name that fits.
         let long = "é".repeat(MAX_PRONOUNS + 1);
         let mut dto = UpdateUserDto { pronouns: Some(Some(long)), ..Default::default() };

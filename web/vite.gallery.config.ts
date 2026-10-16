@@ -1,7 +1,7 @@
 /**
  * The `.kbview` element gallery (vskubuno docs/WEB-VIEWS.md, WV-5a/5b): one page per element, rendered by the
  * views runtime with the host's real `@ui` components and CSS, in light / dark and LTR / RTL. Development and
- * verification only — never part of the product build (`vite.config.ts` does not list `gallery.html`).
+ * verification only - never part of the product build (`vite.config.ts` does not list `gallery.html`).
  *
  *   npx vite --config vite.gallery.config.ts                       # dev server, http://localhost:5174/gallery.html
  *   npx vite build --config vite.gallery.config.ts                 # static build in dist-gallery/

@@ -1,2 +1,2 @@
-Animated SVG weather icons by amCharts — https://www.amcharts.com/free-animated-svg-weather-icons/
+Animated SVG weather icons by amCharts - https://www.amcharts.com/free-animated-svg-weather-icons/
 (c) ammap.com | SVG weather icons. Used in the Kubuno agenda weather widget.

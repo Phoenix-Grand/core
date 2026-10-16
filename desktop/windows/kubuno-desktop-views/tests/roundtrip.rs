@@ -1,7 +1,7 @@
 //! Round-trip tests over a small corpus (`XML_VIEWS.md` §7's worked example
 //! included) plus a lightweight, deterministic "property test": many
 //! pseudo-random byte-level mutations of a handful of seeds, all checked
-//! against the same invariant — `parse(text).text() == text` — the property
+//! against the same invariant - `parse(text).text() == text` - the property
 //! phase 2a's brief asks be pinned down for "any input, including malformed
 //! input". No `proptest`/`quickcheck` dependency: a hand-rolled xorshift is
 //! enough for a deterministic, reproducible spread of inputs without adding
@@ -56,7 +56,7 @@ fn corpus_malformed_mismatched_and_garbage_round_trips_and_reports_errors() {
 
 // ── property test: many pseudo-random mutations, one invariant ────────────
 
-/// A tiny xorshift64 PRNG — deterministic, no dependency, good enough to
+/// A tiny xorshift64 PRNG - deterministic, no dependency, good enough to
 /// spread mutation points across a seed string reproducibly.
 struct Xorshift64(u64);
 
@@ -80,7 +80,7 @@ impl Xorshift64 {
 }
 
 /// Applies one small, byte-level mutation (insert/delete/replace a byte) at
-/// a pseudo-random position — including positions that land mid-tag,
+/// a pseudo-random position - including positions that land mid-tag,
 /// mid-string, mid-comment. The point is not to produce *valid* XML; it is
 /// to throw byte soup at the lexer/parser and check the tree still accounts
 /// for every byte.
@@ -110,7 +110,7 @@ fn mutate(rng: &mut Xorshift64, input: &str) -> String {
     // Mutating arbitrary bytes of valid UTF-8 (the seeds are ASCII-only in
     // their structural parts, but not in `Text="hôte:port"`-style content)
     // can produce invalid UTF-8; fall back to a lossy re-encoding rather than
-    // panic — the round-trip property only needs to hold for what the lexer
+    // panic - the round-trip property only needs to hold for what the lexer
     // actually receives as `&str`.
     String::from_utf8(out).unwrap_or_else(|e| String::from_utf8_lossy(e.as_bytes()).into_owned())
 }
@@ -135,7 +135,7 @@ fn round_trip_holds_under_many_pseudo_random_mutations() {
     let mut rng = Xorshift64(0x9E3779B97F4A7C15); // Fixed seed: reproducible failures.
     for seed in seeds {
         let mut current = seed.to_string();
-        // Each seed is mutated repeatedly, compounding small changes —
+        // Each seed is mutated repeatedly, compounding small changes -
         // checked after every single mutation, so a failure pinpoints
         // exactly which one-byte edit broke the invariant.
         for _ in 0..40 {

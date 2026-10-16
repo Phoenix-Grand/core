@@ -430,20 +430,20 @@ mod tests {
 
     #[test]
     fn typed_bindings() {
-        let fr = |fs: &str| BindingFormat { format_string: Some(fs.into()), null_value: Some("—".into()), culture: Some("fr-FR".into()) };
+        let fr = |fs: &str| BindingFormat { format_string: Some(fs.into()), null_value: Some("-".into()), culture: Some("fr-FR".into()) };
         assert_eq!(to_bound(&DbValue::Int(12345678901), DbKind::Int, ValueKind::Text, &BindingFormat::default()), Some(Value::Str("12345678901".into())));
         assert_eq!(to_bound(&DbValue::Int(1234), DbKind::Int, ValueKind::Text, &fr("N0")), Some(Value::Str("1\u{202F}234".into())));
         assert_eq!(to_bound(&DbValue::Int(36), DbKind::Int, ValueKind::Number, &BindingFormat::default()), Some(Value::F32(36.0)));
         assert_eq!(to_bound(&DbValue::Text("1234.5".into()), DbKind::Decimal, ValueKind::Text, &fr("N2")), Some(Value::Str("1\u{202F}234,50".into())));
         assert_eq!(to_bound(&DbValue::Text("1815-12-10".into()), DbKind::Date, ValueKind::Text, &fr("d")), Some(Value::Str("10/12/1815".into())));
-        assert_eq!(to_bound(&DbValue::Null, DbKind::Date, ValueKind::Text, &fr("d")), Some(Value::Str("—".into())));
+        assert_eq!(to_bound(&DbValue::Null, DbKind::Date, ValueKind::Text, &fr("d")), Some(Value::Str("-".into())));
         assert_eq!(to_bound(&DbValue::Null, DbKind::Int, ValueKind::Number, &fr("N0")), None);
         assert_eq!(from_bound(&Value::Str("1 234,50".into()), DbKind::Decimal, &fr("N2")), Ok(DbValue::Text("1234.5".into())));
         assert_eq!(from_bound(&Value::Str("1\u{202F}234".into()), DbKind::Int, &fr("N0")), Ok(DbValue::Int(1234)));
         assert!(from_bound(&Value::Str("12,5".into()), DbKind::Int, &fr("N0")).is_err());
         assert_eq!(from_bound(&Value::Str("11/12/1815".into()), DbKind::Date, &fr("d")), Ok(DbValue::Text("1815-12-11".into())));
         assert_eq!(from_bound(&Value::Str("31/02/2026".into()), DbKind::Date, &fr("d")), Err("Enter a date as dd/MM/yyyy.".into()));
-        assert_eq!(from_bound(&Value::Str("—".into()), DbKind::Date, &fr("d")), Ok(DbValue::Null));
+        assert_eq!(from_bound(&Value::Str("-".into()), DbKind::Date, &fr("d")), Ok(DbValue::Null));
         assert_eq!(from_bound(&Value::F32(3.0), DbKind::Int, &fr("N0")), Ok(DbValue::Int(3)));
     }
 

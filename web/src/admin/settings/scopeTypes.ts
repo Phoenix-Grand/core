@@ -1,7 +1,7 @@
 import type { OrgUnit } from '../../core/types'
 
 // Where a setting value lives. `default` is the factory value and only ever
-// appears as the last level of a chain — it is never a target scope.
+// appears as the last level of a chain - it is never a target scope.
 export type ScopeType = 'default' | 'instance' | 'org_unit' | 'group' | 'user'
 
 export interface SettingOrigin {

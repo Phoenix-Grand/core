@@ -2,7 +2,7 @@
 //
 // Three questions, three cache entries: the catalogue, one detector's sheet
 // (with the rules that use it), and a trial run. The trial is a MUTATION rather
-// than a query on purpose — it must never be cached, never be refetched on
+// than a query on purpose - it must never be cached, never be refetched on
 // focus, and never be replayed: the body carries text an administrator pasted,
 // and the only correct number of times to send it is exactly once, when they
 // asked.
@@ -82,8 +82,8 @@ export interface DetectorInput {
 /**
  * One match of a trial run.
  *
- * Offsets, never text. The sample lives in the browser — the administrator typed
- * it there — so the highlighting is done locally and the response can keep the
+ * Offsets, never text. The sample lives in the browser - the administrator typed
+ * it there - so the highlighting is done locally and the response can keep the
  * promise the rest of the feature makes: no inspected value in a JSON body.
  */
 export interface TestMatch {

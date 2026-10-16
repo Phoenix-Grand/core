@@ -1,4 +1,4 @@
-<!-- UsersPanel — converted from UsersPanel.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- UsersPanel - converted from UsersPanel.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl>
   <Panel>
     <!-- TODO(views-migrate): <CreateUserModal> is no .kbview element (a local or dynamic component) -->

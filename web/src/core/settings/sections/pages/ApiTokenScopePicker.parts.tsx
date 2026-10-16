@@ -13,7 +13,7 @@ export function Part1({ chosen, toggle, scopes, privilegeLabel, t }: { chosen: N
               onChange={(key) => { if (key && !chosen.has(key)) toggle(key) }}
               options={scopes
                 .filter((s) => !chosen.has(s.key))
-                .map((s) => ({ value: s.key, label: `${privilegeLabel(s)} — ${s.key}` }))}
+                .map((s) => ({ value: s.key, label: `${privilegeLabel(s)} - ${s.key}` }))}
               placeholder={t('settings.tok_scopes')}
               searchPlaceholder={t('settings.tok_scopes_search')}
               width={220}

@@ -1,5 +1,5 @@
 //! The page surface: a Direct2D device of its own (a detached [`Renderer`], no window), on which
-//! each page is recorded into an `ID2D1CommandList` through a [`Graphics`] — the very `Graphics` of
+//! each page is recorded into an `ID2D1CommandList` through a [`Graphics`] - the very `Graphics` of
 //! EVT-8, drawing through the host's [`Painter`] so the canvas primitives and the `kubuno_desktop_ui` widgets
 //! (a control printed with `draw_to_bitmap`) work on paper too. A recorded page is then either handed
 //! to the printer ([`crate::xps::SpoolJob`], vector output) or rasterised at the size a preview shows

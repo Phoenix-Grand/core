@@ -2,12 +2,12 @@
  * Build of `@kubuno/host-runtime` (`npm run build:design-host`, two passes into `packages/host-runtime/dist/`, not
  * committed):
  *
- * 1. default mode — the design surface page of `.kbview` web views in **bundled** mode
+ * 1. default mode - the design surface page of `.kbview` web views in **bundled** mode
  *    (`src/views/design/entry.bundled.tsx`) as a static site with relative URLs, so it can be served from any origin
  *    or folder (Visual Studio maps it to `https://kubuno-design.invalid/`): `index.html`, `entry.js`, `assets/`, the
  *    production fonts with their licence texts (`fonts/`, byte-identical copies of `public/fonts`) and the light /
  *    dark Kubuno themes (`themes/`).
- * 2. `--mode project` — the page in **project** mode for module projects, served by the module's own Vite dev server
+ * 2. `--mode project` - the page in **project** mode for module projects, served by the module's own Vite dev server
  *    (`src/views/design/entry.module.ts` → `project/design-page.js` + `project/design-page.css`), built TOGETHER with
  *    the host's shared modules (`project/shared/<chunk>.js`, the entries of `build/shared-entries.ts`), so that the
  *    page and the module's code share one instance of each; `project/shared.json` maps every shared specifier of the

@@ -20,7 +20,7 @@ export interface User {
   must_change_password?: boolean
   /**
    * When the current local password was chosen (migration `000115`). A date and
-   * nothing more — it says *when*, never anything about the password. `null` on
+   * nothing more - it says *when*, never anything about the password. `null` on
    * an account that holds no local password at all.
    *
    * It is what makes the expiry policy legible on an account sheet: without it,
@@ -35,7 +35,7 @@ export interface User {
    *
    * `gender` and `birthday` are personal data: they travel on `GET /api/v1/me`
    * (oneself) and on the administration sheet, and on nothing else. The
-   * directory search and every people picker answer name, username and photo —
+   * directory search and every people picker answer name, username and photo -
    * so a component must never expect to find them on a user object obtained
    * from `/users/search` or `/users/lookup`.
    */

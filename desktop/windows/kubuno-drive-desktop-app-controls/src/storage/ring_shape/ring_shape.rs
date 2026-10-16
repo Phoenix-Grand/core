@@ -1,4 +1,4 @@
-//! Ring geometry primitive — calculations (mirrors
+//! Ring geometry primitive - calculations (mirrors
 //! `Files.App.Controls/Storage/RingShape/RingShape.cs`, namespace
 //! `Files.App.Controls.Primitives`).
 //!
@@ -35,7 +35,7 @@ impl Point {
     }
 }
 
-/// Result of a `RingShape` calculation — either a full ellipse (closed,
+/// Result of a `RingShape` calculation - either a full ellipse (closed,
 /// complete ring), or an arc (`DrawArc`).
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub enum RingArc {

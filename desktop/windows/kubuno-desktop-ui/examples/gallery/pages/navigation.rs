@@ -1,4 +1,4 @@
-//! Gallery page — the navigation family.
+//! Gallery page - the navigation family.
 //!
 //! The static exposition shows each primitive in the states the web design
 //! system distinguishes (rest, hover, pressed, keyboard ring, disabled,
@@ -145,12 +145,12 @@ fn toolbar_section(p: &mut Page) {
     let c = p.c;
     let t = c.theme();
     let f = c.formats();
-    p.section("Barre de commandes — ToolStrip, toolbar::arrange, menu « Plus » flottant");
+    p.section("Barre de commandes - ToolStrip, toolbar::arrange, menu « Plus » flottant");
 
     let pair_bar = toolbar_of(&PAIR).with_band(true);
     let h = pair_bar.row_height;
     let strip = ((p.area.right - 2.0 * MARGIN - 40.0) / 2.0).min(420.0);
-    p.caption("à côté du prédécesseur (bande Drive activée) : « Nouveau ▾ », séparateur, commandes dont une désactivée, bascule active — survol sur « Copier »");
+    p.caption("à côté du prédécesseur (bande Drive activée) : « Nouveau ▾ », séparateur, commandes dont une désactivée, bascule active - survol sur « Copier »");
     let top = p.y;
     let used = sheet::pair(
         c,
@@ -163,7 +163,7 @@ fn toolbar_section(p: &mut Page) {
     );
     p.advance(used);
 
-    p.caption("trop étroit : la queue part dans le menu « Plus » (ouvert, anneau clavier sur « Couper », « Copier » enfoncé) — puis la même barre dans une Card : aucune bande blanche");
+    p.caption("trop étroit : la queue part dans le menu « Plus » (ouvert, anneau clavier sur « Couper », « Copier » enfoncé) - puis la même barre dans une Card : aucune bande blanche");
     let top = p.y;
     let bar = toolbar_of(&BAR);
     let narrow = Rect::new(MARGIN, top, MARGIN + 330.0, top + h);
@@ -202,7 +202,7 @@ fn toolbar_section(p: &mut Page) {
     let r = Rect::new(body.left, body.top, body.right, body.top + h);
     in_card.paint_items(c, r, Some(2), false);
     c.text(
-        "Toolbar::new() — transparent",
+        "Toolbar::new() - transparent",
         &Rect::new(card_rect.left, card_rect.bottom + 4.0, card_rect.right, card_rect.bottom + 22.0),
         &f.caption,
         &t.text_tertiary,
@@ -387,7 +387,7 @@ fn status_bar() -> StatusBar {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// The interactive column — the five primitives, driven by mouse and keyboard
+// The interactive column - the five primitives, driven by mouse and keyboard
 // ─────────────────────────────────────────────────────────────────────────────
 
 /// A live pane row: `parent` is the row whose chevron folds this one.
@@ -486,7 +486,7 @@ thread_local! {
     static UI: RefCell<Ui> = RefCell::new(Ui::default());
 }
 
-/// The live command bar — long enough to overflow the column.
+/// The live command bar - long enough to overflow the column.
 fn live_toolbar(ui: &Ui) -> Toolbar {
     Toolbar::new()
         .with(menu_item("Plus", "Nouveau"))
@@ -630,7 +630,7 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
         let (left, mut y, right) = interact::panel(c, interact::panel_rect(f.size));
 
         // ── Toolbar ─────────────────────────────────────────────────────────
-        y = interact::caption(c, left, right, y, "Toolbar — Tab puis ← → Début Fin, Entrée ; « … » ouvre le menu");
+        y = interact::caption(c, left, right, y, "Toolbar - Tab puis ← → Début Fin, Entrée ; « … » ouvre le menu");
         let bar = live_toolbar(&ui);
         let h = bar.row_height;
         let rect = Rect::new(left, y, right, y + h);
@@ -724,7 +724,7 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
         y += h + 14.0;
 
         // ── Sidebar ─────────────────────────────────────────────────────────
-        y = interact::caption(c, left, right, y, "Sidebar — ↑ ↓ Début Fin, Entrée, → ← déplient ; molette");
+        y = interact::caption(c, left, right, y, "Sidebar - ↑ ↓ Début Fin, Entrée, → ← déplient ; molette");
         let pane = live_sidebar(&ui);
         let pane_rect = Rect::new(left, y, left + 250.0_f32.min(right - left), y + 150.0);
         let fs = live.focus("pane", pane_rect);
@@ -763,7 +763,7 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
                     ui.side_open[i] = false;
                 }
             } else if host::take_key(vk::LEFT, Modifiers::NONE) > 0 {
-                // Left on a child moves to its parent — the tree pattern.
+                // Left on a child moves to its parent - the tree pattern.
                 if let Some(p) = LIVE_PANE[i].parent.filter(|&p| !LIVE_PANE[p].section) {
                     ui.side_focus = p;
                 }
@@ -795,7 +795,7 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
         y += 150.0 + 14.0;
 
         // ── Breadcrumb ──────────────────────────────────────────────────────
-        y = interact::caption(c, left, right, y, "Breadcrumb — Tab de lien en lien, Entrée ; « … » : menu");
+        y = interact::caption(c, left, right, y, "Breadcrumb - Tab de lien en lien, Entrée ; « … » : menu");
         let trail = live_breadcrumb(ui.crumb_depth);
         let bh = trail.measure(c).height;
         let rect = Rect::new(left, y, right, y + bh);
@@ -871,8 +871,8 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
         // Driven by the component's own `TabsController`: the click, the
         // arrows and wheel, the ← → Home End keys, the reveal and the sliding
         // indicator are the component's behaviour, the same the gallery's own
-        // navigation strip gets — this page only reads back the selection.
-        y = interact::caption(c, left, right, y, "Tabs — ← → Début Fin (activation), flèches et molette + Maj");
+        // navigation strip gets - this page only reads back the selection.
+        y = interact::caption(c, left, right, y, "Tabs - ← → Début Fin (activation), flèches et molette + Maj");
         let mut tabs = live_tabs(&ui);
         let th = tabs.measure(c).height;
         let rect = Rect::new(left, y, right, y + th);
@@ -887,7 +887,7 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
         y += th + 14.0;
 
         // ── Status bar ──────────────────────────────────────────────────────
-        y = interact::caption(c, left, right, y, "StatusBar — les widgets Git sont des boutons (Tab, Entrée)");
+        y = interact::caption(c, left, right, y, "StatusBar - les widgets Git sont des boutons (Tab, Entrée)");
         let sbar = status_bar();
         let sh = sbar.measure(c).height;
         let rect = Rect::new(left, y, right, y + sh);
@@ -945,7 +945,7 @@ fn paint_open_menu(c: &dyn Canvas, f: &Frame, ui: &mut Ui, menus: (Option<Anchor
     show_menu_popup(menu, panel);
 }
 
-/// The first row of a menu that does something — where a menu opened from the
+/// The first row of a menu that does something - where a menu opened from the
 /// keyboard puts its highlight.
 fn first_target(targets: &[Option<usize>]) -> Option<usize> {
     targets.iter().position(|t| t.is_some())

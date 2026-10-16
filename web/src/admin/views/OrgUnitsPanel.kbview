@@ -1,4 +1,4 @@
-<!-- OrgUnitsPanel — converted from OrgUnitsPanel.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- OrgUnitsPanel - converted from OrgUnitsPanel.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <Panel>
   <Panel Class="bg-white rounded-xl border border-border overflow-hidden">
     <Panel Class="flex items-baseline gap-2 px-5 py-4 border-b border-border">

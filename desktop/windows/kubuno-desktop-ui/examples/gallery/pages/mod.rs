@@ -1,4 +1,4 @@
-//! One module per family, each owning its own page file — so families can be
+//! One module per family, each owning its own page file - so families can be
 //! built in parallel without ever editing the same file.
 
 pub mod buttons;

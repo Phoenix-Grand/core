@@ -1,4 +1,4 @@
-<!-- UsersSection — converted from UsersSection.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- UsersSection - converted from UsersSection.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <Panel x:Props="AdminSectionProps" Class="contents">
   <!-- TODO(views-migrate): <UserDetailSection> is no .kbview element (./user-detail/UserDetailSection#default) -->
   <ReactHost Component="{Binding UserDetailSection}" Props="{Binding user_detail_section_props}" Visible="{Binding show_case_1}"/>

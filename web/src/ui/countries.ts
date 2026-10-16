@@ -1,7 +1,7 @@
 // Country dial-code dataset for the @ui PhoneField. Flag is derived from the
 // ISO-3166 alpha-2 code via Unicode regional-indicator letters (no image
 // asset, no CDN). France is pinned first; the rest are alphabetical (FR names).
-// NOTE: broad list, not the full ISO set — extend as needed.
+// NOTE: broad list, not the full ISO set - extend as needed.
 export interface Country { iso2: string; dial: string; name: string }
 
 /** 🇫🇷 flag emoji from an ISO-3166 alpha-2 code. */

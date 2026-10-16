@@ -1,4 +1,4 @@
-/* Tokens de thème Kubuno — source unique partagée par le host (index.css) ET
+/* Tokens de thème Kubuno - source unique partagée par le host (index.css) ET
    chaque bundle de module (module.css). Tailwind v4 lit ce `@theme` pour générer
    les utilitaires basés sur ces tokens ; les variables CSS sont posées sur :root
    (idempotent si plusieurs feuilles les redéclarent). */
@@ -6,7 +6,7 @@
   /* ── Couleurs primaires (bleu Google) ─────────────────── */
   --color-primary:       #1a73e8;
   --color-primary-hover: #1557b0;
-  --color-primary-light: #d3e3fd;   /* fond actif nav — Google M3 */
+  --color-primary-light: #d3e3fd;   /* fond actif nav - Google M3 */
 
   /* ── Surfaces / fonds ──────────────────────────────────── */
   --color-surface-0: #ffffff;
@@ -19,7 +19,7 @@
 
   /* Fond d'atelier : la surface opaque derrière les « feuilles » d'une visionneuse
      ou d'un éditeur (aperçu avant impression, visionneuse plein écran). Sombre par
-     défaut pour que le papier blanc ressorte — ce n'est PAS un voile de modale. */
+     défaut pour que le papier blanc ressorte - ce n'est PAS un voile de modale. */
   --color-viewer-backdrop: #3c4043;
 
   /* ── Search bar ────────────────────────────────────────── */
@@ -52,13 +52,13 @@
   /* ── Séries de graphiques (identité catégorielle) ──────── */
   /* Huit teintes dans un ORDRE FIXE : la place d'un module dans la légende ne
      dépend jamais de son rang, sinon un filtre qui retire une série repeint
-     toutes les autres. Au-delà de la huitième série, on replie en « Autres » —
+     toutes les autres. Au-delà de la huitième série, on replie en « Autres » -
      on ne génère jamais une neuvième teinte.
 
      Deux jeux plutôt qu'un `light-dark()` : les thèmes de Kubuno ne suivent PAS
      `prefers-color-scheme` (le moteur pose les variables et `color-scheme` en
      style inline depuis JS), et Lightning CSS transpile `light-dark()` en un
-     polyfill qui ne sait suivre que la préférence système — un thème sombre
+     polyfill qui ne sait suivre que la préférence système - un thème sombre
      choisi à la main garderait donc les teintes claires. Le consommateur choisit
      le jeu via `useUiTheme()`, exactement comme `MenuDropdown` le fait déjà pour
      `--kb-float-surface-dark`.
@@ -69,7 +69,7 @@
      l'autre : une inversion mécanique sortirait de la bande sombre.
 
      En thème clair, trois teintes passent sous 3:1 sur fond blanc : toute
-     lecture DOIT donc porter une légende nommant chaque série avec sa valeur —
+     lecture DOIT donc porter une légende nommant chaque série avec sa valeur -
      la couleur n'est jamais le seul canal d'identification. */
   --kb-chart-1: #2a78d6;  /* bleu    */
   --kb-chart-2: #eb6834;  /* orange  */
@@ -89,7 +89,7 @@
   --kb-chart-7-dark: #9085e9;
   --kb-chart-8-dark: #e66767;
 
-  /* ── Typographie — DM Sans (libre de droit) ────────────── */
+  /* ── Typographie - DM Sans (libre de droit) ────────────── */
   --font-family-sans: "DM Sans", Inter, system-ui, sans-serif;
   --font-family-mono: "DM Mono", "Fira Code", monospace;
 
@@ -103,18 +103,18 @@
   --radius-xl:  8px;
   --radius-2xl: 8px;
 
-  /* ── Thème — surchargeables au runtime ─────────────────── */
+  /* ── Thème - surchargeables au runtime ─────────────────── */
   --body-bg:               #f8fafd;
   --scrollbar-thumb:       #dadce0;
   --scrollbar-thumb-hover: #bdc1c6;
 
   /* ═══════════════════════════════════════════════════════════════════════════
-   * ÉCHELLES — source unique pour tout ce qui était jusqu'ici écrit en dur.
+   * ÉCHELLES - source unique pour tout ce qui était jusqu'ici écrit en dur.
    *
    * Préfixe `--kb-` volontaire : réutiliser les espaces de noms Tailwind
    * (`--text-*`, `--spacing-*`, `--blur-*`, `--shadow-*`) redéfinirait le sens
    * d'utilitaires déjà employés dans les 24 modules. Ces tokens se consomment
-   * donc via `var()`, y compris — et surtout — depuis les styles inline en JS,
+   * donc via `var()`, y compris - et surtout - depuis les styles inline en JS,
    * qui sont la principale source de dérive (`fontSize: 13`, `blur(24px)`…).
    * ═══════════════════════════════════════════════════════════════════════════ */
 
@@ -155,7 +155,7 @@
   --kb-shadow-2: 0 2px 8px  var(--kb-black-16);
   --kb-shadow-3: 0 4px 12px var(--kb-black-16);
   --kb-shadow-4: 0 6px 16px var(--kb-black-16);
-  /* Panneaux flottants : rampe multi-couches — l'ombre s'étale et s'affaiblit
+  /* Panneaux flottants : rampe multi-couches - l'ombre s'étale et s'affaiblit
      progressivement au lieu d'une seule passe large, ce qui la rend plus douce. */
   --kb-shadow-float:
     0 2px 6px   rgb(0 0 0 / 14%),
@@ -171,7 +171,7 @@
   /* ── Surfaces flottantes (menus, sélecteurs, popovers) ─── */
   /* Le fond DOIT rester translucide : une couleur opaque désactive le flou.
      Il est aussi légèrement TEINTÉ et non blanc pur : sur une interface claire,
-     du blanc flouté derrière un voile blanc reste du blanc — le panneau serait
+     du blanc flouté derrière un voile blanc reste du blanc - le panneau serait
      indiscernable d'un aplat opaque. La teinte froide, le liseré interne clair
      (--kb-float-highlight) et le grain (voir `.kb-frost-layer` dans index.css) sont ce qui fait lire
      la surface comme du verre, exactement comme l'Acrylic de Windows 11. */
@@ -195,7 +195,7 @@
   /* Valeurs reprises TELLES QUELLES de la référence `#boite`
      (/var/www/html/blur, views/layout.php) : demande explicite de l'utilisateur
      d'avoir « la même fenêtre ». Volontairement bien plus transparent que les
-     menus (56 %) — c'est un choix assumé, pas un oubli de lisibilité.
+     menus (56 %) - c'est un choix assumé, pas un oubli de lisibilité.
      Pas de `saturate()` ici : la référence n'en a pas. */
   /* Une fenêtre = un BANDEAU plein à l'accent du module, un contenu blanc.
      (Remplace le cadre en verre dépoli, retiré le 2026-08-09 : le verre restait
@@ -205,13 +205,13 @@
   --kb-window-surface:      #ffffff;                 /* la fenêtre, opaque */
   --kb-window-filter:       none;                    /* plus aucun flou */
   /* AUCUNE bordure : un liseré, même à 10 % de noir, se lit comme un trait blanc
-     sur le voile sombre — c'est l'ombre qui détache la fenêtre de la page.
+     sur le voile sombre - c'est l'ombre qui détache la fenêtre de la page.
      `--kb-window-border` n'est pas défini : la règle accepte une bordure complète
      en surcharge si un thème en veut une. */
   /* Coins DROITS (décision 2026-08-30) : quel que soit le chemin de rendu
      (clip arrondi, arrondis par zone), certains GPU laissaient des filets
      verticaux 1px le long du bandeau. Les fenêtres volantes n'ont donc plus
-     d'arrondi du tout — c'est aussi le look des fenêtres d'OS classiques. */
+     d'arrondi du tout - c'est aussi le look des fenêtres d'OS classiques. */
   --kb-window-radius:       0px;                     /* extérieur */
   --kb-window-inner-radius: 0px;                     /* = extérieur : sans bordure,
                                                         le bandeau doit remplir l'angle */
@@ -219,8 +219,8 @@
   /* ⚠️ `--kb-window-titlebar` n'est PAS défini ici, et c'est délibéré : une
      propriété personnalisée qui en référence une autre est substituée là où elle
      est DÉCLARÉE. Écrire `--kb-window-titlebar: var(--color-primary)` sur `:root`
-     y fige le bleu du core, et la fenêtre d'un module — qui redéfinit pourtant
-     `--color-primary` sur elle-même — hériterait de ce bleu déjà calculé.
+     y fige le bleu du core, et la fenêtre d'un module - qui redéfinit pourtant
+     `--color-primary` sur elle-même - hériterait de ce bleu déjà calculé.
      La règle `.kb-window-titlebar` lit donc l'accent au point d'usage, avec ce
      jeton comme surcharge facultative pour un thème (cf. index.css). */
   --kb-window-title-fg:     #ffffff;                 /* titre, icône et × dessus */
@@ -232,12 +232,12 @@
    *
    * Six core steps (micro to page), shared as the typographic roles of views (`Label Role`, VIEWS-SPEC §7.1) on the web and the
    * desktop: each exists in the industry's reference type scale, none is invented, and two neighbours are at least
-   * 2px apart — a finer gap does not show but would have to be kept everywhere.
+   * 2px apart - a finer gap does not show but would have to be kept everywhere.
    *
    * The top of the scale was crowded (18, 20 and 22 in 4px, two of those steps used twice each); it now jumps from
    * 15.5 to 21.5.
    *
-   * BEFORE ADDING ONE: roles may SHARE a size — what tells a label from a 13.5px card title is the weight and the
+   * BEFORE ADDING ONE: roles may SHARE a size - what tells a label from a 13.5px card title is the weight and the
    * colour, not one more pixel. A new need is nearly always met by an existing step with another weight.
    *
    * The four last steps (badge, caption, subtitle, display) are the free sizes screens wrote before they were views
@@ -248,7 +248,7 @@
   --kb-text-body:    13.5px;  /* body: labels, fields, menus, tabs */
   --kb-text-heading: 15.5px;  /* section headers, card titles */
   --kb-text-title:   21.5px;  /* an object's name heading a panel, large title */
-  --kb-text-page:    22.5px;  /* page title (h1) — 27.5px in the administration */
+  --kb-text-page:    22.5px;  /* page title (h1) - 27.5px in the administration */
   --kb-text-badge:    10px;   /* initials and counts in small avatar and count pills (role Badge) */
   --kb-text-caption:  11px;   /* small pills and chips (role Caption) */
   --kb-text-subtitle: 16px;   /* a group title one step above a heading (role Subtitle; Tailwind's text-base) */
@@ -257,7 +257,7 @@
   /* L'administration porte des titres plus grands que le reste du produit : une
      console se parcourt par grandes sections, et le titre est le repère qui dit
      où l'on a atterri. Redéfini SUR LE PÉRIMÈTRE plutôt que dans l'échelle
-     globale — `--kb-text-page` sert dans une vingtaine d'écrans de modules qui,
+     globale - `--kb-text-page` sert dans une vingtaine d'écrans de modules qui,
      eux, n'ont pas demandé à grossir. */
 
   /* ── Espacement ───────────────────────────────────────── */
@@ -274,7 +274,7 @@
   --kb-space-64: 64px;
 }
 
-/* Portée « console d'administration » — voir la note sur `--kb-text-page`. */
+/* Portée « console d'administration » - voir la note sur `--kb-text-page`. */
 .kb-admin {
   --kb-text-page: 27.5px;
 }

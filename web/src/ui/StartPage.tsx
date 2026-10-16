@@ -99,7 +99,7 @@ export function StartPage({
 
         {recentItems.length === 0 ? (
           <div className="flex-1 flex items-center justify-center px-4 text-center">
-            {recentEmpty ?? <p className="text-text-tertiary text-xs">—</p>}
+            {recentEmpty ?? <p className="text-text-tertiary text-xs">-</p>}
           </div>
         ) : (
           <div className="flex-1 overflow-y-auto py-1">
@@ -126,7 +126,7 @@ export function StartPage({
         )}
       </aside>
 
-      {/* Séparateur redimensionnable (poignée partagée @ui) — desktop only */}
+      {/* Séparateur redimensionnable (poignée partagée @ui) - desktop only */}
       <div className="hidden lg:block">
         <ResizeHandle
           position={recentW}

@@ -53,7 +53,7 @@ impl ConnInfo {
         self.database.clone().unwrap_or_default()
     }
 
-    /// `localhost:5432/shop (user kubuno)`, `C:\db\shop.db` — never the password.
+    /// `localhost:5432/shop (user kubuno)`, `C:\db\shop.db` - never the password.
     pub fn display(&self) -> String {
         if let Some(file) = &self.file {
             return file.clone();

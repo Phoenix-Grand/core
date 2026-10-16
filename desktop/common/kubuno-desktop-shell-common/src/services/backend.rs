@@ -2,8 +2,8 @@
 //!
 //! Every call the views' data comes from goes through here, under the engine's own names. Normally
 //! each one simply forwards to `kubuno_desktop_sync`. Under the offline sample (`--sample`,
-//! [`set_sample`]) they serve a fixed account instead — a launcher, labels, an activity log and an
-//! administration console — so that every page can be shown with deterministic data
+//! [`set_sample`]) they serve a fixed account instead - a launcher, labels, an activity log and an
+//! administration console - so that every page can be shown with deterministic data
 //! (screenshots, demos, tests) without a server, without reading or writing the user's
 //! configuration, and without registering anything with the system. The sample's writes (a label
 //! created, the offline switch…) change the sample in memory only.
@@ -208,7 +208,7 @@ pub fn modules_for(id: &str) -> Result<serde_json::Value> {
     }
     // The shape the core answers with, ids, glyphs and `logo_url`s included (`<id>-logo.png`, the
     // host's files): the sample has no network, so its logos are the web's files embedded at build
-    // time (`services::logos`) — exactly what a real start shows before its first download.
+    // time (`services::logos`) - exactly what a real start shows before its first download.
     let item = |id: &str, label: &str, path: &str, icon: &str| {
         json!({ "id": id, "label": label, "path": path, "icon": icon, "logo_url": format!("/{id}-logo.png") })
     };
@@ -312,11 +312,11 @@ pub fn delete_label(id: &str, label: &str) -> Result<()> {
 /// The activity the sample shows, newest first: (kind, title, body).
 pub fn sample_activity() -> &'static [(&'static str, &'static str, &'static str)] {
     &[
-        ("synced", "Synchronisation terminée", "↑ 3 envoyé(s), 1 modifié(s) — ↓ 12 reçu(s), 0 supprimé(s)"),
-        ("conflict", "Conflit résolu", "Rapport annuel.docx — les deux versions sont conservées"),
+        ("synced", "Synchronisation terminée", "↑ 3 envoyé(s), 1 modifié(s) - ↓ 12 reçu(s), 0 supprimé(s)"),
+        ("conflict", "Conflit résolu", "Rapport annuel.docx - les deux versions sont conservées"),
         ("error", "Échec de l'envoi", "Budget 2026.xlsx : accès refusé par le serveur"),
         ("synced", "Dossier déplacé", r"C:\Users\Camille\Documents\Kubuno → C:\Users\Camille\Kubuno"),
-        ("synced", "Synchronisation manuelle", "↑ 0 envoyé(s), 0 modifié(s) — ↓ 4 reçu(s), 1 supprimé(s)"),
+        ("synced", "Synchronisation manuelle", "↑ 0 envoyé(s), 0 modifié(s) - ↓ 4 reçu(s), 1 supprimé(s)"),
     ]
 }
 

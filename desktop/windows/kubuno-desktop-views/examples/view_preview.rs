@@ -1,4 +1,4 @@
-//! A live preview for `.kbview` files — `vskubuno/docs/XML_VIEWS.md` §8's
+//! A live preview for `.kbview` files - `vskubuno/docs/XML_VIEWS.md` §8's
 //! phase 2c deliverable: open a file, render it through `kubuno_desktop_views`'
 //! interpreter, and hot-reload on every save without restarting or losing
 //! the view model's state.
@@ -9,7 +9,7 @@
 //!
 //! Polls the file's mtime (cheap: one `stat` per check) and asks the host to
 //! wake the window up every 250 ms with [`host::request_repaint_after`], so a
-//! save is picked up promptly even with no mouse/keyboard input — a hot
+//! save is picked up promptly even with no mouse/keyboard input - a hot
 //! reload should not need a nudge from the user to show up. A parse or
 //! validation failure never blanks the window: [`Runtime`] keeps painting the
 //! last tree that DID compile and this example draws a small red banner with
@@ -25,7 +25,7 @@ use kubuno_desktop_views::binding::{HandlerTable, Value, ViewModel};
 use kubuno_desktop_views::runtime::{FileWatcher, Runtime};
 use kubuno_desktop_views::{handlers, node::ViewEventKind};
 
-/// The demo code-behind's state — `XML_VIEWS.md` §7's `SettingsState`,
+/// The demo code-behind's state - `XML_VIEWS.md` §7's `SettingsState`,
 /// trimmed to what the five registered components can bind to. `status` is
 /// not bound by any element; it is written by the handlers below through the
 /// very same [`ViewModel::set`] path every other binding uses (`"Status"`),
@@ -66,7 +66,7 @@ impl ViewModel for SettingsViewModel {
             // `Offline` is one-way bound in the demo view (see
             // `examples/views/settings.kbview`'s comment): the interpreter's
             // own two-way write-back never touches it. But `offline_toggled`
-            // below DOES write it, through this very `set` — which is the
+            // below DOES write it, through this very `set` - which is the
             // point of `XML_VIEWS.md` §7's worked example ("binding cannot
             // guess [the side effect]; a handler can"): in a real app the
             // handler would ask the live sync engine to flip and that
@@ -117,7 +117,7 @@ fn main() -> ExitCode {
     let mut vm = SettingsViewModel::default();
     let mut handlers = handler_table();
 
-    let title = format!("Kubuno view preview — {path}");
+    let title = format!("Kubuno view preview - {path}");
     let result = host::run_with_chrome(&title, 900, 700, if env::var_os("KUBUNO_UI_DARK").is_some() { Theme::dark() } else { Theme::light() }, Chrome::Kubuno, move |c, f: &Frame| {
         host::request_repaint_after(250);
         watcher.poll(&mut runtime);
@@ -146,7 +146,7 @@ fn main() -> ExitCode {
             c.text("Waiting for a view that compiles…", &body, fmt, &t.text_secondary, false);
         }
 
-        // The status line — what the two handlers write to, and the
+        // The status line - what the two handlers write to, and the
         // clearest signal a click/toggle actually reached the view model.
         let status_rect = Rect::new(content.left, content.bottom - 20.0, content.right, content.bottom);
         let status = vm.get("Status").and_then(|v| if let Value::Str(s) = v { Some(s) } else { None }).unwrap_or_default();
@@ -173,7 +173,7 @@ fn paint_diagnostics_banner(c: &dyn ControlCanvas, content: Rect, top: f32, runt
     c.fill_rounded(&banner, 4.0, &theme.danger_light);
     let fmt = &c.formats().body_strong;
     let head = Rect::new(banner.left + 8.0, banner.top + 4.0, banner.right - 8.0, banner.top + 20.0);
-    c.text(&format!("{} diagnostic(s) — showing the last good view", diags.len()), &head, fmt, &theme.danger, false);
+    c.text(&format!("{} diagnostic(s) - showing the last good view", diags.len()), &head, fmt, &theme.danger, false);
     let small = &c.formats().caption;
     for (i, d) in diags.iter().take(3).enumerate() {
         let y = banner.top + 22.0 + 16.0 * i as f32;

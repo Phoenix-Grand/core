@@ -1,11 +1,11 @@
-//! Roaming CLIPBOARD HISTORY — the last things a user copied, whatever the
+//! Roaming CLIPBOARD HISTORY - the last things a user copied, whatever the
 //! module, kept server-side.
 //!
 //! The browser clipboard holds one item, is not shared between tabs and is lost
 //! on reload; the modules' own slots (the spreadsheet's object clipboard, an
 //! editor's cell buffer) are process-local too. This service keeps the recent
 //! clips as the same cross-module JSON envelopes `core.data-card` renders, so
-//! any module — on any tab, on any device — can paste them back.
+//! any module - on any tab, on any device - can paste them back.
 //!
 //! Rules enforced here, never trusted to the client:
 //!   • strictly per user (no sharing, no lookup by id across users);
@@ -48,7 +48,7 @@ pub struct ListQuery {
     pub limit: Option<i64>,
 }
 
-/// Hex SHA-256 of the canonical payload — the dedup key.
+/// Hex SHA-256 of the canonical payload - the dedup key.
 fn fingerprint(payload: &Value) -> String {
     let mut hasher = Sha256::new();
     hasher.update(payload.to_string().as_bytes());
@@ -207,7 +207,7 @@ pub async fn push(
     Ok(Json(json!({ "item": item })))
 }
 
-/// PATCH /api/v1/clipboard/:id — pin / unpin.
+/// PATCH /api/v1/clipboard/:id - pin / unpin.
 pub async fn update(
     State(state): State<AppState>,
     AuthUser(user): AuthUser,
@@ -220,7 +220,7 @@ pub async fn update(
     };
 
     // No RETURNING on the update (MySQL has none): flip the pin on the identity
-    // guard, and only reselect the row when this call actually matched one — a
+    // guard, and only reselect the row when this call actually matched one - a
     // missing row and someone else's are the same 404, no existence leak.
     let affected = state
         .db
@@ -276,7 +276,7 @@ pub async fn delete(
     Ok(Json(json!({ "ok": true })))
 }
 
-/// DELETE /api/v1/clipboard — clear the history, keeping pinned entries.
+/// DELETE /api/v1/clipboard - clear the history, keeping pinned entries.
 pub async fn clear(
     State(state): State<AppState>,
     AuthUser(user): AuthUser,

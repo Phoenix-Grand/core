@@ -9,7 +9,7 @@ import type { EffectivePrivileges } from '../authz/types'
  * Per-account feature switches served by `GET /api/v1/me`.
  *
  * These say whether a whole surface EXISTS for this account, as opposed to what
- * it may do inside one — which is what `privileges` answers. The distinction
+ * it may do inside one - which is what `privileges` answers. The distinction
  * matters because a switched-off feature must leave no trace in the interface:
  * no disabled button, no greyed menu entry, nothing to ask about.
  *
@@ -19,7 +19,7 @@ import type { EffectivePrivileges } from '../authz/types'
  */
 export interface MeFeatures {
   /**
-   * "Download my data" — the self-service data export. Governed by
+   * "Download my data" - the self-service data export. Governed by
    * `data_export.self_service`, resolved by the server for THIS account through
    * the scope chain (instance / organisational unit / group / account).
    */
@@ -45,7 +45,7 @@ const currentModuleRoot = () => '/' + (window.location.pathname.split('/')[1] ??
 /**
  * Tells the OTHER tabs the active account changed. The refresh cookie is shared
  * by every tab: a tab left un-reloaded would keep showing account A's interface
- * while silently fetching as account B on its next token refresh — mixed
+ * while silently fetching as account B on its next token refresh - mixed
  * identities, the exact thing the hard reload exists to prevent.
  */
 export function announceAccountSwitched() {
@@ -61,7 +61,7 @@ interface AuthState {
   totpSession: string | null
   /**
    * The caller's own effective privileges, straight from `/me`. `null` means
-   * "not loaded yet", never "holds nothing" — an account holding nothing comes
+   * "not loaded yet", never "holds nothing" - an account holding nothing comes
    * back with an empty `privileges` array.
    */
   privileges: EffectivePrivileges | null
@@ -73,7 +73,7 @@ interface AuthState {
   features: MeFeatures | null
   /**
    * Loads `/me` once. Idempotent, and deduplicated across concurrent callers.
-   * `force` re-reads even when a block is already held — what a role write does,
+   * `force` re-reads even when a block is already held - what a role write does,
    * since granting or revoking can change what the *operator* themselves may see.
    */
   loadPrivileges: (force?: boolean) => Promise<void>
@@ -85,7 +85,7 @@ interface AuthState {
   /**
    * Google-style account switch: makes the account parked in `slot` the active
    * session, then HARD-reloads onto the current module's root. The reload is
-   * the isolation guarantee — every store, cache and module state is rebuilt
+   * the isolation guarantee - every store, cache and module state is rebuilt
    * under the new identity, nothing of the previous account can leak through.
    */
   switchAccount: (slot: number) => Promise<void>
@@ -144,7 +144,7 @@ export const useAuthStore = create<AuthState>((set, get) => {
 
     // `initialize()` already reads `/me` and keeps the block it returns, so a page
     // load costs nothing extra. This covers the paths that obtain a user without
-    // going through it — signing in, and the OAuth callback.
+    // going through it - signing in, and the OAuth callback.
     loadPrivileges: async (force = false) => {
       if (!force && get().privileges) return
       if (force || !privilegesInFlight) {
@@ -215,7 +215,7 @@ export const useAuthStore = create<AuthState>((set, get) => {
 
     switchAccount: async (slot) => {
       // The server re-points the HttpOnly refresh cookie at the slot; the
-      // response is only a success signal — the hard reload below re-runs
+      // response is only a success signal - the hard reload below re-runs
       // `initialize()` which picks the new session up from the cookie.
       await authApi.switchAccount(slot)
       // The other tabs share the cookie: they must reload too.
@@ -257,7 +257,7 @@ export const useAuthStore = create<AuthState>((set, get) => {
         set({ user: data.user, privileges: data.privileges ?? null, features: data.features ?? null })
         // Notifications are compartmented PER ACCOUNT: only now that the
         // session's identity is known may the bell read (and file into) the
-        // right bucket — never another account's.
+        // right bucket - never another account's.
         useNotificationStore.getState().setActiveUser(data.user.id)
       } catch {
         set({ user: null, accessToken: null, privileges: null, features: null })

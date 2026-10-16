@@ -1,8 +1,8 @@
 // A faithful browser-side copy of `rules::condition`'s comparison semantics.
 //
 // ── Why it is duplicated at all ──────────────────────────────────────────────
-// "Test the condition" must light up EVERY node — including the ones a matching
-// parent short-circuits away — and answer while the operator is typing. A round
+// "Test the condition" must light up EVERY node - including the ones a matching
+// parent short-circuits away - and answer while the operator is typing. A round
 // trip per keystroke is not that.
 //
 // ── What it must keep in step with ───────────────────────────────────────────
@@ -44,7 +44,7 @@ function equals(actual: Json, expected: Json): boolean {
     return actual.toLowerCase() === expected.toLowerCase()
   }
   // A number compared against its own decimal notation as a string is the single
-  // most common way to write a rule that silently never fires — so it matches.
+  // most common way to write a rule that silently never fires - so it matches.
   const mixed = (typeof actual === 'number' && typeof expected === 'string')
     || (typeof actual === 'string' && typeof expected === 'number')
   if (typeof actual === 'number' && typeof expected === 'number') return actual === expected

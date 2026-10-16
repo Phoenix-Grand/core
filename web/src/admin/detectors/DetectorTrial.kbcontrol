@@ -1,4 +1,4 @@
-<!-- DetectorTrial — converted from DetectorTrial.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- DetectorTrial - converted from DetectorTrial.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="Props">
   <Card Title="{Res admin.det_trial_title}"
         IconSize="16"

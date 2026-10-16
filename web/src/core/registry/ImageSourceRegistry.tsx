@@ -4,8 +4,8 @@ import type { ComponentType, ReactNode } from 'react'
  * Extra tabs for the image picker, contributed by modules.
  *
  * The core ships the sources it can implement on its own (URL, upload, webcam,
- * Drive through its published service). Anything that belongs to a module —
- * a Photos library, a stock-image search — is registered here, so the picker
+ * Drive through its published service). Anything that belongs to a module -
+ * a Photos library, a stock-image search - is registered here, so the picker
  * gains it only when that module is installed. No cross-module import: the
  * module hands over a component, the core renders it.
  */

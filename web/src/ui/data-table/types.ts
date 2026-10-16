@@ -27,7 +27,7 @@ export interface DataTableColumn<T> {
   align?:    'left' | 'right' | 'center'
   /** Hidden until the user turns it on in the column chooser. */
   defaultHidden?: boolean
-  /** Cannot be hidden — the column that identifies the row. */
+  /** Cannot be hidden - the column that identifies the row. */
   required?: boolean
   /**
    * Marks the column that titles the row in the narrow (card) layout. Exactly
@@ -59,7 +59,7 @@ export interface DataTableBulkAction<T> {
 export interface DataTableProps<T> {
   rows:    T[]
   columns: DataTableColumn<T>[]
-  /** Stable identity of a row — used for selection, keys and sort stability. Unset: the row's position in `rows`. */
+  /** Stable identity of a row - used for selection, keys and sort stability. Unset: the row's position in `rows`. */
   rowKey?: (row: T) => string
 
   // ── State: loading / error / empty ────────────────────────────────────────
@@ -68,7 +68,7 @@ export interface DataTableProps<T> {
   /** Non-null switches the body to the `error` empty state. */
   error?:        ReactNode
   onRetry?:      () => void
-  /** True while a search/filter is active — picks `no-results` over `first-use`. */
+  /** True while a search/filter is active - picks `no-results` over `first-use`. */
   filtered?:     boolean
   /** Clears the caller's filters; drives the `no-results` action. */
   onClearFilters?: () => void
@@ -92,7 +92,7 @@ export interface DataTableProps<T> {
   pageSize?:         number
   pageSizeOptions?:  number[]
   onPageSizeChange?: (size: number) => void
-  /** Controlled page (0-based — the whole component is 0-based internally). */
+  /** Controlled page (0-based - the whole component is 0-based internally). */
   page?:         number
   onPageChange?: (page: number) => void
   /** Total row count when the caller paginates server-side. */
@@ -123,7 +123,7 @@ export interface DataTableProps<T> {
   /** Show the column chooser. */
   configurableColumns?:  boolean
   /**
-   * Drag the edge of a header to resize it (table layout only — a card list has
+   * Drag the edge of a header to resize it (table layout only - a card list has
    * no columns to resize). Defaults to `true`.
    */
   resizableColumns?:     boolean
@@ -134,7 +134,7 @@ export interface DataTableProps<T> {
   title?:      ReactNode
   /** Row height: `compact`, `normal` (default) or `comfortable` (`.kbview` `Density`). */
   density?:    'compact' | 'normal' | 'comfortable'
-  /** Left side of the toolbar — a search field, filter chips… */
+  /** Left side of the toolbar - a search field, filter chips… */
   toolbar?:    ReactNode
   /** Force the layout instead of following the container width. */
   layout?:     'auto' | 'table' | 'cards'

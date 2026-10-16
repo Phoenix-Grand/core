@@ -1,6 +1,6 @@
 // Wire types of `/api/v1/admin/alerts`, mirroring `crate::alerts`.
 //
-// The console renders what the server decided — including WHAT TO DO about an
+// The console renders what the server decided - including WHAT TO DO about an
 // alert. It never derives an action from the alert's shape: the catalogue lives
 // in Rust, next to the producers, so the two can never point at different
 // screens.
@@ -12,7 +12,7 @@ export type AlertSeverity = 'critical' | 'warning' | 'info'
 export type AlertStatus =
   /** Nobody has looked at it yet. */
   | 'new'
-  /** Somebody took it — the state that stops two operators doing the same work. */
+  /** Somebody took it - the state that stops two operators doing the same work. */
   | 'acknowledged'
   /** Stated as fixed. A recurrence after this opens a NEW alert. */
   | 'resolved'
@@ -30,7 +30,7 @@ export const isOpen = (s: AlertStatus): boolean => s === 'new' || s === 'acknowl
 /**
  * A recommended action.
  *
- * `tab` + `verb` form `/admin/<tab>?action=<verb>` — the console's
+ * `tab` + `verb` form `/admin/<tab>?action=<verb>` - the console's
  * deep-action convention (see `adminAction.ts`). `executes` marks the verbs the
  * alert centre performs itself with a POST instead of navigating away.
  */
@@ -64,7 +64,7 @@ export interface Alert {
   subject_user_id: string | null
   subject_label:   string | null
   org_unit_id:     string | null
-  /** How many times the same problem was observed — what dedup saved us from. */
+  /** How many times the same problem was observed - what dedup saved us from. */
   occurrences:   number
   first_seen_at: string
   last_seen_at:  string
@@ -102,7 +102,7 @@ export interface AlertSummary {
   /** Open alerts assigned to the caller. */
   mine:         number
   /**
-   * When the producers last completed a pass. `null` means they never have —
+   * When the producers last completed a pass. `null` means they never have -
    * and "nothing to report" is not the same sentence as "nothing has looked".
    */
   last_scan_at: string | null
@@ -155,7 +155,7 @@ export function toParams(f: AlertFilters): Record<string, string> {
 /**
  * URL of an action, through the console's single URL builder. The action carries
  * its extra parameters as pairs (the wire form), so they are turned into the
- * object `adminUrl` takes rather than re-implementing the spelling here — which
+ * object `adminUrl` takes rather than re-implementing the spelling here - which
  * is precisely how this file used to drift from the rest of the console.
  */
 export function actionHref(action: AlertAction): string {

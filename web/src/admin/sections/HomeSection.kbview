@@ -1,4 +1,4 @@
-<!-- HomeSection — converted from HomeSection.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- HomeSection - converted from HomeSection.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <Panel>
   <Panel Class="mb-6">
     <Label HtmlTag="H1" Text="{Res admin.home_welcome_title}" FontWeight="Medium" Overflow="Wrap" ForeColor="TextPrimary" Class="text-2xl"/>

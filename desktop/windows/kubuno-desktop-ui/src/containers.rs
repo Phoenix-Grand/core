@@ -1,4 +1,4 @@
-//! Kubuno primitives — **containers**: the family that places rectangles so no
+//! Kubuno primitives - **containers**: the family that places rectangles so no
 //! application has to compute them.
 //!
 //! ## Why this file exists
@@ -7,9 +7,9 @@
 //! them is a small re-derivation of « the header band is 56 tall, so the body
 //! starts at `top + 56` », and every one of them has to be found and edited
 //! again when a metric moves. The replica layer already ships the engine that
-//! answers those questions — [`kubuno_desktop_controls::layout::layout`], checked at
+//! answers those questions - [`kubuno_desktop_controls::layout::layout`], checked at
 //! 52/52 cases against the real toolkit, including the
-//! `⌊cur/2⌋ − ⌊prev/2⌋` re-centring nobody guesses right — and it was simply not
+//! `⌊cur/2⌋ − ⌊prev/2⌋` re-centring nobody guesses right - and it was simply not
 //! reachable from a Kubuno surface. This family is that reach.
 //!
 //! ```ignore
@@ -42,20 +42,20 @@
 //! The replica layer is strict about this and so is this family:
 //!
 //! * a child's `bounds` are **parent-relative**, in the container's own local
-//!   space — that is what makes moving a container move its whole subtree;
+//!   space - that is what makes moving a container move its whole subtree;
 //! * a container crosses into **canvas** space exactly once, and only through
 //!   [`kubuno_desktop_controls::containers::content_origin`].
 //!
 //! Every method here says which space it speaks in its name or its first line.
 //! `*_local` returns local space; everything else returns canvas space.
 //!
-//! ## The anchoring reference — the one place this differs from WinForms
+//! ## The anchoring reference - the one place this differs from WinForms
 //!
 //! WinForms anchors against the change **since the last pass**, because it
 //! writes each child's new rectangle back onto the child. A Kubuno container
 //! keeps the caller's *design* rectangles untouched (they are the caller's
 //! data, not ours to mutate), so the reference the anchor pass measures against
-//! must be the display rect those rectangles were authored in — recorded on the
+//! must be the display rect those rectangles were authored in - recorded on the
 //! first layout, or stated up front with [`Panel::with_design_size`].
 //!
 //! That is what makes `layout_children` a **pure function of its argument**:
@@ -85,7 +85,7 @@ use crate::range::{ScrollBar, ScrollPart};
 use crate::widget::{Widget, WidgetState};
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Family-local metrics — composition numbers the web writes as Tailwind classes
+// Family-local metrics - composition numbers the web writes as Tailwind classes
 // (read off the `@ui` sources named on each), kept here rather than as literals
 // in a paint body.
 // ─────────────────────────────────────────────────────────────────────────────
@@ -117,7 +117,7 @@ pub mod card_metrics {
     pub const DENSE_TITLE_LINE: f32 = 16.0;
 }
 
-/// `@ui/ResizeHandle.tsx` — the web's pane divider, which [`SplitterStyle::Handle`]
+/// `@ui/ResizeHandle.tsx` - the web's pane divider, which [`SplitterStyle::Handle`]
 /// paints.
 pub mod handle_metrics {
     /// The visible line: `w-[5px] rounded-full`.
@@ -126,7 +126,7 @@ pub mod handle_metrics {
     pub const PILL_W: f32 = 14.0;
     pub const PILL_H: f32 = 36.0;
     /// `GripVertical size={13}`: lucide draws two columns of three dots at
-    /// x = 9 / 15 and y = 5 / 12 / 19 in a 24 box, r = 1 with a 2 stroke —
+    /// x = 9 / 15 and y = 5 / 12 / 19 in a 24 box, r = 1 with a 2 stroke -
     /// scaled to 13 that is ±1.6 across, ±3.8 down, and a 1.1 radius.
     pub const DOT_DX: f32 = 1.6;
     pub const DOT_DY: f32 = 3.8;
@@ -220,7 +220,7 @@ impl Drop for Scope<'_> {
     }
 }
 
-/// Runs `f` with `colour` announced as the parent surface — the closure form of
+/// Runs `f` with `colour` announced as the parent surface - the closure form of
 /// [`Scope::bg`].
 pub fn with_bg<R>(canvas: &dyn Canvas, colour: D2D1_COLOR_F, f: impl FnOnce() -> R) -> R {
     let _scope = Scope::bg(canvas, colour);
@@ -246,13 +246,13 @@ fn deflate(r: Rect, d: f32) -> Rect {
     Rect::new(l, t, (r.right - d).max(l), (r.bottom - d).max(t))
 }
 
-/// The radius of a rounded rectangle inset by `d` inside one of radius `r` —
+/// The radius of a rounded rectangle inset by `d` inside one of radius `r` -
 /// what keeps an inner clip concentric with the outer curve.
 fn inner_radius(r: f32, d: f32) -> f32 {
     (r - d).max(0.0)
 }
 
-/// `c` at `alpha` × its own opacity — a token tinted the way Tailwind's `/40`
+/// `c` at `alpha` × its own opacity - a token tinted the way Tailwind's `/40`
 /// suffix does.
 fn with_alpha(c: D2D1_COLOR_F, alpha: f32) -> D2D1_COLOR_F {
     D2D1_COLOR_F { a: c.a * alpha, ..c }
@@ -263,13 +263,13 @@ fn with_alpha(c: D2D1_COLOR_F, alpha: f32) -> D2D1_COLOR_F {
 //
 // `crate::metrics` re-exports the design system's tokens and adds the control
 // metrics the web never had to describe. The three below are card *composition*
-// numbers — where the header band ends, how tall a line of type is — which the
+// numbers - where the header band ends, how tall a line of type is - which the
 // web expresses as Tailwind classes rather than as tokens. They are stated here,
 // with their provenance, rather than as literals in a paint body.
 // ─────────────────────────────────────────────────────────────────────────────
 
 /// A card header's title line. READ off `@ui/Card.tsx`, which sets the title at
-/// `var(--kb-text-heading)` (16) with Tailwind's matching `leading-normal` — 20
+/// `var(--kb-text-heading)` (16) with Tailwind's matching `leading-normal` - 20
 /// DIP. Not measured live: the desktop has no browser to measure in.
 const CARD_TITLE_LINE: f32 = 20.0;
 
@@ -279,14 +279,14 @@ const CARD_SUBTITLE_LINE: f32 = 16.0;
 const CARD_SUBTITLE_GAP: f32 = space::XXS;
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Surface — what a Kubuno container paints itself as.
+// Surface - what a Kubuno container paints itself as.
 // ─────────────────────────────────────────────────────────────────────────────
 
 /// The ground a container draws under its children.
 ///
 /// This is the one concept .NET has no name for. WinForms answers « what colour
 /// is my box » with `BackColor` + `BorderStyle`, which is a colour and a bevel;
-/// Kubuno answers with a *surface* — a token fill, a token stroke and a radius
+/// Kubuno answers with a *surface* - a token fill, a token stroke and a radius
 /// that belong together. `BorderStyle` still decides the border's **thickness**
 /// (and therefore the geometry, through
 /// [`kubuno_desktop_controls::containers::border_thickness`]); the surface decides its
@@ -304,16 +304,16 @@ pub enum Surface {
     /// page can move onto [`Card`] without a single pixel changing.
     Layer,
     /// The Kubuno card: `rounded-xl border border-border bg-surface-0` of
-    /// `@ui/Card.tsx` (and of `@ui/Accordion.tsx`) — `layer_background`
+    /// `@ui/Card.tsx` (and of `@ui/Accordion.tsx`) - `layer_background`
     /// (surface-0, #fff / #202124), `card_stroke`, `radius::XL`. A card is the
     /// WHITE block on the surface-1 page, not a grey one: `card_background` is
     /// surface-1, the page's own ground and the card footer's.
     Card,
-    /// A [`Surface::Card`] lifted off the page with [`SHADOW_MENU`] — the web's
+    /// A [`Surface::Card`] lifted off the page with [`SHADOW_MENU`] - the web's
     /// elevation 2. `SHADOW_FLOAT` is deliberately not used: its outer layers
     /// reach 40 DIP and read as a grey cloud under a card-sized box.
     Raised,
-    /// A recessed well — `surface_2`, no stroke, `radius::XL`. What a read-only
+    /// A recessed well - `surface_2`, no stroke, `radius::XL`. What a read-only
     /// block sunk into a card sits on.
     Well,
 }
@@ -337,7 +337,7 @@ impl Surface {
         }
     }
 
-    /// The colour this surface fills with — what a control landing on it must
+    /// The colour this surface fills with - what a control landing on it must
     /// read as `current_bg()`. `None` for [`Surface::None`], which is
     /// transparent (the web's default).
     pub fn ground(self, c: &dyn Canvas) -> Option<D2D1_COLOR_F> {
@@ -353,7 +353,7 @@ impl Surface {
         self.is_stroked().then(|| c.theme().card_stroke)
     }
 
-    /// Shadow then fill — everything but the frame, so a container can paint
+    /// Shadow then fill - everything but the frame, so a container can paint
     /// its content and THEN the frame on top of it.
     fn paint_ground(self, c: &dyn Canvas, bounds: Rect) {
         let r = self.radius();
@@ -377,7 +377,7 @@ impl Surface {
         }
     }
 
-    /// Paints the surface into `bounds` — shadow, fill, then stroke.
+    /// Paints the surface into `bounds` - shadow, fill, then stroke.
     ///
     /// `border` is the thickness [`border_thickness`] resolved from the
     /// replica's `BorderStyle`: a Kubuno border is a stroke, not the toolkit's
@@ -398,13 +398,13 @@ impl Surface {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Child — one placed rectangle.
+// Child - one placed rectangle.
 // ─────────────────────────────────────────────────────────────────────────────
 
 /// One child of a container: what the layout engine needs, plus (optionally)
 /// the primitive that paints into the rectangle it resolves.
 ///
-/// `item` is [`kubuno_desktop_controls::layout::Item`] itself — the engine's own input
+/// `item` is [`kubuno_desktop_controls::layout::Item`] itself - the engine's own input
 /// type, not a copy of it. `bounds`, `dock`, `anchor`, `visible`, `min` and
 /// `max` therefore mean exactly what they mean to the toolkit, and a caller who
 /// already holds an `Item` can hand it straight over.
@@ -413,7 +413,7 @@ pub struct Child {
     pub item: Item,
     /// The primitive painted into the resolved rectangle, when the caller gave
     /// one. `None` means the container only **places** the rectangle and the
-    /// caller paints it — which is the shape every shell page wants today.
+    /// caller paints it - which is the shape every shell page wants today.
     pub widget: Option<Box<dyn Widget>>,
 }
 
@@ -432,8 +432,8 @@ pub fn item(bounds: Rect, dock: DockStyle, anchor: AnchorStyles) -> Item {
 
 /// A docked band `thickness` DIP thick.
 ///
-/// Only the docking axis is read by the engine — a `Top` band takes its own
-/// height and the container's width — so the other extent is left at zero
+/// Only the docking axis is read by the engine - a `Top` band takes its own
+/// height and the container's width - so the other extent is left at zero
 /// rather than guessed. `Fill` reads neither.
 pub fn band(dock: DockStyle, thickness: f32) -> Item {
     let bounds = match dock {
@@ -444,7 +444,7 @@ pub fn band(dock: DockStyle, thickness: f32) -> Item {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Slots — the child list and its anchoring reference, shared by the containers
+// Slots - the child list and its anchoring reference, shared by the containers
 // that own children. Private: `Panel` and `GroupBox` expose it through their
 // own API, so there is one implementation of « add a child, place the children »
 // rather than two that can drift.
@@ -481,14 +481,14 @@ impl Slots {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Panel — the container that was missing.
+// Panel - the container that was missing.
 // ─────────────────────────────────────────────────────────────────────────────
 
 /// **The** Kubuno container: a box that holds children and places them.
 ///
 /// It owns [`kubuno_desktop_controls::containers::Panel`], so `auto_scroll`,
 /// `border_style`, `padding`, `dock`, `anchor`, `minimum_size` and the rest of
-/// the .NET surface are the replica's fields, reached through [`Deref`] — this
+/// the .NET surface are the replica's fields, reached through [`Deref`] - this
 /// type declares none of them. What it adds is the child list, the Kubuno
 /// [`Surface`], and the two methods an application actually calls:
 /// [`Panel::layout_children`] and [`Panel::child_rect`].
@@ -510,7 +510,7 @@ impl Slots {
 /// The bands stack in **reverse z-order**, exactly as the toolkit docks them:
 /// the child added *last* takes the outermost edge. That is the engine's rule,
 /// not a choice made here, and it is why a `Fill` child belongs at the back of
-/// the list — see [`kubuno_desktop_controls::layout`].
+/// the list - see [`kubuno_desktop_controls::layout`].
 #[derive(Default)]
 pub struct Panel {
     inner: kc::Panel,
@@ -530,7 +530,7 @@ impl Panel {
         self
     }
 
-    /// Sets the replica's `Padding` — the inset every child is placed inside.
+    /// Sets the replica's `Padding` - the inset every child is placed inside.
     pub fn with_padding(mut self, padding: Padding) -> Self {
         self.inner.padding = padding;
         self
@@ -569,7 +569,7 @@ impl Panel {
 
     // ── Adding children ──────────────────────────────────────────────────
 
-    /// Adds a child and returns its index — the index its rectangle has in
+    /// Adds a child and returns its index - the index its rectangle has in
     /// [`Panel::layout_children`].
     pub fn push(&mut self, item: Item) -> usize {
         self.slots.push(Child::new(item))
@@ -580,7 +580,7 @@ impl Panel {
         self.slots.push(Child { item, widget: Some(widget) })
     }
 
-    /// Adds a raw [`Item`] — for a caller that already built one.
+    /// Adds a raw [`Item`] - for a caller that already built one.
     pub fn item(mut self, item: Item) -> Self {
         self.push(item);
         self
@@ -623,7 +623,7 @@ impl Panel {
         self.item(item(bounds, DockStyle::None, anchor))
     }
 
-    /// A child pinned to the top-left at a design rectangle — `Anchor` at its
+    /// A child pinned to the top-left at a design rectangle - `Anchor` at its
     /// toolkit default, so the child neither moves nor stretches.
     pub fn fixed(self, bounds: Rect) -> Self {
         self.anchored(bounds, AnchorStyles::default())
@@ -642,7 +642,7 @@ impl Panel {
         self
     }
 
-    /// Applies `f` to the last child added — for the constraints the builders do
+    /// Applies `f` to the last child added - for the constraints the builders do
     /// not spell (`min`, `max`, `visible`).
     ///
     /// ```ignore
@@ -655,7 +655,7 @@ impl Panel {
         self
     }
 
-    /// The children, in the order they were added — the order their rectangles
+    /// The children, in the order they were added - the order their rectangles
     /// come back in.
     pub fn children(&self) -> &[Child] {
         &self.slots.children
@@ -681,21 +681,21 @@ impl Panel {
 
     /// **LOCAL space.** The children's `DisplayRectangle` for a panel occupying
     /// `bounds`: deflated by the padding and by the border, its origin carrying
-    /// the padding inset — which is what makes a docked child (placed against
+    /// the padding inset - which is what makes a docked child (placed against
     /// this rectangle) and an anchored child (carrying client coordinates) live
     /// in one space.
     ///
     /// Derived from the `bounds` **argument**, never from the model's own
     /// rectangle: a container paints and places where it was put, not where it
     /// thinks it is. The arithmetic itself is
-    /// [`kubuno_desktop_controls::containers::Panel::local_display_rect`] — the replica
+    /// [`kubuno_desktop_controls::containers::Panel::local_display_rect`] - the replica
     /// is handed the box it was asked about and answers.
     pub fn display_rect(&self, bounds: Rect) -> Rect {
         self.sized(bounds).local_display_rect()
     }
 
-    /// **CANVAS space.** Where this panel's client origin — the `(0, 0)` its
-    /// children's rectangles are measured from — lands, given the box it is
+    /// **CANVAS space.** Where this panel's client origin - the `(0, 0)` its
+    /// children's rectangles are measured from - lands, given the box it is
     /// painted into. [`kubuno_desktop_controls::containers::content_origin`] is the one
     /// place local space becomes canvas space, and this is the only call to it.
     pub fn content_origin(&self, bounds: Rect) -> Point {
@@ -718,7 +718,7 @@ impl Panel {
     }
 
     /// **CANVAS space.** The rectangle for each child, in the order they were
-    /// added — the call that replaces a page of `Rect::new`.
+    /// added - the call that replaces a page of `Rect::new`.
     ///
     /// Dock is resolved first (in reverse z-order, each band eating its edge),
     /// then Anchor against the design size. Both passes are the engine's; this
@@ -739,8 +739,8 @@ impl Panel {
 
     /// The topmost visible child under a canvas-space point, or `None`.
     ///
-    /// Walks in reverse order, so the child painted last — and therefore on top
-    /// — answers first, which is [`Children::child_at`]'s rule.
+    /// Walks in reverse order, so the child painted last - and therefore on top
+    /// - answers first, which is [`Children::child_at`]'s rule.
     pub fn child_at(&self, bounds: Rect, x: f32, y: f32) -> Option<usize> {
         let rects = self.layout_children(bounds);
         self.slots
@@ -756,9 +756,9 @@ impl Panel {
     /// children reach, grown by `AutoScrollMargin` and floored by
     /// `AutoScrollMinSize`.
     ///
-    /// Computed by the replica —
+    /// Computed by the replica -
     /// [`kubuno_desktop_controls::containers::ScrollableControl::scroll_content_size_within`]
-    /// — over stand-in children carrying the rectangles this panel resolved, so
+    /// - over stand-in children carrying the rectangles this panel resolved, so
     /// the rule is the toolkit's and not a second copy of it.
     pub fn content_size(&self, bounds: Rect) -> Size {
         let p = self.populated(bounds);
@@ -770,7 +770,7 @@ impl Panel {
         border_thickness(self.inner.border_style)
     }
 
-    /// The replica, told how big the box it is being asked about is — and
+    /// The replica, told how big the box it is being asked about is - and
     /// nothing else. `local_display_rect` reads only the size and the padding,
     /// so this is the honest way to ask the replica a question about a rectangle
     /// it does not own.
@@ -793,7 +793,7 @@ impl Panel {
     }
 
     /// The replica, unsized, holding one stand-in per child at the rectangle
-    /// given — what a question about the *content* rather than the box is asked
+    /// given - what a question about the *content* rather than the box is asked
     /// of.
     fn stand_ins(&self, items: impl Iterator<Item = Item>) -> kc::Panel {
         let mut p = self.inner.clone();
@@ -803,7 +803,7 @@ impl Panel {
     }
 
     /// **CANVAS space.** The box inside the frame: `bounds` deflated by
-    /// [`frame_inset`]. What content is clipped to — NOT the padded client
+    /// [`frame_inset`]. What content is clipped to - NOT the padded client
     /// rectangle, because the web clips nothing at the padding (`overflow:
     /// visible`), so a child's ink that strays into the padding (a focus ring,
     /// an outlined field's floated label, a shadow) must survive.
@@ -811,13 +811,13 @@ impl Panel {
         deflate(bounds, frame_inset(self.surface.is_stroked(), self.border()))
     }
 
-    /// The corner radius of [`Panel::border_box`] — concentric with the frame.
+    /// The corner radius of [`Panel::border_box`] - concentric with the frame.
     pub fn border_box_radius(&self) -> f32 {
         inner_radius(self.surface.radius(), frame_inset(self.surface.is_stroked(), self.border()))
     }
 
     /// Announces this panel's surface as the parent background until the
-    /// returned scope is dropped — so the controls a caller paints into
+    /// returned scope is dropped - so the controls a caller paints into
     /// [`Panel::client_rect`] after [`Widget::paint`] read the panel's ground as
     /// `current_bg()`, not the window's. A no-op scope for [`Surface::None`]
     /// (transparent: the caller's background stays the right one).
@@ -828,7 +828,7 @@ impl Panel {
     /// Paints the panel, then runs `content` with the panel's surface pushed
     /// and the drawing clipped to [`Panel::border_box`] (rounded like the
     /// frame) when the panel has a visible surface. `content` receives the
-    /// padded client rectangle — the area a caller lays controls out in.
+    /// padded client rectangle - the area a caller lays controls out in.
     ///
     /// The frame is stroked AFTER `content`, so nothing a caller paints can
     /// cover it.
@@ -895,7 +895,7 @@ impl Panel {
             if let Some(w) = child.widget.as_ref() {
                 // Only `disabled` is inherited: a container greys its whole
                 // subtree, but the pointer is over ONE child and the container
-                // does not know which — the caller that tracks hover passes it
+                // does not know which - the caller that tracks hover passes it
                 // to the child itself.
                 w.paint(c, r, WidgetState::REST.disabled(state.disabled));
             }
@@ -925,7 +925,7 @@ impl Widget for Panel {
     /// padding and the two border lines.
     ///
     /// Measured over the children's **design** rectangles, not their laid-out
-    /// ones — asking a panel how big it wants to be before it has a box is
+    /// ones - asking a panel how big it wants to be before it has a box is
     /// asking how big its content is, and the laid-out rectangles do not exist
     /// yet. The sum itself is the replica's own `preferred_size`.
     fn measure(&self, canvas: &dyn Canvas) -> Size {
@@ -953,8 +953,8 @@ impl Widget for Panel {
 
 /// Gives a container built **on** [`Panel`] the panel's own builder surface.
 ///
-/// The builders consume `self` — which is what makes the chain read the way it
-/// does — and a consuming method cannot be reached through [`Deref`], because
+/// The builders consume `self` - which is what makes the chain read the way it
+/// does - and a consuming method cannot be reached through [`Deref`], because
 /// deref hands out a reference and a builder needs the value. Rather than write
 /// the same twelve methods twice, they are forwarded here: one definition, in
 /// `Panel`, reachable from every type that wraps one.
@@ -1024,14 +1024,14 @@ macro_rules! panel_builders {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Card — the Kubuno surface, built ON Panel.
+// Card - the Kubuno surface, built ON Panel.
 // ─────────────────────────────────────────────────────────────────────────────
 
 /// A titled block of content on the Kubuno card surface.
 ///
 /// Built **on** [`Panel`], not beside it: a card is a panel that paints
-/// [`Surface::Card`] and reserves a header band, so everything a panel can do —
-/// dock a toolbar, anchor a field, place a list — a card can do, inside its
+/// [`Surface::Card`] and reserves a header band, so everything a panel can do -
+/// dock a toolbar, anchor a field, place a list - a card can do, inside its
 /// body.
 ///
 /// The composition is `@ui/Card.tsx`, READ (the desktop has no browser to
@@ -1157,13 +1157,13 @@ impl Card {
         self
     }
 
-    /// Lifts the card off the page — [`Surface::Raised`].
+    /// Lifts the card off the page - [`Surface::Raised`].
     pub fn raised(mut self) -> Self {
         self.panel.surface = Surface::Raised;
         self
     }
 
-    /// The console's current card look — `layer_background` at `radius::TILE`,
+    /// The console's current card look - `layer_background` at `radius::TILE`,
     /// which is what `admin_storage::card_frame` paints today. Offered so a page
     /// can adopt this type without changing a pixel, then move to the Kubuno
     /// card surface as its own change.
@@ -1193,7 +1193,7 @@ impl Card {
         self.flush
     }
 
-    /// Whether the card renders a header band — `title != null || icon !=
+    /// Whether the card renders a header band - `title != null || icon !=
     /// null || actions != null` in `@ui/Card.tsx`.
     pub fn has_header(&self) -> bool {
         !self.title.is_empty() || self.icon.is_some() || self.actions.is_some()
@@ -1245,8 +1245,8 @@ impl Card {
         block.max(icon).max(actions)
     }
 
-    /// The height the header band takes — its padding, its content and the
-    /// `border-b` hairline that closes it — or `0.0` when the card has no
+    /// The height the header band takes - its padding, its content and the
+    /// `border-b` hairline that closes it - or `0.0` when the card has no
     /// header: `@ui/Card.tsx` renders no header at all in that case, rather
     /// than an empty one.
     pub fn header_height(&self) -> f32 {
@@ -1304,7 +1304,7 @@ impl Card {
     }
 
     /// **CANVAS space.** The actions cluster, when one was reserved with
-    /// [`Card::with_actions`] — right-aligned in the header row.
+    /// [`Card::with_actions`] - right-aligned in the header row.
     pub fn actions_rect(&self, bounds: Rect) -> Option<Rect> {
         let header = self.header_rect(bounds)?;
         let (w, h) = self.actions?;
@@ -1313,7 +1313,7 @@ impl Card {
         Some(Rect::new((right - w).max(header.left), top, right, top + h))
     }
 
-    /// **CANVAS space.** The title line — what is left of the header row once
+    /// **CANVAS space.** The title line - what is left of the header row once
     /// the icon and the actions took their room, with the row's `gap-3`.
     pub fn title_rect(&self, bounds: Rect) -> Option<Rect> {
         let header = self.header_rect(bounds)?;
@@ -1329,14 +1329,14 @@ impl Card {
         Some(Rect::new(left, top, right.max(left), top + self.title_line()))
     }
 
-    /// **CANVAS space.** The padded body — the rectangle a caller draws into,
+    /// **CANVAS space.** The padded body - the rectangle a caller draws into,
     /// and the one [`Panel::layout_children`] places children inside.
     pub fn body_rect(&self, bounds: Rect) -> Rect {
         self.panel.client_rect(bounds)
     }
 
     /// **CANVAS space.** The band between the header and the footer, inside the
-    /// frame — what the body's content is clipped to. Its padding is part of
+    /// frame - what the body's content is clipped to. Its padding is part of
     /// it: the web clips nothing at the padding, so a focus ring or a floated
     /// label near the body's edge survives.
     pub fn body_band(&self, bounds: Rect) -> Rect {
@@ -1398,7 +1398,7 @@ impl Card {
         );
     }
 
-    /// Ground, header and footer — everything but the body and the frame.
+    /// Ground, header and footer - everything but the body and the frame.
     fn paint_chrome(&self, canvas: &dyn Canvas, bounds: Rect, state: WidgetState) {
         let t = canvas.theme();
         let f = canvas.formats();
@@ -1421,7 +1421,7 @@ impl Card {
                     canvas.text_ellipsis(&self.subtitle, &sub, &f.caption, &t.text_secondary);
                 }
             }
-            // The hairline that closes the band — `border-b border-border`.
+            // The hairline that closes the band - `border-b border-border`.
             let rule = Rect::new(header.left, header.bottom - card_metrics::RULE, header.right, header.bottom);
             canvas.fill_rounded(&rule, 0.0, &t.card_stroke);
         }
@@ -1459,7 +1459,7 @@ impl Widget for Card {
     }
 
     /// The panel's own measurement (children + padding + border), widened to
-    /// the header row's intrinsic width — icon, title, actions and their gaps —
+    /// the header row's intrinsic width - icon, title, actions and their gaps -
     /// which is what the web's card would size to in a shrink-to-fit context.
     fn measure(&self, canvas: &dyn Canvas) -> Size {
         let base = self.panel.measure(canvas);
@@ -1496,7 +1496,7 @@ impl Widget for Card {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// GroupBox — the captioned frame, on the replica.
+// GroupBox - the captioned frame, on the replica.
 // ─────────────────────────────────────────────────────────────────────────────
 
 /// A captioned frame around a group of related controls.
@@ -1504,7 +1504,7 @@ impl Widget for Card {
 /// Owns [`kubuno_desktop_controls::containers::GroupBox`], which is where the geometry
 /// that makes a group box a group box lives: the caption band at the top, the
 /// asymmetric display rectangle underneath, the preferred size that accounts for
-/// a caption wider than the content. Kubuno replaces only the pixels — a single
+/// a caption wider than the content. Kubuno replaces only the pixels - a single
 /// rounded hairline in `card_stroke` instead of the toolkit's engraved
 /// `BP_GROUPBOX` groove, and the caption in `text_secondary` at the meta size,
 /// which is how the web labels a `<fieldset>`-shaped block.
@@ -1558,7 +1558,7 @@ impl GroupBox {
         &self.slots.children
     }
 
-    /// **LOCAL space.** The replica's own `DisplayRectangle` — 1 DIP of frame on
+    /// **LOCAL space.** The replica's own `DisplayRectangle` - 1 DIP of frame on
     /// three sides and the whole caption band on top, which is why it is not the
     /// symmetric inset every other container has.
     pub fn display_rect(&self, bounds: Rect) -> Rect {
@@ -1567,7 +1567,7 @@ impl GroupBox {
 
     /// **CANVAS space.** A group box does not scroll and its frame is already in
     /// its children's coordinates, so its client origin is simply where the box
-    /// sits — the replica's own answer.
+    /// sits - the replica's own answer.
     pub fn content_origin(&self, bounds: Rect) -> Point {
         self.inner.content_origin(bounds)
     }
@@ -1594,7 +1594,7 @@ impl GroupBox {
         g
     }
 
-    /// The caption band's height — the replica's display rect starts below it.
+    /// The caption band's height - the replica's display rect starts below it.
     fn band_height(&self, bounds: Rect) -> f32 {
         self.display_rect(bounds).top - self.inner.padding.top
     }
@@ -1621,7 +1621,7 @@ impl GroupBox {
     }
 
     /// **CANVAS space.** The inside of the frame (below the caption band's
-    /// centre line, within the hairline) — what grouped content is clipped
+    /// centre line, within the hairline) - what grouped content is clipped
     /// to. The padding is part of it, as on the web.
     pub fn inner_rect(&self, bounds: Rect) -> Rect {
         deflate(self.frame_rect(bounds), card_metrics::RULE)
@@ -1629,7 +1629,7 @@ impl GroupBox {
 
     /// Clips to [`GroupBox::inner_rect`] (rounded with the frame) until the
     /// scope is dropped. The group box has no ground of its own, so the
-    /// caller's `current_bg()` stays the right one — nothing is pushed.
+    /// caller's `current_bg()` stays the right one - nothing is pushed.
     pub fn push_content_clip<'a>(&self, canvas: &'a dyn Canvas, bounds: Rect) -> Scope<'a> {
         canvas.push_clip_rounded(&self.inner_rect(bounds), inner_radius(radius::LG, card_metrics::RULE));
         Scope::new(canvas, None, ClipKind::Rounded)
@@ -1746,13 +1746,13 @@ impl Widget for GroupBox {
         g.preferred_size(canvas)
     }
 
-    /// The frame runs along the caption band's centre line — the replica's
-    /// arrangement, kept exactly — and the caption sits in a GAP of the frame.
+    /// The frame runs along the caption band's centre line - the replica's
+    /// arrangement, kept exactly - and the caption sits in a GAP of the frame.
     ///
     /// The gap is not erased with a colour (that painted a patch of
     /// `card_background` behind the caption on any other ground): the frame is
-    /// stroked three times under three clips — left of the caption, right of
-    /// it, and below the caption band — so the ground shows through untouched.
+    /// stroked three times under three clips - left of the caption, right of
+    /// it, and below the caption band - so the ground shows through untouched.
     /// Transparent otherwise, like a `<fieldset>`.
     fn paint(&self, canvas: &dyn Canvas, bounds: Rect, state: WidgetState) {
         self.paint_frame(canvas, bounds, state);
@@ -1769,7 +1769,7 @@ impl Widget for GroupBox {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Splitter — two panes and the band between them.
+// Splitter - two panes and the band between them.
 // ─────────────────────────────────────────────────────────────────────────────
 
 /// Two panes separated by a draggable band.
@@ -1790,7 +1790,7 @@ impl Widget for GroupBox {
 ///
 /// `kubuno-drive-desktop-app-controls::grid_splitter` is what ships today: the pure clamp of
 /// `GridSplitter.Helper.cs`, used by Drive for the sidebar and the info pane.
-/// It paints nothing — the divider in Drive is a gap — so « pixel-identical »
+/// It paints nothing - the divider in Drive is a gap - so « pixel-identical »
 /// here means **arithmetically identical**, and it is pinned by
 /// `drag_matches_the_grid_splitter` below: for the same pane, the same drag and
 /// the same bounds, [`Splitter::drag_by`] lands on the DIP
@@ -1811,7 +1811,7 @@ pub struct Splitter {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum SplitterStyle {
     /// A one-DIP `divider` line that thickens on hover and turns to the accent
-    /// while dragged — the desktop shell's own divider (and the gallery's).
+    /// while dragged - the desktop shell's own divider (and the gallery's).
     #[default]
     Hairline,
     /// `@ui/ResizeHandle.tsx`: a 5-DIP `bg-border` rounded line, turning
@@ -1822,7 +1822,7 @@ pub enum SplitterStyle {
 }
 
 impl Splitter {
-    /// The web's `ResizeHandle` look — see [`SplitterStyle::Handle`].
+    /// The web's `ResizeHandle` look - see [`SplitterStyle::Handle`].
     pub fn with_handle(mut self) -> Self {
         self.style = SplitterStyle::Handle;
         self
@@ -1843,7 +1843,7 @@ impl Splitter {
     /// accessible behaviour it lacks):
     ///
     /// * the two arrows ALONG the split axis move the bar by
-    ///   [`scroll_metrics::SPLIT_STEP`] (×5 with Shift) — Left/Right for a
+    ///   [`scroll_metrics::SPLIT_STEP`] (×5 with Shift) - Left/Right for a
     ///   vertical bar, Up/Down for a horizontal one;
     /// * Home / End move it to its minimum / maximum;
     /// * Enter collapses pane 1 to its minimum, and restores the previous
@@ -1920,7 +1920,7 @@ impl Splitter {
 
     /// **CANVAS space.** The three rectangles: pane 1, the bar, pane 2.
     ///
-    /// The crossing adds no border inset — a `SplitContainer`'s own
+    /// The crossing adds no border inset - a `SplitContainer`'s own
     /// `BorderStyle` belongs to its two panes, not to the split, which the
     /// replica documents and measured.
     pub fn arrange(&self, bounds: Rect) -> SplitRects {
@@ -1990,7 +1990,7 @@ impl Splitter {
     /// Moves the bar by `delta` DIP along the split axis, clamped.
     ///
     /// This is the operation `grid_splitter::resize` performs, expressed through
-    /// the replica's [`clamp_distance`] — see the type docs, and the test that
+    /// the replica's [`clamp_distance`] - see the type docs, and the test that
     /// pins the two together.
     pub fn drag_by(&mut self, bounds: Rect, delta: f32) {
         let target = self.inner.splitter_distance + delta;
@@ -1999,7 +1999,7 @@ impl Splitter {
 
     /// The legal range for `splitter_distance`, as `(min, max)`.
     ///
-    /// The maximum is what the far pane's minimum and the bar leave — the same
+    /// The maximum is what the far pane's minimum and the bar leave - the same
     /// quantity `grid_splitter::available_max` computes for Drive's info pane.
     pub fn distance_range(&self, bounds: Rect) -> (f32, f32) {
         let total = self.axis_extent(bounds);
@@ -2010,7 +2010,7 @@ impl Splitter {
 
     /// Re-derives the distance after the container changed size along the split
     /// axis, honouring `FixedPanel`. Straight
-    /// [`adjusted_distance`] — including its truncation, because
+    /// [`adjusted_distance`] - including its truncation, because
     /// `SplitterDistance` is an `Int32` in the toolkit.
     pub fn resized(&mut self, old_total: f32, new_total: f32) {
         self.inner.splitter_distance = adjusted_distance(
@@ -2068,7 +2068,7 @@ impl Widget for Splitter {
         &self.inner
     }
 
-    /// Both minimums plus the bar — the smallest box in which the split still
+    /// Both minimums plus the bar - the smallest box in which the split still
     /// means something. The cross axis is the caller's business.
     fn measure(&self, _canvas: &dyn Canvas) -> Size {
         let extent =
@@ -2080,7 +2080,7 @@ impl Widget for Splitter {
         }
     }
 
-    /// Paints the divider only. The two panes are the caller's — a splitter that
+    /// Paints the divider only. The two panes are the caller's - a splitter that
     /// filled them would be painting over content it knows nothing about.
     ///
     /// At rest a [`crate::metrics::control::SPLITTER_LINE`] hairline in
@@ -2090,7 +2090,7 @@ impl Widget for Splitter {
     /// thickness.
     fn paint(&self, canvas: &dyn Canvas, bounds: Rect, state: WidgetState) {
         // Exception to the opaque-background rule: a splitter only paints its
-        // divider — its two panes belong to the caller (see doc above). Painting
+        // divider - its two panes belong to the caller (see doc above). Painting
         // a solid background here would overwrite them each frame.
         if self.inner.panel1_collapsed || self.inner.panel2_collapsed {
             return;
@@ -2157,7 +2157,7 @@ impl Widget for Splitter {
                 grip
             }
         };
-        // `:focus-visible` — the ring a keyboard user follows.
+        // `:focus-visible` - the ring a keyboard user follows.
         if state.show_focus_ring() {
             // Kept inside the splitter's own box: the ring never paints over
             // whatever sits past its ends.
@@ -2173,7 +2173,7 @@ impl Widget for Splitter {
         }
     }
 
-    /// The grab band, not the bar — a 4 DIP target is not one.
+    /// The grab band, not the bar - a 4 DIP target is not one.
     fn hit_test(&self, bounds: Rect, x: f32, y: f32) -> bool {
         self.hit_test_grip(bounds, x, y)
     }
@@ -2184,7 +2184,7 @@ impl Widget for Splitter {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// ScrollView — a Panel with auto-scroll, and the ranges a scroll bar needs.
+// ScrollView - a Panel with auto-scroll, and the ranges a scroll bar needs.
 // ─────────────────────────────────────────────────────────────────────────────
 
 /// Which axis a scroll query is about.
@@ -2196,7 +2196,7 @@ pub enum Axis {
 
 /// A [`Panel`] whose content may be larger than its box.
 ///
-/// It scrolls the content and **publishes the ranges** — it does not paint a
+/// It scrolls the content and **publishes the ranges** - it does not paint a
 /// scroll bar. That is deliberate: the bar belongs to the `range` family, and a
 /// container that drew its own would be the second implementation of an
 /// arithmetic the replica already owns.
@@ -2204,14 +2204,14 @@ pub enum Axis {
 /// ## The junction with the `range` family
 ///
 /// [`ScrollView::range`] returns a
-/// [`kubuno_desktop_controls::containers::ScrollProperties`] — the replica's own
-/// `HScrollProperties`/`VScrollProperties` — filled in for the box it was asked
+/// [`kubuno_desktop_controls::containers::ScrollProperties`] - the replica's own
+/// `HScrollProperties`/`VScrollProperties` - filled in for the box it was asked
 /// about:
 ///
 /// | field | value | why |
 /// |---|---|---|
 /// | `minimum` | `0` | the content starts at its own origin |
-/// | `maximum` | `content − 1` | .NET's `Maximum` is **inclusive**, so the span `Maximum − Minimum + 1` is the content extent — that is the denominator `ScrollBar::thumb_fraction` divides by |
+/// | `maximum` | `content − 1` | .NET's `Maximum` is **inclusive**, so the span `Maximum − Minimum + 1` is the content extent - that is the denominator `ScrollBar::thumb_fraction` divides by |
 /// | `large_change` | the viewport extent | a page is what you can see, so the thumb reads as `viewport / content` |
 /// | `value` | the scroll offset, ≥ 0 | the replica stores `AutoScrollPosition` as ≤ 0 (the shift applied to the content); a scroll bar wants the positive distance |
 /// | `visible` | `content > viewport` | the toolkit hides a bar with nothing to scroll |
@@ -2246,7 +2246,7 @@ impl ScrollView {
         self
     }
 
-    /// **CANVAS space.** What the viewer sees — the padded client rectangle,
+    /// **CANVAS space.** What the viewer sees - the padded client rectangle,
     /// kept INSIDE the frame: a stroked surface draws its hairline even with
     /// `BorderStyle::None`, so the viewport is inset by [`frame_inset`], never
     /// by less. Content clipped to it (see [`ScrollView::push_content_clip`])
@@ -2257,7 +2257,7 @@ impl ScrollView {
         deflate(self.panel.client_rect(bounds), extra)
     }
 
-    /// The corner radius content is clipped with — concentric with the frame,
+    /// The corner radius content is clipped with - concentric with the frame,
     /// reduced by how far the viewport sits inside it.
     pub fn viewport_radius(&self, bounds: Rect) -> f32 {
         let v = self.viewport(bounds);
@@ -2266,7 +2266,7 @@ impl ScrollView {
     }
 
     /// Clips to the viewport (rounded with the frame) and announces the
-    /// view's ground until the scope is dropped — the one call a caller makes
+    /// view's ground until the scope is dropped - the one call a caller makes
     /// before painting scrolled content, so it can neither overpaint the
     /// border nor cut the corners square.
     pub fn push_content_clip<'a>(&self, canvas: &'a dyn Canvas, bounds: Rect) -> Scope<'a> {
@@ -2317,7 +2317,7 @@ impl ScrollView {
 
     /// Applies a wheel movement, in DIP with the web's sign (`dy > 0` scrolls
     /// DOWN). With Shift held, a vertical wheel scrolls horizontally, as the
-    /// browsers do. Returns whether the offset changed — a view already at its
+    /// browsers do. Returns whether the offset changed - a view already at its
     /// end lets the caller pass the wheel on to its parent (scroll chaining).
     pub fn wheel(&mut self, bounds: Rect, delta: (f32, f32), shift: bool) -> bool {
         let (dx, dy) = if shift && delta.0 == 0.0 { (delta.1, 0.0) } else { delta };
@@ -2355,7 +2355,7 @@ impl ScrollView {
     }
 
     /// Scrolls the least amount that brings `target` (CANVAS space, as laid
-    /// out at the CURRENT offset) fully into the viewport — the browser's
+    /// out at the CURRENT offset) fully into the viewport - the browser's
     /// `scrollIntoView({ block: 'nearest' })`, which is what focusing a
     /// control inside a scroller does. Returns whether the offset changed.
     pub fn ensure_visible(&mut self, bounds: Rect, target: Rect) -> bool {
@@ -2371,7 +2371,7 @@ impl ScrollView {
     }
 
     /// A scroll bar for `axis`, loaded from this view's content, viewport and
-    /// offset — the junction with the `range` family, which paints it into
+    /// offset - the junction with the `range` family, which paints it into
     /// [`ScrollView::track`]. `None` when there is nothing to scroll.
     pub fn scroll_bar(&self, bounds: Rect, axis: Axis) -> Option<ScrollBar> {
         let (content, viewport) = self.extents(bounds, axis);
@@ -2395,7 +2395,7 @@ impl ScrollView {
 
     /// The current offset on one axis, as a **positive** distance scrolled.
     ///
-    /// The replica stores `AutoScrollPosition` as ≤ 0, so this is its negation —
+    /// The replica stores `AutoScrollPosition` as ≤ 0, so this is its negation -
     /// and the `if` is not decoration: negating a resting `0.0` yields `-0.0`,
     /// which compares equal to zero but *formats* as `-0` and would put a minus
     /// sign in front of every unscrolled range a caller prints.
@@ -2426,7 +2426,7 @@ impl ScrollView {
         self.panel.auto_scroll_position = Point::new(-x, -y);
     }
 
-    /// Scrolls by a delta — what a wheel notch or a drag produces.
+    /// Scrolls by a delta - what a wheel notch or a drag produces.
     pub fn scroll_by(&mut self, bounds: Rect, dx: f32, dy: f32) {
         let x = self.offset(Axis::Horizontal) + dx;
         let y = self.offset(Axis::Vertical) + dy;
@@ -2513,7 +2513,7 @@ impl Widget for ScrollView {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Stack — a run of full-width blocks.
+// Stack - a run of full-width blocks.
 // ─────────────────────────────────────────────────────────────────────────────
 
 /// A run of blocks along one axis, each stretched across the other, with a fixed
@@ -2521,13 +2521,13 @@ impl Widget for ScrollView {
 ///
 /// ## Why this is not just a `FlowLayoutPanel`
 ///
-/// The flow engine is exactly right and is what runs underneath — this type
+/// The flow engine is exactly right and is what runs underneath - this type
 /// calls [`kubuno_desktop_controls::layout_panels::flow_layout`] and adds no
 /// arithmetic. What `FlowLayoutPanel` does **not** do is stretch a child across
 /// the cross axis: every child keeps the width it was given, because that is
-/// what the toolkit does. The pattern the console is full of —
+/// what the toolkit does. The pattern the console is full of -
 /// `shell/src/admin_storage.rs::blocks`, a column of full-width cards with
-/// `y += h + GAP` — needs the opposite, and asking `FlowLayoutPanel` for it
+/// `y += h + GAP` - needs the opposite, and asking `FlowLayoutPanel` for it
 /// would mean the caller computing each card's width, which is the `Rect::new`
 /// this family exists to remove.
 ///
@@ -2540,7 +2540,7 @@ pub struct Stack {
     pub direction: FlowDirection,
     /// The space between two blocks.
     pub gap: f32,
-    /// Each block's extent along the run — its height in a column, its width in
+    /// Each block's extent along the run - its height in a column, its width in
     /// a row.
     extents: Vec<f32>,
 }
@@ -2612,14 +2612,14 @@ impl Stack {
             .collect()
     }
 
-    /// The run's total length, gaps included — what a [`ScrollView`] hosting
+    /// The run's total length, gaps included - what a [`ScrollView`] hosting
     /// this stack scrolls over.
     pub fn content_extent(&self) -> f32 {
         self.extents.iter().map(|e| e + self.gap).sum()
     }
 
     /// The flow cells: the cross extent as size, the gap as a trailing margin.
-    /// A trailing gap after the last block is intentional — it is what
+    /// A trailing gap after the last block is intentional - it is what
     /// `y += h + GAP` leaves too, and it is the bottom breathing room a scrolled
     /// column wants.
     fn cells(&self, display: Rect) -> Vec<FlowChild> {
@@ -2684,7 +2684,7 @@ impl Widget for Stack {
     }
 }
 
-/// Same rectangle, moved — the local→canvas step, applied in exactly the places
+/// Same rectangle, moved - the local→canvas step, applied in exactly the places
 /// that cross the boundary.
 fn translate(r: Rect, dx: f32, dy: f32) -> Rect {
     Rect::new(r.left + dx, r.top + dy, r.right + dx, r.bottom + dy)
@@ -2692,7 +2692,7 @@ fn translate(r: Rect, dx: f32, dy: f32) -> Rect {
 
 /// The scroll delta that brings `lo..hi` inside `view_lo..view_hi` with the
 /// least movement (`block: 'nearest'`): 0 when already inside, align the near
-/// edge when it is above/left, the far edge when below/right — and the near
+/// edge when it is above/left, the far edge when below/right - and the near
 /// edge when the target is larger than the view.
 fn nearest_delta(view_lo: f32, view_hi: f32, lo: f32, hi: f32) -> f32 {
     if lo >= view_lo && hi <= view_hi {
@@ -2706,8 +2706,8 @@ fn nearest_delta(view_lo: f32, view_hi: f32, lo: f32, hi: f32) -> f32 {
 
 /// Fills a replica child collection with one stand-in per `(item, rect)` pair.
 ///
-/// The replica's container arithmetic — the content extent, the scrollable
-/// area, `preferred_size` — reads `Controls`, and a Kubuno container keeps its
+/// The replica's container arithmetic - the content extent, the scrollable
+/// area, `preferred_size` - reads `Controls`, and a Kubuno container keeps its
 /// children as layout items rather than as boxed controls. Rather than restate
 /// that arithmetic (five lines that would then have to stay right forever),
 /// the question is put to the replica over stand-ins carrying the geometry that
@@ -2733,13 +2733,13 @@ struct BarDrag {
     grab:       f32,
 }
 
-/// A live region whose content scrolls — the web's `overflow: auto`.
+/// A live region whose content scrolls - the web's `overflow: auto`.
 ///
 /// Unlike [`ScrollView`], which scrolls a replica whose children are known,
 /// this one scrolls whatever is PAINTED into it: the content is laid out in its
 /// own coordinates (at scroll zero they are the caller's), painted under a
 /// translation, and measured while it paints (`Canvas::begin_extent`), so a
-/// bar shows up as soon as anything reaches past the region — on either axis —
+/// bar shows up as soon as anything reaches past the region - on either axis -
 /// without the content declaring its size.
 ///
 /// The content receives a [`Frame`] in its own coordinates: the pointer is
@@ -3030,7 +3030,7 @@ mod tests {
     }
 
     /// The canvas rectangles are the local ones plus the content origin, and
-    /// nothing else — no second padding, no re-derived border offset.
+    /// nothing else - no second padding, no re-derived border offset.
     #[test]
     fn canvas_rects_are_local_rects_plus_the_content_origin() {
         let panel = Panel::new()
@@ -3051,7 +3051,7 @@ mod tests {
     }
 
     /// The padding insets the children, and the border costs SIZE rather than
-    /// offset — the correction the replica's parity harness forced.
+    /// offset - the correction the replica's parity harness forced.
     #[test]
     fn padding_insets_and_the_border_costs_size_not_offset() {
         let panel = Panel::new().with_padding(Padding::all(10.0)).fill();
@@ -3075,7 +3075,7 @@ mod tests {
         assert_eq!(tuple(panel.layout_children(box_)[0]), (60.0, 30.0, 240.0, 110.0));
     }
 
-    /// The docked bands stack in reverse z-order and `Fill` takes what is left —
+    /// The docked bands stack in reverse z-order and `Fill` takes what is left -
     /// the arrangement every admin page needs, end to end.
     #[test]
     fn a_page_of_bands_places_the_way_the_toolkit_docks_them() {
@@ -3138,7 +3138,7 @@ mod tests {
         assert_eq!(panel.content_size(box_), expected);
     }
 
-    /// `child_at` answers in reverse order — the child on top wins.
+    /// `child_at` answers in reverse order - the child on top wins.
     #[test]
     fn child_at_answers_topmost_first() {
         let panel = Panel::new()
@@ -3174,7 +3174,7 @@ mod tests {
     }
 
     /// `flush` drops the body padding (the content meets the border), `dense`
-    /// tightens every band — `@ui/Card.tsx`'s two density props.
+    /// tightens every band - `@ui/Card.tsx`'s two density props.
     #[test]
     fn flush_and_dense_change_the_padding_the_web_way() {
         let box_ = Rect::new(0.0, 0.0, 400.0, 300.0);
@@ -3251,7 +3251,7 @@ mod tests {
 
     // ── GroupBox ─────────────────────────────────────────────────────────
 
-    /// The grouped children sit under the caption band and inside the frame —
+    /// The grouped children sit under the caption band and inside the frame -
     /// the replica's asymmetric display rectangle, unchanged.
     #[test]
     fn a_group_box_places_children_under_its_caption() {
@@ -3340,7 +3340,7 @@ mod tests {
         assert_eq!(tuple(r.panel2), (234.0, 10.0, 810.0, 410.0));
     }
 
-    /// Dragging stops at both minimums — pane 1's own, and what pane 2's leaves.
+    /// Dragging stops at both minimums - pane 1's own, and what pane 2's leaves.
     #[test]
     fn dragging_clamps_at_both_minimums() {
         let box_ = Rect::new(0.0, 0.0, 400.0, 200.0);
@@ -3361,7 +3361,7 @@ mod tests {
     fn drag_matches_the_grid_splitter() {
         let box_ = Rect::new(0.0, 0.0, 900.0, 500.0);
         let (min1, min2, width) = (180.0_f32, 100.0_f32, 4.0_f32);
-        // The far pane's minimum and the bar are what bound the near pane — the
+        // The far pane's minimum and the bar are what bound the near pane - the
         // same quantity `available_max` computes for the info pane.
         let max = grid_splitter::available_max(900.0 - width, min2, min1);
 
@@ -3381,7 +3381,7 @@ mod tests {
         }
     }
 
-    /// `FixedPanel` decides who absorbs a resize — the replica's rule,
+    /// `FixedPanel` decides who absorbs a resize - the replica's rule,
     /// truncation included.
     #[test]
     fn resizing_honours_the_fixed_panel() {
@@ -3595,8 +3595,8 @@ mod tests {
 
     // ── Stack ────────────────────────────────────────────────────────────
 
-    /// The column a console page writes by hand — `y += h + GAP`, each block as
-    /// wide as the area — comes out of the flow engine unchanged.
+    /// The column a console page writes by hand - `y += h + GAP`, each block as
+    /// wide as the area - comes out of the flow engine unchanged.
     #[test]
     fn stack_matches_the_hand_written_column() {
         const GAP: f32 = 12.0;
@@ -3617,7 +3617,7 @@ mod tests {
         assert_eq!(stack.content_extent(), heights.iter().sum::<f32>() + 3.0 * GAP);
     }
 
-    /// The engine is the flow panel's, called with the cells the stack builds —
+    /// The engine is the flow panel's, called with the cells the stack builds -
     /// no second arithmetic.
     #[test]
     fn stack_delegates_to_the_flow_engine() {
@@ -3670,7 +3670,7 @@ mod tests {
     }
 
     /// The replica is reached through `Deref`, so the .NET surface is not
-    /// restated here — a panel's `padding` really is `ControlBase::padding`.
+    /// restated here - a panel's `padding` really is `ControlBase::padding`.
     #[test]
     fn the_dotnet_surface_comes_through_deref() {
         let mut panel = Panel::new();

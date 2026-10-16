@@ -1,4 +1,4 @@
-//! Kubuno primitives — text fields.
+//! Kubuno primitives - text fields.
 //!
 //! ## Who does what
 //!
@@ -11,7 +11,7 @@
 //! view is stateless: it keeps the caret visible by pinning it to the right edge
 //! every frame, it has no notion of a scroll offset that survives a caret move,
 //! no multi-row selection and no blink. A browser input has all of those, so the
-//! editing arithmetic now lives here — as PURE functions (word boundaries, the
+//! editing arithmetic now lives here - as PURE functions (word boundaries, the
 //! edit buffer, undo history, key mapping, soft wrap) that the tests pin, driven
 //! by a small per-field [`EditState`] that persists between frames.
 //!
@@ -85,9 +85,9 @@ use crate::widget::{Widget, WidgetState};
 // source. Everything that IS in the shared table (the 36 height, the 4 radius,
 // the 12 and 8 paddings) is taken from there and never re-typed.
 
-/// `@ui/Input`: `px-3` — the text's horizontal inset.
+/// `@ui/Input`: `px-3` - the text's horizontal inset.
 const PAD_X: f32 = space::MD;
-/// `@ui/Input`: `py-2` — the vertical inset of the text rows. With [`LINE`] it
+/// `@ui/Input`: `py-2` - the vertical inset of the text rows. With [`LINE`] it
 /// reconstructs `h-9` exactly: 8 + 20 + 8 = 36.
 const PAD_Y: f32 = space::SM;
 /// The line box the selection and the caret cover: `leading-normal` text in a
@@ -99,7 +99,7 @@ const LINE: f32 = 20.0;
 /// [`FOCUS_OUTLINE`], which is what `.kb-field-focus` says today.
 pub const FOCUS_RING: f32 = 2.0;
 /// `.kb-field-focus:focus-visible { outline: 3px solid var(--color-primary);
-/// outline-offset: -1px }` — drawn INWARD here, so the field never paints
+/// outline-offset: -1px }` - drawn INWARD here, so the field never paints
 /// outside the bounds it was given; it covers the 1 DIP border, which the web
 /// recolours to the same primary.
 pub const FOCUS_OUTLINE: f32 = 3.0;
@@ -108,19 +108,19 @@ pub const FOCUS_OUTLINE: f32 = 3.0;
 const ICON: f32 = 16.0;
 /// `@ui/Input`: the icon span is `absolute left-3` / `right-3`.
 const ICON_INSET: f32 = space::MD;
-/// `@ui/Input`: `pl-9` / `pr-9` — [`ICON_INSET`] + [`ICON`] + `gap-2`.
+/// `@ui/Input`: `pl-9` / `pr-9` - [`ICON_INSET`] + [`ICON`] + `gap-2`.
 const ICON_COLUMN: f32 = 36.0;
 /// `disabled:opacity-60`. Applied to the ink and the border; the ground is a
 /// token of its own (`disabled:bg-surface-2`), so it is not faded twice.
 const DISABLED_ALPHA: f32 = 0.6;
 
-/// `@ui/Textarea`: `h-36` — the height a multiline field asks for, and
+/// `@ui/Textarea`: `h-36` - the height a multiline field asks for, and
 /// `min-h-16`, the floor it stays usable at.
 const TEXTAREA_HEIGHT: f32 = 144.0;
 const TEXTAREA_MIN_HEIGHT: f32 = 64.0;
 
 /// The glyph a password field shows. `kubuno_desktop_controls::text::PASSWORD_GLYPH`
-/// (private there) — WinForms' `UseSystemPasswordChar` bullet, U+25CF.
+/// (private there) - WinForms' `UseSystemPasswordChar` bullet, U+25CF.
 const PASSWORD_GLYPH: char = '\u{25CF}';
 
 /// The editor's own metrics. None of them is a design token: they are what a
@@ -130,7 +130,7 @@ mod edit {
     /// 1 CSS px caret in `currentColor`; `caret-color` is never set in the web).
     pub const CARET_W: f32 = 1.0;
     /// The web declares no `::selection` rule, so the field keeps the
-    /// browser's highlight — the primary at 35 %, a plain rectangle (the
+    /// browser's highlight - the primary at 35 %, a plain rectangle (the
     /// predecessor's reading, `edit_box::draw_padded`).
     pub const SELECTION_ALPHA: f32 = 0.35;
     /// How far back the undo stack reaches. Browsers do not publish a depth;
@@ -146,11 +146,11 @@ mod edit {
 }
 
 /// The search pill: `core/shell/SearchBar.tsx`, `compact` (the `h-9` form a
-/// 40 DIP top bar holds — the only size a form row can mix with fields and
+/// 40 DIP top bar holds - the only size a form row can mix with fields and
 /// `md` buttons without misaligning).
 mod search {
     use crate::metrics::{height, space};
-    /// `compact ? 'h-9'` — the field height, so a toolbar row mixing a search
+    /// `compact ? 'h-9'` - the field height, so a toolbar row mixing a search
     /// pill, a field and an `md` button lines up.
     pub const HEIGHT: f32 = height::BUTTON_MD;
     /// The omnibar's height (`omnibar::HEIGHT`), what this pill used to be.
@@ -160,7 +160,7 @@ mod search {
     pub const ICON_GAP: f32 = space::SM;
     /// Where the input starts: `pl-3` + 16 + `pr-2` = 36.
     pub const TEXT_LEFT: f32 = ICON_LEFT + super::ICON + ICON_GAP;
-    /// The ✕ button: `px-1` around an `<X size={16} />` — 24 wide.
+    /// The ✕ button: `px-1` around an `<X size={16} />` - 24 wide.
     pub const CLEAR_W: f32 = space::XS + super::ICON + space::XS;
     /// The trailing `pr-2` the pill keeps after its last button.
     pub const END_PAD: f32 = space::SM;
@@ -178,7 +178,7 @@ mod text_menu {
     pub const SHADOW: f32 = 10.0;
 }
 
-// ── Geometry (pure — this is what the tests pin) ──────────────────────────────
+// ── Geometry (pure - this is what the tests pin) ──────────────────────────────
 
 /// Which side an icon column sits on.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -221,7 +221,7 @@ pub fn row_rect(bounds: Rect, i: usize) -> Rect {
 }
 
 /// The height a field asks for: `h-9` for a single line, and one [`LINE`] per
-/// row plus [`PAD_Y`] top and bottom when multiline — which returns exactly
+/// row plus [`PAD_Y`] top and bottom when multiline - which returns exactly
 /// `h-9` again at one row (8 + 20 + 8 = 36).
 pub fn field_height(multiline: bool, rows: usize) -> f32 {
     if multiline {
@@ -244,7 +244,7 @@ pub fn search_clear_rect(bounds: Rect) -> Rect {
     Rect::new((right - search::CLEAR_W).max(bounds.left), bounds.top, right, bounds.bottom)
 }
 
-/// The editable strip inside a search pill, with the ✕ column reserved — the
+/// The editable strip inside a search pill, with the ✕ column reserved - the
 /// conservative answer (the text never runs under the ✕). See
 /// [`search_text_rect_with`] for the exact strip given whether the ✕ shows.
 pub fn search_text_rect(bounds: Rect) -> Rect {
@@ -352,7 +352,7 @@ pub fn word_left(text: &str, i: usize) -> usize {
 }
 
 /// Ctrl+Right, the Windows way: over the current run, then over the spaces
-/// after it — landing on the START of the next word (macOS stops at the end).
+/// after it - landing on the START of the next word (macOS stops at the end).
 /// A line break is a stop of its own.
 pub fn word_right(text: &str, i: usize) -> usize {
     let ch: Vec<char> = text.chars().collect();
@@ -379,7 +379,7 @@ pub fn word_right(text: &str, i: usize) -> usize {
 
 /// What a double-click on character `i` selects: its run (a word, a
 /// punctuation run or a space run). A word takes its trailing spaces with it
-/// — Chromium's `select_trailing_whitespace` on Windows, what Notepad and Word
+/// - Chromium's `select_trailing_whitespace` on Windows, what Notepad and Word
 /// do too. A line break selects nothing.
 pub fn word_range_at(text: &str, i: usize) -> (usize, usize) {
     let ch: Vec<char> = text.chars().collect();
@@ -541,7 +541,7 @@ impl EditBuffer {
 
 // ── Undo history (pure) ──────────────────────────────────────────────────────
 
-/// What kind of edit produced an undo step — typing and deleting bursts merge.
+/// What kind of edit produced an undo step - typing and deleting bursts merge.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum EditKind {
     Typing,
@@ -563,7 +563,7 @@ impl Snapshot {
     }
 }
 
-/// The undo / redo stacks of one field — the browser's per-input undo, which
+/// The undo / redo stacks of one field - the browser's per-input undo, which
 /// `textFieldMenu.ts` reaches through `execCommand('undo')`.
 #[derive(Debug, Clone, Default)]
 pub struct History {
@@ -699,7 +699,7 @@ pub struct VisualLine {
     pub end: usize,
 }
 
-/// Splits `text` into rows: one per paragraph, and — when `width` is given —
+/// Splits `text` into rows: one per paragraph, and - when `width` is given -
 /// wrapped greedily at word boundaries so no row is wider than `width`
 /// (`<textarea wrap="soft">`: trailing spaces hang, a word longer than the row
 /// breaks between characters, as `overflow-wrap: break-word` does).
@@ -819,9 +819,9 @@ pub struct MenuFlags {
     pub can_redo: bool,
 }
 
-/// The menu `TextFieldMenuHost` builds, row for row — Undo / Redo /
+/// The menu `TextFieldMenuHost` builds, row for row - Undo / Redo /
 /// separator / Cut (editable only), Copy, Paste and Delete (editable only),
-/// separator, Select all — with the action each row runs (`None` on
+/// separator, Select all - with the action each row runs (`None` on
 /// separators). Undo and Redo are greyed when their stack is empty, which the
 /// browser's `execCommand` would silently no-op.
 pub fn text_menu(flags: MenuFlags) -> (Menu, Vec<Option<EditAction>>) {
@@ -971,7 +971,7 @@ impl EditInput {
 /// What happened to a field during one [`TextField::update`].
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
 pub struct EditOutcome {
-    /// The text changed (typing, paste, cut, undo, the ✕…) — the web's `input`.
+    /// The text changed (typing, paste, cut, undo, the ✕…) - the web's `input`.
     pub changed: bool,
     /// Enter in a single-line field (a form's implicit submission).
     pub submitted: bool,
@@ -1012,8 +1012,8 @@ struct MenuState {
 /// blink clock and the context menu.
 ///
 /// The caret and the scroll are `Cell`s because [`Widget::paint`] (which takes
-/// `&self`) is where a caret is scrolled into view — the view is only known
-/// there — and where a selection set on the model by a caller is adopted.
+/// `&self`) is where a caret is scrolled into view - the view is only known
+/// there - and where a selection set on the model by a caller is adopted.
 #[derive(Clone, Default)]
 pub struct EditState {
     anchor: Cell<usize>,
@@ -1176,7 +1176,7 @@ fn lay_out(c: &dyn Canvas, display: &str, g: &TextGeom) -> Laid {
 
 impl Laid {
     /// The left edge of row `i`'s text, before scrolling: alignment inside the
-    /// view (only when the row fits — an overflowing row starts at the left
+    /// view (only when the row fits - an overflowing row starts at the left
     /// and scrolls, as an `<input>` does).
     fn align_offset(&self, i: usize, align: HorizontalAlignment) -> f32 {
         let w = self.widths.get(i).copied().unwrap_or(0.0);
@@ -1216,8 +1216,8 @@ fn x_in_line(c: &dyn Canvas, display: &str, line: VisualLine, pos: usize) -> f32
     measure_body(c, char_slice(display, line.start, p))
 }
 
-/// The position in `line` nearest to `x` (relative to the row's origin), or —
-/// with `floor` — the character whose span contains `x` (what a double-click
+/// The position in `line` nearest to `x` (relative to the row's origin), or -
+/// with `floor` - the character whose span contains `x` (what a double-click
 /// picks a word by).
 fn index_in_line(c: &dyn Canvas, display: &str, line: VisualLine, x: f32, floor: bool) -> usize {
     if x <= 0.0 {
@@ -1266,12 +1266,12 @@ struct Edge {
     invalid: bool,
 }
 
-/// `colour` faded to `DISABLED_ALPHA` — `disabled:opacity-60`.
+/// `colour` faded to `DISABLED_ALPHA` - `disabled:opacity-60`.
 fn faded(colour: &D2D1_COLOR_F) -> D2D1_COLOR_F {
     D2D1_COLOR_F { a: colour.a * DISABLED_ALPHA, ..*colour }
 }
 
-/// Ground, border and focus outline — the whole of a box field's chrome.
+/// Ground, border and focus outline - the whole of a box field's chrome.
 fn paint_edge(c: &dyn Canvas, bounds: Rect, edge: &Edge, ground: &D2D1_COLOR_F) {
     let t = c.theme();
     let ground = if edge.disabled { &t.surface_2 } else { ground };
@@ -1316,7 +1316,7 @@ struct TextPaint<'a> {
 }
 
 /// The text of a field: placeholder, or the rows with their selection and
-/// caret, scrolled and clipped to the content box — and a scroll bar on an
+/// caret, scrolled and clipped to the content box - and a scroll bar on an
 /// overflowing multiline field.
 fn paint_text(c: &dyn Canvas, st: &EditState, g: &TextGeom, p: TextPaint) {
     let t = c.theme();
@@ -1345,7 +1345,7 @@ fn paint_text(c: &dyn Canvas, st: &EditState, g: &TextGeom, p: TextPaint) {
     let ink = if p.disabled { faded(&t.text_primary) } else { t.text_primary };
 
     // An unfocused single-line field rests at its start and ellipsises what
-    // does not fit (Chromium drops the scroll on blur) — unless it keeps its
+    // does not fit (Chromium drops the scroll on blur) - unless it keeps its
     // selection visible (`HideSelection = false`) and has one.
     let (sel_a, sel_b) = st.selection();
     let kept = p.keep_selection && !p.disabled && sel_a != sel_b;
@@ -1504,7 +1504,7 @@ struct Spec {
     search: bool,
     multiline: bool,
     /// `AcceptsTab` on a multiline field: Tab types a tab character (the focus ring then leaves Tab to
-    /// the field — register it with `FocusOpts::wants_tab`).
+    /// the field - register it with `FocusOpts::wants_tab`).
     accepts_tab: bool,
     /// Enter in a multiline field is a submit, not a new line (WinForms `AcceptsReturn = false`:
     /// the form's default button gets it). See [`TextField::enter_submits`].
@@ -1645,7 +1645,7 @@ fn update_box(
     let laid = lay_out(c, &display, g);
 
     if !swallowed {
-        // The search ✕ — `onMouseDown={e => { e.preventDefault(); handleChange('') }}`.
+        // The search ✕ - `onMouseDown={e => { e.preventDefault(); handleChange('') }}`.
         let over_clear = clear.is_some_and(|r| r.contains(mx, my));
         st.clear_hot.set(over_clear);
         if over_clear && pressed && !tb.text().is_empty() {
@@ -2140,19 +2140,19 @@ fn show_menu(st: &mut EditState, c: &dyn Canvas, input: &EditInput, flags: MenuF
 // TextField
 // ═════════════════════════════════════════════════════════════════════════════
 
-/// A single-line Kubuno field — `@ui/Input` over
+/// A single-line Kubuno field - `@ui/Input` over
 /// [`kubuno_desktop_controls::text::TextBox`].
 ///
 /// Everything a caller sets on the *model* is the replica's:
 ///
 /// ```ignore
 /// let mut f = TextField::new();
-/// f.set_text("hello");                   // TextBox::set_text — honours CharacterCasing
+/// f.set_text("hello");                   // TextBox::set_text - honours CharacterCasing
 /// f.placeholder_text = "Serveur".into(); // TextBox::placeholder_text
 /// f.read_only = true;                    // TextBoxBase::read_only
 /// f.max_length = 64;                     // TextBoxBase::max_length (maxlength)
 /// f.password_char = Some('*');           // TextBox::password_char
-/// f.select(0, 5);                        // TextBoxBase::select — clamped
+/// f.select(0, 5);                        // TextBoxBase::select - clamped
 /// f.leading_icon = Some("Search");       // what Kubuno adds
 /// ```
 ///
@@ -2169,7 +2169,7 @@ pub struct TextField {
     /// `@ui/Input`'s `error`: the border and the focus outline turn `danger`.
     pub invalid: bool,
     /// A multiline field treats Enter as a submit ([`EditOutcome::submitted`]) instead of typing a
-    /// new line — WinForms' `AcceptsReturn = false`, where Enter clicks the form's default button.
+    /// new line - WinForms' `AcceptsReturn = false`, where Enter clicks the form's default button.
     /// `false` (the default) keeps the text area behaviour.
     pub enter_submits: bool,
     edit: EditState,
@@ -2185,7 +2185,7 @@ impl TextField {
         Spec { enter_submits: self.enter_submits, ..Spec::of(&self.inner, false, false) }
     }
 
-    /// The characters drawn — the password glyph repeated, or the text.
+    /// The characters drawn - the password glyph repeated, or the text.
     pub fn display(&self) -> String {
         display_of(&self.inner)
     }
@@ -2200,7 +2200,7 @@ impl TextField {
         &self.edit
     }
 
-    /// The open context menu's panel (client space) — hand it to
+    /// The open context menu's panel (client space) - hand it to
     /// `FocusRing::keep_focus_in` so a click on it does not blur the field.
     pub fn menu_bounds(&self) -> Option<Rect> {
         self.edit.menu_bounds()
@@ -2261,7 +2261,7 @@ impl TextField {
     /// Makes the field behave as if it already held the focus: the next focused
     /// [`TextField::update`] is not a focus gain, so it keeps the model's
     /// selection instead of selecting the whole text (an editor that appears
-    /// already focused — a table's cell editor — with its caret where it was put).
+    /// already focused - a table's cell editor - with its caret where it was put).
     pub(crate) fn assume_focused(&mut self) {
         self.edit.had_focus = true;
         self.edit.reveal.set(true);
@@ -2347,7 +2347,7 @@ impl Widget for TextField {
 // TextArea
 // ═════════════════════════════════════════════════════════════════════════════
 
-/// The multiline case of the same field — `@ui/Textarea`, which ships the
+/// The multiline case of the same field - `@ui/Textarea`, which ships the
 /// *same* class string as `@ui/Input` plus `h-36 min-h-16`.
 ///
 /// It is a [`TextField`] with `Multiline` set: the chrome, the tokens and the
@@ -2401,7 +2401,7 @@ impl Widget for TextArea {
         self.field.model()
     }
 
-    /// `h-36` — the height `@ui/Textarea` asks for, whatever it holds.
+    /// `h-36` - the height `@ui/Textarea` asks for, whatever it holds.
     fn measure(&self, canvas: &dyn Canvas) -> Size {
         let inner = self.field.measure(canvas);
         self.field.clamp(Size::new(inner.width, Self::HEIGHT + self.padding.vertical()))
@@ -2420,7 +2420,7 @@ impl Widget for TextArea {
 // SearchField
 // ═════════════════════════════════════════════════════════════════════════════
 
-/// The search pill — `core/shell/SearchBar.tsx`'s search row in its `compact`
+/// The search pill - `core/shell/SearchBar.tsx`'s search row in its `compact`
 /// (`h-9`) form, without the module-specific buttons (voice, image, filters)
 /// that composite adds after it.
 ///
@@ -2441,7 +2441,7 @@ impl Widget for TextArea {
 ///
 /// The web pill also lifts with a `box-shadow` when active; a shadow paints
 /// OUTSIDE the element, and a primitive stays inside its bounds, so it is not
-/// drawn — the white ground and the border carry the state.
+/// drawn - the white ground and the border carry the state.
 #[derive(Clone)]
 pub struct SearchField {
     inner: TextBox,
@@ -2574,7 +2574,7 @@ impl Widget for SearchField {
         let disabled = state.disabled || !self.enabled;
         let active = state.focused && !disabled;
         let r = pill(bounds.bottom - bounds.top);
-        // `isActive ? '#ffffff' : var(--color-search-bg)` — and nothing
+        // `isActive ? '#ffffff' : var(--color-search-bg)` - and nothing
         // outside the pill: its corners show the parent, as on the web.
         let ground = if disabled {
             t.surface_2
@@ -2622,7 +2622,7 @@ impl Widget for SearchField {
 // MaskedField
 // ═════════════════════════════════════════════════════════════════════════════
 
-/// A field governed by a mask — `@ui/Input`'s chrome over
+/// A field governed by a mask - `@ui/Input`'s chrome over
 /// [`kubuno_desktop_controls::text::MaskedTextBox`].
 ///
 /// The mask engine is the replica's: `set_mask` parses the WinForms mask
@@ -2653,13 +2653,13 @@ impl MaskedField {
         Self::default()
     }
 
-    /// The visible string — literals, entered characters, prompt glyphs.
+    /// The visible string - literals, entered characters, prompt glyphs.
     pub fn display(&self) -> &str {
         TextBoxBase::text(&self.inner)
     }
 
     /// The string [`Self::display`] shows, but with the characters actually typed where a
-    /// password mask (`PasswordChar` / `UseSystemPasswordChar`) displays its glyphs — what a
+    /// password mask (`PasswordChar` / `UseSystemPasswordChar`) displays its glyphs - what a
     /// binding reads and writes. Equal to [`Self::display`] for a field that masks nothing.
     pub fn value(&self) -> String {
         let mut probe = self.inner.clone();
@@ -2685,7 +2685,7 @@ impl MaskedField {
 
     /// The display positions of the editable slots, in order: an empty
     /// engine shows the prompt char exactly there. (A literal equal to the
-    /// prompt char would be taken for a slot — WinForms forbids that mask.)
+    /// prompt char would be taken for a slot - WinForms forbids that mask.)
     pub fn edit_positions(&self) -> Vec<usize> {
         let mut probe = self.inner.clone();
         probe.set_text("");
@@ -3090,7 +3090,7 @@ impl Widget for MaskedField {
 mod tests {
     use super::*;
 
-    /// A 200 × 36 field at the origin — `@ui/Input`'s own height.
+    /// A 200 × 36 field at the origin - `@ui/Input`'s own height.
     fn bounds() -> Rect {
         Rect::new(0.0, 0.0, 200.0, height::BUTTON_MD)
     }
@@ -3127,7 +3127,7 @@ mod tests {
     }
 
     /// `SearchBar compact`: `h-9`, `pl-3` + 16 + `pr-2` before the text, a
-    /// 24 wide ✕ before the trailing `pr-2` — and the same height as every
+    /// 24 wide ✕ before the trailing `pr-2` - and the same height as every
     /// other field and `md` button (the composition audit's misalignment).
     #[test]
     fn the_search_pill_is_the_compact_search_bar() {
@@ -3505,7 +3505,7 @@ mod tests {
     }
 
     /// A masked field's `value()` is its display string with the typed characters where a
-    /// password mask shows glyphs — what a binding gets.
+    /// password mask shows glyphs - what a binding gets.
     #[test]
     fn a_password_masked_field_binds_the_typed_characters() {
         let mut m = MaskedField::new();

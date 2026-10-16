@@ -1,7 +1,7 @@
 ﻿# Numeric parity diff for the layout-panel family.
 #
-# Reads the two probe outputs — `panels-winforms.json` (the real toolkit) and
-# `panels-port.json` (kubuno-desktop-controls) — and prints every place their arithmetic
+# Reads the two probe outputs - `panels-winforms.json` (the real toolkit) and
+# `panels-port.json` (kubuno-desktop-controls) - and prints every place their arithmetic
 # disagrees by more than the tolerance, then exits NON-ZERO if any did.
 #
 # Why numeric and not pixel: the port paints in the Kubuno design system, so a
@@ -117,7 +117,7 @@ foreach ($rc in $refDoc.cases) {
     }
 
     # A metric the port reports and the toolkit does not is worth knowing about
-    # too — it means the port models something the reference never stated.
+    # too - it means the port models something the reference never stated.
     foreach ($key in $portKeys) {
         if ($refKeys -notcontains $key) {
             $b = @($pc.values.$key)

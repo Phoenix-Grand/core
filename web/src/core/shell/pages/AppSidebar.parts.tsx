@@ -115,7 +115,7 @@ export function Part1({ activeConfig, dragging, sidebarOpen, collapsed, widthSty
       `}
           style={{ background: 'var(--body-bg)', ...widthStyle }}
         >
-          {/* ── Logo Kubuno — affiché ici quand l'AppHeader global est masqué (sous-module
+          {/* ── Logo Kubuno - affiché ici quand l'AppHeader global est masqué (sous-module
                  à barre de titre), pour qu'il reste en place en haut à gauche. ── */}
           {headerHidden && (
             // A direct child of the column, so it stretches to the rail's width and
@@ -133,7 +133,7 @@ export function Part1({ activeConfig, dragging, sidebarOpen, collapsed, widthSty
           {showNewButton && (
             <div className="flex items-center px-2" style={{ height: 72 }}>
               <>
-                {/* A real <button>, like Google's own markup (user request) — the
+                {/* A real <button>, like Google's own markup (user request) - the
                     one exception to the panel's anchors-only habit. */}
                   <button
                     type="button"
@@ -156,7 +156,7 @@ export function Part1({ activeConfig, dragging, sidebarOpen, collapsed, widthSty
                       minWidth: 48,
                       // NO left padding: the icon lives in a fixed 48px box (= the
                       // collapsed disc width), so the « + » centre stays at the same x
-                      // in both states — immobile during the collapse tween and
+                      // in both states - immobile during the collapse tween and
                       // aligned with the menu icons below.
                       paddingRight: collapsed ? 0 : 20,
                       fontSize: '0.875rem',
@@ -181,7 +181,7 @@ export function Part1({ activeConfig, dragging, sidebarOpen, collapsed, widthSty
                     </span>
                   </button>
     
-                {/* THE project's menu component (@ui MenuDropdown) — same surface,
+                {/* THE project's menu component (@ui MenuDropdown) - same surface,
                     same item chrome and same dismiss behaviour as every other menu in
                     the app. Items are built on open, so labels and state are fresh. */}
                 {newMenu.pos && (
@@ -197,7 +197,7 @@ export function Part1({ activeConfig, dragging, sidebarOpen, collapsed, widthSty
     
           {/* ── Corps de la sidebar ────────────────────────────────────────── */}
           {/* Le SidebarBody du module est rendu dans LES DEUX états (replié/déplié) en
-              lui passant `collapsed`, pour que la nav reste identique — au lieu de
+              lui passant `collapsed`, pour que la nav reste identique - au lieu de
               retomber sur la liste générique quand replié. */}
           {activeConfig?.SidebarBody && (!collapsed || activeConfig.collapsedBody) ? (
             <ActiveConfig_SidebarBody collapsed={collapsed} />
@@ -248,15 +248,15 @@ export function Part2({ tc, onResizeDown, onResizeMove, endResize, dragging }: {
             onPointerUp={endResize}
             onPointerCancel={endResize}
             /* Safety net: a capture lost for any other reason (window blur, the node being
-               re-parented) would otherwise leave the sidebar stuck in the dragging state —
+               re-parented) would otherwise leave the sidebar stuck in the dragging state -
                blue line, and no collapse animation any more. */
             onLostPointerCapture={endResize}
             className="hidden lg:block absolute top-0 left-full h-full w-3 z-[60] cursor-col-resize group"
           >
-            {/* Trait vertical — discret au repos, teinté au survol/glissement. */}
+            {/* Trait vertical - discret au repos, teinté au survol/glissement. */}
             <div className={`absolute inset-y-0 left-1/2 -translate-x-1/2 w-[5px] rounded-full transition-colors
                         ${dragging ? 'bg-primary' : 'bg-transparent group-hover:bg-border'}`} />
-            {/* Pastille à grip (façon office) — invisible au repos, apparaît à l'approche. */}
+            {/* Pastille à grip (façon office) - invisible au repos, apparaît à l'approche. */}
             <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center
                         h-9 w-3.5 rounded-full bg-surface-0 border shadow-sm transition
                         ${dragging

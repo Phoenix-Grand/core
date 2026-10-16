@@ -22,7 +22,7 @@ import java.io.File
  *
  * A [streamUrl] plays over the app's authenticated OkHttp client, so playback
  * streams with byte-range requests instead of downloading the whole file first
- * — the difference between a movie starting at once and staring at a spinner.
+ * - the difference between a movie starting at once and staring at a spinner.
  * Falls back to the local [file] (e.g. an already-cached attachment) when no
  * URL is given.
  */

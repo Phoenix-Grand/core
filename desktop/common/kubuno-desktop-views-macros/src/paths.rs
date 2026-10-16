@@ -1,7 +1,7 @@
 //! Where the generated code finds `kubuno_desktop_views`.
 //!
 //! The macros name `::kubuno_desktop_views::…`. An application that depends on the `kubuno-desktop` facade only
-//! (the Kubuno templates: one Kubuno dependency) has no `kubuno_desktop_views` of its own — it reaches the
+//! (the Kubuno templates: one Kubuno dependency) has no `kubuno_desktop_views` of its own - it reaches the
 //! crate as `kubuno_desktop::views`. The expansion is then retargeted: every `::kubuno_desktop_views` path becomes
 //! `::kubuno_desktop::views` (the approach of `proc-macro-crate`, reading the package's `Cargo.toml`).
 

@@ -1,4 +1,4 @@
-<!-- DelegabilityChip — converted from DelegabilityChip.tsx by @kubuno/views-migrate. -->
+<!-- DelegabilityChip - converted from DelegabilityChip.tsx by @kubuno/views-migrate. -->
 <UserControl x:Props="DelegabilityChipProps">
   <Panel Class="contents">
     <Panel HtmlTag="Span"

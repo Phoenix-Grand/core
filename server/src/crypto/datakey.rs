@@ -1,4 +1,4 @@
-//! The key that protects data at rest — kept apart from the token-signing key.
+//! The key that protects data at rest - kept apart from the token-signing key.
 //!
 //! SMTP and directory passwords, OIDC client secrets, users' TOTP secrets and
 //! migration credentials are all encrypted with a key derived from
@@ -64,7 +64,7 @@ fn explicit_key_file() -> Result<Option<PathBuf>> {
 
 /// Where the root key lives: `KUBUNO_DATA_KEY_FILE` when set, else `data.key`
 /// in the instance's state directory (`kubuno-paths`), beside the TLS key, for
-/// the same reason: it is instance identity, not application data — no
+/// the same reason: it is instance identity, not application data - no
 /// database dump carries it. Never inferred from whether a directory exists,
 /// and never a guessed default: if the instance's directories cannot be
 /// resolved, this fails instead of pointing at the system instance's key.
@@ -351,7 +351,7 @@ pub fn generate_root() -> String {
     bytes.iter().map(|b| format!("{b:02x}")).collect()
 }
 
-/// The per-domain key. `domain` keeps one store's key useless against another —
+/// The per-domain key. `domain` keeps one store's key useless against another -
 /// the same separation the previous derivations used, so a seeded instance
 /// reproduces them byte for byte.
 pub fn derive(domain: &[u8], root: &str) -> [u8; 32] {
@@ -363,8 +363,8 @@ pub fn derive(domain: &[u8], root: &str) -> [u8; 32] {
 
 /// The key in force for `domain`.
 ///
-/// Falls back to the passed JWT secret when `init` was never called — a unit
-/// test, a command that does not boot the server — so nothing has to know
+/// Falls back to the passed JWT secret when `init` was never called - a unit
+/// test, a command that does not boot the server - so nothing has to know
 /// whether the process went through the bootstrap.
 pub fn key(domain: &[u8], jwt_secret_fallback: &str) -> [u8; 32] {
     match ROOT.get() {

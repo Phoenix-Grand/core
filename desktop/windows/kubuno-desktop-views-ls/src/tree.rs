@@ -1,5 +1,5 @@
 //! Small shared helpers for walking the `kubuno_desktop_views::syntax` tree at a
-//! cursor offset — used by [`crate::hover`], [`crate::completion`] and
+//! cursor offset - used by [`crate::hover`], [`crate::completion`] and
 //! [`crate::definition`], which all start from "what token is under (or
 //! right next to) the cursor, and what does it belong to".
 
@@ -9,10 +9,10 @@ use rowan::{TextSize, TokenAtOffset};
 
 /// The token at `offset`, preferring the non-trivia side when `offset` sits
 /// exactly between two tokens (e.g. right after `<`, where the left token is
-/// `L_ANGLE` and there is no right token yet — `Single` — or right after a
+/// `L_ANGLE` and there is no right token yet - `Single` - or right after a
 /// space, where `Between(WHITESPACE, next)` should resolve to `next`, the
 /// token the user is about to type into). When both sides are non-trivia,
-/// the left one wins — the conventional "what did the user just finish
+/// the left one wins - the conventional "what did the user just finish
 /// typing" reading a cursor position implies.
 pub fn token_at_offset(root: &SyntaxNode, offset: TextSize) -> Option<SyntaxToken> {
     match root.token_at_offset(offset) {
@@ -40,7 +40,7 @@ pub fn enclosing_attribute(node: &SyntaxNode) -> Option<Attribute> {
     node.ancestors().find_map(Attribute::cast)
 }
 
-/// Whether `token` is the tag-name `IDENT` of a `START_TAG` — i.e. the
+/// Whether `token` is the tag-name `IDENT` of a `START_TAG` - i.e. the
 /// element's own name, as opposed to an attribute name (also an `IDENT`, but
 /// wrapped in an `ATTRIBUTE` node) or an end-tag name.
 pub fn is_start_tag_name(token: &SyntaxToken) -> bool {
@@ -49,7 +49,7 @@ pub fn is_start_tag_name(token: &SyntaxToken) -> bool {
 }
 
 /// Whether `token` is an attribute's name `IDENT` (wrapped in an
-/// `ATTRIBUTE` node — distinct from [`is_start_tag_name`]'s bare
+/// `ATTRIBUTE` node - distinct from [`is_start_tag_name`]'s bare
 /// `START_TAG`-child `IDENT`).
 pub fn is_attribute_name(token: &SyntaxToken) -> bool {
     token.kind() == SyntaxKind::IDENT && token.parent().is_some_and(|p| p.kind() == SyntaxKind::ATTRIBUTE)
@@ -66,7 +66,7 @@ mod tests {
         let p = parse(r#"<Button Text="Ok"/>"#);
         let root = p.syntax();
         // Offset right after "<Button" (before the space and "Text") sits
-        // between the "Button" IDENT and WHITESPACE — the left, non-trivia
+        // between the "Button" IDENT and WHITESPACE - the left, non-trivia
         // token should win.
         let offset = TextSize::from(7); // "<Button".len()
         let t = token_at_offset(&root, offset).expect("a token");
@@ -74,7 +74,7 @@ mod tests {
         assert_eq!(t.text(), "Button");
 
         // Offset right after the following space, before "Text", sits
-        // between WHITESPACE and the "Text" IDENT — should resolve to
+        // between WHITESPACE and the "Text" IDENT - should resolve to
         // "Text", the token about to be typed/completed.
         let offset2 = TextSize::from(8); // "<Button ".len()
         let t2 = token_at_offset(&root, offset2).expect("a token");

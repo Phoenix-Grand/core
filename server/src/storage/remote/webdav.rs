@@ -217,7 +217,7 @@ impl RemoteConnector for WebDavConnector {
 
         // A `Depth: 0` PROPFIND answers with exactly **one** `<d:response>`: the
         // resource itself. `parse_propfind` drops it when the href ends in a
-        // slash and the last segment comes out empty — a collection asked about
+        // slash and the last segment comes out empty - a collection asked about
         // by a path the server echoes back with a trailing slash. That is the
         // only case this fallback exists for, so it reads the single block
         // directly rather than looping: there is never a second one, and the

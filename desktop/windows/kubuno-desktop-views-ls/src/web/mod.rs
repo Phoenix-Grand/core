@@ -3,7 +3,7 @@
 //! One server, two target profiles. A view belongs to the web target when, walking up from its folder, the first
 //! project marker found says so (`vskubuno/docs/VIEWS-SPEC.md` §1):
 //!
-//! 1. `kubuno.views.json` — its `target` (`"web"` / `"desktop"`; a file without `target` is the web compiler's
+//! 1. `kubuno.views.json` - its `target` (`"web"` / `"desktop"`; a file without `target` is the web compiler's
 //!    configuration, so web);
 //! 2. a `package.json` depending on `@kubuno/views-compiler`, or a Visual Studio JavaScript project (`*.esproj`) → web;
 //! 3. a `Cargo.toml` depending on `kubuno-desktop` / `kubuno-desktop-views` → desktop.
@@ -14,7 +14,7 @@
 //! |---|---|
 //! | [`project`] | the project: registries (host JSON + project registries), user controls, the web compiler, `.d.ts` generation |
 //! | [`ts`] | the TypeScript code-behind, read with oxc |
-//! | [`handlers`] | `kubuno/compatibleHandlers`, `createHandler`, `renameHandler`, `removeHandler`, F2 — editing the TS by insertion |
+//! | [`handlers`] | `kubuno/compatibleHandlers`, `createHandler`, `renameHandler`, `removeHandler`, F2 - editing the TS by insertion |
 //! | [`language`] | diagnostics, completion, hover, go-to-definition, code actions, binding paths |
 //! | [`res`] | `{Res key}`: the web i18n bundles (`locales/<lang>/<ns>.json`) and `.kbres` files |
 

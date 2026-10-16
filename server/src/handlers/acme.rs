@@ -2,8 +2,8 @@
 //!
 //! The ACME server (Let's Encrypt) proves domain control by fetching
 //! `http://<domain>/.well-known/acme-challenge/<token>` and checking the body.
-//! This route is deliberately unauthenticated and served over plain HTTP — that
-//! is the whole point of the challenge — and returns only a response the core
+//! This route is deliberately unauthenticated and served over plain HTTP - that
+//! is the whole point of the challenge - and returns only a response the core
 //! itself put there for a pending order (see [`crate::network::acme`]).
 
 use axum::{

@@ -1,11 +1,11 @@
 /**
- * The CLIPBOARD PANE — Kubuno's equivalent of Office's clipboard task pane and
+ * The CLIPBOARD PANE - Kubuno's equivalent of Office's clipboard task pane and
  * of Windows 11's clipboard history (Win+V).
  *
  * Mounted once in App.tsx; opens when `openClipboardPane()` is called from
  * anywhere (core page or module, through the `core` service). It lists the
- * user's recent clips — rendered by the PRODUCER's `core.data-card` renderer,
- * so a copied map shows a map and a copied shape shows a shape — and lets them:
+ * user's recent clips - rendered by the PRODUCER's `core.data-card` renderer,
+ * so a copied map shows a map and a copied shape shows a shape - and lets them:
  *
  *   • paste one back: the entry is written to the system clipboard in the same
  *     dual text/plain + text/html format as a fresh copy, AND returned to the
@@ -20,7 +20,7 @@ import { clipboardApi, type ClipboardItem } from '../api/clipboard'
 import { copyKubunoData } from '../registry/DataTransferRegistry'
 import { DataCardView } from '../registry/DataCardView'
 
-/** "il y a 3 min" — the pane's only timestamp, kept deliberately coarse. */
+/** "il y a 3 min" - the pane's only timestamp, kept deliberately coarse. */
 function ago(iso: string): string {
   const s = Math.max(0, (Date.now() - new Date(iso).getTime()) / 1000)
   if (s < 60) return 'à l’instant'

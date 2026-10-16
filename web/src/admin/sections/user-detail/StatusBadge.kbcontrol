@@ -1,4 +1,4 @@
-<!-- StatusBadge — converted from StatusBadge.tsx by @kubuno/views-migrate. -->
+<!-- StatusBadge - converted from StatusBadge.tsx by @kubuno/views-migrate. -->
 <UserControl x:Props="StatusBadgeProps">
   <Badge Variant="{Binding variant}" Dot="true" Text="{Binding props.label}"/>
 </UserControl>

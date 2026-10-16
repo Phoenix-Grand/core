@@ -1,12 +1,12 @@
 //! Open-document store: full text sync (`TextDocumentSyncKind::FULL`).
 //!
 //! `.kbview` files are hand-sized UI descriptions (`XML_VIEWS.md` §6's own
-//! framing — "not generated megabyte documents"), and `kubuno_desktop_views::syntax::
+//! framing - "not generated megabyte documents"), and `kubuno_desktop_views::syntax::
 //! parse` is explicitly cheap to call on every change (§5: "parse+compile
 //! once per file change", the exact rate this server reparses at). Full sync
 //! avoids maintaining incremental-edit application logic (splicing LSP
 //! `TextDocumentContentChangeEvent` ranges into a rope) for no measurable
-//! benefit at this file size — the same "own a replica, never restate it"
+//! benefit at this file size - the same "own a replica, never restate it"
 //! economy `kubuno-desktop-ui`/`kubuno-desktop-views` apply elsewhere in this codebase.
 
 use std::collections::HashMap;
@@ -17,14 +17,14 @@ use lsp_types::Uri;
 use crate::position::PositionIndex;
 
 /// One open `.kbview` file: its current full text, the parse of that text,
-/// and the UTF-16 position index built from the same text — kept together so
+/// and the UTF-16 position index built from the same text - kept together so
 /// a caller never accidentally mixes a stale index with fresh text.
 pub struct Document {
     pub text: String,
     pub parse: Parse,
     pub position_index: PositionIndex,
     /// The LSP document version last reported by the client (`didOpen`'s
-    /// `version` or the last `didChange`'s) — echoed back on
+    /// `version` or the last `didChange`'s) - echoed back on
     /// `publishDiagnostics` so the client can discard stale diagnostics for a
     /// document it has since edited further.
     pub version: i32,
@@ -56,7 +56,7 @@ impl DocumentStore {
     /// Replaces a document's full text (a `didChange` with
     /// `TextDocumentSyncKind::FULL`'s single whole-text change event) and
     /// reparses it. A `didChange` for a URI never `didOpen`ed is treated as
-    /// an implicit open — defensive, not spec-mandated, but it keeps a
+    /// an implicit open - defensive, not spec-mandated, but it keeps a
     /// misordered notification from silently dropping edits.
     pub fn update(&mut self, uri: Uri, text: String, version: i32) {
         self.docs.insert(uri, Document::new(text, version));

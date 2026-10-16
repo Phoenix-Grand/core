@@ -3,7 +3,7 @@
 //! ## Linking never disarms a local password
 //!
 //! When a directory entry matches an account that already exists locally, the
-//! account is *linked* — it records which directory governs it — and its
+//! account is *linked* - it records which directory governs it - and its
 //! `password_hash` is left exactly as it was. That single decision is what makes
 //! a directory outage survivable: the account keeps signing in the way it
 //! always did (see [`super::auth::authority_for`]), and no synchronisation can
@@ -162,7 +162,7 @@ pub async fn find_existing(
 
 /// Links (or refreshes) an existing account, or creates one.
 ///
-/// `allow_create` is the caller's decision — the sign-in path resolves the
+/// `allow_create` is the caller's decision - the sign-in path resolves the
 /// instance switch and the directory's own flag before calling, and the
 /// synchroniser answers the same question from the same two places.
 pub async fn upsert(
@@ -190,8 +190,8 @@ pub async fn upsert(
         // would silently undo a deliberate decision.
         //
         // The old `RETURNING *` (which MySQL lacks) becomes an update-then-reselect
-        // by the known id. Placeholders are numbered ascending — SET first, the
-        // WHERE key last — and `NOW()` is bound from Rust.
+        // by the known id. Placeholders are numbered ascending - SET first, the
+        // WHERE key last - and `NOW()` is bound from Rust.
         db.execute(
             r#"UPDATE core.users SET
                    ldap_directory_id = $1,
@@ -248,7 +248,7 @@ pub async fn upsert(
     let username = unique_username(db, mapped.username_seed()).await?;
     // The unit the operator named for this directory, when they named one. It
     // matters beyond tidiness now: `auth.methods` is resolved per unit, and an
-    // account placed nowhere follows the INSTANCE policy — which may well not
+    // account placed nowhere follows the INSTANCE policy - which may well not
     // include `directory`, leaving somebody the directory just authenticated
     // unable to sign in tomorrow.
     // No unit named for the directory means the root: MySQL/MariaDB and SQLite

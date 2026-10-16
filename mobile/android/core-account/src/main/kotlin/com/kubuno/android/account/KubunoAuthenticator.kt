@@ -18,7 +18,7 @@ import kotlinx.coroutines.runBlocking
  * The account type is the contract: a sibling app (calendar, mail, notes…)
  * signed with the same certificate calls
  * `AccountManager.getAccountsByType(KubunoAccounts.TYPE)` and
- * `getAuthToken(account, KubunoAccounts.AUTH_TOKEN_ACCESS, …)` — no permission
+ * `getAuthToken(account, KubunoAccounts.AUTH_TOKEN_ACCESS, …)` - no permission
  * and no user consent, because same-signature callers are trusted by the
  * platform (the consent screen only exists for foreign signatures).
  */
@@ -31,7 +31,7 @@ object KubunoAccounts {
 
     // User data written on the system account. All of it is NON-SECRET: it is
     // just enough for a sibling app to know which instance to talk to and as
-    // whom. Tokens never go in here — see AccountManagerBridge.
+    // whom. Tokens never go in here - see AccountManagerBridge.
     const val USER_DATA_ACCOUNT_ID = "account_id"
     const val USER_DATA_SERVER_URL = "server_url"
     const val USER_DATA_USER_ID = "user_id"
@@ -49,7 +49,7 @@ object KubunoAccounts {
 }
 
 /**
- * Lets other Kubuno apps borrow this app's sessions — access tokens only.
+ * Lets other Kubuno apps borrow this app's sessions - access tokens only.
  *
  * Two deliberate restrictions:
  *
@@ -93,7 +93,7 @@ class KubunoAuthenticator(
     /**
      * Returns a currently valid access token for [account], refreshing it here
      * if needed. Runs on a binder thread, so blocking is both allowed and
-     * required — the caller is waiting on an `AccountManagerFuture`.
+     * required - the caller is waiting on an `AccountManagerFuture`.
      */
     override fun getAuthToken(
         response: AccountAuthenticatorResponse?,
@@ -131,7 +131,7 @@ class KubunoAuthenticator(
             tokenBundle(account, token)
         } catch (e: AuthException) {
             when (e.kind) {
-                // Our own session is dead for good — but the account may still
+                // Our own session is dead for good - but the account may still
                 // be alive in a sibling app, so ask before sending the user to
                 // a sign-in screen.
                 FailureKind.GENUINE -> borrowedOr(account, response, id)
@@ -239,7 +239,7 @@ class KubunoAuthenticator(
 
     /**
      * Launches the sign-in UI of whichever app the framework bound this
-     * authenticator into — its own launcher activity, not a hardcoded class,
+     * authenticator into - its own launcher activity, not a hardcoded class,
      * so the shared module stays app-agnostic. The activity reads the
      * authenticator response from the extras and reports the outcome on it.
      */

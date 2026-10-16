@@ -1,5 +1,5 @@
 import { formatRelative, toDate } from '../intl/datetime'
-// Widgets du core (moduleId 'core') — toujours disponibles sur le tableau de bord,
+// Widgets du core (moduleId 'core') - toujours disponibles sur le tableau de bord,
 // indépendamment des modules installés. Enregistrés en side-effect (import dans main.tsx).
 import { useEffect, useState, useRef } from 'react'
 import { useTranslation } from 'react-i18next'

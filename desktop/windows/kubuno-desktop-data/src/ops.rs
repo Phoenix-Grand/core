@@ -165,7 +165,7 @@ impl SaveOp {
 }
 
 /// Starts saving the changes of binding sources `sources` (UI thread) in **one** transaction:
-/// ends their edits (a row that does not validate stops here), plans each adapter's statements —
+/// ends their edits (a row that does not validate stops here), plans each adapter's statements -
 /// a detail list's references to its master's new rows follow the keys the database gives them.
 /// List masters before their details. `Ok(None)`: nothing to save.
 pub fn begin_save(scope: &ComponentScope, mut vm: Option<&mut dyn ViewModel>, sources: &[&str]) -> Result<Option<SaveOp>, DataError> {

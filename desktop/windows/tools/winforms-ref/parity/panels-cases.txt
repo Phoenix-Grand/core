@@ -1,5 +1,5 @@
 # ─────────────────────────────────────────────────────────────────────────────
-# The layout-panel parity cases — declared ONCE, read by BOTH probes.
+# The layout-panel parity cases - declared ONCE, read by BOTH probes.
 #
 #   tools/winforms-ref/parity/panels-winforms/   → real WinForms   → panels-winforms.json
 #   crates/kubuno-desktop-controls/examples/parity_panels.rs → the port    → panels-port.json
@@ -12,7 +12,7 @@
 # AutoScaleMode.None precisely so that one WinForms pixel is one DIP, which is
 # the unit the port's Direct2D space already uses.
 #
-# GRAMMAR — whitespace separated, `#` starts a comment, blank lines ignored.
+# GRAMMAR - whitespace separated, `#` starts a comment, blank lines ignored.
 #
 #   case <id> <flow|table|split|tab>
 #   box   <w> <h> <padL> <padT> <padR> <padB> <none|single|fixed3d>
@@ -38,7 +38,7 @@
 
 
 # ═══════════════════════════════════════════════════════════════════════════
-# FlowLayoutPanel — four directions × WrapContents, with per-child margins, a
+# FlowLayoutPanel - four directions × WrapContents, with per-child margins, a
 # FlowBreak, a child WIDER than the line and a child that EXACTLY fills it.
 #
 # Horizontal sets run against a 300 DIP line: child #3 (320) cannot fit at all,
@@ -158,7 +158,7 @@ cell 20 20 0 0 0 0 -1 -1 1 1 fill
 cell 20 20 0 0 0 0 -1 -1 1 1 fill
 
 # Percents that do NOT sum to 100. WinForms treats them as relative weights, so
-# 30/30 must behave exactly like 50/50 — the rule the port took from the docs.
+# 30/30 must behave exactly like 50/50 - the rule the port took from the docs.
 case table-pct-not-100 table
 box 300 100 0 0 0 0 none
 grid 2 1 none addrows
@@ -182,7 +182,7 @@ cell 10 10 0 0 0 0 0 0 1 1 fill
 cell 10 10 0 0 0 0 1 0 1 1 fill
 cell 10 10 0 0 0 0 2 0 1 1 fill
 
-# Uneven weights summing to 100 — the uncontroversial baseline.
+# Uneven weights summing to 100 - the uncontroversial baseline.
 case table-pct-uneven table
 box 300 100 0 0 0 0 none
 grid 3 1 none addrows
@@ -308,7 +308,7 @@ cell 10 10 0 0 0 0 -1 -1 1 1 fill
 cell 10 10 0 0 0 0 -1 -1 1 1 fill
 
 # Default anchoring (Top|Left, no Dock): WinForms leaves the child its own size
-# inside the cell. The port has no anchor inside a cell — every child fills it.
+# inside the cell. The port has no anchor inside a cell - every child fills it.
 case table-anchor-topleft table
 box 300 120 0 0 0 0 none
 grid 2 1 none addrows
@@ -320,7 +320,7 @@ cell 40 20 0 0 0 0 1 0 1 1 topleft
 
 
 # ═══════════════════════════════════════════════════════════════════════════
-# SplitContainer — the naming trap: Orientation.Vertical is a VERTICAL SPLITTER,
+# SplitContainer - the naming trap: Orientation.Vertical is a VERTICAL SPLITTER,
 # so the panels sit SIDE BY SIDE and SplitterDistance is Panel1's WIDTH.
 # ═══════════════════════════════════════════════════════════════════════════
 
@@ -394,7 +394,7 @@ split horizontal none 90 12 25 25 false false
 
 
 # ═══════════════════════════════════════════════════════════════════════════
-# TabControl — Alignment × Multiline × SizeMode, and the page display rectangle.
+# TabControl - Alignment × Multiline × SizeMode, and the page display rectangle.
 #
 # The `fixed` cases pin ItemSize so the strip metric is arithmetic rather than a
 # function of the system font; the `normal` case is kept precisely to MEASURE the

@@ -1,4 +1,4 @@
-//! Component family `containers` — declared with the `component!` table (see
+//! Component family `containers` - declared with the `component!` table (see
 //! `../macros.rs`) plus, in this same file, the view nodes those components
 //! build. Compiled only with the `family-containers` feature while the families are
 //! being written in parallel; the feature is on by default once integrated.
@@ -7,11 +7,11 @@
 //!
 //! `Panel`, `GroupBox`, `ScrollArea`, `Splitter`, `Tabs` (+ `TabItem`),
 //! `Breadcrumb` (+ `BreadcrumbItem`), `Toolbar` (+ `ToolbarItem`), `Accordion`
-//! (+ `AccordionSection`) and `Stepper` (+ `Step`) — the real
+//! (+ `AccordionSection`) and `Stepper` (+ `Step`) - the real
 //! `kubuno_desktop_controls`/`kubuno_desktop_ui` layout engines and controllers
 //! (`kubuno_desktop_controls::layout::layout`, `kubuno_desktop_controls::layout_panels::{flow_layout,
 //! SplitContainer}`, `kubuno_desktop_ui::navigation::TabsController`), never
-//! re-implemented. There is deliberately no `<Grid>` — `XML_VIEWS.md`'s
+//! re-implemented. There is deliberately no `<Grid>` - `XML_VIEWS.md`'s
 //! layout section is explicit that `kubuno_desktop_controls` has no grid engine, so
 //! none is invented here (see `vskubuno/docs/XML_VIEWS.md`, "There is no
 //! `<Grid>`").
@@ -19,15 +19,15 @@
 //! ## Composite components and the children model
 //!
 //! `Tabs`, `Breadcrumb`, `Toolbar`, `Accordion` and `Stepper` declare
-//! `ChildrenModel::List(&["TabItem"])` (etc.) — the allowed-name slice
+//! `ChildrenModel::List(&["TabItem"])` (etc.) - the allowed-name slice
 //! `crate::validate::validate` now checks a stray child against at *validate*
 //! time (`<TabItem>` outside `<Tabs>` is a diagnostic with a line/column,
 //! wherever it is nested, not just directly under another restrictive
-//! parent — see that module's `gated_required_parents`). Their `build`
+//! parent - see that module's `gated_required_parents`). Their `build`
 //! closures still additionally walk [`crate::props::Props::element`]'s
 //! children directly and reject a wrong one with a [`crate::props::
 //! BuildError`], rather than relying on [`crate::props::Props::
-//! build_children`]'s generic walk — belt and braces: a `.kbview` file that
+//! build_children`]'s generic walk - belt and braces: a `.kbview` file that
 //! skipped validation (or whose registry is stale relative to the running
 //! interpreter) still cannot build a nonsensical tree.
 
@@ -46,7 +46,7 @@ use kubuno_desktop_controls::host::{self, vk, Modifiers};
 use kubuno_desktop_ui::{AnchorStyles, Canvas, DockStyle, FocusId, Padding, Rect, Size, Widget};
 
 // ─────────────────────────────────────────────────────────────────────────
-// Shared parsing helpers — attached layout properties (`Dock`, `Anchor`,
+// Shared parsing helpers - attached layout properties (`Dock`, `Anchor`,
 // `X`/`Y`/`Width`/`Height`) are read the same way on every container's
 // children, and are resolved once at build time (never through a
 // `{Binding …}`): they describe the STRUCTURE the layout engine is handed,
@@ -83,7 +83,7 @@ fn parse_anchor(s: &str) -> AnchorStyles {
 }
 
 /// A literal (non-bound) `String` attribute of `props`, or a build error when
-/// the author wrote a `{Binding …}` expression — layout placement is
+/// the author wrote a `{Binding …}` expression - layout placement is
 /// structural, resolved once at compile time (see the module doc), not a
 /// per-frame value.
 fn literal_str(props: &Props<'_>, name: &str, default: &str) -> Result<String, BuildError> {
@@ -119,7 +119,7 @@ fn literal_bool(props: &Props<'_>, name: &str, default: bool) -> Result<bool, Bu
 // now (`crate::node`, both `pub(crate)`) rather than reimplemented here.
 
 // ═════════════════════════════════════════════════════════════════════════
-// Panel — Dock/Anchor children, over `kubuno_desktop_ui::containers::Panel`.
+// Panel - Dock/Anchor children, over `kubuno_desktop_ui::containers::Panel`.
 // ═════════════════════════════════════════════════════════════════════════
 
 component! {
@@ -215,10 +215,10 @@ pub struct PanelChildSpec {
     pub height: Option<f32>,
 }
 
-/// The size a `<Panel>`'s children's `X`/`Y`/`Width`/`Height` were authored against — the reference
+/// The size a `<Panel>`'s children's `X`/`Y`/`Width`/`Height` were authored against - the reference
 /// the anchor pass measures the size CHANGE from (WinForms' anchor semantics): the panel's own literal
 /// `Width`×`Height` when it has both; for the view's ROOT panel, the view's design size
-/// (`crate::design::design_size`: `DesignWidth`/`DesignHeight`, 800×600 by default — the size the
+/// (`crate::design::design_size`: `DesignWidth`/`DesignHeight`, 800×600 by default - the size the
 /// designer shows it at); otherwise `None`, and the panel's first layout becomes the reference.
 pub fn panel_design_size(element: &crate::ast::Element) -> Option<Size> {
     use crate::ast::AstNode;
@@ -238,7 +238,7 @@ pub fn panel_design_size(element: &crate::ast::Element) -> Option<Size> {
 }
 
 /// Where a `<Panel>`'s children go inside `bounds` (the panel's own box, padding included), in
-/// DOCUMENT order — the one place the WinForms rules are applied, pure (no canvas), unit-tested:
+/// DOCUMENT order - the one place the WinForms rules are applied, pure (no canvas), unit-tested:
 ///
 /// - **Dock**: bands are resolved in WinForms z-order. A `.kbview` paints its children in document
 ///   order, so the LAST child is the frontmost one, and WinForms docks the frontmost control LAST
@@ -283,7 +283,7 @@ pub fn panel_child_rects_shown(specs: &[PanelChildSpec], measured: &[Size], show
     rects
 }
 
-/// The live node for `<Panel>` — see the `panel` module's `component!` entry.
+/// The live node for `<Panel>` - see the `panel` module's `component!` entry.
 /// Rebuilds a real [`kubuno_desktop_ui::containers::Panel`] every frame purely for its
 /// layout arithmetic ([`panel_child_rects`]) and its [`kubuno_desktop_ui::containers::Surface`]
 /// chrome, exactly as [`crate::node::CardNode`]/[`crate::node::StackNode`] do
@@ -292,7 +292,7 @@ pub fn panel_child_rects_shown(specs: &[PanelChildSpec], measured: &[Size], show
 pub struct PanelNode {
     padding: PropSource<f32>,
     surface: PropSource<String>,
-    /// One placement per child, in document order — resolved once at build time.
+    /// One placement per child, in document order - resolved once at build time.
     specs: Vec<PanelChildSpec>,
     /// Where each child goes in the WINDOW (`TitleBar.Region`, `ActionBar.Region`, `TitleBar.Drag`),
     /// honoured on the view's root panel only.
@@ -576,7 +576,7 @@ pub fn band_item_rects(items: &[BandItem], layout: &kubuno_desktop_controls::win
 }
 
 // ═════════════════════════════════════════════════════════════════════════
-// GroupBox — a titled frame around one child body.
+// GroupBox - a titled frame around one child body.
 // ═════════════════════════════════════════════════════════════════════════
 
 component! {
@@ -604,7 +604,7 @@ component! {
     },
 }
 
-/// The live node for `<GroupBox>` — see [`PanelNode`]'s doc for why the real
+/// The live node for `<GroupBox>` - see [`PanelNode`]'s doc for why the real
 /// `kubuno_desktop_ui` container is rebuilt every frame for chrome/layout only.
 pub struct GroupBoxNode {
     title: PropSource<String>,
@@ -641,7 +641,7 @@ impl ViewNode for GroupBoxNode {
 }
 
 // ═════════════════════════════════════════════════════════════════════════
-// ScrollArea — wraps and scrolls its one child's painted content, over the
+// ScrollArea - wraps and scrolls its one child's painted content, over the
 // immediate-mode `kubuno_desktop_ui::containers::ScrollArea` (overflow: auto).
 // ═════════════════════════════════════════════════════════════════════════
 
@@ -673,7 +673,7 @@ component! {
 /// [`kubuno_desktop_ui::containers::ScrollArea`] is not rebuilt every frame: its scroll
 /// offset and last-measured content extent are real state that a rebuild would
 /// erase (the same reason [`crate::node::TextFieldNode`] keeps its own
-/// `kubuno_desktop_ui::text::TextField` — see `crate::node`'s module doc).
+/// `kubuno_desktop_ui::text::TextField` - see `crate::node`'s module doc).
 pub struct ScrollAreaNode {
     corner: PropSource<f32>,
     area: kubuno_desktop_ui::containers::ScrollArea,
@@ -693,12 +693,12 @@ impl ViewNode for ScrollAreaNode {
         self.area.corner = self.corner.resolve(cx.vm);
         // `ScrollArea::frame`'s content closure only hands back `&dyn Canvas`
         // (`kubuno_desktop_ui`'s narrower painting trait), while `PaintCx::canvas` is
-        // `&dyn ControlCanvas` (a supertrait — `crate::node`'s own module
+        // `&dyn ControlCanvas` (a supertrait - `crate::node`'s own module
         // already upcasts `ControlCanvas` → `Canvas` the same way, e.g.
         // `CardNode::paint`'s `let canvas: &dyn Canvas = cx.canvas;`). That
         // coercion only runs ONE way, so the closure's `&dyn Canvas` cannot be
         // turned back into the `&dyn ControlCanvas` a recursed `ViewNode`
-        // needs — the ORIGINAL reference is reused instead (the same
+        // needs - the ORIGINAL reference is reused instead (the same
         // underlying canvas; `frame`'s clip/offset are canvas STATE, not a
         // different object), and the closure's own `c` is ignored.
         let outer_canvas = cx.canvas;
@@ -719,7 +719,7 @@ impl ViewNode for ScrollAreaNode {
 }
 
 // ═════════════════════════════════════════════════════════════════════════
-// Splitter — two panes over `kubuno_desktop_controls::layout_panels::SplitContainer`.
+// Splitter - two panes over `kubuno_desktop_controls::layout_panels::SplitContainer`.
 // ═════════════════════════════════════════════════════════════════════════
 
 component! {
@@ -783,7 +783,7 @@ pub struct SplitterNode {
     distance: PropSource<f32>,
     focus_id: Option<FocusId>,
     on_distance_changed: Option<String>,
-    /// Whether a drag that started on the grab band is still in progress —
+    /// Whether a drag that started on the grab band is still in progress -
     /// kept across frames for the same reason `choice::SliderNode::dragging`
     /// is: the pointer may wander off the bar mid-drag and the bar must keep
     /// following it (`Splitter::drag_to`'s own contract).
@@ -815,7 +815,7 @@ impl SplitterNode {
     }
 
     /// Writes `new_distance` back (when bound `Mode=TwoWay`) and dispatches
-    /// `OnDistanceChanged` — the same two-consumer shape every other bound
+    /// `OnDistanceChanged` - the same two-consumer shape every other bound
     /// control in this crate uses (see `choice::SliderNode::interact`).
     fn commit_distance(&mut self, ix: &mut crate::node::InteractCx<'_>, new_distance: f32) {
         let old_distance = self.local.unwrap_or_else(|| self.distance.resolve(ix.vm));
@@ -831,20 +831,20 @@ impl SplitterNode {
         ix.fire("OnDistanceChanged", self.focus_id, self.on_distance_changed.as_deref(), ViewEventKind::Changed(new_distance.to_string()), &mut args);
     }
 
-    /// The canvas-independent half of a frame — mouse-drag + keyboard, both
-    /// funnelled through [`Self::commit_distance`] — mirroring
+    /// The canvas-independent half of a frame - mouse-drag + keyboard, both
+    /// funnelled through [`Self::commit_distance`] - mirroring
     /// `choice::SliderNode::interact`'s split so this crate's own tests can
     /// drive it without a live `Canvas` (see `node::tests`' note on why that
     /// matters). Never touches `self.orientation`/`self.distance`'s
     /// *resolution* result beyond what the caller already resolved into
-    /// `distance` — re-resolving after a write-back is `paint`'s job, for
+    /// `distance` - re-resolving after a write-back is `paint`'s job, for
     /// same-frame visual feedback, same as every other bound leaf here.
     pub(crate) fn interact(&mut self, ix: &mut crate::node::InteractCx<'_>, bounds: Rect, distance: f32) {
         let mut splitter = self.build(ix.vm, distance);
 
         // Mouse: press-and-hold on the grab band follows the pointer every
         // frame it moves (`Splitter::drag_to`), exactly like
-        // `choice::SliderNode`'s own drag — not a press/release click.
+        // `choice::SliderNode`'s own drag - not a press/release click.
         let (mx, my) = ix.frame.mouse;
         let hot = !ix.frame.pointer_outside() && splitter.hit_test_grip(bounds, mx, my);
         if ix.frame.mouse_down && (self.dragging || hot) {
@@ -858,7 +858,7 @@ impl SplitterNode {
         }
 
         // Keyboard: only once the bar itself holds focus (`x:Name`d, like
-        // every other keyboard-driven control here) — the two arrows along
+        // every other keyboard-driven control here) - the two arrows along
         // the split axis (Shift = a larger step), Home/End, Enter to
         // collapse/restore (`Splitter::handle_key`'s own WAI-ARIA "window
         // splitter" behaviour, unchanged here).
@@ -886,7 +886,7 @@ impl SplitterNode {
             }
             if moved {
                 // `Splitter` exposes no `distance()` getter (this crate
-                // never reaches into `kubuno_desktop_ui`'s private fields — see
+                // never reaches into `kubuno_desktop_ui`'s private fields - see
                 // `node.rs`'s own module doc on why a `ViewNode` recurses
                 // itself instead of trusting a container's `Widget::paint`):
                 // `handle_key` already mutated `splitter`'s own internal
@@ -915,7 +915,7 @@ impl ViewNode for SplitterNode {
             self.interact(&mut ix, bounds, distance);
         }
 
-        // Re-read AFTER interaction, for same-frame feedback — the same
+        // Re-read AFTER interaction, for same-frame feedback - the same
         // technique every other bound leaf in this crate uses.
         let distance = self.current(&*cx.vm);
         let splitter = self.build(cx.vm, distance);
@@ -930,7 +930,7 @@ impl ViewNode for SplitterNode {
 }
 
 // ═════════════════════════════════════════════════════════════════════════
-// Tabs / TabItem — over `kubuno_desktop_ui::navigation::{Tabs, TabsController}`.
+// Tabs / TabItem - over `kubuno_desktop_ui::navigation::{Tabs, TabsController}`.
 // ═════════════════════════════════════════════════════════════════════════
 
 component! {
@@ -952,7 +952,7 @@ component! {
         use super::*;
         // `<TabItem>` is only ever built through `Tabs`' own child walk (see
         // that component's `build`), which reads `Header` and the body
-        // directly off the element rather than calling this function — kept
+        // directly off the element rather than calling this function - kept
         // real (and tested by `ctor_and_setters_match_kubuno_ui`) so
         // `<TabItem>` validates and documents like any other element.
         let header = props.str("Header", "")?;
@@ -1015,7 +1015,7 @@ component! {
 /// The live node for `<Tabs>`. Both [`kubuno_desktop_ui::navigation::Tabs`] (the
 /// strip's items and its geometry) and [`kubuno_desktop_ui::navigation::TabsController`]
 /// (the sliding indicator, per-tab scroll, keyboard roving) are kept as node
-/// state across frames — see [`ScrollAreaNode`]'s doc for why a controller like
+/// state across frames - see [`ScrollAreaNode`]'s doc for why a controller like
 /// this one is never rebuilt.
 pub struct TabsNode {
     selected: PropSource<f32>,
@@ -1074,7 +1074,7 @@ impl ViewNode for TabsNode {
             let mut inner = cx.reborrow();
             // See `ScrollAreaNode::paint`'s comment: the closure's own
             // canvas is `&dyn Canvas`, narrower than `PaintCx::canvas`'s
-            // `&dyn ControlCanvas` — the original reference is reused.
+            // `&dyn ControlCanvas` - the original reference is reused.
             self.controller.page(canvas, &self.tabs, page, outer_frame, move |_c, f| {
                 let mut content_cx = inner.with_surface(outer_canvas, f);
                 child.paint(&mut content_cx, page);
@@ -1084,7 +1084,7 @@ impl ViewNode for TabsNode {
 }
 
 // ═════════════════════════════════════════════════════════════════════════
-// Breadcrumb / BreadcrumbItem — over `kubuno_desktop_ui::navigation::Breadcrumb`.
+// Breadcrumb / BreadcrumbItem - over `kubuno_desktop_ui::navigation::Breadcrumb`.
 // ═════════════════════════════════════════════════════════════════════════
 
 component! {
@@ -1161,7 +1161,7 @@ component! {
 }
 
 /// The live node for `<Breadcrumb>`. Segments are static text (built once,
-/// like `<Panel>`'s Dock/Anchor placement — see the module doc): the real
+/// like `<Panel>`'s Dock/Anchor placement - see the module doc): the real
 /// `kubuno_desktop_ui::navigation::Breadcrumb` owns the fold-behind-`…` arithmetic and
 /// the paint; this node only adds the hit-test → handler dispatch loop.
 pub struct BreadcrumbNode {
@@ -1227,7 +1227,7 @@ impl ViewNode for BreadcrumbNode {
 }
 
 // ═════════════════════════════════════════════════════════════════════════
-// Toolbar / ToolbarItem — over `kubuno_desktop_ui::navigation::Toolbar`.
+// Toolbar / ToolbarItem - over `kubuno_desktop_ui::navigation::Toolbar`.
 // ═════════════════════════════════════════════════════════════════════════
 
 component! {
@@ -1308,7 +1308,7 @@ component! {
     },
 }
 
-/// The live node for `<Toolbar>` — see [`BreadcrumbNode`]'s doc, which this
+/// The live node for `<Toolbar>` - see [`BreadcrumbNode`]'s doc, which this
 /// mirrors: static commands (built once), the real
 /// `kubuno_desktop_ui::navigation::Toolbar` owns overflow/arrangement/paint, this node
 /// adds only the hit-test → handler dispatch loop.
@@ -1348,7 +1348,7 @@ impl ViewNode for ToolbarNode {
 }
 
 // ═════════════════════════════════════════════════════════════════════════
-// Accordion / AccordionSection — over `kubuno_desktop_ui::feedback::Accordion`.
+// Accordion / AccordionSection - over `kubuno_desktop_ui::feedback::Accordion`.
 // ═════════════════════════════════════════════════════════════════════════
 
 component! {
@@ -1432,10 +1432,10 @@ component! {
 }
 
 /// The live node for `<Accordion>`. [`kubuno_desktop_ui::feedback::Accordion`] is kept
-/// as node state (its `sections[i].open` IS the open/closed state — see
+/// as node state (its `sections[i].open` IS the open/closed state - see
 /// [`ScrollAreaNode`]'s doc on why a controller like this is never rebuilt).
 /// Hit-testing (`header_at`) and layout (`section_rects`/`panel_rect`) are
-/// pure `Rect` arithmetic with no `Canvas` — see this family's report and
+/// pure `Rect` arithmetic with no `Canvas` - see this family's report and
 /// `containers::tests` below.
 pub struct AccordionNode {
     accordion: kubuno_desktop_ui::feedback::Accordion,
@@ -1511,7 +1511,7 @@ impl ViewNode for AccordionNode {
 }
 
 // ═════════════════════════════════════════════════════════════════════════
-// Stepper / Step — over `kubuno_desktop_ui::feedback::Stepper`.
+// Stepper / Step - over `kubuno_desktop_ui::feedback::Stepper`.
 // ═════════════════════════════════════════════════════════════════════════
 
 component! {
@@ -1615,9 +1615,9 @@ component! {
     },
 }
 
-/// The live node for `<Stepper>`. Steps are static (built once from XML — see
+/// The live node for `<Stepper>`. Steps are static (built once from XML - see
 /// the module doc); only `CurrentIndex` is bindable. Hit-testing
-/// (`step_at`/`is_reachable`) is pure `Rect` arithmetic with no `Canvas` — see
+/// (`step_at`/`is_reachable`) is pure `Rect` arithmetic with no `Canvas` - see
 /// `containers::tests` below.
 pub struct StepperNode {
     current: PropSource<f32>,
@@ -1629,7 +1629,7 @@ pub struct StepperNode {
 }
 
 impl StepperNode {
-    /// The canvas-independent half of a frame — see
+    /// The canvas-independent half of a frame - see
     /// [`AccordionNode::interact`], whose shape this mirrors: hit-test, then
     /// press/release, then only a REACHABLE step's click counts. Returns the
     /// newly selected index, when a click just completed on one.
@@ -1689,7 +1689,7 @@ impl ViewNode for StepperNode {
     }
 }
 
-/// `<UserControl x:Class="RatingBar">`: the root of a user control's own view (EVT-7b) — a
+/// `<UserControl x:Class="RatingBar">`: the root of a user control's own view (EVT-7b) - a
 /// `<Panel>` (its children placed by docking or anchoring) whose class is the `UserControl` level.
 /// The application's `#[derive(UserControl)] struct RatingBar` makes `<RatingBar/>` usable in its
 /// other views.
@@ -1700,7 +1700,7 @@ pub const USER_CONTROL: ComponentMeta = ComponentMeta {
 };
 
 // ═════════════════════════════════════════════════════════════════════════
-// FloatingWindow — a window drawn inside the view (the web `FloatingWindow`).
+// FloatingWindow - a window drawn inside the view (the web `FloatingWindow`).
 // ═════════════════════════════════════════════════════════════════════════
 
 component! {
@@ -1835,11 +1835,11 @@ pub const ALL: &[ComponentMeta] = &[
 
 #[cfg(test)]
 mod tests {
-    //! Unit tests: layout rects (no `Canvas` needed — `kubuno_desktop_ui::containers::
+    //! Unit tests: layout rects (no `Canvas` needed - `kubuno_desktop_ui::containers::
     //! Panel::layout_children`, `Splitter::panel1_rect`/`panel2_rect`,
     //! `kubuno_desktop_ui::feedback::Accordion::section_rects`/`Stepper::step_rects`
     //! are all pure `Rect` arithmetic, per this family's report), selection
-    //! binding and events — mirroring `crate::node::tests`' own split between
+    //! binding and events - mirroring `crate::node::tests`' own split between
     //! the canvas-independent `interact()` half of a frame and its
     //! canvas-dependent paint.
 
@@ -1970,7 +1970,7 @@ mod tests {
     #[test]
     fn splitter_drag_on_the_grip_writes_back_live_and_fires_on_distance_changed() {
         // Mirrors `choice::tests::slider_drag_writes_back_live_and_fires_on_value_changed`
-        // — the same "press near an edge, the resolved value follows the
+        // - the same "press near an edge, the resolved value follows the
         // pointer, clamped" shape, over `Splitter::hit_test_grip`/
         // `distance_for` instead of `Slider::hit_test`/`drag_to`.
         let mut node = SplitterNode {
@@ -2111,7 +2111,7 @@ mod tests {
         let mut node = stepper_node();
         node.stepper.current = 0;
         let bounds = Rect::new(0.0, 0.0, 600.0, 80.0);
-        let mid = step_mid(&node, bounds, 2); // "Confirmation" — not reachable yet
+        let mid = step_mid(&node, bounds, 2); // "Confirmation" - not reachable yet
 
         node.interact(bounds, mid, false, true);
         let selected = node.interact(bounds, mid, false, false);

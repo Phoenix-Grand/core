@@ -2,7 +2,7 @@
 //
 // ── Why this is a feature and not an ornament ────────────────────────────────
 // A condition tree is written once, by one person, and read afterwards by
-// everyone else — during an incident, during an audit, six months later. If the
+// everyone else - during an incident, during an audit, six months later. If the
 // only way to know what a rule does is to re-read its tree node by node, then
 // nobody audits it and the rule becomes folklore. The sentence below is what
 // makes a rule reviewable by somebody who did not write it.
@@ -51,7 +51,7 @@ function describeNode(node: UiNode, ctx: SummaryContext, t: TFunction, depth = 0
   const joiner = node.op === 'all' ? ` ${t('admin.rl_join_and')} ` : ` ${t('admin.rl_join_or')} `
   const joined = parts.join(joiner)
   // Parenthesise a nested group so "A ET (B OU C)" cannot be misread as
-  // "(A ET B) OU C" — the single most expensive ambiguity a rule can carry.
+  // "(A ET B) OU C" - the single most expensive ambiguity a rule can carry.
   return depth > 0 ? `(${joined})` : joined
 }
 

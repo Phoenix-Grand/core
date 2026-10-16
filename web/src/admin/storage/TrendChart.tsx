@@ -7,7 +7,7 @@ import { type TrendDatum } from './charts'
  *
  * ## Colour
  *
- * Everything resolves through a theme variable — `var(--color-primary)`,
+ * Everything resolves through a theme variable - `var(--color-primary)`,
  * `var(--color-success)`, `var(--color-border)`. No hex is written down, so a
  * theme that remaps its variables recolours both charts, dark mode included.
  *
@@ -51,7 +51,7 @@ function niceCeil(v: number): number {
 }
 
 /**
- * A single-series line over time. No legend — one series, and the card title
+ * A single-series line over time. No legend - one series, and the card title
  * already names it.
  *
  * Days with no sample are absent from `data` rather than zero-filled: a core

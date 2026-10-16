@@ -34,13 +34,13 @@ const INLINE_BULK_COMPACT = 1
 /**
  * The table's top band. It has two mutually exclusive faces:
  *
- *  • idle       — title, the caller's filters, and the column chooser;
- *  • selection  — "N selected", the bulk actions, and a way out.
+ *  • idle       - title, the caller's filters, and the column chooser;
+ *  • selection  - "N selected", the bulk actions, and a way out.
  *
  * They swap rather than coexist: stacking a selection bar under a filter bar is
  * exactly how a toolbar ends up wrapping onto three rows on a narrow screen.
  * When the container is narrow only ONE bulk action stays inline and the rest
- * move to an overflow — a bottom sheet on touch, a menu with a mouse.
+ * move to an overflow - a bottom sheet on touch, a menu with a mouse.
  */
 export function DataTableToolbar<T>({
   title, toolbar, columns, hidden, onHiddenChange, configurableColumns,

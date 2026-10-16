@@ -1,7 +1,7 @@
 //! The app's data context: the values a view binds to (`{Bind name}`) and the lists a `Repeater` expands over.
 //!
 //! The renderer stays free of app logic: a module's app builds a [`Scope`] from its state and installs it with
-//! [`set_data`] (from its `setup` and its event handlers — the state changes only then, so the data is set only
+//! [`set_data`] (from its `setup` and its event handlers - the state changes only then, so the data is set only
 //! then). The renderer reads it while laying a view out, resolving each `{Bind …}` against the current repeater item
 //! scope, then the root. Setting the data bumps a version the painter folds into its cache key, so a changed context
 //! re-rasterises even when the view source did not change. Like the host-control registry, it lives on the UI thread.

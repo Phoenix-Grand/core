@@ -1,4 +1,4 @@
-<!-- SecurityTab — converted from SecurityTab.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- SecurityTab - converted from SecurityTab.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl>
   <Panel Class="max-w-md space-y-6">
     <Panel>

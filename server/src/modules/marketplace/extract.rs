@@ -9,7 +9,7 @@ use crate::errors::AppError;
 ///
 /// Extraction en Rust pur (crate `zip`) : aucun outil externe (`dpkg-deb`, `tar`,
 /// `unzip`) n'est requis, ce qui la rend identique sur Linux, Windows et macOS.
-/// C'est le seul format qu'un module puisse prendre — cf. `artifact.rs`.
+/// C'est le seul format qu'un module puisse prendre - cf. `artifact.rs`.
 pub(super) async fn extract_kbpkg(file: &Path, dest: &Path) -> Result<(), AppError> {
     let (file, dest) = (file.to_path_buf(), dest.to_path_buf());
     tokio::task::spawn_blocking(move || -> Result<(), AppError> {

@@ -37,7 +37,7 @@ pub struct Confirmation {
 }
 
 impl Confirmation {
-    /// « Supprimer l'étiquette » — the danger variant: labels span every module, so removing one
+    /// « Supprimer l'étiquette » - the danger variant: labels span every module, so removing one
     /// unlabels items the user may not have in view.
     pub fn delete_label(name: &str) -> Self {
         Self {
@@ -48,7 +48,7 @@ impl Confirmation {
         }
     }
 
-    /// Disconnecting an account — a warning: nothing is deleted on the server and the local files
+    /// Disconnecting an account - a warning: nothing is deleted on the server and the local files
     /// stay, but the sync stops.
     pub fn disconnect(account: &str) -> Self {
         Self {

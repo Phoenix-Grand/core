@@ -37,7 +37,7 @@ const plan: ViewPlan = {
   },
 }
 
-describe('views runtime — bulk migration additions', () => {
+describe('views runtime - bulk migration additions', () => {
   it('builds nested object props field by field, events included', async () => {
     setTranslator((k) => (k === 'ui.close' ? 'Fermer' : k))
     const Base = createViewBase(plan)

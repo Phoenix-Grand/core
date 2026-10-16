@@ -31,7 +31,7 @@ pub struct Theme {
     /// enables "accent color on title bars"; alpha 0 lets Mica show instead.
     pub titlebar_background: D2D1_COLOR_F,
     /// Title-bar tint when the window has LOST focus
-    /// (`AccentColorInactive` — desaturated gray instead of the accent).
+    /// (`AccentColorInactive` - desaturated gray instead of the accent).
     pub titlebar_background_inactive: D2D1_COLOR_F,
     /// Separator between inactive tabs on the title-bar band.
     pub tab_separator: D2D1_COLOR_F,
@@ -88,11 +88,11 @@ pub struct Theme {
     pub warning: D2D1_COLOR_F,
     pub warning_light: D2D1_COLOR_F,
     /// Tooltip bubble (`TOOLTIP_STYLE` in `@ui/Tooltip`). Deliberately the
-    /// SAME dark grey in both themes — the web ships one style, no dark
+    /// SAME dark grey in both themes - the web ships one style, no dark
     /// variant, so a tooltip always reads as an overlay rather than a surface.
     pub tooltip_background: D2D1_COLOR_F,
     pub tooltip_foreground: D2D1_COLOR_F,
-    /// The veil a MODAL dialog puts over what it covers — `bg-black/30` on
+    /// The veil a MODAL dialog puts over what it covers - `bg-black/30` on
     /// `FloatingWindow`'s backdrop (`backdrop-blur-[1px]` has no desktop
     /// counterpart: `Canvas` publishes no blur). Like the tooltip pair it is
     /// the SAME in both palettes, because the web writes one value: a scrim
@@ -111,18 +111,18 @@ pub struct Theme {
     pub control_fill_hover: D2D1_COLOR_F,
     pub control_fill_pressed: D2D1_COLOR_F,
     /// `ListViewItemBackgroundSelected` (`SubtleFillColorSecondary`): the fill
-    /// of a SELECTED row — must be at least as pronounced as hover (in dark
+    /// of a SELECTED row - must be at least as pronounced as hover (in dark
     /// mode, `control_fill_pressed` 0.04 < hover 0.06 would invert the
     /// reading).
     pub list_selected: D2D1_COLOR_F,
     pub tab_active_background: D2D1_COLOR_F,
     /// App.xaml overrides `TabViewItemHeaderBackgroundPointerOver` with
     /// `SubtleFillColorSecondary`. (The resting background is
-    /// `SubtleFillColorTransparent` — nothing is painted.)
+    /// `SubtleFillColorTransparent` - nothing is painted.)
     pub tab_hover_background: D2D1_COLOR_F,
     /// WinUI `TabViewBorderBrush` = `CardStrokeColorDefault`: the tab strip's
     /// BottomBorderLine and the two 4×4 foot crescents. It is BLACK in both
-    /// themes — a light stroke here reads as bright nubs at the tab's feet.
+    /// themes - a light stroke here reads as bright nubs at the tab's feet.
     pub tab_border: D2D1_COLOR_F,
     pub divider: D2D1_COLOR_F,
     /// `ScrollBarThumbFill` = `ControlStrongFillColorDefault`. Sampled pixel
@@ -130,18 +130,18 @@ pub struct Theme {
     /// white at 54.5%.
     pub scrollbar_thumb: D2D1_COLOR_F,
     /// `--scrollbar-thumb-hover`. The thumb is OPAQUE in both themes, so a
-    /// hover state has to change hue — brightening its alpha does nothing.
+    /// hover state has to change hue - brightening its alpha does nothing.
     pub scrollbar_thumb_hover: D2D1_COLOR_F,
     /// The expanded bar's fill (`ScrollBarBackground`).
     pub scrollbar_track: D2D1_COLOR_F,
     /// `--color-border-strong`: a control's outline on hover (checkbox…).
     pub border_strong: D2D1_COLOR_F,
     pub drive_bar_track: D2D1_COLOR_F,
-    /// Opaque flyout/menu surface — the acrylic FALLBACK colour, used when the
+    /// Opaque flyout/menu surface - the acrylic FALLBACK colour, used when the
     /// popup's DWM `DWMSBT_TRANSIENTWINDOW` backdrop is unavailable.
     pub flyout_background: D2D1_COLOR_F,
     /// `MenuFlyoutPresenterBorderBrush` = `SurfaceStrokeColorFlyoutBrush`
-    /// (#0F000000 light / #33000000 dark) — darker than `card_stroke`, which
+    /// (#0F000000 light / #33000000 dark) - darker than `card_stroke`, which
     /// is why the original's menus read as detached from the page.
     pub flyout_border: D2D1_COLOR_F,
     /// Toolbar card fill (CardBackgroundFillColorSecondary).
@@ -164,17 +164,17 @@ pub struct Theme {
     // stay readable over whatever arbitrary colour the user has picked, so
     // they do not follow the light/dark surface.
 
-    /// The light square of the transparency chequer — `#fff` in
+    /// The light square of the transparency chequer - `#fff` in
     /// `GradientPicker.tsx`'s `repeating-conic-gradient(#bbb 0% 25%, #fff 0%
     /// 50%)`.
     pub picker_chequer_a: D2D1_COLOR_F,
-    /// The dark square of the same chequer — `#bbb`.
+    /// The dark square of the same chequer - `#bbb`.
     pub picker_chequer_b: D2D1_COLOR_F,
-    /// The white ring every picker handle wears — `border: '2px solid #fff'`
+    /// The white ring every picker handle wears - `border: '2px solid #fff'`
     /// on the SV handle, the hue handle and the gradient stop markers
     /// (`ColorPicker.tsx`, `GradientPicker.tsx`).
     pub picker_handle: D2D1_COLOR_F,
-    /// The hairline under that ring — `boxShadow: '0 0 0 1px rgba(0,0,0,.5)'`.
+    /// The hairline under that ring - `boxShadow: '0 0 0 1px rgba(0,0,0,.5)'`.
     /// The web writes `.5` on the SV handle and `.6` on the slider thumb; the
     /// difference is 0.1 of alpha on a one-DIP outline and is not modelled.
     pub picker_handle_shadow: D2D1_COLOR_F,
@@ -231,10 +231,10 @@ impl Theme {
             warning: rgba(249, 171, 0, 1.0),
             // --color-warning-light #fef7e0.
             warning_light: rgba(254, 247, 224, 1.0),
-            // rgba(60, 64, 67, 0.95) / #fff — identical in both themes.
+            // rgba(60, 64, 67, 0.95) / #fff - identical in both themes.
             tooltip_background: rgba(60, 64, 67, 0.95),
             tooltip_foreground: rgba(255, 255, 255, 1.0),
-            // `bg-black/30` — identical in both themes (see the field).
+            // `bg-black/30` - identical in both themes (see the field).
             dialog_scrim: rgba(0, 0, 0, 0.30),
             // --color-panel-bg (= --color-search-bg #e9eef6).
             panel_background: rgba(233, 238, 246, 1.0),
@@ -275,9 +275,9 @@ impl Theme {
             toolbar_background: rgba(255, 255, 255, 1.0),
             // WinUI: #B3FFFFFF.
             layer_fill: rgba(255, 255, 255, 0.70),
-            // ThemedIconAltColor (light): #66F0F0F0 — white at 40%.
+            // ThemedIconAltColor (light): #66F0F0F0 - white at 40%.
             icon_alt: rgba(240, 240, 240, 0.4),
-            // Picker chrome — literals in the web, identical in both palettes.
+            // Picker chrome - literals in the web, identical in both palettes.
             picker_chequer_a: rgba(255, 255, 255, 1.0),
             picker_chequer_b: rgba(187, 187, 187, 1.0),
             picker_handle: rgba(255, 255, 255, 1.0),
@@ -328,10 +328,10 @@ impl Theme {
             warning: rgba(253, 214, 99, 1.0),
             // --color-warning-light #3d3218.
             warning_light: rgba(61, 50, 24, 1.0),
-            // rgba(60, 64, 67, 0.95) / #fff — identical in both themes.
+            // rgba(60, 64, 67, 0.95) / #fff - identical in both themes.
             tooltip_background: rgba(60, 64, 67, 0.95),
             tooltip_foreground: rgba(255, 255, 255, 1.0),
-            // `bg-black/30` — identical in both themes (see the field).
+            // `bg-black/30` - identical in both themes (see the field).
             dialog_scrim: rgba(0, 0, 0, 0.30),
             // --color-panel-bg (= --color-search-bg #303134).
             panel_background: rgba(48, 49, 52, 1.0),
@@ -348,7 +348,7 @@ impl Theme {
             tab_active_background: rgba(58, 58, 58, 0.45),
             // SubtleFillColorSecondary: #0FFFFFFF.
             tab_hover_background: rgba(255, 255, 255, 0.0588),
-            // CardStrokeColorDefault (dark): #19000000 — black, not white.
+            // CardStrokeColorDefault (dark): #19000000 - black, not white.
             tab_border: rgba(0, 0, 0, 0.098),
             // --color-border #5f6368, softened to a rim.
             divider: rgba(95, 99, 104, 0.55),
@@ -367,9 +367,9 @@ impl Theme {
             toolbar_background: rgba(32, 33, 36, 1.0),
             // WinUI: #733A3A3A.
             layer_fill: rgba(58, 58, 58, 0.45),
-            // ThemedIconAltColor (dark): #66161616 — black at 40%.
+            // ThemedIconAltColor (dark): #66161616 - black at 40%.
             icon_alt: rgba(22, 22, 22, 0.4),
-            // Picker chrome — the SAME values as the light palette on purpose:
+            // Picker chrome - the SAME values as the light palette on purpose:
             // the web writes them as literals, not as theme variables.
             picker_chequer_a: rgba(255, 255, 255, 1.0),
             picker_chequer_b: rgba(187, 187, 187, 1.0),
@@ -416,11 +416,11 @@ fn titlebar_tint(mode: ThemeMode, active: bool) -> D2D1_COLOR_F {
     use windows::core::w;
 
     let transparent = D2D1_COLOR_F { r: 0.0, g: 0.0, b: 0.0, a: 0.0 };
-    // TabBar.xaml: TitlebarArea Background="Transparent" — the Mica
+    // TabBar.xaml: TitlebarArea Background="Transparent" - the Mica
     // backdrop shows through the title band; accent tint only applies in
     // light mode when "accent color on title bars" is enabled. When the
     // window is INACTIVE, the Mica backdrop desaturates on its own (DWM) and
-    // Windows no longer applies the accent — so we fall back to transparent,
+    // Windows no longer applies the accent - so we fall back to transparent,
     // or to `AccentColorInactive` if title-bar accent color is enabled.
     if mode == ThemeMode::Dark {
         return transparent;
@@ -444,7 +444,7 @@ fn titlebar_tint(mode: ThemeMode, active: bool) -> D2D1_COLOR_F {
     // ─ □ ✕ are composited by DWM BEHIND the client (sheet of glass); an
     // opaque band would cover them in light theme. 35%: verified on screen
     // against the compiled original, at the same window position (the Mica
-    // backdrop depends on position — comparing elsewhere would skew the
+    // backdrop depends on position - comparing elsewhere would skew the
     // measurement), comparison from 2026-07-23.
     D2D1_COLOR_F { r, g, b, a: 0.35 }
 }

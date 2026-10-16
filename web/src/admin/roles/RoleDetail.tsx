@@ -141,7 +141,7 @@ export class RoleDetail extends ViewBase {
   async askRevoke(row: RoleAssignment) {
     const ok = await this.confirm({
       title:        this.tr('admin.assign_revoke_title'),
-      message:      this.tr('admin.assign_revoke_confirm', { subject: row.subject_label ?? '—', role: this.roleName(this.props.role) }),
+      message:      this.tr('admin.assign_revoke_confirm', { subject: row.subject_label ?? '-', role: this.roleName(this.props.role) }),
       confirmLabel: this.tr('admin.assign_revoke'),
       cancelLabel:  this.tr('common.cancel'),
       variant:      'danger',

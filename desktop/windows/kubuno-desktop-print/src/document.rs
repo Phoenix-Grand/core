@@ -5,7 +5,7 @@
 //! ```
 //!
 //! [`PrintDocument::print`] raises `BeginPrint`, then for each page `QueryPageSettings` and
-//! `PrintPage` — whose handler draws the page on `e.graphics()` and sets `e.has_more_pages` — then
+//! `PrintPage` - whose handler draws the page on `e.graphics()` and sets `e.has_more_pages` - then
 //! `EndPrint`, and sends the pages to the Windows spooler (Direct2D printing over an XPS job:
 //! vector output). The same loop renders a preview ([`PrintDocument::render_preview`], what
 //! `PrintPreviewControl` and `PrintPreviewDialog` show).
@@ -15,7 +15,7 @@
 //! a method of the view: while one of the view's handlers runs, the view is borrowed, so a document
 //! of the view printed from a handler (`self.print_document1.print()`) prints **when that handler
 //! returns**, before the next frame (WinForms prints at once; the difference is invisible to the
-//! user, but the handler cannot read the outcome — see [`PrintDocument::last_error`]).
+//! user, but the handler cannot read the outcome - see [`PrintDocument::last_error`]).
 
 use std::path::PathBuf;
 use std::rc::Rc;
@@ -361,7 +361,7 @@ impl PrintDocument {
     // ── Printing ─────────────────────────────────────────────────────────────────────────────────
 
     /// Prints the document (`Print()`): see the module doc. Returns how many pages went to the
-    /// printer — 0 when the print was deferred to the end of the running handler.
+    /// printer - 0 when the print was deferred to the end of the running handler.
     pub fn print(&mut self) -> Result<usize, PrintError> {
         if self.view_is_busy() {
             self.pending = Some(Pending::Print);
@@ -410,7 +410,7 @@ impl PrintDocument {
     }
 
     /// Shows the document in a print preview window titled `title` (`size` in DIP), modal to the
-    /// application's window — what `PrintPreviewDialog.ShowDialog()` does. Deferred to the end of the
+    /// application's window - what `PrintPreviewDialog.ShowDialog()` does. Deferred to the end of the
     /// running handler like [`Self::print`] (`DialogResult::None` then).
     pub fn show_preview(&mut self, title: &str, size: (f32, f32)) -> kubuno_desktop_controls::buttons::DialogResult {
         if self.view_is_busy() {
@@ -530,7 +530,7 @@ impl Component for PrintDocument {
 }
 
 /// Answers no path: the document is a provider only to be called once per frame
-/// ([`BindingProvider::binding_sync`]) with the view's handlers at hand — when a print deferred
+/// ([`BindingProvider::binding_sync`]) with the view's handlers at hand - when a print deferred
 /// by a busy view runs.
 impl BindingProvider for PrintDocument {
     fn binding_get(&self, _path: &str, _want: ValueKind, _format: &BindingFormat, _scope: &ComponentScope) -> Option<Value> {

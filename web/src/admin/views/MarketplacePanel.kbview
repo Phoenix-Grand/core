@@ -1,4 +1,4 @@
-<!-- MarketplacePanel — converted from MarketplacePanel.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- MarketplacePanel - converted from MarketplacePanel.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <Panel x:Props="MarketplacePanelProps">
   <Panel AccessibleRole="PushButton"
          AutoSize="true"

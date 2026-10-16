@@ -5,8 +5,8 @@
 //!
 //! The only policies the schema can express are *disable* and *ignore*
 //! ([`super::model::OnMissing`]). A deletion cascades through every module's
-//! data and cannot be undone, while the input that would trigger it — "the
-//! directory did not return this person" — is exactly what a network partition,
+//! data and cannot be undone, while the input that would trigger it - "the
+//! directory did not return this person" - is exactly what a network partition,
 //! an expired service password, a typo in the base DN or a paginated result set
 //! produces. Disabling costs one click to undo.
 //!
@@ -17,7 +17,7 @@
 //! an incident rather than a payroll change: nobody at all came back, or the run
 //! would switch off more than a quarter of the accounts the directory governs.
 //! The run then reports `partial` and says why, which is a page an operator
-//! reads — a silently emptied instance is not.
+//! reads - a silently emptied instance is not.
 //!
 //! ## Memberships a synchronisation may touch
 //!
@@ -99,7 +99,7 @@ impl SyncReport {
     /// One-line summary stored in `last_sync_detail` and shown in the list.
     pub fn summary(&self) -> String {
         let mut parts = vec![format!(
-            "{} compte(s) vus — {} créé(s), {} lié(s), {} ignoré(s)",
+            "{} compte(s) vus - {} créé(s), {} lié(s), {} ignoré(s)",
             self.users_seen, self.users_created, self.users_linked, self.users_skipped
         )];
         if self.groups_seen > 0 {
@@ -132,7 +132,7 @@ pub fn disable_guard(governed: usize, seen: usize, would_disable: usize) -> Opti
     }
     if seen == 0 {
         return Some(format!(
-            "l'annuaire n'a retourné aucune entrée alors que {governed} compte(s) en dépendent — \
+            "l'annuaire n'a retourné aucune entrée alors que {governed} compte(s) en dépendent - \
              incident réseau ou configuration cassée plutôt que départs"
         ));
     }
@@ -140,7 +140,7 @@ pub fn disable_guard(governed: usize, seen: usize, would_disable: usize) -> Opti
     if would_disable > ceiling {
         return Some(format!(
             "{would_disable} compte(s) sur {governed} seraient désactivés, au-delà du plafond de {ceiling} \
-             par exécution — relancez après avoir vérifié le filtre et le DN de base"
+             par exécution - relancez après avoir vérifié le filtre et le DN de base"
         ));
     }
     None
@@ -249,7 +249,7 @@ pub async fn run(db: &DbPool, jwt_secret: &str, dir: &LdapDirectory) -> Result<S
     // disabling phase, and for the same reason: a run whose user search came
     // back empty knows nothing about who belongs where, and removing every
     // imported membership on that basis is the group-shaped version of emptying
-    // the instance. Caught in testing — the first run with a filter that matched
+    // the instance. Caught in testing - the first run with a filter that matched
     // nobody stripped every imported group of every member, silently, with a
     // report that said "ok".
     if dir.sync_groups {
@@ -380,7 +380,7 @@ async fn disable_missing(
                 .module("core")
                 .target(target::USER, *id, username.clone())
                 .detail(format!(
-                    "absent de l'annuaire « {} » — compte désactivé, aucune donnée supprimée",
+                    "absent de l'annuaire « {} » - compte désactivé, aucune donnée supprimée",
                     dir.display_name
                 ))
                 .reversible(),
@@ -505,7 +505,7 @@ async fn sync_groups(
         };
 
         // Only rows a run created. A membership an operator granted by hand is
-        // not the directory's to take away — and no membership at all is taken
+        // not the directory's to take away - and no membership at all is taken
         // away by a run that saw nobody.
         let removed = if allow_removals {
             if desired.is_empty() {
@@ -606,7 +606,7 @@ async fn upsert_group(
 /// A group name nobody else holds.
 ///
 /// `core.user_groups.name` is unique across the instance, and an imported group
-/// called "Administrateurs" must not collide with — or, worse, be merged into —
+/// called "Administrateurs" must not collide with - or, worse, be merged into -
 /// the seeded one. The directory's slug disambiguates.
 async fn free_group_name(
     db: &DbPool,
@@ -615,7 +615,7 @@ async fn free_group_name(
     keep: Option<Uuid>,
 ) -> Result<String, AppError> {
     // `core.user_groups.name` is VARCHAR(100). The base is cut short enough that
-    // the disambiguating suffix still fits — truncating the *result* instead
+    // the disambiguating suffix still fits - truncating the *result* instead
     // would drop the suffix and put us back on the collision we were escaping.
     let wanted = clamp_group_name(wanted, GROUP_NAME_MAX - (dir.slug.chars().count() + 12));
     let taken = |name: String, keep: Option<Uuid>| async move {
@@ -705,7 +705,7 @@ mod tests {
 
     #[test]
     fn a_run_that_would_empty_the_instance_is_refused() {
-        // 100 governed, 100 returned, but half of them stamped as missing —
+        // 100 governed, 100 returned, but half of them stamped as missing -
         // a filter change, not a hundred resignations.
         let reason = disable_guard(100, 100, 50).expect("garde-fou déclenché");
         assert!(reason.contains("plafond"));

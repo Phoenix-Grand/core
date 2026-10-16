@@ -1,4 +1,4 @@
-<!-- OAuthCallback — converted from OAuthCallback.tsx by @kubuno/views-migrate. -->
+<!-- OAuthCallback - converted from OAuthCallback.tsx by @kubuno/views-migrate. -->
 <Stack Direction="LeftToRight" Gap="0" CrossAlign="Center" Justify="Center" Class="min-h-screen">
   <Label HtmlTag="Div" Text="{Res oauth.connecting}" Overflow="Wrap" ForeColor="TextSecondary"/>
 </Stack>

@@ -1,4 +1,4 @@
-<!-- ReconciliationCard — converted from ReconciliationCard.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- ReconciliationCard - converted from ReconciliationCard.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="ReconciliationCardProps">
   <Card Title="{Res admin.sto_rec_title}" IconSize="16" Icon="Scale" Subtitle="{Res admin.sto_rec_sub}">
     <Card.Actions>

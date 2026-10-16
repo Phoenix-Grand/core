@@ -1,5 +1,5 @@
 /**
- * Form structure elements (WV-5a): `GroupBox`, `SettingsRow` and `RadioGroup` — the shared versions of the
+ * Form structure elements (WV-5a): `GroupBox`, `SettingsRow` and `RadioGroup` - the shared versions of the
  * section, settings row and radio list every module's settings page defined locally. `GroupBox` has the
  * desktop's name and members; `SettingsRow` and `RadioGroup` are new on both targets (WEB-VIEWS §3), web
  * first: the conformance allowlist says so until the desktop registry has them.

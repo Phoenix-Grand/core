@@ -1,4 +1,4 @@
-<!-- ThemesPanel — converted from ThemesPanel.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- ThemesPanel - converted from ThemesPanel.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <Panel>
   <Stack Direction="LeftToRight" Gap="16" CrossAlign="Start" Justify="SpaceBetween" Class="mb-6">
     <Panel>

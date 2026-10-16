@@ -1,4 +1,4 @@
-<!-- SettingSectionCard — converted from SettingSectionCard.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- SettingSectionCard - converted from SettingSectionCard.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="SettingSectionCardProps">
   <Panel HtmlTag="Section" Class="{Binding section_class}">
     <!-- TODO(views-migrate): <button aria-expanded aria-controls>: attribute(s) without a .kbview property -->

@@ -3,11 +3,11 @@
 //! No scheduler of its own, for the reason [`crate::alerts::jobs`] gives: the
 //! core already has one, with claiming, backoff, crash recovery and an
 //! admin-tunable concurrency, and a second timer beside it would be a second
-//! thing to supervise — invisible to the panel that supervises the first.
+//! thing to supervise - invisible to the panel that supervises the first.
 //!
-//! * [`super::dispatch::ACTION_JOB`] — carries out a matched rule's actions.
-//! * [`super::backtest::BACKTEST_JOB`] — replays history for one rule.
-//! * [`MAINTENANCE`] — purges the execution log and the threshold counters,
+//! * [`super::dispatch::ACTION_JOB`] - carries out a matched rule's actions.
+//! * [`super::backtest::BACKTEST_JOB`] - replays history for one rule.
+//! * [`MAINTENANCE`] - purges the execution log and the threshold counters,
 //!   re-arming itself on success like every other recurring job of the core.
 
 use std::sync::Arc;
@@ -30,7 +30,7 @@ const MAINTENANCE_INTERVAL: Duration = Duration::from_secs(6 * 3_600);
 ///
 /// `server` is captured because dispatching a **module's** action is an
 /// authenticated internal call, and the job context carries a pool and nothing
-/// else — the same reason [`crate::mailer::register_jobs`] captures the JWT
+/// else - the same reason [`crate::mailer::register_jobs`] captures the JWT
 /// secret. The settings block travels rather than a single string because the
 /// call must present the secret **of the target module**
 /// ([`crate::config::settings::ServerSettings::module_secret`]), which is
@@ -65,7 +65,7 @@ pub fn register(registry: &mut JobRegistry, server: Arc<ServerSettings>) {
                 raise_action_failure(&ctx.db, &action_job, outcome.failed).await;
                 // The job itself is NOT failed: the per-action idempotency
                 // claims were released, so a retry would re-run only what did
-                // not take effect — but a rule whose module is down would
+                // not take effect - but a rule whose module is down would
                 // otherwise burn its attempts and dead-letter. The alert is the
                 // durable signal; the operator decides.
             }

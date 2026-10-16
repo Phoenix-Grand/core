@@ -32,7 +32,7 @@ export type PagedPreviewProps = {
   footer:      (page: number, total: number) => React.ReactNode
   /** Changes when the document's CONTENT does, forcing a fresh measurement. */
   revision:    string
-  /** The stamp across every sheet — text or picture. See `watermark.ts`. */
+  /** The stamp across every sheet - text or picture. See `watermark.ts`. */
   watermark?:  WatermarkSpec
   /** Toggling the cover from the sheet's own context menu. */
   onToggleCover?: () => void
@@ -41,7 +41,7 @@ export type PagedPreviewProps = {
   /**
    * Height of the frozen band above the preview (breadcrumb + toolbar).
    *
-   * The rail of thumbnails is pinned too — a page list that scrolls away with
+   * The rail of thumbnails is pinned too - a page list that scrolls away with
    * the pages is a page list you have to leave the page to reach. It pins
    * DIRECTLY under the band: a sticky top is measured from the scrolling
    * ancestor's padding box (24 px here), hence the offset.
@@ -172,7 +172,7 @@ export class PagedPreview extends ViewBase {
       // Height AND top margin: `getBoundingClientRect` returns the box alone, and
       // the footer's `margin-top` is 4 mm of the sheet the content will not get.
       // Reading only the box left the last sheet of a packed report six
-      // millimetres over the edge — the exact defect this component exists to make
+      // millimetres over the edge - the exact defect this component exists to make
       // impossible.
       const footEl   = footerRef.current?.firstElementChild as HTMLElement | null
       const footerPx = footEl
@@ -454,7 +454,7 @@ export class PagedPreview extends ViewBase {
           if (!item) return null
           if (p.kind === 'atom' || item.kind === 'atom') {
             // No wrapper: the blocks carry their own top margin, and an extra
-            // box would either eat it or add to it — either way the sheet would
+            // box would either eat it or add to it - either way the sheet would
             // no longer match what was measured.
             return <Fragment key={k}>{item.kind === 'atom' ? item.node : null}</Fragment>
           }

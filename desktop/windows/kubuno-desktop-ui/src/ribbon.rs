@@ -1,4 +1,4 @@
-//! The Office ribbon — a port of the web's shared ribbon
+//! The Office ribbon - a port of the web's shared ribbon
 //! (`office/frontend/src/ribbon/`: `Ribbon.tsx`, `types.ts`, `officeThemes.ts`,
 //! `Backstage.tsx`), the command surface every Kubuno editor wears.
 //!
@@ -7,7 +7,7 @@
 //! An editor DECLARES its tabs ([`RibbonTab`] → [`RibbonGroup`] →
 //! [`RibbonItem`]); [`Ribbon::frame`] does all the layout, painting, pointer and
 //! keyboard handling, and reports what happened as [`RibbonEvent`]s. Live state
-//! (is Bold on? which font?) is written into the items by the caller — rebuild
+//! (is Bold on? which font?) is written into the items by the caller - rebuild
 //! the tabs every frame, or patch them through [`Ribbon::item_mut`].
 //!
 //! # What is ported
@@ -28,7 +28,7 @@
 //!   separator, custom (a caller-painted slot of a given width).
 //! * **Responsive collapse**: when the groups do not fit, the right-most ones
 //!   fold one by one into a chip (icon + chevron + label) whose click opens the
-//!   whole group in a popover — never a scroll bar, never a clipped control.
+//!   whole group in a popover - never a scroll bar, never a clipped control.
 //! * **Ribbon collapse + peek**: collapsed, the group row is gone; clicking a
 //!   tab shows its groups in a floating flyout that closes on a click outside
 //!   the ribbon or Escape.
@@ -82,7 +82,7 @@ use crate::metrics::{SHADOW_GREY, SHADOW_MENU};
 use crate::{Widget, WidgetState};
 
 // ═════════════════════════════════════════════════════════════════════════════
-// Metrics — the web's Tailwind classes, in DIP
+// Metrics - the web's Tailwind classes, in DIP
 // ═════════════════════════════════════════════════════════════════════════════
 
 pub mod metrics {
@@ -217,7 +217,7 @@ pub mod metrics {
 use metrics as m;
 
 // ═════════════════════════════════════════════════════════════════════════════
-// Colours — `officeThemes.ts`
+// Colours - `officeThemes.ts`
 // ═════════════════════════════════════════════════════════════════════════════
 
 /// `0xRRGGBB` as an opaque colour.
@@ -257,11 +257,11 @@ pub fn contrast_ratio(a: D2D1_COLOR_F, b: D2D1_COLOR_F) -> f32 {
     (la.max(lb) + 0.05) / (la.min(lb) + 0.05)
 }
 
-/// A contextual tab group's header chip on the tab strip: its accent with white text, or — when the
-/// accent is too close to the strip (a green group on the green Spreadsheet tone) — a pale tint of
+/// A contextual tab group's header chip on the tab strip: its accent with white text, or - when the
+/// accent is too close to the strip (a green group on the green Spreadsheet tone) - a pale tint of
 /// the accent with dark ink, like Office, so the chip stays distinct and its text readable.
 pub fn header_colors(accent: D2D1_COLOR_F, strip: D2D1_COLOR_F) -> (D2D1_COLOR_F, D2D1_COLOR_F) {
-    // Distinct from the strip: a different hue or lightness (RGB distance), not only luminance — a
+    // Distinct from the strip: a different hue or lightness (RGB distance), not only luminance - a
     // green chip on a blue strip has close luminances but reads fine.
     let distance = ((accent.r - strip.r).powi(2) + (accent.g - strip.g).powi(2) + (accent.b - strip.b).powi(2)).sqrt();
     if distance >= 0.25 && contrast_ratio(WHITE, accent) >= 3.0 {
@@ -286,7 +286,7 @@ pub fn lighten(c: D2D1_COLOR_F, f: f32) -> D2D1_COLOR_F {
 }
 
 /// `fileAccentFor`: the « Fichier » tab and Backstage rail colour for an app
-/// accent — a lighter shade that stands out on the dark strip; Documents keeps
+/// accent - a lighter shade that stands out on the dark strip; Documents keeps
 /// the shade the web chose by hand.
 pub fn file_accent_for(accent: D2D1_COLOR_F) -> D2D1_COLOR_F {
     let same = |a: D2D1_COLOR_F, b: D2D1_COLOR_F| {
@@ -509,7 +509,7 @@ impl Fonts {
 }
 
 // ═════════════════════════════════════════════════════════════════════════════
-// The data model — `types.ts`
+// The data model - `types.ts`
 // ═════════════════════════════════════════════════════════════════════════════
 
 /// `RibbonItemKind`.
@@ -527,7 +527,7 @@ pub enum ItemKind {
     Menu,
     /// A row of options.
     Gallery,
-    /// A vertical separator (ignored when stacking — see [`MAX_STACK`]).
+    /// A vertical separator (ignored when stacking - see [`MAX_STACK`]).
     ///
     /// [`MAX_STACK`]: metrics::MAX_STACK
     Separator,
@@ -670,7 +670,7 @@ thread_local! {
     static GALLERY_RENDERERS: std::cell::RefCell<std::collections::HashMap<String, GalleryCellRenderer>> = std::cell::RefCell::new(std::collections::HashMap::new());
 }
 
-/// Draws the items of the gallery named `name` (its `x:Name` in a `.kbview`) with `paint` — the owner-draw of
+/// Draws the items of the gallery named `name` (its `x:Name` in a `.kbview`) with `paint` - the owner-draw of
 /// a ribbon gallery: the application paints each item's content, the gallery keeps its frame, hover and
 /// selection. Set it once (before or after the window opens); `None` goes back to the labels and icons.
 pub fn set_gallery_renderer(name: &str, paint: Option<GalleryCellPaint>) {
@@ -2070,7 +2070,7 @@ pub enum RegionKind {
     AddItem,
 }
 
-/// Where one element of the ribbon was drawn this frame — what the view runtime's designer
+/// Where one element of the ribbon was drawn this frame - what the view runtime's designer
 /// selects and its input router routes events to (`RIBBON.md` §7.1, virtual regions).
 #[derive(Debug, Clone, PartialEq)]
 pub struct RibbonRegion {
@@ -2189,7 +2189,7 @@ pub struct Ribbon {
     pub expand_label:   String,
     /// The window caption takes the tab strip's colours, so the two read as
     /// one band, as the web's topbar does over its ribbon (`topbarBg`). On by
-    /// default — every app ribbon owns the top of its window. Turn it off for
+    /// default - every app ribbon owns the top of its window. Turn it off for
     /// a ribbon shown INSIDE a page (a gallery demo).
     pub owns_caption:   bool,
     /// Where the quick actions sit.
@@ -4051,7 +4051,7 @@ fn menu_panel(it: &RibbonItem, key: Target, anchor: Rect) -> Float {
 }
 
 // ═════════════════════════════════════════════════════════════════════════════
-// Backstage — `Backstage.tsx`
+// Backstage - `Backstage.tsx`
 // ═════════════════════════════════════════════════════════════════════════════
 
 /// `BackstageSection`.

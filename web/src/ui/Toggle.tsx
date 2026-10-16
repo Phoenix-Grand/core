@@ -9,12 +9,12 @@ interface ToggleProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 
   size?: 'sm' | 'md'
 }
 
-const DURATION = 150   // ms — the CSS transition this replaces
+const DURATION = 150   // ms - the CSS transition this replaces
 
 /* The switch is drawn on a canvas; the hidden checkbox keeps every native behaviour
  * (label association, keyboard, form submission, assistive technologies). The input
  * remains the single source of truth for the state, exactly as when CSS read
- * `:checked` — the canvas only mirrors it. */
+ * `:checked` - the canvas only mirrors it. */
 export function Toggle({ label, description, size = 'md', className, id, ...props }: ToggleProps) {
   const inputId = id ?? label?.toLowerCase().replace(/\s+/g, '-')
   const g = TOGGLE_GEOMETRY[size]
@@ -67,7 +67,7 @@ export function Toggle({ label, description, size = 'md', className, id, ...prop
     const form  = input?.form
 
     // `change` covers pointer and keyboard toggles (controlled or not). `reset` covers
-    // a form restoring its defaults, which does NOT fire `change` — free with CSS,
+    // a form restoring its defaults, which does NOT fire `change` - free with CSS,
     // explicit here.
     const onChange = () => syncFromInput()
     const onReset  = () => requestAnimationFrame(() => syncFromInput(true))
@@ -81,7 +81,7 @@ export function Toggle({ label, description, size = 'md', className, id, ...prop
      *
      * `device-pixel-content-box` is the primitive meant for this: it reports the box in
      * DEVICE pixels, so it fires precisely when a canvas needs a new backing store. A
-     * `resize` listener is not a substitute — changing the pixel ratio while the CSS
+     * `resize` listener is not a substitute - changing the pixel ratio while the CSS
      * viewport keeps its size fires no resize event at all (verified).
      *
      * The resolution query is a fallback for engines without that box (Safari). It has
@@ -96,7 +96,7 @@ export function Toggle({ label, description, size = 'md', className, id, ...prop
         observer = new ResizeObserver(() => syncFromInput(true))
         observer.observe(canvasRef.current, { box: 'device-pixel-content-box' })
       } catch {
-        observer = null   // box unsupported — the media query below takes over
+        observer = null   // box unsupported - the media query below takes over
       }
     }
 
@@ -134,7 +134,7 @@ export function Toggle({ label, description, size = 'md', className, id, ...prop
         className,
       )}
     >
-      {/* `mt-0.5` aligns the switch with the first line of the label — with no label
+      {/* `mt-0.5` aligns the switch with the first line of the label - with no label
           there is nothing to align to, and it would just offset the switch by 2px. */}
       <div className={cn('relative flex-shrink-0', (label || description) && 'mt-0.5')}>
         <input ref={inputRef} type="checkbox" id={inputId} className="peer sr-only" {...props} />

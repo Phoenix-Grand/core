@@ -45,7 +45,7 @@ export interface VoiceDictation {
   micBtnRef: React.RefObject<HTMLButtonElement | null>
   toggleVoice: () => void
   stop: () => void
-  /** The centered toast overlay — render it anywhere (it is `position: fixed`). */
+  /** The centered toast overlay - render it anywhere (it is `position: fixed`). */
   voiceToast: ReactNode
 }
 
@@ -313,7 +313,7 @@ export function useVoiceDictation(opts: UseVoiceDictationOptions = {}): VoiceDic
         WebkitBackdropFilter: mounted ? 'blur(2px)' : 'none',
         transition: 'background 160ms ease',
       }}
-      // Click on the dim backdrop (not the card) dismisses — consistent everywhere.
+      // Click on the dim backdrop (not the card) dismisses - consistent everywhere.
       onMouseDown={(e) => { if (e.target === e.currentTarget) stopVoice() }}
     >
       <div

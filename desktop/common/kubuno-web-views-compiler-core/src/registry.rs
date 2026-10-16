@@ -133,7 +133,7 @@ pub struct WebBlock {
     pub template: bool,
 }
 
-/// Where an element comes from — what the module isolation rule checks.
+/// Where an element comes from - what the module isolation rule checks.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum Origin {
     /// `@kubuno/ui` / `@kubuno/sdk` / `@kubuno/views` (the host registry).
@@ -175,7 +175,7 @@ impl Element {
 /// carried in [`UserControlRef::props`]; empty when the control declares no `x:Props` (pass-through, as before).
 #[derive(Debug, Clone, Deserialize, serde::Serialize)]
 pub struct UserControlProp {
-    /// The field name, verbatim — the React prop the compiled control reads (`file`, `onOpen`).
+    /// The field name, verbatim - the React prop the compiled control reads (`file`, `onOpen`).
     pub name: String,
     /// The field is a function type: it becomes an event (`onOpen` → `OnOpen`), not a bindable property.
     #[serde(default)]
@@ -239,7 +239,7 @@ impl WebRegistry {
 
     /// Adds a registry document. `host` documents may name host modules only; project documents may name
     /// host modules or project-local ones. A name already known is never overridden (first wins) and is
-    /// reported — a project control cannot shadow a host element.
+    /// reported - a project control cannot shadow a host element.
     pub fn add_document(&mut self, doc: &RegistryDocument, label: &str, host: bool) {
         for entry in &doc.components {
             let web: WebBlock = match entry.web.clone().map(serde_json::from_value::<WebBlock>) {
@@ -257,7 +257,7 @@ impl WebRegistry {
                 let allowed = HOST_MODULES.contains(&module) || (!host && is_project_module(module));
                 if !allowed {
                     self.problems.push(format!(
-                        "{label}: element `{}` imports `{module}`, which is neither a host singleton ({}) nor a file of this project — a view may only use host elements and its own module's controls (module isolation)",
+                        "{label}: element `{}` imports `{module}`, which is neither a host singleton ({}) nor a file of this project - a view may only use host elements and its own module's controls (module isolation)",
                         entry.name,
                         HOST_MODULES.join(", ")
                     ));
@@ -287,7 +287,7 @@ impl WebRegistry {
             let mut prop_map: BTreeMap<String, PropTarget> = BTreeMap::new();
             let mut event_map: BTreeMap<String, EventSource> = BTreeMap::new();
             // A `children: ReactNode` field (WV-7, the React slot convention) is not a bindable attribute: the
-            // control hosts the view's child elements, rendered into its `children` prop — exactly as `Panel`,
+            // control hosts the view's child elements, rendered into its `children` prop - exactly as `Panel`,
             // `Stack` and the built-in `UserControl` do (`web.content = "children"`, `children = List`).
             let mut children_slot = false;
             for p in &uc.props {

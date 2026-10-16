@@ -1,4 +1,4 @@
-<!-- ModePicker — converted from ModePicker.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- ModePicker - converted from ModePicker.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="Props">
   <Stack>
     <Repeater ItemKey="key" ItemsSource="{Binding rows_offered}">

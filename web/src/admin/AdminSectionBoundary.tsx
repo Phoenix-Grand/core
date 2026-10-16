@@ -23,7 +23,7 @@ function SectionCrashed() {
  * A delegated administrator sees the console but not every surface, and a panel
  * that assumes its data arrived can throw on a refused request. Without this the
  * whole `/admin` route unmounts and the operator gets a white page with no clue
- * what happened — the one outcome a permission refusal must never produce.
+ * what happened - the one outcome a permission refusal must never produce.
  * Re-keyed on the tab id, so navigating away from a broken section recovers.
  */
 export default class AdminSectionBoundary extends Component<

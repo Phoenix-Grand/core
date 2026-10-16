@@ -34,10 +34,10 @@ function MappingSummary({
   t: (k: string, o?: Record<string, unknown>) => string
 }) {
   const rows: [string, string][] = [
-    [t('ldap.attr_username'), mapping.username ?? '—'],
-    [t('ldap.attr_email'), mapping.email ?? '—'],
-    [t('ldap.attr_display_name'), mapping.display_name ?? '—'],
-    [t('ldap.attr_unique_id'), mapping.has_unique_id ? t('ldap.present') : '—'],
+    [t('ldap.attr_username'), mapping.username ?? '-'],
+    [t('ldap.attr_email'), mapping.email ?? '-'],
+    [t('ldap.attr_display_name'), mapping.display_name ?? '-'],
+    [t('ldap.attr_unique_id'), mapping.has_unique_id ? t('ldap.present') : '-'],
     [t('ldap.groups_found'), String(mapping.groups)],
   ]
   return (
@@ -190,7 +190,7 @@ export function Part2({ list, probe, authProbe, report, editing, form, setForm, 
                           )}
                           {p.hint && (
                             <p className="mt-2">
-                              <span className="text-text-secondary">{t('ldap.advice')} — </span>
+                              <span className="text-text-secondary">{t('ldap.advice')} - </span>
                               {p.hint}
                             </p>
                           )}
@@ -262,7 +262,7 @@ export function Part2({ list, probe, authProbe, report, editing, form, setForm, 
                               )}
                               {a.hint && (
                                 <p className="mt-2">
-                                  <span className="text-text-secondary">{t('ldap.advice')} — </span>
+                                  <span className="text-text-secondary">{t('ldap.advice')} - </span>
                                   {a.hint}
                                 </p>
                               )}

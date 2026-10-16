@@ -1,4 +1,4 @@
-//! Gallery page — the dock and the workspace shell
+//! Gallery page - the dock and the workspace shell
 //! (`core/frontend/src/core/shell/workspace/`: `Dock.tsx`, `WorkspaceShell.tsx`,
 //! `MenuBar.tsx`, `WorkspaceMenuBar.tsx`).
 //!
@@ -6,8 +6,8 @@
 //!
 //! * the PaintSharp « Layer » editor: a dark `WorkspaceShell` (topbar, compact
 //!   menu bar, options bar, tool rail, status bar) around a `DockArea` whose
-//!   default arrangement is the web's own —
-//!   `right: [['navigator'], ['layers'], ['brush', 'adjust', 'filters']]` —
+//!   default arrangement is the web's own -
+//!   `right: [['navigator'], ['layers'], ['brush', 'adjust', 'filters']]` -
 //!   over the `#141414` canvas;
 //! * the App builder: the light dock theme, `left: [['elements'], ['tree']]`,
 //!   `right: [['inspector']]`, over the `#eef1f5` viewport.
@@ -166,7 +166,7 @@ pub fn draw(c: &dyn Canvas, f: &Frame) {
         let t = c.theme();
 
         // ── 1. PaintSharp: WorkspaceShell (dark) + DockArea ─────────────────
-        p.section("Dock — @core Dock.tsx + WorkspaceShell.tsx (PaintSharp « Layer »)");
+        p.section("Dock - @core Dock.tsx + WorkspaceShell.tsx (PaintSharp « Layer »)");
         p.caption("glisser un onglet : losange + flèches de bord, fantôme ; ailleurs = flottant · double-clic : détacher · clic droit : menu");
         let frame = Rect::new(MARGIN, p.y, right, p.y + PAINT_H);
         if f.mouse_down && !ui.prev_down && frame.contains(f.mouse.0, f.mouse.1) {
@@ -234,7 +234,7 @@ pub fn draw(c: &dyn Canvas, f: &Frame) {
         p.advance(PLAIN_H);
 
         // ── 3. App builder: the light dock theme ────────────────────────────
-        p.caption("App builder — thème clair (WORKSPACE_LIGHT)");
+        p.caption("App builder - thème clair (WORKSPACE_LIGHT)");
         let frame = Rect::new(MARGIN, p.y, right, p.y + APP_H);
         if f.mouse_down && !ui.prev_down && frame.contains(f.mouse.0, f.mouse.1) {
             ui.focused_app = true;
@@ -408,7 +408,7 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
         let fm = c.formats();
         let (left, mut y, right) = interact::panel(c, interact::panel_rect(f.size));
 
-        y = interact::caption(c, left, right, y, "Panneaux masqués (hidden) — le viewport seul, pleine taille");
+        y = interact::caption(c, left, right, y, "Panneaux masqués (hidden) - le viewport seul, pleine taille");
         for (label, app) in [("PaintSharp : masquer les panneaux", false), ("App builder : masquer les panneaux", true)] {
             let dock = if app { &mut ui.app } else { &mut ui.paint };
             let sw = Switch::new().on(dock.hidden).label(label);
@@ -425,7 +425,7 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
         }
         y += 6.0;
 
-        y = interact::caption(c, left, right, y, "Disposition — réinitialiser (menu d'onglet « Réinitialiser la disposition »)");
+        y = interact::caption(c, left, right, y, "Disposition - réinitialiser (menu d'onglet « Réinitialiser la disposition »)");
         let mut x = left;
         for (label, app) in [("Réinitialiser PaintSharp", false), ("Réinitialiser App builder", true)] {
             let b = Button::new(label).variant(Variant::Secondary);
@@ -448,7 +448,7 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
             }
         }
 
-        y = interact::caption(c, left, right, y, "Panneaux fermés — le contrôle du rail droit (dockReopenStore)");
+        y = interact::caption(c, left, right, y, "Panneaux fermés - le contrôle du rail droit (dockReopenStore)");
         let mut any = false;
         for (who, app) in [("PaintSharp", false), ("App builder", true)] {
             let dock = if app { &mut ui.app } else { &mut ui.paint };
@@ -461,7 +461,7 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
             }
         }
         if !any {
-            c.text("Aucun — fermez un onglet (×) pour le voir ici", &Rect::new(left, y, right, y + 20.0), &fm.caption, &t.text_tertiary, false);
+            c.text("Aucun - fermez un onglet (×) pour le voir ici", &Rect::new(left, y, right, y + 20.0), &fm.caption, &t.text_tertiary, false);
             y += 28.0;
         }
         y += 8.0;

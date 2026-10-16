@@ -5,7 +5,7 @@ import { usePrivileges } from '../../../core/authz/usePrivileges'
 import type { DashboardPanel, PanelPeriod } from '../../panels/types'
 
 /**
- * The dashboard's data layer — one read, no writes.
+ * The dashboard's data layer - one read, no writes.
  *
  * The page performs no action of its own: every panel links to the report that
  * owns the records behind it (the account list, the session inventory, the
@@ -16,8 +16,8 @@ import type { DashboardPanel, PanelPeriod } from '../../panels/types'
  * ## Nothing on this page is estimated
  *
  * Every figure the endpoint returns is read from a table the core itself writes.
- * The one family the reference console panels and this page does not — **file
- * sharing exposure**, internal and external — lives in module schemas the core
+ * The one family the reference console panels and this page does not - **file
+ * sharing exposure**, internal and external - lives in module schemas the core
  * never reads, and is therefore ABSENT rather than drawn as a zero. The note at
  * the foot of the page says so out loud; see `handlers/admin/dashboard.rs` for
  * the channel that would carry it.

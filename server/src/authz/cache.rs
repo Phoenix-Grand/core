@@ -12,7 +12,7 @@
 //!
 //!  * the TTL is seconds, not minutes;
 //!  * every write to a role, a role's privileges, or an assignment calls
-//!    [`invalidate_all`] — not "invalidate the subject", because an assignment
+//!    [`invalidate_all`] - not "invalidate the subject", because an assignment
 //!    made to a *group* changes the context of everyone in that group, and a
 //!    privilege removed from a *role* changes it for everyone holding the role.
 //!    Working out that closure correctly on every write is exactly the kind of
@@ -89,13 +89,13 @@ pub fn invalidate_all() {
 // ── The roster: who holds an assignment at all ───────────────────────────────
 //
 // `GET /api/v1/me` now answers with the caller's effective privileges, and `/me`
-// is called on every page load by *every* account — overwhelmingly by accounts
+// is called on every page load by *every* account - overwhelmingly by accounts
 // that administer nothing. Resolving those would add two queries per page load
 // (the resolution, then the fallback that reads the caller's own unit) to pay for
 // an answer that is always "holds nothing".
 //
 // The roster is the fast path: one small set, shared by the whole process, of the
-// accounts that hold at least one live assignment — directly or through a group.
+// accounts that hold at least one live assignment - directly or through a group.
 // An account absent from it resolves to the empty context with **no query at
 // all**. It is one query per TTL for the entire instance instead of two per
 // ordinary page load, and it cannot answer "no" wrongly: the same
@@ -110,7 +110,7 @@ pub enum Roster {
     /// The complete set. An account absent from it holds nothing.
     Holders(Arc<HashSet<Uuid>>),
     /// Too many holders to enumerate (an assignment carried by a group with
-    /// thousands of members). No fast path — everyone resolves normally, which is
+    /// thousands of members). No fast path - everyone resolves normally, which is
     /// the behaviour that predates this cache.
     Unbounded,
 }

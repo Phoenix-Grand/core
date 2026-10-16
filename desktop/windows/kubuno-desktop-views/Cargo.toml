@@ -13,12 +13,12 @@ repository.workspace = true
 # just parsed. `quick-xml` is also the crate whose quadratic-parsing /
 # unbounded-namespace-allocation advisories (RUSTSEC-2026-0194/0195) this
 # workspace already worked around once (see `../kubuno-desktop-shell/Cargo.toml`'s
-# `tauri-winrt-notification` pin) — reason enough not to reach for it again.
+# `tauri-winrt-notification` pin) - reason enough not to reach for it again.
 rowan = "0.16"
 
 # The component families this crate declares metadata for (Button, Switch,
 # TextField, Card, Stack). `kubuno-desktop-views` depends on `kubuno-desktop-ui`, never the
-# reverse — the registry is a sibling crate, not a change to the design system
+# reverse - the registry is a sibling crate, not a change to the design system
 # itself (nothing in `kubuno-desktop-ui` is touched to adopt XML views).
 kubuno-desktop-ui = { workspace = true }
 # Only for `Stack::direction`'s type (`FlowDirection`): `kubuno-desktop-ui` imports it
@@ -41,7 +41,7 @@ kubuno-drive-desktop-app-controls = { workspace = true }
 serde      = { workspace = true }
 serde_json = { workspace = true }
 
-# `GetLocalTime` — `crate::clock::today()`'s only caller: `<MonthCalendar>`/
+# `GetLocalTime` - `crate::clock::today()`'s only caller: `<MonthCalendar>`/
 # `<DatePicker>` have no owned clock (same as `kubuno_desktop_ui` itself; see that
 # module's doc) and nothing else in this workspace computes the real local
 # date either, so this crate reads it directly rather than inventing a

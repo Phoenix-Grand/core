@@ -2,8 +2,8 @@
 //!
 //! ## Why this is written here rather than pulled from a crate
 //!
-//! The inventory needs four facts — device class, platform, platform version,
-//! browser — and it needs them to be *stable*, because they feed the
+//! The inventory needs four facts - device class, platform, platform version,
+//! browser - and it needs them to be *stable*, because they feed the
 //! fingerprint that correlates sessions opened before the inventory existed
 //! (see [`super::correlate`]). A general-purpose parser optimises for coverage
 //! of two decades of exotic strings; a change in its heuristics would silently
@@ -17,7 +17,7 @@
 //! client chose; everything derived from it is *observed*, and the console
 //! labels it as such. The only stronger claim available anywhere in this feature
 //! is a native application's declaration, and that one is labelled "declared by
-//! the device" — never "verified".
+//! the device" - never "verified".
 
 use serde::Serialize;
 
@@ -116,8 +116,8 @@ fn version_after(ua: &str, prefix: &str) -> Option<String> {
     }
 }
 
-/// Windows reports a kernel version. `Windows NT 10.0` covers both 10 and 11 —
-/// the browsers froze it deliberately — so the mapping stops at 10 rather than
+/// Windows reports a kernel version. `Windows NT 10.0` covers both 10 and 11 -
+/// the browsers froze it deliberately - so the mapping stops at 10 rather than
 /// guessing, and a native application's declared version is what distinguishes
 /// them when the operator turned that on.
 fn windows_version(nt: &str) -> Option<String> {
@@ -210,7 +210,7 @@ fn programmatic(ua: &str, lower: &str) -> Option<Normalised> {
     None
 }
 
-/// `Kubuno/0.4.1 (Android 14; Pixel 7)` — the shape the native applications emit.
+/// `Kubuno/0.4.1 (Android 14; Pixel 7)` - the shape the native applications emit.
 fn kubuno_app(ua: &str) -> Option<Normalised> {
     let rest = ua.strip_prefix("Kubuno/")?;
     let app_version: String = rest

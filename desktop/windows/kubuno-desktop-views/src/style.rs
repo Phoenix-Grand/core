@@ -166,7 +166,7 @@ pub const WEB_COLORS: &[(&str, u32)] = &[
     ("YellowGreen", 0x9ACD32),
 ];
 
-/// The typical value of each Windows system colour (Windows 11 light, default settings) — what the
+/// The typical value of each Windows system colour (Windows 11 light, default settings) - what the
 /// contrast check assumes, since the real ones depend on the machine.
 const SYSTEM_DEFAULTS: &[(&str, u32)] = &[
     ("ActiveBorder", 0xB4B4B4), ("ActiveCaption", 0x99B4D1), ("ActiveCaptionText", 0x000000), ("AppWorkspace", 0xABABAB),
@@ -407,7 +407,7 @@ pub fn contrast_warnings(fore: Option<&ColorValue>, back: Option<&ColorValue>, s
 
 // ── Fonts ─────────────────────────────────────────────────────────────────────
 
-/// A parsed `Font` attribute — the WinForms text form `"Segoe UI, 12pt, style=Bold, Italic"`.
+/// A parsed `Font` attribute - the WinForms text form `"Segoe UI, 12pt, style=Bold, Italic"`.
 #[derive(Debug, Clone, PartialEq, Default)]
 pub struct FontSpec {
     pub family: Option<String>,

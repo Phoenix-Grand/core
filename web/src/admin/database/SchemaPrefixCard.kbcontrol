@@ -1,4 +1,4 @@
-<!-- SchemaPrefixCard — converted from SchemaPrefixCard.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- SchemaPrefixCard - converted from SchemaPrefixCard.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl>
   <Card Title="{Res admin.dbprefix_title}"
         IconSize="16"

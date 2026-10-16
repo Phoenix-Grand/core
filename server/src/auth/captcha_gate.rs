@@ -2,13 +2,13 @@
 //!
 //! # Why this is separate from [`crate::auth::login_throttle`]
 //!
-//! The throttle (account lockout) is keyed by user id — it must be, since it
+//! The throttle (account lockout) is keyed by user id - it must be, since it
 //! protects a specific account and resets on that account's success. Keying the
 //! CAPTCHA gate the same way turned it into an enumeration oracle: an unknown
 //! login never accrued failures there (no row is created for a stranger, on
 //! purpose), so a CAPTCHA appeared only for accounts that exist. This module
 //! keys the count on the SUBMITTED IDENTIFIER instead (hashed), so the gate arms
-//! identically whether or not the identifier names a real account — the CAPTCHA
+//! identically whether or not the identifier names a real account - the CAPTCHA
 //! is demanded the same either way, and existence stays hidden.
 //!
 //! The raw identifier is never stored: only its SHA-256. Rows are swept once
@@ -36,7 +36,7 @@ pub fn hash_identifier(login: &str) -> String {
 /// Failures past which sign-in requires a CAPTCHA
 /// (`security.login_captcha_after_failures`). Resolved at the INSTANCE scope, not
 /// the account's: an unknown identifier has no unit to resolve from, and reading
-/// it per-account would make the threshold — and thus the gate — depend on
+/// it per-account would make the threshold - and thus the gate - depend on
 /// whether the account exists, which is the very oracle this avoids. `0` (the
 /// default) disables the gate. Fails open (0) on any error.
 pub async fn threshold(db: &DbPool) -> i32 {

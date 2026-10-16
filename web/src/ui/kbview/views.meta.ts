@@ -60,20 +60,20 @@ const DIVIDER: PropertyMeta<{ dividerColor?: string }> = {
   to: { prop: 'dividerColor' },
 }
 
-/** Web-only: the HTML element of a container (WV-11: a migrated screen keeps its sections, forms and lists — the accessibility tree reads them). */
+/** Web-only: the HTML element of a container (WV-11: a migrated screen keeps its sections, forms and lists - the accessibility tree reads them). */
 const CONTAINER_TAGS = ['Div', 'Section', 'Nav', 'Header', 'Footer', 'Main', 'Aside', 'Article', 'Form', 'Fieldset', 'Figure', 'Ul', 'Ol', 'Li', 'Label', 'Span', 'P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6'] as const
 const CONTAINER_TAG: PropertyMeta<{ as?: string }> = {
   name: 'HtmlTag', kind: { Enum: CONTAINER_TAGS }, default: 'Div', category: 'Accessibility', webOnly: true,
-  doc: 'Web only: the HTML element of the container — a section, a navigation, a form (OnSubmit), a list and its items… Screen readers announce it.',
-  docFr: "Web uniquement : l'élément HTML du conteneur — une section, une navigation, un formulaire (OnSubmit), une liste et ses éléments… Les lecteurs d'écran l'annoncent.",
+  doc: 'Web only: the HTML element of the container - a section, a navigation, a form (OnSubmit), a list and its items… Screen readers announce it.',
+  docFr: "Web uniquement : l'élément HTML du conteneur - une section, une navigation, un formulaire (OnSubmit), une liste et ses éléments… Les lecteurs d'écran l'annoncent.",
   to: { prop: 'as', values: Object.fromEntries(CONTAINER_TAGS.map((t) => [t, t.toLowerCase()])) as Record<(typeof CONTAINER_TAGS)[number], string> },
 }
 
 /** Web `DataAttributes`: the container's `data-*` attributes (the shell's styles and scripts find it by them). */
 const DATA_ATTRIBUTES: PropertyMeta<{ dataAttributes?: string }> = {
   name: 'DataAttributes', kind: 'String', default: '', category: 'Behavior', bindable: true, webOnly: true,
-  doc: 'Web only: data-* attributes of the element, separated by semicolons — a name (app-chrome) or name=value (panel=right). Styles and scripts of the page find the element by them.',
-  docFr: "Web uniquement : attributs data-* de l'élément, séparés par des points-virgules — un nom (app-chrome) ou nom=valeur (panel=right). Les styles et scripts de la page retrouvent l'élément par eux.",
+  doc: 'Web only: data-* attributes of the element, separated by semicolons - a name (app-chrome) or name=value (panel=right). Styles and scripts of the page find the element by them.',
+  docFr: "Web uniquement : attributs data-* de l'élément, séparés par des points-virgules - un nom (app-chrome) ou nom=valeur (panel=right). Les styles et scripts de la page retrouvent l'élément par eux.",
   to: { prop: 'dataAttributes' },
 }
 
@@ -243,7 +243,7 @@ export const RepeaterMeta = {
 } as const satisfies ElementMeta<ComponentProps<typeof Repeater>>
 
 /**
- * `ReactHost` (web only): any React component, rendered as it is — the migration's escape hatch for what is not a
+ * `ReactHost` (web only): any React component, rendered as it is - the migration's escape hatch for what is not a
  * view yet (WEB-VIEWS §2.3): the codemod cuts such parts out with their values as `Props`.
  */
 export const ReactHostMeta = {

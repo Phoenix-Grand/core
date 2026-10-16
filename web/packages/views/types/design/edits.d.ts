@@ -3,7 +3,7 @@
  * text"): the page never writes text, it posts `EditOp`s the host applies to the buffer. Pure functions:
  * move / resize / nudge ops, deletions, the Toolbox skeleton markup, and the keyboard map.
  *
- * Every value is a whole CSS px of the view (page px divided by the zoom, rounded — a pointer delta at a zoom or a
+ * Every value is a whole CSS px of the view (page px divided by the zoom, rounded - a pointer delta at a zoom or a
  * fractional scale is fractional). `X` is inline-start based (`insetInlineStart`): in a right-to-left container a
  * move to the right decreases it.
  */

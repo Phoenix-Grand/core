@@ -120,7 +120,7 @@ async fn live(url: &str, expect: MySqlFlavor) {
 #[tokio::test]
 async fn oracle_mysql_runs_its_variant() {
     let Ok(url) = std::env::var("KUBUNO_MYSQL_TEST_URL") else {
-        eprintln!("KUBUNO_MYSQL_TEST_URL not set — test skipped");
+        eprintln!("KUBUNO_MYSQL_TEST_URL not set - test skipped");
         return;
     };
     live(&url, MySqlFlavor::Oracle).await;
@@ -129,7 +129,7 @@ async fn oracle_mysql_runs_its_variant() {
 #[tokio::test]
 async fn mariadb_runs_its_variant() {
     let Ok(url) = std::env::var("KUBUNO_MARIADB_TEST_URL") else {
-        eprintln!("KUBUNO_MARIADB_TEST_URL not set — test skipped");
+        eprintln!("KUBUNO_MARIADB_TEST_URL not set - test skipped");
         return;
     };
     live(&url, MySqlFlavor::MariaDb).await;

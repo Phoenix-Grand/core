@@ -1,4 +1,4 @@
-<!-- BackupCodesSection — converted from BackupCodesSection.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- BackupCodesSection - converted from BackupCodesSection.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl>
   <Panel Class="contents">
     <Panel Visible="{Binding show_case_1}" Class="space-y-3">

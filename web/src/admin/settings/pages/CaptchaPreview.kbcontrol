@@ -1,4 +1,4 @@
-<!-- CaptchaPreview — converted from CaptchaPreview.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- CaptchaPreview - converted from CaptchaPreview.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl>
   <Panel BackColor="Surface1" DataAttributes="{Binding div_data}" Class="mt-2 rounded-lg border border-border p-3">
     <Stack Direction="LeftToRight" Gap="0" CrossAlign="Center" Justify="SpaceBetween" Class="mb-2">

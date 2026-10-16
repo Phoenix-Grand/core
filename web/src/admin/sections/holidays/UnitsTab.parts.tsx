@@ -69,7 +69,7 @@ export function Part6({ t, setError, setPref, pref, fail }: { t: NonNullable<Uni
                       title={t('admin.hol_units_clear')}
                       onClick={() => {
                         setError(null)
-                        // `null` deletes the row — the unit goes back to inheriting,
+                        // `null` deletes the row - the unit goes back to inheriting,
                         // rather than storing what it currently inherits.
                         setPref.mutate({
                           calendar_id: pref.calendar_id ?? undefined,

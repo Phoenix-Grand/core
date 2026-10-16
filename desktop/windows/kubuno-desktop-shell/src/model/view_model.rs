@@ -1,4 +1,4 @@
-//! What the shell's views show, computed from its state — pure functions, unit-tested: the window
+//! What the shell's views show, computed from its state - pure functions, unit-tested: the window
 //! hands their results to its user controls (typed access) and to its own bindings.
 //!
 //! The state itself ([`ShellState`]) is what the engine, the background fetches and the user's
@@ -91,7 +91,7 @@ pub fn host_of(server_url: &str) -> String {
     server_url.split("://").last().unwrap_or(server_url).trim_end_matches('/').to_string()
 }
 
-/// Base 1024, one decimal for kB/MB and TWO for GB — `format.ts` verbatim, so the desktop reads
+/// Base 1024, one decimal for kB/MB and TWO for GB - `format.ts` verbatim, so the desktop reads
 /// exactly like the web; the units are the culture's (« Ko », « Mo », « Go » in French).
 pub fn format_size(bytes: u64) -> String {
     const KB: f64 = 1024.0;
@@ -136,8 +136,8 @@ pub const NAV: [(Page, &str, &str); 4] =
 /// console's groups line up.
 pub const RAIL_INDENT: f32 = 28.0;
 
-/// The rail's rows (`Sidebar.ItemsSource`): the pages, then — while the console is open, `admin`
-/// holding its expanded groups — its tree under a header.
+/// The rail's rows (`Sidebar.ItemsSource`): the pages, then - while the console is open, `admin`
+/// holding its expanded groups - its tree under a header.
 pub fn nav_rows(admin: Option<&[String]>) -> Rows {
     let text = |key: &str| match key {
         "launcher" => Resources::nav_home(),
@@ -260,12 +260,12 @@ pub fn account_rows(accounts: &[AccountInfo]) -> Rows {
         .map(|a| {
             let host = host_of(&a.server_url);
             let name = match &a.label {
-                Some(l) if !l.trim().is_empty() => format!("{l} — {host}"),
+                Some(l) if !l.trim().is_empty() => format!("{l} - {host}"),
                 _ => host,
             };
-            // The person first, the server after — the identity is what tells two accounts on the
+            // The person first, the server after - the identity is what tells two accounts on the
             // same server apart.
-            let title = if a.user.is_empty() { name } else { format!("{} — {name}", a.user) };
+            let title = if a.user.is_empty() { name } else { format!("{} - {name}", a.user) };
             Row::new()
                 .with("Id", Value::Str(a.id.clone()))
                 .with("ActiveId", Value::Str(active.clone()))
@@ -349,7 +349,7 @@ pub fn activity_rows(events: &[crate::services::activity::Event], now: Instant) 
 
 // ── Labels ───────────────────────────────────────────────────────────────────────────────────
 
-/// The palette the web offers, in its order — a new label takes the next one.
+/// The palette the web offers, in its order - a new label takes the next one.
 pub const PALETTE: [&str; 8] = ["#1e8e3e", "#1a73e8", "#9334e6", "#ec4899", "#d93025", "#f59e0b", "#14b8a6", "#5f6368"];
 
 /// The labels page's rows.
@@ -431,7 +431,7 @@ mod tests {
         s = ShellState { conn: Conn::Expired, offline: true, ..ShellState::default() };
         let l = launcher(&s);
         assert_eq!(l.sync_tone, "Danger");
-        assert_eq!(l.server_text, "Session expirée — reconnectez-vous");
+        assert_eq!(l.server_text, "Session expirée - reconnectez-vous");
         assert_eq!(l.online_label, "Hors ligne");
         assert_eq!(l.sync_detail, "Les activités s'afficheront ici");
     }
@@ -444,8 +444,8 @@ mod tests {
         ];
         let rows = account_rows(&accounts);
         let rows: Vec<&Row> = rows.iter().collect();
-        assert_eq!(rows[0].text("Title"), "Camille Martin — cloud.exemple.fr");
-        assert_eq!(rows[1].text("Title"), "Asso — x.org");
+        assert_eq!(rows[0].text("Title"), "Camille Martin - cloud.exemple.fr");
+        assert_eq!(rows[1].text("Title"), "Asso - x.org");
         assert_eq!(account_name(&accounts[1]), "Asso");
         assert_eq!(account_name(&accounts[0]), "cloud.exemple.fr");
     }

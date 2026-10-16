@@ -1,4 +1,4 @@
-<!-- ReauthDialog — converted from ReauthDialog.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- ReauthDialog - converted from ReauthDialog.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <FloatingWindow x:Props="Props"
                 Title="{Res reauth.title}"
                 IconSize="16"

@@ -1,14 +1,14 @@
-//! `kubuno-desktop-views-ls` — the LSP language server for `.kbview` files
+//! `kubuno-desktop-views-ls` - the LSP language server for `.kbview` files
 //! (`vskubuno/docs/ARCHITECTURE.md` phase 3, `vskubuno/docs/XML_VIEWS.md`
 //! §8's phase 3 row: "Language server over the same `rowan` AST + registry
 //! (diagnostics, hover, completion from `enum` metadata)").
 //!
-//! Built entirely on [`kubuno_desktop_views`]' public API — the lossless
+//! Built entirely on [`kubuno_desktop_views`]' public API - the lossless
 //! [`kubuno_desktop_views::syntax`] tree, the typed [`kubuno_desktop_views::ast`] layer, the
 //! [`kubuno_desktop_views::validate`] validator, the [`kubuno_desktop_views::registry`]
 //! component metadata and, since work package DSG-2
 //! (`vskubuno/docs/DESIGNER.md`), [`kubuno_desktop_views::edit`]'s surgical splice
-//! API — never on the in-progress interpreter internals (`props`/`node`/
+//! API - never on the in-progress interpreter internals (`props`/`node`/
 //! `compile`/`runtime`/`binding`), which another agent is actively building
 //! at the time this crate was written. See each module's own doc comment for
 //! the LSP feature it implements.
@@ -18,17 +18,17 @@
 //! | [`position`] | Byte offset ⇄ LSP UTF-16 `Position` conversion |
 //! | [`documents`] | Open-document store (full text sync) |
 //! | [`tree`] | Shared cursor-offset → syntax-tree-context helpers |
-//! | [`common_attrs`] | The `Dock`/`Anchor`/… attributes every element accepts (worked around — see its own doc) |
+//! | [`common_attrs`] | The `Dock`/`Anchor`/… attributes every element accepts (worked around - see its own doc) |
 //! | [`diagnostics`] | Parse errors + validator findings (and contrast warnings) → LSP `Diagnostic` |
-//! | [`bindings`] | `kubuno/bindingPaths` — the paths of a view's data context (kept for older clients) |
-//! | [`binding_sources`] | `kubuno/bindingSources` — the source schema of a view's bindings (data context, item row, data components, resources, converters) |
+//! | [`bindings`] | `kubuno/bindingPaths` - the paths of a view's data context (kept for older clients) |
+//! | [`binding_sources`] | `kubuno/bindingSources` - the source schema of a view's bindings (data context, item row, data components, resources, converters) |
 //! | [`binding_lsp`] | `{Binding …}` diagnostics, completion, hover, definition and the « Mettre à jour les liaisons » quick fix |
 //! | [`completion`] | Element name / attribute name / enum value / closing tag |
 //! | [`hover`] | Component/property/event docs from the registry |
-//! | [`symbols`] | `textDocument/documentSymbol` — the element tree, `x:Name` as the label |
+//! | [`symbols`] | `textDocument/documentSymbol` - the element tree, `x:Name` as the label |
 //! | [`definition`] | `Click="handler"` → `fn handler` in a sibling `.rs` file (text search) |
-//! | [`edit_bridge`] | `kubuno/applyEdit`, `kubuno/elementAtOffset`, `kubuno/rangeOfElement` — the designer's surgical edit/selection-sync methods (DSG-2) |
-//! | [`handler_insert`] | `kubuno/createHandler` — double-click a control/event → create the Rust handler (DSG-10) |
+//! | [`edit_bridge`] | `kubuno/applyEdit`, `kubuno/elementAtOffset`, `kubuno/rangeOfElement` - the designer's surgical edit/selection-sync methods (DSG-2) |
+//! | [`handler_insert`] | `kubuno/createHandler` - double-click a control/event → create the Rust handler (DSG-10) |
 //! | [`handlers`] | `kubuno/compatibleHandlers`, `kubuno/renameHandler`, `kubuno/removeHandler`, handler warnings and quick fixes, F2 rename (EVT-5) |
 //! | [`sources`] | The client's open buffers, read instead of the files (`openFiles`) |
 //! | [`project`] | The project's own controls, scanned from its sources (EVT-7b) |
@@ -36,12 +36,12 @@
 //! | [`web`] | The web profile: profile detection, the JSON registry and web compiler, the TypeScript code-behind (oxc), the same LSP methods for web views |
 //! | [`server`] | The `lsp-server` `Connection` main loop tying all of the above together |
 //!
-//! ## Formatting — deliberately not implemented
+//! ## Formatting - deliberately not implemented
 //!
 //! The brief allows skipping `textDocument/formatting` when it cannot be
 //! done losslessly, and that is the case here: `kubuno-desktop-views`' own `edit`
 //! module doc is explicit that "every byte" outside a precisely-touched
-//! splice range is meaningful (`XML_VIEWS.md` §6 — comments, attribute
+//! splice range is meaningful (`XML_VIEWS.md` §6 - comments, attribute
 //! order, blank-line grouping the VS designer and Claude both edit
 //! surgically around), and `syntax::lexer`'s `TEXT` token can be an
 //! element's actual content (`<Label> foo </Label>`), so a generic

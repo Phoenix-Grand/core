@@ -1,10 +1,10 @@
-//! Kubuno primitives — the date family: [`DatePicker`], [`MonthCalendar`] and
+//! Kubuno primitives - the date family: [`DatePicker`], [`MonthCalendar`] and
 //! [`TimePicker`].
 //!
 //! # Why this family was missed, and what that changes
 //!
 //! The first eight families were picked off the WinForms replica list, and
-//! `kubuno_desktop_controls::datetime` was on it from the start — it simply was not
+//! `kubuno_desktop_controls::datetime` was on it from the start - it simply was not
 //! read. Nothing about it is new: the replica already carries the whole civil
 //! calendar ([`Date`], [`month_grid`], [`iso_week`]), the selection rules, the
 //! bounds and the format engine, all of it tested. This layer adds pixels and
@@ -12,21 +12,21 @@
 //!
 //! # Where the pixels come from
 //!
-//! There is no hand-written predecessor in `kubuno-drive-desktop-app-controls`, so — as
-//! `docs/UI_BRIEF.md` requires — the reference is the **web**, read from source
+//! There is no hand-written predecessor in `kubuno-drive-desktop-app-controls`, so - as
+//! `docs/UI_BRIEF.md` requires - the reference is the **web**, read from source
 //! (this machine cannot run the web app, so every number below was *read*, not
 //! measured through CDP):
 //!
 //! | part | web source |
 //! |---|---|
-//! | the field | `core/frontend/src/ui/date-picker/DatePicker.tsx` — its trigger button, verbatim |
+//! | the field | `core/frontend/src/ui/date-picker/DatePicker.tsx` - its trigger button, verbatim |
 //! | the floating panel | `date-picker/PickerPopover.tsx` (`rounded-xl`, `p-3`, `shadow-2xl`) and `helpers.ts` (`popoverSize`, `computePos`) |
-//! | the month grid | `date-picker/DayView.tsx` — the `grid-cols-7` of `h-8 w-8` day buttons, its weekday strip and its nav header |
+//! | the month grid | `date-picker/DayView.tsx` - the `grid-cols-7` of `h-8 w-8` day buttons, its weekday strip and its nav header |
 //! | the spin column | `@ui/NumberInput`, the same `w-6` / `size={11}` pair [`crate::range`] uses |
 //!
 //! # What comes from the replica, and is never restated here
 //!
-//! *All* of the arithmetic. [`month_grid`] lays out the 6×7 cells — including
+//! *All* of the arithmetic. [`month_grid`] lays out the 6×7 cells - including
 //! the rule that catches every port, that the leading week is shown **in full**
 //! rather than collapsing to nothing when the 1st falls on the first day of the
 //! week; [`Date`] owns leap years, month lengths and the day-of-week;
@@ -35,18 +35,18 @@
 //! cap; `MonthCalendar::is_bold` owns the three bold lists;
 //! `DateTimePicker::set_value` owns the value clamp and
 //! `DateTimePicker::display_text` owns the fr-FR formatting. Not one of those is
-//! re-derived below — each primitive owns its replica and [`Deref`]s to it.
+//! re-derived below - each primitive owns its replica and [`Deref`]s to it.
 //!
 //! # What this layer adds
 //!
 //! Only concepts the replica genuinely does not model:
 //!
-//! * the **viewed month** — the toolkit derives the grid's month from
+//! * the **viewed month** - the toolkit derives the grid's month from
 //!   `SelectionStart`, so a native calendar cannot be browsed without moving the
 //!   selection; the web keeps a separate `viewDate` and so does
 //!   [`MonthCalendar::view_month`];
-//! * the **hot day** and the **hot header button** — a replica has no pointer;
-//! * the **range phase** ([`MonthCalendar::extending`]) — the web's
+//! * the **hot day** and the **hot header button** - a replica has no pointer;
+//! * the **range phase** ([`MonthCalendar::extending`]) - the web's
 //!   `rangePhase`, which the native control keeps in its drag state;
 //! * the picker's **open** flag (`DroppedDown` is runtime state, not a designer
 //!   property) and the [`MonthCalendar`] its panel is.
@@ -105,11 +105,11 @@ pub mod calendar_metrics {
     /// `PickerPopover`: `p-3` around the calendar column.
     pub const PAD: f32 = space::MD;
     /// One column of the `grid-cols-7`: the panel's content width, split seven
-    /// ways. Derived rather than stated because the web derives it too — the
+    /// ways. Derived rather than stated because the web derives it too - the
     /// grid is `grid-cols-7` inside `p-3`, not a fixed track.
     pub const DAY_COLUMN: f32 = (WIDTH - 2.0 * PAD) / 7.0;
     /// `DayView`: a day button is `h-8 w-8`, centred in its track (`mx-auto`).
-    /// So the disc is 32 and the track is wider — the gaps between discs are the
+    /// So the disc is 32 and the track is wider - the gaps between discs are the
     /// web's, not a rounding.
     pub const DAY: f32 = 32.0;
     /// Six rows of seven. `calendarGrid` runs `startOfWeek(startOfMonth)` to
@@ -145,19 +145,19 @@ pub mod calendar_metrics {
     pub const DISABLED_DAY_ALPHA: f32 = 0.30;
 
     /// The caption's month / year buttons: `text-sm font-semibold … px-1
-    /// rounded hover:bg-surface-1` — a 4 DIP inset each side of the text, on
+    /// rounded hover:bg-surface-1` - a 4 DIP inset each side of the text, on
     /// a `text-sm` line box (20).
     pub const TITLE_PAD_X: f32 = space::XS;
     pub const TITLE_LINE: f32 = 20.0;
 
     /// The keyboard cursor's ring on a day disc. The web's day buttons carry
     /// no focus class of their own, so they wear the design system's
-    /// `focus-visible` ring — `ring-2 ring-primary`, the same 2 DIP every
+    /// `focus-visible` ring - `ring-2 ring-primary`, the same 2 DIP every
     /// Kubuno control paints.
     pub const DAY_FOCUS_RING: f32 = 2.0;
 }
 
-/// Tailwind's `shadow-2xl`, verbatim — what `PickerPopover` declares
+/// Tailwind's `shadow-2xl`, verbatim - what `PickerPopover` declares
 /// (`bg-white rounded-xl shadow-2xl border border-border`):
 /// `0 25px 50px -12px rgb(0 0 0 / .25)`. Pure black, as Tailwind writes it.
 pub const SHADOW_2XL: [ShadowLayer; 1] =
@@ -167,7 +167,7 @@ pub const SHADOW_2XL: [ShadowLayer; 1] =
 /// layer's CSS blur radius. This is `Painter::draw_layered_shadow`'s own
 /// `REACH` (a gaussian keeps most of its density within ~3/4 of its radius):
 /// the shadow is painted as rings out to `spread + blur × REACH`, so that is
-/// the extent a popup must leave room for — no more, no less.
+/// the extent a popup must leave room for - no more, no less.
 const SHADOW_REACH: f32 = 0.75;
 
 /// One DIP of slack on every side of a shadow's reach: the outermost ring is
@@ -175,7 +175,7 @@ const SHADOW_REACH: f32 = 0.75;
 const SHADOW_SLACK: f32 = 1.0;
 
 /// How far a layered shadow spills past its surface on each side, as
-/// `(left, top, right, bottom)` — the pure answer to « how big must the popup
+/// `(left, top, right, bottom)` - the pure answer to « how big must the popup
 /// be so the shadow is not cut into a hard band ».
 ///
 /// Every layer inflates the surface by `spread + blur × REACH` and then moves
@@ -197,7 +197,7 @@ use calendar_metrics as cal;
 ///
 /// `helpers.ts` exports exactly this array (`WEEKDAYS = ['L','M','M','J','V','S','D']`)
 /// and it is Monday-first, which is the same base
-/// [`Date::weekday`](kubuno_desktop_controls::datetime::Date::weekday) counts on — so a
+/// [`Date::weekday`](kubuno_desktop_controls::datetime::Date::weekday) counts on - so a
 /// `FirstDayOfWeek` rotation is an index rotation and nothing else.
 ///
 /// Note that these are the WEB's one-letter labels, not the replica's `lun.`
@@ -206,7 +206,7 @@ use calendar_metrics as cal;
 pub const WEEKDAYS: [&str; 7] = ["L", "M", "M", "J", "V", "S", "D"];
 
 /// `DatePicker.tsx`' trigger: `flex items-center gap-2 px-3 rounded border` at
-/// `h-9` — an `@ui/Input`, so its height, radius and inset are the shared
+/// `h-9` - an `@ui/Input`, so its height, radius and inset are the shared
 /// tokens and only the gap and the glyph are stated here.
 const FIELD_PAD_X: f32 = space::MD;
 const FIELD_GAP: f32 = space::SM;
@@ -216,7 +216,7 @@ const FIELD_ICON: f32 = 14.0;
 const FIELD_FOCUS_RING: f32 = 2.0;
 /// `disabled && 'bg-surface-2 cursor-not-allowed opacity-60'`.
 const DISABLED_FIELD_ALPHA: f32 = 0.6;
-/// `computePos` anchors the popover at `r.bottom + 4`. (A combo's is 2 — they
+/// `computePos` anchors the popover at `r.bottom + 4`. (A combo's is 2 - they
 /// are different controls and the two files say different numbers.)
 const PANEL_OFFSET: f32 = space::XS;
 /// `computePos`' viewport margin: the popover keeps 8 px off every edge
@@ -224,8 +224,8 @@ const PANEL_OFFSET: f32 = space::XS;
 const PANEL_EDGE: f32 = space::SM;
 
 /// The highlight behind the edited segment. The web declares no `::selection`
-/// rule, so a field keeps the browser highlight — `--color-primary` at 35 %, a
-/// plain rectangle on a 20 DIP line box — which is exactly what
+/// rule, so a field keeps the browser highlight - `--color-primary` at 35 %, a
+/// plain rectangle on a 20 DIP line box - which is exactly what
 /// `edit_box::draw_text` paints for a text selection. The segment IS the
 /// selection of a date field, so it wears the same one.
 const SEGMENT_ALPHA: f32 = 0.35;
@@ -233,7 +233,7 @@ const SEGMENT_LINE: f32 = 20.0;
 
 /// `@ui/NumberInput`: the spin column is `w-6` and its chevrons `size={11}`,
 /// separated from the field by a `border-l` and from each other by a
-/// `border-b`. The same pair [`crate::range`]'s spinners use — `ShowUpDown` is
+/// `border-b`. The same pair [`crate::range`]'s spinners use - `ShowUpDown` is
 /// the toolkit calling a picker a spinner, so it must look like one.
 const SPIN_COLUMN: f32 = 24.0;
 const SPIN_GLYPH: f32 = 11.0;
@@ -242,7 +242,7 @@ const SPIN_RULE: f32 = control::SEPARATOR;
 /// One **device** pixel expressed in DIP.
 ///
 /// This is the one legitimate use of `Canvas::scale` in a family, and it
-/// *divides* by it — the same helper, for the same reason, the replica keeps as
+/// *divides* by it - the same helper, for the same reason, the replica keeps as
 /// `hairline`. It is used here as a measuring allowance, not as a thickness:
 /// `Painter::draw_layout` snaps the band it is handed onto the pixel grid
 /// before laying the text out, so a band measured to the exact text width can
@@ -251,7 +251,7 @@ fn physical_pixel(c: &dyn Canvas) -> f32 {
     1.0 / c.scale().max(0.01)
 }
 
-/// The same colour at a fraction of its alpha — how this design system dims
+/// The same colour at a fraction of its alpha - how this design system dims
 /// (`opacity-30`, `opacity-60`), for which there is no token.
 fn faded(color: &D2D1_COLOR_F, alpha: f32) -> D2D1_COLOR_F {
     D2D1_COLOR_F { a: color.a * alpha, ..*color }
@@ -274,7 +274,7 @@ fn or_theme(opt: Option<D2D1_COLOR_F>, fallback: D2D1_COLOR_F) -> D2D1_COLOR_F {
 /// The pair exists because `BoldedDates` has to read: the design system allows
 /// six text sizes and exactly two weights, so a bolded day is the *medium* step
 /// of the same size and a plain one the regular step. That does depart from
-/// `DayView`, which draws every day at `font-medium` — but the web has no
+/// `DayView`, which draws every day at `font-medium` - but the web has no
 /// bolded-dates concept at all, and painting every day medium would leave the
 /// three bold lists nothing to say. Stated here rather than hidden in the paint.
 fn day_formats(c: &dyn Canvas, role: FontRole) -> (&IDWriteTextFormat, &IDWriteTextFormat) {
@@ -293,7 +293,7 @@ fn day_formats(c: &dyn Canvas, role: FontRole) -> (&IDWriteTextFormat, &IDWriteT
 /// `date` shifted by `delta` months, the day clamped into the target month.
 ///
 /// The month walk is the one `MonthCalendar::paint` performs to tile its grid
-/// (`total = month - 1 + ordinal`, then `div_euclid` / `rem_euclid` by 12) —
+/// (`total = month - 1 + ordinal`, then `div_euclid` / `rem_euclid` by 12) -
 /// the replica keeps it inside that loop rather than publishing it, so it is
 /// spelled once here and used by nothing else. The clamp is
 /// [`Date::days_in_month`](kubuno_desktop_controls::datetime::Date::days_in_month),
@@ -337,7 +337,7 @@ pub enum HeaderPart {
     Title,
 }
 
-/// A month grid — the replica, with Kubuno pixels.
+/// A month grid - the replica, with Kubuno pixels.
 ///
 /// Everything about *being* a calendar is
 /// [`kubuno_desktop_controls::datetime::MonthCalendar`]'s and is reached through
@@ -353,21 +353,21 @@ pub enum HeaderPart {
 /// `core/frontend/src/ui/date-picker/DayView.tsx` and `PickerPopover.tsx`: a
 /// `rounded-xl` panel with `p-3`, a `w-7 h-7` nav header closed by `mb-2`, an
 /// `h-7` weekday strip closed by `mb-0.5`, and a `grid-cols-7` of `h-8 w-8` day
-/// buttons — a filled accent disc when selected, an accent ring when today, a
+/// buttons - a filled accent disc when selected, an accent ring when today, a
 /// `bg-primary/10` square inside a range, `hover:bg-surface-2` otherwise, and
 /// `opacity-30` outside `[MinDate, MaxDate]`.
 ///
 /// The panel paints its own surface and outline but **not** its shadow: a
-/// `MonthCalendar` dropped in a form is not floating, and the one that IS —
-/// [`DatePicker`]'s panel — draws the shadow before handing it the rectangle.
+/// `MonthCalendar` dropped in a form is not floating, and the one that IS -
+/// [`DatePicker`]'s panel - draws the shadow before handing it the rectangle.
 #[derive(Clone, Default)]
 pub struct MonthCalendar {
     inner: replica::MonthCalendar,
     /// The month the grid shows, `None` to follow the toolkit's rule (the month
     /// of `SelectionStart`).
     ///
-    /// The toolkit has no such property — a native calendar cannot be browsed
-    /// without moving its selection — and the web does
+    /// The toolkit has no such property - a native calendar cannot be browsed
+    /// without moving its selection - and the web does
     /// (`viewDate`), so this is a Kubuno addition rather than a duplicate.
     pub view_month: Option<Date>,
     /// The day under the pointer. The replica has no pointer, and
@@ -376,10 +376,10 @@ pub struct MonthCalendar {
     /// The header button under the pointer.
     pub hot_header: Option<HeaderPart>,
     /// Whether the next click **extends** the range rather than starting a new
-    /// one — the web's `rangePhase`, which the native control keeps in its drag
+    /// one - the web's `rangePhase`, which the native control keeps in its drag
     /// state. Only ever set when `MaxSelectionCount > 1`.
     pub extending: bool,
-    /// The keyboard cursor — the day the arrows move, the ARIA grid pattern's
+    /// The keyboard cursor - the day the arrows move, the ARIA grid pattern's
     /// roving « focused cell ». `None` until a key moves it (a pointer click
     /// selects, it does not light a ring); [`MonthCalendar::active_day`] then
     /// falls back to the selection. The web's grid has no keyboard model of
@@ -396,7 +396,7 @@ pub enum CalendarKey {
     Ignored,
     /// The keyboard cursor moved (and the shown month followed it).
     Moved,
-    /// Enter / Space picked this day — it went through
+    /// Enter / Space picked this day - it went through
     /// [`MonthCalendar::click_day`], so the selection already holds it.
     Activated(Date),
 }
@@ -418,7 +418,7 @@ impl MonthCalendar {
         Self::default()
     }
 
-    /// Shows `date`'s month and collapses the selection onto it — the two
+    /// Shows `date`'s month and collapses the selection onto it - the two
     /// things a caller wants at once when it seeds a calendar.
     pub fn on(mut self, date: Date) -> Self {
         self.inner.set_selection_start(date);
@@ -457,7 +457,7 @@ impl MonthCalendar {
         let months = delta * self.scroll_months();
         self.view_month = Some(add_months(base, months));
         // A keyboard cursor travels with the page, the way PageDown moves it
-        // to the same day of the next month — otherwise it would be left on a
+        // to the same day of the next month - otherwise it would be left on a
         // month nobody sees.
         if let Some(day) = self.focus_day {
             self.focus_day = Some(self.clamp_to_bounds(add_months(day, months)));
@@ -473,7 +473,7 @@ impl MonthCalendar {
 
     /// The day the keyboard acts on: the cursor when it is on the shown
     /// month, else the selection's start when it is, else the 1st of the
-    /// shown month — always inside `[MinDate, MaxDate]`.
+    /// shown month - always inside `[MinDate, MaxDate]`.
     pub fn active_day(&self) -> Date {
         let (year, month) = self.shown_month();
         let on_page = |d: &Date| d.year == year && d.month == month;
@@ -493,7 +493,7 @@ impl MonthCalendar {
         self.view_month = Some(date.first_of_month());
     }
 
-    /// Whether `(vk, mods)` is a key [`MonthCalendar::key`] acts on — asked
+    /// Whether `(vk, mods)` is a key [`MonthCalendar::key`] acts on - asked
     /// before the key is taken from the queue, so nothing else is swallowed.
     pub fn handles_key(vk: u16, mods: Modifiers) -> bool {
         match vk {
@@ -514,7 +514,7 @@ impl MonthCalendar {
     /// | Home / End | the first / last day of the week (`FirstDayOfWeek`) |
     /// | PageUp / PageDown | the same day of the previous / next month |
     /// | Shift + PageUp / PageDown | the same day of the previous / next year |
-    /// | Enter / Space | — picks the cursor's day ([`CalendarKey::Activated`]) |
+    /// | Enter / Space | - picks the cursor's day ([`CalendarKey::Activated`]) |
     ///
     /// The cursor never leaves `[MinDate, MaxDate]`, and a month walk clamps
     /// the day (31 January + 1 month = 28 February).
@@ -566,7 +566,7 @@ impl MonthCalendar {
         picked
     }
 
-    /// `subMonths(viewDate, 1)` — one *scroll step*, which is one month at the
+    /// `subMonths(viewDate, 1)` - one *scroll step*, which is one month at the
     /// default `ScrollChange`.
     pub fn prev_month(&mut self) {
         self.scroll(-1);
@@ -577,7 +577,7 @@ impl MonthCalendar {
         self.scroll(1);
     }
 
-    /// The 42 cells of the shown month — [`month_grid`], with the replica's own
+    /// The 42 cells of the shown month - [`month_grid`], with the replica's own
     /// `FirstDayOfWeek` resolution. Not one line of it is re-derived here.
     pub fn cells(&self) -> [Cell; 42] {
         let (year, month) = self.shown_month();
@@ -592,7 +592,7 @@ impl MonthCalendar {
     }
 
     /// Whether `date` is inside the current selection, and whether it is one of
-    /// its two edges — the web's `inRange` / `isEdge`.
+    /// its two edges - the web's `inRange` / `isEdge`.
     fn selection_of(&self, date: Date) -> (bool, bool) {
         let (start, end) = (self.inner.selection_start(), self.inner.selection_end());
         ((start..=end).contains(&date), date == start || date == end)
@@ -602,7 +602,7 @@ impl MonthCalendar {
     ///
     /// With `MaxSelectionCount == 1` it collapses the selection onto the day.
     /// Above that it walks the web's two phases: the first click anchors, the
-    /// second extends — and the extension goes through
+    /// second extends - and the extension goes through
     /// `MonthCalendar::set_selection_end`, so ordering the ends, clamping into
     /// `[MinDate, MaxDate]` and capping the span at `MaxSelectionCount` are all
     /// the replica's, not this method's.
@@ -626,7 +626,7 @@ impl MonthCalendar {
     /// when `ShowWeekNumbers` asks for one.
     ///
     /// The gutter is **one more column of the same grid**. The web has no week
-    /// numbers to copy — this is therefore a Kubuno decision, and it is written
+    /// numbers to copy - this is therefore a Kubuno decision, and it is written
     /// as one: sizing the gutter off the day column is what keeps the grid
     /// regular instead of inventing a width for it.
     pub fn columns(&self) -> usize {
@@ -638,7 +638,7 @@ impl MonthCalendar {
         bounds.inflate(-cal::PAD, -cal::PAD)
     }
 
-    /// One column's width inside `bounds` — the `grid-cols-7` track, or one
+    /// One column's width inside `bounds` - the `grid-cols-7` track, or one
     /// eighth of it when a week gutter is shown.
     pub fn column_width(&self, bounds: Rect) -> f32 {
         let inner = Self::content(bounds);
@@ -663,14 +663,14 @@ impl MonthCalendar {
         Rect::new(h.right - cal::NAV, h.top, h.right, h.top + cal::NAV)
     }
 
-    /// The caption between the two nav buttons — `flex-1` in the web's header.
+    /// The caption between the two nav buttons - `flex-1` in the web's header.
     pub fn title_rect(&self, bounds: Rect) -> Rect {
         let h = self.header_rect(bounds);
         Rect::new(h.left + cal::NAV, h.top, h.right - cal::NAV, h.bottom)
     }
 
     /// Which header button `(x, y)` lands on. The two nav buttons are round
-    /// (`rounded-full`), so their corners do not answer — the same rule
+    /// (`rounded-full`), so their corners do not answer - the same rule
     /// [`crate::buttons::circular_hit`] states for every circular control.
     pub fn header_at(&self, bounds: Rect, x: f32, y: f32) -> Option<HeaderPart> {
         if crate::buttons::circular_hit(self.prev_month_rect(bounds), x, y) {
@@ -689,7 +689,7 @@ impl MonthCalendar {
         Rect::new(Self::content(bounds).left, top, Self::content(bounds).right, top + cal::WEEKDAY)
     }
 
-    /// The seven day columns — the week-number gutter, when there is one, sits
+    /// The seven day columns - the week-number gutter, when there is one, sits
     /// to their left and is NOT part of this rectangle.
     pub fn grid_rect(&self, bounds: Rect) -> Rect {
         let inner = Self::content(bounds);
@@ -709,7 +709,7 @@ impl MonthCalendar {
         Some(Rect::new(inner.left, grid.top, grid.left, grid.bottom))
     }
 
-    /// The full track of cell `index` (0..42) — a column wide, [`cal::DAY`]
+    /// The full track of cell `index` (0..42) - a column wide, [`cal::DAY`]
     /// tall.
     pub fn cell_rect(&self, bounds: Rect, index: usize) -> Rect {
         let grid = self.grid_rect(bounds);
@@ -720,7 +720,7 @@ impl MonthCalendar {
         Rect::new(x, y, x + w, y + cal::DAY)
     }
 
-    /// The `h-8 w-8` disc inside that track (`mx-auto`) — what is actually
+    /// The `h-8 w-8` disc inside that track (`mx-auto`) - what is actually
     /// filled, ringed and clicked.
     pub fn day_rect(&self, bounds: Rect, index: usize) -> Rect {
         let cell = self.cell_rect(bounds, index);
@@ -744,7 +744,7 @@ impl MonthCalendar {
     }
 
     /// Which **date** `(x, y)` lands on, trailing days of the neighbouring
-    /// months included — there is no empty cell in this grid, because
+    /// months included - there is no empty cell in this grid, because
     /// [`month_grid`] always fills the leading week.
     ///
     /// Pure geometry: a day outside `[MinDate, MaxDate]` still answers here, and
@@ -766,7 +766,7 @@ impl MonthCalendar {
         Some(Rect::new(inner.left, top, inner.right, top + cal::FOOTER_ROW))
     }
 
-    /// The panel's size, with no canvas — the grid is fixed type-free geometry,
+    /// The panel's size, with no canvas - the grid is fixed type-free geometry,
     /// so this is exact and a caller can lay a popup out before it paints.
     ///
     /// One month only: see the module's stated gaps for `CalendarDimensions`.
@@ -790,7 +790,7 @@ impl MonthCalendar {
         let title_ink = or_theme(self.inner.title_fore_color, t.text_primary);
         let ink = if dead { faded(&title_ink, DISABLED_FIELD_ALPHA) } else { title_ink };
 
-        // `TitleBackColor` is a modelled property with no web counterpart — the
+        // `TitleBackColor` is a modelled property with no web counterpart - the
         // web's header sits on the panel's own ground. Painted only when the
         // caller set it, which is exactly what "ambient when None" means.
         if let Some(back) = self.inner.title_back_color {
@@ -810,7 +810,7 @@ impl MonthCalendar {
         }
 
         // `text-sm font-semibold text-text-primary hover:text-primary px-1
-        // rounded hover:bg-surface-1` — one caption where the web has two
+        // rounded hover:bg-surface-1` - one caption where the web has two
         // adjacent buttons (see [`HeaderPart::Title`]); on hover the pair
         // lights as one.
         let (year, month) = self.shown_month();
@@ -841,7 +841,7 @@ impl MonthCalendar {
         let t = c.theme();
         // `text-[11px] font-medium text-text-tertiary`. There is no 11 DIP
         // format object in `TextFormats` (the token exists, the format does
-        // not), so this is the meta step at the same weight — one size up, and
+        // not), so this is the meta step at the same weight - one size up, and
         // said so rather than left to be read off the pixels.
         let f = &c.formats().caption_strong;
         let ink = if dead { faded(&t.text_tertiary, DISABLED_FIELD_ALPHA) } else { t.text_tertiary };
@@ -875,7 +875,7 @@ impl MonthCalendar {
             c.fill_rounded(&disc, pill(cal::DAY), &t.accent);
             t.accent_foreground
         } else if in_range {
-            // `bg-primary/10 text-primary` — a SQUARE, deliberately: it is what
+            // `bg-primary/10 text-primary` - a SQUARE, deliberately: it is what
             // makes a range read as continuous between its two round edges.
             c.fill_rounded(&disc, 0.0, &faded(&t.accent, cal::RANGE_ALPHA));
             t.accent
@@ -898,7 +898,7 @@ impl MonthCalendar {
             }
         };
 
-        // `opacity-30 cursor-not-allowed` — applied over whatever the ladder
+        // `opacity-30 cursor-not-allowed` - applied over whatever the ladder
         // chose, exactly as the web's last class does.
         let alpha = if live { 1.0 } else { cal::DISABLED_DAY_ALPHA };
         let (plain, bold) = day_formats(c, self.inner.control().font.unwrap_or(FontRole::Caption));
@@ -915,7 +915,7 @@ impl MonthCalendar {
     }
 
     /// The week-number gutter. A row made ENTIRELY of trailing days carries no
-    /// number — the replica's own rule, for the same reason: the leading week
+    /// number - the replica's own rule, for the same reason: the leading week
     /// its grid always shows would otherwise label a week of the month before.
     fn paint_week_numbers(&self, c: &dyn Canvas, bounds: Rect, cells: &[Cell; 42], dead: bool) {
         let Some(gutter) = self.week_column(bounds) else { return };
@@ -935,8 +935,8 @@ impl MonthCalendar {
     /// The today footer.
     ///
     /// The replica draws a `Color.Red`-ish swatch here because the native
-    /// control does; this layer draws the web's own footer instead — a rule and
-    /// a `text-xs` row — because the design system has no swatch and the grid
+    /// control does; this layer draws the web's own footer instead - a rule and
+    /// a `text-xs` row - because the design system has no swatch and the grid
     /// already marks today with an accent ring. The label is composed the way
     /// the replica composes it, from [`format_custom`] and `FR.short_date`.
     fn paint_footer(&self, c: &dyn Canvas, bounds: Rect, dead: bool) {
@@ -976,7 +976,7 @@ impl Widget for MonthCalendar {
         let dead = state.disabled || !self.inner.control().enabled;
 
         // `PickerPopover`: `bg-white rounded-xl border border-border`. The
-        // surface is `CalendarMonthBackground` when the caller set it —
+        // surface is `CalendarMonthBackground` when the caller set it -
         // `MonthCalendar` re-surfaces `BackColor` for exactly that.
         let face = or_theme(
             self.inner.control().back_color,
@@ -1012,7 +1012,7 @@ impl Widget for MonthCalendar {
 /// Which part of the picker's field a point lands on.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum FieldPart {
-    /// The `ShowCheckBox` well — the toolkit's « no value is selected » toggle.
+    /// The `ShowCheckBox` well - the toolkit's « no value is selected » toggle.
     CheckBox,
     /// The rest of the field. A click here opens the panel, unless
     /// `ShowUpDown` replaced it with a spinner.
@@ -1023,19 +1023,19 @@ pub enum FieldPart {
     SpinDown,
 }
 
-/// One editable part of the field's text — the toolkit's « fields » of a
+/// One editable part of the field's text - the toolkit's « fields » of a
 /// `DateTimePicker`, which the user selects with ←/→ and edits with ↑/↓ or by
 /// typing digits. Which ones exist, and in which order, is read off the
 /// format pattern (`dd/MM/yyyy` has three, `HH:mm:ss` three, `dddd d MMMM
-/// yyyy` three — the weekday name is derived, not edited).
+/// yyyy` three - the weekday name is derived, not edited).
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Segment {
     Day,
     Month,
     Year,
-    /// `H` / `HH` — 0 to 23.
+    /// `H` / `HH` - 0 to 23.
     Hour,
-    /// `h` / `hh` — 1 to 12, the AM/PM half kept.
+    /// `h` / `hh` - 1 to 12, the AM/PM half kept.
     Hour12,
     Minute,
     Second,
@@ -1061,8 +1061,8 @@ enum Token {
     Run(char, usize),
 }
 
-/// Splits `pattern` exactly the way `format_custom` walks it — quoted text and
-/// `\`-escapes are literal, a run of one specifier letter is one token — so
+/// Splits `pattern` exactly the way `format_custom` walks it - quoted text and
+/// `\`-escapes are literal, a run of one specifier letter is one token - so
 /// formatting the runs one by one and concatenating gives the same string as
 /// formatting the whole pattern. The grammar is the replica's; this only
 /// keeps the boundaries it throws away.
@@ -1140,7 +1140,7 @@ fn segment_value(v: DateTime, seg: Segment) -> i32 {
     }
 }
 
-/// The inclusive range a segment takes — the day's depends on the month.
+/// The inclusive range a segment takes - the day's depends on the month.
 fn segment_range(v: DateTime, seg: Segment) -> (i32, i32) {
     match seg {
         Segment::Day => (1, Date::days_in_month(v.date.year, v.date.month) as i32),
@@ -1180,7 +1180,7 @@ fn with_segment(v: DateTime, seg: Segment, value: i32) -> DateTime {
 }
 
 /// `v` with one segment moved by `delta`: the toolkit's up/down, which WRAPS
-/// inside the segment (59 → 00, 31 → 1) without carrying into the next one —
+/// inside the segment (59 → 00, 31 → 1) without carrying into the next one -
 /// except the year, which has no wrap and stops at the bounds.
 fn step_segment(v: DateTime, seg: Segment, delta: i32) -> DateTime {
     let (lo, hi) = segment_range(v, seg);
@@ -1206,7 +1206,7 @@ fn step_segment(v: DateTime, seg: Segment, delta: i32) -> DateTime {
 ///
 /// `DatePicker.tsx`'s trigger, in full: `w-full flex items-center gap-2 px-3
 /// rounded border bg-white text-left` at `h-9`, with a leading `size={14}`
-/// glyph — an `@ui/Input`, so [`height::BUTTON_MD`], [`radius::SM`] and
+/// glyph - an `@ui/Input`, so [`height::BUTTON_MD`], [`radius::SM`] and
 /// [`space::MD`], plus `focus:ring-2 focus:ring-primary` and
 /// `disabled:opacity-60`. The panel is [`MonthCalendar`], anchored at
 /// `r.bottom + 4` the way `computePos` anchors it.
@@ -1215,19 +1215,19 @@ fn step_segment(v: DateTime, seg: Segment, delta: i32) -> DateTime {
 ///
 /// [`DatePicker::calendar`] is a real [`MonthCalendar`], and
 /// [`DatePicker::open_panel`] is the one place the picker's `Value`, bounds and
-/// `Calendar*` colours are projected onto it — the same single direction, at the
+/// `Calendar*` colours are projected onto it - the same single direction, at the
 /// same moment, as the web's `openPicker()`, which seeds `viewDate` from the
 /// value when the popover opens. Picking a day writes back through
 /// [`DatePicker::pick`], so the value has one home.
 #[derive(Clone)]
 pub struct DatePicker {
     inner: replica::DateTimePicker,
-    /// Whether the panel is dropped — `DateTimePicker.DroppedDown`, which the
+    /// Whether the panel is dropped - `DateTimePicker.DroppedDown`, which the
     /// replica does not model (it is runtime state, not a designer property).
     pub open: bool,
     /// The dropped panel.
     pub calendar: MonthCalendar,
-    /// The viewport the panel places itself in — the monitor's work area
+    /// The viewport the panel places itself in - the monitor's work area
     /// (`Frame::screen_area`) when the panel is shown in a `host::popup`.
     /// `Some` turns on `computePos`' flip (above the field when there is not
     /// room below) and its horizontal clamp; `None` keeps the plain « under
@@ -1236,10 +1236,10 @@ pub struct DatePicker {
     /// The web's `error` prop: `border-danger`, and a danger focus ring
     /// (`kb-field-focus-danger`).
     pub invalid: bool,
-    /// The segment the keyboard edits — the toolkit's selected field. `None`
+    /// The segment the keyboard edits - the toolkit's selected field. `None`
     /// until the field is clicked or a key selects one.
     pub active_segment: Option<Segment>,
-    /// The field part under the pointer — lights a spin button
+    /// The field part under the pointer - lights a spin button
     /// (`hover:bg-surface-2`). A replica has no pointer, hence a field here.
     pub hot_part: Option<FieldPart>,
     /// Digits typed into the active segment and not yet committed (a year is
@@ -1268,7 +1268,7 @@ impl DerefMut for DatePicker {
 /// A time field.
 ///
 /// It is the SAME control: `DateTimePickerFormat::Time` is a property of
-/// `DateTimePicker`, not a second type — so this is an alias, exactly as
+/// `DateTimePicker`, not a second type - so this is an alias, exactly as
 /// [`crate::buttons::ToggleButton`] is one for a check box in button
 /// appearance. Build one with [`DatePicker::time`].
 ///
@@ -1276,12 +1276,12 @@ impl DerefMut for DatePicker {
 /// scrolling hour/minute columns (`TimeScroll.tsx`) are a control the replica
 /// layer does not model at all, and building one here would be inventing a
 /// primitive rather than porting one. The toolkit's own answer to « edit a time
-/// in a picker » is `ShowUpDown`, which IS modelled and IS painted — hence
+/// in a picker » is `ShowUpDown`, which IS modelled and IS painted - hence
 /// [`DatePicker::time`] turning it on.
 pub type TimePicker = DatePicker;
 
 impl DatePicker {
-    /// A picker with the replica's defaults — `Format = Long`, so it shows
+    /// A picker with the replica's defaults - `Format = Long`, so it shows
     /// « lundi 15 juin 2026 ».
     pub fn new() -> Self {
         let mut picker = Self {
@@ -1306,7 +1306,7 @@ impl DatePicker {
         picker
     }
 
-    /// The `dd/MM/yyyy` field — `ShortDatePattern`, the shape the web's `date`
+    /// The `dd/MM/yyyy` field - `ShortDatePattern`, the shape the web's `date`
     /// mode shows and its `jj/mm/aaaa` placeholder describes.
     pub fn short() -> Self {
         let mut p = Self::new();
@@ -1314,7 +1314,7 @@ impl DatePicker {
         p
     }
 
-    /// A time field: `LongTimePattern` and the toolkit's spinner — see
+    /// A time field: `LongTimePattern` and the toolkit's spinner - see
     /// [`TimePicker`].
     pub fn time() -> Self {
         let mut p = Self::new();
@@ -1330,7 +1330,7 @@ impl DatePicker {
         self
     }
 
-    /// Sets `MinDate` / `MaxDate`, through the replica's own bounds rules —
+    /// Sets `MinDate` / `MaxDate`, through the replica's own bounds rules -
     /// which also drag `Value` into the new window.
     pub fn between(mut self, min: Date, max: Date) -> Self {
         self.inner.set_min_date(min);
@@ -1339,7 +1339,7 @@ impl DatePicker {
         self
     }
 
-    /// The text the field shows — the replica's, formatted against [`FR`].
+    /// The text the field shows - the replica's, formatted against [`FR`].
     pub fn display_text(&self) -> String {
         self.inner.display_text(&FR)
     }
@@ -1372,7 +1372,7 @@ impl DatePicker {
     }
 
     /// Projects the picker's value, bounds and `Calendar*` appearance onto the
-    /// panel — the one direction of the sync, run when the panel opens.
+    /// panel - the one direction of the sync, run when the panel opens.
     pub fn sync_calendar(&mut self) {
         let date = self.inner.value().date;
         self.calendar.set_min_date(self.inner.min_date());
@@ -1391,7 +1391,7 @@ impl DatePicker {
         self.calendar.trailing_fore_color = self.inner.calendar_trailing_fore_color;
     }
 
-    /// Drops the panel, seeding it from the value — the web's `openPicker()`.
+    /// Drops the panel, seeding it from the value - the web's `openPicker()`.
     pub fn open_panel(&mut self) {
         if !self.has_panel() {
             return;
@@ -1416,7 +1416,7 @@ impl DatePicker {
     }
 
     /// Picks `date` from the panel: the value is written through the replica's
-    /// clamp, the panel follows, and the popover closes — `handleSelectDate`
+    /// clamp, the panel follows, and the popover closes - `handleSelectDate`
     /// for the web's `date` mode.
     pub fn pick(&mut self, date: Date) {
         if !self.calendar.is_selectable(date) {
@@ -1429,8 +1429,8 @@ impl DatePicker {
     }
 
     /// Drops the panel from the keyboard: as [`DatePicker::open_panel`], with
-    /// the calendar's keyboard cursor put on the value — the ARIA pattern's
-    /// « focus moves to the selected date » — so its ring shows at once.
+    /// the calendar's keyboard cursor put on the value - the ARIA pattern's
+    /// « focus moves to the selected date » - so its ring shows at once.
     pub fn open_panel_from_keyboard(&mut self) {
         self.open_panel();
         if self.open {
@@ -1443,7 +1443,7 @@ impl DatePicker {
 
     /// The field's text and where each editable segment sits in it. The text
     /// is [`DatePicker::display_text`], except that digits typed into the
-    /// active segment and not yet committed replace that segment's value — so
+    /// active segment and not yet committed replace that segment's value - so
     /// a year being typed reads « 20 » rather than jumping to year 20.
     pub fn field_text(&self) -> (String, Vec<SegmentSpan>) {
         let value = self.inner.value();
@@ -1503,7 +1503,7 @@ impl DatePicker {
     }
 
     /// Moves the selection one segment left (`-1`) or right (`+1`), stopping
-    /// at the ends — ←/→ in a `DateTimePicker`.
+    /// at the ends - ←/→ in a `DateTimePicker`.
     pub fn move_segment(&mut self, delta: i32) {
         self.commit_typed();
         let segs = self.segments();
@@ -1539,7 +1539,7 @@ impl DatePicker {
     }
 
     /// One typed character. Digits fill the active segment the way a native
-    /// date field does: the segment commits — and the selection moves on —
+    /// date field does: the segment commits - and the selection moves on -
     /// as soon as no further digit could keep it in range (« 4 » in a day is
     /// complete, « 1 » waits for a second digit), or when it holds its full
     /// width. `a` / `p` set the AM/PM segment. Returns whether it was taken.
@@ -1609,14 +1609,14 @@ impl DatePicker {
     }
 
     /// The field lost the keyboard focus: typed digits are committed and the
-    /// panel closes — the web's outside-`mousedown`, and Tab away.
+    /// panel closes - the web's outside-`mousedown`, and Tab away.
     pub fn blur(&mut self) {
         self.commit_typed();
         self.close_panel();
     }
 
     /// Whether `(key, mods)` is one [`DatePicker::key`] acts on in the
-    /// picker's current state — asked before the key is taken from the queue,
+    /// picker's current state - asked before the key is taken from the queue,
     /// so Tab, Ctrl+Tab and every shortcut the field does not own stay there.
     pub fn handles_key(&self, key: u16, mods: Modifiers) -> bool {
         let alt = mods.matches(Modifiers::ALT);
@@ -1641,13 +1641,13 @@ impl DatePicker {
 
     /// One key, in the picker's current state. Returns whether it acted.
     ///
-    /// **Panel open** — the calendar's keys ([`MonthCalendar::key`]); Enter /
+    /// **Panel open** - the calendar's keys ([`MonthCalendar::key`]); Enter /
     /// Space pick the cursor's day and close; Escape, Alt+↑ and F4 close.
     ///
-    /// **Panel closed** — the toolkit's field editing: ←/→ select the
+    /// **Panel closed** - the toolkit's field editing: ←/→ select the
     /// previous / next segment, Home/End the first / last, ↑/↓ step the
     /// selected one, Backspace drops a typed digit, Escape drops them all.
-    /// Enter commits what was typed, or — like the web trigger, a `<button>` —
+    /// Enter commits what was typed, or - like the web trigger, a `<button>` -
     /// opens the panel; Space toggles `ShowCheckBox` when there is one, else
     /// opens; Alt+↓ and F4 open (the native control's shortcuts).
     pub fn key(&mut self, key: u16, mods: Modifiers) -> bool {
@@ -1715,7 +1715,7 @@ impl DatePicker {
     }
 
     /// Takes this frame's keys and typed text meant for the field from the
-    /// host queue and applies them — call it while the field holds the focus.
+    /// host queue and applies them - call it while the field holds the focus.
     /// Returns whether anything was taken. Keys the picker does not own (Tab,
     /// shortcuts) stay in the queue.
     pub fn take_input(&mut self) -> bool {
@@ -1745,7 +1745,7 @@ impl DatePicker {
 
     // ── Geometry ─────────────────────────────────────────────────────────────
 
-    /// The field's height — an `@ui/Input`'s `h-9`.
+    /// The field's height - an `@ui/Input`'s `h-9`.
     pub fn field_height(&self) -> f32 {
         height::BUTTON_MD
     }
@@ -1755,7 +1755,7 @@ impl DatePicker {
         Rect::new(bounds.left, bounds.top, bounds.right, bounds.top + self.field_height())
     }
 
-    /// Splits `r` into a `w`-wide band at the LEADING edge and the rest —
+    /// Splits `r` into a `w`-wide band at the LEADING edge and the rest -
     /// mirrored under `RightToLeftLayout`, which is the one thing that flag
     /// changes here.
     fn split_leading(r: Rect, w: f32, rtl: bool) -> (Rect, Rect) {
@@ -1774,7 +1774,7 @@ impl DatePicker {
         }
         let field = self.field_rect(bounds);
         // The spin column is at the trailing edge, so it takes the OTHER side
-        // from the content — hence the inverted `rtl`.
+        // from the content - hence the inverted `rtl`.
         let (column, _) = Self::split_leading(field, SPIN_COLUMN, !self.inner.right_to_left_layout);
         let mid = (column.top + column.bottom) / 2.0;
         Some((
@@ -1864,7 +1864,7 @@ impl DatePicker {
 
     /// Everything the dropped panel paints: the panel plus the reach of its
     /// `shadow-2xl` ([`shadow_outset`]). This is the rectangle a
-    /// `host::popup` must cover — sized any smaller, the shadow is cut into a
+    /// `host::popup` must cover - sized any smaller, the shadow is cut into a
     /// hard band at the popup's edge.
     pub fn drop_down_paint_bounds(&self, bounds: Rect) -> Rect {
         let panel = self.drop_down_rect(bounds);
@@ -1872,7 +1872,7 @@ impl DatePicker {
         Rect::new(panel.left - l, panel.top - t, panel.right + r, panel.bottom + b)
     }
 
-    /// Paints the dropped panel ALONE — its shadow and its calendar — at
+    /// Paints the dropped panel ALONE - its shadow and its calendar - at
     /// `panel`, which is wherever the caller put it (in a popup's local space,
     /// typically: [`DatePicker::drop_down_rect`] rebased on
     /// [`DatePicker::drop_down_paint_bounds`]' top-left). Pair it with
@@ -1887,8 +1887,8 @@ impl DatePicker {
 
     /// Shows the dropped panel in an interactive `host::popup` of its own, so
     /// it overflows every container and the window itself. Returns the
-    /// popup's bounds (client DIP) — hand them to the focus manager's
-    /// `keep_focus_in` so a click in the calendar does not blur the field —
+    /// popup's bounds (client DIP) - hand them to the focus manager's
+    /// `keep_focus_in` so a click in the calendar does not blur the field -
     /// or `None` when the panel is closed. The pointer over the popup comes
     /// back in the page's client coordinates, so [`DatePicker::day_at`] and
     /// [`MonthCalendar::header_at`] on [`DatePicker::drop_down_rect`] hit-test
@@ -1923,7 +1923,7 @@ impl DatePicker {
     }
 
     /// The segment a click at `(x, y)` selects: the one under it, else the
-    /// nearest on the same line (a click past the end selects the last) —
+    /// nearest on the same line (a click past the end selects the last) -
     /// `None` outside the text band.
     pub fn segment_at(&self, c: &dyn Canvas, bounds: Rect, x: f32, y: f32) -> Option<Segment> {
         let band = self.text_rect(bounds);
@@ -1961,7 +1961,7 @@ impl DatePicker {
         Some(FieldPart::Value)
     }
 
-    /// Which day of the DROPPED panel `(x, y)` lands on — `None` when the panel
+    /// Which day of the DROPPED panel `(x, y)` lands on - `None` when the panel
     /// is closed.
     pub fn day_at(&self, bounds: Rect, x: f32, y: f32) -> Option<Date> {
         self.open.then(|| self.calendar.day_at(self.drop_down_rect(bounds), x, y)).flatten()
@@ -1979,7 +1979,7 @@ impl DatePicker {
         let face = if dead { t.surface_2 } else { t.layer_background };
         c.fill_rounded(&field, radius::SM, &face);
         // `kb-field-focus`: the stroke shows on `:focus-visible`, and on an
-        // OPEN picker (`kb-field-focus--on` — opened by mouse, the trigger has
+        // OPEN picker (`kb-field-focus--on` - opened by mouse, the trigger has
         // the focus but not `:focus-visible`, and the panel below is this
         // field's). `error` turns border and ring to `danger`.
         let ring = !dead && (state.show_focus_ring() || self.open);
@@ -2008,7 +2008,7 @@ impl DatePicker {
             &faded(&t.text_tertiary, alpha),
         );
 
-        // `displayText ? 'text-text-primary' : 'text-text-tertiary'` — and the
+        // `displayText ? 'text-text-primary' : 'text-text-tertiary'` - and the
         // toolkit greys the value when `ShowCheckBox` is unchecked, which is the
         // same « there is no value here » reading.
         let ink = if self.value_shown() {
@@ -2043,7 +2043,7 @@ impl DatePicker {
             let rule = &faded(&t.card_stroke, alpha);
             let glyph = &faded(&t.text_secondary, alpha);
             // `hover:bg-surface-2 hover:text-text-primary`, inside the field's
-            // `overflow-hidden` rounded box — so the hovered half keeps the
+            // `overflow-hidden` rounded box - so the hovered half keeps the
             // field's corner.
             let hot = if dead { None } else { self.hot_part };
             c.push_clip_rounded(&field, radius::SM);
@@ -2063,7 +2063,7 @@ impl DatePicker {
         }
     }
 
-    /// Paints the field WITHOUT its dropped panel — for a caller that shows
+    /// Paints the field WITHOUT its dropped panel - for a caller that shows
     /// the panel elsewhere ([`DatePicker::popup_drop_down`] or
     /// [`DatePicker::paint_drop_down`]). Same field, same states as
     /// [`Widget::paint`], the open ring included.
@@ -2091,7 +2091,7 @@ fn place_panel(field: Rect, left: f32, size: Size, area: Rect) -> Rect {
 }
 
 /// Paints a check well in the Kubuno check-box look (`@ui/Checkbox`), at the
-/// geometry `crate::metrics::control` carries — the web's own canvas painter's
+/// geometry `crate::metrics::control` carries - the web's own canvas painter's
 /// `{ size: 18, border: 2, radius: 4, tick: 11 }`.
 fn paint_check(c: &dyn Canvas, well: Rect, state: CheckState, alpha: f32) {
     let t = c.theme();
@@ -2144,7 +2144,7 @@ impl Widget for DatePicker {
         let dead = state.disabled || !self.inner.control().enabled;
         self.paint_field(canvas, bounds, state, dead);
         if self.open && self.has_panel() && !dead {
-            // The panel floats, so IT wears the shadow — `shadow-2xl`, as
+            // The panel floats, so IT wears the shadow - `shadow-2xl`, as
             // `PickerPopover` declares it. Painted in place, past `bounds`:
             // a caller that needs it to escape a container or the window
             // uses `paint_field_only` + `popup_drop_down` instead.
@@ -2152,7 +2152,7 @@ impl Widget for DatePicker {
         }
     }
 
-    /// The field, plus the dropped panel — a click in the calendar is a click
+    /// The field, plus the dropped panel - a click in the calendar is a click
     /// on the picker, not on whatever is painted behind it.
     fn hit_test(&self, bounds: Rect, x: f32, y: f32) -> bool {
         self.field_rect(bounds).contains(x, y)
@@ -2173,7 +2173,7 @@ impl Widget for DatePicker {
 //
 // Two kinds, in this order: the GEOMETRY this layer adds (which cell is where,
 // what the pointer lands on, what a panel measures), and the proof that the
-// arithmetic underneath is still the replica's — the grid, the bounds, the
+// arithmetic underneath is still the replica's - the grid, the bounds, the
 // selection cap and the month walk are asserted through this type, so a
 // re-derivation here would show up as a divergence from the values the replica's
 // own tests pin.
@@ -2190,7 +2190,7 @@ mod tests {
     use super::*;
     use kubuno_desktop_controls::datetime::{Day, Time};
 
-    /// The panel, laid out where `panel_size` asks for it — the rectangle every
+    /// The panel, laid out where `panel_size` asks for it - the rectangle every
     /// hit test below is run against.
     fn panel_of(cal: &MonthCalendar) -> Rect {
         let s = cal.panel_size();
@@ -2222,7 +2222,7 @@ mod tests {
 
         // Seven `grid-cols-7` tracks fill the padded width exactly.
         assert_eq!(cal::DAY_COLUMN * 7.0 + 2.0 * cal::PAD, cal::WIDTH);
-        // And a day disc is smaller than its track — the gaps between the discs
+        // And a day disc is smaller than its track - the gaps between the discs
         // are the web's `mx-auto`, not a rounding. A `const` block, because both
         // operands are constants and the check is worth making at compile time.
         const { assert!(cal::DAY < cal::DAY_COLUMN) };
@@ -2255,7 +2255,7 @@ mod tests {
 
     // ── `day_at`, at the exact borders ───────────────────────────────────────
 
-    /// June 2026 opens on Monday 1 June — the case the replica's own tests call
+    /// June 2026 opens on Monday 1 June - the case the replica's own tests call
     /// out, because the naive offset would be zero and the grid would open flush
     /// on the 1st. It does not: the whole preceding week is shown, so the 1st is
     /// cell 7 and the cell before it is 31 May.
@@ -2267,7 +2267,7 @@ mod tests {
         let (x, y) = centre(&cal, bounds, 7);
         assert_eq!(cal.day_at(bounds, x, y), Some(Date::new(2026, 6, 1)));
 
-        // The cell before it is NOT empty — this grid has no empty cell.
+        // The cell before it is NOT empty - this grid has no empty cell.
         let (x, y) = centre(&cal, bounds, 6);
         assert_eq!(cal.day_at(bounds, x, y), Some(Date::new(2026, 5, 31)));
         assert!(!cal.cells()[6].in_month, "and it reads as a trailing day");
@@ -2303,7 +2303,7 @@ mod tests {
     }
 
     /// A month whose 1st is a Sunday and one whose 1st is a Monday, under both
-    /// `FirstDayOfWeek` choices — the rotation is an index rotation, and the
+    /// `FirstDayOfWeek` choices - the rotation is an index rotation, and the
     /// leading week is always shown in full.
     #[test]
     fn a_month_starting_sunday_and_one_starting_monday() {
@@ -2338,7 +2338,7 @@ mod tests {
         }
     }
 
-    /// A leap February has a 29th and the year after it does not — the grid
+    /// A leap February has a 29th and the year after it does not - the grid
     /// takes both from the replica's `days_in_month`.
     #[test]
     fn february_of_a_leap_year_has_a_twenty_ninth() {
@@ -2377,7 +2377,7 @@ mod tests {
         }
         assert_eq!(year.shown_month(), (2025, 1));
 
-        // Browsing does NOT move the selection — the whole point of
+        // Browsing does NOT move the selection - the whole point of
         // `view_month`, which the toolkit does not have.
         assert_eq!(cal.selection_start(), Date::new(2026, 12, 15));
 
@@ -2414,7 +2414,7 @@ mod tests {
         assert!(!cal.is_selectable(Date::new(2026, 6, 9)));
         assert!(!cal.is_selectable(Date::new(2026, 6, 21)));
 
-        // The 9th is still on the grid — a picker greys it, it does not vanish.
+        // The 9th is still on the grid - a picker greys it, it does not vanish.
         let bounds = panel_of(&cal);
         let (x, y) = centre(&cal, bounds, 7 + 8);
         assert_eq!(cal.day_at(bounds, x, y), Some(Date::new(2026, 6, 9)));
@@ -2429,7 +2429,7 @@ mod tests {
         assert_eq!(cal.min_date(), replica::MIN_DATE);
     }
 
-    /// A range is picked in two clicks and capped by `MaxSelectionCount` — both
+    /// A range is picked in two clicks and capped by `MaxSelectionCount` - both
     /// rules the replica owns, reached from this layer's phase flag.
     #[test]
     fn a_multi_day_selection_takes_two_clicks_and_is_capped() {
@@ -2455,7 +2455,7 @@ mod tests {
         assert_eq!(cal.selection_range().start, Date::new(2026, 6, 20));
         assert_eq!(cal.selection_range().end, Date::new(2026, 6, 26));
 
-        // With `MaxSelectionCount = 1` every click collapses the selection —
+        // With `MaxSelectionCount = 1` every click collapses the selection -
         // there is no phase at all.
         let mut single = MonthCalendar::new();
         single.max_selection_count = 1;
@@ -2467,7 +2467,7 @@ mod tests {
     }
 
     /// The three bolded-date lists are the replica's matching, reached through
-    /// `Deref` — this layer only chooses a heavier format for them.
+    /// `Deref` - this layer only chooses a heavier format for them.
     #[test]
     fn bolded_dates_are_the_replicas_three_lists() {
         let mut cal = MonthCalendar::new().on(Date::new(2026, 6, 15));
@@ -2514,7 +2514,7 @@ mod tests {
     // ── DatePicker ───────────────────────────────────────────────────────────
 
     /// The field is an input: the token height, the token radius, the token
-    /// inset — and the panel hangs 4 DIP under it.
+    /// inset - and the panel hangs 4 DIP under it.
     #[test]
     fn the_field_is_an_input_and_the_panel_hangs_under_it() {
         let p = DatePicker::short().on(Date::new(2026, 6, 15));
@@ -2596,7 +2596,7 @@ mod tests {
         assert!(p.text_rect(bounds).right <= p.icon_rect(bounds).left);
     }
 
-    /// A time picker IS the picker with a time format — one control, two
+    /// A time picker IS the picker with a time format - one control, two
     /// paints, no second type.
     #[test]
     fn a_time_picker_is_the_picker_in_a_time_format() {
@@ -2651,7 +2651,7 @@ mod tests {
         assert_eq!(p.value().date, Date::new(2026, 6, 18));
     }
 
-    /// A picker's panel picks ONE date and shows no today row — the web's
+    /// A picker's panel picks ONE date and shows no today row - the web's
     /// panel, not the toolkit's standalone calendar.
     #[test]
     fn a_pickers_panel_is_the_webs_panel_not_the_toolkits_calendar() {
@@ -2669,7 +2669,7 @@ mod tests {
         assert_eq!(stand.first_day_of_week, Day::Default);
     }
 
-    /// `Value` is greyed but still shown when `ShowCheckBox` is unchecked — the
+    /// `Value` is greyed but still shown when `ShowCheckBox` is unchecked - the
     /// toolkit's « no value is selected », which is why this layer paints no ✕.
     #[test]
     fn an_unchecked_check_box_means_no_value_is_selected() {
@@ -2714,7 +2714,7 @@ mod tests {
     }
 
     /// The weekday labels are the web's, and their base is the replica's
-    /// Monday-first weekday numbering — so a rotation is an index rotation.
+    /// Monday-first weekday numbering - so a rotation is an index rotation.
     #[test]
     fn the_weekday_labels_are_the_webs_monday_first_array() {
         assert_eq!(WEEKDAYS, ["L", "M", "M", "J", "V", "S", "D"]);
@@ -2860,7 +2860,7 @@ mod tests {
         assert_eq!(pb.bottom, panel.bottom + b);
 
         // The four-layer float ramp reaches far further below than to the
-        // sides — the band the audit saw when a caller guessed 10 DIP.
+        // sides - the band the audit saw when a caller guessed 10 DIP.
         let (_, _, side, below) = shadow_outset(&crate::metrics::SHADOW_FLOAT);
         assert!(below > 60.0 && side > 30.0);
     }

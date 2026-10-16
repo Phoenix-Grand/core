@@ -122,7 +122,7 @@ export function childEntries(map: LayoutMap, parentId: string): LayoutEntry[] {
 /**
  * The deepest element under a point: entries scanned in REVERSE paint order, the first whose visible part holds
  * the point wins (a container is recorded before its children, so the most nested match comes first; between
- * overlapping siblings the later-painted one wins — `LayoutMap::hit_test`'s rule). Entries with nothing visible
+ * overlapping siblings the later-painted one wins - `LayoutMap::hit_test`'s rule). Entries with nothing visible
  * are skipped; `skip` excludes ids (e.g. the dragged element).
  */
 export function hitTest(map: LayoutMap, x: number, y: number, skip?: (id: string) => boolean): LayoutEntry | null {

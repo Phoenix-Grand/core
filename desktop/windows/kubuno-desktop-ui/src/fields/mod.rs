@@ -1,4 +1,4 @@
-//! Form fields — the data-entry layer the web calls its "Contacts style"
+//! Form fields - the data-entry layer the web calls its "Contacts style"
 //! primitives.
 //!
 //! Every other UI family (buttons, lists, dialogs, editors…) was ported before
@@ -6,18 +6,18 @@
 //! thin for a form. These are the fields a Contacts window, a settings page or a
 //! share dialog is built from.
 //!
-//! They all sit on ONE base, [`outlined::OutlinedField`] — the Material outlined
+//! They all sit on ONE base, [`outlined::OutlinedField`] - the Material outlined
 //! text field whose label starts inside the box and floats up onto the border
 //! when the field is focused or holds a value. The composites are thin layers
 //! over it, exactly as on the web, so the notch, the focus colour and the
 //! spacing are defined once:
 //!
-//! * [`FieldGroup`] — `@ui/FieldGroup`: several sub-fields stacked under ONE
+//! * [`FieldGroup`] - `@ui/FieldGroup`: several sub-fields stacked under ONE
 //!   shared icon, with a Plus/Moins chevron revealing the « advanced » ones;
-//! * [`LabelCombobox`] — `@ui/LabelCombobox`: a free-text « Libellé » field with
+//! * [`LabelCombobox`] - `@ui/LabelCombobox`: a free-text « Libellé » field with
 //!   a dropdown of presets that narrow as you type (hosted in a popup, so it
 //!   escapes its container and the window);
-//! * [`FloatCheckbox`] — `@ui/FloatCheckbox`: the round selection check floating
+//! * [`FloatCheckbox`] - `@ui/FloatCheckbox`: the round selection check floating
 //!   over a media card.
 //!
 //! Still web-only: `AddressField`, `PhoneField`, `DateField` (they need the
@@ -67,7 +67,7 @@ mod m {
     /// Kept off the screen's edges when the list is placed.
     pub const EDGE: f32 = 8.0;
     /// How far `SHADOW_WAFFLE` reaches past the list (`0 4px 8px 3px`): 11 to
-    /// the sides, 15 below — a popup hosting the list covers it.
+    /// the sides, 15 below - a popup hosting the list covers it.
     pub const SHADOW_SIDE: f32 = 12.0;
     pub const SHADOW_BELOW: f32 = 16.0;
     /// `FloatCheckbox`: `w-5 h-5 rounded-full border-2`, the ✓ at 10 px bold
@@ -99,7 +99,7 @@ pub struct GroupField {
     pub key: String,
     /// Hidden until the group is expanded (Plus).
     pub advanced: bool,
-    /// The field itself — a plain outlined field WITHOUT its own icon: the
+    /// The field itself - a plain outlined field WITHOUT its own icon: the
     /// group owns the icon.
     pub field: OutlinedField,
 }
@@ -114,7 +114,7 @@ pub struct GroupLayout {
     pub toggle: Option<Rect>,
 }
 
-/// `@ui/FieldGroup` — several labelled sub-fields stacked under one shared
+/// `@ui/FieldGroup` - several labelled sub-fields stacked under one shared
 /// icon (a « Nom » block, an « Organisation » block…), with a chevron that
 /// reveals the advanced ones.
 pub struct FieldGroup {
@@ -214,7 +214,7 @@ impl FieldGroup {
     }
 
     /// Paints the group with a state per sub-field (hover, focus…) and one for
-    /// the chevron — what a live form passes; [`Widget::paint`] paints them
+    /// the chevron - what a live form passes; [`Widget::paint`] paints them
     /// all at rest.
     pub fn paint_parts(
         &self,
@@ -294,11 +294,11 @@ pub enum ComboKey {
     Moved,
     /// A preset was picked into the field (Enter on the active row).
     Picked,
-    /// The list closed (Escape) — the field keeps the focus.
+    /// The list closed (Escape) - the field keeps the focus.
     Closed,
 }
 
-/// `@ui/LabelCombobox` — an editable « Libellé »: an outlined field whose
+/// `@ui/LabelCombobox` - an editable « Libellé »: an outlined field whose
 /// value is FREE TEXT, plus a dropdown of presets that narrow as you type. A
 /// combobox, not a closed select: a custom label is always kept.
 ///
@@ -338,7 +338,7 @@ impl LabelCombobox {
     }
 
     /// The presets matching the typed text (case-insensitive `includes`),
-    /// as indices into `presets` — all of them when the field is empty.
+    /// as indices into `presets` - all of them when the field is empty.
     pub fn suggestions(&self) -> Vec<usize> {
         let q = self.field.text.trim().to_lowercase();
         (0..self.presets.len()).filter(|&i| q.is_empty() || self.presets[i].to_lowercase().contains(&q)).collect()
@@ -374,7 +374,7 @@ impl LabelCombobox {
         Rect::new(left, top, left + size.width, top + h)
     }
 
-    /// Everything the list paints, its shadow included — the popup's bounds.
+    /// Everything the list paints, its shadow included - the popup's bounds.
     pub fn list_paint_bounds(list: Rect) -> Rect {
         Rect::new(list.left - m::SHADOW_SIDE, list.top - m::SHADOW_SIDE, list.right + m::SHADOW_SIDE, list.bottom + m::SHADOW_BELOW)
     }
@@ -410,7 +410,7 @@ impl LabelCombobox {
     }
 
     /// One key-down, for a focused combobox. Pure; the caller takes the key
-    /// from the host queue unless the answer is [`ComboKey::Ignored`] — so
+    /// from the host queue unless the answer is [`ComboKey::Ignored`] - so
     /// every other key goes on to the field.
     pub fn key(&mut self, key: u16, mods: Modifiers) -> ComboKey {
         let n = self.suggestions().len();
@@ -450,7 +450,7 @@ impl LabelCombobox {
         }
     }
 
-    /// Whether [`LabelCombobox::key`] would act on `key` — decided before the
+    /// Whether [`LabelCombobox::key`] would act on `key` - decided before the
     /// key is taken from the host queue, so the rest reaches the field.
     pub fn handles_key(&self, key: u16, mods: Modifiers) -> bool {
         let n = self.suggestions().len();
@@ -463,7 +463,7 @@ impl LabelCombobox {
     }
 
     /// Keeps the active row valid after the text (and so the suggestions)
-    /// changed — the web re-filters on every keystroke.
+    /// changed - the web re-filters on every keystroke.
     pub fn refilter(&mut self) {
         let n = self.suggestions().len();
         if self.active.is_some_and(|a| a >= n) {
@@ -481,7 +481,7 @@ impl LabelCombobox {
         self.list_view().paint(c, rect, hot);
     }
 
-    /// An owned snapshot of the open list — what a popup's `'static` paint
+    /// An owned snapshot of the open list - what a popup's `'static` paint
     /// closure captures, since the combobox itself stays with its caller.
     pub fn list_view(&self) -> ComboList {
         ComboList {
@@ -562,7 +562,7 @@ impl Widget for LabelCombobox {
 // FloatCheckbox
 // ═════════════════════════════════════════════════════════════════════════════
 
-/// `@ui/FloatCheckbox` — the round check floating over a media card (files,
+/// `@ui/FloatCheckbox` - the round check floating over a media card (files,
 /// photos) for multi-select. Invisible at rest; it appears when its card is
 /// hovered (`reveal`, the web's `group-hover`) and stays while selected.
 ///

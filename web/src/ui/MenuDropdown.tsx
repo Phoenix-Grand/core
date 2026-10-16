@@ -31,13 +31,13 @@ interface MenuPalette {
   bg: string; text: string; sep: string; label: string
   hover: string; hoverText: string; accent: string; shortcut: string; danger: string
   border: string; shadow: string
-  /** Bottom sheet (touch): opaque — it has no backdrop-filter, only a dim scrim. */
+  /** Bottom sheet (touch): opaque - it has no backdrop-filter, only a dim scrim. */
   sheetBg: string
 }
 
 /* Translucent menu surfaces: the panel lets the content underneath show through,
  * blurred and saturated (see ./backdrop). `bg` must therefore stay partially
- * transparent — an opaque colour would silently disable the effect. */
+ * transparent - an opaque colour would silently disable the effect. */
 
 const PALETTES: Record<MenuTheme, MenuPalette> = {
   light: {
@@ -78,7 +78,7 @@ export function MenuDropdown({ items, pos, onClose, minWidth: minWidthProp = 200
   const [hovered, setHovered] = useState<number | null>(null)
 
   // Clic extérieur : le test porte sur `[data-kb-menu]` et non sur `ref.contains`, sinon
-  // un clic dans un sous-menu — porté dans `document.body` — fermerait le menu parent.
+  // un clic dans un sous-menu - porté dans `document.body` - fermerait le menu parent.
   useEffect(() => {
     const handler = (e: Event) => {
       const t = e.target
@@ -86,7 +86,7 @@ export function MenuDropdown({ items, pos, onClose, minWidth: minWidthProp = 200
       if (!el?.closest(`[${MENU_ATTR}]`)) onClose()
     }
     // `pointerdown`, pas `mousedown` : un déclencheur Radix appelle `preventDefault()`
-    // sur pointerdown, ce qui SUPPRIME le mousedown de compatibilité — le menu ouvert
+    // sur pointerdown, ce qui SUPPRIME le mousedown de compatibilité - le menu ouvert
     // ne voyait alors jamais le clic et restait affiché. Capture pour passer devant
     // tout composant qui stoppe la propagation.
     document.addEventListener('pointerdown', handler, true)
@@ -264,7 +264,7 @@ export function MenuDropdown({ items, pos, onClose, minWidth: minWidthProp = 200
             <span style={{ minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.label}</span>
             {/* Third column: left-aligned so the shortcuts read as a clean column
                 (the column itself is `auto`, i.e. as wide as the longest one).
-                Always rendered — an empty cell keeps the columns in step. */}
+                Always rendered - an empty cell keeps the columns in step. */}
             <span style={{ color: on ? c.hoverText : c.shortcut, fontSize: 'var(--kb-text-body)', textAlign: 'left', paddingLeft: 16, opacity: on ? 0.85 : 1 }}>
               {item.shortcut ?? ''}
             </span>
@@ -311,7 +311,7 @@ function SubmenuItem({ item, onClose, theme, index, hovered, setHovered }: {
   // Le panneau du sous-menu s'attarde 180 ms pour laisser traverser en diagonale, mais la
   // SURBRILLANCE ne doit pas s'attarder avec lui : sinon, en passant à une ligne voisine,
   // deux lignes restaient allumées en même temps. Elle suit donc le pointeur, sauf quand
-  // celui-ci est entré dans le sous-menu — auquel cas aucune ligne du parent n'est
+  // celui-ci est entré dans le sous-menu - auquel cas aucune ligne du parent n'est
   // survolée et on garde la ligne d'origine allumée, comme le fait macOS.
   const on = hovered === index || (pos !== null && hovered === null)
 
@@ -340,7 +340,7 @@ function SubmenuItem({ item, onClose, theme, index, hovered, setHovered }: {
         <span style={{ width: 20, flexShrink: 0, color: on ? c.hoverText : c.accent, fontSize: 14, display: 'inline-flex', alignItems: 'center' }}>{item.icon ?? ''}</span>
         <span style={{ minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.label}</span>
         {/* The caret sits in the SHORTCUT column: a submenu has no shortcut, and
-            the two never coexist — so the arrow lines up with the shortcuts. */}
+            the two never coexist - so the arrow lines up with the shortcuts. */}
         <span style={{ color: on ? c.hoverText : c.label, fontSize: 'var(--kb-text-body)', textAlign: 'right', paddingLeft: 16 }}>▸</span>
       </button>
       {pos && (

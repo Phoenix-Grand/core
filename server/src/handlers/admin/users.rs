@@ -86,8 +86,8 @@ pub struct ListUsersQuery {
     pub org_unit_id: Option<Uuid>,
     /// Confine the listing to SEVERAL units at once, comma-separated.
     ///
-    /// The console lets an operator hold two branches at the same time — looking
-    /// at "Sales" and "Marketing" together — and every downstream operation (the
+    /// The console lets an operator hold two branches at the same time - looking
+    /// at "Sales" and "Marketing" together - and every downstream operation (the
     /// count, the bulk bar, the export) must describe that same union, not one
     /// unit of it. Merged with `org_unit_id`, which stays for the single-unit
     /// callers that predate this.
@@ -127,7 +127,7 @@ pub struct ListUsersQuery {
 /// for a caller who does not hold `core.users.read` at all. The array `= ANY(...)`
 /// membership tests of the old PostgreSQL statement become portable `IN (...)`
 /// lists; only the descendants expansion keeps a PostgreSQL set-returning
-/// function (`core.org_unit_descendants`) — see the report.
+/// function (`core.org_unit_descendants`) - see the report.
 fn build_user_filter(
     backend: Backend,
     search: Option<&str>,
@@ -201,7 +201,7 @@ fn build_user_filter(
 ///
 /// The fragment is interpolated into the statement, so it must never carry
 /// caller text: an unknown name falls back to the default instead of being
-/// passed through. `id` breaks ties — without it two rows that compare equal can
+/// passed through. `id` breaks ties - without it two rows that compare equal can
 /// swap between pages and an account is seen twice, or not at all.
 /// `NULLS LAST` in both directions: "never signed in" is an absence, and it
 /// belongs at the end whichever way the column is read.
@@ -240,13 +240,13 @@ fn requested_units(q: &ListUsersQuery) -> Option<Vec<Uuid>> {
     (!units.is_empty()).then_some(units)
 }
 
-/// `GET /admin/users` — **confined to the caller's organisational subtree**.
+/// `GET /admin/users` - **confined to the caller's organisational subtree**.
 ///
 /// Before delegation existed this listing filtered nothing at all, which was
 /// harmless when the only administrator was an instance administrator. It stops
 /// being harmless the moment a role can be scoped: without the subtree filter a
-/// delegated administrator enumerates the whole directory — every address, every
-/// name — which is most of the value of the directory to an attacker.
+/// delegated administrator enumerates the whole directory - every address, every
+/// name - which is most of the value of the directory to an attacker.
 ///
 /// `scope_units = NULL` means "no restriction" (instance scope or superuser); an
 /// **empty** array means "nothing", which is the right answer for a caller who
@@ -268,7 +268,7 @@ pub async fn list_users(
     let backend = state.db.backend();
 
     // `order` comes from `sort_clause`, a closed allow-list that falls back to
-    // the default for any name it does not know — no caller text reaches the
+    // the default for any name it does not know - no caller text reaches the
     // statement. Search, role, units and paging all travel as bind parameters.
     let (where_sql, mut binds) = build_user_filter(
         backend,
@@ -290,7 +290,7 @@ pub async fn list_users(
         .await
         .map_err(|e| { tracing::error!(error = %e, "list_users"); AppError::Database(e) })?;
 
-    // The total must obey the same perimeter — and the same filters — or the
+    // The total must obey the same perimeter - and the same filters - or the
     // pagination tells the caller how many accounts they are not allowed to see,
     // and offers pages that come back empty.
     let (count_where, count_binds) = build_user_filter(
@@ -313,7 +313,7 @@ pub async fn list_users(
 
     let mut body = json!({ "users": users, "total": total, "limit": limit, "offset": offset });
 
-    // Accounts per unit — the "own" count only; a subtree total is a sum over a
+    // Accounts per unit - the "own" count only; a subtree total is a sum over a
     // tree the caller already holds, and computing it here would be one
     // recursive query per unit for an answer the console can add up itself.
     // Deliberately NOT narrowed by the search/role/unit filters: this describes
@@ -383,10 +383,10 @@ const EXPORT_COLUMNS: &[(&str, &str)] = &[
     ("id",             "identifiant"),
 ];
 
-/// `GET /admin/users/export` — the listing, exactly as filtered, as a CSV file.
+/// `GET /admin/users/export` - the listing, exactly as filtered, as a CSV file.
 ///
-/// It takes the SAME parameters as `list_users` — search, role, units, subtree,
-/// ordering — because the file has to be the list the operator is looking at. An
+/// It takes the SAME parameters as `list_users` - search, role, units, subtree,
+/// ordering - because the file has to be the list the operator is looking at. An
 /// export computed on a different perimeter is the one mistake this endpoint can
 /// make that nobody notices until the file has been sent on.
 ///
@@ -430,7 +430,7 @@ pub async fn export_users(
 
     if users.len() as i64 > EXPORT_MAX {
         return Err(AppError::Validation(format!(
-            "Trop de comptes pour un seul export (maximum {EXPORT_MAX}) — restreignez la recherche ou l'unité"
+            "Trop de comptes pour un seul export (maximum {EXPORT_MAX}) - restreignez la recherche ou l'unité"
         )));
     }
 
@@ -537,7 +537,7 @@ pub struct CreateUserAdminDto {
     pub display_name: Option<String>,
     pub quota_bytes:  Option<i64>,
     /// Unit the account is created in. A delegated administrator must name one
-    /// inside their own subtree — an account created outside the tree would be
+    /// inside their own subtree - an account created outside the tree would be
     /// invisible to every scoped listing, including their own.
     pub org_unit_id:  Option<Uuid>,
 }
@@ -590,7 +590,7 @@ pub async fn create_user(
 
     let role = dto.role.as_deref().unwrap_or("user");
     // No explicit quota means "apply the policy", and the policy is resolved for
-    // the unit the account lands in — not the instance value. An administrator
+    // the unit the account lands in - not the instance value. An administrator
     // who gave Marketing 50 GiB expects an account created there to get 50 GiB.
     let quota = match dto.quota_bytes {
         Some(explicit) => explicit,
@@ -632,14 +632,14 @@ pub async fn create_user(
 
     // The password the account was handed enters the history straight away:
     // otherwise "no reuse" would let its owner change it once and set it back to
-    // the one an administrator typed — the single password most likely to have
+    // the one an administrator typed - the single password most likely to have
     // been written down or sent over a chat.
     crate::settings::password_policy::remember(&mut tx, user.id, &hash, policy.history_depth)
         .await?;
 
     // `role = 'admin'` on the legacy surface means "instance super-administrator";
     // materialise the assignment so the account is visible to the whole
-    // delegation model — and to the "never remove the last one" guard.
+    // delegation model - and to the "never remove the last one" guard.
     if role == "admin" {
         apply_legacy_role_change(&mut tx, user.id, "admin", ctx.user_id).await?;
     }
@@ -655,8 +655,8 @@ pub async fn create_user(
     .await?;
 
     // `UserCreated` used to be published by public registration only, so an
-    // account created by an administrator — the majority of them on a managed
-    // instance — was invisible to every module that provisions on account
+    // account created by an administrator - the majority of them on a managed
+    // instance - was invisible to every module that provisions on account
     // creation, and to the rule engine. Published after the commit, and logged:
     // `publish` alone reaches live subscribers but leaves nothing in
     // `core.event_log`, which is what a retrospective replay reads.
@@ -712,7 +712,7 @@ pub struct UpdateUserAdminDto {
     // "nobody may change this", which is not what the card offers.
     //
     // Same three-state shape as `PATCH /me`: absent leaves alone, `null` erases,
-    // a value sets. Same bounds too — the DTO is normalised through
+    // a value sets. Same bounds too - the DTO is normalised through
     // [`crate::models::user::UpdateUserDto::tidy_profile`] rather than
     // re-validated by hand, so the two paths cannot drift apart.
     #[serde(default, deserialize_with = "crate::models::user::double_option")]
@@ -808,7 +808,7 @@ pub async fn update_user(
 ) -> Result<Json<serde_json::Value>, AppError> {
     // Promoting or demoting through this legacy field is granting or revoking
     // instance super-administration: superuser only, and it must go through the
-    // assignment table so the model — and guard 4 — see it.
+    // assignment table so the model - and guard 4 - see it.
     if dto.role.is_some() {
         ctx.require_superuser("changement de rôle système")?;
     }
@@ -834,7 +834,7 @@ pub async fn update_user(
         .ok_or_else(|| AppError::NotFound(format!("User {id}")))?;
     let previous = user_from_row(&previous).map_err(AppError::Database)?;
 
-    // Perimeter: the unit the account is in today, and — when the edit moves it —
+    // Perimeter: the unit the account is in today, and - when the edit moves it -
     // the unit it is going to. Checking only the first would let a delegated
     // administrator push accounts out of their own subtree.
     ctx.require_for_unit(keys::USERS_UPDATE, previous.org_unit_id)?;
@@ -862,7 +862,7 @@ pub async fn update_user(
                display_name = COALESCE($4, display_name),
                org_unit_id = COALESCE($5, org_unit_id),
                -- Reactivating an account cancels its pending destruction. The
-               -- alternative — leaving the stamp — would let the purge job
+               -- alternative - leaving the stamp - would let the purge job
                -- delete a live account weeks later because somebody had once
                -- deleted it and changed their mind.
                deleted_at  = CASE WHEN $6 IS TRUE THEN NULL ELSE deleted_at END,
@@ -927,7 +927,7 @@ pub async fn update_user(
         .after(snap(target::USER, &user))
         .reversible();
 
-    // The personal columns are absent from the snapshot whitelist on purpose —
+    // The personal columns are absent from the snapshot whitelist on purpose -
     // a gender must not be readable in a trail every administrator can export.
     // The sentence restores what the diff cannot say, without saying what was
     // written.
@@ -951,7 +951,7 @@ pub struct BulkOrgUnitDto {
 /// directory while an operator's browser is thinking about it.
 const BULK_MAX: usize = 500;
 
-/// `POST /admin/users/bulk/org-unit` — move several accounts into one unit.
+/// `POST /admin/users/bulk/org-unit` - move several accounts into one unit.
 ///
 /// One transaction and **one** audit entry, rather than N calls to
 /// `PATCH /admin/users/:id`. The difference is not performance: a bulk move that
@@ -1034,7 +1034,7 @@ pub async fn bulk_set_org_unit(
         .map(|u| u.id)
         .collect();
 
-    // Nothing to do — but say so rather than writing an entry claiming a move.
+    // Nothing to do - but say so rather than writing an entry claiming a move.
     if moving.is_empty() {
         return Ok(Json(json!({ "moved": 0, "org_unit_id": dto.org_unit_id })));
     }
@@ -1104,7 +1104,7 @@ fn bulk_ids(raw: &[Uuid]) -> Result<Vec<Uuid>, AppError> {
 
 /// The selected accounts, locked in id order so two concurrent bulk operations
 /// queue instead of deadlocking, with every guard applied BEFORE a single row is
-/// written — a partial run is exactly what the transaction is here to prevent.
+/// written - a partial run is exactly what the transaction is here to prevent.
 ///
 /// The old `WHERE id = ANY(...) ORDER BY id FOR UPDATE` had no portable form, so
 /// each row is locked in turn, in the sorted id order, reproducing its lock
@@ -1147,7 +1147,7 @@ pub struct BulkActiveDto {
     pub is_active: bool,
 }
 
-/// `POST /admin/users/bulk/active` — suspend or restore several accounts.
+/// `POST /admin/users/bulk/active` - suspend or restore several accounts.
 ///
 /// One transaction and one recapitulative entry rather than N calls to
 /// `PATCH /users/:id`, for the same reason as the bulk unit move: N calls half
@@ -1168,7 +1168,7 @@ pub async fn bulk_set_active(
         .map(|u| u.id)
         .collect();
 
-    // Nothing to do — say so rather than writing an entry claiming a change.
+    // Nothing to do - say so rather than writing an entry claiming a change.
     if changing.is_empty() {
         return Ok(Json(json!({ "changed": 0, "is_active": dto.is_active })));
     }
@@ -1227,7 +1227,7 @@ pub struct BulkDeleteDto {
     pub user_ids: Vec<Uuid>,
 }
 
-/// `POST /admin/users/bulk/delete` — deactivate several accounts and arm their
+/// `POST /admin/users/bulk/delete` - deactivate several accounts and arm their
 /// purge, the bulk form of `DELETE /admin/users/:id`.
 ///
 /// Deliberately the SOFT delete, never the purge: erasing is a second, separate
@@ -1318,7 +1318,7 @@ pub struct BulkRequirePasswordChangeDto {
     pub user_ids: Vec<Uuid>,
 }
 
-/// `POST /admin/users/bulk/require-password-change` — arm the forced password
+/// `POST /admin/users/bulk/require-password-change` - arm the forced password
 /// change on the selected accounts.
 ///
 /// ## Why this IS the bulk "reset"
@@ -1348,7 +1348,7 @@ pub async fn bulk_require_password_change(
     let previous = bulk_load_and_authorise(&state.db, &mut tx, &ctx, &ids, keys::USER_PASSWORD).await?;
 
     // `password_hash` is not mapped onto `User`, so its presence is asked of the
-    // database — as is the flag, to avoid re-arming what is already armed. One
+    // database - as is the flag, to avoid re-arming what is already armed. One
     // probe per id, in the already-sorted order.
     let mut rows: Vec<(Uuid, bool, bool)> = Vec::new();
     for uid in &ids {
@@ -1442,7 +1442,7 @@ pub async fn delete_user(
     ctx.require_for_unit(keys::USERS_DELETE, previous.org_unit_id)?;
     ensure_can_act_on_user(&state.db, &ctx, id).await?;
 
-    // `deleted_at` is what arms the automatic purge, and it is stamped *here* —
+    // `deleted_at` is what arms the automatic purge, and it is stamped *here* -
     // never by a suspension. The two produce the same `is_active = FALSE`, and a
     // purge keyed on that flag would destroy accounts somebody merely put on
     // hold. See `migrations/000109`.
@@ -1487,7 +1487,7 @@ pub struct PurgeUserDto {
     pub confirm_email: String,
 }
 
-/// `DELETE /admin/users/:id/purge` — erases the row, for good.
+/// `DELETE /admin/users/:id/purge` - erases the row, for good.
 ///
 /// ## Why this is a second route and not a flag on the first
 ///
@@ -1504,7 +1504,7 @@ pub struct PurgeUserDto {
 /// 2. **The email is typed back.** Not a checkbox: a checkbox is ticked by the
 ///    hand that was already moving. Retyping `marie.dupont@…` is the moment
 ///    somebody reads the address and notices it is not the one they meant.
-/// 3. **The ordinary guards still apply** — scope, self-protection, and the last
+/// 3. **The ordinary guards still apply** - scope, self-protection, and the last
 ///    super-administrator. Erasing is not a way around a rule that blocks
 ///    deactivating.
 ///
@@ -1576,7 +1576,7 @@ pub async fn purge_user(
     // The referential action and the check contradict each other, and nothing
     // caught it because until this route existed no account was ever hard
     // deleted. Clearing both columns is what the constraint means by "not
-    // assigned" — the alert survives, unassigned, which is the right outcome:
+    // assigned" - the alert survives, unassigned, which is the right outcome:
     // it was raised by the instance, not by the person who happened to take it.
     let released = tx
         .execute(
@@ -1600,7 +1600,7 @@ pub async fn purge_user(
             tracing::error!(error = %e, user_id = %id, "purge_user: suppression");
             // A constraint that still refuses names the relation holding the
             // account back. A bare 500 here would send an operator to the logs
-            // for something they can act on — and the point of this route is to
+            // for something they can act on - and the point of this route is to
             // finish, or to say precisely what is in the way.
             match e.as_database_error().and_then(|d| d.constraint()) {
                 Some(c) => AppError::Conflict(format!(
@@ -1885,7 +1885,7 @@ pub async fn admin_stats(
     })))
 }
 
-/// GET /admin/users/:id/sessions — liste les sessions actives d'un utilisateur.
+/// GET /admin/users/:id/sessions - liste les sessions actives d'un utilisateur.
 pub async fn list_user_sessions(
     State(state): State<AppState>,
     _admin: AdminUser,
@@ -1920,7 +1920,7 @@ pub async fn list_user_sessions(
     Ok(Json(json!({ "sessions": sessions })))
 }
 
-/// DELETE /admin/users/:id/sessions/:sid — révoque une session précise.
+/// DELETE /admin/users/:id/sessions/:sid - révoque une session précise.
 pub async fn revoke_user_session(
     State(state): State<AppState>,
     ctx: AdminCtx,
@@ -1988,7 +1988,7 @@ pub async fn revoke_user_session(
     Ok(Json(json!({ "ok": true })))
 }
 
-/// DELETE /admin/users/:id/sessions — révoque TOUTES les sessions d'un utilisateur.
+/// DELETE /admin/users/:id/sessions - révoque TOUTES les sessions d'un utilisateur.
 pub async fn revoke_all_user_sessions(
     State(state): State<AppState>,
     ctx: AdminCtx,

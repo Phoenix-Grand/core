@@ -1,8 +1,8 @@
-# Kubuno Desktop — Microsoft Store packaging (MSIX)
+# Kubuno Desktop - Microsoft Store packaging (MSIX)
 
 The Microsoft Store distributes desktop applications as **MSIX**: the Win32 executable
 (full trust, *Desktop Bridge*) is wrapped with the **Windows SDK** tools. Packaging does not
-depend on any UI framework — it simply wraps the executable.
+depend on any UI framework - it simply wraps the executable.
 
 > Creating the `.msix` (`MakeAppx.exe`) works **on Windows only**.
 > Build the executable first: `cargo build --release -p kubuno-desktop-shell`.
@@ -54,17 +54,17 @@ distribution.
 
 ## Notes
 
-- **No runtime dependency** — the app is native Win32 (Direct2D / DirectWrite /
+- **No runtime dependency** - the app is native Win32 (Direct2D / DirectWrite /
   DirectComposition, all provided by Windows). No WebView2, no redistributable to bundle.
-- **Capabilities** — `runFullTrust` (a normal Win32 process, with file and network access)
+- **Capabilities** - `runFullTrust` (a normal Win32 process, with file and network access)
   and `internetClient`. Syncing an arbitrary folder works thanks to full trust; if you target
   a folder outside the user profile and the Store asks for it, add the restricted
   capability `broadFileSystemAccess` (with a justification).
-- **Architecture** — x64 (`ProcessorArchitecture="x64"`). For ARM64, rebuild for the
+- **Architecture** - x64 (`ProcessorArchitecture="x64"`). For ARM64, rebuild for the
   `aarch64-pc-windows-msvc` target and duplicate the manifest.
 
 ## Outside the Store (direct distribution)
 
 Two options: distribute the **signed** `.msix` (installed with a double-click), or just the
-executable — it needs no runtime. A classic installer (NSIS/WiX) is still to be written for
+executable - it needs no runtime. A classic installer (NSIS/WiX) is still to be written for
 shortcuts and an entry in "Add or remove programs".

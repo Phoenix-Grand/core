@@ -11,7 +11,7 @@ use uuid::Uuid;
 /// `AuthUser` accepts either a JWT (a human at a browser) or a personal API
 /// token (a program) and returns the same `User`. Without this discriminator the
 /// trail cannot tell an operator clicking a button from a script holding a
-/// long-lived credential — which is precisely the distinction that matters when
+/// long-lived credential - which is precisely the distinction that matters when
 /// reading the log after an incident.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]

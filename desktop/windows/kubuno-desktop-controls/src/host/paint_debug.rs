@@ -2,7 +2,7 @@
 //! counter show, drawn by the host over the page after each frame.
 //!
 //! - **Invalidated regions** flash (magenta, fading over 600 ms): the rectangles a page reports with
-//!   [`note_invalidated`] — a control that invalidated itself, a custom control whose paint buffer
+//!   [`note_invalidated`] - a control that invalidated itself, a custom control whose paint buffer
 //!   was repainted.
 //! - **Layout bounds** of every element the page reports with [`note_layout`] (cyan outline), its
 //!   padding (green band inside) and margin (orange band outside).

@@ -1,5 +1,5 @@
 /**
- * Item context menu — builds the <MenuDropdown> item list, gated by the source
+ * Item context menu - builds the <MenuDropdown> item list, gated by the source
  * capabilities. The dynamic submenus (« Ouvrir avec » + the colour grid of
  * « Organiser ») are embedded as `custom` items rendering the existing
  * components as-is.

@@ -1,6 +1,6 @@
 //! Owner-draw in views (EVT-8): an element whose `DrawMode` (or `OwnerDraw`) asks for it has its
-//! items drawn by its `OnDrawItem` handler — and measured by its `OnMeasureItem` handler under
-//! `OwnerDrawVariable` — with the surface lent to the handler ([`crate::events::DrawItemEventArgs`]).
+//! items drawn by its `OnDrawItem` handler - and measured by its `OnMeasureItem` handler under
+//! `OwnerDrawVariable` - with the surface lent to the handler ([`crate::events::DrawItemEventArgs`]).
 //!
 //! The widgets of `kubuno_desktop_ui` raise their items to the owner-draw handler lent for their paint
 //! (`kubuno_desktop_ui::graphics::owner_draw::with_handler`); a node lends [`ElementOwnerDraw`], which turns

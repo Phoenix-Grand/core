@@ -13,11 +13,11 @@
 //! modules **officiels** hébergés sous `github.com/kubuno/`.
 //!
 //! Découpage :
-//! - [`catalog`]  — client HTTP + modèles du catalogue distant
-//! - [`artifact`] — résolution de l'artefact adapté à l'OS/arch (Releases GitHub)
-//! - [`extract`]  — extraction de l'archive et repérage du dossier module
-//! - [`install`]  — installation récursive (dépendances) et désinstallation
-//! - [`progress`] — suivi en mémoire des installations en tâche de fond
+//! - [`catalog`]  - client HTTP + modèles du catalogue distant
+//! - [`artifact`] - résolution de l'artefact adapté à l'OS/arch (Releases GitHub)
+//! - [`extract`]  - extraction de l'archive et repérage du dossier module
+//! - [`install`]  - installation récursive (dépendances) et désinstallation
+//! - [`progress`] - suivi en mémoire des installations en tâche de fond
 
 mod artifact;
 mod catalog;

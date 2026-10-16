@@ -1,4 +1,4 @@
-<!-- ThemeDevicePreview — converted from ThemeDevicePreview.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- ThemeDevicePreview - converted from ThemeDevicePreview.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="ThemeDevicePreviewProps">
   <Panel>
     <Panel BackColor="Surface2" Class="mb-3 inline-flex items-center gap-0.5 rounded-lg p-0.5">

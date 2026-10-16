@@ -3,8 +3,8 @@
 //! read a custom row back on the target.
 //!
 //! This exercises exactly what `handlers::admin::db_switch::migrate_core_database`
-//! does under the hood — `database::migrations::run` on the target followed by
-//! `kubuno_db::copy_schema` — so a green run here is a green core switch.
+//! does under the hood - `database::migrations::run` on the target followed by
+//! `kubuno_db::copy_schema` - so a green run here is a green core switch.
 //!
 //! SQLite → SQLite always runs (embedded). PostgreSQL → SQLite runs when
 //! `KUBUNO_PG_TEST_URL` is set, otherwise it prints a notice and is skipped.
@@ -112,7 +112,7 @@ async fn core_switch_sqlite_to_sqlite() {
 #[tokio::test]
 async fn core_switch_pg_to_sqlite() {
     let Some(src) = fresh_pg_core().await else {
-        eprintln!("KUBUNO_PG_TEST_URL non défini — core_switch_pg_to_sqlite ignoré");
+        eprintln!("KUBUNO_PG_TEST_URL non défini - core_switch_pg_to_sqlite ignoré");
         return;
     };
     let dst_dir = TempDir::new();
@@ -130,7 +130,7 @@ async fn core_switch_pg_to_sqlite() {
 #[tokio::test]
 async fn core_switch_sqlite_to_fresh_mysql() {
     let Some(url) = std::env::var("KUBUNO_MYSQL_TEST_URL").ok().filter(|u| !u.trim().is_empty()) else {
-        eprintln!("KUBUNO_MYSQL_TEST_URL not set — core_switch_sqlite_to_fresh_mysql skipped");
+        eprintln!("KUBUNO_MYSQL_TEST_URL not set - core_switch_sqlite_to_fresh_mysql skipped");
         return;
     };
     let src_dir = TempDir::new();
@@ -259,11 +259,11 @@ async fn sqlite_core_alert_constraints_match_postgres() {
 #[tokio::test]
 async fn core_switch_pg_to_fresh_mysql() {
     let Some(url) = std::env::var("KUBUNO_MYSQL_TEST_URL").ok().filter(|u| !u.trim().is_empty()) else {
-        eprintln!("KUBUNO_MYSQL_TEST_URL not set — core_switch_pg_to_fresh_mysql skipped");
+        eprintln!("KUBUNO_MYSQL_TEST_URL not set - core_switch_pg_to_fresh_mysql skipped");
         return;
     };
     let Some(src) = fresh_pg_core().await else {
-        eprintln!("KUBUNO_PG_TEST_URL not set — core_switch_pg_to_fresh_mysql skipped");
+        eprintln!("KUBUNO_PG_TEST_URL not set - core_switch_pg_to_fresh_mysql skipped");
         return;
     };
     let prefix = format!("t{}_", &uuid::Uuid::new_v4().simple().to_string()[..10]);

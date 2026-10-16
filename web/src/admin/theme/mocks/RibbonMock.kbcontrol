@@ -1,4 +1,4 @@
-<!-- MockRibbon — converted from RibbonMock.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- MockRibbon - converted from RibbonMock.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl>
   <Panel Class="rounded-lg overflow-hidden border [border-color:var(--kbn-ws-border,_#dadce0)]">
     <Panel Class="flex items-end gap-1 px-2 pt-1.5 [height:34px] [background:var(--kbn-office-tabstrip,_#1557b0)]">

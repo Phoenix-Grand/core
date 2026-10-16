@@ -1,7 +1,7 @@
 //! Keyboard focus: which control receives the keys, how Tab moves it, and
 //! whether its ring shows.
 //!
-//! Web counterpart: the browser itself — sequential focus navigation (Tab /
+//! Web counterpart: the browser itself - sequential focus navigation (Tab /
 //! Shift+Tab in DOM order), focus on `mousedown`, blur when clicking something
 //! unfocusable, and the `:focus-visible` heuristic every `@kubuno/ui`
 //! primitive styles its ring with (`focus-visible:ring-2` in
@@ -11,7 +11,7 @@
 //! each frame, every focusable control calls [`FocusRing::register`] with a
 //! stable id and the rectangle it was painted in. The manager keeps the
 //! previous frame's list and resolves input against it at the START of the
-//! next frame — the same "route against last frame's geometry" rule the
+//! next frame - the same "route against last frame's geometry" rule the
 //! gallery's menus use, so a click is decided before anyone paints.
 //!
 //! ```ignore
@@ -45,7 +45,7 @@ use crate::{Rect, WidgetState};
 pub struct FocusId(pub u64);
 
 impl FocusId {
-    /// FNV-1a of `s` — `const`, so an id can be a `const`.
+    /// FNV-1a of `s` - `const`, so an id can be a `const`.
     pub const fn of(s: &str) -> Self {
         let b = s.as_bytes();
         let mut h: u64 = 0xcbf2_9ce4_8422_2325;
@@ -58,7 +58,7 @@ impl FocusId {
         FocusId(h)
     }
 
-    /// `base` followed by an index — one id per row, cell or item.
+    /// `base` followed by an index - one id per row, cell or item.
     pub const fn indexed(base: &str, index: usize) -> Self {
         let FocusId(h) = Self::of(base);
         // Mix the index in with a second FNV round over its bytes.
@@ -99,11 +99,11 @@ pub struct FocusOpts {
     /// The control handles `Tab` itself while focused (a code editor
     /// indenting): the manager then leaves `Tab`/`Shift+Tab` in the queue.
     pub wants_tab: bool,
-    /// The ring shows even when the focus came from the pointer — the web's
+    /// The ring shows even when the focus came from the pointer - the web's
     /// `:focus-visible` matches text inputs (anything taking typed text) on
     /// click. Set it for text fields, text areas, editable combos.
     pub always_visible: bool,
-    /// Reachable by click and programmatically, but skipped by Tab — the
+    /// Reachable by click and programmatically, but skipped by Tab - the
     /// web's `tabindex="-1"` (a menu item managed by arrow keys, a
     /// roving-tabindex row that is not the current one).
     pub skip_tab: bool,
@@ -114,7 +114,7 @@ impl FocusOpts {
     pub const TEXT: Self = Self { wants_tab: false, always_visible: true, skip_tab: false };
 }
 
-/// Why the focus moved — what an event layer on top of the ring needs to raise the
+/// Why the focus moved - what an event layer on top of the ring needs to raise the
 /// WinForms focus sequences in the right order (`Enter → GotFocus` then, on the old
 /// control, `Leave → Validating → Validated → LostFocus` for the keyboard, or
 /// `LostFocus → Leave → Validating → Validated` for the pointer).
@@ -143,12 +143,12 @@ pub struct FocusChange {
 /// What [`FocusRing::register`] tells the control about itself this frame.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
 pub struct FocusState {
-    /// It holds the focus — it reads the keys.
+    /// It holds the focus - it reads the keys.
     pub focused: bool,
     /// Its ring must show (`focused && :focus-visible`).
     pub visible: bool,
     /// It GAINED the focus at the start of this frame (click, Tab or
-    /// [`FocusRing::focus`]) — where a field selects its text on Tab-in.
+    /// [`FocusRing::focus`]) - where a field selects its text on Tab-in.
     pub gained: bool,
 }
 
@@ -164,12 +164,12 @@ struct Entry {
     id:   FocusId,
     rect: Rect,
     opts: FocusOpts,
-    /// The tab indexes of the containers it is in, outermost first, then its own — empty unless a
+    /// The tab indexes of the containers it is in, outermost first, then its own - empty unless a
     /// page declares tab indexes ([`FocusRing::push_tab_index`]). Tab follows these keys.
     tab_key: Vec<i32>,
 }
 
-/// The focus manager of one page (or one window). Plain data — keep it in the
+/// The focus manager of one page (or one window). Plain data - keep it in the
 /// page's state, or a `thread_local!`, and drive it with
 /// [`FocusRing::begin_frame`] / [`FocusRing::end_frame`] around the paint.
 #[derive(Default)]
@@ -291,7 +291,7 @@ impl FocusRing {
         self.state_with(id, opts)
     }
 
-    /// How many controls registered so far this frame — a mark for [`FocusRing::remove_since`] and
+    /// How many controls registered so far this frame - a mark for [`FocusRing::remove_since`] and
     /// [`FocusRing::skip_tab_since`], taken before painting a part of the page.
     pub fn mark(&self) -> usize {
         self.cur.len()
@@ -376,7 +376,7 @@ impl FocusRing {
         self.focused
     }
 
-    /// Whether the last interaction was the keyboard — the page-wide half of
+    /// Whether the last interaction was the keyboard - the page-wide half of
     /// `:focus-visible`.
     pub fn focus_visible(&self) -> bool {
         self.keyboard
@@ -397,7 +397,7 @@ impl FocusRing {
     }
 
     /// Programmatic focus that always shows the ring (`focus({focusVisible:
-    /// true})`) — e.g. returning focus to a trigger after closing its menu
+    /// true})`) - e.g. returning focus to a trigger after closing its menu
     /// with Escape.
     pub fn focus_visibly(&mut self, id: impl Into<FocusId>) {
         self.keyboard = true;
@@ -410,7 +410,7 @@ impl FocusRing {
     }
 
     /// Moves the focus to the next (`forward`) or previous tabbable control of
-    /// the last frame's order, wrapping — what Tab does. Shows the ring.
+    /// the last frame's order, wrapping - what Tab does. Shows the ring.
     pub fn step(&mut self, forward: bool) {
         self.keyboard = true;
         let mut tabbable: Vec<&Entry> = self.prev.iter().filter(|e| !e.opts.skip_tab).collect();
@@ -431,7 +431,7 @@ impl FocusRing {
     }
 
     /// Consumes this frame's Escape key-down (any modifiers) from the host
-    /// queue and returns whether there was one — the hook a focused control
+    /// queue and returns whether there was one - the hook a focused control
     /// (or an open menu) uses to act on Escape. The first caller wins.
     pub fn take_escape(&mut self) -> bool {
         if !self.escape_pending {
@@ -463,7 +463,7 @@ impl FocusRing {
         }
     }
 
-    /// Every focus move since the last call, oldest first, and forgets them —
+    /// Every focus move since the last call, oldest first, and forgets them -
     /// what an event layer (`kubuno_desktop_views`' input router) reads once per frame,
     /// right after [`FocusRing::begin_frame`], to raise Enter/GotFocus/Leave/
     /// Validating/Validated/LostFocus. Moves made while painting (a control
@@ -474,7 +474,7 @@ impl FocusRing {
         std::mem::take(&mut self.changes)
     }
 
-    /// Puts the focus back on `id` WITHOUT recording a move — a validation that
+    /// Puts the focus back on `id` WITHOUT recording a move - a validation that
     /// was cancelled (WinForms' `CancelEventArgs.Cancel` on `Validating`) keeps
     /// the focus where it was, as if it had never left.
     pub fn restore(&mut self, id: Option<FocusId>) {
@@ -522,7 +522,7 @@ fn compare_tab_keys(a: &[i32], b: &[i32]) -> std::cmp::Ordering {
 /// [`FocusRing::take_changes`] must not grow the list forever).
 const MAX_PENDING_CHANGES: usize = 64;
 
-/// Half-period of the text caret's blink, in ms — the Windows default
+/// Half-period of the text caret's blink, in ms - the Windows default
 /// `GetCaretBlinkTime` (Chromium on Windows follows the system setting).
 pub const CARET_BLINK_MS: u64 = 530;
 

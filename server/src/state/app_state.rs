@@ -23,7 +23,7 @@ pub struct AppState {
     pub ws_hub:   Arc<WsHub>,
     /// Centralised remote mounts (connectors + cache + encryption).
     pub remote_mounts: Arc<RemoteMountService>,
-    /// Attendance counter fed by the module proxy — which account used which
+    /// Attendance counter fed by the module proxy - which account used which
     /// application, aggregated by day (see [`crate::modules::usage`]).
     pub usage: Arc<UsageMeter>,
     /// Live TLS state: the reloadable rustls config the HTTPS listener serves

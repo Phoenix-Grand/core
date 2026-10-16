@@ -22,7 +22,7 @@ import retrofit2.converter.kotlinx.serialization.asConverterFactory
  *
  * The base URL is fixed at construction. It used to be a mutable field shared
  * by the whole app, which with several accounts live at once would let a
- * request leave for one server carrying another's bearer — a cross-instance
+ * request leave for one server carrying another's bearer - a cross-instance
  * leak, not merely a stale read. One client per account removes the question.
  *
  * Connection pool and dispatcher are injected so that N accounts share one set
@@ -44,7 +44,7 @@ class KubunoClient(
 
     private val normalisedBase = normalize(baseUrl)
 
-    /** Owned by this client alone — see [SharedHttp] for why. */
+    /** Owned by this client alone - see [SharedHttp] for why. */
     private val dispatcher = Dispatcher(shared.executor)
 
     /** Where [shutdown] runs, since closing sockets may not touch the main thread. */

@@ -10,7 +10,7 @@ import okhttp3.Request
  * Routes an image request to the account that owns the URL.
  *
  * Coil takes a single call factory for the whole process, but thumbnails and
- * avatars belong to whichever instance they came from — the switcher shows
+ * avatars belong to whichever instance they came from - the switcher shows
  * every account's portrait at once. Picking the client by URL prefix keeps
  * each request on its own session, so one server never receives another's
  * bearer token.

@@ -1,4 +1,4 @@
-<!-- StepperDemo — converted from StepperDemo.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- StepperDemo - converted from StepperDemo.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl>
   <Stack Gap="12">
     <!-- TODO(views-migrate): <Stepper> steps: no .kbview property -->

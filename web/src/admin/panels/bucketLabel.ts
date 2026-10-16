@@ -9,7 +9,7 @@ import type { PanelBucket } from './types'
  *
  * ## The `Z` that is not there
  *
- * `iso` is a LOCAL wall-clock instant — the server already stated it in the
+ * `iso` is a LOCAL wall-clock instant - the server already stated it in the
  * instance's zone (`to_char(…, 'YYYY-MM-DD"T"HH24:MI:SS')` in `period.rs`), so
  * it is read as local. Appending a `Z` would shift the whole axis by the offset,
  * silently, and only in some time zones.
@@ -35,7 +35,7 @@ export function bucketLabel(iso: string, bucket: PanelBucket, locale: string): s
 /**
  * The TABLE label: the whole instant, spelt out.
  *
- * A report is read away from the page that produced it — months later, on paper,
+ * A report is read away from the page that produced it - months later, on paper,
  * by somebody who did not choose the window. "03/03" is enough under a chart
  * whose period is stated above it and useless in a column somebody photocopied,
  * so the row carries the year and, for a week, says that it is a week.

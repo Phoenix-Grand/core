@@ -1,6 +1,6 @@
 import type { User } from "../../../core/types"
 
-/** Circular monogram — the account has no avatar in the vast majority of cases. */
+/** Circular monogram - the account has no avatar in the vast majority of cases. */
 export function UserAvatar({ user, size = 40 }: { user: User; size?: number }) {
   const name = user.display_name || user.username || user.email
   const initials = name.trim().slice(0, 2).toUpperCase()

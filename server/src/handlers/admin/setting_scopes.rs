@@ -81,8 +81,8 @@ pub struct LockDto {
 ///
 /// `core.settings.manage` is declared non-scopable (migration `000044`), so it
 /// can only be held instance-wide today and `require` would be enough. The unit
-/// check is written anyway and on purpose: the day that declaration is relaxed —
-/// which per-unit settings makes plausible — an operator delegated over one
+/// check is written anyway and on purpose: the day that declaration is relaxed -
+/// which per-unit settings makes plausible - an operator delegated over one
 /// branch must not be able to reconfigure another one. A guard added afterwards
 /// is a guard nobody adds.
 fn authorize(ctx: &AdminCtx, scope: &SettingScope, privilege: &str) -> Result<(), AppError> {
@@ -147,8 +147,8 @@ pub async fn resolved_settings(
     ctx.require(keys::SETTINGS_READ)?;
     let scope = q.scope()?;
     // Before anything is resolved. Without it, any uuid produced a complete,
-    // plausible settings page — every key resolved, `can_override: true`
-    // throughout — for a unit, group or account that does not exist, and the
+    // plausible settings page - every key resolved, `can_override: true`
+    // throughout - for a unit, group or account that does not exist, and the
     // console offered writes on it. See `store::ensure_subject_exists`.
     store::ensure_subject_exists(&state.db, &scope).await?;
 
@@ -204,7 +204,7 @@ pub async fn resolved_settings(
     })))
 }
 
-/// GET /api/v1/admin/settings/chain/:key — the whole inheritance chain.
+/// GET /api/v1/admin/settings/chain/:key - the whole inheritance chain.
 pub async fn setting_chain(
     State(state): State<AppState>,
     ctx: AdminCtx,
@@ -335,7 +335,7 @@ pub async fn set_scoped_value(
     crate::network::config::validate_setting(&key, &dto.value)?;
     // The declared `value_type` says "an integer"; it cannot say "at least 8".
     // The resolver clamps out-of-range values so a stale row can never make the
-    // policy fail open — but a console that accepts "3" and silently enforces 8
+    // policy fail open - but a console that accepts "3" and silently enforces 8
     // is a console that lies about what it enforces.
     validate_password_policy_value(&key, &dto.value)?;
 
@@ -347,7 +347,7 @@ pub async fn set_scoped_value(
     // ── Anti-lockout ─────────────────────────────────────────────────────────
     // The resolver reads the whole inheritance chain (several rows), which a
     // transaction handle cannot do on every engine, so the check runs on the
-    // pool against committed state — hence AFTER the commit. If the change
+    // pool against committed state - hence AFTER the commit. If the change
     // stranded every administrator, revert it at once (clear the scope's own
     // override, restoring the broader inherited policy) so the console cannot
     // lock itself out, then surface the error.
@@ -369,7 +369,7 @@ pub async fn set_scoped_value(
     Ok(Json(json!({ "message": "Réglage enregistré" })))
 }
 
-/// DELETE /api/v1/admin/settings/scoped/:key — revert to the inherited value.
+/// DELETE /api/v1/admin/settings/scoped/:key - revert to the inherited value.
 ///
 /// A deletion, never a write of the inherited value: this is what makes the
 /// scope follow its parent again, including for changes made later.
@@ -448,7 +448,7 @@ pub async fn set_scoped_lock(
 
 /// The relay settings have exactly one writer, and it encrypts. Accepting one
 /// here would store a credential in clear under a key the rest of the code reads
-/// as ciphertext — unusable and readable at the same time.
+/// as ciphertext - unusable and readable at the same time.
 fn guard_owned_elsewhere(key: &str) -> Result<(), AppError> {
     if crate::handlers::admin::mail::owns_setting(key) {
         return Err(AppError::Validation(format!(

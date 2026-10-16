@@ -1,4 +1,4 @@
-<!-- FloorsField — converted from FloorsField.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- FloorsField - converted from FloorsField.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="FloorsFieldProps">
   <Stack>
     <Panel Class="flex items-baseline justify-between gap-2">

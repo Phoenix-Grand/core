@@ -1,4 +1,4 @@
-<!-- Field — converted from Field.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- Field - converted from Field.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="FieldProps">
   <Panel Class="flex flex-col gap-0.5 py-1.5 sm:flex-row sm:gap-3">
     <!-- TODO(views-migrate): <dt> has no .kbview element yet -->

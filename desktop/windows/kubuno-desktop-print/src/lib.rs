@@ -1,4 +1,4 @@
-//! # `kubuno-desktop-print` — the Windows Forms printing stack for Kubuno desktop applications
+//! # `kubuno-desktop-print` - the Windows Forms printing stack for Kubuno desktop applications
 //!
 //! `vskubuno/docs/PRINTING.md`. The components of `System.Drawing.Printing` and of the Windows Forms
 //! printing dialogs, as non-visual components of a `.kbview` (the designer's component tray) and as
@@ -9,7 +9,7 @@
 //!   `EndPrint`; [`PrintDocument::print`].
 //! - [`PrinterSettings`] / [`PageSettings`]: the printer (installed printers, the default one),
 //!   copies, collation, two-sided printing, page range, printing to a file; paper, tray,
-//!   orientation, margins, colour — and what the printer can do, asked of the spooler.
+//!   orientation, margins, colour - and what the printer can do, asked of the spooler.
 //! - [`PrintPreviewControl`] (a control) and [`PrintPreviewDialog`] (a window with its tool bar):
 //!   the pages rendered through the same `PrintPage` handler.
 //! - [`PrintDialog`] and [`PageSetupDialog`]: Windows' own common dialogs (`PrintDlgEx`,

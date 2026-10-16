@@ -1,5 +1,5 @@
 /**
- * Where a drop lands (a Toolbox item, or an element dragged to another place), per container kind — pure
+ * Where a drop lands (a Toolbox item, or an element dragged to another place), per container kind - pure
  * (vskubuno docs/DESIGNER.md §4, §10 "Toolbox drop", transposed to the web containers):
  *
  * - routing: the element under the pointer when it takes children, else its parent (a leaf → before / after it

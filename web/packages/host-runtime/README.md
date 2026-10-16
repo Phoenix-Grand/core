@@ -8,7 +8,7 @@
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://github.com/kubuno/core/blob/main/LICENSE)
 
 **The design host of [Kubuno](https://github.com/kubuno/core) web views: the page that renders `.kbview` /
-`.kbcontrol` views in the Visual Studio designer — for a module project through its own development server, and as
+`.kbcontrol` views in the Visual Studio designer - for a module project through its own development server, and as
 a ready-to-serve static site when no server runs.**
 
 The Kubuno extension for Visual Studio shows a web view in a WebView2 document pane. That pane loads one of the two
@@ -34,7 +34,7 @@ npm install --save-dev @kubuno/host-runtime @kubuno/views-compiler@^0.1.2
 ```
 
 `kbview()` must be in `vite.config.ts` (it already is for a project with views), and `kubuno.views.json` names no
-`design.entry`. Tell the page what your entry would load in the host before your views render — your stylesheet and
+`design.entry`. Tell the page what your entry would load in the host before your views render - your stylesheet and
 your translations:
 
 ```json
@@ -53,13 +53,13 @@ host's import map at run time, and your code never imports the core or another m
 
 ## How project mode gets one instance of everything
 
-A module's code imports the host's **shared specifiers** — `react`, `react-dom`, `react-dom/client`,
+A module's code imports the host's **shared specifiers** - `react`, `react-dom`, `react-dom/client`,
 `react/jsx-runtime`, `react/jsx-dev-runtime`, `@ui`, `@kubuno/sdk`, `@kubuno/drive`, `@kubuno/views`, `i18next`,
 `react-i18next`, `zustand`, `@tanstack/react-query`, `react-router-dom`, `@radix-ui/react-dropdown-menu`. In
 production none of them is bundled: the host's import map maps each one to the host's single instance. On npm,
 `@kubuno/sdk`, `@kubuno/drive` and `@kubuno/views` are type surfaces whose runtime throws, and `@ui` is not even a
 package name. In a module's dev server they would resolve to nothing, to throwing stubs, or to copies different
-from the page's — a second React breaks every hook, a second `@kubuno/views` does not know the page's views.
+from the page's - a second React breaks every hook, a second `@kubuno/views` does not know the page's views.
 
 So the project-mode build (`dist/project/`) is made the way the host's own build is made:
 
@@ -86,8 +86,8 @@ So the project-mode build (`dist/project/`) is made the way the host's own build
 **Why not an import map?** The page could carry an import map pointing the shared specifiers at this package. But
 Vite rewrites every bare import of the code it serves to a resolved URL, and pre-bundles the dependencies of your
 code with their own copies of `react`: an import map would only see what Vite left bare, and would still leave two
-Reacts. Resolving the specifiers in the dev server, and keeping them out of pre-bundling, gives every importer — your
-code, its dependencies, the page — the same module at the same URL; the shared modules are built exactly as the
+Reacts. Resolving the specifiers in the dev server, and keeping them out of pre-bundling, gives every importer - your
+code, its dependencies, the page - the same module at the same URL; the shared modules are built exactly as the
 host's import-map targets are, so the design page behaves like the running host.
 
 The project-mode build uses **React's development build** (as a dev server does): readable errors and warnings, and
@@ -114,7 +114,7 @@ Every URL in the bundled build is relative: serve `dist/` from any origin or fol
 | `dist/project/design-page.js`, `design-page.css` | the project-mode page and its stylesheet |
 | `dist/project/shared/*.js`, `dist/project/chunks/` | the host's shared modules |
 | `dist/project/shared.json` | shared specifier → module (`@kubuno/host-runtime/shared.json`): `{version: 1, hostRuntime, entry, themes, shared}` |
-| `dist/design-host.json` | written last: `{version: 1, hostRuntime, registrySha256, files}` — every file of the build and the hash of the host registry it embeds, checked by the Visual Studio extension's build before it ships `dist/` |
+| `dist/design-host.json` | written last: `{version: 1, hostRuntime, registrySha256, files}` - every file of the build and the hash of the host registry it embeds, checked by the Visual Studio extension's build before it ships `dist/` |
 
 ## Build
 

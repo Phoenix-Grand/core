@@ -3,8 +3,8 @@
 //!
 //! The server only tracks `.kbview` documents; the Rust code-behind lives in rust-analyzer's
 //! world. A request that edits the code-behind (create, rename, remove a handler…) must compute
-//! its offsets against the text the client will apply the edits to — the editor buffer, which may
-//! hold unsaved changes — not against the file on disk. So such requests may carry `openFiles`, a
+//! its offsets against the text the client will apply the edits to - the editor buffer, which may
+//! hold unsaved changes - not against the file on disk. So such requests may carry `openFiles`, a
 //! map `uri → text` of the client's open documents, installed for the duration of the request with
 //! [`with_overlays`]; every read of a code-behind or sibling view goes through [`read`], which
 //! answers from that overlay first, then from the disk.

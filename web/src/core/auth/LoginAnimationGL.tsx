@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import LoginAnimation3D from './LoginAnimation3D'
 import { animTuning } from './animTuning'
 
-// WebGL (fragment shader) rendering of the silk membranes — per-pixel gradients
+// WebGL (fragment shader) rendering of the silk membranes - per-pixel gradients
 // like Vanta's effects (suggested reference: vanta.halo), so the falloffs are
 // perfectly smooth: no columns, no seams, no 8-bit banding (dithered output).
 // The model is the same as the canvas fallback (LoginAnimation3D): two large
@@ -36,7 +36,7 @@ const vec3 FILLC  = vec3( 30., 100., 235.) / 255.;
 const vec3 EDGEC  = vec3(140., 195., 255.) / 255.;
 
 // ONE sheet of silk: a single 3D surface y(x, z) (z = depth into the scene),
-// whose undulation is NON-UNIFORM — slow spatial modulations make some regions
+// whose undulation is NON-UNIFORM - slow spatial modulations make some regions
 // of the fabric swell strongly while others stay almost flat. The screen shows
 // the projected optical density of the translucent sheet: folds (where the
 // surface turns back on itself, dy/dz ~ 0) naturally concentrate light into
@@ -81,7 +81,7 @@ void main() {
   float dens = 0.0;
   float S = 2.0 * uSigma * uSigma;
   // Adaptive smoothing: each depth layer is smeared over its projected spacing
-  // (|dy/dz|/N), normalised to keep total mass — steep regions become a
+  // (|dy/dz|/N), normalised to keep total mass - steep regions become a
   // continuous film instead of visible stacked bands, folds stay sharp.
   float K = 0.55 / (float(N) * float(N));
   for (int i = 0; i < N; i++) {

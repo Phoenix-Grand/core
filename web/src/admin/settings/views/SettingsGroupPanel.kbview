@@ -1,4 +1,4 @@
-<!-- SettingsGroupPanel — converted from SettingsGroupPanel.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- SettingsGroupPanel - converted from SettingsGroupPanel.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <Panel x:Props="Props" Visible="{Binding show_main}" Class="{Binding containerClass}">
   <!-- TODO(views-migrate): <SettingScopeBar> is no .kbview element (./SettingScopeBar#default) -->
   <ReactHost Component="{Binding SettingScopeBar}" Props="{Binding setting_scope_bar_props}"/>

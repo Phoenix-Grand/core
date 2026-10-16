@@ -1,12 +1,12 @@
 //! Render a parsed `.kbview`/`.kbcontrol` into a CPU pixmap.
 //!
-//! The view is parsed by the *shared* Kubuno grammar ([`kubuno_desktop_views_syntax`]) — the same parser the web
-//! compiler and the desktop runtime use — and rendered in the *shared* control vocabulary (the registry
+//! The view is parsed by the *shared* Kubuno grammar ([`kubuno_desktop_views_syntax`]) - the same parser the web
+//! compiler and the desktop runtime use - and rendered in the *shared* control vocabulary (the registry
 //! `web/src/ui/kbview-registry.web.json`): a screen's root is a `Panel`/`Stack`, boxes carry
 //! `BackColor`/`Surface`/`CornerRadius`/`Elevation`, text is a `Label` sized by its typographic `Role`, a `Button` is
 //! styled by its `Variant`. So a mobile view renders the same here as in the web/desktop designer.
 //!
-//! Layout is delegated to [`taffy`], a CSS flexbox engine — the same model the web design surface uses — so the
+//! Layout is delegated to [`taffy`], a CSS flexbox engine - the same model the web design surface uses - so the
 //! device and the designer agree: a `Stack` is a flex container (`Direction`, `Gap`, `CrossAlign` → `align-items`,
 //! `Justify` → `justify-content`, `Stack.Fill` → `flex: 1 1 0`), a `Panel` docks its children like a DockPanel
 //! (nested flex boxes, in document order, the undocked children filling what remains) or places them absolutely
@@ -146,12 +146,12 @@ pub fn render_view(
 
 /// A tappable target of a view: an element that carries an `x:Name` and/or one or more event attributes
 /// (`OnClick`, `OnTextChanged`…), with its laid-out box (physical px). The app hit-tests a tap against these to
-/// learn which handler to run — the engine itself stays free of app logic.
+/// learn which handler to run - the engine itself stays free of app logic.
 #[derive(Clone, Debug, PartialEq)]
 pub struct Hit {
     /// The element's `x:Name`, if it has one.
     pub name: Option<String>,
-    /// Its event handlers, as `(event, handler)` — e.g. `("Click", "search_submit")` for `OnClick="search_submit"`.
+    /// Its event handlers, as `(event, handler)` - e.g. `("Click", "search_submit")` for `OnClick="search_submit"`.
     pub events: Vec<(String, String)>,
     /// The laid-out box, physical px.
     pub rect: HostRect,
@@ -184,7 +184,7 @@ pub(crate) fn field_spec(el: &Element) -> Option<FieldSpec> {
 }
 
 /// The event handlers an element declares: `(event name without `On`, handler)`. An event attribute is the shared
-/// grammar's rule — `On` followed by an upper-case letter (`OnClick`, `OnTextChanged`).
+/// grammar's rule - `On` followed by an upper-case letter (`OnClick`, `OnTextChanged`).
 fn event_handlers(el: &Element) -> Vec<(String, String)> {
     el.attributes()
         .filter_map(|a| {
@@ -197,7 +197,7 @@ fn event_handlers(el: &Element) -> Vec<(String, String)> {
 }
 
 /// The tappable targets of a view: for every element carrying an `x:Name` or an event attribute, its laid-out box
-/// (physical px) and its handlers, in paint order (ancestors before descendants) — so [`hit_test`] can take the last
+/// (physical px) and its handlers, in paint order (ancestors before descendants) - so [`hit_test`] can take the last
 /// (topmost) match. Same layout as [`render_view`]; an unparseable or zero-size view has none.
 pub fn view_hits(src: &str, width: u32, height: u32, font: Option<&FontHandle>, safe_area: Option<(f32, f32)>) -> Vec<Hit> {
     if width == 0 || height == 0 {
@@ -991,7 +991,7 @@ pub(crate) fn fill_circle(pm: &mut sk::Pixmap, cx: f32, cy: f32, r: f32, c: Rgba
     }
 }
 
-/// Draw `img` translated to `(sx, sy)` and uniformly scaled by `scale` (bilinear) — used by host controls (e.g. a map).
+/// Draw `img` translated to `(sx, sy)` and uniformly scaled by `scale` (bilinear) - used by host controls (e.g. a map).
 pub(crate) fn draw_image_xform(pm: &mut sk::Pixmap, img: &sk::Pixmap, sx: f32, sy: f32, scale: f32, clip: Option<&sk::Mask>) {
     if scale <= 0.0 {
         return;
@@ -1001,7 +1001,7 @@ pub(crate) fn draw_image_xform(pm: &mut sk::Pixmap, img: &sk::Pixmap, sx: f32, s
     pm.draw_pixmap(0, 0, img.as_ref(), &paint, tf, clip);
 }
 
-/// Stroke a polyline (round caps/joins) — used by host controls (e.g. a route line).
+/// Stroke a polyline (round caps/joins) - used by host controls (e.g. a route line).
 pub(crate) fn stroke_polyline(pm: &mut sk::Pixmap, pts: &[(f32, f32)], width: f32, c: Rgba, clip: Option<&sk::Mask>) {
     if pts.len() < 2 {
         return;
@@ -1296,7 +1296,7 @@ fn is_bold(el: &Element) -> bool {
 
 // ── Vocabulary → pixels ─────────────────────────────────────────────────────────────────────────────────
 
-/// Logical font size (px) of a `Label` role — the Kubuno typography scale (theme values, like the web).
+/// Logical font size (px) of a `Label` role - the Kubuno typography scale (theme values, like the web).
 fn role_px(role: Option<&str>) -> f32 {
     match role.unwrap_or("Body") {
         "Micro" => 10.5,

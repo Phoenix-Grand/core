@@ -16,7 +16,7 @@
 //! source text.
 //!
 //! Dynamic fragments (column lists, `IN (...)` expansions) are produced by
-//! [`crate::dialect`], whose identifier parameters are `&'static str` — a value
+//! [`crate::dialect`], whose identifier parameters are `&'static str` - a value
 //! that cannot come from an HTTP request without going through a deliberate
 //! leak. Bind parameters remain the only channel for user data, exactly as
 //! before.
@@ -28,7 +28,7 @@
 //! body is left untouched.
 //!
 //! It also *rejects* two constructs that would silently corrupt data once
-//! rewritten, and it rejects them on every backend — including PostgreSQL — so
+//! rewritten, and it rejects them on every backend - including PostgreSQL - so
 //! that a developer working against PostgreSQL finds out immediately instead of
 //! shipping a module that only breaks on MySQL:
 //!
@@ -54,7 +54,7 @@ pub enum SqlError {
     #[error(
         "bind placeholder ${found} appears where ${expected} was expected (byte {at}): \
          MySQL and SQLite placeholders are positional, so $1..$n must appear once each, \
-         in ascending order — bind the value again rather than reusing $n"
+         in ascending order - bind the value again rather than reusing $n"
     )]
     PlaceholderOrder {
         found: usize,
@@ -68,7 +68,7 @@ pub enum SqlError {
     /// contains `WHERE theme ? 'fontFamily'`, PostgreSQL's JSON key-existence
     /// operator. Rewritten blindly it would become a bind placeholder, the
     /// driver would feed it the next bound value, and every parameter after it
-    /// would be off by one — a defect that only shows up in production.
+    /// would be off by one - a defect that only shows up in production.
     #[error(
         "a bare `?` at byte {at} would be read as a bind placeholder by MySQL and SQLite. \
          If this is one of PostgreSQL's JSON operators (`?`, `?|`, `?&`), replace it with \
@@ -270,7 +270,7 @@ pub struct Lint {
 
 /// Flags PostgreSQL-only constructs that [`prepare`] cannot translate on its
 /// own. Meant for unit tests over a module's SQL constants, not for the request
-/// path — the whole point is to fail a `cargo test`, not a user request.
+/// path - the whole point is to fail a `cargo test`, not a user request.
 ///
 /// It is deliberately a substring scan: a false positive costs one comment, a
 /// missed construct costs a production incident on another engine.

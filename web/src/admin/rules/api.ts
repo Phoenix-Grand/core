@@ -18,7 +18,7 @@ export const EXEC_KEY    = ['admin-rules-executions'] as const
 /**
  * The catalogue: every trigger, every action, the closed operator vocabulary,
  * the settable modes and the ceilings. Everything the editor offers is derived
- * from this — nothing is hard-coded in the frontend.
+ * from this - nothing is hard-coded in the frontend.
  */
 export function useRuleCatalog(enabled = true) {
   return useQuery({
@@ -126,7 +126,7 @@ export function useStartBacktest() {
  * Polls one replay until it settles.
  *
  * The replay runs in the job queue, not in the request: a month of events cannot
- * hold an HTTP call open — or die with it. So the console asks again until the
+ * hold an HTTP call open - or die with it. So the console asks again until the
  * row says `done` or `failed`, and stops.
  */
 export function useBacktest(ruleId: string | null, backtestId: string | null) {

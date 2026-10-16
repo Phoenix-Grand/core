@@ -1,12 +1,12 @@
-//! Gallery page — **dialogs**: the two confirmations, the prompt and its field,
+//! Gallery page - **dialogs**: the two confirmations, the prompt and its field,
 //! the name conflict, a floating window placed in a host of its own, a popover,
 //! and a stack of toasts.
 //!
 //! There is no predecessor to pair against (nothing in `kubuno-drive-desktop-app-controls`
-//! draws a dialog — that is the whole reason this family exists), so the static
+//! draws a dialog - that is the whole reason this family exists), so the static
 //! exposition is a variant × state matrix rather than an old/new diff. The
-//! things worth staring at are the **footer** — the confirming action on the
-//! left, the cancel on the right, both at least 96 wide, in every dialog — the
+//! things worth staring at are the **footer** - the confirming action on the
+//! left, the cancel on the right, both at least 96 wide, in every dialog - the
 //! **wrap** of a message quoting a long file name (it breaks after its hyphens
 //! instead of running past the dialog's edge), the **focus-visible rings** a
 //! keyboard user sees, and the content-wide toast cards. The **placement** of
@@ -54,7 +54,7 @@ use kubuno_desktop_ui::{Canvas, DockStyle, Padding, Rect, Size, Widget, WidgetSt
 use super::interact::{self, Live};
 use super::sheet::NAV_H;
 
-/// The static region's own margin — narrower than the shared `MARGIN`, because
+/// The static region's own margin - narrower than the shared `MARGIN`, because
 /// two 400-wide columns only fit the left region with a little on each side.
 const M: f32 = 8.0;
 /// The gap that opens between one item and the next in a column.
@@ -76,7 +76,7 @@ pub fn draw(c: &dyn Canvas, f: &Frame) {
 }
 
 // ═════════════════════════════════════════════════════════════════════════════
-// The static exposition — two columns inside the left region.
+// The static exposition - two columns inside the left region.
 // ═════════════════════════════════════════════════════════════════════════════
 
 /// Where the exposition starts. `sheet::NAV_H` (44) counts the nav strip
@@ -91,12 +91,12 @@ fn static_exposition(c: &dyn Canvas, region: Rect) {
     let x_a = M;
     let x_b = M + half + M;
 
-    // Column A — the destructive confirmation (long name, keyboard ring), the
+    // Column A - the destructive confirmation (long name, keyboard ring), the
     // conflict, and the popover at the bottom.
     let ya = confirm_danger(c, x_a, TOP, half);
     conflict_row(c, x_a, ya + IG, half);
 
-    // Column B — the prompt in both its states, then a toast stack in the room
+    // Column B - the prompt in both its states, then a toast stack in the room
     // left under them.
     let mut yb = prompt_value(c, x_b, TOP, half);
     yb = prompt_empty(c, x_b, yb + IG, half);
@@ -114,12 +114,12 @@ fn caption(c: &dyn Canvas, x: f32, y: f32, right: f32, text: &str) -> f32 {
     y + CAP_ADV
 }
 
-/// The destructive confirmation quoting a file name longer than a line — it
-/// breaks after its separators and stays inside the dialog — as a keyboard
+/// The destructive confirmation quoting a file name longer than a line - it
+/// breaks after its separators and stays inside the dialog - as a keyboard
 /// user sees it after one Tab: the ring on « Annuler », the pointer over
 /// « Supprimer ».
 fn confirm_danger(c: &dyn Canvas, x: f32, y: f32, width: f32) -> f32 {
-    let y = caption(c, x, y, x + width, "ConfirmDialog — nom trop long coupé · Tab : anneau sur « Annuler »");
+    let y = caption(c, x, y, x + width, "ConfirmDialog - nom trop long coupé · Tab : anneau sur « Annuler »");
     let mut d = ConfirmDialog::danger("Supprimer définitivement ?", format!("« {LONG_NAME} » sera supprimé."))
         .labels("Supprimer", "Annuler");
     d.set_focus(Some(DialogPart::Action(ActionId::Cancel)), true);
@@ -131,7 +131,7 @@ fn confirm_danger(c: &dyn Canvas, x: f32, y: f32, width: f32) -> f32 {
 }
 
 fn prompt_value(c: &dyn Canvas, x: f32, y: f32, width: f32) -> f32 {
-    let y = caption(c, x, y, x + width, "PromptDialog — champ pré-rempli et sélectionné (focus initial)");
+    let y = caption(c, x, y, x + width, "PromptDialog - champ pré-rempli et sélectionné (focus initial)");
     let p = PromptDialog::new("Renommer")
         .with_message("Nouveau nom du dossier :")
         .with_value("Photos de vacances")
@@ -143,10 +143,10 @@ fn prompt_value(c: &dyn Canvas, x: f32, y: f32, width: f32) -> f32 {
 }
 
 /// The same dialog with an EMPTY value, so the **disabled** confirming action is
-/// on the page too — the state `canConfirm` puts it in, and the one a caller
+/// on the page too - the state `canConfirm` puts it in, and the one a caller
 /// most often gets wrong.
 fn prompt_empty(c: &dyn Canvas, x: f32, y: f32, width: f32) -> f32 {
-    let y = caption(c, x, y, x + width, "PromptDialog — vide : action de confirmation désactivée");
+    let y = caption(c, x, y, x + width, "PromptDialog - vide : action de confirmation désactivée");
     let empty = PromptDialog::new("Nouveau dossier").with_placeholder("Sans titre");
     let s = empty.measure_at(c, width + 2.0 * M);
     let r = Rect::new(x, y, x + s.width, y + s.height);
@@ -155,7 +155,7 @@ fn prompt_empty(c: &dyn Canvas, x: f32, y: f32, width: f32) -> f32 {
 }
 
 fn conflict_row(c: &dyn Canvas, x: f32, y: f32, width: f32) -> f32 {
-    let y = caption(c, x, y, x + width, "ConflictDialog — 1re option survolée, 2e au focus clavier");
+    let y = caption(c, x, y, x + width, "ConflictDialog - 1re option survolée, 2e au focus clavier");
     let mut d = ConflictDialog::new("Rapport annuel.pdf", ConflictKind::File);
     // The first row lit, so the hovered frame and its accent wash are visible
     // without the pointer having to be there; the second wears the ring Tab
@@ -169,11 +169,11 @@ fn conflict_row(c: &dyn Canvas, x: f32, y: f32, width: f32) -> f32 {
 }
 
 /// Three cards, stacked by a [`ToastQueue`] in the bottom-right corner of
-/// `stage` — the `bottom-4 right-4` anchor the provider uses. Each card is as
+/// `stage` - the `bottom-4 right-4` anchor the provider uses. Each card is as
 /// wide as its content (up to 24rem); the warning and the failure stack UNDER
 /// the success, as the web's assertive live region follows the polite one.
 fn toasts(c: &dyn Canvas, stage: Rect) {
-    caption(c, stage.left, stage.top, stage.right, "Toasts — largeur au contenu · ✕ survolé · polis puis assertifs");
+    caption(c, stage.left, stage.top, stage.right, "Toasts - largeur au contenu · ✕ survolé · polis puis assertifs");
     let mut q = ToastQueue::new();
     q.push(
         Toast::error("Le serveur n'a pas répondu. Vérifiez votre connexion, puis réessayez.")
@@ -193,8 +193,8 @@ fn toasts(c: &dyn Canvas, stage: Rect) {
 /// A menu-shaped popover on a fixed anchor at the bottom of `column`, opening
 /// to its RIGHT with the bottom edges aligned (`Side::Right`, `Align::End`).
 ///
-/// The static page shows it at rest; the live one — in a popup placed against
-/// the screen — lives in the interactive column.
+/// The static page shows it at rest; the live one - in a popup placed against
+/// the screen - lives in the interactive column.
 fn popover_static(c: &dyn Canvas, column: Rect) {
     let t = c.theme();
     let anchor = Rect::new(column.left, column.bottom - 28.0, column.left + 120.0, column.bottom);
@@ -204,7 +204,7 @@ fn popover_static(c: &dyn Canvas, column: Rect) {
     // the anchor's right and grows upwards (bottom edges aligned), so a caption
     // on the anchor's row would run under it.
     let top = placement.rect.top.min(anchor.top) - CAP_ADV;
-    caption(c, column.left, top, column.right, "Popover — ancre fixe, à droite");
+    caption(c, column.left, top, column.right, "Popover - ancre fixe, à droite");
     // A visible marker for the anchor the popover hangs off.
     c.stroke_rounded(&anchor, space::XS, &t.border_strong);
     c.text("Actions…", &anchor, &c.formats().body, &t.text_secondary, true);
@@ -248,16 +248,16 @@ fn paint_menu_rows(c: &dyn Canvas, _pop: &Popover, panel: Rect, active: Option<u
     }
 }
 
-/// The window the FloatingWindow button raises — the same body as the static
+/// The window the FloatingWindow button raises - the same body as the static
 /// host example, so the two cannot drift.
 fn window_widget() -> FloatingWindow {
-    let mut w = FloatingWindow::new("Propriétés — Rapport annuel.pdf")
+    let mut w = FloatingWindow::new("Propriétés - Rapport annuel.pdf")
         .modal()
         .with_icon("FileText")
         .with_actions(Actions::pair("Appliquer", "Annuler"));
     // The body's children are a Panel's children: four docked rows, placed by
     // the layout engine and painted by the container family. They are pushed in
-    // REVERSE reading order on purpose — the engine walks the child list
+    // REVERSE reading order on purpose - the engine walks the child list
     // backwards, so the row added LAST takes the topmost band.
     {
         let body = w.body_mut();
@@ -280,10 +280,10 @@ fn window_widget() -> FloatingWindow {
 }
 
 // ═════════════════════════════════════════════════════════════════════════════
-// The interactive column — the same surfaces, live under pointer and keyboard.
+// The interactive column - the same surfaces, live under pointer and keyboard.
 // ═════════════════════════════════════════════════════════════════════════════
 
-/// Which modal surface is currently open. Only one modal is up at a time — a
+/// Which modal surface is currently open. Only one modal is up at a time - a
 /// modal veils the column, so a second cannot be reached under it.
 #[derive(Clone, Copy, PartialEq, Eq)]
 enum Modal {
@@ -425,11 +425,11 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
 
         let (left, y0, right) = interact::panel(c, host_rect);
 
-        // ── The open-buttons — one grid cell each. Behind a modal they are
+        // ── The open-buttons - one grid cell each. Behind a modal they are
         //    veiled: no hover, no click, and NOT registered with the focus ring,
         //    which is what keeps Tab inside the dialog.
         let modal_up = ui.modal.is_some();
-        let mut y = interact::caption(c, left, right, y0, "Ouvrez une surface — souris, ou Tab puis Entrée / Espace");
+        let mut y = interact::caption(c, left, right, y0, "Ouvrez une surface - souris, ou Tab puis Entrée / Espace");
         let gap = 8.0;
         let bw = (right - left - gap) / 2.0;
         let bh = 40.0;
@@ -445,7 +445,7 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
         y += 3.0 * (bh + gap) + 4.0;
 
         // The last outcome, echoed so a dismissal leaves a trace of its choice.
-        let echo = if ui.result.is_empty() { "—".to_string() } else { ui.result.clone() };
+        let echo = if ui.result.is_empty() { "-".to_string() } else { ui.result.clone() };
         c.text_ellipsis(
             &format!("Résultat : {echo}"),
             &Rect::new(left, y, right, y + 20.0),
@@ -466,9 +466,9 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
 
         // The edge opener: a popover from here must hang below the window.
         let edge = Rect::new(left, host_rect.bottom - space::LG - bh, left + bw, host_rect.bottom - space::LG);
-        interact::caption(c, left, right, edge.top - 20.0, "Popover au bord de la fenêtre — il en déborde");
+        interact::caption(c, left, right, edge.top - 20.0, "Popover au bord de la fenêtre - il en déborde");
         let st = opener(&live, &mut ui, EDGE_OPENER, edge, modal_up, Surface::Popover);
-        Button::new("Popover — bord de fenêtre").variant(Variant::Secondary).paint(c, edge, st);
+        Button::new("Popover - bord de fenêtre").variant(Variant::Secondary).paint(c, edge, st);
 
         // ── The modal, if one is up.
         if let Some((m, opener)) = ui.modal {
@@ -868,7 +868,7 @@ fn run_popover(f: &Frame, live: &Live, ui: &mut Ui, pointer: (f32, f32)) {
         return;
     }
     // Tab is the focus ring's (taken before the page): once it has moved the
-    // focus off the opener, the menu closes — a menu does not survive its
+    // focus off the opener, the menu closes - a menu does not survive its
     // trigger losing the focus.
     let opener = opener_id(ui.popover_opener);
     if interact::with_focus(|r| r.focused()) != Some(opener) {

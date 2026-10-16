@@ -413,7 +413,7 @@ pub fn set_drag_hover(id: Option<String>) {
 }
 
 /// What a dragged menu row is over at `(x, y)` (last design frame): a row of a menu, else the owner
-/// of the « Type Here » slot under it — what [`set_drag_hover`] takes.
+/// of the « Type Here » slot under it - what [`set_drag_hover`] takes.
 pub fn hover_at(x: f32, y: f32) -> Option<String> {
     let row = LAST_ROWS.with(|l| l.borrow().iter().rev().find(|r| r.rect.contains(x, y)).map(|r| r.id.clone()));
     row.or_else(|| LAST_SLOTS.with(|l| l.borrow().iter().find(|s| s.rect.contains(x, y)).map(|s| s.parent_id.clone())))
@@ -455,7 +455,7 @@ fn drag_hover() -> Option<String> {
 }
 
 /// Where the dragged menu row `dragged` goes when dropped at `(x, y)`: before or after the row under
-/// the pointer, in that row's level, or at the end of the level whose « Type Here » slot is under it —
+/// the pointer, in that row's level, or at the end of the level whose « Type Here » slot is under it -
 /// the parent element, the index among its element children, and the insertion marker. `None` over
 /// nothing of a menu, or inside the dragged row's own sub-menu.
 pub fn drop_target(dragged: &str, x: f32, y: f32) -> Option<(String, usize, Rect)> {
@@ -941,7 +941,7 @@ impl ViewNode for MenuBarNode {
 // ── <DropDownButton> and <SplitButton> ─────────────────────────────────────────────────────
 
 /// `<DropDownButton>` (WinForms `ToolStripDropDownButton`): a button whose click opens its menu below
-/// it — its own items, else the `<ContextMenu>` its `DropDownMenu` names. `<SplitButton>`
+/// it - its own items, else the `<ContextMenu>` its `DropDownMenu` names. `<SplitButton>`
 /// (`ToolStripSplitButton`): a button whose main part raises `OnClick` (or runs its `DefaultItem`)
 /// and whose arrow opens the menu. Space, Enter, Down and Alt+Down open the menu from the keyboard
 /// (Space and Enter click a split button's main part).

@@ -1,5 +1,5 @@
 //! The typed handles of the ribbon family (`vskubuno/docs/RIBBON.md` §3): one per element, each a
-//! [`Control`] with its builder methods — the code-first way to build or change a ribbon
+//! [`Control`] with its builder methods - the code-first way to build or change a ribbon
 //! (`RibbonButton::new().label("Coller").large_icon("ClipboardPaste").large().on_click(|_, _| …)`),
 //! and the type of the fields `#[kubuno_desktop::view]` generates for its `x:Name`d elements
 //! (`self.bold.set_checked(true)`).

@@ -11,7 +11,7 @@
 //!   fire-and-forget: the publisher never learns whether anybody counted. A
 //!   running total built from a lossy stream of increments is wrong by an
 //!   unknown amount and stays wrong forever, and the only repair is a full
-//!   recount — i.e. the thing this channel does directly.
+//!   recount - i.e. the thing this channel does directly.
 //! * **It cannot express "nothing changed".** A module that is up, healthy and
 //!   holding a steady 4 GiB publishes no events at all, which is
 //!   indistinguishable from a module that crashed last Tuesday. Freshness is
@@ -23,7 +23,7 @@
 //!
 //! So: a synchronous internal route that takes the module's **current total**
 //! per account, and answers. Re-declaring the same total twice is a no-op
-//! because the row is keyed by `(module_id, user_id)` — idempotence is a
+//! because the row is keyed by `(module_id, user_id)` - idempotence is a
 //! property of the schema, not of the caller's care. A message lost in flight
 //! costs one stale row until the next declaration, and the next declaration
 //! repairs it completely rather than compounding the error.
@@ -50,7 +50,7 @@
 //!    bytes. `office`, `notes`, `flow`, `paintsharp` and friends write their
 //!    documents into `drive` over `/ipc/*`; `drive` stores them, so `drive`
 //!    declares them as [`Category::Content`]. Office declares only what sits in
-//!    its own schema — and, optionally, a [`Category::Delegated`] line that names
+//!    its own schema - and, optionally, a [`Category::Delegated`] line that names
 //!    how many objects it is behind without weighing them again.
 //! 2. A module that *indexes* files it did not write declares nothing for them
 //!    (`media` scanning a folder that belongs to `drive`).
@@ -61,7 +61,7 @@
 //! *measure* rather than estimate (it knows about deduplication, compression and
 //! the bin), the partition it produces is total (every byte has exactly one
 //! holder, including bytes uploaded by hand that no module produced), and it is
-//! stable — uninstalling `office` does not make its documents vanish from the
+//! stable - uninstalling `office` does not make its documents vanish from the
 //! accounting, because they never were in its accounting.
 //!
 //! The rule is made *visible* rather than merely respected:
@@ -77,36 +77,36 @@
 //!
 //! 1. **Decide what it holds**, by the rule above. Anything it writes through
 //!    another module is not its.
-//! 2. **Split that by category** — see [`crate::storage::categories`]. The split
+//! 2. **Split that by category** - see [`crate::storage::categories`]. The split
 //!    is what separates "what this person put here" (billed) from "what the
 //!    module needed in order to work" (not billed).
 //! 3. **Declare the complete state at startup and periodically.**
 //!    `POST {core_url}/internal/storage/usage` with the module's
 //!    `KUBUNO_INTERNAL_SECRET` in `X-Internal-Secret` and a body of
 //!    `{"full": true, "usage": [{"user_id": …, "category": …, "used_bytes": …,
-//!    "object_count": …}]}`. Retry with a backoff until it lands — the core is
+//!    "object_count": …}]}`. Retry with a backoff until it lands - the core is
 //!    routinely not ready on the first attempt after a reboot.
 //! 4. **Declare incrementally after each write.** Same route, `"full": false`,
 //!    listing only the affected accounts with their *new absolute totals*, and
 //!    listing every category for those accounts including the ones that dropped
-//!    to zero — a partial declaration retires nothing, so an omitted category
+//!    to zero - a partial declaration retires nothing, so an omitted category
 //!    keeps its last value.
 //! 5. **Nothing else.** No `module_id` in the body (the core takes it from the
 //!    secret), no delta arithmetic, no ordering guarantees needed. Re-declaring
 //!    is free; a lost call is repaired by the next one.
 //!
-//! A module that holds nothing still declares — `{"full": true, "usage": []}`.
+//! A module that holds nothing still declares - `{"full": true, "usage": []}`.
 //! "This module stores nothing" and "this module has never spoken" are different
 //! facts and the console states them differently.
 //!
-//! `drive` is the worked example — see `drive/src/services/usage.rs`.
+//! `drive` is the worked example - see `drive/src/services/usage.rs`.
 //!
 //! ## `used_bytes` and the repair
 //!
 //! `core.users.used_bytes` keeps its own writer (the storing module, updated on
 //! every write so a quota refusal is immediate). What is new is that the core may
-//! now *repair* it from the declarations — see
-//! [`crate::jobs::builtin`] — because two things make that safe which were not
+//! now *repair* it from the declarations - see
+//! [`crate::jobs::builtin`] - because two things make that safe which were not
 //! true when this channel shipped: only **billable** categories are summed, so a
 //! module declaring its thumbnails cannot inflate a quota; and the repair is
 //! suspended whole while any declaring module is stale or has never completed a
@@ -115,7 +115,7 @@
 //!
 //! "Billable" is defined by one criterion, stated in
 //! [`crate::storage::categories`]: **an account is billed for what it can free
-//! itself**. Its files, its bin, a revision history it can purge — all things
+//! itself**. Its files, its bin, a revision history it can purge - all things
 //! with a handle it holds. Not the thumbnails, indexes and caches it never asked
 //! for and cannot remove.
 
@@ -152,7 +152,7 @@ pub struct UsageEntry {
     #[serde(default)]
     pub object_count: Option<i64>,
     /// What these bytes are, in the module's machinery. Absent means
-    /// [`Category::Content`] — which keeps a module written against the first
+    /// [`Category::Content`] - which keeps a module written against the first
     /// version of this channel correct, not merely accepted.
     #[serde(default)]
     pub category: Option<String>,
@@ -189,7 +189,7 @@ pub enum Scope {
     /// single upload or deletion.
     Partial,
     /// The listed accounts *are* everything the module holds. Rows for any other
-    /// account are retired — this is the path that repairs a breakdown after a
+    /// account are retired - this is the path that repairs a breakdown after a
     /// declaration was lost, and the only one that can bring a module's share
     /// back down to zero.
     Full,
@@ -211,7 +211,7 @@ pub struct DeclarationOutcome {
     /// The module's physically held total across every account, after the write:
     /// every category except `delegated`, which another module already counted.
     pub module_total_bytes: i64,
-    /// The part of that total charged to the accounts' quotas — `content` plus
+    /// The part of that total charged to the accounts' quotas - `content` plus
     /// `trash`. Always ≤ `module_total_bytes`.
     pub module_billable_bytes: i64,
     pub accounts: i64,
@@ -373,7 +373,7 @@ pub async fn declare(
     // just stamp it no longer holds. Retiring by the shared instant is portable
     // and per (account, category): a module that emptied one account's bin loses
     // its `trash` row without losing its `content` row. An empty full
-    // declaration deletes every row for the module — "I hold nothing at all".
+    // declaration deletes every row for the module - "I hold nothing at all".
     let retired: i64 = match scope {
         Scope::Partial => 0,
         Scope::Full => tx
@@ -453,7 +453,7 @@ pub async fn declare(
 
 /// One module's held total, billable total and account count, read after a
 /// declaration commits. Only categories the current binary knows as held /
-/// billable are counted — the former query's `= ANY(<held/billable list>)`,
+/// billable are counted - the former query's `= ANY(<held/billable list>)`,
 /// which excluded an unknown category from both totals.
 async fn module_totals(db: &DbPool, module_id: &str) -> Result<(i64, i64, i64), AppError> {
     let backend = db.backend();
@@ -514,7 +514,7 @@ async fn module_totals(db: &DbPool, module_id: &str) -> Result<(i64, i64, i64), 
 /// module, or inside one account's sheet.
 ///
 /// ⚠️ PRIVACY: this is the finest grain any administrator ever sees. It carries
-/// a technical role, a volume and a count of objects — never a name, a path, a
+/// a technical role, a volume and a count of objects - never a name, a path, a
 /// folder, a MIME type or anything else that would say *what* a person keeps.
 /// See `crate::storage::categories` for the rule and its guard test.
 #[derive(Debug, Clone, Serialize)]
@@ -537,22 +537,22 @@ pub struct ModuleUsage {
     pub module_id: String,
     pub display_name: String,
     /// `false` means the module has **never** declared. Its `used_bytes` is not
-    /// zero — it is unknown, and the console must say so rather than draw an
+    /// zero - it is unknown, and the console must say so rather than draw an
     /// empty bar next to modules that measured themselves.
     pub declared: bool,
-    /// The **billable** share — `content` plus `trash`. `None` exactly when
+    /// The **billable** share - `content` plus `trash`. `None` exactly when
     /// `declared` is false; never defaulted to 0.
     ///
     /// This field keeps the meaning it had before categories existed, because it
     /// is the one compared against `core.users.used_bytes`: mixing thumbnails
     /// into it would turn the reconciliation into a permanent false alarm.
     pub used_bytes: Option<i64>,
-    /// Everything the module physically holds, billable or not — the figure a
+    /// Everything the module physically holds, billable or not - the figure a
     /// disk is sized on. Always ≥ `used_bytes`.
     pub held_bytes: Option<i64>,
     /// Bytes this module is behind but another module holds and counts. Shown,
     /// never summed. Usually 0 with a non-zero `delegated_objects`: a module
-    /// that delegates rarely knows what its objects weigh — the holder does.
+    /// that delegates rarely knows what its objects weigh - the holder does.
     pub delegated_bytes: Option<i64>,
     pub delegated_objects: Option<i64>,
     /// The split, in the vocabulary's display order. Empty for a module that
@@ -564,8 +564,8 @@ pub struct ModuleUsage {
     pub last_declared_at: Option<chrono::DateTime<chrono::Utc>>,
     pub last_full_sync_at: Option<chrono::DateTime<chrono::Utc>>,
     /// The module declared once and has since gone quiet past the configured
-    /// window. Its figure is still shown — it is the last thing known to be
-    /// true — but flagged.
+    /// window. Its figure is still shown - it is the last thing known to be
+    /// true - but flagged.
     pub stale: bool,
     pub is_enabled: bool,
 }
@@ -576,7 +576,7 @@ pub struct ModuleUsage {
 pub struct Breakdown {
     pub modules: Vec<ModuleUsage>,
     /// Sum of every module's **billable** declaration. Compared against
-    /// `SUM(core.users.used_bytes)` — same axis, so the difference below means
+    /// `SUM(core.users.used_bytes)` - same axis, so the difference below means
     /// something.
     pub declared_bytes: i64,
     /// `SUM(core.users.used_bytes) - declared_bytes`, floored at zero: the share
@@ -622,7 +622,7 @@ pub async fn stale_hours(db: &DbPool) -> i64 {
 /// Builds the breakdown against an authoritative total (`SUM(used_bytes)`), which
 /// the caller has usually already read for its own header.
 ///
-/// The module list comes from `core.modules` — the registry every module writes
+/// The module list comes from `core.modules` - the registry every module writes
 /// itself into at startup. No identifier is compiled in anywhere: a module the
 /// core has never met simply is not in the table, and a module installed
 /// tomorrow appears without a line of code changing.
@@ -631,7 +631,7 @@ pub async fn breakdown(db: &DbPool, authoritative_used: i64) -> Result<Breakdown
 
     // Listed: every enabled, non-internal module (what the administration's
     // module list shows), plus any module that has declarations on file even
-    // after being disabled — its bytes are still on the disk, and dropping it
+    // after being disabled - its bytes are still on the disk, and dropping it
     // from the breakdown would quietly move them into "unattributed".
     // "N hours ago" is computed in Rust and bound, rather than expressed with
     // NOW() - make_interval(...) which no other engine spells the same way.
@@ -747,7 +747,7 @@ pub async fn breakdown(db: &DbPool, authoritative_used: i64) -> Result<Breakdown
                 module_id,
                 display_name: r.display_name.clone(),
                 declared,
-                // A declaring module with no rows holds zero — a real, measured
+                // A declaring module with no rows holds zero - a real, measured
                 // zero. A module that never declared holds `None`. Collapsing
                 // the two is the mistake this whole feature exists to avoid.
                 used_bytes: declared.then(|| sum(|c| c.billable)),
@@ -766,7 +766,7 @@ pub async fn breakdown(db: &DbPool, authoritative_used: i64) -> Result<Breakdown
         })
         .collect();
 
-    // Biggest billable share first — the order the page reads in. Ties and
+    // Biggest billable share first - the order the page reads in. Ties and
     // never-declared modules fall back to the identifier so the list is stable
     // between two refreshes.
     modules.sort_by(|a, b| {
@@ -797,7 +797,7 @@ pub async fn breakdown(db: &DbPool, authoritative_used: i64) -> Result<Breakdown
     })
 }
 
-/// Orders a category list by the vocabulary's display order — billed first, then
+/// Orders a category list by the vocabulary's display order - billed first, then
 /// the module's own machinery, then the pointer to another module's books.
 /// Anything the binary does not know sorts last, under its stored name.
 fn sort_categories(list: &mut [CategoryUsage]) {
@@ -825,7 +825,7 @@ fn fold_categories<'a>(it: impl Iterator<Item = &'a CategoryUsage>) -> Vec<Categ
         if let Some(n) = c.object_count {
             e.object_count = Some(e.object_count.unwrap_or(0) + n);
         }
-        // Accounts do not add across modules — the same person can hold content
+        // Accounts do not add across modules - the same person can hold content
         // in two of them. The largest single-module figure is the only honest
         // lower bound available without a second query, and it is labelled as
         // such on the page.
@@ -894,7 +894,7 @@ pub async fn stale_reporters(
 
 /// Everything the core knows about where one account's bytes live.
 ///
-/// ⚠️ PRIVACY — THE LINE THIS TYPE MUST NOT CROSS.
+/// ⚠️ PRIVACY - THE LINE THIS TYPE MUST NOT CROSS.
 ///
 /// This is the most detailed storage view an administrator has of a person, and
 /// it is deliberately made of nothing but **volumes, counts of objects and
@@ -907,7 +907,7 @@ pub async fn stale_reporters(
 /// that somebody keeps 400 files whose names end in `.docx` in a folder called
 /// "Divorce" answers neither, and is not something running the mail server
 /// should let you find out. Category identifiers are chosen under the same
-/// constraint — see `crate::storage::categories`.
+/// constraint - see `crate::storage::categories`.
 #[derive(Debug, Clone, Serialize)]
 pub struct AccountUsage {
     pub user_id: Uuid,
@@ -1010,7 +1010,7 @@ pub async fn account_usage(db: &DbPool, user_id: Uuid) -> Result<AccountUsage, A
             object_count: r.object_count,
             billable: known.is_some_and(Category::is_billable),
             held: known.is_none_or(Category::is_held),
-            // Always this one account — a number that would say nothing.
+            // Always this one account - a number that would say nothing.
             accounts: None,
             category: raw,
         };
@@ -1117,7 +1117,7 @@ pub struct BlockedDeclarant {
 /// The check is deliberately *global*: a correction driven by all-but-one module
 /// would silently subtract the missing one's share from every account it holds
 /// bytes for. There is no safe partial repair, so a single unfit declarant stops
-/// the pass — and the existing staleness alert already tells an operator which.
+/// the pass - and the existing staleness alert already tells an operator which.
 pub async fn repair_blockers(db: &DbPool) -> Result<Vec<BlockedDeclarant>, AppError> {
     let hours = stale_hours(db).await;
     let stale_before = Utc::now() - Duration::hours(hours);
@@ -1147,7 +1147,7 @@ pub async fn repair_blockers(db: &DbPool) -> Result<Vec<BlockedDeclarant>, AppEr
     // An instance where nobody declares is not an instance where nobody stores
     // anything. Reading the empty table as "every account bills zero" would zero
     // every counter on the platform, which is the single worst thing this job
-    // could do — so the absence of declarants is itself a blocker.
+    // could do - so the absence of declarants is itself a blocker.
     if rows.is_empty() {
         return Ok(vec![BlockedDeclarant {
             module_id: String::new(),
@@ -1201,7 +1201,7 @@ impl CounterDrift {
 /// least `min_delta` bytes.
 ///
 /// Accounts with no declarations at all are included with `declared_bytes = 0`
-/// only when their counter is non-zero — otherwise every account on the instance
+/// only when their counter is non-zero - otherwise every account on the instance
 /// would be a candidate for a correction to the value it already has.
 pub async fn counter_drifts(db: &DbPool, min_delta: i64) -> Result<Vec<CounterDrift>, AppError> {
     let billable: Vec<String> = Category::ALL
@@ -1349,7 +1349,7 @@ pub async fn repair_preview(db: &DbPool) -> Result<RepairReport, AppError> {
 ///
 /// * Only **billable** categories are summed. A module declaring its thumbnails
 ///   cannot move anybody's ceiling.
-/// * A single unfit declarant — stale, or never having completed a full sync —
+/// * A single unfit declarant - stale, or never having completed a full sync -
 ///   suspends the pass entirely. There is no safe partial repair: correcting
 ///   from all-but-one module's books silently subtracts the missing one's share
 ///   from every account it holds bytes for.

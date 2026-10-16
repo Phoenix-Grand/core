@@ -1,7 +1,7 @@
 /**
  * Cross-module labels attached to drive files and folders, for the explorer's
  * pastilles. ONE pair of calls covers the whole listing (the labels, then their
- * drive assignments) and is cached by react-query — never one request per row.
+ * drive assignments) and is cached by react-query - never one request per row.
  *
  * Only the local drive source carries labels: remote mounts and module mounts
  * have no `drive.file`/`drive.folder` resource identity, hence the `enabled`

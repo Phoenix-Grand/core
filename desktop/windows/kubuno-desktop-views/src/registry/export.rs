@@ -1,12 +1,12 @@
 //! JSON export of the component registry for the Visual Studio designer
 //! (`vskubuno/docs/DESIGNER.md` §5 "Registry export for the C# side", §8's
-//! DSG-1) — served over the language server's `kubuno/registry` custom LSP
+//! DSG-1) - served over the language server's `kubuno/registry` custom LSP
 //! method (`kubuno-desktop-views-ls/src/server.rs`) and consumed by
 //! `Kubuno.VisualStudio.Designer.Registry.ComponentRegistry.FromJson`
 //! (`vskubuno/src/Kubuno.VisualStudio.Designer/Registry/ComponentRegistry.cs`),
 //! whose fixture (`vskubuno/tests/Kubuno.VisualStudio.Designer.Tests/Fixtures/
 //! registry.sample.json`) this module's own [`components_json`] output is
-//! meant to equal — "both sides share one truth" rather than a fixture that
+//! meant to equal - "both sides share one truth" rather than a fixture that
 //! quietly drifts from what this crate actually exports.
 //!
 //! ## Where this module follows the C# side instead of §5's own sketch
@@ -16,7 +16,7 @@
 //! sketch) already committed to specific choices this module matches exactly
 //! rather than re-deriving:
 //!
-//! - **snake_case field names** (`layout_kind`, not `layoutKind`) — the
+//! - **snake_case field names** (`layout_kind`, not `layoutKind`) - the
 //!   consumer's `Serialization/RegistryJsonOptions.cs` uses a
 //!   `SnakeCaseNamingPolicy`, the opposite convention from DSG-2's
 //!   `kubuno/applyEdit` bridge (`edit_bridge.rs`), which is `camelCase`
@@ -39,7 +39,7 @@
 //!   (task requirement: "children model incl. allowed child names"). Emitted
 //!   as its own array (empty when the container gates nothing) rather than
 //!   folded into `children` itself, because `children` must stay the bare
-//!   string `"List"` the C# `JsonStringEnumConverter` expects — a JSON object
+//!   string `"List"` the C# `JsonStringEnumConverter` expects - a JSON object
 //!   there would break deserialization. `System.Text.Json`'s default
 //!   `Deserialize` silently ignores JSON properties a type does not declare,
 //!   so this would have been safe to add even without a C# change; a matching
@@ -47,17 +47,17 @@
 //!   not just present.
 //! - **The registry version/hash lives on the RPC envelope, not inside the
 //!   component array.** `ComponentRegistry.FromJson` deserializes a bare
-//!   JSON array (`List<ComponentMeta>`) — the fixture's own top-level shape.
+//!   JSON array (`List<ComponentMeta>`) - the fixture's own top-level shape.
 //!   Wrapping that array in `{version, components}` would break `FromJson`
 //!   outright, so [`RegistryExport`] (what `kubuno/registry` actually
 //!   returns) wraps the array with a `version` field for the client to cache
-//!   against, while [`components_json`] — what the fixture equals — stays
+//!   against, while [`components_json`] - what the fixture equals - stays
 //!   the bare array `FromJson` already expects.
 //!
 //! ## What `version` is
 //!
 //! A 64-bit FNV-1a hash of the exported components' own canonical JSON
-//! bytes, hex-encoded — cheap, no new crate dependency (a cache key only
+//! bytes, hex-encoded - cheap, no new crate dependency (a cache key only
 //! ever needs to change when the content changes, never to resist
 //! tampering), and deterministic across runs of the same binary, unlike
 //! `std::collections::hash_map::DefaultHasher` (`RandomState`'s per-process
@@ -72,7 +72,7 @@ use super::{ChildrenModel, ComponentMeta};
 pub use kubuno_desktop_views_model::schema::{ChildrenModelJson, ComponentJson, EventJson, LayoutKindJson, PropKindJson, PropertyJson, RegistryExport};
 use kubuno_desktop_views_model::schema::fnv1a_hex;
 
-/// One exported property — [`super::PropertyMeta`] field-for-field, with its French documentation
+/// One exported property - [`super::PropertyMeta`] field-for-field, with its French documentation
 /// and default category filled in.
 fn property_json(component: &str, p: &super::PropertyMeta, inherited_from: Option<&'static str>, root_only: bool) -> PropertyJson {
     PropertyJson {
@@ -95,7 +95,7 @@ fn property_json(component: &str, p: &super::PropertyMeta, inherited_from: Optio
     }
 }
 
-/// One exported event — [`super::EventMeta`] field-for-field, with where it comes from (own, common,
+/// One exported event - [`super::EventMeta`] field-for-field, with where it comes from (own, common,
 /// view) and its French documentation.
 fn event_json(component: &super::ComponentMeta, e: &super::EventMeta, root_only: bool) -> EventJson {
     let common = !root_only && !component.events.iter().any(|own| own.name == e.name);
@@ -125,7 +125,7 @@ fn event_json(component: &super::ComponentMeta, e: &super::EventMeta, root_only:
 }
 
 /// Converts one PascalCase Rust type name into kebab-case (`"TextField"` ->
-/// `"text-field"`, `"Button"` -> `"button"`) — see [`ComponentJson::icon`].
+/// `"text-field"`, `"Button"` -> `"button"`) - see [`ComponentJson::icon`].
 fn kebab_case(name: &str) -> String {
     let mut out = String::with_capacity(name.len() + 4);
     for (i, c) in name.char_indices() {
@@ -141,9 +141,9 @@ fn kebab_case(name: &str) -> String {
     out
 }
 
-/// The toolbox family name for `name` — `"core"` for the five phase-2a
+/// The toolbox family name for `name` - `"core"` for the five phase-2a
 /// examples, else the enabled family whose `ALL` slice declares it, else
-/// (never expected in practice — [`super::all`]'s own tests already assert
+/// (never expected in practice - [`super::all`]'s own tests already assert
 /// every registered name is unique and findable) `"other"`, a safe fallback
 /// rather than a panic.
 fn family_of(name: &str) -> &'static str {
@@ -276,7 +276,7 @@ fn to_json(meta: &ComponentMeta) -> ComponentJson {
     }
 }
 
-/// Every registered component, exported in [`super::all`]'s own order — the
+/// Every registered component, exported in [`super::all`]'s own order - the
 /// bare JSON array `ComponentRegistry.FromJson` deserializes, and what the
 /// checked-in fixture (`vskubuno/tests/.../Fixtures/registry.sample.json`) is
 /// regenerated from.
@@ -286,7 +286,7 @@ pub fn components_json() -> Vec<ComponentJson> {
 
 /// Builds [`RegistryExport`]. `version` is computed from the components'
 /// *own* serialized JSON, so it changes exactly when a client re-fetching it
-/// would see different data — not, e.g., from `registry::all()`'s
+/// would see different data - not, e.g., from `registry::all()`'s
 /// `OnceLock`'s address, which would be stable but meaningless.
 /// [`export`] as one JSON line (what a design surface prints for `--export-registry`: it links no
 /// JSON crate of its own).
@@ -326,7 +326,7 @@ mod tests {
     #[test]
     fn every_component_serializes_the_expected_top_level_keys() {
         // "A Rust test that the exported JSON deserializes against a copy of
-        // the C# fixture's shape" (task requirement) — key presence, both
+        // the C# fixture's shape" (task requirement) - key presence, both
         // the fields the original C# `ComponentMeta` already declares and
         // the additive `allowed_children` this module adds.
         let value = serde_json::to_value(components_json()).expect("components should serialize");

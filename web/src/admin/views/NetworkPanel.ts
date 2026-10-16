@@ -217,7 +217,7 @@ export class NetworkPanel extends ViewBase {
     if (!(this.runtime?.restart_required)) return undefined as never
     return this.tr(
             'admin.net_restart_body',
-            "L'activation, la désactivation ou le changement de port du HTTPS lie ou délie une socket : le service doit être redémarré pour appliquer ce changement. Le port HTTP continue d'être servi en parallèle du HTTPS — un mandataire inverse ou une sonde qui l'utilise n'est pas coupé.",
+            "L'activation, la désactivation ou le changement de port du HTTPS lie ou délie une socket : le service doit être redémarré pour appliquer ce changement. Le port HTTP continue d'être servi en parallèle du HTTPS - un mandataire inverse ou une sonde qui l'utilise n'est pas coupé.",
           )
   }
 
@@ -262,7 +262,7 @@ export class NetworkPanel extends ViewBase {
 
   get span_text2() {
     if (!(this.cert)) return undefined as never
-    return this.cert.subject || '—'
+    return this.cert.subject || '-'
   }
 
   get show_cert_san() {
@@ -291,7 +291,7 @@ export class NetworkPanel extends ViewBase {
 
   get span_text6() {
     if (!(this.cert)) return undefined as never
-    return this.cert.issuer || '—'
+    return this.cert.issuer || '-'
   }
 
   get show_cert_not_after() {
@@ -434,7 +434,7 @@ export class NetworkPanel extends ViewBase {
 
   get span_text11() {
     if (!(this.acmeMode) || !(this.acme)) return undefined as never
-    return this.acme.domains.length > 0 ? this.acme.domains.join(', ') : '—'
+    return this.acme.domains.length > 0 ? this.acme.domains.join(', ') : '-'
   }
 
   get show_acme_last_order() {
@@ -534,7 +534,7 @@ export class NetworkPanel extends ViewBase {
                       ? this.tr('admin.net_cert_expired_on', 'Expirait le {{d}}', {
                           d: new Date(c.not_after).toLocaleDateString(this.i18n.language),
                         })
-                      : '—') + String(' · ') + String(c.source === 'acme'
+                      : '-') + String(' · ') + String(c.source === 'acme'
                       ? this.tr('admin.net_cert_source_acme', 'ACME (automatique)')
                       : this.tr('admin.net_cert_source_upload', 'importé'))) : undefined, part7_props: ((this.history.length > 0)) ? ({ askDelete: this.memo("askDelete:bound", [], () => this.askDelete.bind(this)), c: c, removeCert: this.removeCert, t: this.tr }) : undefined, key: c.id }
     })

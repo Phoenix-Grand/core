@@ -7,7 +7,7 @@ import type React from 'react'
 
 // Selection border for stacked rows, drawn as per-side inset box-shadows so
 // adjacent selected rows collapse their shared edge to a single 2px line: a row
-// whose previous sibling is also selected (`mergeTop`) omits its TOP edge — the
+// whose previous sibling is also selected (`mergeTop`) omits its TOP edge - the
 // row above already draws that junction with its bottom edge. Non-adjacent edges
 // stay 2px (matching a focused <Input>).
 const SEL_RING_COLOR = 'var(--color-primary, #1a73e8)'

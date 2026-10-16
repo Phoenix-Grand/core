@@ -1,4 +1,4 @@
-<!-- AdminForbidden — converted from AdminForbidden.tsx by @kubuno/views-migrate. -->
+<!-- AdminForbidden - converted from AdminForbidden.tsx by @kubuno/views-migrate. -->
 <UserControl x:Props="AdminForbiddenProps">
   <EmptyState Variant="Unavailable"
               Icon="Lock"

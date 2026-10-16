@@ -24,7 +24,7 @@ data class SharedAccount(
  * `AccountManager`.
  *
  * This is how a *consumer* app (mail, calendar…) discovers the accounts a
- * *sibling* app signed in — the per-app [AccountRegistry] is private storage,
+ * *sibling* app signed in - the per-app [AccountRegistry] is private storage,
  * whereas the `com.kubuno` accounts are shared. Tokens are never read here: an
  * access token is obtained separately through `getAuthToken`, which the owning
  * app's authenticator serves. Same-signature callers need no permission.

@@ -1,4 +1,4 @@
-//! `AccountsCard` — the account panel's card of the OTHER accounts, as the web's `AccountMenu` draws it:
+//! `AccountsCard` - the account panel's card of the OTHER accounts, as the web's `AccountMenu` draws it:
 //! a toggle row (« Masquer plus de comptes » / « Afficher plus de comptes », the first accounts' letters
 //! while folded, a chevron), then, unfolded, one row per account:
 //!

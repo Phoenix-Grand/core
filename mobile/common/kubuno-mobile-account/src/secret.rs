@@ -1,8 +1,8 @@
 //! The OS secret store, where the refresh token lives.
 //!
 //! A refresh token is long-lived (30 days) and must never touch the logs, the JSON or ordinary app storage. On a
-//! phone it belongs in the platform keystore — Android's `AndroidKeyStore` / `EncryptedSharedPreferences`, iOS's
-//! Keychain — which the shell wraps and hands to the account layer as a [`SecretStore`]. This crate stays free of any
+//! phone it belongs in the platform keystore - Android's `AndroidKeyStore` / `EncryptedSharedPreferences`, iOS's
+//! Keychain - which the shell wraps and hands to the account layer as a [`SecretStore`]. This crate stays free of any
 //! platform API: it only drives the trait. [`MemorySecretStore`] is the in-process fallback for tests and tools.
 
 use std::collections::HashMap;
@@ -26,7 +26,7 @@ pub trait SecretStore: Send + Sync {
 }
 
 /// An in-process secret store (no persistence, no encryption): the fallback for tests and tools. **Not** for a real
-/// device — a real one uses the platform keystore through the shell's [`SecretStore`].
+/// device - a real one uses the platform keystore through the shell's [`SecretStore`].
 #[derive(Default)]
 pub struct MemorySecretStore {
     map: Mutex<HashMap<String, String>>,

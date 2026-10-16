@@ -39,7 +39,7 @@ export const useImagePickerStore = create<Store>((set, get) => ({
 /**
  * Opens the project's image picker and resolves with the chosen image, or null
  * if the user closes it. THE way to insert or upload an image anywhere in the
- * app — modules never build their own file input for that.
+ * app - modules never build their own file input for that.
  *
  * Requires `<ImagePickerHost />` mounted once (App.tsx).
  */
@@ -51,7 +51,7 @@ export const openImagePickerMany = (options?: ImagePickerOptions): Promise<Image
   useImagePickerStore.getState().open({ ...options, multiple: true })
 
 /**
- * Same picker, but always resolves to a File — for the callers that UPLOAD the
+ * Same picker, but always resolves to a File - for the callers that UPLOAD the
  * image rather than merely reference it. A picked URL is fetched here, because
  * an authenticated Drive/Photos URL is useless to whoever reads the result
  * later (an anonymous visitor, another server).

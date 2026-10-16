@@ -11,7 +11,7 @@ import type { InstanceCard } from './InstanceCard'
 export function Part1({ t, instance }: { t: NonNullable<InstanceCard['tr']>; instance: NonNullable<InstanceCard['props']['instance']> }) {
   return (
     <Field label={t('admin.sub_instance_name')}>
-              {instance.name ?? '—'}
+              {instance.name ?? '-'}
             </Field>
   )
 }

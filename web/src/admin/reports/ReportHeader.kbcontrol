@@ -1,4 +1,4 @@
-<!-- ReportHeader — converted from ReportHeader.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- ReportHeader - converted from ReportHeader.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="ReportHeaderProps">
   <Panel HtmlTag="Header"
          BackColor="Surface"

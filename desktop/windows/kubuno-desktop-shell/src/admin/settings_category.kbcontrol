@@ -1,6 +1,6 @@
 <!--
   One category of the instance's settings (« Courriel », « Général »…): a dense card titled by the category,
-  one row per setting — its label, its current value on the right, its description under the label — the rows
+  one row per setting - its label, its current value on the right, its description under the label - the rows
   separated by rules. Read only.
 -->
 <UserControl xmlns="https://kubuno.com/views" xmlns:x="https://kubuno.com/views/x" xmlns:d="https://kubuno.com/views/design" x:Class="SettingsCategory" DesignWidth="936" DesignHeight="175" OnLoad="settings_category_load">

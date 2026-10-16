@@ -1,4 +1,4 @@
-//! Circular storage gauge — calculations (mirrors
+//! Circular storage gauge - calculations (mirrors
 //! `Files.App.Controls/Storage/StorageRing/StorageRing.cs`).
 //!
 //! The C# is a templated `RangeBase` with two [`RingShape`]s ("value" and
@@ -6,7 +6,7 @@
 //! recomputes based on `Value`, then picks a visual state
 //! (Safe/Caution/Critical/Disabled). The pure CALCULATIONS are ported here:
 //! `compute` reproduces the `UpdateRings` cascade and returns
-//! [`StorageRingLayout`] — the two `RingShape`s ready to be drawn + the
+//! [`StorageRingLayout`] - the two `RingShape`s ready to be drawn + the
 //! visual state. The input struct [`StorageRing`] (its `DependencyProperty`s
 //! + defaults) lives in [`super::storage_ring_properties`].
 
@@ -63,7 +63,7 @@ impl StorageRing {
             normalized_angles(self.min_angle, self.max_angle);
 
         // UpdateRadii: _sharedRadius (the `newRadius` parameter only
-        // influences unused local variables in the C# — reproduced as-is).
+        // influences unused local variables in the C# - reproduced as-is).
         let radii_check =
             (adjusted_size / 2.0) - if thickness_check == ThicknessCheck::Equal { 0.0 } else { larger_thickness / 2.0 };
         let shared_radius = if radii_check <= 4.0 { 4.0 } else { radii_check };
@@ -140,7 +140,7 @@ impl StorageRing {
 
     /// `DoubleToAngle`: `value` (∈[min,max]) → angle (∈[MinAngle,MaxAngle]).
     /// Uses NORMALIZED angles for clamping, RAW angles for amplitude and
-    /// offset — exactly like the C#.
+    /// offset - exactly like the C#.
     fn double_to_angle(
         &self,
         value: f64,

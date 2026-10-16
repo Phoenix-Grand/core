@@ -31,7 +31,7 @@ impl MessageBoxButtons {
     }
 }
 
-/// The icon of a [`MessageBox`] — Windows Forms' five, plus Kubuno's `Danger` (a destructive
+/// The icon of a [`MessageBox`] - Windows Forms' five, plus Kubuno's `Danger` (a destructive
 /// confirmation: a red disc and a red confirming action, the web `ConfirmDialog`'s `danger`).
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum MessageBoxIcon {
@@ -58,7 +58,7 @@ impl MessageBoxIcon {
         }
     }
 }
-/// A modal message with buttons, in Kubuno's style — Windows Forms' `MessageBox`. It is owned by
+/// A modal message with buttons, in Kubuno's style - Windows Forms' `MessageBox`. It is owned by
 /// the window whose event handler shows it (or by `owner`), which takes no input until it closes.
 ///
 /// ```no_run
@@ -93,7 +93,7 @@ impl MessageBox {
     ///
     /// The web `ConfirmDialog`'s look, in a real dialog window: the Kubuno title band with the
     /// caption, a body `p-6` holding the icon on its 48 DIP disc then the message, and the window's
-    /// action bar with the buttons on the right — the confirming ones as text buttons, the
+    /// action bar with the buttons on the right - the confirming ones as text buttons, the
     /// cancelling one as a ghost, all at least 96 DIP wide (`FloatingWindow`'s footer rule).
     pub fn build(text: &str, caption: &str, buttons: MessageBoxButtons, icon: MessageBoxIcon) -> Form {
         /// `ConfirmDialog`'s `defaultWidth={380}`, `p-6`, the disc and the gap under it.

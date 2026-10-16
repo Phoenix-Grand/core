@@ -1,4 +1,4 @@
-// @mention contract — the reusable shape shared by every mention-aware field and
+// @mention contract - the reusable shape shared by every mention-aware field and
 // by any module that wants to feed people (contacts, mail…) into those fields.
 //
 // These types live in `@ui` (the lowest shared layer) so that the primitives can
@@ -42,7 +42,7 @@ export interface MentionsConfig {
   /**
    * Explicit provider list. When omitted, the primitives fall back to the
    * providers registered at the `'mentions.provider'` extension point
-   * (dynamic discovery — no provider means the feature is silently inert).
+   * (dynamic discovery - no provider means the feature is silently inert).
    */
   providers?: MentionProvider[]
   /** Trigger character (default `'@'`). */

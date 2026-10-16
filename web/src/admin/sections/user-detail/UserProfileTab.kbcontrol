@@ -1,4 +1,4 @@
-<!-- ProfileTab — converted from ProfileTab.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- ProfileTab - converted from ProfileTab.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="ProfileTabProps">
   <Panel Class="grid gap-4 lg:grid-cols-2">
     <!-- TODO(views-migrate): <IdentityCard> is no .kbview element (./cards/IdentityCard#default) -->

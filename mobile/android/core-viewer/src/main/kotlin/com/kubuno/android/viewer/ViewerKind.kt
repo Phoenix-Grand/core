@@ -10,7 +10,7 @@ package com.kubuno.android.viewer
  */
 enum class ViewerKind { IMAGE, PDF, TEXT, VIDEO, AUDIO, UNSUPPORTED }
 
-/** MIME types too generic to trust — fall back to the extension for these. */
+/** MIME types too generic to trust - fall back to the extension for these. */
 private val GENERIC_MIMES = setOf(
     "", "application/octet-stream", "binary/octet-stream",
     "application/binary", "application/unknown", "content/unknown",
@@ -80,6 +80,6 @@ fun previewKind(name: String, mime: String?): ViewerKind {
     }
 }
 
-/** True when an in-app viewer exists — the delegation contract's `canPreview`. */
+/** True when an in-app viewer exists - the delegation contract's `canPreview`. */
 fun canPreview(name: String, mime: String?): Boolean =
     previewKind(name, mime) != ViewerKind.UNSUPPORTED

@@ -1,4 +1,4 @@
-//! The domains this instance answers for — declared, and *proven*.
+//! The domains this instance answers for - declared, and *proven*.
 //!
 //! ## The one idea
 //!
@@ -17,7 +17,7 @@
 //!   is refused ([`store::is_verified`], read by `handlers::auth::register`).
 //! * **It offers** the verified names wherever an administrator types an
 //!   address, so the console stops being a free-text field.
-//! * **It diagnoses** the mail configuration of each domain — MX, SPF, DMARC —
+//! * **It diagnoses** the mail configuration of each domain - MX, SPF, DMARC -
 //!   as a reading, never a verdict: the core does not run the mail service and
 //!   has no business declaring somebody's zone wrong.
 //! * **It does not** route mail, create mailboxes, or rewrite anybody's address.

@@ -1,4 +1,4 @@
-//! Children clipping: like every Windows Forms control, a container — and a user control — clips its children to
+//! Children clipping: like every Windows Forms control, a container - and a user control - clips its children to
 //! its own box. An element of a user control's view never paints, nor takes the pointer, outside the instance using
 //! it; a button wider than its panel is cut at the panel's edge.
 //!
@@ -11,7 +11,7 @@
 //!   all it holds) is clipped on the canvas, the pointer outside the visible part is kept from it, and its input
 //!   rectangles (input router, focus ring, design-time hit-test, accessibility bounds) are cut to the visible part.
 //!   A slot entirely inside the clip pushes nothing: the clip costs nothing in the common case, and what a control
-//!   deliberately draws just outside its own box — its focus ring, its shadow — is kept.
+//!   deliberately draws just outside its own box - its focus ring, its shadow - is kept.
 //!
 //! The floating parts of a view are not clipped by the containers they are declared in: menus, tooltips and
 //! drop-downs are surfaces of their own (`kubuno_desktop_controls::host::popup`), and a `<Popover>`'s panel is painted
@@ -52,7 +52,7 @@ pub(crate) fn current() -> Option<Rect> {
     STACK.with(|s| s.borrow().last().copied())
 }
 
-/// What of `client` (a rectangle in client coordinates) the clip in force leaves visible — what the pointer may
+/// What of `client` (a rectangle in client coordinates) the clip in force leaves visible - what the pointer may
 /// reach of it (empty when it is entirely clipped away).
 pub(crate) fn visible_client(client: Rect) -> Rect {
     match current() {
@@ -62,7 +62,7 @@ pub(crate) fn visible_client(client: Rect) -> Rect {
 }
 
 /// The clip in force, in the current content coordinates, when `bounds` (content coordinates) crosses it: `None`
-/// when nothing clips `bounds`, `Some(clip)` when part of it — or all of it — is clipped away.
+/// when nothing clips `bounds`, `Some(clip)` when part of it - or all of it - is clipped away.
 pub(crate) fn cut(bounds: Rect) -> Option<Rect> {
     let (dx, dy) = host::content_offset();
     let clip = offset(current()?, (-dx, -dy));

@@ -19,7 +19,7 @@ pub struct SmbShare {
 /// Exists because a share's NAME and its COMMENT are different things, and the
 /// connection form has no other way to show that: a server whose share is called
 /// `home_martinien` may describe it as "Home Martinien", and entering the
-/// description gets the mount rejected with `NT_STATUS_BAD_NETWORK_NAME` — with
+/// description gets the mount rejected with `NT_STATUS_BAD_NETWORK_NAME` - with
 /// nothing on screen to explain why.
 ///
 /// Uses `-g`, smbclient's machine-readable form (`TYPE|NAME|COMMENT`), rather
@@ -244,7 +244,7 @@ impl RemoteConnector for SmbConnector {
         let mapped: ByteStream = Box::pin(stream.map(move |r| {
             r.map_err(RemoteError::Io)
         }));
-        // Note: tmp file cleanup is deferred — could use a wrapper that deletes on drop
+        // Note: tmp file cleanup is deferred - could use a wrapper that deletes on drop
         let _ = tmp_clone;
         Ok(mapped)
     }

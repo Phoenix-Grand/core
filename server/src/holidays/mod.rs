@@ -1,21 +1,21 @@
-//! Public holidays and special days — the instance's answer to "is that day
+//! Public holidays and special days - the instance's answer to "is that day
 //! off, and where".
 //!
 //! ## What lives here
 //!
-//! * [`model`] — the closed grammar of a rule, and the shapes the API speaks.
-//! * [`rules`] — the expander: a rule plus a date range gives occurrences. Pure
+//! * [`model`] - the closed grammar of a rule, and the shapes the API speaks.
+//! * [`rules`] - the expander: a rule plus a date range gives occurrences. Pure
 //!   arithmetic, no database, fully tested.
-//! * [`store`] — reading and writing the referential, and folding the
+//! * [`store`] - reading and writing the referential, and folding the
 //!   organisational-unit overlay into it.
-//! * [`seed`] — loading the shipped dataset without ever undoing an edit.
-//! * [`resolve`] — which calendars apply to a given reader.
+//! * [`seed`] - loading the shipped dataset without ever undoing an edit.
+//! * [`resolve`] - which calendars apply to a given reader.
 //!
 //! ## The rule that governs the whole module
 //!
 //! A holiday is **information**, not a permission. Every signed-in account may
 //! read the feed for any calendar; `core.holidays.manage` gates writing, and
-//! `core.holidays.read` gates the administration console — not the answer to
+//! `core.holidays.read` gates the administration console - not the answer to
 //! "what day is the 14th of July". A calendar that hid public holidays from
 //! ordinary members would be a bug wearing a policy's clothes.
 //!

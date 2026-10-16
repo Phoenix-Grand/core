@@ -1,7 +1,7 @@
 //! Where the launcher's data comes from: the host app's [`LauncherService`].
 //!
 //! The launcher knows no server and no account. The app that places it says which apps there are,
-//! which of them the user made favourites, how one is opened and where an edited list is saved —
+//! which of them the user made favourites, how one is opened and where an edited list is saved -
 //! the shell from its own fetch of the instance's modules; another app, later, through the shell's
 //! token broker (`kubuno-desktop-account`), see this crate's README.
 

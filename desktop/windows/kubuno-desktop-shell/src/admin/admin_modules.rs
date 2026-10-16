@@ -45,7 +45,7 @@ pub struct ModulesData {
     pub modules: Vec<ModuleInfo>,
 }
 
-/// A module's icon: its coloured brand logo when it ships one, else its glyph — the web launcher's rule.
+/// A module's icon: its coloured brand logo when it ships one, else its glyph - the web launcher's rule.
 fn icon_for(m: &kubuno_desktop_sync::AdminModule) -> &'static str {
     crate::services::apps::logo_for(&m.id).or_else(|| m.icon.as_deref().and_then(kubuno_desktop::views::icon::glyph)).unwrap_or("Package")
 }
@@ -198,7 +198,7 @@ impl ModulesSection {
         let cy = (cell.top + cell.bottom) / 2.0;
         match column {
             APP => {
-                // The logo, then the name, its version and « Par défaut » over the description — dimmed
+                // The logo, then the name, its version and « Par défaut » over the description - dimmed
                 // while the service is off.
                 let off = !m.enabled;
                 let logo = Rect::new(cell.left, cy - LOGO / 2.0, cell.left + LOGO, cy + LOGO / 2.0);

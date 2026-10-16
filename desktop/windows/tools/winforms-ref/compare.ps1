@@ -2,7 +2,7 @@
 # Kubuno reproduction on the right, captioned and separated by a rule.
 #
 # The two are captured at the same DPI by construction (both run on this
-# machine), so a difference in the composite is a real difference in the port —
+# machine), so a difference in the composite is a real difference in the port -
 # not a scaling artefact.
 #
 #   .\compare.ps1 -Reference ..\..\shots\01-buttonbase.png `
@@ -52,7 +52,7 @@ $g.InterpolationMode = 'HighQualityBicubic'
 $g.DrawString('WinForms (référence)', $font, $ink, 8, 8)
 $portCaption = 'Kubuno (port natif)'
 if ([Math]::Abs($factor - 1.0) -gt 0.01) {
-    $portCaption += (' — ramené à l''échelle de la référence (×{0:N2})' -f $factor)
+    $portCaption += (' - ramené à l''échelle de la référence (×{0:N2})' -f $factor)
 }
 $g.DrawString($portCaption, $font, $ink, ($a.Width + $gap + 8), 8)
 

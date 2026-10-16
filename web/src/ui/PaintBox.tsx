@@ -42,7 +42,7 @@ export function preparePaint(canvas: HTMLCanvasElement, dpr: number, data?: unkn
 
 /**
  * A drawing surface (the `.kbview` `PaintBox`): a `<canvas>` whose `OnPaint` handler draws with the 2D context,
- * in CSS pixels at any pixel ratio — charts, previews, small custom visuals. Repainted when it is resized, when the
+ * in CSS pixels at any pixel ratio - charts, previews, small custom visuals. Repainted when it is resized, when the
  * pixel ratio changes (zoom, another screen) and when `PaintData` changes.
  */
 export const PaintBox = React.forwardRef<HTMLCanvasElement, PaintBoxProps>(function PaintBox(

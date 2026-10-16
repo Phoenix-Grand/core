@@ -62,7 +62,7 @@ const RELOAD_AT = 'kb_chunk_reload_at'
 function handleChunkError() {
   // Garde anti-boucle robuste : au plus un rechargement par 30 s. Si l'erreur
   // PERSISTE après rechargement (chunk définitivement cassé, pas juste périmé),
-  // on n'entre PAS dans une boucle infinie — on laisse l'erreur visible.
+  // on n'entre PAS dans une boucle infinie - on laisse l'erreur visible.
   const last = Number(sessionStorage.getItem(RELOAD_AT) || 0)
   if (Date.now() - last < 30_000) return
   sessionStorage.setItem(RELOAD_AT, String(Date.now()))
@@ -78,7 +78,7 @@ window.addEventListener('unhandledrejection', (e) => {
 
 // Langue d'instance : lue sur /api/v1/config (réglage public), appliquée
 // seulement si ni l'utilisateur ni son compte n'ont décidé. Lancée ici, sans
-// attente, pour que la page de connexion — servie AVANT toute authentification —
+// attente, pour que la page de connexion - servie AVANT toute authentification -
 // s'y conforme dès qu'elle a la réponse.
 void syncInstanceLanguage()
 
@@ -93,14 +93,14 @@ installDirectoryMentions()
 const queryClient = new QueryClient({
   defaultOptions: {
     // `gcTime` 60 s (défaut TanStack = 5 min) : une fois une requête sans
-    // observateur (page quittée), ses données — p.ex. un listing de dossier
-    // drive de plusieurs milliers d'entrées — sont libérées ~5× plus vite.
+    // observateur (page quittée), ses données - p.ex. un listing de dossier
+    // drive de plusieurs milliers d'entrées - sont libérées ~5× plus vite.
     // `staleTime` 30 s inchangé : un retour sur la page re-fetch de toute façon.
     queries: { retry: 1, staleTime: 30_000, gcTime: 60_000 },
   },
 })
 
-// Monter React immédiatement — App gère l'état isInitialized via ProtectedRoute
+// Monter React immédiatement - App gère l'état isInitialized via ProtectedRoute
 const root = document.getElementById('root')
 if (!root) throw new Error('Root element manquant')
 
@@ -136,7 +136,7 @@ useAuthStore.subscribe((state, prev) => {
  *
  * Ces événements n'arrivent presque jamais seuls : quand le serveur redémarre,
  * les modules installés se réenregistrent tous en quelques secondes, et chaque
- * onglet ouvert lançait alors une requête par module — une quinzaine pour
+ * onglet ouvert lançait alors une requête par module - une quinzaine pour
  * apprendre une seule et même chose. Une courte fenêtre d'attente n'en laisse
  * partir qu'une, et retarde d'autant la prise en compte d'un module isolé qui
  * apparaît ou disparaît : imperceptible pour ce que ça change à l'écran.
@@ -193,7 +193,7 @@ async function bootstrap() {
   // Apply the user's per-user theme preference (follows them across devices),
   // but ONLY when this browser has no explicit local choice. Otherwise a theme
   // just applied via the admin panel (which stores it locally) would be reverted
-  // — and clobbered — on every reload by a stale server-side preference.
+  // - and clobbered - on every reload by a stale server-side preference.
   // `fetchThemes` already honours localStorage first, so this is purely the
   // cross-device fallback for a fresh browser.
   await themesPromise

@@ -61,7 +61,7 @@ struct ModuleLicenceRow {
 const MAX_KEY_LEN: usize = 8192;
 
 /// The contract as the page shows it: the stored claims, plus the two things
-/// only the server can say — today's verdict on the signature, and how long is
+/// only the server can say - today's verdict on the signature, and how long is
 /// left.
 fn contract_json(stored: &store::StoredContract, trust: &Trust) -> Value {
     let now = chrono::Utc::now();
@@ -142,7 +142,7 @@ pub async fn get(
 
     // The installed modules and the licence each one declares. Read from
     // `core.modules`, which is where the manifest each module ships lands
-    // (`modules::manager::sync_to_db`) — never from a list of names in the core.
+    // (`modules::manager::sync_to_db`) - never from a list of names in the core.
     let modules = if ctx.has(keys::MODULES_READ) {
         let rows = state
             .db
@@ -200,7 +200,7 @@ pub async fn get(
         "accounts": accounts,
         "modules":  modules,
         "support": {
-            // The community channels, always — they are what an instance without
+            // The community channels, always - they are what an instance without
             // a contract actually has, and they do not stop existing when one is
             // registered.
             "community": {
@@ -228,7 +228,7 @@ pub struct RegisterKeyDto {
     key: String,
 }
 
-/// `POST /admin/subscription/support-key` — register or replace the contract.
+/// `POST /admin/subscription/support-key` - register or replace the contract.
 pub async fn register_key(
     State(state): State<AppState>,
     _admin: AdminUser,
@@ -237,7 +237,7 @@ pub async fn register_key(
     Json(dto): Json<RegisterKeyDto>,
 ) -> Result<Json<Value>, AppError> {
     // Writing a support contract is editing instance-wide configuration, so it
-    // is governed by the settings key — the same one the menu entry is gated on
+    // is governed by the settings key - the same one the menu entry is gated on
     // for reading. It grants nothing: the contract unlocks no feature.
     ctx.require(keys::SETTINGS_MANAGE)?;
 
@@ -298,7 +298,7 @@ pub async fn register_key(
         .detail(if key.is_verified() {
             "signature vérifiée"
         } else {
-            "signature non vérifiée — informations déclaratives"
+            "signature non vérifiée - informations déclaratives"
         });
     if let Some(before) = before {
         entry = entry.before(before);
@@ -312,7 +312,7 @@ pub async fn register_key(
     Ok(Json(json!({ "contract": contract_json(&stored, &key.trust) })))
 }
 
-/// `DELETE /admin/subscription/support-key` — go back to community support.
+/// `DELETE /admin/subscription/support-key` - go back to community support.
 ///
 /// Not a destructive operation in any meaningful sense: the instance loses a
 /// display, never a capability. The contract itself lives in the operator's

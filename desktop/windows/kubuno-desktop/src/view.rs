@@ -1,4 +1,4 @@
-//! [`View`]: what a window shows — a form class (`#[kubuno_desktop::view]`) or a [`Form`] built in code.
+//! [`View`]: what a window shows - a form class (`#[kubuno_desktop::view]`) or a [`Form`] built in code.
 
 use kubuno_desktop_views::binding::{Value, ViewModel};
 use kubuno_desktop_views::events::{ElementRef, EventArgs, UiDispatcher};
@@ -6,14 +6,14 @@ use kubuno_desktop_views::events::{ElementRef, EventArgs, UiDispatcher};
 use crate::__private::HandlerCx;
 use crate::forms::{AsForm, DialogResult, Form};
 
-/// What a window shows: a [`Form`] and the code that handles its events — Windows Forms' `Form`
+/// What a window shows: a [`Form`] and the code that handles its events - Windows Forms' `Form`
 /// subclass.
 ///
 /// `#[kubuno_desktop::view("main_view.kbview")]` on a struct implements it: the struct gets a field per
 /// `x:Name`d control of the view (typed with its handle: `status: TextField`), a hidden [`Form`] it
 /// derefs to (`self.set_text("Title")`, `self.close()`, `self.controls()`), `initialize_component()`,
 /// `Default` (unless derived), and each handler the view names (`OnClick="hello_click"`) runs the
-/// struct's method of that name — a plain method, with one of the signatures of
+/// struct's method of that name - a plain method, with one of the signatures of
 /// [`__private::Handler`](crate::__private::Handler):
 ///
 /// ```ignore
@@ -22,7 +22,7 @@ use crate::forms::{AsForm, DialogResult, Form};
 ///
 /// A [`Form`] built in code is a `View` too (its events have Rust subscribers only).
 ///
-/// Mistakes are compile errors that name the `.kbview` line — a control the crate does not know:
+/// Mistakes are compile errors that name the `.kbview` line - a control the crate does not know:
 ///
 /// ```compile_fail
 /// #[kubuno_desktop::view(xml = r#"<Panel><Frobnicator x:Name="f"/></Panel>"#)]
@@ -97,7 +97,7 @@ pub trait View: ViewModel + 'static {
         false
     }
 
-    /// Opens the view in a window of its own and returns at once — Windows Forms' `Show()`. The
+    /// Opens the view in a window of its own and returns at once - Windows Forms' `Show()`. The
     /// window lives until it is closed, or until the application's main window closes. Call it from
     /// a running application (an event handler).
     fn show(self)
@@ -108,7 +108,7 @@ pub trait View: ViewModel + 'static {
     }
 
     /// Opens the view as a modal dialog owned by `owner` (the other windows of the application do
-    /// not take input meanwhile) and returns how it was closed once it is — Windows Forms'
+    /// not take input meanwhile) and returns how it was closed once it is - Windows Forms'
     /// `ShowDialog(owner)`. The view stays usable afterwards: read its controls, its fields.
     fn show_dialog(&mut self, owner: &dyn AsForm) -> DialogResult
     where

@@ -66,7 +66,7 @@ impl SettingsPage {
         self.saved_proxy = v.proxy.clone();
     }
 
-    /// Saves the proxy field when it changed — when it loses the focus, on Enter, or when the page
+    /// Saves the proxy field when it changed - when it loses the focus, on Enter, or when the page
     /// is left: there is no Save button, so an unsaved edit would be silently lost.
     pub fn commit_proxy(&mut self) {
         let typed = self.proxy.trim().to_string();

@@ -29,11 +29,11 @@
 //!
 //! `ControlBase` does not carry a `Controls` collection (it is shared and this
 //! file may not edit it), so the collection lives on the first container level
-//! that needs it — [`ScrollableControl`] — and on [`GroupBox`], which descends
+//! that needs it - [`ScrollableControl`] - and on [`GroupBox`], which descends
 //! from `Control` directly. Both delegate the actual placement to
 //! [`crate::layout::layout`]: this file never re-implements Dock or Anchor.
 //!
-//! ## Coordinate spaces — the rule that keeps containers movable
+//! ## Coordinate spaces - the rule that keeps containers movable
 //!
 //! `ControlBase::bounds` is **parent-relative**, as WinForms defines it. A
 //! container therefore lays its children out in its own **local space**: the
@@ -45,7 +45,7 @@
 //! receives the box the container occupies, and the container translates its
 //! children by that box's origin, plus its padding, its border and the
 //! auto-scroll offset. Moving a container therefore moves its whole subtree for
-//! free — nothing ever shifts a descendant by hand.
+//! free - nothing ever shifts a descendant by hand.
 //!
 //! The operations that cross the boundary are named for it: `local_display_rect`
 //! produces the layout input, while [`Children::paint`] and
@@ -63,8 +63,8 @@
 //! ## How this family paints
 //!
 //! Like the real toolkit, and only like it. Every colour, every metric and the
-//! caption font come from [`crate::system::Visuals`] — `GetSysColor`,
-//! `GetSystemMetricsForDpi`, `lfMessageFont` — reached through
+//! caption font come from [`crate::system::Visuals`] - `GetSysColor`,
+//! `GetSystemMetricsForDpi`, `lfMessageFont` - reached through
 //! [`ControlCanvas::visuals`]. Nothing here reads the Kubuno palette or the
 //! design system's text formats, and nothing here rounds a corner: a WinForms
 //! container is a square box, and its borders are the two-tone one-pixel rings
@@ -73,29 +73,29 @@
 //! Concretely:
 //!
 //! * a container's ground is its own `BackColor`, else `SystemColors.Control`
-//!   (`Control.DefaultBackColor`) — the ambient value a real control would
+//!   (`Control.DefaultBackColor`) - the ambient value a real control would
 //!   inherit from its parent, which this library models as `back_color = None`;
 //! * `BorderStyle::FixedSingle` is one square line in `SystemColors.WindowFrame`
-//!   — measured on the reference sheet as `#646464`, the `COLOR_WINDOWFRAME` of
+//!   - measured on the reference sheet as `#646464`, the `COLOR_WINDOWFRAME` of
 //!   this machine, not a shadow grey;
 //! * `BorderStyle::Fixed3D` is [`Border3DStyle::Sunken`] through
 //!   [`ControlCanvas::draw_edge`]: two rings, dark outside and darker inside on
-//!   the top/left, light on the bottom/right — and it stays that way **with
+//!   the top/left, light on the bottom/right - and it stays that way **with
 //!   visual styles on**, which is the measurement [`paint_border`] carries;
-//! * a [`GroupBox`] frames itself with the theme's own `BP_GROUPBOX` — a single
-//!   flat `#DCDCDC` line on a default Windows 11 — falling back to
+//! * a [`GroupBox`] frames itself with the theme's own `BP_GROUPBOX` - a single
+//!   flat `#DCDCDC` line on a default Windows 11 - falling back to
 //!   [`Border3DStyle::Etched`], the classic engraved groove, when visual styles
 //!   are off. Either way it notches its caption into the top of that frame, in
 //!   `SystemColors.ControlText` and the system message font.
 //!
 //! ## Themed and classic, in this family
 //!
-//! One control, two correct renderings — see [`crate::theme`] for why, and for
+//! One control, two correct renderings - see [`crate::theme`] for why, and for
 //! the rule this migration was done under: **a part is chosen by rendering it
 //! and sampling it, never by reading its name.** Both decisions below came out
 //! of a measurement, and one of them contradicts the obvious guess:
 //!
-//! | asked | sampled — on `04-containers.png`, on `DrawToBitmap`, and on the live control | adopted |
+//! | asked | sampled - on `04-containers.png`, on `DrawToBitmap`, and on the live control | adopted |
 //! |---|---|---|
 //! | `GroupBox` frame | one flat `#DCDCDC` line, no groove, in every `FlatStyle` | `BUTTON` / `BP_GROUPBOX` |
 //! | `Panel` / `UserControl` `Fixed3D` | the classic `#A0A0A0`→`#696969` over `#FFFFFF`→`#E3E3E3` two-ring well | **no theme part** |
@@ -232,7 +232,7 @@ impl Point {
     }
 }
 
-/// One scrollbar's designer-visible state — the port of `HScrollProperties` /
+/// One scrollbar's designer-visible state - the port of `HScrollProperties` /
 /// `VScrollProperties`. The two toolkit types are identical apart from the axis
 /// they drive, so one struct models both; a `ScrollableControl` holds an `h` and
 /// a `v`.
@@ -268,7 +268,7 @@ impl Default for ScrollProperties {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// The child collection — the model of `Control.Controls` plus the layout pass.
+// The child collection - the model of `Control.Controls` plus the layout pass.
 // ─────────────────────────────────────────────────────────────────────────────
 
 /// A container's children and the state its layout needs.
@@ -276,10 +276,10 @@ impl Default for ScrollProperties {
 /// This is the `Control.Controls` collection the toolkit gives every control,
 /// carried here on the container levels that use it (rather than on the shared
 /// `ControlBase`, which this file may not touch). It owns the one piece of
-/// layout state that must survive between passes — the previous display rect —
+/// layout state that must survive between passes - the previous display rect -
 /// because anchoring is defined against the *change* in size, not the size.
 // `Clone` works because `Box<dyn Control>` is cloneable through the
-// `ControlClone` supertrait — cloning a container deep-copies its children,
+// `ControlClone` supertrait - cloning a container deep-copies its children,
 // which is what a control value must do.
 #[derive(Clone, Default)]
 pub struct Children {
@@ -295,7 +295,7 @@ impl Children {
         Self::default()
     }
 
-    /// Adds a child, last in z-order — and therefore, for docking, the child
+    /// Adds a child, last in z-order - and therefore, for docking, the child
     /// placed against the *outermost* container edge (see the reverse-z-order
     /// rule in `layout.rs`).
     pub fn push(&mut self, child: Box<dyn Control>) {
@@ -323,7 +323,7 @@ impl Children {
     }
 
     /// Resolves `Dock` then `Anchor` for every child inside `display`, and
-    /// writes each child's new bounds back onto it. Reuses the shared engine —
+    /// writes each child's new bounds back onto it. Reuses the shared engine -
     /// there is deliberately no docking or anchoring logic in this file.
     ///
     /// `display` must be the container's client rectangle in its **own local
@@ -331,7 +331,7 @@ impl Children {
     /// border. That is what makes the resulting child `bounds` parent-relative,
     /// as `ControlBase::bounds` is documented to be. Passing a canvas-absolute
     /// rectangle compiles and paints correctly *once*, then breaks the moment the
-    /// container moves — see the coordinate-space note in the module docs.
+    /// container moves - see the coordinate-space note in the module docs.
     pub fn perform_layout(&mut self, display: Rect) {
         let items: Vec<Item> = self.items.iter().map(|c| Item::from(c.control())).collect();
         let previous = self.previous.unwrap_or(display);
@@ -343,12 +343,12 @@ impl Children {
     }
 
     /// The furthest right and bottom edge the children reach, in **client**
-    /// coordinates — so a container with padding sees an extent that already
+    /// coordinates - so a container with padding sees an extent that already
     /// includes that padding on the left and top. Hidden children contribute
     /// nothing.
     ///
     /// This is the raw extent, before `AutoScrollMargin`/`AutoScrollMinSize` are
-    /// applied — [`ScrollableControl::scroll_content_size`] does that.
+    /// applied - [`ScrollableControl::scroll_content_size`] does that.
     pub fn content_extent(&self) -> Size {
         let mut w = 0.0_f32;
         let mut h = 0.0_f32;
@@ -364,7 +364,7 @@ impl Children {
     }
 
     /// Paints every visible child, translating its local `bounds` into canvas
-    /// space by `origin` — the canvas position of this collection's local origin,
+    /// space by `origin` - the canvas position of this collection's local origin,
     /// which the container computes from the box it was asked to paint into (plus
     /// padding, border and the auto-scroll offset). The container is responsible
     /// for clipping.
@@ -379,7 +379,7 @@ impl Children {
         }
     }
 
-    /// The topmost visible child containing `local` — a point already converted
+    /// The topmost visible child containing `local` - a point already converted
     /// into this collection's local space, since that is the space the children's
     /// `bounds` live in. Walks in reverse z-order, so the child painted last (and
     /// therefore on top) is the one that answers.
@@ -392,7 +392,7 @@ impl Children {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// ScrollableControl — the base of the container chain.
+// ScrollableControl - the base of the container chain.
 // ─────────────────────────────────────────────────────────────────────────────
 
 /// `System.Windows.Forms.ScrollableControl`: a `Control` that owns children,
@@ -406,22 +406,22 @@ pub struct ScrollableControl {
     control: ControlBase,
 
     // ── The six declared properties ──────────────────────────────────────
-    /// `AutoScroll` — when the content overflows, scroll instead of clip.
+    /// `AutoScroll` - when the content overflows, scroll instead of clip.
     pub auto_scroll: bool,
-    /// `AutoScrollMargin` — padding added around the content extent when the
+    /// `AutoScrollMargin` - padding added around the content extent when the
     /// scrollable area is computed.
     pub auto_scroll_margin: Size,
-    /// `AutoScrollMinSize` — a floor on the virtual content size, so the area
+    /// `AutoScrollMinSize` - a floor on the virtual content size, so the area
     /// scrolls even when the children are smaller.
     pub auto_scroll_min_size: Size,
-    /// `AutoScrollPosition` — the current scroll offset. WinForms *returns* this
+    /// `AutoScrollPosition` - the current scroll offset. WinForms *returns* this
     /// as `<= 0` on each axis (the amount the content is shifted up/left); the
     /// port keeps that convention, so painting adds it directly.
     pub auto_scroll_position: Point,
-    /// `HorizontalScroll` — the horizontal scrollbar's state. Modelled, not yet
+    /// `HorizontalScroll` - the horizontal scrollbar's state. Modelled, not yet
     /// painted (this wave draws no track/thumb); a host can drive and read it.
     pub horizontal_scroll: ScrollProperties,
-    /// `VerticalScroll` — the vertical scrollbar's state. Same note as above.
+    /// `VerticalScroll` - the vertical scrollbar's state. Same note as above.
     pub vertical_scroll: ScrollProperties,
 
     /// The child controls (`Controls`), plus their layout state.
@@ -448,7 +448,7 @@ impl ScrollableControl {
         Self::default()
     }
 
-    /// The children's `DisplayRectangle`, in client coordinates — the box
+    /// The children's `DisplayRectangle`, in client coordinates - the box
     /// deflated by padding, its origin carrying that inset. A `ScrollableControl`
     /// has no border of its own, hence the zero inset.
     pub fn local_display_rect(&self) -> Rect {
@@ -473,7 +473,7 @@ impl ScrollableControl {
     /// `AutoScrollMargin` and floored by `AutoScrollMinSize`.
     ///
     /// Takes the display rect rather than reading its own, because a bordered
-    /// subclass (`Panel`, `UserControl`) has a different one — and subtracting the
+    /// subclass (`Panel`, `UserControl`) has a different one - and subtracting the
     /// wrong origin would fold the border into the scrollable area.
     pub fn scroll_content_size_within(&self, display: Rect) -> Size {
         let raw = self.children.content_extent();
@@ -483,7 +483,7 @@ impl ScrollableControl {
     }
 
     /// The virtual content size: the children's extent, grown by
-    /// `AutoScrollMargin`, then floored by `AutoScrollMinSize` — exactly the
+    /// `AutoScrollMargin`, then floored by `AutoScrollMinSize` - exactly the
     /// rectangle the scrollbars would range over.
     pub fn scroll_content_size(&self) -> Size {
         self.scroll_content_size_within(self.local_display_rect())
@@ -511,7 +511,7 @@ impl Control for ScrollableControl {
         &mut self.control
     }
 
-    /// The size that just contains the children plus the padding — the base
+    /// The size that just contains the children plus the padding - the base
     /// container measurement the concrete types build on.
     fn preferred_size(&self, _c: &dyn Canvas) -> Size {
         let content = self.scroll_content_size();
@@ -521,7 +521,7 @@ impl Control for ScrollableControl {
         )
     }
 
-    /// Fills the background, then paints the children — translated from local
+    /// Fills the background, then paints the children - translated from local
     /// space into `bounds` and clipped to the client rectangle.
     fn paint(&self, c: &dyn ControlCanvas, bounds: Rect) {
         c.fill_rect(&bounds, &background(&self.control, c));
@@ -537,7 +537,7 @@ impl Control for ScrollableControl {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// ContainerControl — adds focus management and DPI auto-scaling.
+// ContainerControl - adds focus management and DPI auto-scaling.
 // ─────────────────────────────────────────────────────────────────────────────
 
 /// `System.Windows.Forms.ContainerControl`: a `ScrollableControl` that manages a
@@ -546,23 +546,23 @@ impl Control for ScrollableControl {
 pub struct ContainerControl {
     scrollable: ScrollableControl,
 
-    /// `ActiveControl` — the focused child. WinForms holds a `Control`
+    /// `ActiveControl` - the focused child. WinForms holds a `Control`
     /// reference; the port holds the child's index in [`Children`], since that
     /// is what can be resolved without a boxed identity. `None` means no active
     /// child.
     pub active_control: Option<usize>,
-    /// `AutoScaleDimensions` — the DPI/font the layout was designed at.
+    /// `AutoScaleDimensions` - the DPI/font the layout was designed at.
     pub auto_scale_dimensions: Size,
-    /// `AutoScaleMode` — how to scale from design dimensions to runtime.
+    /// `AutoScaleMode` - how to scale from design dimensions to runtime.
     pub auto_scale_mode: AutoScaleMode,
-    /// `AutoValidate` — whether leaving a child validates it.
+    /// `AutoValidate` - whether leaving a child validates it.
     pub auto_validate: AutoValidate,
-    /// `CurrentAutoScaleDimensions` — the *current* DPI/font dimensions. A
+    /// `CurrentAutoScaleDimensions` - the *current* DPI/font dimensions. A
     /// read-only computed value in the toolkit; here it is stored so a host that
     /// performs the scaling can publish it. Not derived by the library, which
     /// owns no device from which to measure the current font.
     pub current_auto_scale_dimensions: Size,
-    /// `ParentForm` — the `Form` this container sits on. A back-reference the
+    /// `ParentForm` - the `Form` this container sits on. A back-reference the
     /// library does not own (there is no parent graph here); always `None`, set
     /// and read by the host. Kept so the property is never silently missing.
     pub parent_form: Option<()>,
@@ -620,7 +620,7 @@ impl Control for ContainerControl {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Form — the windowed host. 47 declared properties.
+// Form - the windowed host. 47 declared properties.
 // ─────────────────────────────────────────────────────────────────────────────
 
 /// `System.Windows.Forms.Form`: a `ContainerControl` that is a top-level window.
@@ -632,7 +632,7 @@ impl Control for ContainerControl {
 ///    `MinimumSize`, `Size`, `TabStop`, `Text`). The toolkit re-declares these
 ///    on `Form` only to re-attribute them (a different browsable default, mostly);
 ///    the storage is the *same* field, reached through `Deref`. Duplicating them
-///    would create two sources of truth, so they are **not** re-added here —
+///    would create two sources of truth, so they are **not** re-added here -
 ///    `Form::default` sets the base to `Form`'s documented defaults instead.
 /// 2. **Content geometry the form itself owns** (`ClientSize`, `DesktopBounds`,
 ///    `DesktopLocation`).
@@ -645,89 +645,89 @@ impl Control for ContainerControl {
 pub struct Form {
     container: ContainerControl,
 
-    // ── Group 2 — content geometry ───────────────────────────────────────
-    /// `ClientSize` — the drawable area inside the window chrome. The library
+    // ── Group 2 - content geometry ───────────────────────────────────────
+    /// `ClientSize` - the drawable area inside the window chrome. The library
     /// owns no chrome, so this equals the control size; kept as a field the host
     /// can override once it knows its border/caption thickness.
     pub client_size: Size,
-    /// `DesktopLocation` — the window's top-left in screen space. Host space; the
+    /// `DesktopLocation` - the window's top-left in screen space. Host space; the
     /// library never positions a window.
     pub desktop_location: Point,
 
-    // ── Group 3 — dialog / focus behaviour ───────────────────────────────
-    /// `AcceptButton` — the default button (Enter). Referenced by child name;
+    // ── Group 3 - dialog / focus behaviour ───────────────────────────────
+    /// `AcceptButton` - the default button (Enter). Referenced by child name;
     /// the host resolves the actual `IButtonControl`.
     pub accept_button: Option<String>,
-    /// `CancelButton` — the cancel button (Esc). Referenced by child name.
+    /// `CancelButton` - the cancel button (Esc). Referenced by child name.
     pub cancel_button: Option<String>,
-    /// `DialogResult` — the decision a modal form reports on close.
+    /// `DialogResult` - the decision a modal form reports on close.
     pub dialog_result: DialogResult,
-    /// `KeyPreview` — whether the form sees key events before its children.
+    /// `KeyPreview` - whether the form sees key events before its children.
     pub key_preview: bool,
-    /// `Modal` — read-only in the toolkit: true only while shown with `ShowDialog`.
+    /// `Modal` - read-only in the toolkit: true only while shown with `ShowDialog`.
     /// Host-owned; there is no message loop here.
     pub modal: bool,
-    /// `MainMenuStrip` — the form's primary menu, referenced by name. The menu
+    /// `MainMenuStrip` - the form's primary menu, referenced by name. The menu
     /// itself belongs to the toolstrip family, not this file.
     pub main_menu_strip: Option<String>,
 
-    // ── Group 4 — windowing chrome (host-applied) ────────────────────────
-    /// `FormBorderStyle` — border/resize style. Host draws the frame.
+    // ── Group 4 - windowing chrome (host-applied) ────────────────────────
+    /// `FormBorderStyle` - border/resize style. Host draws the frame.
     pub form_border_style: FormBorderStyle,
-    /// `WindowState` — normal/minimised/maximised. Host applies it.
+    /// `WindowState` - normal/minimised/maximised. Host applies it.
     pub window_state: FormWindowState,
-    /// `StartPosition` — initial placement. Host resolves it.
+    /// `StartPosition` - initial placement. Host resolves it.
     pub start_position: FormStartPosition,
-    /// `SizeGripStyle` — whether the resize grip shows. Host draws it.
+    /// `SizeGripStyle` - whether the resize grip shows. Host draws it.
     pub size_grip_style: SizeGripStyle,
-    /// `FormCornerPreference` — rounded-corner hint to the compositor.
+    /// `FormCornerPreference` - rounded-corner hint to the compositor.
     pub form_corner_preference: FormCornerPreference,
-    /// `Opacity` — whole-window opacity (0.0–1.0). Applied by the host layer.
+    /// `Opacity` - whole-window opacity (0.0–1.0). Applied by the host layer.
     pub opacity: f64,
-    /// `TopMost` — keep above other windows. Host-applied.
+    /// `TopMost` - keep above other windows. Host-applied.
     pub top_most: bool,
-    /// `ControlBox` — show the system menu / close box. Host-applied.
+    /// `ControlBox` - show the system menu / close box. Host-applied.
     pub control_box: bool,
-    /// `HelpButton` — show the `?` caption button. Host-applied.
+    /// `HelpButton` - show the `?` caption button. Host-applied.
     pub help_button: bool,
-    /// `MaximizeBox` — show the maximise button. Host-applied.
+    /// `MaximizeBox` - show the maximise button. Host-applied.
     pub maximize_box: bool,
-    /// `MinimizeBox` — show the minimise button. Host-applied.
+    /// `MinimizeBox` - show the minimise button. Host-applied.
     pub minimize_box: bool,
-    /// `ShowIcon` — show the caption icon. Host-applied.
+    /// `ShowIcon` - show the caption icon. Host-applied.
     pub show_icon: bool,
-    /// `ShowInTaskbar` — appear in the taskbar. Host-applied.
+    /// `ShowInTaskbar` - appear in the taskbar. Host-applied.
     pub show_in_taskbar: bool,
-    /// `KeyPreview`'s cousin for RTL mirroring — `RightToLeftLayout`. Host-applied.
+    /// `KeyPreview`'s cousin for RTL mirroring - `RightToLeftLayout`. Host-applied.
     pub right_to_left_layout: bool,
-    /// `Icon` — the caption/taskbar icon, referenced by name; the host loads it.
+    /// `Icon` - the caption/taskbar icon, referenced by name; the host loads it.
     pub icon: Option<String>,
-    /// `TransparencyKey` — the colour painted as transparent. Host compositing.
+    /// `TransparencyKey` - the colour painted as transparent. Host compositing.
     pub transparency_key: Option<D2D1_COLOR_F>,
-    /// `FormBorderColor` — custom border colour (modern Windows). Host-applied.
+    /// `FormBorderColor` - custom border colour (modern Windows). Host-applied.
     pub form_border_color: Option<D2D1_COLOR_F>,
-    /// `FormCaptionBackColor` — custom caption background. Host-applied.
+    /// `FormCaptionBackColor` - custom caption background. Host-applied.
     pub form_caption_back_color: Option<D2D1_COLOR_F>,
-    /// `FormCaptionTextColor` — custom caption text colour. Host-applied.
+    /// `FormCaptionTextColor` - custom caption text colour. Host-applied.
     pub form_caption_text_color: Option<D2D1_COLOR_F>,
 
-    // ── Group 4 (cont.) — MDI surface (host-applied) ─────────────────────
-    /// `IsMdiContainer` — hosts MDI children. Host-managed.
+    // ── Group 4 (cont.) - MDI surface (host-applied) ─────────────────────
+    /// `IsMdiContainer` - hosts MDI children. Host-managed.
     pub is_mdi_container: bool,
-    /// `MdiChildrenMinimizedAnchorBottom` — anchor minimised MDI children to the
+    /// `MdiChildrenMinimizedAnchorBottom` - anchor minimised MDI children to the
     /// bottom. Host-managed.
     pub mdi_children_minimized_anchor_bottom: bool,
-    /// `MdiParent` — the MDI parent form, referenced by name. Host graph.
+    /// `MdiParent` - the MDI parent form, referenced by name. Host graph.
     pub mdi_parent: Option<String>,
-    /// `MdiChildren` — read-only list of MDI children (by name). Host graph.
+    /// `MdiChildren` - read-only list of MDI children (by name). Host graph.
     pub mdi_children: Vec<String>,
-    /// `Owner` — the owning form, referenced by name. Host graph.
+    /// `Owner` - the owning form, referenced by name. Host graph.
     pub owner: Option<String>,
-    /// `OwnedForms` — read-only list of owned forms (by name). Host graph.
+    /// `OwnedForms` - read-only list of owned forms (by name). Host graph.
     pub owned_forms: Vec<String>,
 
     // ── Obsolete ─────────────────────────────────────────────────────────
-    /// `AutoScale` — obsolete since .NET 2.0 (superseded by `AutoScaleMode`).
+    /// `AutoScale` - obsolete since .NET 2.0 (superseded by `AutoScaleMode`).
     /// Kept because the catalogue still declares it; defaults to `true` as the
     /// toolkit does.
     pub auto_scale: bool,
@@ -788,7 +788,7 @@ impl Form {
         Self::default()
     }
 
-    /// `IsMdiChild` — read-only in the toolkit: a form is an MDI child iff it has
+    /// `IsMdiChild` - read-only in the toolkit: a form is an MDI child iff it has
     /// an MDI parent. Derived, never stored, so the two can never disagree.
     pub fn is_mdi_child(&self) -> bool {
         self.mdi_parent.is_some()
@@ -826,7 +826,7 @@ impl Control for Form {
     }
 
     /// Paints the form's client area, then its children. Window chrome (caption,
-    /// border, buttons) is the host's, so only the client fill is drawn here —
+    /// border, buttons) is the host's, so only the client fill is drawn here -
     /// `SystemColors.Control` unless a `BackColor` was set, which is what
     /// `Form.DefaultBackColor` resolves to and what the reference sheets show
     /// behind every control (`#F0F0F0` on this machine).
@@ -845,7 +845,7 @@ impl Control for Form {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// UserControl — a reusable composite. 5 declared properties.
+// UserControl - a reusable composite. 5 declared properties.
 // ─────────────────────────────────────────────────────────────────────────────
 
 /// `System.Windows.Forms.UserControl`: a `ContainerControl` packaged as a single
@@ -855,15 +855,15 @@ impl Control for Form {
 pub struct UserControl {
     container: ContainerControl,
 
-    /// `AutoSize` — grow to fit the children. Re-declared from `Control` because
+    /// `AutoSize` - grow to fit the children. Re-declared from `Control` because
     /// `UserControl` makes it browsable; stored here as the type's own field.
     pub auto_size: bool,
-    /// `AutoSizeMode` — grow-only vs grow-and-shrink.
+    /// `AutoSizeMode` - grow-only vs grow-and-shrink.
     pub auto_size_mode: AutoSizeMode,
-    /// `AutoValidate` — re-declared; forwarded to the container base at
+    /// `AutoValidate` - re-declared; forwarded to the container base at
     /// construction so there is one source of truth at paint time.
     pub auto_validate: AutoValidate,
-    /// `BorderStyle` — the frame the user control paints. Default `None`.
+    /// `BorderStyle` - the frame the user control paints. Default `None`.
     pub border_style: BorderStyle,
 }
 
@@ -890,7 +890,7 @@ impl UserControl {
         local_display_rect(self.control(), border_thickness(self.border_style))
     }
 
-    /// Where this control's client origin lands on the canvas — its position plus
+    /// Where this control's client origin lands on the canvas - its position plus
     /// the border, since client coordinates start just inside that border. The
     /// padding is not added: [`Self::local_display_rect`] carries it.
     pub fn content_origin(&self, bounds: Rect) -> Point {
@@ -955,7 +955,7 @@ impl Control for UserControl {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Panel — a scrollable box with a border. 5 declared properties.
+// Panel - a scrollable box with a border. 5 declared properties.
 // ─────────────────────────────────────────────────────────────────────────────
 
 /// `System.Windows.Forms.Panel`: a `ScrollableControl` with a `BorderStyle`.
@@ -964,18 +964,18 @@ impl Control for UserControl {
 pub struct Panel {
     scrollable: ScrollableControl,
 
-    /// `AutoSize` — re-declared browsable on `Panel`; the panel grows to its
+    /// `AutoSize` - re-declared browsable on `Panel`; the panel grows to its
     /// content when set.
     pub auto_size: bool,
-    /// `AutoSizeMode` — grow-only vs grow-and-shrink.
+    /// `AutoSizeMode` - grow-only vs grow-and-shrink.
     pub auto_size_mode: AutoSizeMode,
-    /// `BorderStyle` — `None` (default), `FixedSingle`, or `Fixed3D`.
+    /// `BorderStyle` - `None` (default), `FixedSingle`, or `Fixed3D`.
     pub border_style: BorderStyle,
-    /// `TabStop` — `Panel` re-declares this with a default of **false** (a panel
+    /// `TabStop` - `Panel` re-declares this with a default of **false** (a panel
     /// is not a tab stop), where `Control`'s default is `true`. Set on the base
     /// at construction; this field mirrors it for the designer surface.
     pub tab_stop: bool,
-    /// `Text` — a panel has no visible caption, but the property exists (used by
+    /// `Text` - a panel has no visible caption, but the property exists (used by
     /// tooling); the string lives on the base and is mirrored here.
     pub text: String,
 }
@@ -1008,7 +1008,7 @@ impl Panel {
         local_display_rect(self.control(), border_thickness(self.border_style))
     }
 
-    /// Where this panel's client origin lands on the canvas — its position plus
+    /// Where this panel's client origin lands on the canvas - its position plus
     /// the border, since client coordinates start just inside that border. The
     /// padding is not added: [`Self::local_display_rect`] carries it.
     pub fn content_origin(&self, bounds: Rect) -> Point {
@@ -1073,7 +1073,7 @@ impl Control for Panel {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// GroupBox — a captioned frame. Derives from Control DIRECTLY (not scrollable).
+// GroupBox - a captioned frame. Derives from Control DIRECTLY (not scrollable).
 // 6 declared properties.
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -1082,42 +1082,42 @@ impl Control for Panel {
 /// canvas-free, so it uses this nominal band (the default font's line height).
 const GROUPBOX_CAPTION_BAND: f32 = 16.0;
 
-/// `BUTTON` / `BP_GROUPBOX` — the themed group-box frame.
+/// `BUTTON` / `BP_GROUPBOX` - the themed group-box frame.
 ///
 /// Taken from the SDK's own constant rather than written as `4`, for the reason
 /// [`crate::theme::part`] gives: a part id copied wrong does not fail, it draws
 /// something plausible. It is spelled here rather than added to
 /// [`crate::theme::part`] because that module is another file's, and one `const`
-/// in the family that uses it is cheaper than a cross-file edit — the SDK
+/// in the family that uses it is cheaper than a cross-file edit - the SDK
 /// remains the single source of the number either way.
 const BP_GROUPBOX: i32 = windows::Win32::UI::Controls::BP_GROUPBOX.0;
-/// `BP_GROUPBOX` — a live group box.
+/// `BP_GROUPBOX` - a live group box.
 const GBS_NORMAL: i32 = windows::Win32::UI::Controls::GBS_NORMAL.0;
-/// `BP_GROUPBOX` — a group box whose control is disabled.
+/// `BP_GROUPBOX` - a group box whose control is disabled.
 const GBS_DISABLED: i32 = windows::Win32::UI::Controls::GBS_DISABLED.0;
 
 /// `System.Windows.Forms.GroupBox`: a captioned, square etched frame that groups
-/// controls. Unlike `Panel`, it descends from `Control` directly — it is **not**
-/// scrollable — so it carries its own [`Children`] and its own `ControlBase`.
+/// controls. Unlike `Panel`, it descends from `Control` directly - it is **not**
+/// scrollable - so it carries its own [`Children`] and its own `ControlBase`.
 #[derive(Clone)]
 pub struct GroupBox {
     control: ControlBase,
 
-    /// `Text` — the caption, notched into the top border. `GroupBox` re-declares
+    /// `Text` - the caption, notched into the top border. `GroupBox` re-declares
     /// it; kept here as the authoritative caption while the base `text` mirrors
     /// it, because the caption is this type's defining feature.
     pub text: String,
-    /// `AllowDrop` — re-declared browsable on `GroupBox`; mirrors the base.
+    /// `AllowDrop` - re-declared browsable on `GroupBox`; mirrors the base.
     pub allow_drop: bool,
-    /// `AutoSize` — grow to fit the grouped controls.
+    /// `AutoSize` - grow to fit the grouped controls.
     pub auto_size: bool,
-    /// `AutoSizeMode` — grow-only vs grow-and-shrink.
+    /// `AutoSizeMode` - grow-only vs grow-and-shrink.
     pub auto_size_mode: AutoSizeMode,
-    /// `FlatStyle` — how the frame is drawn (`Standard`/`Flat`/`Popup`/`System`).
+    /// `FlatStyle` - how the frame is drawn (`Standard`/`Flat`/`Popup`/`System`).
     /// Only `Standard`/`Flat` differ visibly here; `System`/`Popup` fall back to
     /// the standard frame, documented rather than faked.
     pub flat_style: FlatStyle,
-    /// `UseCompatibleTextRendering` — GDI vs GDI+ text metrics in the toolkit.
+    /// `UseCompatibleTextRendering` - GDI vs GDI+ text metrics in the toolkit.
     /// Irrelevant to DirectWrite; stored for fidelity, not honoured.
     pub use_compatible_text_rendering: bool,
 
@@ -1145,7 +1145,7 @@ impl GroupBox {
         Self::default()
     }
 
-    /// `GroupBox.DisplayRectangle`, in client coordinates — its origin carrying
+    /// `GroupBox.DisplayRectangle`, in client coordinates - its origin carrying
     /// the inset, like every other container.
     ///
     /// The inset is asymmetric, which is why this does not use the shared
@@ -1161,7 +1161,7 @@ impl GroupBox {
 
     /// Where this group box's client origin lands on the canvas, given the box
     /// `paint` was asked to draw into. Add a grouped child's `bounds` to it to get
-    /// that child's on-screen rectangle — which is what a caller wanting to
+    /// that child's on-screen rectangle - which is what a caller wanting to
     /// decorate a grouped control needs, and what it must not re-derive by hand.
     ///
     /// The frame and caption band are already in the children's coordinates, and
@@ -1202,12 +1202,12 @@ impl Control for GroupBox {
     /// band plus the children.
     ///
     /// The caption is *painted* in the system message font but *measured* here
-    /// with the host's own format — see [`caption_format`] for why, and for what
+    /// with the host's own format - see [`caption_format`] for why, and for what
     /// it would take to close the gap. The arithmetic is untouched by the
     /// repaint: this family's geometry is pinned by the layout parity harness.
     fn preferred_size(&self, c: &dyn Canvas) -> Size {
         // The extent is in client coordinates, so measure it from the display
-        // rect's origin — otherwise the frame and caption band would be counted
+        // rect's origin - otherwise the frame and caption band would be counted
         // twice, once in the children's bounds and once in the sum below.
         let d = self.local_display_rect();
         let raw = self.children.content_extent();
@@ -1224,11 +1224,11 @@ impl Control for GroupBox {
     ///
     /// **Themed** (visual styles on, which is how the reference sheets were
     /// made): `BUTTON` / `BP_GROUPBOX`, which on a default Windows 11 is a
-    /// single flat `#DCDCDC` line — sampled straight off `04-containers.png`,
+    /// single flat `#DCDCDC` line - sampled straight off `04-containers.png`,
     /// where the sheet's own group boxes are that one line and *not* the
     /// engraved groove. The state is the control's real one; measured, the
     /// theme draws the same line for `GBS_NORMAL` and `GBS_DISABLED`, so it
-    /// changes no pixel today — passing a lie because it happens not to show
+    /// changes no pixel today - passing a lie because it happens not to show
     /// would be a fact waiting to be wrong.
     ///
     /// `FlatStyle` does **not** reach the themed branch: `Standard`, `Flat`,
@@ -1237,12 +1237,12 @@ impl Control for GroupBox {
     /// still decides the classic edge, which is the only place it is visible.
     ///
     /// **Classic** (visual styles off): `ControlPaint.DrawBorder3D` with
-    /// [`groupbox_edge`] — normally `Border3DStyle::Etched`, a sunken outer ring
+    /// [`groupbox_edge`] - normally `Border3DStyle::Etched`, a sunken outer ring
     /// over a raised inner one, so the frame reads as two one-pixel lines
     /// (`ControlDark` with `ControlLightLight` under it) rather than as a stroke.
     ///
     /// Either way the frame's top runs along the caption band's centre line,
-    /// which is why it starts half a band below the control's own top edge —
+    /// which is why it starts half a band below the control's own top edge -
     /// 8 DIP, which is exactly where the reference sheet puts it.
     fn paint(&self, c: &dyn ControlCanvas, bounds: Rect) {
         let colors = c.visuals().colors;
@@ -1254,7 +1254,7 @@ impl Control for GroupBox {
         );
         // The ground the part is composited onto is this group box's own: the
         // theme leaves the frame's interior alone (`BP_GROUPBOX` is partially
-        // transparent), so what shows through it is the pre-fill — which must be
+        // transparent), so what shows through it is the pre-fill - which must be
         // the colour the container would have put there itself.
         if !c.draw_theme_part(
             theme::class::BUTTON,
@@ -1269,8 +1269,8 @@ impl Control for GroupBox {
         // Notch the caption into the top of the frame: measure the label in the
         // system message font, erase the segment of the frame behind it with the
         // container's own ground, then draw the text over the gap. The band is
-        // taller than the frame is thick — one themed line, or the two classic
-        // rings — so the erase clears it whole either way.
+        // taller than the frame is thick - one themed line, or the two classic
+        // rings - so the erase clears it whole either way.
         //
         // The toolkit does the same thing the other way round (`GroupBoxRenderer`
         // draws the part in pieces around the caption). Both land on the same
@@ -1326,7 +1326,7 @@ impl Control for GroupBox {
 
 /// **Returns CLIENT space.** A container's `DisplayRectangle`: its client box
 /// deflated by padding and by `inset` (the border it paints), with its origin at
-/// `(padding.left + inset, padding.top + inset)` — *not* at zero.
+/// `(padding.left + inset, padding.top + inset)` - *not* at zero.
 ///
 /// That origin is the correction the parity harness forced. `ControlBase::bounds`
 /// is parent-**client**-relative, so a display rect normalised to `(0, 0)` puts
@@ -1337,7 +1337,7 @@ impl Control for GroupBox {
 /// panel with `Padding = 10` reports `10,10,190,90`.
 ///
 /// Deliberately derived from the control's SIZE, never from its `bounds` position
-/// — `bounds` is itself parent-relative, so reading its origin here would mix two
+/// - `bounds` is itself parent-relative, so reading its origin here would mix two
 /// spaces and reintroduce the bug this convention removes.
 ///
 /// Containers with a symmetric inset call this through their own
@@ -1347,7 +1347,7 @@ pub fn local_display_rect(control: &ControlBase, inset: f32) -> Rect {
     let s = control.size();
     let p = control.padding;
     // The ORIGIN comes from the padding alone. Client coordinates already start
-    // inside the border, so the border must not offset them a second time — the
+    // inside the border, so the border must not offset them a second time - the
     // panels harness proved it: `table-border-single` (padding 0, border 1)
     // reports `0,0,301,98` in WinForms, not `1,1,…`. The border still costs its
     // two lines of SIZE, which is why the far edges lose `2 * inset`.
@@ -1362,19 +1362,19 @@ pub fn local_display_rect(control: &ControlBase, inset: f32) -> Rect {
 }
 
 /// **Takes CANVAS space, returns CANVAS space.** Where a container's client
-/// origin — the `(0, 0)` its children's `bounds` are measured from — lands on the
+/// origin - the `(0, 0)` its children's `bounds` are measured from - lands on the
 /// canvas, given the box `paint` was asked to draw into.
 ///
 /// It adds **no** padding: [`local_display_rect`] already carries that in its
 /// origin, and adding it again would apply it twice. It *does* add `inset`, the
-/// border — because client coordinates start inside the border, so client `(0,0)`
+/// border - because client coordinates start inside the border, so client `(0,0)`
 /// is the point just within it. Between them the two functions account for the
 /// border exactly once: as size in the display rect, as offset here.
 ///
 /// This is the single point at which client space becomes canvas space. Anything
 /// that needs a child's on-screen position (a host hit-test, a decoration drawn
 /// over a control) must add this to the child's `bounds` rather than re-deriving
-/// an offset for itself — two copies of that sum are exactly how a container's
+/// an offset for itself - two copies of that sum are exactly how a container's
 /// geometry and its painting drift apart.
 ///
 /// Prefer the inherent `content_origin(&self, bounds)` each container exposes: it
@@ -1384,7 +1384,7 @@ pub fn content_origin(bounds: Rect, inset: f32, scroll: Point) -> Point {
 }
 
 /// **Takes CANVAS space, returns CANVAS space.** The client rectangle children are
-/// clipped to — the same deflation as [`local_display_rect`], but left where it is
+/// clipped to - the same deflation as [`local_display_rect`], but left where it is
 /// instead of moved to the origin.
 ///
 /// The pair is deliberate: [`local_display_rect`] answers « how big is the area,
@@ -1407,7 +1407,7 @@ pub fn client_rect_on_canvas(bounds: Rect, control: &ControlBase, inset: f32) ->
 /// or the two-line 3-D bevel.
 ///
 /// Public because `SplitContainer` *declares* its own `BorderStyle` (the
-/// catalogue says so) and therefore cannot borrow `Panel`'s inset — without this
+/// catalogue says so) and therefore cannot borrow `Panel`'s inset - without this
 /// it would copy the mapping, and two copies of a three-line table are exactly
 /// how the geometry of a border and the painting of it drift apart.
 pub fn border_thickness(style: BorderStyle) -> f32 {
@@ -1421,7 +1421,7 @@ pub fn border_thickness(style: BorderStyle) -> f32 {
 /// The ground a container fills its box with: its own `BackColor` when one was
 /// set, else `SystemColors.Control`.
 ///
-/// `back_color = None` is the port's model of an *ambient* colour — the value a
+/// `back_color = None` is the port's model of an *ambient* colour - the value a
 /// real control inherits from its parent. There is no parent graph here, so the
 /// resolution is `Control.DefaultBackColor`, which is `SystemColors.Control`
 /// (`#F0F0F0` on a default Windows 11) and is what every reference sheet shows
@@ -1430,14 +1430,14 @@ fn background(control: &ControlBase, c: &dyn ControlCanvas) -> D2D1_COLOR_F {
     control.back_color.unwrap_or(c.visuals().colors.control)
 }
 
-/// The `BP_GROUPBOX` state a group box is in — `GBS_DISABLED` when its control
+/// The `BP_GROUPBOX` state a group box is in - `GBS_DISABLED` when its control
 /// is disabled, `GBS_NORMAL` otherwise. Those are the only two the part has.
 ///
 /// A free function for the same reason [`groupbox_edge`] is one: the mapping is
 /// asserted without a window. It is deliberately **not** folded into the call
 /// site, because "the frame looks the same in both states" is a *measurement*
 /// about today's theme, not a licence to stop asking which state a control is
-/// in — the moment a theme greys the frame, this is already right.
+/// in - the moment a theme greys the frame, this is already right.
 fn groupbox_state(enabled: bool) -> i32 {
     if enabled {
         GBS_NORMAL
@@ -1449,15 +1449,15 @@ fn groupbox_state(enabled: bool) -> i32 {
 /// The 3-D edge a `GroupBox` frames itself with **when visual styles are off**,
 /// for a given `FlatStyle`.
 ///
-/// With them on the frame comes from `BP_GROUPBOX` and this is not consulted —
+/// With them on the frame comes from `BP_GROUPBOX` and this is not consulted -
 /// measured, all four flat styles render the same themed line (see
 /// [`GroupBox::paint`]). What follows is therefore the classic rendering only.
 ///
-/// `Standard` is the engraved groove — a sunken ring with a raised one inside,
+/// `Standard` is the engraved groove - a sunken ring with a raised one inside,
 /// which is what `ControlPaint.DrawBorder3D(Border3DStyle.Etched)` paints.
 /// `Flat` is the toolkit's one visible alternative: a single flat ring in
 /// `ControlDark`, no bevel. `System` and `Popup` are painted as `Standard`, as
-/// [`GroupBox::flat_style`] declares — they differ only under a theme this
+/// [`GroupBox::flat_style`] declares - they differ only under a theme this
 /// library does not read.
 ///
 /// A free function so the mapping can be asserted without a window, the way this
@@ -1472,16 +1472,16 @@ fn groupbox_edge(style: FlatStyle) -> Border3DStyle {
 /// Paints a `BorderStyle`, exactly as the toolkit draws it, and returns the
 /// **interior** the content goes in.
 ///
-/// * `None` — nothing; the interior is the box itself.
-/// * `FixedSingle` — one **square** line in `SystemColors.WindowFrame`. That is
+/// * `None` - nothing; the interior is the box itself.
+/// * `FixedSingle` - one **square** line in `SystemColors.WindowFrame`. That is
 ///   the colour the reference sheet actually shows (`#646464` here), because a
 ///   `FixedSingle` control is a `WS_BORDER` window and Windows paints that frame
 ///   with `COLOR_WINDOWFRAME`, not with a shadow grey.
-/// * `Fixed3D` — a real `DrawEdge` bevel, [`Border3DStyle::Sunken`]: the two
+/// * `Fixed3D` - a real `DrawEdge` bevel, [`Border3DStyle::Sunken`]: the two
 ///   concentric one-pixel rings of a well, dark on the top/left and light on the
 ///   bottom/right. The old two-tone stroke approximation is gone.
 ///
-/// ## Why `Fixed3D` takes **no** theme part — a measurement, not an omission
+/// ## Why `Fixed3D` takes **no** theme part - a measurement, not an omission
 ///
 /// Every other family in this wave replaced its `Fixed3D` frame with a themed
 /// one, and the obvious move here was the same: a `TextBox`'s `Fixed3D` is the
@@ -1490,13 +1490,13 @@ fn groupbox_edge(style: FlatStyle) -> Border3DStyle {
 ///
 /// A `Panel` (and a `UserControl`) asks for `Fixed3D` by putting
 /// `WS_EX_CLIENTEDGE` on a **plain window class**, and `uxtheme` does not theme
-/// that client edge — `DefWindowProc` still paints it, from `GetSysColor`. A
+/// that client edge - `DefWindowProc` still paints it, from `GetSysColor`. A
 /// `TextBox`, a `ListView` and a `TreeView` are common controls that draw their
 /// own themed border instead, which is why the same property name produces two
 /// different frames.
 ///
 /// Sampled on this machine, with visual styles **on**, a `Panel` with
-/// `BorderStyle.Fixed3D` — identically through `Form.DrawToBitmap` (how the
+/// `BorderStyle.Fixed3D` - identically through `Form.DrawToBitmap` (how the
 /// reference sheets are made) and off the live screen:
 ///
 /// | ring | top + left | bottom + right |
@@ -1504,7 +1504,7 @@ fn groupbox_edge(style: FlatStyle) -> Border3DStyle {
 /// | outer | `#A0A0A0` (`ControlDark`) | `#FFFFFF` (`ControlLightLight`) |
 /// | inner | `#696969` (`ControlDarkDark`) | `#E3E3E3` (`ControlLight`) |
 ///
-/// which is exactly [`Border3DStyle::Sunken`] out of `edge_colors` — so the
+/// which is exactly [`Border3DStyle::Sunken`] out of `edge_colors` - so the
 /// classic path below is already pixel-identical and a themed branch would only
 /// make it wrong. `the_container_fixed3d_frame_is_the_classic_well` pins those
 /// four hexes so a future migration cannot "finish the job" by mistake.
@@ -1512,14 +1512,14 @@ fn groupbox_edge(style: FlatStyle) -> Border3DStyle {
 /// **This is a statement about containers, not about the function.** `ListView`
 /// and `TreeView` reach `Fixed3D` through this very function and *do* wear the
 /// themed `#ABADB3` line; a `Label`'s `Fixed3D` is a single `SS_SUNKEN` ring
-/// (`#A0A0A0` over `#FFFFFF`). Three families, three frames, one shared name —
+/// (`#A0A0A0` over `#FFFFFF`). Three families, three frames, one shared name -
 /// so a family that needs its own must branch around this call rather than
 /// change what it draws for everyone.
 ///
 /// **Public because `BorderStyle` is not this family's alone.** `TextBoxBase`,
 /// `ListBox`, `TreeView`, `ListView` and `SplitContainer` all declare it, and a
 /// second implementation of the same three lines is how a field and a list end
-/// up reading as different depths — this crate has already paid for duplicated
+/// up reading as different depths - this crate has already paid for duplicated
 /// definitions (`HorizontalAlignment` in four copies, two `LeftRightAlignment`s
 /// whose defaults had drifted). One bevel, one caller-visible interior.
 ///
@@ -1528,7 +1528,7 @@ fn groupbox_edge(style: FlatStyle) -> Border3DStyle {
 /// in DIP. At 100 % they are the same number; above it the painted frame is the
 /// thinner of the two, which is what keeps a bevel hairline at every scale.
 /// Containers deflate their display rect with `border_thickness` and clip with
-/// [`client_rect_on_canvas`], so they discard this return value — it exists for
+/// [`client_rect_on_canvas`], so they discard this return value - it exists for
 /// the families that lay their content out *against the frame they just drew*.
 ///
 /// **The interior contract is unchanged by the themed migration**: nothing in
@@ -1547,7 +1547,7 @@ pub fn paint_border(c: &dyn ControlCanvas, bounds: Rect, style: BorderStyle) -> 
 }
 
 /// The format a caption is **measured** with when only a bare [`Canvas`] is at
-/// hand — the one thing this repaint cannot fix from inside this file.
+/// hand - the one thing this repaint cannot fix from inside this file.
 ///
 /// A `GroupBox` *paints* its caption in the system message font
 /// (`lfMessageFont`, see [`GroupBox::paint`]), which is reachable only through
@@ -1557,7 +1557,7 @@ pub fn paint_border(c: &dyn ControlCanvas, bounds: Rect, style: BorderStyle) -> 
 /// the caption sits; they can disagree on how wide a long caption makes the box.
 ///
 /// Closing the gap means widening `Control::preferred_size` to take a
-/// `&dyn ControlCanvas` (or teaching `Canvas` to hand out the system font) —
+/// `&dyn ControlCanvas` (or teaching `Canvas` to hand out the system font) -
 /// `control.rs`'s call, not this file's. Measuring with a *wrong* font is the
 /// lesser error of the two available: dropping the caption term instead would
 /// silently shrink every group box whose caption is longer than its content.
@@ -1661,7 +1661,7 @@ mod tests {
     /// The border a container PAINTS and the border its layout RESERVES are two
     /// statements of one fact, and nothing checks them against each other at
     /// run time. `Fixed3D` is `DrawEdge(Sunken)`, which is two one-pixel rings,
-    /// so the inset must be 2 — a single-ring style with a 2 DIP inset would
+    /// so the inset must be 2 - a single-ring style with a 2 DIP inset would
     /// leave a one-pixel gap between the frame and the first child, on every
     /// panel in the library.
     #[test]
@@ -1675,7 +1675,7 @@ mod tests {
     }
 
     /// With visual styles OFF, a group box frames itself with the engraved
-    /// groove — two rings — unless `FlatStyle::Flat` asks for the toolkit's
+    /// groove - two rings - unless `FlatStyle::Flat` asks for the toolkit's
     /// single flat ring. If `Standard` ever stopped being `Etched`, every
     /// classic group box would read as embossed.
     #[test]
@@ -1706,7 +1706,7 @@ mod tests {
 
     /// Renders one `BUTTON` part through `uxtheme` into a top-down 32-bit DIB
     /// and hands back its pixels, so a hex can be asserted with no window, no
-    /// device and no swap chain — the same GDI round trip [`crate::theme`]
+    /// device and no swap chain - the same GDI round trip [`crate::theme`]
     /// performs, stopping short of the Direct2D upload.
     ///
     /// The DIB is pre-filled with `COLOR_BTNFACE` (`#F0F0F0`), which is the
@@ -1775,8 +1775,8 @@ mod tests {
     }
 
     /// **The finding this migration rests on.** The group boxes on
-    /// `04-containers.png` are a single flat `#DCDCDC` line — not the two-ring
-    /// etched groove the classic path paints — and `BP_GROUPBOX` is what
+    /// `04-containers.png` are a single flat `#DCDCDC` line - not the two-ring
+    /// etched groove the classic path paints - and `BP_GROUPBOX` is what
     /// produces it, byte for byte.
     ///
     /// Sampled clear of the corners: the left edge at mid-height, and the row
@@ -1786,7 +1786,7 @@ mod tests {
     fn the_themed_groupbox_frame_is_the_reference_line() {
         let (w, h) = (200usize, 90usize);
         let Some(px) = sample_button_part(BP_GROUPBOX, GBS_NORMAL, w as i32, h as i32) else {
-            eprintln!("[containers] visual styles unavailable — themed frame not asserted");
+            eprintln!("[containers] visual styles unavailable - themed frame not asserted");
             return;
         };
         let mid = h / 2;
@@ -1800,7 +1800,7 @@ mod tests {
         assert_eq!(hex(px[mid * w + w / 2]), "#F0F0F0", "the interior is the caller's ground");
     }
 
-    /// The frame is the SAME line in both states — measured, not assumed, which
+    /// The frame is the SAME line in both states - measured, not assumed, which
     /// is what lets [`GroupBox::paint`] pass the control's real state without
     /// the frame moving. The live disabled group box on this machine agrees; it
     /// is its CAPTION that greys, not its frame.
@@ -1811,7 +1811,7 @@ mod tests {
             sample_button_part(BP_GROUPBOX, GBS_NORMAL, w as i32, h as i32),
             sample_button_part(BP_GROUPBOX, GBS_DISABLED, w as i32, h as i32),
         ) else {
-            eprintln!("[containers] visual styles unavailable — themed states not asserted");
+            eprintln!("[containers] visual styles unavailable - themed states not asserted");
             return;
         };
         let mid = h / 2;
@@ -1831,12 +1831,12 @@ mod tests {
     /// frame**, however much it shares the property name with a `TextBox`.
     ///
     /// A `Panel` asks for it with `WS_EX_CLIENTEDGE` on a plain window class,
-    /// which `uxtheme` leaves to `DefWindowProc` — so with visual styles ON the
+    /// which `uxtheme` leaves to `DefWindowProc` - so with visual styles ON the
     /// live control still shows the classic two-ring well. Sampled off both a
     /// `Form.DrawToBitmap` (how the reference sheets are made) and the real
     /// screen, a `Panel` with `BorderStyle.Fixed3D` gives `#A0A0A0` over
     /// `#696969` on the top/left and `#FFFFFF` over `#E3E3E3` on the
-    /// bottom/right — which is precisely what [`paint_border`] already paints.
+    /// bottom/right - which is precisely what [`paint_border`] already paints.
     ///
     /// The assertion is on the COLOURS rather than on the absence of a call,
     /// because "no themed branch" is only right for as long as those four hexes
@@ -1850,7 +1850,7 @@ mod tests {
         else {
             panic!("a sunken well is two full rings");
         };
-        assert_eq!(hex_of(ol), "#A0A0A0", "outer top/left — sampled on a live Panel");
+        assert_eq!(hex_of(ol), "#A0A0A0", "outer top/left - sampled on a live Panel");
         assert_eq!(hex_of(od), "#FFFFFF", "outer bottom/right");
         assert_eq!(hex_of(il), "#696969", "inner top/left");
         assert_eq!(hex_of(id), "#E3E3E3", "inner bottom/right");
@@ -1867,7 +1867,7 @@ mod tests {
         p.control_mut().padding = crate::enums::Padding::all(5.0);
         p.border_style = BorderStyle::Fixed3D; // 2 DIP
         let d = p.local_display_rect();
-        // The origin carries the PADDING only — client coordinates already start
+        // The origin carries the PADDING only - client coordinates already start
         // inside the border. The border costs two lines of size instead:
         // 100 - 5 - 2*2 = 91, 80 - 5 - 2*2 = 71.
         assert_eq!((d.left, d.top, d.right, d.bottom), (5.0, 5.0, 91.0, 71.0));
@@ -1914,7 +1914,7 @@ mod tests {
     }
 
     /// The `D23` shape from the harness: a container placed away from the origin,
-    /// with padding, must report a display rect starting at the padding — and a
+    /// with padding, must report a display rect starting at the padding - and a
     /// Top-docked child must then land there too, in the same space.
     #[test]
     fn a_padded_container_docks_its_child_at_the_padding_not_at_zero() {
@@ -2046,7 +2046,7 @@ mod tests {
     }
 
     /// The padding belongs to the display rect and the border to the crossing
-    /// into canvas space — each accounted exactly once. Carrying the padding here
+    /// into canvas space - each accounted exactly once. Carrying the padding here
     /// as well was the double-count the layout harness caught.
     #[test]
     fn the_paint_origin_carries_position_border_and_scroll_but_not_the_padding() {
@@ -2057,7 +2057,7 @@ mod tests {
         p.auto_scroll_position = Point::new(-10.0, -20.0); // scrolled down/right
         let origin = p.content_origin(p.control().bounds);
         // 100 + border 1 - scroll 10 = 91; 50 + 1 - 20 = 31. The PADDING is not
-        // here — it is already inside the children's bounds, via the display rect.
+        // here - it is already inside the children's bounds, via the display rect.
         assert_eq!((origin.x, origin.y), (91.0, 31.0));
 
         // The clip is the fully inset box on canvas, and does not scroll.

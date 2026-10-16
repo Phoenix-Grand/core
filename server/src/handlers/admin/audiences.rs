@@ -6,8 +6,8 @@
 //! Left to itself, a sharing dialog offers two things: one person at a time, or
 //! everybody. The first is tedious enough that people reach for the second, and
 //! the second is how a document meant for four people ends up readable by the
-//! whole instance. An audience sits between them — "Direction", "Agence de
-//! Lyon" — so that the convenient answer is also a narrow one.
+//! whole instance. An audience sits between them - "Direction", "Agence de
+//! Lyon" - so that the convenient answer is also a narrow one.
 //!
 //! ## An audience grants nothing
 //!
@@ -24,7 +24,7 @@
 //! Composing an audience ([`keys::AUDIENCES_MANAGE`]) and deciding where it is
 //! offered ([`keys::AUDIENCES_APPLY`]) are deliberately separate. The first
 //! prepares a list nobody has seen yet. The second changes what every account in
-//! an organisational unit is shown the next time they share something — the part
+//! an organisational unit is shown the next time they share something - the part
 //! that can widen exposure across a whole organisation, and the part that
 //! deserves to be granted on purpose.
 //!
@@ -33,7 +33,7 @@
 //! A policy row carries `module_id` as free text and there is no foreign key to
 //! `core.modules`. Modules that can consume audiences say so when they register;
 //! the console offers those. Uninstalling a module leaves its policy in place
-//! rather than silently erasing an administrator's decision — it comes back
+//! rather than silently erasing an administrator's decision - it comes back
 //! intact on reinstall, and produces nothing in the meantime.
 
 use axum::{
@@ -63,7 +63,7 @@ use crate::{
 /// route cannot quietly disagree.
 const MAX_APPLIED: usize = 5;
 
-/// Trimmed, with the interior collapsed — the name is a label in a dropdown, and
+/// Trimmed, with the interior collapsed - the name is a label in a dropdown, and
 /// `"Direction  générale"` and `"Direction générale"` must not coexist there.
 fn clean_name(raw: &str) -> String {
     raw.split_whitespace().collect::<Vec<_>>().join(" ")
@@ -82,7 +82,7 @@ fn validate_details(name: &str, description: Option<&str>) -> Result<String, App
     // reject a French name forty accented characters long.
     if name.chars().count() > 40 {
         return Err(AppError::Validation(
-            "Le nom d'une audience ne peut pas dépasser 40 caractères — il s'affiche dans une liste de partage, à côté d'un nom de fichier.".into(),
+            "Le nom d'une audience ne peut pas dépasser 40 caractères - il s'affiche dans une liste de partage, à côté d'un nom de fichier.".into(),
         ));
     }
     if let Some(d) = description {
@@ -107,13 +107,13 @@ fn name_conflict(e: sqlx::Error, name: &str) -> AppError {
 
 // ── Reading ──────────────────────────────────────────────────────────────────
 
-/// `GET /admin/audiences` — every audience, with what an administrator needs to
+/// `GET /admin/audiences` - every audience, with what an administrator needs to
 /// judge it without opening it.
 ///
 /// Two counts, deliberately both: `member_count` is how many entries were added
 /// (what you edit), `reach` is how many distinct active accounts those entries
 /// resolve to (what actually happens when the audience is used). They differ
-/// whenever a member is a group, which is the recommended case — so showing only
+/// whenever a member is a group, which is the recommended case - so showing only
 /// the first would hide the one number that says how wide a proposal really is.
 #[derive(sqlx::FromRow)]
 struct AudienceListRow {
@@ -132,7 +132,7 @@ struct AudienceListRow {
 ///
 /// Portable across the three engines: `LEFT JOIN LATERAL` exists on neither MySQL
 /// nor SQLite, so each per-audience figure is a correlated scalar subquery
-/// instead — `COUNT(*)`/`COUNT(DISTINCT …)` already decode as `i64`, so the old
+/// instead - `COUNT(*)`/`COUNT(DISTINCT …)` already decode as `i64`, so the old
 /// `::bigint` casts are gone, and `COUNT` returns `0` for no rows, so the
 /// `COALESCE` wrappers went with them. Public so the portability test exercises
 /// the exact query the handler runs on each engine.
@@ -238,7 +238,7 @@ struct AudiencePolicyRow {
     org_unit_name: String,
 }
 
-/// `GET /admin/audiences/:id` — one audience and its members, resolved to names.
+/// `GET /admin/audiences/:id` - one audience and its members, resolved to names.
 ///
 /// The member list carries what each entry *is* (a group or an account) and, for
 /// a group, how many active accounts it currently brings in. That last figure is
@@ -256,7 +256,7 @@ pub async fn get_audience(
     // The two figures the sheet states next to the name, computed exactly as the
     // list computes them. They were missing here while the sheet already
     // rendered them, so it read "entrée(s), compte(s) atteint(s)" with no
-    // numbers at all — the kind of defect that survives because the sentence
+    // numbers at all - the kind of defect that survives because the sentence
     // still looks like a sentence.
     // Portable across the three engines, exactly as the list above: the two
     // figures are correlated scalar subqueries rather than `LEFT JOIN LATERAL`,
@@ -444,11 +444,11 @@ pub async fn create_audience(
     })))
 }
 
-/// `PATCH /admin/audiences/:id` — name and description, the only mutable fields.
+/// `PATCH /admin/audiences/:id` - name and description, the only mutable fields.
 ///
 /// `is_everyone` is not among them: it is not a label but a membership rule, and
 /// letting it be toggled would turn a named list into "everyone" without a single
-/// member row changing — the least visible way imaginable to widen a proposal.
+/// member row changing - the least visible way imaginable to widen a proposal.
 pub async fn update_audience(
     State(state): State<AppState>,
     audit: AdminAudit,
@@ -572,7 +572,7 @@ pub struct MembersDto {
     pub members: Vec<MemberRefDto>,
 }
 
-/// `POST /admin/audiences/:id/members` — add one or several at once.
+/// `POST /admin/audiences/:id/members` - add one or several at once.
 ///
 /// The whole batch is one transaction: a half-applied "add these six groups"
 /// leaves an administrator unable to tell what the audience now contains without
@@ -684,7 +684,7 @@ pub async fn add_members(
     Ok(Json(json!({ "ok": true, "added": added })))
 }
 
-/// `DELETE /admin/audiences/:id/members` — remove one or several at once.
+/// `DELETE /admin/audiences/:id/members` - remove one or several at once.
 pub async fn remove_members(
     State(state): State<AppState>,
     audit: AdminAudit,
@@ -797,14 +797,14 @@ async fn policy_rows(
 /// `GET /admin/audiences/policy?org_unit_id=…&module_id=…`
 ///
 /// The ordered list offered in that module, for accounts of that unit. First
-/// entry is the primary one — the proposal shown by default.
+/// entry is the primary one - the proposal shown by default.
 ///
 /// ## Inheritance, and why the answer has two halves
 ///
 /// A unit with no rows of its own does **not** fall back to nothing: it falls
 /// back to the nearest ancestor that has a policy for this module, exactly like
 /// a setting resolves through `core.setting_chain`. One tree must not carry two
-/// contradictory inheritance rules — an administrator who learns that settings
+/// contradictory inheritance rules - an administrator who learns that settings
 /// flow downwards will assume the same of audiences, and be wrong in a way that
 /// only shows up as "why does nobody in Support see the Direction option?".
 ///
@@ -883,7 +883,7 @@ pub struct SetPolicyDto {
     pub audience_ids: Vec<Uuid>,
 }
 
-/// `PUT /admin/audiences/policy` — replaces the whole ordered list atomically.
+/// `PUT /admin/audiences/policy` - replaces the whole ordered list atomically.
 ///
 /// Replacement rather than incremental edits, because the order *is* the
 /// meaning: "add this one" has no answer to "where?", and two admins reordering
@@ -982,7 +982,7 @@ pub async fn set_policy(
             .target(
                 target::AUDIENCE_POLICY,
                 dto.org_unit_id,
-                format!("{} — {}", unit_name, dto.module_id),
+                format!("{} - {}", unit_name, dto.module_id),
             )
             .before(json!({ "audience_ids": before }))
             .after(json!({ "audience_ids": dto.audience_ids }))

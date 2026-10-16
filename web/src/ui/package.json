@@ -1,7 +1,7 @@
 {
   "name": "@kubuno/ui",
   "version": "0.1.17",
-  "description": "Kubuno shared UI primitives (@ui) — pure, framework-level visual components used by the host and every module.",
+  "description": "Kubuno shared UI primitives (@ui) - pure, framework-level visual components used by the host and every module.",
   "license": "AGPL-3.0-or-later",
   "homepage": "https://github.com/kubuno/core/tree/main/web/src/ui",
   "repository": {

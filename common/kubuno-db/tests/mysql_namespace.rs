@@ -29,7 +29,7 @@ fn settings(url: &str, prefix: &str) -> DbSettings {
 #[tokio::test]
 async fn mysql_connect_creates_a_missing_namespace() {
     let Some(url) = mysql_url() else {
-        eprintln!("KUBUNO_MYSQL_TEST_URL not set — test skipped");
+        eprintln!("KUBUNO_MYSQL_TEST_URL not set - test skipped");
         return;
     };
     // A unique prefix, so the namespace `<prefix>core` cannot pre-exist.

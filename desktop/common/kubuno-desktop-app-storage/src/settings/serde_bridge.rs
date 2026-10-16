@@ -1,7 +1,7 @@
 //! An app's existing settings **struct** stored through [`Settings`] (`docs/STORAGE-COMPONENTS.md` lot ST-2): each
 //! top-level field of the struct is one setting of an open set, so an app with a large `#[derive(Serialize,
-//! Deserialize)]` struct (drive's ~110 options) moves onto the storage engine — its files, Registry back-end, sandbox,
-//! change notifications and migration — without writing a `.kbsettings` entry per field.
+//! Deserialize)]` struct (drive's ~110 options) moves onto the storage engine - its files, Registry back-end, sandbox,
+//! change notifications and migration - without writing a `.kbsettings` entry per field.
 //!
 //! Booleans, numbers, strings (serde's unit enum variants included) and lists of strings are stored as such; any
 //! other field (a nested struct, an `Option` that is `None`, a list of non-strings) is stored as its JSON text and read

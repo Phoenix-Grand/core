@@ -1,16 +1,16 @@
-//! `DateTimePicker` and `MonthCalendar` — the two date/time controls.
+//! `DateTimePicker` and `MonthCalendar` - the two date/time controls.
 //!
 //! ## Why these two share a file
 //!
 //! They are siblings in the toolkit (both derive straight from `Control`, not
 //! from a common date base), but they compute on the *same* thing: a civil
 //! calendar. WinForms leans on `System.DateTime` and `CultureInfo`; this crate
-//! has neither, and — by rule — must not add a date/time dependency. So the
+//! has neither, and - by rule - must not add a date/time dependency. So the
 //! file carries its own **civil-date core** (Howard Hinnant's
 //! `days_from_civil` / `civil_from_days`), a pure, exact, integer calendar that
 //! both controls measure and paint against. Everything a test could check
-//! without a window — leap years, month lengths, day-of-week, the month grid,
-//! selection clamping, the format engine — is a free function over that core.
+//! without a window - leap years, month lengths, day-of-week, the month grid,
+//! selection clamping, the format engine - is a free function over that core.
 //!
 //! ## What each control actually owns
 //!
@@ -30,15 +30,15 @@
 //!
 //! WinForms pulls month/day names and the Long/Short/Time patterns from the
 //! ambient `CultureInfo`. The port has no culture service, and Kubuno ships in
-//! French, so the names and default patterns here are **fr-FR** — which is also
+//! French, so the names and default patterns here are **fr-FR** - which is also
 //! what the reference sheet (`07-datetime.png`) was painted with. This is a
 //! deliberate, documented choice, isolated in [`Names`] so a future culture
 //! service can replace it in one place.
 //!
 //! ## What these two paint with
 //!
-//! Every colour, metric and font comes from [`crate::system::Visuals`] — the
-//! values Windows itself publishes — and every shape is **square**: a WinForms
+//! Every colour, metric and font comes from [`crate::system::Visuals`] - the
+//! values Windows itself publishes - and every shape is **square**: a WinForms
 //! surface has no rounded corner anywhere, and the `DateTimePicker`'s field is
 //! not a stroked box but a `DrawEdge` bevel (`Border3DStyle::Sunken`), the same
 //! two-ring well a `TextBox` sits in. The only curve either control draws is the
@@ -49,7 +49,7 @@
 //! * **The title band.** The classic `MonthCalendar` defaults `TitleBackColor`
 //!   to `SystemColors.ActiveCaption`, which `Visuals` does not read (it carries
 //!   no caption colours). The band therefore falls back to `Window` /
-//!   `WindowText` — which is also exactly what the reference sheet shows, the
+//!   `WindowText` - which is also exactly what the reference sheet shows, the
 //!   themed control painting its header on the calendar's own ground.
 //! * **The today marker.** The native control hard-codes `Color.Red`. There is
 //!   no red among the system colours, so the ring and the today swatch take
@@ -73,11 +73,11 @@ use crate::system::{Border3DSide, Border3DStyle};
 // A calendar is pure arithmetic on a day serial number. `days_from_civil`
 // numbers days so that 1970-01-01 is 0; the inverse round-trips exactly for
 // every date the controls can hold. Nothing here allocates, branches on a
-// clock, or depends on a locale — it is the bedrock both controls stand on.
+// clock, or depends on a locale - it is the bedrock both controls stand on.
 // ═══════════════════════════════════════════════════════════════════════════
 
 /// A calendar date. Fields are ordered year→month→day so the derived `Ord` is
-/// chronological — which is exactly what selection clamping and Min/Max bounds
+/// chronological - which is exactly what selection clamping and Min/Max bounds
 /// compare on, so no hand-written comparator can drift from it.
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Debug, Hash)]
 pub struct Date {
@@ -94,7 +94,7 @@ pub struct Time {
     pub second: u8,
 }
 
-/// A date and a time — `DateTimePicker.Value` is one of these.
+/// A date and a time - `DateTimePicker.Value` is one of these.
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Debug, Hash)]
 pub struct DateTime {
     pub date: Date,
@@ -165,7 +165,7 @@ impl Date {
         Self::from_days(self.to_days() + days)
     }
 
-    /// The first day of this date's month — where a month grid starts from.
+    /// The first day of this date's month - where a month grid starts from.
     pub fn first_of_month(self) -> Self {
         Self::new(self.year, self.month, 1)
     }
@@ -176,7 +176,7 @@ impl DateTime {
         Self { date, time }
     }
 
-    /// Midnight on `date` — the value a date-only control holds.
+    /// Midnight on `date` - the value a date-only control holds.
     pub const fn at_midnight(date: Date) -> Self {
         Self { date, time: Time { hour: 0, minute: 0, second: 0 } }
     }
@@ -186,7 +186,7 @@ impl DateTime {
 // Enumerations these two controls declare
 // ═══════════════════════════════════════════════════════════════════════════
 
-/// `DateTimePickerFormat` — whether the field shows a standard or custom
+/// `DateTimePickerFormat` - whether the field shows a standard or custom
 /// pattern. Discriminants match the toolkit's `[Flags]` values so a round-trip
 /// through an integer is exact.
 #[derive(Clone, Copy, PartialEq, Eq, Debug, Default)]
@@ -202,7 +202,7 @@ pub enum DateTimePickerFormat {
     Custom = 8,
 }
 
-/// `System.Windows.Forms.Day` — the first day of the week, or `Default` to take
+/// `System.Windows.Forms.Day` - the first day of the week, or `Default` to take
 /// it from the locale. Discriminants match the toolkit (Monday = 0 … Sunday =
 /// 6, Default = 7).
 #[derive(Clone, Copy, PartialEq, Eq, Debug, Default)]
@@ -221,7 +221,7 @@ pub enum Day {
 
 impl Day {
     /// Resolve to a concrete first day, 0 = Monday … 6 = Sunday. The port has no
-    /// locale service, so `Default` resolves to **Monday** — the fr-FR first day
+    /// locale service, so `Default` resolves to **Monday** - the fr-FR first day
     /// the reference sheet is built with. A future culture service replaces just
     /// this line.
     pub fn resolved(self) -> u8 {
@@ -238,7 +238,7 @@ impl Day {
     }
 }
 
-/// `MonthCalendar.CalendarDimensions` — the grid of months shown at once.
+/// `MonthCalendar.CalendarDimensions` - the grid of months shown at once.
 /// WinForms models this as a `System.Drawing.Size` of integer columns × rows;
 /// a dedicated struct keeps it from being confused with a DIP [`Size`].
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
@@ -254,7 +254,7 @@ impl CalendarDimensions {
     pub fn clamped(columns: i32, rows: i32) -> Self {
         let mut cols = columns.clamp(1, 12) as u8;
         let mut rows = rows.clamp(1, 12) as u8;
-        // Reduce rows, then columns, until the product fits — mirrors WinForms.
+        // Reduce rows, then columns, until the product fits - mirrors WinForms.
         while cols as u16 * rows as u16 > 12 {
             if rows > 1 {
                 rows -= 1;
@@ -272,7 +272,7 @@ impl Default for CalendarDimensions {
     }
 }
 
-/// `SelectionRange` — a `[start, end]` pair of dates. A view over the calendar's
+/// `SelectionRange` - a `[start, end]` pair of dates. A view over the calendar's
 /// `SelectionStart`/`SelectionEnd`, exactly as WinForms exposes it.
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
 pub struct SelectionRange {
@@ -283,15 +283,15 @@ pub struct SelectionRange {
 // ═══════════════════════════════════════════════════════════════════════════
 // Documented bounds
 //
-// The toolkit publishes its own hard limits — `DateTimePicker.MinimumDateTime`
+// The toolkit publishes its own hard limits - `DateTimePicker.MinimumDateTime`
 // / `MaximumDateTime`, and the same range for `MonthCalendar`. `MinDate`/
 // `MaxDate` default to them and may never be set outside them.
 // ═══════════════════════════════════════════════════════════════════════════
 
-/// `DateTimePicker.MinimumDateTime` / `MonthCalendar.MinDate` default —
+/// `DateTimePicker.MinimumDateTime` / `MonthCalendar.MinDate` default -
 /// 1753-01-01, the SQL-Server-compatible floor the toolkit uses.
 pub const MIN_DATE: Date = Date::new(1753, 1, 1);
-/// `DateTimePicker.MaximumDateTime` / `MonthCalendar.MaxDate` default —
+/// `DateTimePicker.MaximumDateTime` / `MonthCalendar.MaxDate` default -
 /// 9998-12-31, the toolkit's documented ceiling.
 pub const MAX_DATE: Date = Date::new(9998, 12, 31);
 
@@ -355,7 +355,7 @@ pub const FR: Names = Names {
 /// `m mm` (minute), `s ss` (second), `t tt` (AM/PM). Text inside `'…'` or `"…"`
 /// is literal, and `\` escapes the next character.
 ///
-/// **Not supported** — and, per the "honour or declare" rule, never silently
+/// **Not supported** - and, per the "honour or declare" rule, never silently
 /// reinterpreted: `f`/`F` (fractional seconds), `g` (era), `K`/`z` (time-zone
 /// offset). If one appears it is emitted **verbatim as a literal letter**; this
 /// is a defined, documented fallback, not a substitution with another field.
@@ -450,7 +450,7 @@ fn emit_run(out: &mut String, ch: char, n: usize, d: Date, t: Time, names: &Name
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// Month-grid geometry — a pure, tested function
+// Month-grid geometry - a pure, tested function
 //
 // Given a month and the first day of the week, which date is in each of the six
 // rows × seven columns? This is the one bit of the calendar a bug would make
@@ -462,7 +462,7 @@ fn emit_run(out: &mut String, ch: char, n: usize, d: Date, t: Time, names: &Name
 pub struct Cell {
     pub date: Date,
     /// `false` for the trailing days of the previous/next month that fill the
-    /// first and last rows — the toolkit paints them in `TrailingForeColor`.
+    /// first and last rows - the toolkit paints them in `TrailingForeColor`.
     pub in_month: bool,
 }
 
@@ -472,11 +472,11 @@ pub struct Cell {
 ///
 /// ## The leading week is never empty
 ///
-/// The obvious offset — `(weekday(1st) - first_day) mod 7` — is **zero** when
+/// The obvious offset - `(weekday(1st) - first_day) mod 7` - is **zero** when
 /// the 1st happens to fall on the first day of the week, and the grid then opens
 /// flush on the 1st. The native control does not: it always shows the whole
 /// preceding week as trailing days, so the month never starts in the top-left
-/// cell. June 2026 is the case that exposes it — the 1st is a Monday, and with
+/// cell. June 2026 is the case that exposes it - the 1st is a Monday, and with
 /// `FirstDayOfWeek = Monday` the reference sheet's first row is **25–31 May**,
 /// not 1–7 June.
 ///
@@ -491,7 +491,7 @@ pub struct Cell {
 pub fn month_grid(year: i32, month: u8, first_day: u8) -> [Cell; 42] {
     let first = Date::new(year, month, 1);
     // How many leading trailing-days precede the 1st, given where the week
-    // starts. A whole week (7) rather than none (0) when the two coincide — see
+    // starts. A whole week (7) rather than none (0) when the two coincide - see
     // the note above; this is the native control's behaviour, not a rounding.
     let offset = match (first.weekday() + 7 - first_day) % 7 {
         0 => 7,
@@ -528,7 +528,7 @@ pub fn iso_week(date: Date) -> u32 {
 /// Resolve a [`FontRole`] to one of the shared DirectWrite formats.
 ///
 /// **Measurement only.** Both controls *paint* with the system UI font
-/// (`Visuals::fonts`), which is what the toolkit measures against — but
+/// (`Visuals::fonts`), which is what the toolkit measures against - but
 /// `Control::preferred_size` receives a bare [`Canvas`], not a
 /// [`ControlCanvas`], so the system font is out of reach there and the shared
 /// formats are the only ones available. Widening that signature is out of scope
@@ -548,14 +548,14 @@ fn format_for(c: &dyn Canvas, role: FontRole) -> &IDWriteTextFormat {
     }
 }
 
-/// An explicit colour if set, else the system one — the ambient resolution the
+/// An explicit colour if set, else the system one - the ambient resolution the
 /// `Calendar*`/`Title*`/`Trailing*` colour properties perform. In WinForms an
 /// unset colour means « take the system default », never a literal transparent.
 fn or_system(opt: Option<D2D1_COLOR_F>, fallback: D2D1_COLOR_F) -> D2D1_COLOR_F {
     opt.unwrap_or(fallback)
 }
 
-/// One **device** pixel expressed in the canvas's DIP — the thickness of every
+/// One **device** pixel expressed in the canvas's DIP - the thickness of every
 /// hairline the two controls draw (the day-name rule, the week-number divider).
 ///
 /// This is the one legitimate use of `Canvas::scale` in a family, and it
@@ -578,28 +578,28 @@ pub struct DateTimePicker {
     control: ControlBase,
 
     // ── Value & bounds ───────────────────────────────────────────────────
-    /// `Value` — the current date/time. Clamped into `[min_date, max_date]` on
+    /// `Value` - the current date/time. Clamped into `[min_date, max_date]` on
     /// every set. Defaults to [`DEFAULT_TODAY`] at midnight (see that constant
     /// for why it is not `DateTime.Now`).
     value:    DateTime,
-    /// `MinDate` — never below [`MIN_DATE`].
+    /// `MinDate` - never below [`MIN_DATE`].
     min_date: Date,
-    /// `MaxDate` — never above [`MAX_DATE`].
+    /// `MaxDate` - never above [`MAX_DATE`].
     max_date: Date,
 
     // ── Format ───────────────────────────────────────────────────────────
     /// `Format`.
     pub format:        DateTimePickerFormat,
-    /// `CustomFormat` — consulted only when `format == Custom`.
+    /// `CustomFormat` - consulted only when `format == Custom`.
     pub custom_format: Option<String>,
 
     // ── Editing chrome ───────────────────────────────────────────────────
-    /// `ShowUpDown` — a spin box instead of a drop-down calendar.
+    /// `ShowUpDown` - a spin box instead of a drop-down calendar.
     pub show_up_down:  bool,
-    /// `ShowCheckBox` — a leading check box; when unchecked "no value is
+    /// `ShowCheckBox` - a leading check box; when unchecked "no value is
     /// selected" and the text greys out.
     pub show_check_box: bool,
-    /// `Checked` — meaningful only with `show_check_box`.
+    /// `Checked` - meaningful only with `show_check_box`.
     pub checked:       bool,
     /// `DropDownAlign`.
     pub drop_down_align: LeftRightAlignment,
@@ -607,7 +607,7 @@ pub struct DateTimePicker {
     pub right_to_left_layout: bool,
 
     // ── Calendar appearance ──────────────────────────────────────────────
-    /// `CalendarFont` — role the drop-down calendar paints its dates with.
+    /// `CalendarFont` - role the drop-down calendar paints its dates with.
     pub calendar_font:             Option<FontRole>,
     /// `CalendarForeColor`.
     pub calendar_fore_color:       Option<D2D1_COLOR_F>,
@@ -638,7 +638,7 @@ impl Default for DateTimePicker {
             show_check_box: false,
             checked:  true,
             // Stated explicitly: `LeftRightAlignment` deliberately has no
-            // `Default`, because the two properties using it disagree — the
+            // `Default`, because the two properties using it disagree - the
             // catalogue gives `DateTimePicker.DropDownAlign` = Left, but
             // `UpDownBase.UpDownAlign` = Right. The default belongs to the
             // property, so each owner names its own.
@@ -664,7 +664,7 @@ impl DateTimePicker {
     }
 
     /// `Value = v`, clamped into `[MinDate, MaxDate]` (the toolkit throws when
-    /// out of range; a value type is friendlier clamping — documented here).
+    /// out of range; a value type is friendlier clamping - documented here).
     pub fn set_value(&mut self, v: DateTime) {
         let lo = DateTime::at_midnight(self.min_date);
         let hi = DateTime::at_midnight(self.max_date);
@@ -704,7 +704,7 @@ impl DateTimePicker {
         }
     }
 
-    /// The text the control displays for its current value — the same string
+    /// The text the control displays for its current value - the same string
     /// `Text` would return.
     pub fn display_text(&self, names: &Names) -> String {
         format_custom(self.value, self.effective_pattern(names), names)
@@ -731,13 +731,13 @@ impl DateTime {
 // Direct2D coordinate space is already DIP and scaling by `c.scale()` here would
 // apply the DPI factor a second time (1.75× too large at 175 %). `c.scale()` is
 // only ever right for choosing a PHYSICAL-pixel thickness, where one divides by
-// it — and `stroke_rounded` already draws its hairline that way.
+// it - and `stroke_rounded` already draws its hairline that way.
 const PICKER_HEIGHT:   f32 = 23.0;
 const PICKER_PAD_X:    f32 = 6.0;
 const PICKER_GAP:      f32 = 4.0;
 /// The button allowance used **when measuring**. The paint uses the real
-/// `SM_CXVSCROLL` from [`crate::system::SystemMetrics`] — the metric the toolkit
-/// sizes a combo/spin button with — but `preferred_size` takes a bare `Canvas`
+/// `SM_CXVSCROLL` from [`crate::system::SystemMetrics`] - the metric the toolkit
+/// sizes a combo/spin button with - but `preferred_size` takes a bare `Canvas`
 /// and cannot reach it (see [`format_for`]). The two agree to a pixel at 96 DPI
 /// (17 vs 18), and every picker on the sheet is given an explicit `Width`.
 const BUTTON_W:        f32 = 18.0;
@@ -777,8 +777,8 @@ impl Control for DateTimePicker {
         c.fill_rect(&bounds, &back);
         let field = c.draw_edge(&bounds, Border3DStyle::Sunken, Border3DSide::ALL);
 
-        // The button band — the drop-down, or the up/down spinner under
-        // `ShowUpDown` — is one vertical-scroll-bar wide, the metric the toolkit
+        // The button band - the drop-down, or the up/down spinner under
+        // `ShowUpDown` - is one vertical-scroll-bar wide, the metric the toolkit
         // sizes a combo button with (`SystemInformation.VerticalScrollBarWidth`).
         // It sits at the trailing edge, which is the LEFT edge under RTL.
         let width = (field.right - field.left).max(0.0);
@@ -795,7 +795,7 @@ impl Control for DateTimePicker {
             )
         };
 
-        // A control-faced, RAISED button — `DrawFrameControl(DFCS_SCROLLCOMBOBOX)`
+        // A control-faced, RAISED button - `DrawFrameControl(DFCS_SCROLLCOMBOBOX)`
         // for the drop-down, two stacked ones for the spinner. The chevrons stay
         // VECTOR icons, never text: the UI face has no arrow glyphs, so a
         // character like « ▾ » would render as a tofu box.
@@ -812,7 +812,7 @@ impl Control for DateTimePicker {
             button(&btn, "ChevronDown", DROPDOWN_GLYPH);
         }
 
-        // Optional leading check box — the toolkit's own `DFCS_BUTTONCHECK`: a
+        // Optional leading check box - the toolkit's own `DFCS_BUTTONCHECK`: a
         // sunken well on the window colour with a black tick. When unchecked
         // "no value is selected", so the value greys out (documented WinForms
         // behaviour) while still being shown.
@@ -869,11 +869,11 @@ pub struct MonthCalendar {
     control: ControlBase,
 
     // ── Selection ────────────────────────────────────────────────────────
-    /// `SelectionStart` — kept ≤ `selection_end` and inside `[min, max]`.
+    /// `SelectionStart` - kept ≤ `selection_end` and inside `[min, max]`.
     selection_start: Date,
     /// `SelectionEnd`.
     selection_end:   Date,
-    /// `MaxSelectionCount` — the range may span at most this many days.
+    /// `MaxSelectionCount` - the range may span at most this many days.
     pub max_selection_count: i32,
 
     // ── Bounds ───────────────────────────────────────────────────────────
@@ -883,9 +883,9 @@ pub struct MonthCalendar {
     // ── Layout / behaviour ───────────────────────────────────────────────
     /// `FirstDayOfWeek`.
     pub first_day_of_week: Day,
-    /// `CalendarDimensions` — the grid of months.
+    /// `CalendarDimensions` - the grid of months.
     pub calendar_dimensions: CalendarDimensions,
-    /// `ScrollChange` — months scrolled per next/prev click. `0` means "the
+    /// `ScrollChange` - months scrolled per next/prev click. `0` means "the
     /// number of months currently shown" (the toolkit's documented default).
     pub scroll_change: i32,
     /// `RightToLeftLayout`.
@@ -893,7 +893,7 @@ pub struct MonthCalendar {
 
     // ── Today ────────────────────────────────────────────────────────────
     today_date:     Date,
-    /// `TodayDateSet` (get-only in WinForms) — whether `TodayDate` was set
+    /// `TodayDateSet` (get-only in WinForms) - whether `TodayDate` was set
     /// explicitly rather than taken from the clock.
     today_date_set: bool,
 
@@ -905,7 +905,7 @@ pub struct MonthCalendar {
     /// **Colour deviation, recorded here rather than left to be read off the
     /// pixels.** The native control hard-codes `Color.Red` for this ring (and
     /// for the today swatch in the footer). [`crate::system::Visuals`] carries
-    /// only what `GetSysColor` answers, and no system colour is red — inventing
+    /// only what `GetSysColor` answers, and no system colour is red - inventing
     /// one would be exactly the hard-coding `system.rs` exists to prevent. So
     /// both take `Highlight`, which is what the *themed* control marks today
     /// with and what the reference sheet's swatch is painted in. Over a selected
@@ -916,11 +916,11 @@ pub struct MonthCalendar {
     pub show_week_numbers: bool,
 
     // ── Bolded dates ─────────────────────────────────────────────────────
-    /// `BoldedDates` — specific dates.
+    /// `BoldedDates` - specific dates.
     pub bolded_dates: Vec<Date>,
-    /// `AnnuallyBoldedDates` — recur every year; only month+day are significant.
+    /// `AnnuallyBoldedDates` - recur every year; only month+day are significant.
     pub annually_bolded_dates: Vec<Date>,
-    /// `MonthlyBoldedDates` — recur every month; only the day is significant.
+    /// `MonthlyBoldedDates` - recur every month; only the day is significant.
     pub monthly_bolded_dates: Vec<Date>,
 
     // ── Colours ──────────────────────────────────────────────────────────
@@ -978,7 +978,7 @@ impl MonthCalendar {
         self.selection_end
     }
 
-    /// `SelectionRange` — the pair, always with `start ≤ end`.
+    /// `SelectionRange` - the pair, always with `start ≤ end`.
     pub fn selection_range(&self) -> SelectionRange {
         SelectionRange { start: self.selection_start, end: self.selection_end }
     }
@@ -1001,13 +1001,13 @@ impl MonthCalendar {
         self.selection_end = e;
     }
 
-    /// `SelectionStart = d` — collapses the range onto a single day, then re-runs
+    /// `SelectionStart = d` - collapses the range onto a single day, then re-runs
     /// the range rules.
     pub fn set_selection_start(&mut self, d: Date) {
         self.set_selection_range(d, d);
     }
 
-    /// `SelectionEnd = d` — extends from the current start.
+    /// `SelectionEnd = d` - extends from the current start.
     pub fn set_selection_end(&mut self, d: Date) {
         let s = self.selection_start;
         self.set_selection_range(s, d);
@@ -1034,7 +1034,7 @@ impl MonthCalendar {
     pub fn today_date(&self) -> Date {
         self.today_date
     }
-    /// `TodayDate = d` — also flips `TodayDateSet` true, as the toolkit does.
+    /// `TodayDate = d` - also flips `TodayDateSet` true, as the toolkit does.
     pub fn set_today_date(&mut self, d: Date) {
         self.today_date = d.clamp(self.min_date, self.max_date);
         self.today_date_set = true;
@@ -1057,7 +1057,7 @@ impl MonthCalendar {
             || self.monthly_bolded_dates.iter().any(|b| b.day == date.day)
     }
 
-    /// `SingleMonthSize` (get-only) — the DIP size one month needs, before the
+    /// `SingleMonthSize` (get-only) - the DIP size one month needs, before the
     /// week-number column and today row. A nominal, at 96 DPI, matching the
     /// reference sheet's proportions.
     pub fn single_month_size(&self) -> Size {
@@ -1068,7 +1068,7 @@ impl MonthCalendar {
     }
 }
 
-// Metrics for the calendar, in DIP — used as-is, for the same reason as the
+// Metrics for the calendar, in DIP - used as-is, for the same reason as the
 // picker's: the canvas is already in DIP (the renderer calls `SetDpi`), so these
 // must NOT be multiplied by `c.scale()`.
 const MC_CELL_W:       f32 = 26.0;
@@ -1104,7 +1104,7 @@ impl MonthCalendar {
         let rule = hairline(c);
 
         // Title band: month + year, prev/next arrows. The band sits on the
-        // calendar's own ground rather than a coloured caption bar — see the
+        // calendar's own ground rather than a coloured caption bar - see the
         // note on `title_back_color` below.
         let title = Rect::new(rect.left, rect.top, rect.right, rect.top + MC_TITLE_H);
         let title_back = or_system(self.title_back_color, colors.window);
@@ -1163,7 +1163,7 @@ impl MonthCalendar {
             let row_top = grid_top + row as f32 * cell_h;
 
             // Week-number gutter. A row made ENTIRELY of trailing days carries
-            // no number — the leading week `month_grid` now always shows would
+            // no number - the leading week `month_grid` now always shows would
             // otherwise label a week of the previous month, which the reference
             // sheet leaves blank.
             let row_cells = &cells[row * 7..row * 7 + 7];
@@ -1187,7 +1187,7 @@ impl MonthCalendar {
 
                 // The today ring. The native control hard-codes `Color.Red`
                 // here; `Visuals` publishes no such colour (it reads only what
-                // `GetSysColor` answers), so the ring takes `Highlight` — which
+                // `GetSysColor` answers), so the ring takes `Highlight` - which
                 // is what the themed control marks today with, and what the
                 // reference sheet's today swatch is drawn in. Over a SELECTED
                 // day that would be invisible, so it flips to `HighlightText`.
@@ -1256,7 +1256,7 @@ impl Control for MonthCalendar {
         let colors = &c.visuals().colors;
 
         // The calendar's ground is the WINDOW colour under a flat one-pixel
-        // frame — square, like every other surface in the toolkit.
+        // frame - square, like every other surface in the toolkit.
         // `BackColor` (which `MonthCalendar` re-surfaces) wins.
         let back = or_system(self.control.back_color, colors.window);
         c.fill_rect(&bounds, &back);
@@ -1355,7 +1355,7 @@ mod tests {
     #[test]
     fn grid_starts_on_the_chosen_first_day_monday() {
         // June 2026: the 1st is a Monday, so with first_day = Monday column 0
-        // carries a Monday — and, per the rule below, that Monday is 25 May,
+        // carries a Monday - and, per the rule below, that Monday is 25 May,
         // not the 1st.
         let g = month_grid(2026, 6, 0);
         assert_eq!(g[0].date.weekday(), 0);
@@ -1369,7 +1369,7 @@ mod tests {
     /// whole preceding week instead.
     ///
     /// June 2026 with `FirstDayOfWeek = Monday` is exactly the case that
-    /// diverged — `07-datetime.png` opens on **25 May**.
+    /// diverged - `07-datetime.png` opens on **25 May**.
     #[test]
     fn the_grid_always_opens_on_a_full_leading_week() {
         let g = month_grid(2026, 6, 0);
@@ -1378,8 +1378,8 @@ mod tests {
         assert!(g[..7].iter().all(|cell| !cell.in_month));
         assert_eq!(g[7].date, Date::new(2026, 6, 1));
 
-        // The trailing edge needs no special rule — six rows of seven is six
-        // whole weeks — but it must still close on one: 29–30 June, then 1–5
+        // The trailing edge needs no special rule - six rows of seven is six
+        // whole weeks - but it must still close on one: 29–30 June, then 1–5
         // July, which is the reference's last row.
         assert_eq!(g[35].date, Date::new(2026, 6, 29));
         assert_eq!(g[41].date, Date::new(2026, 7, 5));

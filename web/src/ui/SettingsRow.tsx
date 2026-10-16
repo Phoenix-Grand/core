@@ -23,7 +23,7 @@ export interface SettingsRowProps {
 
 /**
  * One line of a settings page (the `.kbview` `SettingsRow`): the setting's name and its help line, and the
- * control that changes it — the single shared version of the row every module's settings page copied
+ * control that changes it - the single shared version of the row every module's settings page copied
  * (`flex items-start gap-8 py-4`, a 240 px label column, a line between rows). The name labels the row for
  * screen readers (`role="group"`).
  */

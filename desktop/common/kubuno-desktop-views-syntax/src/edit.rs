@@ -1,12 +1,12 @@
-//! Surgical edits — `XML_VIEWS.md`'s phase 2a brief: "set/insert/remove an
-//! attribute, insert/remove/move a child element — each preserving all
+//! Surgical edits - `XML_VIEWS.md`'s phase 2a brief: "set/insert/remove an
+//! attribute, insert/remove/move a child element - each preserving all
 //! untouched bytes … and producing minimal diffs".
 //!
 //! ## Implementation choice
 //!
 //! Every operation here computes one or more precise byte ranges on the
 //! *original* source text (found through the parsed tree's
-//! [`rowan::TextRange`]s) and replaces each — it does not mutate `rowan`'s
+//! [`rowan::TextRange`]s) and replaces each - it does not mutate `rowan`'s
 //! green tree in place (via `GreenNode::replace_child`/friends). Both
 //! approaches satisfy the actual requirement ("preserve untouched bytes",
 //! "minimal diff", "exact output text" in tests); a text splice is the one
@@ -14,7 +14,7 @@
 //! crate's public docs do not spell out in enough detail to get right blind,
 //! and it is trivially reasoned about and tested (every function below is
 //! "compute a range, replace it"). A caller that needs the result as a tree
-//! again just re-parses it — [`crate::syntax::parse`] is cheap (§5's own
+//! again just re-parses it - [`crate::syntax::parse`] is cheap (§5's own
 //! "parse+compile once per file change", not per frame) and re-parsing after
 //! an edit is exactly the workflow a designer or Claude already has (edit →
 //! show the new file → parse again for the next edit). A future phase can
@@ -25,7 +25,7 @@
 //!
 //! Every function takes the AST node(s) to operate on (from a tree already
 //! parsed with [`crate::syntax::parse`]) and returns the precise [`Edit`]s to
-//! apply against that *same, original* text — not a whole new document
+//! apply against that *same, original* text - not a whole new document
 //! string. This is what `vskubuno/docs/DESIGNER.md`'s "DSG-2 protocol"
 //! section needs: the VS side applies each `{range, newText}` pair as one
 //! minimal `ITextEdit.Replace`, instead of diffing two whole-file strings to
@@ -35,13 +35,13 @@
 //!
 //! A single designer gesture can need more than one disjoint range (moving an
 //! element touches both where it used to be and where it now is; renaming
-//! touches both the start and end tag when they are separate) — every
+//! touches both the start and end tag when they are separate) - every
 //! function therefore returns `Vec<Edit>`, empty for a no-op (an out-of-range
 //! index, a missing attribute to remove, an id that does not resolve to
 //! anything). Every `Edit` a single call returns is disjoint from every
 //! other, and each is expressed in the *original* document's byte offsets, so
 //! applying them in any order (front-to-back or back-to-front) reproduces the
-//! same result — [`apply_edits`] applies them back-to-front for exactly that
+//! same result - [`apply_edits`] applies them back-to-front for exactly that
 //! reason.
 
 use crate::ast::{AstNode, Attribute, Element};
@@ -60,7 +60,7 @@ pub struct Edit {
 
 /// Applies `edits` (as produced by this module's functions, always disjoint
 /// and in `text`'s own original coordinates) to `text`, returning the whole
-/// document's new text — the single value the pre-"DSG-2 protocol" API used
+/// document's new text - the single value the pre-"DSG-2 protocol" API used
 /// to return directly. Edits are applied back-to-front (by descending
 /// `range.start()`) so that splicing one never invalidates another's
 /// still-to-be-applied byte offsets.
@@ -75,7 +75,7 @@ pub fn apply_edits(text: &str, edits: &[Edit]) -> String {
 }
 
 /// The full source text a node's tree was parsed from, reconstructed by
-/// walking to the root ([`SyntaxKind::DOCUMENT`]) and reading it back —
+/// walking to the root ([`SyntaxKind::DOCUMENT`]) and reading it back -
 /// exact because the tree is lossless (`XML_VIEWS.md` §6). Currently unused
 /// by this module's own edit functions (each computes a range against the
 /// caller-supplied text directly), kept for a caller that only has a node
@@ -84,7 +84,7 @@ pub fn apply_edits(text: &str, edits: &[Edit]) -> String {
 #[allow(dead_code)]
 fn root_text(node: &SyntaxNode) -> String {
     // `ancestors()` always yields at least `node` itself, so this fallback
-    // never actually triggers — kept instead of `.expect()` so there is no
+    // never actually triggers - kept instead of `.expect()` so there is no
     // panic path in production code at all (`CLAUDE.md` §7's "no `unwrap`
     // outside tests, `expect` only at bootstrap").
     node.ancestors().last().unwrap_or_else(|| node.clone()).text().to_string()
@@ -124,7 +124,7 @@ fn escape_attribute_value(value: &str, quote: char) -> String {
 /// Sets `name="value"` on `element`, creating the attribute if absent.
 ///
 /// - If the attribute exists, only its value's bytes (between the quotes)
-///   change — the quote style, the attribute's position, and every other
+///   change - the quote style, the attribute's position, and every other
 ///   attribute are untouched.
 /// - If it does not, `<Name a="1"/>` gains it right before the tag's closer
 ///   (`<Name a="1" name="value"/>`), double-quoted.
@@ -136,7 +136,7 @@ pub fn set_attribute(element: &Element, name: &str, value: &str) -> Vec<Edit> {
         }
     }
 
-    // Not present (or malformed beyond repair) — insert a brand new
+    // Not present (or malformed beyond repair) - insert a brand new
     // `<space>name="value"` right before the start tag's closer.
     let Some(start_tag) = element.start_tag() else { return Vec::new() };
     let Some(closer) = tag_closer(&start_tag) else { return Vec::new() };
@@ -170,11 +170,11 @@ fn tag_closer(start_tag: &SyntaxNode) -> Option<crate::syntax::SyntaxToken> {
 
 /// Inserts `child_xml` (a well-formed `.kbview` fragment, e.g.
 /// `"<Label Text=\"hi\"/>"`) as `parent`'s child at `index` (0-based, among
-/// element children only — text/comments do not count), shifting the
+/// element children only - text/comments do not count), shifting the
 /// existing child currently at `index` (and everything after it) later. An
 /// `index` at or past the current child count appends at the end.
 ///
-/// `child_xml` is inserted byte-for-byte with no added whitespace — this
+/// `child_xml` is inserted byte-for-byte with no added whitespace - this
 /// function is a precise splice primitive, not a formatter; a caller that
 /// wants the new child on its own indented line includes that formatting in
 /// `child_xml` itself (see the module doc's "implementation choice").
@@ -186,7 +186,7 @@ pub fn insert_child(parent: &Element, index: usize, child_xml: &str) -> Vec<Edit
         let Some(start_tag) = parent.start_tag() else { return Vec::new() };
         let Some(closer) = tag_closer(&start_tag) else { return Vec::new() };
         if closer.kind() != SyntaxKind::SLASH_R_ANGLE {
-            return Vec::new(); // Malformed tree — nothing sane to splice.
+            return Vec::new(); // Malformed tree - nothing sane to splice.
         }
         let name = parent.name().unwrap_or_default();
         let replacement = format!(">{child_xml}</{name}>");
@@ -241,7 +241,7 @@ pub fn move_child(parent: &Element, from: usize, to: usize) -> Vec<Edit> {
     // The whitespace the delete range absorbed (empty for an inline element).
     let leading = leading_whitespace(moved.syntax()).map(|t| t.text().to_string()).unwrap_or_default();
 
-    // Every other child, in order, with `from` removed — exactly the list
+    // Every other child, in order, with `from` removed - exactly the list
     // `to` is an index into (`Vec::remove` + `Vec::insert`'s own contract).
     let remaining: Vec<&Element> = children.iter().enumerate().filter(|(i, _)| *i != from).map(|(_, e)| e).collect();
     let to = to.min(remaining.len());
@@ -274,11 +274,11 @@ fn leading_whitespace(node: &SyntaxNode) -> Option<crate::syntax::SyntaxToken> {
 }
 
 /// Moves the child at `from` in `source_parent` to index `to` in
-/// `dest_parent` — the general case [`move_child`] does not cover, for a
+/// `dest_parent` - the general case [`move_child`] does not cover, for a
 /// drag that drops an element into a *different* container (`XML_VIEWS.md`
 /// §1's Dock/Flow bands, `DESIGNER.md` §4). Delegates to [`move_child`]
 /// verbatim when `source_parent`/`dest_parent` are the same element (by
-/// identity — same underlying [`SyntaxNode`]), for its exact, already-tested
+/// identity - same underlying [`SyntaxNode`]), for its exact, already-tested
 /// same-parent behavior; otherwise removes the child from `source_parent`
 /// and inserts its own `<Tag …>…</Tag>` text into `dest_parent`, which is
 /// always safe as two disjoint edits since the two parents' subtrees never
@@ -335,7 +335,7 @@ pub fn reorder_children(parent: &Element, order: &[usize]) -> Vec<Edit> {
         .collect()
 }
 
-/// Renames `element`'s tag — its start-tag name token, and its end-tag name
+/// Renames `element`'s tag - its start-tag name token, and its end-tag name
 /// token too when it has one (a self-closing element only has the one to
 /// change). Every attribute, and the element's `x:Name` (a *value*, never
 /// the tag name), is left untouched.
@@ -378,12 +378,12 @@ pub fn unique_name(name: &str, taken: &std::collections::HashSet<String>) -> Str
 }
 
 /// Inserts a copied `.kbview` fragment (one element, possibly with children, as produced by the
-/// designer's Copy/Duplicate) as `parent`'s child at `index` — the Paste/Duplicate gesture.
+/// designer's Copy/Duplicate) as `parent`'s child at `index` - the Paste/Duplicate gesture.
 /// Unlike [`insert_child`] (a verbatim splice), this one lays the fragment out like the rest of
 /// the file: on its own line, indented like its new siblings (or one level under `parent` when
 /// it has none), the fragment's own inner lines re-indented to match. Every `x:Name` in the
-/// fragment that already exists in `taken` (see [`collect_names`]) — or twice in the fragment
-/// itself — is renamed with [`unique_name`], so a paste never creates a duplicate name.
+/// fragment that already exists in `taken` (see [`collect_names`]) - or twice in the fragment
+/// itself - is renamed with [`unique_name`], so a paste never creates a duplicate name.
 ///
 /// `fragment` may hold several elements one after the other (a multi-selection copied together,
 /// `DESIGNER.md` §13): they are inserted in order at `index`, each on its own line.
@@ -446,7 +446,7 @@ pub fn insert_fragment(
     }
 }
 
-/// Wraps `element` in a new `<wrapper>` container — the designer's "Wrap in" gesture. The element
+/// Wraps `element` in a new `<wrapper>` container - the designer's "Wrap in" gesture. The element
 /// moves one indentation level down, between the new tags, each on its own line; an element that
 /// shares its line with other content is wrapped inline instead. No edit for a `wrapper` that is
 /// not a valid element name.
@@ -468,7 +468,7 @@ pub fn wrap_element(element: &Element, wrapper: &str) -> Vec<Edit> {
     vec![Edit { range: element.syntax().text_range(), new_text }]
 }
 
-/// Replaces the container `element` by its own children — the designer's "Remove container"
+/// Replaces the container `element` by its own children - the designer's "Remove container"
 /// gesture (the children, and anything between them such as comments, move one indentation level
 /// up). No edit for an element without children, or for the document root unless it has exactly
 /// one child (a view always has a single root element).
@@ -643,7 +643,7 @@ fn reindent(s: &str, indent: &str, nl: &str) -> String {
 
 /// `target`'s own range, extended to also cover the single whitespace-only
 /// `TEXT` token immediately preceding it among `container`'s children (if
-/// any) — the shared "remove this node cleanly" rule [`remove_attribute`],
+/// any) - the shared "remove this node cleanly" rule [`remove_attribute`],
 /// [`remove_child`] and [`move_child`] all use.
 fn delete_range_absorbing_leading_whitespace(container: &SyntaxNode, target: &SyntaxNode) -> TextRange {
     let mut previous: Option<SyntaxElement> = None;
@@ -676,7 +676,7 @@ mod tests {
     }
 
     /// Runs `f` against `src`'s root element and returns the whole-document
-    /// text after applying the edits it returns — the shape most of this
+    /// text after applying the edits it returns - the shape most of this
     /// module's original tests already asserted on, kept via [`apply_edits`]
     /// now that the functions themselves return `Vec<Edit>`.
     fn applied(src: &str, f: impl FnOnce(&Element) -> Vec<Edit>) -> String {

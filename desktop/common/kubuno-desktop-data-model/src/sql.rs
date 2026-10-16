@@ -1,4 +1,4 @@
-//! SQL text helpers shared by the runtime (`kubuno_desktop_data::sql`) and the `data_source!` macro — never
+//! SQL text helpers shared by the runtime (`kubuno_desktop_data::sql`) and the `data_source!` macro - never
 //! for values: values are always parameters.
 //!
 //! - [`rewrite_named`]: provider-neutral named parameters `@name` → the provider's placeholders

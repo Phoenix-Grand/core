@@ -4,7 +4,7 @@ import { ViewBase } from './Breadcrumb.kbview'
 
 /** Gallery page: Breadcrumb (OnClick of a segment through the parent's adapter). */
 export class Breadcrumb extends ViewBase {
-  @bind accessor clicked = '—'
+  @bind accessor clicked = '-'
 
   get status(): string {
     return `Last segment clicked: ${this.clicked}`

@@ -1,9 +1,9 @@
 //! Portable equivalents of the PostgreSQL SQL functions the handlers rely on.
 //!
 //! The core schema historically shipped a handful of `LANGUAGE sql` / plpgsql
-//! functions — `core.org_unit_descendants`, `core.org_unit_ancestors`,
+//! functions - `core.org_unit_descendants`, `core.org_unit_ancestors`,
 //! `core.superadmin_ids`, `core.label_access`, `core.setting_chain`,
-//! `core.setting_overrides` — that the request handlers call inline
+//! `core.setting_overrides` - that the request handlers call inline
 //! (`FROM core.org_unit_descendants($1) d`, `WHERE ... IN (SELECT ...
 //! FROM core.superadmin_ids())`). MySQL and SQLite have no such stored
 //! functions, so those calls fail at run time on any non-PostgreSQL deployment.
@@ -26,7 +26,7 @@
 //!
 //! Every recursive walk is bounded by [`MAX_TREE_DEPTH`]. A cycle stored by a
 //! past bug (A → B → A) must degrade into a truncated result, never hang the
-//! backend — MySQL and SQLite do not detect cycles on their own, and neither
+//! backend - MySQL and SQLite do not detect cycles on their own, and neither
 //! does PostgreSQL's `WITH RECURSIVE` without such a guard.
 
 use kubuno_db::dialect::Backend;
@@ -47,7 +47,7 @@ fn placeholder_list(start: usize, count: usize) -> String {
 
 /// Portable replacement for `core.org_unit_descendants($root)`.
 ///
-/// A derived table with columns `(id, name, parent_id, depth)` — the same shape
+/// A derived table with columns `(id, name, parent_id, depth)` - the same shape
 /// the PostgreSQL function returned. `depth` is `0` for the root itself, `1` for
 /// its direct children, and so on; a unit reachable by several paths (a cycle)
 /// keeps its shallowest depth. `root` is the placeholder number of the root id,
@@ -69,7 +69,7 @@ pub fn org_unit_descendants(root: usize) -> String {
 /// Portable replacement for `core.org_unit_descendants(...)` over a **set** of
 /// roots (the delegated-listing filter, which walks the subtree of every unit a
 /// grant covers). `start` is the first of `count` placeholders, each a root id
-/// bound in order. Panics on an empty set — callers must not build one.
+/// bound in order. Panics on an empty set - callers must not build one.
 pub fn org_unit_descendants_many(start: usize, count: usize) -> String {
     assert!(count > 0, "org_unit_descendants_many needs at least one root");
     let anchor = format!(
@@ -82,7 +82,7 @@ pub fn org_unit_descendants_many(start: usize, count: usize) -> String {
 }
 
 /// Portable expansion of **several** subtrees at once, each row tagged with the
-/// root it descends from — the shape the effective-privilege resolver needs (it
+/// root it descends from - the shape the effective-privilege resolver needs (it
 /// expands every unit a grant is scoped to and maps the descendants back to that
 /// grant). Columns `(root, id)`. `start` is the first of `count` placeholders,
 /// each a root id bound in order. Panics on an empty set.
@@ -145,7 +145,7 @@ fn subtree(anchor: &str, step_join: &str, root_placeholder: &str) -> String {
 /// Portable replacement for `core.superadmin_ids()`: active accounts holding an
 /// instance-scoped super-user role (directly or through a group), the grant not
 /// expired. A derived table with a single column `user_id`. No placeholders;
-/// interpolate and give it an alias — `FROM core.superadmin_ids() s` →
+/// interpolate and give it an alias - `FROM core.superadmin_ids() s` →
 /// `FROM {} s`.
 pub fn superadmin_ids(backend: Backend) -> String {
     let now = backend.now();

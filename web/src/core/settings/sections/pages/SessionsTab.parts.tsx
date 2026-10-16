@@ -107,7 +107,7 @@ function DeviceCard({ device, sessions, current, onDisown }: {
       {/* Mobile hierarchy, deliberately: the TWO verbs that matter stay on one
           row and everything else moves into a "⋮" sheet. Four buttons wrapping
           onto a second line is the pattern this codebase has already decided
-          against — a wrapped toolbar reads as four equally important actions
+          against - a wrapped toolbar reads as four equally important actions
           and none of them is reachable with a thumb. */}
       <div className="mb-3 flex items-center gap-2">
         <Button variant="secondary" size="sm" icon={<LogOut size={14} />}

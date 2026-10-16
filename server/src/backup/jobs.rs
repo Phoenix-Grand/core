@@ -9,13 +9,13 @@
 //!
 //! ## Two types, and why not one
 //!
-//! * [`RUN`] — the recurring occurrence. It re-arms itself.
-//! * [`RUN_NOW`] — a manual run, enqueued by the console.
+//! * [`RUN`] - the recurring occurrence. It re-arms itself.
+//! * [`RUN_NOW`] - a manual run, enqueued by the console.
 //!
 //! They are separate because `queue::reschedule_after` refuses to insert when a
 //! job of the same type is already pending: a manual run sitting in the queue
 //! would silently swallow the recurring job's re-arm and stop the schedule dead
-//! — a bug whose only symptom is that backups quietly stop, which is the exact
+//! - a bug whose only symptom is that backups quietly stop, which is the exact
 //! failure this feature exists to prevent.
 //!
 //! ## A failed dump is not a failed job
@@ -24,7 +24,7 @@
 //! the failure in `core.backup_runs` (where the alert producer and the health
 //! check read it), re-arms the next occurrence and returns `Ok`. Returning `Err`
 //! would hand the job to the runner's retry-then-give-up path and leave the
-//! chain dead until the next restart — trading a visible failure for an
+//! chain dead until the next restart - trading a visible failure for an
 //! invisible one. Only a failure of the *bookkeeping itself* is an `Err`: at
 //! that point nothing can be recorded, and the queue's own machinery is the last
 //! thing still watching.
@@ -41,8 +41,8 @@ use crate::errors::AppError;
 use crate::jobs::queue::{self, NewJob};
 use crate::jobs::registry::JobRegistry;
 
-/// The recurring occurrence. Its `done_at` is not what the console reads —
-/// `core.backup_runs` is — because a job that ran and produced nothing is not a
+/// The recurring occurrence. Its `done_at` is not what the console reads -
+/// `core.backup_runs` is - because a job that ran and produced nothing is not a
 /// backup.
 pub const RUN: &str = "core.backup.run";
 
@@ -55,7 +55,7 @@ const BUSY_RETRY: Duration = Duration::from_secs(300);
 /// Runs one backup end to end: open the row, write the file, rotate the old
 /// ones, close the row.
 ///
-/// Returns the id of the history row in both outcomes — a caller that wants to
+/// Returns the id of the history row in both outcomes - a caller that wants to
 /// know what happened reads the row, so a failure is never a message that exists
 /// only in a log.
 pub async fn execute(
@@ -105,7 +105,7 @@ pub async fn execute(
         }
         Err(e) => {
             let elapsed = started.elapsed().as_millis() as i64;
-            // `{e:#}` prints the whole anyhow chain — "Export de core.users:
+            // `{e:#}` prints the whole anyhow chain - "Export de core.users:
             // connection closed" rather than "Export de core.users". The
             // operator gets the sentence that names the fix.
             let message = format!("{e:#}");
@@ -146,7 +146,7 @@ pub fn register(registry: &mut JobRegistry) {
             return Ok(());
         }
 
-        // A dump failure is recorded, not propagated — see the module header.
+        // A dump failure is recorded, not propagated - see the module header.
         if let Err(e) = execute(&ctx.db, Trigger::Scheduled, None).await {
             tracing::error!(error = %e, "backup: écriture de l'historique impossible");
             // Re-armed even here: losing one history row must not stop the
@@ -171,7 +171,7 @@ pub fn register(registry: &mut JobRegistry) {
         }
 
         // The console records who asked, so the history can name them after the
-        // fact. A payload without an actor is still run — the row simply says
+        // fact. A payload without an actor is still run - the row simply says
         // "manual" with nobody attached, which is honest.
         let actor = match (
             job.payload.get("actor_id").and_then(|v| v.as_str()).and_then(|s| Uuid::parse_str(s).ok()),

@@ -12,7 +12,7 @@ export interface SettingSectionCardProps {
   /**
    * What the section currently amounts to, right-aligned before the chevron:
    * how many knobs, how many of them no longer follow the level above. It is on
-   * the RIGHT and not under the title because it is a state, not a subtitle —
+   * the RIGHT and not under the title because it is a state, not a subtitle -
    * a column of states down the right edge is what makes a folded page of eight
    * sections answer "where did we change something" without opening one.
    */
@@ -23,7 +23,7 @@ export interface SettingSectionCardProps {
   icon?:    ReactNode
   /**
    * The left gutter of the open body: what scope these settings apply to. Comes
-   * in as a node rather than being derived here — only the panel knows which
+   * in as a node rather than being derived here - only the panel knows which
    * scope is on screen, and re-deriving it per section is how two sections of
    * the same page end up claiming two different scopes.
    *

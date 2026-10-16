@@ -1,4 +1,4 @@
-//! The directory policy — the five keys of migration `000110`, resolved.
+//! The directory policy - the five keys of migration `000110`, resolved.
 //!
 //! This module exists so that the policy is read in **one** place and through
 //! the scope engine, never with a hand-written `SELECT … FROM core.settings`.
@@ -48,8 +48,8 @@ pub const KEY_AUDIENCE: &str = "directory.audience";
 /// compiler then demands the matching arms below.
 ///
 /// The six added by migration `000114` are governed exactly like the first two:
-/// same scope, same resolver, same refusal shape. Two of them —
-/// [`ProfileField::Gender`] and [`ProfileField::Birthday`] — carry personal
+/// same scope, same resolver, same refusal shape. Two of them -
+/// [`ProfileField::Gender`] and [`ProfileField::Birthday`] - carry personal
 /// data, and it is worth being precise about what the switch does and does not
 /// do there. It decides whether the **person** may state or erase the datum. It
 /// decides nothing about who may *see* it: neither field is ever returned by
@@ -145,7 +145,7 @@ impl ProfileField {
 /// Resolves one boolean key for an account, falling back to `fallback` when the
 /// key resolves to nothing at all.
 ///
-/// "Nothing at all" means an undeclared key or a `NULL` factory default — the
+/// "Nothing at all" means an undeclared key or a `NULL` factory default - the
 /// state of an instance whose migration `000110` has not run yet. A background
 /// of `false` there would turn an unmigrated instance into one with no
 /// directory and no editable profile, so the caller passes the value that
@@ -180,8 +180,8 @@ impl Audience {
     fn parse(v: Option<&Value>) -> Self {
         match v.and_then(Value::as_str) {
             Some("same_unit") => Audience::SameUnit,
-            // Anything else — including a value a future version may add and
-            // this one does not know — reads as the permissive default the
+            // Anything else - including a value a future version may add and
+            // this one does not know - reads as the permissive default the
             // route had before the key existed. A narrowing this code cannot
             // enforce must not be *reported* as enforced.
             _ => Audience::AllMembers,
@@ -201,7 +201,7 @@ impl SharingPolicy {
     /// What an administrator gets: the directory never closes on them, because
     /// the administration console's own people pickers run on these very
     /// routes. An operator who mistypes a policy must be able to reach the
-    /// screen that undoes it — the same reasoning as `auth.local_admin_fallback`
+    /// screen that undoes it - the same reasoning as `auth.local_admin_fallback`
     /// (migration `000090`).
     ///
     /// Addresses stay governed: an administrator is exempt from the *closure*
@@ -242,7 +242,7 @@ impl SharingPolicy {
 /// Save nothing about why, and `AppError::Validation` would answer 400 "données
 /// invalides" for data that is perfectly valid. `SettingLocked` is the project's
 /// existing "a setting forbids this write" refusal: 403, free-form message,
-/// error code `SETTING_LOCKED` — which is precisely the situation, since the
+/// error code `SETTING_LOCKED` - which is precisely the situation, since the
 /// administrator may indeed have locked the key.
 pub async fn ensure_may_edit(
     db: &DbPool,
@@ -318,7 +318,7 @@ mod tests {
 
     #[test]
     fn the_two_personal_fields_are_governed_like_the_rest() {
-        // Nothing special about their *editing* policy — the difference lives in
+        // Nothing special about their *editing* policy - the difference lives in
         // what the directory routes select, which is asserted next to those
         // queries (`handlers::users::DIRECTORY_COLUMNS`).
         assert_eq!(ProfileField::Gender.key(), "directory.profile_edit_gender");

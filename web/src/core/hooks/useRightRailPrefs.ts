@@ -8,7 +8,7 @@ import type { User } from '../types'
 
 /**
  * User customisation of the right rail: which module panels appear, and in which
- * order. Same storage contract as the waffle launcher's favourites — the user's
+ * order. Same storage contract as the waffle launcher's favourites - the user's
  * server-side `preferences`, with a localStorage cache so the rail is still right
  * on a cold start or offline.
  *
@@ -61,7 +61,7 @@ export function useRightRailPrefs() {
 
   /* A module's own panel is hidden while you are IN that module: it would offer a
    * cramped copy of the page you are already looking at. The customisation dialog
-   * still lists it — it is contextually irrelevant, not disabled. */
+   * still lists it - it is contextually irrelevant, not disabled. */
   const { pathname } = useLocation()
   const currentApp = appIdFromPath(pathname)
 
@@ -81,7 +81,7 @@ export function useRightRailPrefs() {
     try { localStorage.setItem(LS_KEY, JSON.stringify(next)) } catch { /* best-effort */ }
     // A panel that has just been hidden must not stay open behind the rail.
     if (activeId && next.hidden.includes(activeId)) closePanel()
-    // One atomic write of the whole object — no read-modify-write of a bag, which is
+    // One atomic write of the whole object - no read-modify-write of a bag, which is
     // what made the module preferences race (see useModulePrefs).
     api.patch<{ user: User }>('/me', { preferences: { right_rail: next } })
       .then(({ data }) => { if (data?.user) updateUser({ preferences: data.user.preferences }) })

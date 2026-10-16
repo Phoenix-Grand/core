@@ -1,4 +1,4 @@
-<!-- InheritanceChainWindow — converted from InheritanceChainWindow.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- InheritanceChainWindow - converted from InheritanceChainWindow.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <FloatingWindow x:Props="InheritanceChainWindowProps" Title="{Binding title}" Width="520" Modal="true" OnClose="floating_window_close">
   <Panel Class="max-h-[60vh] overflow-y-auto p-4">
     <Label Text="{Res admin.chain_intro}" Role="Meta" Overflow="Wrap" ForeColor="TextTertiary" Class="mb-3"/>

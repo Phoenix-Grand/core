@@ -1,11 +1,11 @@
-//! [`Props`] — the typed reading of one element's attributes that
+//! [`Props`] - the typed reading of one element's attributes that
 //! [`crate::registry`]'s `component!` table drives, per the orchestrator's
 //! architecture decision: "the table lists properties once; the macro
 //! produces both the descriptive metadata (`PROPERTIES`, read by
 //! [`crate::validate`]) and the typed reading of each property through
 //! `Props` accessors". A `build` closure calls `props.bool("On", false)`,
 //! `props.f32("Gap", 8.0)`, `props.str("Text", "")`, `props.enum_("Variant",
-//! "Primary")` — one accessor per [`crate::registry::PropKind`] — and gets
+//! "Primary")` - one accessor per [`crate::registry::PropKind`] - and gets
 //! back a [`crate::binding::PropSource`] rather than a bare value: a literal
 //! is resolved once at build time, a `{Binding …}` expression carries its
 //! path through unresolved, to be read fresh every frame (§5).
@@ -24,18 +24,18 @@ use crate::registry::{ComponentMeta, PropKind};
 
 /// [`Props::build_children_sized`]'s per-child result: the built node, plus
 /// its own literal `Height` and `Width` attribute value (each `None` when
-/// absent or not a number) — named so the field itself stays legible
+/// absent or not a number) - named so the field itself stays legible
 /// (clippy's `type_complexity` lint, same reason `registry::BuildFn` is a
 /// named alias rather than spelled out twice).
 pub type SizedChild = (Box<dyn ViewNode>, Option<f32>, Option<f32>);
 
 /// A build-time failure: a `component!` `build` closure could not turn an
-/// element into a live node — a malformed binding, a value
+/// element into a live node - a malformed binding, a value
 /// [`crate::validate`] would also reject, or (defensively; should not happen
 /// once [`crate::compile::compile`] only calls `build` after a clean
 /// validation pass) an attribute that does not parse. Carries the byte range
 /// to underline, exactly like [`crate::syntax::Diagnostic`], because it *is*
-/// turned into one — see [`crate::compile::build_error_to_diagnostic`].
+/// turned into one - see [`crate::compile::build_error_to_diagnostic`].
 #[derive(Debug, Clone)]
 pub struct BuildError {
     pub message: String,
@@ -98,7 +98,7 @@ impl<'a> Props<'a> {
         Self { element, meta }
     }
 
-    /// The element this view reads — for a `build` closure that needs
+    /// The element this view reads - for a `build` closure that needs
     /// something [`Props`] does not wrap directly (recursing into children:
     /// see [`Props::build_children`]/[`Props::build_single_child`], which
     /// cover the two children models every registered component uses).
@@ -106,8 +106,8 @@ impl<'a> Props<'a> {
         self.element
     }
 
-    /// The registry entry of the element (what a shared `build` — an application class's,
-    /// EVT-7b — reads its name from).
+    /// The registry entry of the element (what a shared `build` - an application class's,
+    /// EVT-7b - reads its name from).
     pub fn meta(&self) -> &'static ComponentMeta {
         self.meta
     }
@@ -176,11 +176,11 @@ impl<'a> Props<'a> {
     /// (`"Primary"`, `"TopDown"`…), checked against the same variant list
     /// [`crate::validate`] checks it against when [`ComponentMeta::property`]
     /// has an entry for `name`. Returned as a plain `String` rather than a
-    /// generic `T: FromStr` — the concrete `kubuno_desktop_ui`/`kubuno_desktop_controls` enum
+    /// generic `T: FromStr` - the concrete `kubuno_desktop_ui`/`kubuno_desktop_controls` enum
     /// types have no `FromStr` impl (nothing in that crate needed one before
     /// this), and adding one there would be exactly the "touch `kubuno-desktop-ui`
     /// for XML views" this crate avoids (see the crate root doc). A `build`
-    /// closure matches the string onto the real enum itself — one small
+    /// closure matches the string onto the real enum itself - one small
     /// `match`, not a trait bound this crate would have to invent.
     pub fn enum_(&self, name: &str, default: &str) -> Result<PropSource<String>, BuildError> {
         match self.raw(name) {
@@ -208,7 +208,7 @@ impl<'a> Props<'a> {
         }
     }
 
-    /// An event attribute's handler name (`OnClick="save"`) — a plain string,
+    /// An event attribute's handler name (`OnClick="save"`) - a plain string,
     /// never a binding: §2's handler table is looked up by exactly this name.
     /// `None` when the element carries no such attribute, or an empty one.
     ///
@@ -226,13 +226,13 @@ impl<'a> Props<'a> {
 
     /// `x:Name`, hashed into the [`kubuno_desktop_ui::FocusId`] it *is* (§1: "free …
     /// not a synthesized field name"). `None` for an element with no
-    /// `x:Name` — it simply never takes part in [`kubuno_desktop_ui::FocusRing`].
+    /// `x:Name` - it simply never takes part in [`kubuno_desktop_ui::FocusRing`].
     pub fn focus_id(&self) -> Option<kubuno_desktop_ui::FocusId> {
         self.element.attribute("x:Name").and_then(|a| a.value()).map(|s| crate::compile::scoped_focus(kubuno_desktop_ui::FocusId::of(&s)))
     }
 
     /// Builds every direct child element (`ChildrenModel::List`, e.g.
-    /// `<Stack>`) into its own [`ViewNode`], in document order — one call
+    /// `<Stack>`) into its own [`ViewNode`], in document order - one call
     /// each `build` closure of a list container makes instead of walking
     /// [`Element::children`] and the registry itself.
     pub fn build_children(&self, cx: &mut BuildCx) -> Result<Vec<Box<dyn ViewNode>>, BuildError> {
@@ -240,7 +240,7 @@ impl<'a> Props<'a> {
     }
 
     /// [`Self::build_children`], each paired with its own literal `Height`/
-    /// `Width` attribute value, when it has one that parses as a number —
+    /// `Width` attribute value, when it has one that parses as a number -
     /// what `<Stack>` reads to let one child pin its own main-axis extent
     /// instead of trusting `ViewNode::measure`'s guess (`node::StackChild`'s
     /// own doc has the worked example, `<Splitter>`). Read directly off the

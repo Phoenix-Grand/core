@@ -1,4 +1,4 @@
-<!-- AnchoredDemo — converted from AnchoredDemo.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- AnchoredDemo - converted from AnchoredDemo.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl>
   <Panel Class="p-3">
     <!-- TODO(views-migrate): <button ref>: attribute(s) without a .kbview property -->

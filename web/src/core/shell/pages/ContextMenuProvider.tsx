@@ -60,7 +60,7 @@ export function ContextMenuProvider({ children }: { children: React.ReactNode })
     /* A dialog or floating window is its own surface, and the module's background
      * menu has no business there. React bubbles synthetic events along the
      * COMPONENT tree rather than the DOM one, so a window portalled into <body>
-     * still reaches this handler from whichever module opened it — which is how
+     * still reaches this handler from whichever module opened it - which is how
      * right-clicking a form in the "Stockages distants" window raised Drive's
      * folder menu. `role="dialog"` is what every FloatingWindow and modal sets. */
     const el = e.target instanceof Element ? e.target : null

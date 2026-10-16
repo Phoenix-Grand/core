@@ -1,6 +1,6 @@
 <!--
-  The account panel (the web's AccountMenu): its header stays put — the active account's address and a close
-  button — while the rest scrolls under it: the avatar (a 3 white outline, the camera button at its bottom right),
+  The account panel (the web's AccountMenu): its header stays put - the active account's address and a close
+  button - while the rest scrolls under it: the avatar (a 3 white outline, the camera button at its bottom right),
   « Bonjour … ! », « Gérer votre compte », the other accounts' card (AccountsCard: it folds; a click switches, a
   dead session or another instance's account shows its buttons), then « Ajouter un compte », « Étiquettes »,
   « Administration » (ShowAdmin) and « Se déconnecter ». 320 wide; the host sizes it to ContentHeight and puts it

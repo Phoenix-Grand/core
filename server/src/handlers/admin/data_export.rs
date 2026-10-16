@@ -6,20 +6,20 @@
 //! The seven settings are edited through `PUT /admin/settings/scoped/:key`, like
 //! every other setting: one audited writer, one validator, one inheritance
 //! chain. A second write path here would be a second place for the audit entry
-//! to be forgotten — the same reasoning the backup and storage pages follow.
+//! to be forgotten - the same reasoning the backup and storage pages follow.
 //!
 //! ## The routes, and why each is separate
 //!
-//! * `GET /admin/data-export` — the page: policy, eligibility, what is running,
+//! * `GET /admin/data-export` - the page: policy, eligibility, what is running,
 //!   history, and the services the live modules currently offer.
-//! * `POST /admin/data-export` — request one. Audited, alerted, asynchronous.
-//! * `POST /admin/data-export/:id/cancel` — stop one that has not been handed
+//! * `POST /admin/data-export` - request one. Audited, alerted, asynchronous.
+//! * `POST /admin/data-export/:id/cancel` - stop one that has not been handed
 //!   over. Its own route rather than a `DELETE` with a flag: cancelling a run in
 //!   flight and deleting a finished archive are different acts on different
 //!   objects, and a single endpoint would put them one parameter apart.
-//! * `DELETE /admin/data-export/:id` — delete a produced archive now, before its
+//! * `DELETE /admin/data-export/:id` - delete a produced archive now, before its
 //!   retention would.
-//! * `GET /admin/data-export/:id/download` — the archive itself.
+//! * `GET /admin/data-export/:id/download` - the archive itself.
 //!
 //! ## Why the download is a route of its own and not a static file
 //!
@@ -27,7 +27,7 @@
 //! three of them are visible in the filesystem: the run finished, the **hold has
 //! elapsed**, the file has not been deleted, and the retention has not passed.
 //! Serving the directory would honour none of them. On top of that, every
-//! download is audited and counted — an archive fetched three times from two
+//! download is audited and counted - an archive fetched three times from two
 //! addresses is a fact somebody must be able to read after an incident.
 
 use axum::{
@@ -63,7 +63,7 @@ const MAX_SELECTED: usize = 5_000;
 
 // ── Reading the page ─────────────────────────────────────────────────────────
 
-/// `GET /admin/data-export` — everything the page opens on.
+/// `GET /admin/data-export` - everything the page opens on.
 pub async fn get_data_export(
     State(state): State<AppState>,
     admin: AdminUser,
@@ -232,7 +232,7 @@ pub struct RequestExportDto {
     pub with_instance: bool,
 }
 
-/// `POST /admin/data-export` — produce an archive.
+/// `POST /admin/data-export` - produce an archive.
 ///
 /// Returns the run id rather than the archive: production is hours on a real
 /// instance, and the hold means the file is not downloadable when the request
@@ -277,7 +277,7 @@ pub async fn request_export(
         )));
     }
 
-    // One at a time, instance-wide — and checked before anything is written, so a
+    // One at a time, instance-wide - and checked before anything is written, so a
     // double-click produces one export and one clear refusal.
     if runs::active_admin(&state.db).await?.is_some() {
         return Err(AppError::Conflict("Un export est déjà en cours".into()));
@@ -367,7 +367,7 @@ pub async fn request_export(
             expires_at,
             destination,
             // No ceiling: an operator's archive is governed by the audit trail
-            // and by the hold, not by a counter — and a legitimate hand-over
+            // and by the hold, not by a counter - and a legitimate hand-over
             // often means fetching the same file from two machines.
             download_limit: None,
             // The policy's ceiling, read when the job runs. The console offers no
@@ -379,7 +379,7 @@ pub async fn request_export(
     )
     .await?;
 
-    // ── The trail, the alert, the work — in that order ──────────────────────
+    // ── The trail, the alert, the work - in that order ──────────────────────
     // The audit entry is written FIRST and is the record that cannot be lost:
     // the alert is best-effort by design, and the job may not start for minutes.
     audit
@@ -388,7 +388,7 @@ pub async fn request_export(
             crate::audit::AuditEntry::new("core.data_export.request")
                 .target(target::SETTING, export_id, "Export de données".to_string())
                 .detail(format!(
-                    "Export demandé — périmètre : {} ({} compte(s)), services : {}, \
+                    "Export demandé - périmètre : {} ({} compte(s)), services : {}, \
                      référentiels d'instance : {}, disponible le {}",
                     dto.scope,
                     subjects.len(),
@@ -424,7 +424,7 @@ pub async fn request_export(
 
 // ── Cancelling and deleting ──────────────────────────────────────────────────
 
-/// `POST /admin/data-export/:id/cancel` — stop a run that has not finished.
+/// `POST /admin/data-export/:id/cancel` - stop a run that has not finished.
 ///
 /// This is the far half of the notification: an administrator who did not ask
 /// for this export has until `available_at` to press it, and pressing it stops
@@ -469,7 +469,7 @@ pub async fn cancel_export(
                 .target(target::SETTING, id, "Export de données".to_string())
                 .detail(format!(
                     "Export annulé (demandé par {}, {} compte(s))",
-                    run.actor_label.as_deref().unwrap_or("—"),
+                    run.actor_label.as_deref().unwrap_or("-"),
                     run.subjects_total
                 )),
         )
@@ -478,7 +478,7 @@ pub async fn cancel_export(
     Ok(Json(json!({ "message": "Export annulé" })))
 }
 
-/// `DELETE /admin/data-export/:id` — remove a produced archive now.
+/// `DELETE /admin/data-export/:id` - remove a produced archive now.
 pub async fn delete_export(
     State(state): State<AppState>,
     audit: AdminAudit,
@@ -514,7 +514,7 @@ pub async fn delete_export(
                 .detail(format!(
                     "Archive supprimée avant expiration ({} compte(s), demandée par {})",
                     run.subjects_total,
-                    run.actor_label.as_deref().unwrap_or("—")
+                    run.actor_label.as_deref().unwrap_or("-")
                 )),
         )
         .await;
@@ -524,7 +524,7 @@ pub async fn delete_export(
 
 // ── The archive itself ───────────────────────────────────────────────────────
 
-/// `GET /admin/data-export/:id/download` — hand over the archive.
+/// `GET /admin/data-export/:id/download` - hand over the archive.
 ///
 /// Every refusal below is a `403`/`404`/`409` with a sentence, never a silent
 /// empty response: an operator whose download is refused must learn *which* of
@@ -572,7 +572,7 @@ pub async fn download_export(
     // Re-validated even though it came from our own row: this is the one handler
     // that turns a database string into an open file descriptor.
     if !archive::is_export_file(file_name) {
-        tracing::error!(export_id = %id, "export: nom d'archive non reconnu — téléchargement refusé");
+        tracing::error!(export_id = %id, "export: nom d'archive non reconnu - téléchargement refusé");
         return Err(AppError::NotFound("Archive introuvable sur le disque".into()));
     }
 
@@ -618,7 +618,7 @@ pub async fn download_export(
         .into_response())
 }
 
-/// `GET /admin/data-export/:id/subjects` — which accounts an export covered, and
+/// `GET /admin/data-export/:id/subjects` - which accounts an export covered, and
 /// what each of them produced.
 ///
 /// Its own route rather than a field of the history: an instance-wide export has

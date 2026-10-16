@@ -1,4 +1,4 @@
-//! The dock — a port of the web's shared panel system
+//! The dock - a port of the web's shared panel system
 //! (`core/frontend/src/core/shell/workspace/Dock.tsx`, `DockArea`), the
 //! draggable / dockable panels every advanced editor wears (PaintSharp's
 //! sub-editors, the App builder…).
@@ -8,7 +8,7 @@
 //! Panels are TABS that can be re-docked left or right, merged into a tab
 //! group, split above / below another group, torn off as floating windows,
 //! rolled up or maximised (floats), resized (columns and stacked groups),
-//! closed and reopened — with a single ghost rectangle showing the exact
+//! closed and reopened - with a single ghost rectangle showing the exact
 //! landing zone during a drag, and the Visual Studio « guide diamond »: a
 //! five-way compass over the pane under the pointer plus two window-edge
 //! arrows.
@@ -22,8 +22,8 @@
 //! # Immediate mode
 //!
 //! [`DockArea::frame`] handles the frame's input, paints the chrome and calls
-//! the caller's `content` closure once per visible surface — the viewport
-//! (the dock's children on the web) and the active panel of every group — in
+//! the caller's `content` closure once per visible surface - the viewport
+//! (the dock's children on the web) and the active panel of every group - in
 //! z-order, clipped to the surface, with a [`Frame`] whose pointer is masked
 //! when something else (a float, a drag in progress, the tab menu) sits above
 //! it. Floating panels are painted after the docked ones, and the ghost and
@@ -36,7 +36,7 @@
 //! another, and are persisted relative to the dock. They are not top-level OS
 //! windows: a panel's content is painted by the caller's closure every frame
 //! (immediate mode), and the host's top-level surfaces ([`host::popup`]) only
-//! take `'static` paint closures — a torn-off OS window would need the panel
+//! take `'static` paint closures - a torn-off OS window would need the panel
 //! to be a retained, self-painting object, which the web's panels are not.
 //!
 //! # Differences with the web, on purpose
@@ -48,7 +48,7 @@
 //! * Keyboard: Ctrl+Tab / Ctrl+Shift+Tab cycle through the panels (surfacing
 //!   the next one, as Visual Studio does), Escape cancels a drag or a resize,
 //!   the Menu key (or Shift+F10) opens the focused tab's menu.
-//! * A panel may carry an icon and may be declared non-closable — what the
+//! * A panel may carry an icon and may be declared non-closable - what the
 //!   designable `<DockPanel>` offers.
 
 use std::sync::atomic::{AtomicU32, Ordering};
@@ -69,7 +69,7 @@ use crate::metrics::ShadowLayer;
 use crate::{Widget, WidgetState};
 
 // ═════════════════════════════════════════════════════════════════════════════
-// Metrics — the web's constants and Tailwind classes, in DIP
+// Metrics - the web's constants and Tailwind classes, in DIP
 // ═════════════════════════════════════════════════════════════════════════════
 
 pub mod metrics {
@@ -146,7 +146,7 @@ pub mod metrics {
 use metrics as m;
 
 // ═════════════════════════════════════════════════════════════════════════════
-// The model — `DockLayout`, `DockGroup`, `DropTarget`, and the pure transforms
+// The model - `DockLayout`, `DockGroup`, `DropTarget`, and the pure transforms
 // ═════════════════════════════════════════════════════════════════════════════
 
 /// A panel id (editor-defined, a plain string like on the web).
@@ -173,7 +173,7 @@ fn is_false(b: &bool) -> bool {
     !*b
 }
 
-/// `DockGroup`: a tab group — docked in a column or floating.
+/// `DockGroup`: a tab group - docked in a column or floating.
 #[derive(Debug, Clone, PartialEq, Default, Serialize, Deserialize)]
 pub struct DockGroup {
     pub id: String,
@@ -241,7 +241,7 @@ impl DockLayout {
         }
     }
 
-    /// The layout as JSON — what the web keeps in `localStorage`.
+    /// The layout as JSON - what the web keeps in `localStorage`.
     pub fn to_json(&self) -> String {
         serde_json::to_string(self).unwrap_or_default()
     }
@@ -430,7 +430,7 @@ pub fn is_docked(layout: &DockLayout, id: &str) -> bool {
     layout.find(id).is_some()
 }
 
-/// `openPanel`: a panel is ONE live instance — opening one that is already on
+/// `openPanel`: a panel is ONE live instance - opening one that is already on
 /// screen SURFACES it (active tab of its group, a rolled float unrolled);
 /// otherwise it is re-docked in a new group of the right column.
 pub fn open_panel(layout: &DockLayout, id: &str) -> DockLayout {
@@ -463,7 +463,7 @@ pub fn build_default(arr: &DockArrangement) -> DockLayout {
 
 /// `reconcile`: drops panels no longer known, appends known panels missing
 /// from the layout (unless the user closed them) at the top of the right
-/// column, and enforces « one panel, one place » and unique group ids — a
+/// column, and enforces « one panel, one place » and unique group ids - a
 /// stored layout may hold duplicates.
 pub fn reconcile(layout: &DockLayout, known: &[&str]) -> DockLayout {
     let is_known = |p: &str| known.contains(&p);
@@ -532,7 +532,7 @@ pub fn reconcile(layout: &DockLayout, known: &[&str]) -> DockLayout {
 }
 
 // ═════════════════════════════════════════════════════════════════════════════
-// The theme — `DockTheme` (Direction A: « Material-refined chrome »)
+// The theme - `DockTheme` (Direction A: « Material-refined chrome »)
 // ═════════════════════════════════════════════════════════════════════════════
 
 /// `0xRRGGBB` as an opaque colour.
@@ -577,7 +577,7 @@ pub struct DockTheme {
 
 impl DockTheme {
     /// `DEFAULT_THEME`: follows the app's theme (light or dark) through the
-    /// core semantic tokens — `surface-0`, `surface-2`, `border`,
+    /// core semantic tokens - `surface-0`, `surface-2`, `border`,
     /// `text-primary`, `text-secondary`, `primary`.
     pub fn from_theme(t: &Theme) -> Self {
         Self {
@@ -762,7 +762,7 @@ pub(crate) fn ui_format(c: &dyn Canvas, size: f32, weight: u32) -> IDWriteTextFo
 // The panel registry and the strings
 // ═════════════════════════════════════════════════════════════════════════════
 
-/// `DockPanel`: one entry of the registry — the web's `{ label, render }`,
+/// `DockPanel`: one entry of the registry - the web's `{ label, render }`,
 /// the content being painted by the caller's closure.
 #[derive(Debug, Clone, PartialEq)]
 pub struct DockPanel {
@@ -974,7 +974,7 @@ enum MenuAction {
 }
 
 // ═════════════════════════════════════════════════════════════════════════════
-// DockArea — the controller
+// DockArea - the controller
 // ═════════════════════════════════════════════════════════════════════════════
 
 /// `DockArea`: the layout state, persistence, drag logic and painting of a
@@ -1096,7 +1096,7 @@ impl DockArea {
         &self.layout
     }
 
-    /// Bumped on every layout change — a cheap « did it change? » for a host.
+    /// Bumped on every layout change - a cheap « did it change? » for a host.
     pub fn revision(&self) -> u64 {
         self.revision
     }
@@ -1112,7 +1112,7 @@ impl DockArea {
         self.layout.to_json()
     }
 
-    /// `load`: a layout from JSON — `false` (and nothing changes) when it is
+    /// `load`: a layout from JSON - `false` (and nothing changes) when it is
     /// not one. An EMPTY string restores the default arrangement.
     pub fn load_layout(&mut self, json: &str) -> bool {
         if json.trim().is_empty() {
@@ -1228,7 +1228,7 @@ impl DockArea {
         self.commit(l);
     }
 
-    /// The closed panels, `(id, label)` — what the web publishes to the
+    /// The closed panels, `(id, label)` - what the web publishes to the
     /// shell's reopen control.
     pub fn closed_panels(&self) -> Vec<(PanelId, String)> {
         self.layout.closed.iter().map(|p| (p.clone(), self.label(p))).collect()
@@ -1298,7 +1298,7 @@ impl DockArea {
     }
 
     /// Where a float is: its stored position (clamped inside the dock), a
-    /// `DEF_W` width and its height — the whole dock when maximised, its
+    /// `DEF_W` width and its height - the whole dock when maximised, its
     /// header when rolled.
     fn float_rect(&self, c: &dyn Canvas, g: &DockGroup, b: Rect) -> Rect {
         if g.max {
@@ -1393,7 +1393,7 @@ impl DockArea {
         GroupGeo { gid: g.id.clone(), side, card, strip, tabs, roll, max, content }
     }
 
-    /// The chrome target under `(x, y)` — floats first (top-most last in the
+    /// The chrome target under `(x, y)` - floats first (top-most last in the
     /// list, so searched backwards), then the docked groups and the resizers.
     fn hit(&self, x: f32, y: f32) -> Option<Hit> {
         let geo = &self.geo;
@@ -1516,7 +1516,7 @@ impl DockArea {
         (l, t)
     }
 
-    /// `floatTarget`: where the panel lands when not dropped on a guide — a
+    /// `floatTarget`: where the panel lands when not dropped on a guide - a
     /// float under the pointer, snapped; the target is dock-relative, the
     /// ghost in client DIP.
     fn float_target(&self, drag: &Drag, x: f32, y: f32) -> (DropTarget, Rect) {
@@ -1531,7 +1531,7 @@ impl DockArea {
         (DropTarget::Float { x: l - b.left, y: t - b.top }, Rect::new(l, t, l + fw, t + fh))
     }
 
-    /// `floatHere`: the tab menu's « detach » — a float at the dock's centre
+    /// `floatHere`: the tab menu's « detach » - a float at the dock's centre
     /// (top-left at mid-width, a third of the height, like the web).
     fn float_here(&mut self, id: &str) {
         let b = self.geo.bounds;
@@ -1957,7 +1957,7 @@ impl DockArea {
         }
     }
 
-    /// The reopen control — the web's right-rail button: a round button with
+    /// The reopen control - the web's right-rail button: a round button with
     /// the `PanelRightOpen` icon and a count badge, painted at `rect` (a 40
     /// DIP square is the rail's size) while panels are closed; its click
     /// lists the closed panels in a menu, a row reopens one. Returns `true`
@@ -2275,7 +2275,7 @@ impl DockArea {
     }
 
     /// The panel whose tab is access node `id` (from [`Self::access_nodes`]
-    /// with the same `base`) — what a host activates on a UIA « Invoke ».
+    /// with the same `base`) - what a host activates on a UIA « Invoke ».
     pub fn access_panel(&self, base: u64, id: u64) -> Option<PanelId> {
         let mut n = base;
         for g in self.geo.groups() {

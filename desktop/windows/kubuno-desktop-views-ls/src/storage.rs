@@ -2,7 +2,7 @@
 //!
 //! - the **binding members of a `<Settings>`**: the settings its `.kbsettings` file declares (`Schema`, default
 //!   `settings`, looked up in the view's package), with their shapes and whether a two-way binding may write them
-//!   (an `Application` setting may not) — completion, hover, unknown-name diagnostics and go-to-definition of
+//!   (an `Application` setting may not) - completion, hover, unknown-name diagnostics and go-to-definition of
 //!   `{Binding Theme, Source=settings}` come from them through [`crate::binding_sources`];
 //! - **platform availability**: an element that exists on some platforms only
 //!   (`kubuno_desktop_views_meta::kbview::PLATFORM_ELEMENTS`: `<RegistryKey>` is Windows only) is a warning in a view of a
@@ -188,8 +188,8 @@ pub fn diagnostics(doc: &Document, uri: &Uri) -> Vec<Diagnostic> {
                     DiagnosticSeverity::WARNING,
                     "platform-only",
                     tr(
-                        &format!("`<{name}>` exists on {only} only, and this project also targets {others} ([package.metadata.kubuno] targets): there it reads nothing and its calls fail — keep portable data in a `<Settings>`, or this view to {only}"),
-                        &format!("`<{name}>` n'existe que sous {only}, et ce projet cible aussi {others} ([package.metadata.kubuno] targets) : là, il ne lit rien et ses appels échouent — gardez les données portables dans un `<Settings>`, ou réservez cette vue à {only}"),
+                        &format!("`<{name}>` exists on {only} only, and this project also targets {others} ([package.metadata.kubuno] targets): there it reads nothing and its calls fail - keep portable data in a `<Settings>`, or this view to {only}"),
+                        &format!("`<{name}>` n'existe que sous {only}, et ce projet cible aussi {others} ([package.metadata.kubuno] targets) : là, il ne lit rien et ses appels échouent - gardez les données portables dans un `<Settings>`, ou réservez cette vue à {only}"),
                     ),
                 ));
             }
@@ -203,8 +203,8 @@ pub fn diagnostics(doc: &Document, uri: &Uri) -> Vec<Diagnostic> {
                     DiagnosticSeverity::INFORMATION,
                     "open-settings",
                     tr(
-                        &format!("no `{set}.kbsettings` in this project: the set is open (any name, no default, no typed class) — add one with Add > New Item > Kubuno Settings File"),
-                        &format!("aucun `{set}.kbsettings` dans ce projet : le jeu est ouvert (tout nom, sans défaut ni classe typée) — ajoutez-en un avec Ajouter > Nouvel élément > Fichier de paramètres Kubuno"),
+                        &format!("no `{set}.kbsettings` in this project: the set is open (any name, no default, no typed class) - add one with Add > New Item > Kubuno Settings File"),
+                        &format!("aucun `{set}.kbsettings` dans ce projet : le jeu est ouvert (tout nom, sans défaut ni classe typée) - ajoutez-en un avec Ajouter > Nouvel élément > Fichier de paramètres Kubuno"),
                     ),
                 ));
             }

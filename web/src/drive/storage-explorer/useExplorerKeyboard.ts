@@ -1,9 +1,9 @@
 /**
  * Keyboard of the explorer.
  *
- * 1. Shortcuts — Ctrl/Cmd+A (select all), Escape (clear), Suppr/Retour arrière
+ * 1. Shortcuts - Ctrl/Cmd+A (select all), Escape (clear), Suppr/Retour arrière
  *    (trash, or permanent delete with Shift).
- * 2. Cursor — arrows move the focused item and Enter opens it. Works in EVERY
+ * 2. Cursor - arrows move the focused item and Enter opens it. Works in EVERY
  *    view (icons/list/details/tiles/content) because folders AND files carry
  *    `data-selectable-id`; up/down picks the closest geometric neighbour, which
  *    handles grids, lists and the folders↔files boundary alike.

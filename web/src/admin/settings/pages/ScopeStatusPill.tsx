@@ -58,7 +58,7 @@ export default function ScopeStatusPill({ resolved, scoped, instanceOnly }: Scop
 
   // Said at BOTH levels, not only where the control is disabled: on a module
   // that mixes the two, an operator reading the instance page has no other way
-  // to tell a knob a unit will be able to move from one it never will — and
+  // to tell a knob a unit will be able to move from one it never will - and
   // finds out by selecting a unit and meeting a greyed control.
   if (instanceOnly) {
     return (

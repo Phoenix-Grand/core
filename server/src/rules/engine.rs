@@ -13,7 +13,7 @@
 //!
 //! Everything free comes first. The two gates that cost a query are placed
 //! behind the conditions, so an instance whose rules almost never match pays
-//! almost nothing — and the two that must be *correct* rather than fast (the
+//! almost nothing - and the two that must be *correct* rather than fast (the
 //! depth guard, the deterministic rollout) never depend on state that could
 //! differ between two processes.
 //!
@@ -235,7 +235,7 @@ pub async fn decide(
 /// could be suspended by a rule that "does not apply" to it on the next look.
 ///
 /// The draw is `SHA-256(rule_id : subject) mod 100`, so it is stable across
-/// processes, restarts, and versions of this binary — and different for each
+/// processes, restarts, and versions of this binary - and different for each
 /// rule, so two 10% pilots do not silently target the same tenth of the
 /// population.
 pub fn in_rollout(rule_id: Uuid, subject_key: &str, percent: i16) -> bool {

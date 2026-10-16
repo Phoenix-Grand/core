@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ─────────────────────────────────────────────────────────────────────────────
-# build_git.sh — prépare et committe le CODE SOURCE de Kubuno vers Git/GitHub.
+# build_git.sh - prépare et committe le CODE SOURCE de Kubuno vers Git/GitHub.
 #
 # N'embarque que le source : tous les artefacts (target/, node_modules/, dist/,
 # frontend/dist*, data/, *.deb…) et les secrets (.env, *.key…) sont exclus par
@@ -30,7 +30,7 @@ fi
 
 # 2. .gitignore obligatoire (sinon on risque de committer des Go d'artefacts)
 if [ ! -f .gitignore ]; then
-  echo "ERREUR : .gitignore manquant — abandon." >&2
+  echo "ERREUR : .gitignore manquant - abandon." >&2
   exit 1
 fi
 

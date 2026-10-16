@@ -4,8 +4,8 @@
 //! the shell's token broker (`kubuno-desktop-account`), off the UI thread, kept on disk (offline-first).
 //!
 //! - [`modules`]: `/api/v1/modules` read as the web's launcher reads it (`parse_modules`, `module_label`,
-//!   `migrate_favorites`, `initials_of`, `tile`) — moved from the shell.
-//! - [`logos`]: the content-addressed picture cache and the web's logos embedded at build time — moved from
+//!   `migrate_favorites`, `initials_of`, `tile`) - moved from the shell.
+//! - [`logos`]: the content-addressed picture cache and the web's logos embedded at build time - moved from
 //!   the shell, its directory and its downloads made the caller's.
 //! - [`snapshot`]: what the header shows at one moment ([`HeaderSnapshot`]), and the offline sample.
 //! - [`feed`]: the worker thread (broker, server, disk, the broker's events).

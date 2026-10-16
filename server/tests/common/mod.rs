@@ -2,7 +2,7 @@
 //!
 //! The tests never touch the running instance's database. They need
 //! `KUBUNO_TEST_DATABASE_URL` (or `DATABASE_URL`) pointing at a throwaway
-//! database — locally:
+//! database - locally:
 //!
 //! ```text
 //! sudo -u postgres psql -c "CREATE ROLE kubuno_test LOGIN PASSWORD 'kubuno_test'"
@@ -11,7 +11,7 @@
 //! KUBUNO_TEST_DATABASE_URL=postgres://kubuno_test:kubuno_test@127.0.0.1:5432/kubuno_test cargo test
 //! ```
 //!
-//! Without that variable the tests print a notice and pass — CI without a
+//! Without that variable the tests print a notice and pass - CI without a
 //! PostgreSQL must not turn red on a missing fixture.
 #![allow(dead_code)]
 
@@ -45,7 +45,7 @@ pub async fn test_pool() -> Option<DbPool> {
     let url = match test_database_url() {
         Some(u) => u,
         None => {
-            eprintln!("KUBUNO_TEST_DATABASE_URL absent — test ignoré");
+            eprintln!("KUBUNO_TEST_DATABASE_URL absent - test ignoré");
             return None;
         }
     };

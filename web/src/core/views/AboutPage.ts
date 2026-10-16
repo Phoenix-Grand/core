@@ -35,7 +35,7 @@ export class AboutPage extends ViewBase {
   }
 
   get version(): string {
-    return this.memo('version', [this.health], () => this.health?.version ?? '—')
+    return this.memo('version', [this.health], () => this.health?.version ?? '-')
   }
 
   get modulesCount(): number {

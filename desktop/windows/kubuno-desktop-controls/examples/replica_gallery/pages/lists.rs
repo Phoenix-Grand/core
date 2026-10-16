@@ -1,4 +1,4 @@
-//! `03-listcontrol` — ComboBox, ListBox, CheckedListBox.
+//! `03-listcontrol` - ComboBox, ListBox, CheckedListBox.
 
 use kubuno_desktop_controls::lists::{CheckedListBox, ComboBox, ComboBoxStyle, ListBox, SelectionMode};
 use kubuno_desktop_controls::CheckState;
@@ -22,7 +22,7 @@ fn combos() -> Group {
         cb
     };
     group(
-        "ComboBox — DropDownStyle",
+        "ComboBox - DropDownStyle",
         300.0,
         vec![
             kid(combo(ComboBoxStyle::DropDown, 0)).w(240.0),
@@ -53,7 +53,7 @@ fn list_boxes() -> Group {
     }
 
     group(
-        "ListBox — SelectionMode",
+        "ListBox - SelectionMode",
         300.0,
         vec![kid(single).size(240.0, 110.0), kid(multi).size(240.0, 110.0)],
     )

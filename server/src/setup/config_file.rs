@@ -1,7 +1,7 @@
 //! Writing the installer's answers into `config.toml` without losing the file.
 //!
-//! The shipped `config.toml.example` is dense with comments — it is the reference
-//! an administrator reads months later — so answers are patched in line by line,
+//! The shipped `config.toml.example` is dense with comments - it is the reference
+//! an administrator reads months later - so answers are patched in line by line,
 //! section aware, instead of re-serialising a parsed document (which would drop
 //! every comment). The previous file is kept beside the new one as
 //! `config.toml.bak`, and the new one is written to a temporary file in the same
@@ -92,7 +92,7 @@ pub fn patch(source: &str, assigns: &[Assign]) -> String {
         match sections.iter().find(|(n, _, _)| *n == a.section) {
             Some((_, start, end)) => {
                 match (*start..*end).find(|&i| is_assignment_of(&lines[i], &a.key)) {
-                    // An existing assignment — live or commented out — is replaced in place.
+                    // An existing assignment - live or commented out - is replaced in place.
                     Some(i) => lines[i] = rendered,
                     // Otherwise the key is added at the end of its section.
                     None => {
@@ -220,7 +220,7 @@ pub fn write_atomic(path: &Path, content: &str) -> Result<()> {
         f.write_all(content.as_bytes())?;
         f.sync_all()?;
     }
-    // 0640 — it carries the database password and the JWT secret. On Windows,
+    // 0640 - it carries the database password and the JWT secret. On Windows,
     // a protected DACL (SYSTEM, Administrators, the service account): under
     // %ProgramData% the inherited one lets every local user read it.
     #[cfg(unix)]

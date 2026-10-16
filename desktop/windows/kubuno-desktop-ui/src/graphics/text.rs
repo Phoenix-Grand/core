@@ -129,7 +129,7 @@ pub enum StringTrimming {
     EllipsisCharacter,
     /// At a word, with « … ».
     EllipsisWord,
-    /// « … » in the middle (a path: `C:\…\file.txt`) — drawn as `EllipsisCharacter` by DirectWrite
+    /// « … » in the middle (a path: `C:\…\file.txt`) - drawn as `EllipsisCharacter` by DirectWrite
     /// with the last path segment kept.
     EllipsisPath,
 }
@@ -195,7 +195,7 @@ impl StringFormat {
         Self { alignment: StringAlignment::Center, line_alignment: StringAlignment::Center, trimming: StringTrimming::Character, flags: StringFormatFlags::NONE }
     }
 
-    /// One line, vertically centred, ellipsis at the end — a list row's label.
+    /// One line, vertically centred, ellipsis at the end - a list row's label.
     pub const fn single_line_ellipsis() -> Self {
         Self { alignment: StringAlignment::Near, line_alignment: StringAlignment::Center, trimming: StringTrimming::EllipsisCharacter, flags: StringFormatFlags::NO_WRAP }
     }

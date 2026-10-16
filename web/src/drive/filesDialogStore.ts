@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import type { FileItem } from './api'
 
-/** Référence vers un emplacement distant (montage) — pour écrire hors du drive local. */
+/** Référence vers un emplacement distant (montage) - pour écrire hors du drive local. */
 export interface RemoteRef {
   mountId: string
   path:    string  // dossier distant (sans le nom de fichier)
@@ -51,12 +51,12 @@ interface FilesDialogState {
   saveOpts:    SaveDialogOptions | null
   saveResolve: ((result: SaveDialogResult | null) => void) | null
 
-  // API publique — appelée par les modules consommateurs
+  // API publique - appelée par les modules consommateurs
   openFile:       (opts?: OpenDialogOptions)    => Promise<FileItem | null>
   pickFolder:     (opts?: FolderPickerOptions)  => Promise<FolderSelection | null>
   saveFile:       (opts?: SaveDialogOptions)    => Promise<SaveDialogResult | null>
 
-  // API interne — appelée par les dialogs uniquement
+  // API interne - appelée par les dialogs uniquement
   _resolveOpen:         (file: FileItem | null) => void
   _resolveFolderPicker: (folder: FolderSelection | null) => void
   _resolveSave:         (result: SaveDialogResult | null) => void

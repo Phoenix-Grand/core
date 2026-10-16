@@ -2,7 +2,7 @@
 //
 // Three cache entries: the counters, the list of territories, and one
 // territory's days. They are kept apart because they are read at different
-// moments — the list is a long inventory, a territory's days are a page — but
+// moments - the list is a long inventory, a territory's days are a page - but
 // every mutation invalidates all three: enabling a country changes a counter,
 // and editing a day changes the "corrigées" count on the list behind it.
 
@@ -10,7 +10,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { api } from '../../../core/api/client'
 import i18n from '../../../core/i18n'
 
-/** The language the console is being read in — sent with every read, because a
+/** The language the console is being read in - sent with every read, because a
  *  territory's name and a holiday's name are both translated server-side. */
 const locale = () => i18n.language || 'en'
 
@@ -58,7 +58,7 @@ export interface CalendarSummary extends HolidayCalendar {
   inherited_count:   number
   overridden_count:  number
   subdivision_count: number
-  /** The name in the console's language — what the list sorts and shows. */
+  /** The name in the console's language - what the list sorts and shows. */
   display_name:      string
 }
 
@@ -267,7 +267,7 @@ export function useReloadDataset() {
 export interface PreviewDate { year: number; date: string; observed_from: string | null }
 
 /**
- * The dates a rule being written produces — computed by the server.
+ * The dates a rule being written produces - computed by the server.
  *
  * Deliberately not reimplemented in TypeScript: the expander *is* the definition
  * of what a rule means, and a second implementation here would be a second

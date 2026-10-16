@@ -1,4 +1,4 @@
-//! (mirror of BladeMode.cs) — enum for the `BladeView`'s display mode.
+//! (mirror of BladeMode.cs) - enum for the `BladeView`'s display mode.
 
 /// The blade mode.
 ///

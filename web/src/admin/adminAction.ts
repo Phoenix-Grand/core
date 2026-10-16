@@ -6,8 +6,8 @@ import { adminUrlWith, buildAdminUrl, type AdminUrlTarget } from './adminRoute'
  * ── Deep actions in the admin URL ────────────────────────────────────────────
  *
  * A tab is a *place*; an action is a *verb*. The console addresses both with one
- * convention, so that anything — the search bar, a health check, an e-mail, an
- * audit row — can link straight to the surface that performs the task instead of
+ * convention, so that anything - the search bar, a health check, an e-mail, an
+ * audit row - can link straight to the surface that performs the task instead of
  * dropping the operator on a page and leaving them to find the button.
  *
  *     /admin/<section>[/<record>[/<pane>]]?action=<verb>[&id=<resource>]
@@ -22,7 +22,7 @@ import { adminUrlWith, buildAdminUrl, type AdminUrlTarget } from './adminRoute'
  *
  * ── Consuming one ────────────────────────────────────────────────────────────
  *
- * The section that owns the surface claims the verb — nobody else has to know it
+ * The section that owns the surface claims the verb - nobody else has to know it
  * exists:
  *
  *     useAdminAction('create', () => setShowCreate(true))
@@ -43,7 +43,7 @@ import { adminUrlWith, buildAdminUrl, type AdminUrlTarget } from './adminRoute'
 export type AdminActionTarget = AdminUrlTarget
 
 /**
- * Builds the canonical URL of a target — the single place an admin address is
+ * Builds the canonical URL of a target - the single place an admin address is
  * spelt. A caller says WHAT it means (`params: { user: id, pane: 'security' }`)
  * and never where each piece lands: which parameters become path segments is
  * decided by the section's declaration in `adminNav.ts`, read by `adminRoute.ts`.
@@ -54,7 +54,7 @@ export function adminUrl(target: AdminActionTarget): string {
   return buildAdminUrl(target)
 }
 
-/** "Same place, with these parameters changed" — see `adminRoute.ts`. */
+/** "Same place, with these parameters changed" - see `adminRoute.ts`. */
 export { adminUrlWith }
 
 /**
@@ -68,7 +68,7 @@ export function useAdminAction(verb: string, handler: (id: string | null) => voi
   const [params, setParams] = useSearchParams()
   const handlerRef = useRef(handler)
   handlerRef.current = handler
-  // Last claim honoured — guards against a double run in React strict mode and
+  // Last claim honoured - guards against a double run in React strict mode and
   // against the re-render caused by our own URL rewrite.
   const claimed = useRef<string | null>(null)
 

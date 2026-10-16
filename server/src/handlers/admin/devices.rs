@@ -1,4 +1,4 @@
-//! `/admin/devices` and `/admin/sessions` — the operator's view of the
+//! `/admin/devices` and `/admin/sessions` - the operator's view of the
 //! inventory.
 //!
 //! ## Privileges
@@ -17,7 +17,7 @@
 //! Approve, block, sign out and forget go through [`crate::audit::AuditTx`],
 //! which cannot be committed without its entry. "Forget" in particular: it is
 //! the action whose meaning is most often misread, so the trail records exactly
-//! what it did — remove an inventory row — and the interface says, in words,
+//! what it did - remove an inventory row - and the interface says, in words,
 //! that nothing was erased on the machine itself.
 
 use axum::{
@@ -87,7 +87,7 @@ fn device_label(device: &crate::devices::DeviceRow) -> String {
 
 // ── Reads ────────────────────────────────────────────────────────────────────
 
-/// `GET /api/v1/admin/devices` — the filterable inventory.
+/// `GET /api/v1/admin/devices` - the filterable inventory.
 pub async fn list_devices(
     State(state): State<AppState>,
     _admin: AdminUser,
@@ -105,7 +105,7 @@ pub async fn list_devices(
     })))
 }
 
-/// `GET /api/v1/admin/devices/facets` — the distinct values worth filtering on.
+/// `GET /api/v1/admin/devices/facets` - the distinct values worth filtering on.
 pub async fn device_facets(
     State(state): State<AppState>,
     _admin: AdminUser,
@@ -120,7 +120,7 @@ pub async fn device_facets(
     })))
 }
 
-/// `GET /api/v1/admin/devices/:id` — one device, its sessions and its timeline.
+/// `GET /api/v1/admin/devices/:id` - one device, its sessions and its timeline.
 pub async fn get_device(
     State(state): State<AppState>,
     _admin: AdminUser,
@@ -138,7 +138,7 @@ pub async fn get_device(
     })))
 }
 
-/// `GET /api/v1/admin/sessions` — every live session of the instance.
+/// `GET /api/v1/admin/sessions` - every live session of the instance.
 ///
 /// This view simply did not exist: the only way to answer "who is signed in
 /// right now" was to open each account in turn, which meant nobody ever asked.
@@ -159,7 +159,7 @@ pub async fn list_sessions(
 pub struct ApprovalDto {
     /// `pending` | `approved` | `blocked`.
     pub approval: String,
-    /// Why. Recorded on the trail and on the device timeline — "who blocked
+    /// Why. Recorded on the trail and on the device timeline - "who blocked
     /// this laptop" is only half the question an operator asks later.
     #[serde(default)]
     pub reason: Option<String>,
@@ -276,7 +276,7 @@ pub async fn set_approval(
     })))
 }
 
-/// `POST /api/v1/admin/devices/:id/sign-out` — closes the device's sessions.
+/// `POST /api/v1/admin/devices/:id/sign-out` - closes the device's sessions.
 ///
 /// Distinct from blocking on purpose: the device may sign in again. It is the
 /// action for "somebody left a session open in a meeting room", not for "this
@@ -342,7 +342,7 @@ pub async fn sign_out_device(
     Ok(Json(json!({ "revoked_sessions": revoked })))
 }
 
-/// `DELETE /api/v1/admin/devices/:id` — forgets a device.
+/// `DELETE /api/v1/admin/devices/:id` - forgets a device.
 ///
 /// ⚠ Erases **nothing on the machine**. It removes what the server remembered:
 /// the inventory row, its timeline, its approval. The device keeps every file it
@@ -381,7 +381,7 @@ pub async fn forget_device(
             .before(before)
             // Spelled out in the trail, because it is the misreading everybody
             // makes: this deletes an inventory entry, not the device's contents.
-            .detail("Entrée d'inventaire supprimée — aucune donnée effacée sur l'appareil"),
+            .detail("Entrée d'inventaire supprimée - aucune donnée effacée sur l'appareil"),
     )
     .await?;
 

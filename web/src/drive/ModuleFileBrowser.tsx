@@ -1,5 +1,5 @@
 /**
- * ModuleFileBrowser — navigateur de fichiers pour les sous-modules.
+ * ModuleFileBrowser - navigateur de fichiers pour les sous-modules.
  *
  * Devenu un **wrapper mince** autour de `StorageExplorer` (la zone d'exploration
  * générique, partagée par tous les types de stockage). Il fixe la source sur le

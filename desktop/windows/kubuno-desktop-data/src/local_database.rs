@@ -1,5 +1,5 @@
 //! `<LocalDatabase>`: a SQLite database of the app on the device (vskubuno `docs/STORAGE-COMPONENTS.md` §3.5,
-//! lot ST-2) — a `DbConnection` whose file the app never names by path:
+//! lot ST-2) - a `DbConnection` whose file the app never names by path:
 //!
 //! ```xml
 //! <LocalDatabase x:Name="db" DatabaseName="notes"/>
@@ -8,7 +8,7 @@
 //!
 //! The file is `<user_data_dir>/<app>/databases/<DatabaseName>.db` (`AccountScoped`: the signed-in account's,
 //! `<user_data_dir>/accounts/<key>/<app>/databases/…`, the folder an account's sign-out removes), resolved by
-//! `kubuno_desktop_app_storage::files::local_database_path` — the same spec a plain `DbConnection` takes as
+//! `kubuno_desktop_app_storage::files::local_database_path` - the same spec a plain `DbConnection` takes as
 //! `ConnectionString="Data Source=app:notes"`. In a sandboxed profile it is the sandbox's.
 
 use kubuno_desktop_views::prelude::*;

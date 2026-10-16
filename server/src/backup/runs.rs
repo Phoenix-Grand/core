@@ -1,4 +1,4 @@
-//! `core.backup_runs` — the record that turns a backup into something anybody
+//! `core.backup_runs` - the record that turns a backup into something anybody
 //! can believe.
 //!
 //! ## The rule of this file
@@ -7,7 +7,7 @@
 //! success cannot distinguish "nothing ran" from "something ran and died", and
 //! those are opposite emergencies: the first needs a scheduler, the second needs
 //! a disk. Opening first also means a process killed mid-dump leaves a visibly
-//! stuck `running` row instead of no trace at all — which is exactly the silence
+//! stuck `running` row instead of no trace at all - which is exactly the silence
 //! this whole feature exists to break.
 //!
 //! Nothing here ever stores a path outside `destination`, a credential, or a
@@ -191,8 +191,8 @@ pub async fn close_stalled(db: &DbPool) -> Result<u64, AppError> {
 
 /// Is a run already in flight?
 ///
-/// Two dumps at once are not a corruption — the file names differ to the second
-/// — but they double the I/O of the one operation an instance runs precisely
+/// Two dumps at once are not a corruption - the file names differ to the second
+/// - but they double the I/O of the one operation an instance runs precisely
 /// when it is least able to afford it.
 pub async fn is_running(db: &DbPool) -> Result<bool, AppError> {
     db.fetch_scalar::<bool>(
@@ -245,7 +245,7 @@ pub async fn list(db: &DbPool, limit: i64) -> Result<Vec<BackupRun>, AppError> {
 /// What the health check and the alert producer both need, in one round trip.
 #[derive(Debug, Clone, Default, Serialize)]
 pub struct RunStats {
-    /// When a backup last actually succeeded. `None` means never — which the
+    /// When a backup last actually succeeded. `None` means never - which the
     /// console renders as "never", never as "unknown".
     pub last_success_at: Option<DateTime<Utc>>,
     pub last_success_bytes: Option<i64>,

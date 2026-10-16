@@ -2,7 +2,7 @@
 //! bindings"): diagnostics (an unknown key, mode, trigger, converter or path, a type that does not
 //! fit the property, a two-way binding of a read-only member), the « Mettre à jour les liaisons »
 //! quick fix after a member was renamed, completion of keys, paths, sources, modes, triggers and
-//! converters, hover, and go-to-definition to the Rust member — all answered from the schema of
+//! converters, hover, and go-to-definition to the Rust member - all answered from the schema of
 //! [`crate::binding_sources`].
 
 use std::collections::HashMap;
@@ -381,7 +381,7 @@ pub fn rename_edits(doc: &Document, old: &str, new: &str) -> Vec<TextEdit> {
 
 // ── `kubuno/bindingPreview` ────────────────────────────────────────────
 
-/// `kubuno/bindingPreview`: what a property shows for a sample source value through a binding —
+/// `kubuno/bindingPreview`: what a property shows for a sample source value through a binding -
 /// computed by the runtime's own converters and formats (the « Liaison de données » dialog's live
 /// sample).
 #[derive(Debug, serde::Deserialize)]
@@ -668,7 +668,7 @@ pub fn definition(doc: &Document, uri: &Uri, pos: Position) -> Option<Location> 
 }
 
 /// `kubuno/bindingDefinition { uri, elementId, attribute }`: the definition of the path (else the
-/// converter) of an element's binding — the Properties window's « Aller à la définition ».
+/// converter) of an element's binding - the Properties window's « Aller à la définition ».
 #[derive(Debug, serde::Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct BindingDefinitionParams {

@@ -3,7 +3,7 @@
 //!
 //! rustls is the sole TLS engine. This module never touches key bytes beyond
 //! handing them to rustls, and rustls categorically cannot negotiate SSLv3 /
-//! TLS 1.0 / TLS 1.1 — so the "disable the old protocols" hardening an Apache
+//! TLS 1.0 / TLS 1.1 - so the "disable the old protocols" hardening an Apache
 //! operator applies by hand is, here, structural.
 
 use std::collections::HashMap;
@@ -20,14 +20,14 @@ use super::cert;
 use super::config::{NetworkConfig, TlsMinVersion};
 
 /// Installs the process-wide crypto provider rustls 0.23 requires before any
-/// `ServerConfig` is built. Idempotent — a second call is a no-op.
+/// `ServerConfig` is built. Idempotent - a second call is a no-op.
 pub fn install_crypto_provider() {
     let _ = rustls::crypto::ring::default_provider().install_default();
 }
 
 /// Builds a rustls `ServerConfig` from a PEM chain and key, honouring the
 /// minimum protocol version. A build failure means the pair is unusable or
-/// mismatched — which is exactly the validation the upload path relies on.
+/// mismatched - which is exactly the validation the upload path relies on.
 pub fn build_server_config(
     cert_pem: &[u8],
     key_pem: &[u8],
@@ -67,7 +67,7 @@ pub fn build_server_config(
 
 /// The mutable TLS state shared between the accept loop and the admin handlers.
 ///
-/// `reload` holds the axum-server config the HTTPS listener actually serves —
+/// `reload` holds the axum-server config the HTTPS listener actually serves -
 /// `Some` only when the process bound an HTTPS socket at boot. `hsts` holds the
 /// **configured** `Strict-Transport-Security` value (`None` when the setting is
 /// off); whether a given response actually carries it is decided per request by
@@ -143,7 +143,7 @@ impl TlsRuntime {
 ///   * a reverse proxy terminated it and says so with `X-Forwarded-Proto`.
 ///
 /// That header is forgeable by anyone who can open a socket, so it is believed
-/// only when the socket peer sits in `server.trusted_proxy_cidrs` — the same
+/// only when the socket peer sits in `server.trusted_proxy_cidrs` - the same
 /// rule [`crate::auth::client_ip`] applies to `X-Forwarded-For`, and the one
 /// `handlers::admin::health` already uses. A comma-separated chain keeps the
 /// FIRST hop: the scheme the browser actually used.
@@ -202,7 +202,7 @@ pub async fn refresh_runtime(state: &AppState) {
     let live = state.tls.is_https_live();
 
     // The CONFIGURED value; whether a given response carries it is decided per
-    // request by `response_is_over_tls` — an instance behind a TLS-terminating
+    // request by `response_is_over_tls` - an instance behind a TLS-terminating
     // reverse proxy serves plain HTTP here and must still send HSTS.
     state.tls.set_hsts(
         cfg.hsts

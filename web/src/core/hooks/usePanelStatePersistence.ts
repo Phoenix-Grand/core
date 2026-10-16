@@ -17,7 +17,7 @@ import { panelPrefs, appIdFromPath, SIDEBAR_WIDTH } from '../store/panelPrefs'
  */
 export function usePanelStatePersistence(): void {
   const { pathname } = useLocation()
-  // Bumped when module bundles load at runtime — a module may only then register
+  // Bumped when module bundles load at runtime - a module may only then register
   // its CollapseSidebarRegistry prefix, changing the default-collapse for its
   // pages (e.g. office). Re-evaluate the default once that happens.
   const loadedVersion = useModulesStore((s) => s.loadedVersion)
@@ -27,8 +27,8 @@ export function usePanelStatePersistence(): void {
   // persisted back as if they were fresh user actions.
   const applying = useRef(false)
 
-  // Restore saved state when the active application — or its default-collapse
-  // scope — changes (incl. mount/F5 and late module registration).
+  // Restore saved state when the active application - or its default-collapse
+  // scope - changes (incl. mount/F5 and late module registration).
   useEffect(() => {
     const app = appIdFromPath(pathname)
     const collapseByDefault = CollapseSidebarRegistry.matches(pathname)

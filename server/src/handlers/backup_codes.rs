@@ -1,7 +1,7 @@
 //! Backup codes for the second factor (`/me/2fa/backup-codes`).
 //!
-//! - `GET`  — how many are left. A counter, never a code.
-//! - `POST` — print a fresh sheet, invalidating the previous one. Sensitive: it
+//! - `GET`  - how many are left. A counter, never a code.
+//! - `POST` - print a fresh sheet, invalidating the previous one. Sensitive: it
 //!   is guarded by [`Reauthenticated`], because reprinting the codes that bypass
 //!   the second factor is exactly as powerful as removing the second factor.
 //!
@@ -37,7 +37,7 @@ pub async fn get_status(
     path = "/api/v1/me/2fa/backup-codes",
     tag = "auth",
     responses(
-        (status = 200, description = "Nouveau lot de codes — affiché une seule fois"),
+        (status = 200, description = "Nouveau lot de codes - affiché une seule fois"),
         (status = 403, description = "Réauthentification requise (REAUTH_REQUIRED)")
     )
 )]
@@ -60,7 +60,7 @@ pub async fn regenerate(
     // Audited for every account: regenerating is how an attacker who briefly held
     // a session would give themselves durable access, and the previous sheet
     // becoming worthless is something the legitimate owner must be able to see.
-    // The entry records the count and the method that satisfied the challenge —
+    // The entry records the count and the method that satisfied the challenge -
     // never a code, in clear or hashed.
     let ctx = login_context(&headers, client_ip, &user);
     ctx.record(

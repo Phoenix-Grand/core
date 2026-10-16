@@ -12,7 +12,7 @@ export type Operator =
   | 'contains' | 'not_contains' | 'starts_with' | 'ends_with'
   | 'in' | 'not_in' | 'exists' | 'not_exists' | 'is_true' | 'is_false'
 
-/** Operators that read no value — the editor hides the value field for them. */
+/** Operators that read no value - the editor hides the value field for them. */
 export const UNARY_OPERATORS: readonly Operator[] = ['exists', 'not_exists', 'is_true', 'is_false']
 
 /** Operators whose value is a list. */
@@ -37,7 +37,7 @@ export type Severity = 'critical' | 'warning' | 'info'
  * variant is deliberate: a module may teach the engine a new leaf shape (a
  * content detector with a confidence threshold, say), and the builder renders it
  * through the leaf-kind registry rather than through a `switch` in this file.
- * An unknown node is shown read-only and preserved byte-for-byte — never
+ * An unknown node is shown read-only and preserved byte-for-byte - never
  * silently dropped on save.
  */
 export type CondNode =
@@ -59,8 +59,8 @@ export interface CompareNode {
  * The `detector` leaf (`rules::detect::DetectorLeaf`).
  *
  * Thresholds, never logic: a catalogue key and how much of it is enough. The
- * pattern lives in the detector — a row an administrator manages, tests and
- * audits on its own screen — which is what let content inspection arrive
+ * pattern lives in the detector - a row an administrator manages, tests and
+ * audits on its own screen - which is what let content inspection arrive
  * without an expression language arriving with it.
  */
 export interface DetectorNode {
@@ -69,7 +69,7 @@ export interface DetectorNode {
   /** 0…1. Displayed as a percentage, which is how everybody reads 0.8. */
   min_confidence:     number
   min_matches:        number
-  /** Distinct values. Never above `min_matches` — the server refuses it. */
+  /** Distinct values. Never above `min_matches` - the server refuses it. */
   min_unique_matches: number
   /** Names of `content` fields of the trigger. Empty = every part supplied. */
   parts:    string[]
@@ -127,7 +127,7 @@ export interface ActionRow {
  *
  * The **enabled** ones only: a disabled detector is refused on save, so
  * offering it would let an operator write a rule the server then rejects. The
- * three thresholds are the detector's own — the builder proposes them as the
+ * three thresholds are the detector's own - the builder proposes them as the
  * starting point of a leaf rather than inventing defaults of its own.
  */
 export interface DetectorRow {
@@ -148,7 +148,7 @@ export interface RuleLimits {
   condition_leaves: number
   actions:          number
   scope_refs:       number
-  /** Detector leaves per rule — a ceiling of its own, on top of the leaf budget. */
+  /** Detector leaves per rule - a ceiling of its own, on top of the leaf budget. */
   detector_leaves:  number
 }
 
@@ -161,7 +161,7 @@ export interface Catalog {
   /** The kinds of leaf a tree may hold. There is no third: the wire is an enum. */
   leaf_types?: string[]
   detectors?:  DetectorRow[]
-  /** Field type marking a content part — a text to inspect, not a fact to compare. */
+  /** Field type marking a content part - a text to inspect, not a fact to compare. */
   content_field_type?: string
 }
 
@@ -234,7 +234,7 @@ export interface ExecutionRow {
   resource_type:  string | null
   resource_id:    string | null
   /**
-   * Structural detail only — counters, the threshold state and the per-action
+   * Structural detail only - counters, the threshold state and the per-action
    * verdicts. The engine never records what a rule inspected, so there is no
    * column here for the content and the console must not invent one.
    */
@@ -322,7 +322,7 @@ export function emptyRuleInput(): RuleInput {
     trigger:            '',
     conditions:         { type: 'all', of: [] },
     actions:            [],
-    // A rule is born doing nothing — the same default `validate::RuleInput`
+    // A rule is born doing nothing - the same default `validate::RuleInput`
     // applies server-side, restated here so the editor never shows "enforce"
     // as a starting point.
     mode:               'inactive',

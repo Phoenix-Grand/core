@@ -3,7 +3,7 @@
 //!
 //! ## The order that makes it safe
 //!
-//! 1. The chosen file is validated — a base name inside the configured
+//! 1. The chosen file is validated - a base name inside the configured
 //!    destination, one of our own archives, matching this engine.
 //! 2. A **safety backup** of the current state is taken first and recorded, so
 //!    the operator can always return to what was there a moment ago.
@@ -102,7 +102,7 @@ pub async fn restore_from_file(
     file_name: &str,
     actor: Option<(Uuid, String)>,
 ) -> Result<RestoreOutcome, AppError> {
-    // 1. Validate the destination and the name — no traversal, our own file.
+    // 1. Validate the destination and the name - no traversal, our own file.
     let destination = super::policy::validate_destination(destination)?;
     archive::validate_backup_name(file_name)?;
     let dest_dir = PathBuf::from(&destination);
@@ -123,7 +123,7 @@ pub async fn restore_from_file(
     let run_id = open(db, actor_id, actor_label.as_deref(), file_name, format).await?;
     let started = Instant::now();
 
-    // 3. Safety backup FIRST. If it fails, the restore is abandoned — never
+    // 3. Safety backup FIRST. If it fails, the restore is abandoned - never
     //    replace data without a way back.
     let safety = match take_safety_backup(db, &dest_dir, &actor).await {
         Ok(s) => s,
@@ -168,7 +168,7 @@ pub async fn restore_from_file(
         Err(e) => {
             let elapsed = started.elapsed().as_millis() as i64;
             let msg = format!("{e:#}");
-            tracing::error!(run_id = %run_id, error = %msg, "Restauration à chaud échouée — base inchangée");
+            tracing::error!(run_id = %run_id, error = %msg, "Restauration à chaud échouée - base inchangée");
             fail(db, run_id, &msg, elapsed).await?;
             Err(AppError::Internal(anyhow::anyhow!(
                 "Restauration échouée, la base est inchangée. Sauvegarde de secours : {}. Détail : {msg}",
@@ -186,7 +186,7 @@ async fn take_safety_backup(
     actor: &Option<(Uuid, String)>,
 ) -> anyhow::Result<super::dump::DumpOutcome> {
     let label = match actor {
-        Some((_, l)) if !l.is_empty() => format!("{l} — sauvegarde de secours avant restauration"),
+        Some((_, l)) if !l.is_empty() => format!("{l} - sauvegarde de secours avant restauration"),
         _ => "Sauvegarde de secours avant restauration".to_string(),
     };
     let run_actor = actor.as_ref().map(|(id, _)| (*id, label.clone()));
@@ -285,7 +285,7 @@ async fn fail(db: &DbPool, id: Uuid, error: &str, duration_ms: i64) -> Result<()
     Ok(())
 }
 
-/// The most recent restores, newest first — for the console.
+/// The most recent restores, newest first - for the console.
 pub async fn list(db: &DbPool, limit: i64) -> Result<Vec<RestoreRun>, AppError> {
     let limit = limit.clamp(1, 100);
     db.fetch_all_as::<RestoreRun>(

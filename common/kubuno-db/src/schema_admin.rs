@@ -3,8 +3,8 @@
 //! schema from one engine to another.
 //!
 //! These sit above the per-statement executor ([`crate::exec`]) because they act
-//! on the *shape* of the database — its schemas, its tables, its rows read back
-//! generically — rather than on one module's queries. Two features build on
+//! on the *shape* of the database - its schemas, its tables, its rows read back
+//! generically - rather than on one module's queries. Two features build on
 //! them:
 //!
 //! * **Changing the schema prefix at run time** ([`rename_schema_prefix`]): the
@@ -14,8 +14,8 @@
 //!   generic, type-preserving, table-by-table copy in foreign-key order, so the
 //!   core (or a module) can move from PostgreSQL to MySQL or SQLite and back.
 //!
-//! Everything here reads rows without a target struct — the same generic path
-//! the portable backup uses — and re-binds each cell as a typed [`DbValue`], so
+//! Everything here reads rows without a target struct - the same generic path
+//! the portable backup uses - and re-binds each cell as a typed [`DbValue`], so
 //! the destination driver re-encodes it for its own engine.
 //!
 //! # Type fidelity across engines
@@ -32,7 +32,7 @@
 //! **destination-directed**: it also reads the destination catalog (freshly
 //! migrated, so its columns carry the real logical types) and, when the source
 //! codec is ambiguous while the destination column is strict, it *reconstructs*
-//! the value from the destination type — a `BLOB(16)`/`TEXT` becomes a `uuid`, an
+//! the value from the destination type - a `BLOB(16)`/`TEXT` becomes a `uuid`, an
 //! `INTEGER` a `boolean`, an ISO `TEXT` a `timestamp`/`date`, and a JSON `TEXT`
 //! (SQLite list column, or MariaDB `LONGTEXT`) a `json`/`jsonb`. A native
 //! PostgreSQL array column (`text[]`, `uuid[]`, …) is written from the portable
@@ -67,7 +67,7 @@ pub enum AdminError {
     },
     #[error("préfixe de schéma invalide : {0}")]
     BadPrefix(String),
-    /// A prefix rename would land on a namespace that already exists — possibly
+    /// A prefix rename would land on a namespace that already exists - possibly
     /// another instance's on a shared server. Refused before anything moves.
     #[error("le schéma cible {0} existe déjà : renommage refusé pour ne pas mélanger deux instances")]
     TargetExists(String),
@@ -92,7 +92,7 @@ pub enum AdminError {
 // ─────────────────────────────────────────────────────────────────────────────
 
 /// A bare identifier fragment we are willing to interpolate into DDL (schema and
-/// prefix names). Lowercase ASCII letters, digits and underscore only — the same
+/// prefix names). Lowercase ASCII letters, digits and underscore only - the same
 /// rule [`crate::schema::SchemaPrefix`] enforces, so nothing user-controlled can
 /// carry a quote or a dot into a statement.
 fn is_safe_ident(s: &str) -> bool {
@@ -118,7 +118,7 @@ fn quote_ident(s: &str) -> String {
 ///
 /// * PostgreSQL / MySQL: the server namespaces (schemas / databases) whose name
 ///   is `<prefix><known-schema>` for a schema in [`KUBUNO_SCHEMAS`].
-/// * SQLite: always empty — a SQLite database has no server-level namespace to
+/// * SQLite: always empty - a SQLite database has no server-level namespace to
 ///   rename (each schema is a file), so a prefix change is a no-op there.
 pub async fn discover_prefixed_schemas(
     pool: &DbPool,
@@ -177,16 +177,16 @@ pub struct PrefixRename {
 /// Renames every Kubuno schema present under `old_prefix` to `new_prefix` on the
 /// primary server, engine by engine, rolling back on failure.
 ///
-/// * **PostgreSQL** — `ALTER SCHEMA "<old>s" RENAME TO "<new>s"` for each schema,
+/// * **PostgreSQL** - `ALTER SCHEMA "<old>s" RENAME TO "<new>s"` for each schema,
 ///   inside one transaction. PostgreSQL DDL is transactional, so any failure
 ///   rolls the whole set back automatically: the database is never left half
 ///   renamed.
-/// * **MySQL/MariaDB** — a database cannot be renamed in one statement, so each
+/// * **MySQL/MariaDB** - a database cannot be renamed in one statement, so each
 ///   `<old>s` database is recreated as `<new>s` and every table moved with
 ///   `RENAME TABLE`. MySQL DDL is *not* transactional, so on failure this
 ///   compensates by moving the already-moved tables back and dropping what it
 ///   created.
-/// * **SQLite** — a no-op ([`PrefixRename::noop`] is set): each schema is a file,
+/// * **SQLite** - a no-op ([`PrefixRename::noop`] is set): each schema is a file,
 ///   there is no server namespace to rename.
 ///
 /// `old_prefix` and `new_prefix` are validated bare identifiers (or empty). The
@@ -231,7 +231,7 @@ async fn rename_prefix_pg(
             quote_ident(&eff_new)
         );
         if let Err(e) = tx.execute(&sql, params![]).await {
-            tracing::error!(from = %eff_old, to = %eff_new, error = %e, "Renommage de schéma PostgreSQL échoué — rollback");
+            tracing::error!(from = %eff_old, to = %eff_new, error = %e, "Renommage de schéma PostgreSQL échoué - rollback");
             // Dropping the transaction rolls every prior ALTER back.
             return Err(AdminError::Sqlx(e));
         }
@@ -278,14 +278,14 @@ async fn rename_prefix_mysql(
         }
     }
 
-    // Each entry: (eff_old, eff_new, tables moved) — exactly the tables this
+    // Each entry: (eff_old, eff_new, tables moved) - exactly the tables this
     // call moved, so a failure is undone table by table (MySQL DDL does not roll
     // back on its own) and never by dropping a database that still holds data.
     let mut done: Vec<(String, String, Vec<String>)> = Vec::new();
     for (eff_old, eff_new) in plan {
         let mut moved = Vec::new();
         if let Err(e) = move_mysql_database(pool, &eff_old, &eff_new, &mut moved).await {
-            tracing::error!(from = %eff_old, to = %eff_new, error = %e, "Renommage de base MySQL échoué — compensation");
+            tracing::error!(from = %eff_old, to = %eff_new, error = %e, "Renommage de base MySQL échoué - compensation");
             undo_mysql_move(pool, &eff_new, &eff_old, &moved).await;
             for (done_old, done_new, tables) in done.iter().rev() {
                 undo_mysql_move(pool, done_new, done_old, tables).await;
@@ -375,7 +375,7 @@ async fn drop_mysql_database_if_empty(pool: &DbPool, eff_db: &str) -> Result<(),
     Ok(())
 }
 
-/// Views, routines and events of a database — the objects `RENAME TABLE` does
+/// Views, routines and events of a database - the objects `RENAME TABLE` does
 /// not carry to another database.
 async fn mysql_non_table_objects(pool: &DbPool, eff_db: &str) -> Result<i64, AdminError> {
     Ok(pool
@@ -490,7 +490,7 @@ pub async fn portable_export_plan(
 }
 
 /// Reads one row's cells as typed [`DbValue`]s, per the export columns and the
-/// source engine — the engine-aware read that makes the value portable.
+/// source engine - the engine-aware read that makes the value portable.
 pub fn portable_read_row(
     row: &DbRow,
     columns: &[ExportColumn],
@@ -508,7 +508,7 @@ pub struct ImportColumn {
     text_cast: Option<String>,
 }
 
-/// The destination column plan for one table, keyed by column name — read from
+/// The destination column plan for one table, keyed by column name - read from
 /// the freshly-migrated destination catalog, so its columns carry the real types.
 pub async fn portable_import_plan(
     pool: &DbPool,
@@ -530,10 +530,10 @@ pub async fn portable_import_plan(
 /// reconstructed into the destination's strict type, a PostgreSQL array into a
 /// `text[]`/`uuid[]` literal, and a text value into a non-text PostgreSQL column
 /// (`inet`, `citext`, an enum…). Returns the value to bind and, when set, the
-/// SQL cast suffix to append after its placeholder — e.g. `::uuid[]` or `::inet`.
+/// SQL cast suffix to append after its placeholder - e.g. `::uuid[]` or `::inet`.
 ///
 /// A value that cannot be reconstructed is a hard [`AdminError::Convert`] rather
-/// than a silent mis-store — so a bad restore fails cleanly instead of corrupting.
+/// than a silent mis-store - so a bad restore fails cleanly instead of corrupting.
 pub fn portable_bind_cell(
     dst_backend: Backend,
     src_codec: Codec,
@@ -572,7 +572,7 @@ pub fn portable_bind_cell(
 ///
 /// Public so the backup module can serialise a value with its source codec and,
 /// on restore, rebuild it into the destination column's strict type through the
-/// very same [`plan_rebuild`]/[`rebuild_cell`] path a live engine switch uses —
+/// very same [`plan_rebuild`]/[`rebuild_cell`] path a live engine switch uses -
 /// see the `portable_*` functions below. A backup taken on one engine therefore
 /// restores faithfully onto any other.
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
@@ -649,8 +649,8 @@ struct DstCol {
 
 /// One copyable column: its name, the codec its values travel as, and the SQL
 /// expression that reads it from the source (usually the quoted name, but a
-/// PostgreSQL `citext`/`inet`/array is cast to a portable shape — `::text` or
-/// `to_jsonb(...)` — so a driver that has no such type can still decode it).
+/// PostgreSQL `citext`/`inet`/array is cast to a portable shape - `::text` or
+/// `to_jsonb(...)` - so a driver that has no such type can still decode it).
 struct Col {
     name: String,
     codec: Codec,
@@ -684,8 +684,8 @@ const DEFAULT_BATCH: usize = 200;
 /// Copies every table of `src_schema` on `src` into `dst_schema` on `dst`,
 /// preserving types, in foreign-key order, verifying row counts.
 ///
-/// Both schema names are **effective** names — already carrying whatever prefix
-/// applies — and are quoted literally, so neither pool's prefix layer rewrites
+/// Both schema names are **effective** names - already carrying whatever prefix
+/// applies - and are quoted literally, so neither pool's prefix layer rewrites
 /// them a second time.
 ///
 /// The destination tables must already exist (freshly migrated and empty is the
@@ -694,7 +694,7 @@ const DEFAULT_BATCH: usize = 200;
 /// filled in batches inside a single destination transaction with foreign-key
 /// enforcement relaxed for the load. If any table's destination count does not
 /// match the source, the whole transaction is rolled back and
-/// [`AdminError::RowCountMismatch`] is returned — the caller must not switch to a
+/// [`AdminError::RowCountMismatch`] is returned - the caller must not switch to a
 /// destination that did not receive everything.
 ///
 /// `progress` is called after each table with its name and the running total of
@@ -1097,7 +1097,7 @@ fn read_cell(
         Codec::DateTime => {
             // PostgreSQL's `timestamptz` decodes to `DateTime<Utc>`; MySQL's
             // `DATETIME` and SQLite's text timestamp decode to `NaiveDateTime`
-            // (read as UTC — the session/write policy keeps every value UTC).
+            // (read as UTC - the session/write policy keeps every value UTC).
             let dt = match backend {
                 Backend::Postgres => row.try_get::<Option<DateTime<Utc>>>(name)?,
                 _ => row
@@ -1121,7 +1121,7 @@ fn read_cell(
 /// so a copy, a portable backup and their verification all leave them out:
 /// `_sqlx_migrations` (each engine has its own migration history) and
 /// `kubuno_event_outbox` (the MySQL/SQLite event transport, created at startup
-/// and absent from a PostgreSQL target — copying it broke a switch back to
+/// and absent from a PostgreSQL target - copying it broke a switch back to
 /// PostgreSQL).
 const ENGINE_LOCAL_TABLES: [&str; 2] = ["_sqlx_migrations", "kubuno_event_outbox"];
 
@@ -1213,7 +1213,7 @@ async fn dst_columns(
 }
 
 /// The PostgreSQL type a text value must be cast to (`$n::<type>`) to land in a
-/// column whose type is not plain text — `inet`/`cidr`/`macaddr`, a `time`, or a
+/// column whose type is not plain text - `inet`/`cidr`/`macaddr`, a `time`, or a
 /// `citext`/enum/domain (`USER-DEFINED`). `None` for a plain text column (no cast
 /// needed) and for an array (handled by the element cast instead).
 fn pg_text_cast(data_type: &str, udt: &str) -> Option<String> {
@@ -1226,7 +1226,7 @@ fn pg_text_cast(data_type: &str, udt: &str) -> Option<String> {
         // text on export, cast back to its own type on import (`$n::tsvector`).
         // Native character types report a `data_type` with a space (`character
         // varying`), which `safe_pg_type` rejects, so they keep binding as raw
-        // text — exactly right.
+        // text - exactly right.
         other => safe_pg_type(other),
     }
 }
@@ -1359,7 +1359,7 @@ fn pg_col(name: String, data_type: &str, udt: &str) -> Col {
         "double precision" => (Codec::F64, q.clone()),
         // sqlx refuses to decode a PostgreSQL `numeric` straight into `f64`
         // (NUMERIC maps to a decimal type, not FLOAT8), so read it through a
-        // `::double precision` cast. Precision beyond f64 is dropped — the same
+        // `::double precision` cast. Precision beyond f64 is dropped - the same
         // parity the portable format already accepts for numeric values.
         "numeric" => (Codec::F64, format!("{q}::double precision")),
         "uuid" => (Codec::Uuid, q.clone()),
@@ -1387,7 +1387,7 @@ fn pg_col(name: String, data_type: &str, udt: &str) -> Col {
         // character varying / text / char / and anything else travels as text.
         // The `::text` cast is a no-op for character types but is what lets an
         // exotic-but-text-representable type (e.g. `tsvector`, ranges) be read at
-        // all — decoding it into a `String` directly is refused by the driver.
+        // all - decoding it into a `String` directly is refused by the driver.
         _ => {
             let _ = udt;
             (Codec::Text, format!("{q}::text"))
@@ -1442,7 +1442,7 @@ async fn mysql_columns(
         .map(|(name, data_type, column_type)| {
             let q = quote_ident(&name);
             // A MySQL/MariaDB `DECIMAL`/`NUMERIC` does not decode into `f64`
-            // directly, so read it through a `CAST(... AS DOUBLE)` — mirroring the
+            // directly, so read it through a `CAST(... AS DOUBLE)` - mirroring the
             // PostgreSQL `numeric` handling.
             let read_expr = match data_type.to_ascii_lowercase().as_str() {
                 "decimal" | "numeric" => format!("CAST({q} AS DOUBLE)"),
@@ -1458,7 +1458,7 @@ fn mysql_codec(data_type: &str, column_type: &str) -> Codec {
         // Fixed-width BINARY(16) is Kubuno's UUID (always exactly 16 bytes). A
         // VARBINARY(16) is variable and holds opaque bytes shorter than 16 (an
         // AES-GCM nonce is 12), so it must NOT be read as a UUID or the decode
-        // fails on the short value — it is a blob.
+        // fails on the short value - it is a blob.
         "binary" if column_type.to_ascii_lowercase().contains("(16)") => Codec::Uuid,
         "binary" | "varbinary" | "blob" | "tinyblob" | "mediumblob" | "longblob" => Codec::Blob,
         // tinyint(1) is the boolean convention.
@@ -1614,7 +1614,7 @@ mod tests {
 
     #[test]
     fn plan_rebuild_only_helps_a_strict_destination() {
-        // A SQLite destination is lenient — never rebuilt.
+        // A SQLite destination is lenient - never rebuilt.
         assert_eq!(plan_rebuild(Backend::Sqlite, Codec::Blob, Codec::Uuid), None);
         // SQLite→PostgreSQL: the poor storage classes are rebuilt to the strict type.
         assert_eq!(plan_rebuild(Backend::Postgres, Codec::Blob, Codec::Uuid), Some(Target::Uuid));

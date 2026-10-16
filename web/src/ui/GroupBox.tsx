@@ -15,7 +15,7 @@ export interface GroupBoxProps {
 }
 
 /**
- * A titled group of controls (the `.kbview` `GroupBox`): a heading, an optional help line, then the content —
+ * A titled group of controls (the `.kbview` `GroupBox`): a heading, an optional help line, then the content -
  * the shared version of the `Section` the modules' settings pages each defined (`text-lg` heading, `text-xs`
  * description, `pb-10` after the group). The heading names the group for screen readers.
  */

@@ -21,7 +21,7 @@ pub struct LoginFields {
 }
 
 impl LoginFields {
-    /// Whether the form can be submitted at all — an empty field would only earn a round trip
+    /// Whether the form can be submitted at all - an empty field would only earn a round trip
     /// and a server error.
     pub fn is_complete(&self) -> bool {
         let server = self.server.trim();

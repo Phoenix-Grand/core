@@ -2,7 +2,7 @@
 //! Rust port of `Files.App.Controls`.
 
 // The module tree mirrors the folders of `Files.App.Controls` one to one, as
-// the port requires — which puts `foo/foo.rs` under `foo`.
+// the port requires - which puts `foo/foo.rs` under `foo`.
 #![allow(clippy::module_inception)]
 pub mod blade_view;
 pub mod breadcrumb_bar;

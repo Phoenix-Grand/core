@@ -12,14 +12,14 @@ import { useWsStore } from '../core/store/wsStore'
  * ── One inventory, three readers ─────────────────────────────────────────────
  * The sidebar submenu, the module list and one module's page all describe the
  * same set. They share ONE query key so a toggle made on the page is reflected
- * in the menu without either knowing about the other — and so the browser makes
+ * in the menu without either knowing about the other - and so the browser makes
  * one request, not three.
  *
  * ── Live, without polling ────────────────────────────────────────────────────
  * A module can appear, disappear or fall over while the console is open, and
  * the core already says so: `ModuleRegistered`, `ModuleUnregistered` and
  * `ModuleHealthChanged` reach the browser over the existing WebSocket (see
- * `websocket/hub.rs`). We invalidate on those three rather than poll — the
+ * `websocket/hub.rs`). We invalidate on those three rather than poll - the
  * event is already there, and a timer would only add latency and traffic.
  *
  * Two things that channel forces us to be careful about:
@@ -35,7 +35,7 @@ import { useWsStore } from '../core/store/wsStore'
  */
 
 // A module's PAGES travel with the inventory. The type and the reader live with
-// the settings schema they describe — a pure module, so both can be tested
+// the settings schema they describe - a pure module, so both can be tested
 // without dragging the query layer in.
 export { groupsOf, type ModuleSettingGroup } from './settings/moduleSettingSchema'
 import type { ModuleSettingGroup } from './settings/moduleSettingSchema'
@@ -48,10 +48,10 @@ export interface AdminModule {
   description:   string | null
   is_enabled:    boolean
   installed_at:  string
-  /** The module's own USER settings page — never its administration surface. */
+  /** The module's own USER settings page - never its administration surface. */
   settings_path: string | null
   /**
-   * Lucide name of the module's glyph — the icon of its entry point, the same
+   * Lucide name of the module's glyph - the icon of its entry point, the same
    * one the shell and the waffle menu show. Served with the inventory so a
    * module that is stopped or switched off still has a face: those are the rows
    * an operator most needs to recognise.
@@ -80,7 +80,7 @@ const MODULE_EVENTS = new Set(['ModuleRegistered', 'ModuleUnregistered', 'Module
  * registers two dozen modules within a couple of seconds, and each of the
  * console's readers is subscribed. Without this, one restart means a handful of
  * identical `/admin/modules` requests. One timer at module scope collapses the
- * whole burst — and every subscriber's share of it — into a single refetch,
+ * whole burst - and every subscriber's share of it - into a single refetch,
  * while staying far below what a human reads as a delay.
  */
 const COALESCE_MS = 400
@@ -90,7 +90,7 @@ let coalesceTimer: ReturnType<typeof setTimeout> | null = null
  * The installed modules, kept in step with the instance in real time.
  *
  * Returns an idle query (no request, no data) when the caller may not read
- * modules — every consumer therefore renders its "nothing to show" branch
+ * modules - every consumer therefore renders its "nothing to show" branch
  * rather than a refusal.
  */
 export function useAdminModules() {
@@ -128,11 +128,11 @@ export function useAdminModules() {
 /**
  * What a module is doing right now, as three states that must not be merged.
  *
- *  • `disabled`    — an administrator switched it off. A decision, not a fault.
- *  • `unreachable` — it is switched ON and no instance has registered. That is
+ *  • `disabled`    - an administrator switched it off. A decision, not a fault.
+ *  • `unreachable` - it is switched ON and no instance has registered. That is
  *                    an incident: its pages do not open and nobody was told.
- *  • `running`     — enabled, and an instance is serving it.
- *  • `unknown`     — the live registry has not loaded yet. Reported as such so
+ *  • `running`     - enabled, and an instance is serving it.
+ *  • `unknown`     - the live registry has not loaded yet. Reported as such so
  *                    that the first second after a page load does not paint
  *                    every module as broken.
  */
@@ -141,7 +141,7 @@ export type ModuleLiveState = 'disabled' | 'unreachable' | 'running' | 'unknown'
 /**
  * Reads the live state from the registry the shell already holds
  * (`GET /api/v1/modules`, refreshed on the very same lifecycle events by
- * `main.tsx`) — no extra request, and no privilege beyond being signed in.
+ * `main.tsx`) - no extra request, and no privilege beyond being signed in.
  */
 export function useModuleLiveState(): (module: AdminModule) => ModuleLiveState {
   const active = useModulesStore(s => s.activeModules)
@@ -166,8 +166,8 @@ export interface ToggleResult { id: string; is_enabled: boolean; also_disabled: 
 /**
  * Enables or disables a module, optimistically.
  *
- * The flip is applied to the cache before the request leaves — the toggle must
- * not wait on a round trip — and rolled back if the server refuses. Callers add
+ * The flip is applied to the cache before the request leaves - the toggle must
+ * not wait on a round trip - and rolled back if the server refuses. Callers add
  * their own `onSuccess`/`onError` at `mutate()` time (React Query runs both).
  */
 export function useToggleModule() {

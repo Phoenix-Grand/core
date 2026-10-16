@@ -1,4 +1,4 @@
-//! `08-views` — TreeView, ListView.
+//! `08-views` - TreeView, ListView.
 
 use kubuno_desktop_controls::views::{ColumnHeader, ListView, ListViewItem, TreeNode, TreeView, View};
 
@@ -23,7 +23,7 @@ fn tree() -> Group {
         .expanded()];
     // `SelectedNode = a` in the reference: the second row, « Kubuno ».
     t.selected_path = Some(vec![0, 0]);
-    group("TreeView — lines / selection", 300.0, vec![kid(t).size(260.0, 160.0)])
+    group("TreeView - lines / selection", 300.0, vec![kid(t).size(260.0, 160.0)])
 }
 
 fn details() -> Group {
@@ -43,12 +43,12 @@ fn details() -> Group {
         ListViewItem::new("Alice").with_sub("user").with_sub("5 Go"),
         ListViewItem::new("Bob").with_sub("user").with_sub("5 Go"),
     ];
-    group("ListView — View=Details", 420.0, vec![kid(l).size(380.0, 160.0)])
+    group("ListView - View=Details", 420.0, vec![kid(l).size(380.0, 160.0)])
 }
 
 fn list() -> Group {
     let mut l = ListView::new();
     l.view = View::List;
     l.items = (1..=8).map(|i| ListViewItem::new(format!("élément {i}"))).collect();
-    group("ListView — View=List", 420.0, vec![kid(l).size(380.0, 110.0)])
+    group("ListView - View=List", 420.0, vec![kid(l).size(380.0, 110.0)])
 }

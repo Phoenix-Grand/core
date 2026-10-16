@@ -73,7 +73,7 @@ class TokenManager(
      * Returns a valid access token, refreshing first when the current one is
      * expired or about to expire. Returns null when there is no session at all.
      * Throws [AuthException] (TRANSIENT while in cooldown / network down, or
-     * GENUINE when the session is dead — state is then [AuthState.Expired]).
+     * GENUINE when the session is dead - state is then [AuthState.Expired]).
      */
     override suspend fun validAccessToken(): String? {
         val current = cached ?: store.load()?.also { cached = it } ?: return null
@@ -124,7 +124,7 @@ class TokenManager(
                 throw AuthException(FailureKind.TRANSIENT, "Malformed refresh response")
             }
             val rotated = StoredTokens(access, refreshTok, clock())
-            // Persist FIRST — only then is the new pair allowed to serve.
+            // Persist FIRST - only then is the new pair allowed to serve.
             store.save(rotated)
             cached = rotated
             _authState.value = AuthState.LoggedIn(access)

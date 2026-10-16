@@ -44,7 +44,7 @@ impl PropertyValue for crate::binding::Rows {
     }
 }
 
-/// A property of a custom control holding any Rust value — `#[property] messages:
+/// A property of a custom control holding any Rust value - `#[property] messages:
 /// Shared<Vec<Message>>`, set in the view with a binding (`Messages="{Binding Messages}"`) to a
 /// view model path answering [`Value::Object`] (`Value::from(Shared::new(messages))`). Shared
 /// (`Arc`), so handing it to the control every frame copies a pointer; it derefs to the value.
@@ -223,7 +223,7 @@ impl PropertyValue for crate::style::ColorValue {
 }
 
 /// A fixed drawing colour (`#[property] accent_color: Color`, `System.Drawing.Color`): a theme
-/// token is read in the light theme — use [`crate::style::ColorValue`] to follow the theme. Written
+/// token is read in the light theme - use [`crate::style::ColorValue`] to follow the theme. Written
 /// back as `#RRGGBB(AA)`.
 impl PropertyValue for kubuno_desktop_ui::graphics::Color {
     const KIND: PropKind = PropKind::String;

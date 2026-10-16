@@ -33,7 +33,7 @@ export function Part1({ assignments, isLoading, t, canGrant, setAssignOpen, when
                           {a.subject_group_id
                             ? <Building2 size={15} className="text-text-tertiary shrink-0" />
                             : <Users size={15} className="text-text-tertiary shrink-0" />}
-                          <span className="truncate text-text-primary">{a.subject_label ?? '—'}</span>
+                          <span className="truncate text-text-primary">{a.subject_label ?? '-'}</span>
                         </span>
                       ),
                     },
@@ -47,7 +47,7 @@ export function Part1({ assignments, isLoading, t, canGrant, setAssignOpen, when
                           </span>
                         ) : (
                           <span className="inline-flex items-center gap-1 text-sm text-text-secondary">
-                            <Building2 size={13} />{a.scope_org_unit_name ?? '—'}
+                            <Building2 size={13} />{a.scope_org_unit_name ?? '-'}
                           </span>
                         )
                       ),

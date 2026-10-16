@@ -7,17 +7,17 @@
 //!
 //! ## What a change does, engine by engine
 //!
-//! * **PostgreSQL** — `ALTER SCHEMA "<old>core" RENAME TO "<new>core"` for the
+//! * **PostgreSQL** - `ALTER SCHEMA "<old>core" RENAME TO "<new>core"` for the
 //!   core and every module schema present, in one transaction.
-//! * **MySQL/MariaDB** — a database cannot be renamed in one statement, so each
+//! * **MySQL/MariaDB** - a database cannot be renamed in one statement, so each
 //!   `<old>*` database is recreated as `<new>*` and its tables moved.
-//! * **SQLite** — the prefix names files, not a server namespace; there is no
+//! * **SQLite** - the prefix names files, not a server namespace; there is no
 //!   live rename to perform, so a change here is refused with a clear message
 //!   (it would point the modules at empty files). The card reports this.
 //!
 //! Renaming the `core` schema takes the primary namespace out from under the
 //! running pool, so the operation persists the new value and asks for a core
-//! restart to finalise — which also restarts every module with the new
+//! restart to finalise - which also restarts every module with the new
 //! `KUBUNO_DB_SCHEMA_PREFIX`. This is a deliberate brief outage: the data is
 //! moved atomically (per engine) and the source is never left half-renamed.
 
@@ -70,7 +70,7 @@ fn applicable(state: &AppState) -> bool {
 
 /// The connection parameters the instance is currently using, so the migration
 /// form starts from what is already known instead of blank fields. The password
-/// is never exposed — only whether one is set. `null` if it cannot be resolved.
+/// is never exposed - only whether one is set. `null` if it cannot be resolved.
 fn current_connection(state: &AppState) -> Value {
     match crate::config::settings::database_credentials(&state.settings.database) {
         Ok(c) => json!({
@@ -86,7 +86,7 @@ fn current_connection(state: &AppState) -> Value {
     }
 }
 
-/// `GET /admin/database/schema-prefix` — the current prefix and whether it can
+/// `GET /admin/database/schema-prefix` - the current prefix and whether it can
 /// be changed on this engine.
 pub async fn get_schema_prefix(
     State(state): State<AppState>,
@@ -109,7 +109,7 @@ pub struct SchemaPrefixDto {
     prefix: String,
 }
 
-/// `PUT /admin/database/schema-prefix` — validate, rename the live namespaces,
+/// `PUT /admin/database/schema-prefix` - validate, rename the live namespaces,
 /// persist the new value, and report that a core restart finalises it.
 pub async fn put_schema_prefix(
     State(state): State<AppState>,
@@ -145,7 +145,7 @@ pub async fn put_schema_prefix(
     // Persist the new prefix FIRST. If the config cannot be written (e.g. the
     // config directory is not writable by the service account), nothing is
     // renamed, so the instance is never left with renamed schemas and a stale
-    // config — the state that breaks it until a manual repair. The in-memory
+    // config - the state that breaks it until a manual repair. The in-memory
     // settings keep the old value until the process restarts, which is exactly
     // what finalises the change.
     persist_prefix(&new_prefix)?;
@@ -175,7 +175,7 @@ pub async fn put_schema_prefix(
                     from = %old_prefix,
                     to = %new_prefix,
                     renamed = ?o.renamed,
-                    "Préfixe de schéma changé — redémarrage du core requis pour finaliser"
+                    "Préfixe de schéma changé - redémarrage du core requis pour finaliser"
                 );
                 audit
                     .record(

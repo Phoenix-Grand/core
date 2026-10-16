@@ -1,7 +1,7 @@
 //! A small, dependency-free reader of `.kbview` files for the tools that cannot link `kubuno-desktop-views`
 //! (the `#[kubuno_desktop::view]` proc macro, which runs in the compiler): the elements in document order,
-//! with their attributes, line and depth. It is tolerant — comments, processing instructions and
-//! `CDATA` sections are skipped, text content is ignored — and reports the first malformed tag it
+//! with their attributes, line and depth. It is tolerant - comments, processing instructions and
+//! `CDATA` sections are skipped, text content is ignored - and reports the first malformed tag it
 //! meets with its line. The full parser, validator and editor stay `kubuno_desktop_views::syntax`.
 
 /// One element of a view, as written.

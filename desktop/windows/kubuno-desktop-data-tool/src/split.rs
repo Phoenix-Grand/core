@@ -254,7 +254,7 @@ fn next_word_is(tokens: &[Token], sql: &str, at: usize, words: &[&str]) -> bool 
         .is_some_and(|t| t.kind == Kind::Word && words.contains(&sql[t.start..t.end].to_ascii_lowercase().as_str()))
 }
 
-/// Whether a statement is expected to return rows (a result set), by its first word — or, for a
+/// Whether a statement is expected to return rows (a result set), by its first word - or, for a
 /// DML statement, a top-level `RETURNING` / `OUTPUT`. Unknown statements are run as queries: one
 /// that returns no column simply gives no result set.
 pub fn returns_rows(statement: &str, provider: ProviderName) -> bool {

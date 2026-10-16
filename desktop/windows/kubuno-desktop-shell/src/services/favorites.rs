@@ -2,7 +2,7 @@
 //! header's waffle flyout) shows and does.
 //!
 //! The apps are the connected instance's modules (`services::apps`, fetched in the background);
-//! the favourites are the SAME list the web shows — `preferences.waffle_favorites` on the account,
+//! the favourites are the SAME list the web shows - `preferences.waffle_favorites` on the account,
 //! an ordered array of app ids, ids this build does not know included (`kubuno_desktop_shell_controls::Draft`
 //! carries them through an edit). Opening an app opens its route in the user's browser; a saved
 //! list goes back to the server, which keeps the web and the desktop showing one list.

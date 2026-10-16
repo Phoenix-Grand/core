@@ -42,7 +42,7 @@ pub(crate) struct DraftEntry {
     data: serde_json::Value,
 }
 
-/// A draft is dropped after this long without a write — an installation left
+/// A draft is dropped after this long without a write - an installation left
 /// open in a forgotten tab must not sit in memory for ever.
 const DRAFT_TTL: Duration = Duration::from_secs(2 * 60 * 60);
 /// Cap on drafts kept at once, so an unattended port cannot be made to grow the
@@ -71,7 +71,7 @@ pub(crate) fn router(state: Arc<SetupState>) -> Router {
 
 /// A refusal the wizard can SHOW IN THE OPERATOR'S LANGUAGE.
 ///
-/// The server has no idea which language the screen is in — it is reached before
+/// The server has no idea which language the screen is in - it is reached before
 /// any account, any preference, any session exists. So it names the reason with
 /// a stable `code` (plus whatever the sentence needs) and lets the client
 /// translate it. The French `error` text stays for anything reading this API
@@ -143,7 +143,7 @@ async fn status(State(st): State<Arc<SetupState>>) -> Json<StatusResponse> {
 // It holds the installation token, the database password and the administrator
 // password: the browser is the wrong place for those, and a refresh that lost
 // them sent the operator back to the first screen with empty fields. Here they
-// stay in the installer process's memory — they never touch a disk, they vanish
+// stay in the installer process's memory - they never touch a disk, they vanish
 // when the process ends, and they are erased the moment the installation
 // succeeds. The tab keeps only an unguessable identifier.
 
@@ -155,7 +155,7 @@ fn draft_id_is_valid(id: &str) -> bool {
 fn prune(store: &mut HashMap<String, DraftEntry>) {
     store.retain(|_, e| e.saved.elapsed() < DRAFT_TTL);
     while store.len() >= DRAFT_MAX {
-        // Oldest first — a live tab writes on every keystroke, so the one that
+        // Oldest first - a live tab writes on every keystroke, so the one that
         // has not written in the longest time is the safest to lose.
         let oldest = store
             .iter()
@@ -221,7 +221,7 @@ async fn delete_draft(
 /// The themes shipped with the instance, read straight from `themes_dir`.
 ///
 /// They are on disk before the first boot (the package seeds them), so the
-/// wizard can offer the real ones rather than an invented palette — and the
+/// wizard can offer the real ones rather than an invented palette - and the
 /// choice is the same object the administration console manages afterwards.
 /// A few of each theme's variables travel with it so the wizard can draw a
 /// faithful preview without loading the theme itself.
@@ -230,7 +230,7 @@ struct ThemeChoice {
     id: String,
     name: String,
     color_scheme: String,
-    /// The theme's CSS variables, in full — not a swatch.
+    /// The theme's CSS variables, in full - not a swatch.
     ///
     /// The wizard applies them to itself the moment one is picked, so choosing a
     /// theme is something you SEE rather than a promise about later. All six
@@ -307,7 +307,7 @@ impl DbForm {
             .database(database)
     }
 
-    /// The engine-agnostic settings the shared pool opens from — the same section
+    /// The engine-agnostic settings the shared pool opens from - the same section
     /// the running instance deserializes from `config.toml`, built here from the
     /// wizard's fields so `test-database` and `install` reach the database
     /// through `kubuno_db` exactly as the booted instance will.
@@ -338,7 +338,7 @@ impl DbForm {
             }
         }
         // Carry the schema prefix into the install/test pool so `kubuno_db`
-        // creates and migrates the core's own schema under `<prefix>core` — the
+        // creates and migrates the core's own schema under `<prefix>core` - the
         // exact namespace the booted instance reconnects to. Without it the
         // wizard would populate `core` while the restarted instance looks for
         // `<prefix>core` and finds it empty (the admin account lost).
@@ -361,7 +361,7 @@ impl DbForm {
         std::path::Path::new(&self.sqlite_dir()).join(format!("{SCHEMA}.sqlite"))
     }
 
-    /// An identifier we are willing to interpolate into `CREATE DATABASE` — that
+    /// An identifier we are willing to interpolate into `CREATE DATABASE` - that
     /// statement takes no bind parameters on PostgreSQL or MySQL, so the name is
     /// checked rather than escaped. The rule (`[A-Za-z_][A-Za-z0-9_]{0,62}`) is
     /// safe under both PostgreSQL's `"…"` and MySQL's `` `…` `` quoting.
@@ -404,7 +404,7 @@ impl DbForm {
             ));
         }
         if backend == Backend::Sqlite {
-            // SQLite needs no host, user or database name — only a writable
+            // SQLite needs no host, user or database name - only a writable
             // directory, which is validated when the file is probed.
             return Ok(());
         }
@@ -435,7 +435,7 @@ async fn connect(opts: PgConnectOptions) -> Result<PgPool, sqlx::Error> {
 }
 
 /// A short-lived MySQL connection to the server itself (no default database),
-/// used to test the credentials and — when asked — to `CREATE DATABASE` before
+/// used to test the credentials and - when asked - to `CREATE DATABASE` before
 /// the module's own database exists.
 async fn connect_mysql_server(form: &DbForm) -> Result<sqlx::MySqlPool, sqlx::Error> {
     use sqlx::mysql::{MySqlConnectOptions, MySqlPoolOptions};
@@ -451,7 +451,7 @@ async fn connect_mysql_server(form: &DbForm) -> Result<sqlx::MySqlPool, sqlx::Er
         .await
 }
 
-/// PostgreSQL's "database does not exist" — the one failure the wizard can fix
+/// PostgreSQL's "database does not exist" - the one failure the wizard can fix
 /// on its own rather than sending the administrator to a shell.
 fn is_missing_database(e: &sqlx::Error) -> bool {
     matches!(e, sqlx::Error::Database(d) if d.code().as_deref() == Some("3D000"))
@@ -632,7 +632,7 @@ async fn test_database_mysql(form: &DbForm) -> Response {
     }
 
     // Missing: report whether this account may create it, so the wizard can offer
-    // to — the same shape as the PostgreSQL branch.
+    // to - the same shape as the PostgreSQL branch.
     let can_create = mysql_can_create_database(&server).await;
     server.close().await;
     Json(DbTestResponse {
@@ -776,7 +776,7 @@ struct InstanceForm {
     #[serde(default)]
     theme_id: Option<String>,
     /// The language chosen in the wizard, which becomes the instance's default
-    /// (`instance.locale`) — what everyone sees until they pick their own.
+    /// (`instance.locale`) - what everyone sees until they pick their own.
     #[serde(default)]
     locale: Option<String>,
 }
@@ -824,7 +824,7 @@ impl AdminForm {
     }
 }
 
-/// 32 random bytes as hex — what `openssl rand -hex 32` produces, which is what
+/// 32 random bytes as hex - what `openssl rand -hex 32` produces, which is what
 /// the configuration file tells administrators to use.
 fn generate_secret() -> String {
     let mut bytes = [0u8; 32];
@@ -846,7 +846,7 @@ fn is_hex_colour(v: &str) -> bool {
 }
 
 /// A data URI carrying an image, capped at ~200 KB (the encoded weight of a
-/// medium-sized logo — anything heavier belongs behind the file upload the
+/// medium-sized logo - anything heavier belongs behind the file upload the
 /// admin console offers). PNG/JPEG/WebP/SVG only, refused otherwise.
 fn is_reasonable_image_dataurl(v: &str) -> bool {
     if v.len() > 300_000 { return false }   // ~200 KB decoded, headers included
@@ -885,8 +885,8 @@ async fn reach_database(
 ) -> Result<DbPool, Box<Response>> {
     match backend {
         Backend::Postgres => {
-            // Probe the target database. A missing one can be created — when
-            // asked — through the maintenance `postgres` database.
+            // Probe the target database. A missing one can be created - when
+            // asked - through the maintenance `postgres` database.
             match connect(form.options(db_name)).await {
                 Ok(p) => p.close().await,
                 Err(e) if is_missing_database(&e) && create => {
@@ -1030,7 +1030,7 @@ async fn install(State(st): State<Arc<SetupState>>, Json(req): Json<InstallReque
     //     binary primary key). Idempotent and never fatal.
     crate::database::seed::ensure_instance_identity(&db).await;
 
-    // 3. First administrator — unless this database already has one.
+    // 3. First administrator - unless this database already has one.
     let admin_existed: bool = db
         .fetch_optional_scalar::<i64>(
             &format!(
@@ -1300,7 +1300,7 @@ mod tests {
     #[test]
     fn schema_prefix_is_carried_into_the_install_pool() {
         // The wizard's prefix must reach `to_db_settings`, so the install pool
-        // creates and migrates the core's own schema under `<prefix>core` — the
+        // creates and migrates the core's own schema under `<prefix>core` - the
         // exact namespace the restarted instance reconnects to.
         let mut f = form_from_url("postgres", "postgres://u:p@h:5432/mydb");
         f.schema_prefix = Some("kub_".into());
@@ -1336,7 +1336,7 @@ mod tests {
     async fn test_database_postgres_when_configured() {
         let Some(url) = std::env::var("KUBUNO_PG_TEST_URL").ok().filter(|u| !u.trim().is_empty())
         else {
-            eprintln!("KUBUNO_PG_TEST_URL absent — test PG ignoré");
+            eprintln!("KUBUNO_PG_TEST_URL absent - test PG ignoré");
             return;
         };
         let resp = test_database(Json(form_from_url("postgres", &url))).await;
@@ -1349,7 +1349,7 @@ mod tests {
     async fn test_database_mysql_when_configured() {
         let Some(url) = std::env::var("KUBUNO_MYSQL_TEST_URL").ok().filter(|u| !u.trim().is_empty())
         else {
-            eprintln!("KUBUNO_MYSQL_TEST_URL absent — test MySQL ignoré");
+            eprintln!("KUBUNO_MYSQL_TEST_URL absent - test MySQL ignoré");
             return;
         };
         let resp = test_database(Json(form_from_url("mysql", &url))).await;

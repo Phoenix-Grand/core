@@ -83,7 +83,7 @@ fn main() -> ExitCode {
     let mut open = env::var("KUBUNO_MENUS_OPEN").ok();
     let mut frames = 0u32;
     let theme = if env::var_os("KUBUNO_UI_DARK").is_some() { Theme::dark() } else { Theme::light() };
-    let result = host::run_with_chrome("Menus — Kubuno", 760, 480, theme, Chrome::Kubuno, move |c, f: &Frame| {
+    let result = host::run_with_chrome("Menus - Kubuno", 760, 480, theme, Chrome::Kubuno, move |c, f: &Frame| {
         if let Some(z) = zoom {
             host::set_zoom(z);
         }

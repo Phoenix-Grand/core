@@ -240,7 +240,7 @@ export class ModuleAdminPage extends ViewBase {
           <>
             <GroupHeading group={this.active} />
 
-            {/* Both belong to the module, not to any one of its pages — so they
+            {/* Both belong to the module, not to any one of its pages - so they
                 sit on the FIRST one, which is where the menu lands, instead of
                 being repeated five times over. */}
             {this.isFirst && this.scopeCallout}

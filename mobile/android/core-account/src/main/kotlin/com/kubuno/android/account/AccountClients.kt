@@ -18,7 +18,7 @@ import javax.inject.Singleton
  *
  * This is the piece every app needs and none should re-implement: the session
  * lives in an encrypted per-account file, and a single [KubunoClient] instance
- * per account keeps every refresh behind one `TokenManager` lock — the server
+ * per account keeps every refresh behind one `TokenManager` lock - the server
  * revokes the whole session family if two refreshes race.
  *
  * What an app builds *on top* of a client (a database, a sync engine) is its

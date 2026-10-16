@@ -1,4 +1,4 @@
-//! `textDocument/documentSymbol` — the element tree, `x:Name` as the symbol
+//! `textDocument/documentSymbol` - the element tree, `x:Name` as the symbol
 //! name where present (§1: `x:Name` is the one stable identity a `.kbview`
 //! element carries), the tag name otherwise.
 
@@ -7,7 +7,7 @@ use lsp_types::{DocumentSymbol, Range, SymbolKind};
 
 use crate::documents::Document as OpenDocument;
 
-/// The full symbol tree for `doc`'s current parse — `None` when the document
+/// The full symbol tree for `doc`'s current parse - `None` when the document
 /// has no root element at all (an empty file, or one that failed to parse
 /// even that far; `kubuno_desktop_views::syntax::parse` still returns *a* tree, but
 /// [`Document::root_element`] is `None` in that case).
@@ -29,7 +29,7 @@ fn element_symbol(el: &Element, doc: &OpenDocument) -> DocumentSymbol {
 
     let full_range = to_range(doc, el.syntax().text_range());
     // The "selection range" is what an editor highlights when you click the
-    // symbol in an outline view — the element's own name token (in the start
+    // symbol in an outline view - the element's own name token (in the start
     // tag), not the whole subtree, exactly like `ast::Element::name_range`
     // already hands the validator for its "unknown element" diagnostics.
     let selection_range =

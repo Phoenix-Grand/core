@@ -1,4 +1,4 @@
-<!-- DelegatedNote — converted from DelegatedNote.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- DelegatedNote - converted from DelegatedNote.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="DelegatedNoteProps">
   <Panel Visible="{Binding show_main}" Class="{Binding div_class}">
     <Stack Direction="LeftToRight" CrossAlign="Center">

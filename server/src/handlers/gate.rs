@@ -1,4 +1,4 @@
-//! `POST /internal/rules/gate` — the route a module calls **before** it commits.
+//! `POST /internal/rules/gate` - the route a module calls **before** it commits.
 //!
 //! Authenticated by `X-Internal-Secret` like every other internal route, so the
 //! caller is a module the core spawned rather than a browser. It is deliberately
@@ -11,12 +11,12 @@
 //!
 //! ```text
 //!   1. declare, at registration, a trigger with content-part fields
-//!      (`"type": "content"`) — or use the core's `core.content_gate`;
+//!      (`"type": "content"`) - or use the core's `core.content_gate`;
 //!   2. before committing, POST the structural facts and the parts here;
 //!   3. on `block`, refuse the operation and show `message` and `reference`;
 //!      on `warn`, proceed and show `message`;
 //!   4. on a network error or a timeout of its own, apply the instance's
-//!      `rules.gate.fail_mode` — open by default.
+//!      `rules.gate.fail_mode` - open by default.
 //! ```
 //!
 //! Step 4 is the half the core cannot do for the module: a core that is

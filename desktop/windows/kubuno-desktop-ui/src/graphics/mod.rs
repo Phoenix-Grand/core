@@ -1,4 +1,4 @@
-//! # `Graphics` — a WinForms-`Graphics`-like drawing API over the Kubuno [`Canvas`]
+//! # `Graphics` - a WinForms-`Graphics`-like drawing API over the Kubuno [`Canvas`]
 //!
 //! The [`Canvas`] a widget paints through offers the primitives the design system needs (rounded
 //! fills, strokes, text in a box, icons). A custom control or an owner-drawn list needs more: lines
@@ -21,13 +21,13 @@
 //! A `Graphics` is a thin, borrowed view over a canvas: it owns no device. When the canvas lends its
 //! Direct2D renderer ([`Canvas::graphics_renderer`], the host's painter does) every call is drawn
 //! with Direct2D directly, in the same `BeginDraw` as the widgets, with the transform, clip and
-//! hints of the `Graphics` applied around that one call and the device context restored after it —
+//! hints of the `Graphics` applied around that one call and the device context restored after it -
 //! so interleaving `Graphics` calls with the canvas' own primitives is safe. Without a renderer (a
 //! canvas of another app, a test double) the calls fall back to the canvas primitives, as close as
 //! they allow (gradients → their middle colour, no rotation of images…).
 //!
 //! Every call is an [`display::Op`]: a `Graphics` can also **record** them into a
-//! [`display::DisplayList`] ([`Graphics::recording`], [`Graphics::recorder`]) — what the unit tests
+//! [`display::DisplayList`] ([`Graphics::recording`], [`Graphics::recorder`]) - what the unit tests
 //! assert on, and what a control's paint buffer keeps and replays while the control is valid.
 //!
 //! ## Coordinates and state
@@ -37,7 +37,7 @@
 //! coordinates. The transform, clip and hints apply to the `Graphics` calls only; the canvas
 //! primitives called through the `Graphics` ([`Canvas`] is implemented on it, so existing paint code
 //! keeps working) draw in the surface's own state. All methods take `&self`: a `Graphics` is lent,
-//! never replaced — which is also what lets an event's args carry one ([`GraphicsSlot`]).
+//! never replaced - which is also what lets an event's args carry one ([`GraphicsSlot`]).
 
 pub mod display;
 mod d2d;
@@ -131,7 +131,7 @@ impl<'a> Graphics<'a> {
 }
 
 impl Graphics<'static> {
-    /// A `Graphics` that draws nothing and records every call — for tests, and for measuring what
+    /// A `Graphics` that draws nothing and records every call - for tests, and for measuring what
     /// a paint would draw.
     pub fn recorder() -> Self {
         Self::build(None, None, Mode::None).recording()
@@ -167,7 +167,7 @@ impl<'a> Graphics<'a> {
         self.canvas
     }
 
-    /// The renderer (Direct2D device context, DirectWrite factory), when the surface lends it —
+    /// The renderer (Direct2D device context, DirectWrite factory), when the surface lends it -
     /// for code that draws with Direct2D itself. Like [`Graphics::raw_canvas`], not recorded.
     pub fn renderer(&self) -> Option<&'a Renderer> {
         self.unrecorded.set(true);
@@ -541,14 +541,14 @@ impl<'a> Graphics<'a> {
     }
 
     /// `Clear(color)`: the clip region (everything when unclipped) becomes `color`, replacing what
-    /// is there — transparent included.
+    /// is there - transparent included.
     pub fn clear(&self, color: impl Into<Color>) {
         self.emit(Op::Clear { color: color.into(), state: self.snapshot() });
     }
 
     // ── Text ───────────────────────────────────────────────────────────────────────────────────
 
-    /// `DrawString(text, font, brush, layoutRectangle, format)`: laid out in `rect` — wrapped,
+    /// `DrawString(text, font, brush, layoutRectangle, format)`: laid out in `rect` - wrapped,
     /// aligned both ways and trimmed as `format` says, clipped to `rect` unless `NO_CLIP`.
     pub fn draw_string(&self, text: &str, font: &Font, brush: impl Into<Brush>, rect: Rect, format: &StringFormat) {
         let brush = brush.into();
@@ -644,7 +644,7 @@ pub fn role_format(f: &TextFormats, role: FontRole) -> &IDWriteTextFormat {
     }
 }
 
-/// The canvas primitives on a `Graphics` — so paint code written for a [`Canvas`] runs on one
+/// The canvas primitives on a `Graphics` - so paint code written for a [`Canvas`] runs on one
 /// unchanged. Each call is recorded (and drawn in the surface's own state: the `Graphics`
 /// transform and clip do not apply to them). Without a surface, the theme and text formats are
 /// those of a headless stand-in and nothing is drawn.

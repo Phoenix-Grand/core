@@ -110,7 +110,7 @@ port = 8080
 frontend_dist = "/usr/local/kubuno/frontend"
 modules_dir = "/usr/local/kubuno/modules"
 themes_dir = "/Library/Application Support/Kubuno/data/themes"
-# OBLIGATOIRE — openssl rand -hex 32
+# OBLIGATOIRE - openssl rand -hex 32
 internal_secret = "CHANGEZ_MOI"
 secure_cookies = false
 
@@ -123,7 +123,7 @@ database = "kubuno"
 run_migrations = true
 
 [auth]
-# OBLIGATOIRE — openssl rand -base64 48
+# OBLIGATOIRE - openssl rand -base64 48
 jwt_secret = "CHANGEZ_MOI_AVEC_UNE_CLE_LONGUE_ET_ALEATOIRE"
 
 [storage]
@@ -283,7 +283,7 @@ cat > "$DIST_XML" << DIST
 DIST
 
 RES="$(mktemp -d)"
-cp LICENSE "$RES/LICENSE" 2>/dev/null || echo "Kubuno — AGPL-3.0" > "$RES/LICENSE"
+cp LICENSE "$RES/LICENSE" 2>/dev/null || echo "Kubuno - AGPL-3.0" > "$RES/LICENSE"
 
 OUT="$DIST_DIR/kubuno-core-${VERSION}-${ARCH_LABEL}.pkg"
 echo "==> productbuild…"
@@ -297,6 +297,6 @@ productbuild \
 echo ""
 echo "══════════════════════════════════════════════"
 echo "  Paquet macOS : $OUT"
-echo "  (non signé — pour distribution hors App Store :"
+echo "  (non signé - pour distribution hors App Store :"
 echo "   signez avec MACOS_SIGN_IDENTITY=… puis notarisez avec notarytool.)"
 echo "══════════════════════════════════════════════"

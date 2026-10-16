@@ -1,4 +1,4 @@
-<!-- OverlaysGroup — converted from OverlaysGroup.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- OverlaysGroup - converted from OverlaysGroup.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl>
   <Panel Class="contents">
     <Label Text="{Res admin.t_prev_overlays_hint}" Overflow="Wrap" ForeColor="TextTertiary" Class="text-[11px] mb-2.5 -mt-1"/>

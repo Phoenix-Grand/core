@@ -1,4 +1,4 @@
-<!-- CategoryComposition — converted from CategoryComposition.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- CategoryComposition - converted from CategoryComposition.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="CategoryCompositionProps">
   <Panel>
     <CompositionBar Segments="{Binding segments}" Total="{Binding cc_total}" AriaLabel="{Binding props.ariaLabel}" Visible="{Binding show_segments}"/>

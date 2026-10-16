@@ -1,4 +1,4 @@
-/** Shared password strength heuristic — used by the sign-up form and the forced
+/** Shared password strength heuristic - used by the sign-up form and the forced
  *  password change screen so both show the exact same meter. */
 export interface PasswordStrength {
   score: number

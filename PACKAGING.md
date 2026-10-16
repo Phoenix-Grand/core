@@ -16,7 +16,7 @@ un **PostgreSQL 16** accessible (non embarqué dans les paquets).
 
 ---
 
-## RPM — `build_rpm.sh`
+## RPM - `build_rpm.sh`
 
 ```bash
 bash build_rpm.sh             # → dist/kubuno-core-<ver>-1.<arch>.rpm
@@ -38,7 +38,7 @@ bash build_rpm.sh --install   # build + dnf/zypper/rpm install
 
 ---
 
-## Windows — `build_windows.sh`
+## Windows - `build_windows.sh`
 
 ```bash
 # Cross-compilation depuis Linux (cargo-xwin + NSIS) :
@@ -52,7 +52,7 @@ TARGET=x86_64-pc-windows-gnu bash build_windows.sh # alternative toolchain GNU
 Installeur **NSIS** qui :
 - installe binaires + frontend + migrations dans `C:\Program Files\Kubuno\` ;
 - crée les données inscriptibles dans `C:\ProgramData\Kubuno\` (`config.toml`,
-  `files\`, `logs\`) — c'est le répertoire de travail du service ;
+  `files\`, `logs\`) - c'est le répertoire de travail du service ;
 - enregistre et démarre le service **« Kubuno Core »** via le wrapper
   [WinSW](https://github.com/winsw/winsw) (`kubuno-service.exe` + `.xml`,
   redistribuable, .NET Framework intégré à Windows 10+) ;
@@ -66,7 +66,7 @@ Le SDK MSVC est téléchargé/caché automatiquement par cargo-xwin.
 
 ---
 
-## macOS — `build_macos.sh` (à exécuter sur un Mac)
+## macOS - `build_macos.sh` (à exécuter sur un Mac)
 
 ```bash
 bash build_macos.sh                       # → dist/kubuno-core-<ver>-arm64.pkg (Apple Silicon)
@@ -88,7 +88,7 @@ Paquet **`.pkg`** (pkgbuild + productbuild) qui :
 
 ---
 
-## Modules — packaging générique
+## Modules - packaging générique
 
 Chaque dépôt module reçoit (via `_tools/deploy_packaging.sh`) trois scripts
 **auto-détectants** (id/version lus dans `Cargo.toml`) + un workflow CI :
@@ -123,7 +123,7 @@ cd ../calendar && bash build_rpm.sh         # RPM du module (auto-détecté)
 Dépendances système spécifiques gérées automatiquement : `media` → `ffmpeg`,
 `assistant` → recommande `ollama`.
 
-## CI — Releases GitHub multi-plateformes
+## CI - Releases GitHub multi-plateformes
 
 `.github/workflows/dist.yml` construit RPM (ubuntu), Windows (windows-latest) et
 macOS (macos-latest) sur push d'un tag `v*`, et attache les artefacts à la

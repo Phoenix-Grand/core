@@ -20,7 +20,7 @@ use super::*;
 /// on one page is a wall nobody reads; five addresses, each answering one
 /// question, is a panel.
 ///
-/// `id` is a STABLE, UNTRANSLATED slug because it travels in the URL — an
+/// `id` is a STABLE, UNTRANSLATED slug because it travels in the URL - an
 /// address may not change shape with the interface language.
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct SettingGroup {
@@ -81,7 +81,7 @@ pub struct SettingDef {
     /// Rare/expert knob: folded behind an "Avancé" disclosure inside its section.
     #[serde(default)]
     pub advanced:    bool,
-    /// "info" | "warning" | "danger" — how loudly the console must warn before
+    /// "info" | "warning" | "danger" - how loudly the console must warn before
     /// this is changed. `danger` means "can make the server unreachable or lose
     /// mail" and requires an explicit confirmation in the UI.
     #[serde(default)]
@@ -100,7 +100,7 @@ pub struct SettingDef {
     #[serde(default)]
     pub multiline:   bool,
     /// Key of another `bool` setting of the SAME module. The setting is hidden
-    /// while that boolean is false — a panel must shrink when a feature is off.
+    /// while that boolean is false - a panel must shrink when a feature is off.
     #[serde(default)]
     pub depends_on:  Option<String>,
 }
@@ -154,8 +154,8 @@ impl SettingDef {
 
 /// Validates the presentation metadata of a whole manifest.
 ///
-/// Unlike `scope` and `type` — tolerated with a warning since the first
-/// modules shipped, and skipped one by one — a malformed *new* field aborts the
+/// Unlike `scope` and `type` - tolerated with a warning since the first
+/// modules shipped, and skipped one by one - a malformed *new* field aborts the
 /// registration. These fields are new: nothing in the wild carries them, so
 /// there is no compatibility to protect, and a knob silently dropped from an
 /// administration panel is worse than a module that refuses to start.
@@ -224,14 +224,14 @@ pub fn validate_settings_schema(module_id: &str, defs: &[SettingDef]) -> Result<
     Ok(())
 }
 
-/// Longest acceptable group slug — it is a path segment, not a sentence.
+/// Longest acceptable group slug - it is a path segment, not a sentence.
 pub(super) const MAX_GROUP_ID_LEN: usize = 50;
 
 /// Validates the `[[setting_groups]]` of a manifest and every reference to them.
 ///
 /// A module that declares no group is valid and unchanged: `groups` empty and no
 /// setting carrying a `group` passes straight through. What is refused is a
-/// half-declaration — a setting pointing at a group that does not exist would
+/// half-declaration - a setting pointing at a group that does not exist would
 /// vanish from every page of the panel, silently, which is exactly the failure
 /// mode groups exist to prevent.
 ///
@@ -301,10 +301,10 @@ pub fn validate_setting_groups(
 
 /// Reads back the groups a module pushed at registration, in menu order.
 ///
-/// `position` first (ascending), then declaration order for whatever has none —
+/// `position` first (ascending), then declaration order for whatever has none -
 /// a sort that is stable, so a module that positions nothing keeps its manifest's
 /// order rather than an arbitrary one.
-/// The glyph that stands for a module: the icon of its ENTRY POINT — the
+/// The glyph that stands for a module: the icon of its ENTRY POINT - the
 /// sidebar item with the lowest position, which is the same rule the shell and
 /// the waffle menu already use to pick a module's face. Deriving it rather than
 /// asking modules to declare a second icon keeps one answer to "what does this
@@ -373,11 +373,11 @@ pub async fn internal_module_settings(
 /// authenticates the caller as being inside the instance but does not IDENTIFY
 /// it, so the secret-only route above answers `403` to all of them. Here the id
 /// in the path says whose settings to return, and the internal secret is the
-/// proof of belonging — exactly the trust every other `/internal/modules/:id/*`
+/// proof of belonging - exactly the trust every other `/internal/modules/:id/*`
 /// route (heartbeat, unregister) already extends to the master secret.
 ///
 /// When derived secrets ARE in force the caller is identified as well, and
-/// [`ensure_caller_is`] then holds it to its own id — a module can never read
+/// [`ensure_caller_is`] then holds it to its own id - a module can never read
 /// another module's settings. So the URL is a convenience for the shared-secret
 /// deployment, never a way around the isolation of the derived one.
 pub async fn internal_module_settings_by_id(
@@ -390,7 +390,7 @@ pub async fn internal_module_settings_by_id(
 }
 
 /// The instance-scoped settings of one module, keyed by their SHORT name (the
-/// `<module>.` prefix stripped) with the effective value — the stored one, or
+/// `<module>.` prefix stripped) with the effective value - the stored one, or
 /// the declared default when nothing was ever set.
 async fn build_module_settings(
     db: &DbPool,

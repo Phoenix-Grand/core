@@ -535,7 +535,7 @@ pub struct LayoutEventArgs {
 ///
 /// In an immediate-mode runtime a bound value can change "behind the
 /// control's back": `*Changed` events fire for every source (like WinForms),
-/// and a handler that only cares about the user's edits ignores the rest —
+/// and a handler that only cares about the user's edits ignores the rest -
 /// which also avoids WinForms' "handler sets `Text`, which raises
 /// `TextChanged`" re-entrancy trap.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Hash)]
@@ -630,7 +630,7 @@ impl IntoLegacyValue for Value {
 }
 
 /// A value changed: `old` → `new`, and from where (`vskubuno/docs/EVENTS.md`
-/// §1 — deliberately richer than WinForms' bare `EventArgs` on `TextChanged`).
+/// §1 - deliberately richer than WinForms' bare `EventArgs` on `TextChanged`).
 /// Its legacy value is `new`'s ([`IntoLegacyValue`]).
 ///
 /// ```
@@ -755,7 +755,7 @@ pub struct CellCancelEventArgs {
 
 /// `CellValidating` of a `DataTable` (WinForms `DataGridViewCellValidatingEventArgs`): the text
 /// the user typed (`formatted_value`, before it is parsed back per the column's format);
-/// `cancel = true` refuses it — the editor stays open with the text.
+/// `cancel = true` refuses it - the editor stays open with the text.
 #[derive(EventArgs, Debug, Clone, Default, PartialEq, Eq)]
 #[args(extends = CancelEventArgs, cancel)]
 pub struct CellValidatingEventArgs {

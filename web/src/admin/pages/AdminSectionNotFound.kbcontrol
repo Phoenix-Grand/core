@@ -1,4 +1,4 @@
-<!-- AdminSectionNotFound — converted from AdminSectionNotFound.tsx by @kubuno/views-migrate. -->
+<!-- AdminSectionNotFound - converted from AdminSectionNotFound.tsx by @kubuno/views-migrate. -->
 <UserControl x:Props="AdminSectionNotFoundProps">
   <EmptyState ActionLabel="{Res admin.unknown_section_action}"
               Variant="NoResults"

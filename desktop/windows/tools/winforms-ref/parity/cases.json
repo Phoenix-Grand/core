@@ -16,8 +16,8 @@
   "//14": "dock/anchor. WinForms' MinimumSize setter clamps the bounds immediately,",
   "//15": "so setting them the other way round would compare two different inputs.",
   "//16": "",
-  "//17": "A nested container's rect carries a REALISTIC design size — the size the",
-  "//18": "first dock pass will give it — even though a docked node's own rect is",
+  "//17": "A nested container's rect carries a REALISTIC design size - the size the",
+  "//18": "first dock pass will give it - even though a docked node's own rect is",
   "//19": "otherwise ignored on the axis it docks to. It is the baseline its own",
   "//20": "anchored children are measured from, so a placeholder like [0,0,10,10]",
   "//21": "would make every nested anchor case measure that placeholder instead.",
@@ -211,7 +211,7 @@
 
     {
       "id": "D23-padding-dock-and-anchor",
-      "why": "A padded container holding BOTH a docked band and an anchored child. Nothing resizes, so any delta is purely a disagreement about which origin a child's rectangle is measured from — and the two children must agree with each other.",
+      "why": "A padded container holding BOTH a docked band and an anchored child. Nothing resizes, so any delta is purely a disagreement about which origin a child's rectangle is measured from - and the two children must agree with each other.",
       "size": [200, 100],
       "padding": [10, 10, 10, 10],
       "children": [
@@ -405,7 +405,7 @@
 
     {
       "id": "A20-odd-start-half-delta",
-      "why": "An ODD start size on the unanchored axis. WinForms recentres on displayRect.Width / 2 (integer), which is NOT the same number as adding half the size CHANGE — this case is the one that tells the two rules apart.",
+      "why": "An ODD start size on the unanchored axis. WinForms recentres on displayRect.Width / 2 (integer), which is NOT the same number as adding half the size CHANGE - this case is the one that tells the two rules apart.",
       "size": [201, 101],
       "resize": [300, 160],
       "children": [{ "name": "a", "rect": [10, 10, 80, 30], "anchor": "None" }]

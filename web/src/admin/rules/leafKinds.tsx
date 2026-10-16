@@ -1,10 +1,10 @@
-// The leaf-kind registry — the extension point of the condition builder.
+// The leaf-kind registry - the extension point of the condition builder.
 //
 // ── What a "leaf kind" is ────────────────────────────────────────────────────
 // A group node (`all` / `any` / `none`) is structure and belongs to the builder.
 // Everything at the bottom of the tree is a LEAF, and a leaf is a *kind*: the
 // comparison this build ships (`compare`), and whatever a module teaches the
-// engine later — a content detector with a confidence threshold, a rate over a
+// engine later - a content detector with a confidence threshold, a rate over a
 // window, a reputation lookup. Each kind declares five things and nothing else:
 //
 //   • how to create one,          • how to edit one,
@@ -16,7 +16,7 @@
 // Adding a kind must not require touching ConditionTree.tsx, RuleSummary.tsx or
 // the tester. A module registers its kind at import time and the three surfaces
 // pick it up. A node whose kind nobody registered is rendered read-only and
-// preserved verbatim on save — an unknown leaf is somebody else's feature, not
+// preserved verbatim on save - an unknown leaf is somebody else's feature, not
 // a corrupt tree, and dropping it silently would change what the rule does.
 
 import type { ComponentType } from 'react'
@@ -31,7 +31,7 @@ export interface LeafContext {
   trigger: TriggerRow | undefined
   /**
    * The whole catalogue. A kind whose vocabulary is not carried by the trigger
-   * reads it from here — the detector leaf names a detector, and the list of
+   * reads it from here - the detector leaf names a detector, and the list of
    * detectors is served next to the triggers rather than inside one.
    */
   catalog: Catalog | undefined
@@ -84,7 +84,7 @@ export interface LeafKindDef {
   quota?: LeafQuota
   /**
    * Browser-side verdict. Return `'unknown'` when the kind genuinely cannot be
-   * decided client-side — the tester then says so instead of guessing, which is
+   * decided client-side - the tester then says so instead of guessing, which is
    * the difference between a debugger and a decoration.
    */
   evaluate: (node: CondNode, facts: Json) => boolean | 'unknown'
@@ -151,7 +151,7 @@ export interface LeafQuotaState {
 /**
  * Per-kind counters, for the builder's counter row and for the save guard.
  *
- * A kind is listed as soon as it declares a ceiling this build can read — even
+ * A kind is listed as soon as it declares a ceiling this build can read - even
  * at zero, so an operator sees "Détections 0 / 8" before they need it rather
  * than discovering the ceiling by hitting it.
  */
@@ -180,7 +180,7 @@ interface CompareShape { type: 'compare'; field: string; op: Operator; value?: u
 /**
  * The fields a comparison may name.
  *
- * A field declaring no operator is not comparable — that is how the server
+ * A field declaring no operator is not comparable - that is how the server
  * marks a content part, and a comparison against one is refused at write time.
  * Offering it would give the operator a field whose operator list is empty and
  * no way to tell why.
@@ -246,7 +246,7 @@ function CompareEditor({ node, onChange, ctx, disabled }: LeafEditorProps) {
   const setField = (name: string) => {
     const next = fieldDef(ctx, name)
     // Keep the operator when the new field still allows it, otherwise fall back
-    // to the first one it declares — an operator it refuses is a 422 waiting.
+    // to the first one it declares - an operator it refuses is a 422 waiting.
     const op = next?.operators.includes(cmp.op) ? cmp.op : (next?.operators[0] ?? 'eq')
     onChange({ type: 'compare', field: name, op, value: UNARY_OPERATORS.includes(op) ? null : '' })
   }

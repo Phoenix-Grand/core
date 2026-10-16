@@ -89,7 +89,7 @@ export function drawAdorners(layer: HTMLElement, origin: { left: number; top: nu
   }
   if (spec.hover) {
     // Hover uses the same outset frame as a selection (`selectionFrame`), so the two boxes share the exact same
-    // width, height and margins — they differ only by opacity (see `.kbd-hover` / `.kbd-sel`), not by geometry.
+    // width, height and margins - they differ only by opacity (see `.kbd-hover` / `.kbd-sel`), not by geometry.
     const frame = selectionFrame(spec.hover.rect)
     box(layer, origin, frame, 'kbd-hover')
     if (spec.hover.label) tag(layer, origin, frame, spec.hover.label, 'kbd-tag-hover')

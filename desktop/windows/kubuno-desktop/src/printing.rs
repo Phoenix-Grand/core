@@ -26,7 +26,7 @@
 //! component created in code. The component classes themselves are in [`components`]
 //! (`kubuno_desktop_print`).
 //!
-//! A document of a view printed — or previewed — from one of the view's handlers prints **when that
+//! A document of a view printed - or previewed - from one of the view's handlers prints **when that
 //! handler returns** (its own `PrintPage` handler is a method of the view, which the running handler
 //! borrows); see `kubuno_desktop_print::document`.
 

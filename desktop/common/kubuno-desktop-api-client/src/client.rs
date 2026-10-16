@@ -300,7 +300,7 @@ impl ApiClientBuilder {
             return Err(ApiError::InvalidRequest("the server URL must start with http:// or https://".to_string()));
         }
         // Reuse a shared reqwest::Client for an identical configuration instead of
-        // building a new one — with its own TLS root store and connection pool — for
+        // building a new one - with its own TLS root store and connection pool - for
         // every ApiClient (api_for() builds one on each login attempt).
         let key: ClientKey = (self.user_agent, self.timeout, self.connect_timeout, self.proxy);
         let http = shared_http_client(&key)?;
@@ -315,7 +315,7 @@ type ClientKey = (String, Duration, Duration, Option<String>);
 
 /// Returns a `reqwest::Client` for `key`, building (and caching) it once per distinct
 /// configuration. A `reqwest::Client` is internally reference-counted, so clones share
-/// its pool — cheap — whereas building one loads the system root store. The cache holds
+/// its pool - cheap - whereas building one loads the system root store. The cache holds
 /// one entry per distinct (user-agent, timeouts, proxy) tuple: a handful in practice.
 fn shared_http_client(key: &ClientKey) -> Result<reqwest::Client, ApiError> {
     static CLIENTS: std::sync::OnceLock<std::sync::Mutex<std::collections::HashMap<ClientKey, reqwest::Client>>> =

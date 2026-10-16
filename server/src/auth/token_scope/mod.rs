@@ -7,7 +7,7 @@
 //! module, `core.api_tokens` carried no notion of scope, `expires_at` was
 //! nullable, and resolution never looked at the owner's second factor. A token
 //! minted by an administrator was therefore a complete, permanent administration
-//! key that bypassed step-up authentication — the last of the five findings of
+//! key that bypassed step-up authentication - the last of the five findings of
 //! the security audit, and the only one still open.
 //!
 //! ## The shape of the fix
@@ -71,7 +71,7 @@ pub fn is_write_method(method: &Method) -> bool {
 /// The one refusal that gets **no grace at all**.
 ///
 /// A legacy token keeps its owner's privileges while the migration window is
-/// open — everywhere except here. An unscoped credential performing an
+/// open - everywhere except here. An unscoped credential performing an
 /// administrative write is the defect itself, not a compatibility concern: it is
 /// what turned "an API key" into "a permanent root key", and letting it survive
 /// its own remediation for ninety days would make the remediation decorative.
@@ -99,7 +99,7 @@ pub fn deny_legacy_admin_write(
 /// Role to present to a module for a token-authenticated call.
 ///
 /// The proxy used to forward the owner's `role` verbatim, so a token belonging to
-/// an administrator arrived at every module as an administrator — the header the
+/// an administrator arrived at every module as an administrator - the header the
 /// modules gate their own administration on. A scoped token is therefore an
 /// ordinary user unless it explicitly carries [`MODULE_ADMIN`], and even then only
 /// if its owner really is one: the token cannot manufacture a role its owner does

@@ -1,4 +1,4 @@
-//! `OrgUnitTree` — the organisational units as an indented tree (the web's `OrgUnitsPanel`): root
+//! `OrgUnitTree` - the organisational units as an indented tree (the web's `OrgUnitsPanel`): root
 //! first, each unit's children under it sorted by name, every unit shown (as on the web). A row: a
 //! building glyph indented by its depth, the name over the description, the accounts of the unit
 //! and its descendants, then « + » (add a child unit) and the pencil (edit), both in the web console.

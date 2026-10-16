@@ -1,8 +1,8 @@
 //! Reads and writes of the device inventory.
 //!
 //! Every query lists its columns. `SELECT *` would carry
-//! `core.devices.correlation_hash` — the one value in this feature that must
-//! never leave the database — into a struct that serialises itself, and the
+//! `core.devices.correlation_hash` - the one value in this feature that must
+//! never leave the database - into a struct that serialises itself, and the
 //! only reliable defence against that is to never write the star.
 //!
 //! ## One shape for both audiences
@@ -28,7 +28,7 @@ use crate::errors::AppError;
 ///
 /// `host(d.last_ip)` and `NOW()` are spelled for the running engine
 /// (`Backend::inet_text` / `Backend::now`); the active-session count is a bare
-/// `COUNT(*)` (the former `::bigint` cast is redundant — `COUNT` already decodes
+/// `COUNT(*)` (the former `::bigint` cast is redundant - `COUNT` already decodes
 /// as `i64` on all three engines).
 fn device_columns(backend: Backend) -> String {
     format!(
@@ -373,7 +373,7 @@ pub struct SessionQuery {
     pub offset: Option<i64>,
 }
 
-/// Every live session of the instance — a view that simply did not exist.
+/// Every live session of the instance - a view that simply did not exist.
 ///
 /// Until now the only way to answer "who is currently signed in" was to open
 /// each account in turn, which meant nobody ever asked.
@@ -455,7 +455,7 @@ fn push_session_filters(builder: &mut DbQueryBuilder, query: &SessionQuery, ctx:
     }
     if query.without_2fa == Some(true) {
         // NULL is "we do not know", and an unknown strength must not be counted
-        // as "passed 2FA" — the tri-state rule, applied to a session.
+        // as "passed 2FA" - the tri-state rule, applied to a session.
         builder.push(" AND (rt.auth_strength IS NULL OR rt.auth_strength NOT IN ('password_totp', 'backup_code'))");
     }
 }
@@ -577,7 +577,7 @@ pub async fn revoke_sessions(
 /// remembered about it; the machine keeps every file it already holds, and the
 /// interface says so in as many words because it is the misreading everybody
 /// makes. `refresh_tokens.device_id` is `ON DELETE SET NULL`, so sessions
-/// survive — forgetting is not a sign-out, and the console offers both.
+/// survive - forgetting is not a sign-out, and the console offers both.
 pub async fn forget(tx: &mut DbTx, device_id: Uuid) -> Result<(), AppError> {
     let affected = tx
         .execute(

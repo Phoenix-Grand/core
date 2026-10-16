@@ -1,6 +1,6 @@
 /**
  * What the design surface knows of the elements: the catalog (host registry + project registries + user
- * controls — read at run time, never a hard-coded list) and the plan being shown (element id → node, literal
+ * controls - read at run time, never a hard-coded list) and the plan being shown (element id → node, literal
  * attribute values). Pure: no DOM.
  */
 import type { PlanNode, ViewPlan } from '../plan';
@@ -58,7 +58,7 @@ export declare function literalNumber(node: PlanNode | undefined, name: string):
 export declare function planModules(plan: ViewPlan): Map<string, Set<string>>;
 /** How a container lays out its children, as far as the surface's gestures are concerned. */
 export type ContainerKind = 'leaf' | 'flow' | 'dock' | 'absolute' | 'single' | 'list';
-/** The container kind of an element (an id the plan does not know — a property element — is a `list`). */
+/** The container kind of an element (an id the plan does not know - a property element - is a `list`). */
 export declare function containerKind(nodes: ReadonlyMap<string, NodeInfo>, catalog: Catalog, id: string): ContainerKind;
 /** Whether an element is placed by `X` / `Y` (a child of an absolute container). */
 export declare function isAbsoluteChild(nodes: ReadonlyMap<string, NodeInfo>, catalog: Catalog, id: string): boolean;

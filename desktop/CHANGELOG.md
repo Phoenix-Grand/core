@@ -14,20 +14,20 @@ number at release time, and CI publishes that section as the GitHub Release note
 ### Changed
 
 - **Desktop apps keep their image and icon caches within a memory budget.** The Direct2D cache of decoded images
-  (photos, previews, resource pictures) was unbounded — a single large photo decodes to tens of megabytes, so viewing
+  (photos, previews, resource pictures) was unbounded - a single large photo decodes to tens of megabytes, so viewing
   many images over a session could retain hundreds of MB that was never released. It now has a resident-byte budget
   (128 MB) with least-recently-used eviction, and the icon render caches are capped; memory belonging to a superseded
   graphics device is reclaimed as its entries fall out of use instead of being stranded for the window's lifetime.
-- **HTTP clients are shared instead of rebuilt per request-maker.** Every API client built its own `reqwest` client —
+- **HTTP clients are shared instead of rebuilt per request-maker.** Every API client built its own `reqwest` client -
   each with its own copy of the TLS root store and connection pool (~0.5–1 MB), and the login path rebuilt one on each
-  attempt — so memory grew with the number of accounts and request-makers in a process. Clients with the same
+  attempt - so memory grew with the number of accounts and request-makers in a process. Clients with the same
   configuration now share a single underlying HTTP client.
 
 ## [0.1.4-alpha] - 2026-10-13
 
 ### Changed
 
-- **The designer's selection, hover and parent adorners now match the web designer exactly** — colour, weight and
+- **The designer's selection, hover and parent adorners now match the web designer exactly** - colour, weight and
   size. The selection outline is the full accent (the primary at 2 DIP, other elements of a multi-selection at
   1 DIP), the hover outline is the same 2 DIP box in the accent at 45 % opacity, and the selected control's parent
   is a 1 DIP dashed outline in the accent at 75 % opacity; all share the same 3 DIP outset frame. (The outlines
@@ -38,12 +38,12 @@ number at release time, and CI publishes that section as the GitHub Release note
 ### Changed
 
 - **The desktop view designer labels the controls on its design surface.** Hovering or selecting a control now
-  shows a small corner tag with its type (and its `x:Name` when it has one) — like a WinForms or Figma designer —
+  shows a small corner tag with its type (and its `x:Name` when it has one) - like a WinForms or Figma designer -
   so nested controls can finally be told apart; the primary selection's parent is tagged too. Faint container
   outlines now use a theme-aware stroke whose strength alternates with nesting depth, so a pile of nested dashed
   rectangles reads as distinct frames, legible in both the light and dark Visual Studio themes.
 - **The hover outline matches the selection outline** (as in the web designer): hovering a control now draws the
-  same `selection_frame` box — identical size, margins and stroke width as a selected element — differing only by
+  same `selection_frame` box - identical size, margins and stroke width as a selected element - differing only by
   colour (a lighter accent), instead of a tighter border hugging the control's own edge.
 
 ### Fixed
@@ -83,8 +83,8 @@ number at release time, and CI publishes that section as the GitHub Release note
   none of its other children (they were squeezed to nothing, and their anchored controls were drawn over the
   Backstage).
 - **Dialogs opened from a ribbon command, a dock panel or any container paint whole.** A modal dialog
-  opened by a handler (`ShowDialog`) inherited the paint state of the window frame it was opened from — the clip of
-  the container the command sat in, its disabled scope, its deferred drawings, its menu requests — so a dialog
+  opened by a handler (`ShowDialog`) inherited the paint state of the window frame it was opened from - the clip of
+  the container the command sat in, its disabled scope, its deferred drawings, its menu requests - so a dialog
   opened from the ribbon showed only the ribbon's band (about 32 to 146 DIP from its top): its first control and its
   action bar were cut away. Each view's frame now runs with its own state; the window underneath finds its own
   again when the dialog closes. Applications no longer need to defer their dialogs to the end of the frame.
@@ -109,15 +109,15 @@ number at release time, and CI publishes that section as the GitHub Release note
 
 ### Added
 
-- **Kubuno Desktop runs once per user session.** Starting it again — from the Start menu, a shortcut, a dev build
-  or a copy in another folder, whatever its profile or data directory — no longer opens a second window: the
+- **Kubuno Desktop runs once per user session.** Starting it again - from the Start menu, a shortcut, a dev build
+  or a copy in another folder, whatever its profile or data directory - no longer opens a second window: the
   running Kubuno Desktop comes back from the notification area or the taskbar to the front (restored, focused, its
   taskbar button flashing when Windows refuses the focus), on the page the new launch asked for (`--page settings`),
   and the new launch exits quietly with no splash screen. A start at logon (`--background`) leaves a running one as
   it is. A Kubuno Desktop that crashed or was killed never blocks the next start. Developers can still run a second,
   named instance in debug builds only: `--dev-instance <name>` or `KUBUNO_DEV_INSTANCE=<name>` (agents running a
   sandboxed shell next to the user's must now pass one). See `desktop/README.md`, "Single instance".
-- **`kubuno-desktop-single-instance`**: the cross-platform single-instance primitive behind it — an OS lock per key
+- **`kubuno-desktop-single-instance`**: the cross-platform single-instance primitive behind it - an OS lock per key
   (named mutex on Windows, `flock` on Linux and macOS, both released by the OS with the process), the hand-off of a
   second launch's command line (named pipe / Unix socket restricted to the current user) and bringing a window to
   the front. Keys per user session, per profile or per document; paths normalised (case, `\\?\`, separators, `..`).
@@ -135,7 +135,7 @@ number at release time, and CI publishes that section as the GitHub Release note
 - **Ribbon: `OnBackstageOpened` and `OnBackstageClosed`**, raised when the Backstage (the « Fichier » tab) opens over
   the page and when it closes.
 - **Windows: full screen.** `Form::set_full_screen(true)` (or `FullScreen="true"`, bindable, on a view's
-  root) shows a window over its whole monitor, without title bar, border or task bar — a slide show, F11;
+  root) shows a window over its whole monitor, without title bar, border or task bar - a slide show, F11;
   `set_full_screen(false)` puts it back where it was, maximised or not. `Form::is_full_screen()` reads it.
 
 ### Changed
@@ -179,7 +179,7 @@ number at release time, and CI publishes that section as the GitHub Release note
 
 - **`{Res}` arguments and plurals** (vskubuno `docs/WEB-VIEWS.md` lot WV-6, the same rules as the web, which uses
   i18next). `{Res files, Count={Binding n}, Name={Binding user.name}, Sep=', '}`: every argument fills the string's
-  `{{name}}` placeholders (`Count` fills `{{count}}`), and `Count` picks the plural form — `files_zero` for 0, else
+  `{{name}}` placeholders (`Count` fills `{{count}}`), and `Count` picks the plural form - `files_zero` for 0, else
   the culture's form (`files_one`, `files_few`, `files_many`, `files_other`… by the CLDR rules of the 13 product
   languages, checked against the browsers' `Intl.PluralRules`), else `files`. The text follows the bound values and
   the language live. A translation may hold forms its neutral file lacks (Russian `_few`, Arabic `_two`).
@@ -218,7 +218,7 @@ number at release time, and CI publishes that section as the GitHub Release note
 
 - **The header's panels follow the theme's `PanelBackground`.** The apps launcher and the account panel are tinted
   with a new theme colour, `PanelBackground` (`#E9EEF6` light, `#303134` dark, the web's `--color-panel-bg`), at
-  80 % over their blur — in the dark theme the panel is now the web's dark ground instead of a near-black one. The
+  80 % over their blur - in the dark theme the panel is now the web's dark ground instead of a near-black one. The
   colour is offered with the other theme colours in the views' colour editor.
 
 - **Two title bar heights, buttons always centred.** Windows drawn by Kubuno now have a 32-pixel title bar, as in
@@ -266,8 +266,8 @@ number at release time, and CI publishes that section as the GitHub Release note
   still maximises and snap layouts stay on the maximise button. F6 (or Alt, in a window without a menu bar) moves
   the keyboard focus to the title bar's controls and back. Example: `kubuno-shell-controls --example form_header`.
 
-- **Rounded window corners, by default and configurable.** Every Kubuno desktop window — main window, dialog, tool
-  window, owned window, splash screen, MDI document, in-window dialog — now has rounded corners (8 pixels, like
+- **Rounded window corners, by default and configurable.** Every Kubuno desktop window - main window, dialog, tool
+  window, owned window, splash screen, MDI document, in-window dialog - now has rounded corners (8 pixels, like
   Windows 11), square while maximised, snapped or full screen. A view's `CornerRadius` (and `CornerPreference`)
   sets any radius, `0` for square corners; borderless windows stay square unless asked. On Windows 11 the default
   radius is drawn by the system (its shadow and border); any other radius, and every radius on Windows 10, is drawn
@@ -286,7 +286,7 @@ number at release time, and CI publishes that section as the GitHub Release note
   on the web (vskubuno `docs/SHELL-CONTROLS.md`).
 - **The launcher and the account panel open outside their window.** They open in a floating panel of their own
   (`kubuno::popup::Popup`: rounded, blurred, closing on a click outside or Escape), placed under their button,
-  flipped above it when there is no room below and kept inside the screen's work area — so a small app window no
+  flipped above it when there is no room below and kept inside the screen's work area - so a small app window no
   longer clips them.
 - **The account panel matches the web's**: the camera button on the photo (it opens the web's photo settings), the
   folding « Masquer / Afficher plus de comptes » card with the other accounts' initials, a « Déconnecté » session's
@@ -412,7 +412,7 @@ number at release time, and CI publishes that section as the GitHub Release note
   `Equals`, `NotEquals`, `BoolToText`, `Count`) and the application's own: `#[kubuno_views::value_converter]` on an
   `impl ValueConverter for T` (or `register_converter`) registers it before `main`.
 - **The language server knows what a binding can name** (`kubuno-views-ls`): `kubuno/bindingSources` answers the
-  source schema of an element — its view's data context (a form class's `#[bind]` fields and `#[data_context]` paths,
+  source schema of an element - its view's data context (a form class's `#[bind]` fields and `#[data_context]` paths,
   a user control's properties, a hand-written `impl ViewModel`'s arms, with their Rust types and locations), the row of
   the template it is in (the `d:ItemsSource` sample's keys, a binding source's columns, the code-behind's
   `Row::new().with(…)` chain), the data components and their members, the `.kbres` resources and the converters.
@@ -437,8 +437,8 @@ number at release time, and CI publishes that section as the GitHub Release note
 
 - **User controls are `.kbcontrol` files** (vskubuno `docs/VIEWS-SPEC.md` §1.1): a view whose root is
   `<UserControl>` now uses the `.kbcontrol` extension, forms and dialogs keep `.kbview`. The language server
-  (`kubuno-views-ls`) reads both, and warns when a file's extension disagrees with what it holds — a user control in a
-  `.kbview` (by its root or its `#[derive(UserControl)]` code-behind), a form in a `.kbcontrol` — with the quick fix
+  (`kubuno-views-ls`) reads both, and warns when a file's extension disagrees with what it holds - a user control in a
+  `.kbview` (by its root or its `#[derive(UserControl)]` code-behind), a form in a `.kbcontrol` - with the quick fix
   « Renommer en .kbcontrol » / « Renommer en .kbview » that renames the file and updates the code-behind's
   `#[user_control(view = …)]` / `#[kubuno::view(…)]` and the `x:Inherits` of the views deriving from it. Chat's
   `conversation_list_pane`, `conversation_pane` and `conversation_row` and the user control test fixtures are now
@@ -447,10 +447,10 @@ number at release time, and CI publishes that section as the GitHub Release note
 - **Offline-first data sync, foundation** (vskubuno `docs/DESKTOP-OFFLINE-SYNC.md`, lots SE-0 to SE-3; libraries
   only, not yet used by the shell or the apps): four cross-platform crates in `common/`, in the solution under
   *Libraries*.
-  - `kubuno-secrets`: secrets in the OS credential store — Windows Credential Manager (local to the machine, never
-    roaming), macOS Keychain, Linux Secret Service — with an in-memory store for tests and an opt-in owner-only file
+  - `kubuno-secrets`: secrets in the OS credential store - Windows Credential Manager (local to the machine, never
+    roaming), macOS Keychain, Linux Secret Service - with an in-memory store for tests and an opt-in owner-only file
     for Linux sessions without a Secret Service.
-  - `kubuno-api-client`: a typed client of the Kubuno web API — any HTTP method, `If-Match` and `Idempotency-Key`
+  - `kubuno-api-client`: a typed client of the Kubuno web API - any HTTP method, `If-Match` and `Idempotency-Key`
     headers, cursor paging of the Kubuno Delta Protocol v1, retries with backoff that honour `Retry-After`, server
     errors classified (retry later, conflict, rejected, session expired).
   - `kubuno-account`: accounts identified by server and user (stable across data wipes), sign-in with the two-factor
@@ -469,8 +469,8 @@ number at release time, and CI publishes that section as the GitHub Release note
 
 - **Kubuno Desktop (the shell) written like a Windows Forms application** (vskubuno `docs/DESKTOP-MIGRATION.md`, app
   lot 2): `Application::run(ShellWindow::new(…))`, the window designed in `shell_window.kbview` and one user control
-  per page — `LauncherPage`, `SettingsPage`, `AccountsPage` (a Repeater of `AccountRow`), `ActivityPage` (a Repeater
-  of `ActivityRow`), `LoginPage`, `LabelsPage` (a Repeater of `LabelRow`) — plus the `StatusPresenter` (loading,
+  per page - `LauncherPage`, `SettingsPage`, `AccountsPage` (a Repeater of `AccountRow`), `ActivityPage` (a Repeater
+  of `ActivityRow`), `LoginPage`, `LabelsPage` (a Repeater of `LabelRow`) - plus the `StatusPresenter` (loading,
   empty, failed), the in-window confirmation dialog and two custom controls, `StorageGauge` and `StatusDot`. The
   64-DIP header is the window's title bar, built from title-bar regions: the gaps between its controls drag the
   window, the controls do not. Every view opens in the Visual Studio designer with sample data; the texts are in
@@ -488,20 +488,20 @@ number at release time, and CI publishes that section as the GitHub Release note
   `host::resize_page`.
 - Custom controls: `Control::accessible_parts` lists what a control paints itself (a grid's tiles, a menu's rows) in
   the accessibility tree, under the control.
-- **`kubuno-desktop.exe --sample`**: the offline sample — a fixed account, launcher, labels, activity log and
+- **`kubuno-desktop.exe --sample`**: the offline sample - a fixed account, launcher, labels, activity log and
   administration data, nothing read from or written to the configuration, no tray icon, Explorer entry, `Run` key or
   sync. `--light` / `--dark` force the theme, `--culture fr|en` the language, and `--page login` opens the sign-in
   page. For screenshots, demos and tests. A Debug build started under a debugger (F5 in Visual Studio) runs the sample
   by default, so a debugging session never touches the real profile or the system integration; `--live` opts out.
 - Views: `TitleBarPadding` on a window (`Form::set_title_bar_padding`), the title bar's side insets (16 by default).
 - Views: `CheckAlign` on a `Switch` (Windows Forms' `CheckBox.CheckAlign`): `MiddleRight` puts the switch at the right
-  end of its box, after its label — a settings row.
+  end of its box, after its label - a settings row.
 - Views: `Solid` on a `Badge`: the saturated colour of its variant with white text, a counter pinned on a button.
 - Views: `Tint="Primary"` on an `Avatar` (the accent colour, white initials: the signed-in user in a header).
 - Views: `Role="Page"` and `Role="PageAdmin"` on a `Label` (and `Role::Page`/`Role::PageAdmin` in `kubuno_ui`): the
   page-title steps of the web scale (22.5, and 27.5 in the administration console). The shell's page titles use them.
 - Views: an `Indent` field in a `Sidebar`'s `ItemsSource` rows, and an `Indent` property on a written `SidebarItem`,
-  in pixels — flat rows that line up with a tree's groups.
+  in pixels - flat rows that line up with a tree's groups.
 - Views: `ActiveControl` of a user control moves the keyboard focus (`set_active_control(Some("server"))` focuses the
   control of that name inside, at the next frame), as in Windows Forms.
 - A `Sidebar`'s rows are in the accessibility tree (its headers as texts, its rows as list items, by their labels).
@@ -576,9 +576,9 @@ number at release time, and CI publishes that section as the GitHub Release note
   `TextArea`'s text from code replaces it even while the field has the focus.
 
 - **Splash screens.** Kubuno Desktop (the shell), Drive, Chat and Documents now open with a large splash
-  screen (800 × 500): an original, procedural artwork per application in the colours of its logo — the Kubuno
+  screen (800 × 500): an original, procedural artwork per application in the colours of its logo - the Kubuno
   aperture rings and floating cubes, Drive's storage slabs and data streams, Chat's ripples and speech bubbles,
-  Documents' fanned pages and ribbon — around a large rendition of the module's mark, with the product name, its
+  Documents' fanned pages and ribbon - around a large rendition of the module's mark, with the product name, its
   version, a live status line that follows the real start-up steps, a thin progress bar, and the licence and
   credits. It appears within a few tens of milliseconds of the launch, fades in, stays at least 1.5 s, and fades out
   into the main window once that window is on screen (a click dismisses it). It is drawn at the launch monitor's
@@ -599,7 +599,7 @@ number at release time, and CI publishes that section as the GitHub Release note
   fonts, linked to a project file or embedded, each with a comment; `resources.fr.kbres`, `resources.de-DE.kbres`
   translate them. `kubuno::resources!("resources.kbres")` generates a typed `Resources` class
   (`Resources::welcome_text()`, `Resources::logo()`, `Resources::app_icon().sizes()`, `Resources::ding().play()`,
-  `Resources::accent()`), checked and embedded at compile time — nothing is read from disk at run time.
+  `Resources::accent()`), checked and embedded at compile time - nothing is read from disk at run time.
 - **UI culture**: `kubuno::resources::culture()` follows Windows' display language; `set_culture("fr")` switches the
   whole application live (fallback `fr-CA` → `fr` → another `fr-*` → neutral), and `on_culture_changed` notifies.
 - **`{Res key}` in views**: `Text="{Res welcome_text}"`, `Image="{Res logo}"`, `BackgroundImage="{Res banner}"`,
@@ -608,8 +608,8 @@ number at release time, and CI publishes that section as the GitHub Release note
 - `kubuno-resources-tool`: converts `.resw`/`.resx` files (one folder per culture, like drive-localization's 49
   locales) into `.kbres` files, and checks a resource file and its translations.
 - **Icons from image files, everywhere an icon is shown** (`vskubuno/docs/ICONS.md`): an icon property accepts a name
-  of the Kubuno icon set (`Icon="Save"`), an image file relative to the view (`Icon="resources/save.svg"`) — SVG, PNG,
-  ICO, JPEG, BMP, GIF, TIFF or WebP — or a project resource (`{Res Logo}`). Icons are rendered at the exact pixel size
+  of the Kubuno icon set (`Icon="Save"`), an image file relative to the view (`Icon="resources/save.svg"`) - SVG, PNG,
+  ICO, JPEG, BMP, GIF, TIFF or WebP - or a project resource (`{Res Logo}`). Icons are rendered at the exact pixel size
   they cover (SVG as vectors through Direct2D, raster images with a high-quality filter, the closest frame of an
   `.ico`), in buttons, menus, toolbars, sidebars, status bars, docked panels, empty states, the ribbon and the title
   bar. An SVG drawn in `currentColor` follows the control's colour and the light or dark theme.
@@ -630,12 +630,12 @@ number at release time, and CI publishes that section as the GitHub Release note
 - **A button's `Image`** is drawn by the same pipeline when the button has no `Icon` (SVG and every raster format,
   `{Res key}`), at its own size (an icon file: its 32 px image) unless `IconSize` says otherwise.
 - **The ribbon as a family of designable controls** (`<Ribbon>`, `vskubuno/docs/RIBBON.md`): the ribbon and every
-  element composing it — `RibbonTab`, `RibbonContextualTabGroup`, `RibbonGroup`, `RibbonControlGroup`, `RibbonBox`,
+  element composing it - `RibbonTab`, `RibbonContextualTabGroup`, `RibbonGroup`, `RibbonControlGroup`, `RibbonBox`,
   `RibbonQuickAccessToolbar`, `RibbonBackstage` with `BackstageTab` / `BackstageButton` / `BackstageSeparator`,
   `RibbonButton`, `RibbonToggleButton`, `RibbonRadioButton`, `RibbonMenuButton`, `RibbonSplitButton`,
   `RibbonColorPicker`, `RibbonMenuItem`, `RibbonSplitMenuItem`, `RibbonCheckBox`, `RibbonComboBox`,
   `RibbonTextBox`, `RibbonNumericField`, `RibbonGallery`, `RibbonGalleryCategory`, `RibbonGalleryItem`,
-  `RibbonLabel`, `RibbonSeparator` — are real controls of two new levels (`RibbonControl`, `RibbonItem`): each has
+  `RibbonLabel`, `RibbonSeparator` - are real controls of two new levels (`RibbonControl`, `RibbonItem`): each has
   its own properties (bindable), events and class, is the sender of its events, a typed field of the view
   (`self.bold.set_checked(true)`), a typed handle for code (`RibbonButton::new().label("Coller").on_click(…)`) and a
   base to derive from. The non-visual **`<Command>`** holds a label, icons, a shortcut and an enabled / checked state
@@ -662,7 +662,7 @@ number at release time, and CI publishes that section as the GitHub Release note
   BackgroundImage… are hidden: the ribbon paints and lays them out).
 - Ribbon handles' `small_icon` / `large_icon` take any `IconSource` (a name, an image file, a project resource).
 - **Extending another app's ribbon** (`kubuno_ui::ribbon::merge`, `vskubuno/docs/RIBBON.md` §8): a module registers a
-  fragment — groups added to an existing tab before / after a named group, or new tabs — for a ribbon by its
+  fragment - groups added to an existing tab before / after a named group, or new tabs - for a ribbon by its
   `x:Name` (`ribbon.merge(fragment)` on the typed handle); the fragment's controls get their clicks back, and it goes
   away with its handle. The gallery's ribbon page shows an « Assistant » module merged into Accueil.
 - `QatSettingsKey` on `<Ribbon>`: the commands the user adds to the quick access toolbar are saved per user and per
@@ -719,11 +719,11 @@ number at release time, and CI publishes that section as the GitHub Release note
   opened. As in Windows Forms, `Load` is now raised once when the window is created, shown or not (its first frame runs
   off screen at the window's created size), and `Shown` once, the first time the window is actually on screen; hiding
   and showing the window again raises neither a second time.
-- `kubuno-ui` icons: the lucide rename alias table is now empty and its test asserts the real contract — the embedded set carries both the new and the old spelling of every rename the web uses (`CircleAlert`/`AlertCircle`, ...), so both resolve to themselves; an alias is only allowed for a name that is not embedded and must point to an embedded one.
+- `kubuno-ui` icons: the lucide rename alias table is now empty and its test asserts the real contract - the embedded set carries both the new and the old spelling of every rename the web uses (`CircleAlert`/`AlertCircle`, ...), so both resolve to themselves; an alias is only allowed for a name that is not embedded and must point to an embedded one.
 - Controls now clip their children to their own box, as every Windows Forms control does. The elements of a user
   control's view no longer paint outside the instance using it when the view is larger than the instance (or an
-  element is placed or anchored beyond its edge) — on a page, in a `<Repeater>` item (each item clips to its own
-  box), inside another user control — and a `<Panel>`, `<GroupBox>`, `<Card>`, `<Stack>` or any other container no
+  element is placed or anchored beyond its edge) - on a page, in a `<Repeater>` item (each item clips to its own
+  box), inside another user control - and a `<Panel>`, `<GroupBox>`, `<Card>`, `<Stack>` or any other container no
   longer lets a child spill out of it. The clipped-away part is gone for the pointer too: it is not hovered, clicked,
   focused by a click, scrolled with the wheel nor selected in the designer, and the bounds given to assistive
   technology are cut to the visible part. A drag started on the visible part keeps the pointer outside it, as a
@@ -760,8 +760,8 @@ number at release time, and CI publishes that section as the GitHub Release note
 - Designer: a user control used inside another view shows the data its instance is given and its controls as they
   would run (like a Windows Forms user control on a form): its own `d:` samples apply only when that user control
   itself is designed, so the rows of a `Repeater` no longer all show the same sample.
-- Accessibility: an element is named by what it shows — its text, a `{Res …}` text included, its placeholder, its
-  description — else by its tooltip (an icon button's only words); the developer's `x:Name` is the last resort, and
+- Accessibility: an element is named by what it shows - its text, a `{Res …}` text included, its placeholder, its
+  description - else by its tooltip (an icon button's only words); the developer's `x:Name` is the last resort, and
   never for a decorative container or image. A static text's words are announced (they were empty). The elements of
   a user control and of a Repeater's items are in the tree under them (they were attached to unrelated parents).
 
@@ -896,9 +896,9 @@ number at release time, and CI publishes that section as the GitHub Release note
   around it (`Back`, `Search`, `Delete`). In code, `kubuno::DockArea` offers `open`, `close`, `reset`,
   `save_layout` and `load_layout`. The designer shows the declared arrangement; a click on a panel selects its
   `<DockPanel>` and a control dropped on an empty panel becomes its content.
-- **Kubuno windows look like the web's windows** (`kubuno_controls::window_chrome`): every Kubuno window — the main
+- **Kubuno windows look like the web's windows** (`kubuno_controls::window_chrome`): every Kubuno window - the main
   form of `Application::run`, dialogs (`show_dialog`), `MessageBox`, the print preview, tool windows, MDI documents,
-  in-window dialogs and the gallery's `FloatingWindow` — now wears the band of the web `FloatingWindow`
+  in-window dialogs and the gallery's `FloatingWindow` - now wears the band of the web `FloatingWindow`
   (`core/frontend/src/ui/FloatingWindow.tsx`, measured on the live web): 50 px accent band, 16 px insets, heading-size title, the window's icon,
   30 × 30 rounded caption buttons with the white veil on hover, square corners, the window shadow, a white content
   area. One painter draws it everywhere, so the running window, the designer and the gallery are the same pixels.
@@ -906,15 +906,15 @@ number at release time, and CI publishes that section as the GitHub Release note
     layouts on the maximise button, resize borders and a resize grip, maximised insets, Alt+Space / right-click on the
     band / click on the icon open the window menu, Alt+F4, DPI changes.
 - **Window properties, WinForms-complete and beyond** (on a view's root element, in the Properties window and in code):
-  `WindowKind` (Form, Dialog, ToolWindow, Splash, Flyout, MdiChild — presets of the border, buttons and placement),
+  `WindowKind` (Form, Dialog, ToolWindow, Splash, Flyout, MdiChild - presets of the border, buttons and placement),
   `ShowIcon`, `HelpButton`, `SizeGripStyle`, `TransparencyKey`, `RightToLeftLayout`, `IsMdiContainer`,
   `SplashDuration`, `ResizeBorder` (a borderless window that still resizes), `Chrome`, `Backdrop`, `CornerPreference`,
   `BorderColor`, `AccentColor`, and a new *Title Bar* category: `TitleBarHeight`, `TitleBarBackground`,
   `TitleBarForeground`, `Subtitle`, `TitleAlignment`, `ShowTitle`, `CaptionButtonStyle` (Kubuno or Windows buttons),
   `CaptionButtons` (buttons of your own next to minimise) and `ExtendContentIntoTitleBar`.
 - **Controls in the title bar and the action bar**: `TitleBar.Region="Left|Center|Right"` puts a control of the view's
-  top level in the window's band (tabs, a search field, an avatar) — it takes the pointer instead of dragging the
-  window —, `TitleBar.Drag="true"` makes any control a drag area (the way to move a borderless window), and
+  top level in the window's band (tabs, a search field, an avatar) - it takes the pointer instead of dragging the
+  window -, `TitleBar.Drag="true"` makes any control a drag area (the way to move a borderless window), and
   `ActionBar.Region="Left|Right"` puts buttons in the window's action bar, the web dialogs' footer.
 - **Window events**: `ResizeBegin`, `ResizeEnd`, `TitleBarDoubleClick`, `DpiChanged`, `HelpButtonClicked`,
   `CaptionButtonClick` and `MdiChildActivate` (with `FormClosing`, `Shown`, `Activated`, `Deactivate` as before).
@@ -924,8 +924,8 @@ number at release time, and CI publishes that section as the GitHub Release note
   inside the parent in the floating-window look, drag, resize, minimise, maximise, `layout_mdi` Cascade / Tile /
   ArrangeIcons, `active_mdi_child`, `mdi_children`) and in-window dialogs over a veil (`show_in_window`).
 - **`<FloatingWindow>`**: a window drawn inside a view, designable (Title, Icon, IsOpen, Modal, ShowClose, OnClose).
-- **`MessageBox` in the Kubuno look**: the web `ConfirmDialog`'s layout — icon on a tinted disc, the message, text
-  buttons in the action bar — with a new `MessageBoxIcon::Danger` for destructive confirmations. `<Icon Disc="…">`
+- **`MessageBox` in the Kubuno look**: the web `ConfirmDialog`'s layout - icon on a tinted disc, the message, text
+  buttons in the action bar - with a new `MessageBoxIcon::Danger` for destructive confirmations. `<Icon Disc="…">`
   draws any icon on such a disc.
 - `Application::set_theme` switches the open windows live (title bars, pages, dialogs); `Application::add_message_filter`
   (WinForms' `IMessageFilter`), `Form::on_message` (tray callbacks, `WM_COPYDATA`, `WM_SETTINGCHANGE`),
@@ -933,13 +933,13 @@ number at release time, and CI publishes that section as the GitHub Release note
 - Example `cargo run -p kubuno --example window_kinds [-- --open <kind>] [--dark]`: every kind of window.
 - **Printing, the Windows Forms way** (new crate `kubuno-print`, `kubuno::printing`; vskubuno `docs/PRINTING.md`):
   - `PrintDocument` with `BeginPrint`, `QueryPageSettings` (change one page's orientation, paper or margins),
-    `PrintPage` (draw the page on `e.graphics()` — the same `Graphics` as a control's paint — within `e.margin_bounds`,
+    `PrintPage` (draw the page on `e.graphics()` - the same `Graphics` as a control's paint - within `e.margin_bounds`,
     set `e.has_more_pages`) and `EndPrint`; `print()` sends the pages to the Windows print spooler as vector output
     (text stays text, fonts embedded). A view's `<PrintDocument>` prints through its `.kbview` handlers.
   - Printing into a file without any dialog (`PrintToFile` + `PrintFileName`): with "Microsoft Print to PDF" it
     writes a PDF, with the XPS Document Writer an XPS document; without a file name a Save dialog asks for one.
-  - `PrinterSettings` (the installed printers, the default one, copies, collation, two-sided printing, page range —
-    pages outside a chosen range are not sent —, the printer's paper sizes, trays, resolutions and colour support) and
+  - `PrinterSettings` (the installed printers, the default one, copies, collation, two-sided printing, page range -
+    pages outside a chosen range are not sent -, the printer's paper sizes, trays, resolutions and colour support) and
     `PageSettings` (paper, tray, orientation, margins in hundredths of an inch, colour, the printable area).
   - `PrintPreviewControl` (zoom or fitted, 1 to 10 columns and rows of pages, start page, mouse wheel and Page
     Up/Down) and `PrintPreviewDialog`, a window in the Kubuno look with Print, Zoom, one/two/three/four/six pages, the
@@ -957,7 +957,7 @@ number at release time, and CI publishes that section as the GitHub Release note
 - **Typed data sources** (`kubuno-data`, `kubuno::data`; vskubuno `docs/DATA.md` DATA-4): a `.kbdata` file describes
   a data source (connection name, tables, views, named queries) and `data_source!("shop.kbdata")` turns it at compile
   time into row structs (`Customer`) with `fetch_all`, `fetch_by_key`, `insert`, `update`, `delete` and one function per
-  named query, checked by SQLx against the committed offline cache `.sqlx` — no `sqlx` dependency needed in the
+  named query, checked by SQLx against the committed offline cache `.sqlx` - no `sqlx` dependency needed in the
   application. Typed rows load into and read back from a `BindingSource`; `*_task` variants run on the data runtime and
   are awaited from the UI. A stale or incomplete cache is a compiler warning at the `data_source!` call.
 - **`DataTable` columns are formatted and editable in place, like a Windows Forms `DataGridView`**: `<Column
@@ -996,7 +996,7 @@ number at release time, and CI publishes that section as the GitHub Release note
 
 - **Data access components (`kubuno-data`, vskubuno `docs/DATA.md`, lot DATA-1)**: a new crate that brings
   ADO.NET/WinForms-style database access to Kubuno desktop applications, PostgreSQL and SQLite first.
-  - `<DbConnection>`: the connection string is never written in the view or the source — it is looked up by
+  - `<DbConnection>`: the connection string is never written in the view or the source - it is looked up by
     name in the environment (`ConnectionStrings__Name`), the Windows Credential Manager or the user secrets
     store (`%APPDATA%\Kubuno\UserSecrets\<id>\secrets.json`, the id coming from `[package.metadata.kubuno]
     user-secrets-id` in the application's `Cargo.toml`); `{secret:Key}` placeholders keep passwords out of a
@@ -1006,7 +1006,7 @@ number at release time, and CI publishes that section as the GitHub Release note
     `ConnectionStringBuilder` reads both the `Key=Value;` and URL forms and never displays a password.
   - `<DbCommand>` and `<TableAdapter>`: parameterized SQL only (`@name` parameters); a table adapter fills a
     table whose rows track their state (added, modified, deleted) and saves the changes with generated
-    `INSERT`/`UPDATE`/`DELETE` statements in a single transaction — all or nothing, with generated keys written
+    `INSERT`/`UPDATE`/`DELETE` statements in a single transaction - all or nothing, with generated keys written
     back and rows changed by someone else reported as a concurrency conflict.
   - `<BindingSource>`: current row and position, filter (`Name LIKE 'A%' AND Age >= 18`) and sort
     (`Name ASC, Age DESC`), add / edit / cancel / end edit, field validation (types, required values, lengths,
@@ -1025,17 +1025,17 @@ number at release time, and CI publishes that section as the GitHub Release note
     libraries): bindings reach them by name without any code in the view model, `Runtime::components()` /
     `with_component::<BindingSource, _>("customers", …)` (and `kubuno_views::scope::current()` in a handler,
     `UiHandle::components()` in an async handler) reach them from code, and a hot reload of the view keeps
-    their rows. Their `.kbview` handlers run — synchronously when a binding changed them, so an
+    their rows. Their `.kbview` handlers run - synchronously when a binding changed them, so an
     `OnRowValidating` handler can refuse a row and an `OnAddingNew` handler can cancel an addition.
   - `<BindingNavigator>`: the WinForms navigation strip (first, previous, position box, count, next, last,
     add, delete, save) with the Kubuno icons, disabled where an action is not possible; its Save item saves
     the binding source through its adapter (`AutoSave`) and raises `SaveItemClick`.
-  - The `ErrorProvider` draws its error icon next to every control bound to a field in error — a red badge
+  - The `ErrorProvider` draws its error icon next to every control bound to a field in error - a red badge
     with an exclamation mark, the message as its tooltip, `IconAlignment`, `IconPadding`, `BlinkStyle` and
     `BlinkRate` as in WinForms.
   - Typed bindings: a numeric property bound to a number column gets a number, a check box a boolean, and
     `FormatString=` (`N2`, `C`, `P1`, `D5`, `#,##0.00`, `d`, `g`, `dd/MM/yyyy`…), `NullValue=` and `Culture=`
-    (default: the Windows user's locale) format what is shown and parse what is typed back — `1 234,50` or
+    (default: the Windows user's locale) format what is shown and parse what is typed back - `1 234,50` or
     `10/12/1815` in French. This applies to any binding: a text holding a number now reaches a numeric
     property, and a number shown in a text property is displayed instead of left empty.
   - `kubuno_data::fill`, `save` and the new `save_all` work on the view's components; `DataContext` keeps
@@ -1230,7 +1230,7 @@ number at release time, and CI publishes that section as the GitHub Release note
   the saturation/value area inside it in its three shapes (square, triangle, circle), the six harmony schemes
   with their markers on the ring and their swatches, the preview and hex field, the RGB / HSV / HSL / CMYK / GRAY
   channel tabs with their gradient tracks, the twelve chips, the recent colours and the optional Cancel / Add
-  footer — same geometry to the half-DIP, same colours in light and dark, same keys (the ring wraps, the area
+  footer - same geometry to the half-DIP, same colours in light and dark, same keys (the ring wraps, the area
   moves by 0.02 / 0.1, a channel by 1 / 10). The old stacked SV area with separate hue and alpha sliders is gone
   (the web's picker has no alpha: a colour's opacity is kept, not edited). The ring and the SV area are drawn
   pixel by pixel like the web's canvas, the tracks with real gradients.
@@ -1589,7 +1589,7 @@ number at release time, and CI publishes that section as the GitHub Release note
   Windows Forms designer**, instead of the 4-DIP dashes it shared with the parent-container outline:
   `kubuno_views::design::dotted_outline` walks the marquee rectangle's perimeter in DEVICE pixels
   (not DIPs) so each dot is exactly one device pixel of ink and one device pixel of gap, pixel-aligned
-  and crisp at any DPI (checked at 175%) — flat, round-free squares, not `stroke_arc`'s round dashes.
+  and crisp at any DPI (checked at 175%) - flat, round-free squares, not `stroke_arc`'s round dashes.
   The parent-container outline (`paint_adorners`) still uses `dashed_outline` unchanged.
 - **`<Panel>` `Anchor` and `Dock` now behave like Windows Forms** at runtime and in the designer: an
   anchored edge keeps its distance to the panel's edge when the panel is resized (Left+Right stretches,
@@ -1599,7 +1599,7 @@ number at release time, and CI publishes that section as the GitHub Release note
   z-order (the first child in the document docks first, a `Dock="Fill"` written after the bands takes
   the remainder), and a docked or anchored child without `Width`/`Height` keeps its natural size instead
   of collapsing to zero.
-- **`kubuno-controls`' host no longer drops quick clicks — for every window it hosts, not just the
+- **`kubuno-controls`' host no longer drops quick clicks - for every window it hosts, not just the
   `.kbview` design surface.** A press released before the next frame was built (a touchpad tap, a
   synthetic click) was never seen as a press: `WM_PAINT` is only synthesized once the message
   queue is otherwise empty, so a fast `WM_*BUTTONDOWN` + `WM_*BUTTONUP` pair could both be
@@ -1607,20 +1607,20 @@ number at release time, and CI publishes that section as the GitHub Release note
   `down && !prev_down` edge check across frames never fired. `kubuno_controls::host` now latches
   each button's press per frame (`consume_button_edge`, unit-tested): the frame immediately after a
   press always reports that button down at least once, even if it was already released again by
-  then, and the frame after that carries the real (released) level — so the release edge a widget
+  then, and the frame after that carries the real (released) level - so the release edge a widget
   checks for still arrives too. Fixed for the left AND right buttons (a fast right-click could
   silently fail to open a context menu the same way); the host now also tracks the MIDDLE button
   (`Frame::middle_down`, previously not read from `WM_MBUTTONDOWN`/`WM_MBUTTONUP` at all) with the
   same latching, for any control that wants it. `kubuno-views`' `view_embed` (the surface
   `vskubuno`'s designer embeds) previously worked around this locally by latching its own
-  `WM_LBUTTONDOWN`; that workaround is now redundant and has been removed — behaviour is
+  `WM_LBUTTONDOWN`; that workaround is now redundant and has been removed - behaviour is
   unchanged, it just relies on the host's own guarantee instead. The spike's diagnostic chrome
   (probe line, Save/Menu demo buttons) is now only painted with `--debug-probe`, so the designer
   shows the view alone.
 
 - **The sign-in page's title no longer overlaps the shell header's "☰ Kubuno" brand text.**
   `login_view` is the one page that draws no rail (it "owns the whole window because there is
-  nothing to navigate to yet" — `window.rs`), but the shell's own header band is still painted on
+  nothing to navigate to yet" - `window.rs`), but the shell's own header band is still painted on
   every page including sign-in; `login_view::draw` drew its own "Connexion à Kubuno" title at
   `y = 0..64`, the same band, instead of below `crate::header::HEIGHT` the way every other page
   positions its title relative to `crate::chrome::content_area`. Sign-in has no rail to get that
@@ -1629,15 +1629,15 @@ number at release time, and CI publishes that section as the GitHub Release note
   down with it, since they all derive from the same `page()` rect.
 
 - **`kubuno-chat` failed to build**: `src/chat/.cargo/config.toml` was malformed TOML (an
-  unescaped `\k`/`\c` inside a plain string is not a valid escape sequence — Windows path
+  unescaped `\k`/`\c` inside a plain string is not a valid escape sequence - Windows path
   backslashes need `\\` or a literal `'...'` string). It was also stale: `chat` builds as part of
   the Windows workspace and must share the workspace's build directory to load the same
-  `kubuno_ui.dll` as every other app — exactly the reason `drive`'s own `.cargo/config.toml`
+  `kubuno_ui.dll` as every other app - exactly the reason `drive`'s own `.cargo/config.toml`
   (which `chat`'s comment claimed to mirror) deliberately sets none. `chat`'s config now matches
   `drive`'s: no target-dir, just the explanation of why not.
 
 - `kubuno_views::design::DesignController::press` now selects AND arms a Move/Resize/Reorder
-  drag in the SAME press (gated by a new `DRAG_THRESHOLD`, so a plain click still just selects) —
+  drag in the SAME press (gated by a new `DRAG_THRESHOLD`, so a plain click still just selects) -
   found during DSG-9's own visual check: the previous two-press design (select, then a second
   press to arm) read as "dragging an unselected element does nothing but select it".
 - `kubuno_views::protocol::parse_host_message` now strips a leading U+FEFF (byte-order mark)
@@ -1653,7 +1653,7 @@ number at release time, and CI publishes that section as the GitHub Release note
 - **Move/resize drag, Flow reorder and toolbox drop in `.kbview` design mode** (`kubuno-views`,
   work package DSG-9 of `vskubuno/docs/DESIGNER.md` §10): `kubuno_views::design::DesignController`
   gained a drag state machine driven by real mouse input on `examples/view_embed.rs`'s own
-  surface — pressing a resize handle or an Anchor element's own body arms a live-preview
+  surface - pressing a resize handle or an Anchor element's own body arms a live-preview
   move/resize (snaplines against sibling edges/centres and the container's own bounds, Shift
   suppresses snapping, Esc cancels with no text write), pressing a Flow (`<Stack>`) child arms a
   reorder with a live insertion marker. Nothing is written to `.kbview` text until mouse-up: a
@@ -1663,7 +1663,7 @@ number at release time, and CI publishes that section as the GitHub Release note
   `kubuno_views::design::ToolboxController` answers the surface's own protocol additions
   (`dragEnter`/`dragOver`/`drop`/`dragLeave`, the host's translation of an OLE/WPF drag from the
   VS Toolbox) with live drop-target feedback (`dropTargetChanged`, incl. whether the current
-  position is actually allowed — validated against the registry's `ChildrenModel`, mirroring
+  position is actually allowed - validated against the registry's `ChildrenModel`, mirroring
   `crate::validate`'s own gating rule) and, on a valid drop, an `insertChild` edit with a
   `<Component/>`/`<Component X="…" Y="…" Width="80" Height="24"/>` skeleton. 50 new/updated tests
   in `design.rs`, plus new wire-shape tests in `protocol.rs`; `cargo clippy --all-targets -- -D
@@ -1671,18 +1671,18 @@ number at release time, and CI publishes that section as the GitHub Release note
 
 - **Design mode for `.kbview` views** (`kubuno-views`, work package DSG-6 of `vskubuno/docs/
   DESIGNER.md`): a new `kubuno_views::design` module records a per-frame **layout map** (every
-  compiled element's stable id + painted bounds + parent id + parent's layout kind — `Anchor`/
+  compiled element's stable id + painted bounds + parent id + parent's layout kind - `Anchor`/
   `Dock`, `Flow`, or none), additive and zero-cost when unused (`PaintCx::design` is `None` for
   an ordinary frame; `Runtime::frame` is unchanged, a new `Runtime::frame_with_design` opts in).
   `LayoutMap::hit_test` finds the deepest element under a point. `examples/view_embed.rs` (the
   exe `vskubuno`'s `RustDesignSurfaceHost` embeds) gained an actual design mode: while on, real
-  mouse/keyboard input no longer reaches the compiled view's own widgets — a click selects the
+  mouse/keyboard input no longer reaches the compiled view's own widgets - a click selects the
   element under the cursor instead, Esc selects its parent, Delete/an arrow (nudge, Anchor
   elements only, Shift for a larger step) become edit requests rather than being applied
   locally, and selection/hover/parent-container adorners are drawn on top (8 resize handles on
   an Anchor/absolute element, a plain outline on a flow child). A new line-delimited JSON
-  protocol (`kubuno_views::protocol`) on the surface's own stdin/stdout — documented as
-  `vskubuno/docs/DESIGNER.md` §9 — carries `setText`/`setDesignMode`/`select` in and
+  protocol (`kubuno_views::protocol`) on the surface's own stdin/stdout - documented as
+  `vskubuno/docs/DESIGNER.md` §9 - carries `setText`/`setDesignMode`/`select` in and
   `selectionChanged`/`editRequest` out, replacing the temp-file bridge `RustDesignSurfaceHost`
   used until now; `view_embed`'s `<file.kbview>` CLI argument is now optional. `examples/
   view_preview.rs` is untouched.
@@ -1723,7 +1723,7 @@ number at release time, and CI publishes that section as the GitHub Release note
   methods let a client (the Visual Studio designer, or any other tool) make surgical edits to an
   open `.kbview` document and keep a design surface's selection in sync with the XML text,
   without ever regenerating the file: `kubuno/applyEdit` (set/remove an attribute, insert a
-  child, remove an element, move an element — including into a different container — and
+  child, remove an element, move an element - including into a different container - and
   rename an element, each returning the minimal `{range, newText}` edits to apply, computed
   against the document's current text), `kubuno/elementAtOffset` and `kubuno/rangeOfElement`
   (selection sync between the XML text and a design surface). Every element is addressed by a
@@ -1754,9 +1754,9 @@ number at release time, and CI publishes that section as the GitHub Release note
   `On*="…"` attribute on the `.kbview` element, and inserts both a real `fn <name>(vm: &mut dyn
   ViewModel, value: Value)` stub into the code-behind `.rs` file (found the same way
   `definition.rs` finds handlers) and, when that file already has a `handlers!` table, a
-  forwarding registration entry — a real `fn` is always created (never only a closure inside the
+  forwarding registration entry - a real `fn` is always created (never only a closure inside the
   table) so "go to definition" keeps working. Every insertion is a pure, zero-length text
-  splice — nothing existing is ever regenerated or reformatted. If the event already names a
+  splice - nothing existing is ever regenerated or reformatted. If the event already names a
   handler, the response is just that handler's existing location instead of a new edit. The
   result travels as a standard `lsp_types::WorkspaceEdit` (`{changes: {uri: [TextEdit]}}`)
   covering both files.
@@ -1772,18 +1772,18 @@ number at release time, and CI publishes that section as the GitHub Release note
   - a **surgical edit API** (set/insert/remove an attribute, insert/remove/
     move a child element) that changes exactly the bytes it needs to and
     leaves comments, formatting and attribute order untouched everywhere
-    else — the foundation the future visual designer and Claude will both
+    else - the foundation the future visual designer and Claude will both
     edit `.kbview` files through;
   - a **component metadata registry** describing five real desktop
-    components (`Button`, `Switch`, `TextField`, `Card`, `Stack`) — their
-    properties, types, allowed values and children — read directly from
+    components (`Button`, `Switch`, `TextField`, `Card`, `Stack`) - their
+    properties, types, allowed values and children - read directly from
     `kubuno-ui`'s existing API, with nothing in `kubuno-ui` itself changed;
   - a **validator** that checks a parsed view against that registry and
     reports unknown elements/attributes, invalid values and misplaced
-    children, each with a precise line and column — the same diagnostics
+    children, each with a precise line and column - the same diagnostics
     engine a future in-editor preview and language server will reuse.
 
-  This phase does not yet build or display anything from a `.kbview` file —
+  This phase does not yet build or display anything from a `.kbview` file -
   that is the next step. Nothing about how existing desktop screens work
   today has changed.
 - **`kubuno-views` crate: the XML views interpreter.** A `.kbview` file now
@@ -1792,7 +1792,7 @@ number at release time, and CI publishes that section as the GitHub Release note
     built into a live tree of the real `Button`/`Switch`/`TextField`/`Card`/
     `Stack` widgets, laid out with the same `kubuno_controls` engines
     hand-written screens use, and painted every frame with real mouse/focus
-    interaction (hover, press, click, Tab order) — not a static picture;
+    interaction (hover, press, click, Tab order) - not a static picture;
   - **one-way and two-way data binding** (`Text="{Binding Path}"`,
     `On="{Binding Path, Mode=TwoWay}"`) against a small view-model interface,
     and named event handlers (`OnClick="save_clicked"`) dispatched from a
@@ -1804,7 +1804,7 @@ number at release time, and CI publishes that section as the GitHub Release note
     on-screen banner naming the file, line and column of the problem;
   - a new example, `cargo run -p kubuno-views --example view_preview -- <file.
     kbview>`, opens any `.kbview` file in a live, hot-reloading preview
-    window — the fastest way to see a view while editing it, ahead of the
+    window - the fastest way to see a view while editing it, ahead of the
     Visual Studio designer.
 
   The component registry itself is unchanged (still the same five
@@ -1814,18 +1814,18 @@ number at release time, and CI publishes that section as the GitHub Release note
   all enabled (`default = ["all-features"]`); `kubuno-views-ls`'s completion
   and hover, being registry-driven, list every one of them too:
   - **`kubuno-views`: the `display` component family (Label, LinkLabel, Badge,
-    Icon, Separator, Spinner, ProgressBar, Callout, EmptyState) — live widgets
+    Icon, Separator, Spinner, ProgressBar, Callout, EmptyState) - live widgets
     with click handling on LinkLabel/Callout/EmptyState and animation on
     Spinner/ProgressBar.**
-  - **XML views: `choice` family — IconButton, CheckBox, RadioButton, Slider,
+  - **XML views: `choice` family - IconButton, CheckBox, RadioButton, Slider,
     NumericField, with live interaction and two-way bindings.**
-  - **XML views: `text` family — TextArea, SearchField, MaskedField, Dropdown,
+  - **XML views: `text` family - TextArea, SearchField, MaskedField, Dropdown,
     ComboBox, DatePicker, ColorField and the `Option` child element, with real
     floating panels.** Known gap: ColorField's picker panel isn't wired.
-  - **XML views: `containers` family — Panel (Dock/Anchor), GroupBox,
+  - **XML views: `containers` family - Panel (Dock/Anchor), GroupBox,
     ScrollArea, Splitter, Tabs/TabItem, Breadcrumb, Toolbar, Accordion,
     Stepper.**
-  - **XML views: `data` family — ListBox, CheckedListBox, ListView, TreeView,
+  - **XML views: `data` family - ListBox, CheckedListBox, ListView, TreeView,
     DataTable, MonthCalendar with bindable selection, events and wheel
     scrolling.**
 
@@ -1841,20 +1841,20 @@ number at release time, and CI publishes that section as the GitHub Release note
 - **XML views: typed children.** `ChildrenModel::List` now carries the
   allowed child element names (empty for an ordinary widget container like
   `<Stack>`/`<Panel>`/`<Splitter>`). `crate::validate` uses this, registry-wide,
-  to reject a "gated" child under the wrong parent wherever it is nested —
+  to reject a "gated" child under the wrong parent wherever it is nested -
   `<TabItem>` outside `<Tabs>`, and likewise `<Item>`/`<Column>`/`<Option>`/
   `<Step>`/`<AccordionSection>`/`<BreadcrumbItem>`/`<ToolbarItem>` outside
-  their own parent — with a line/column diagnostic naming the valid parent(s).
+  their own parent - with a line/column diagnostic naming the valid parent(s).
   `ComponentMeta` also gained a `LayoutKind` (`None`/`Flow`/`DockAnchor`/
   `Split`/`Tabs`) describing which layout engine a container drives, metadata
   only, for the future visual designer's drop visualization
   (`vskubuno/docs/DESIGNER.md` §4/§6 DSG-1).
 
 - **XML views: bindable lists (`ItemsSource`).** `crate::binding::Value`
-  gained a `List(Vec<Row>)` variant (`Row` = named fields, in order) — what
+  gained a `List(Vec<Row>)` variant (`Row` = named fields, in order) - what
   `ItemsSource="{Binding Path}"` now actually reads, every frame, on
   `ListBox`/`CheckedListBox`/`ListView`/`TreeView`/`DataTable` (each row's
-  `Text` field, or — for `ListView`/`DataTable` — one cell per `<Column
+  `Text` field, or - for `ListView`/`DataTable` - one cell per `<Column
   Binding="{Binding Field}">`) and on `Dropdown`/`ComboBox` (`DisplayMember`/
   `ValueMember`, defaulting to `Label`/`Value`, name which row field is the
   option's label/value). Static `<Item>`/`<Option>` children remain fully
@@ -1863,12 +1863,12 @@ number at release time, and CI publishes that section as the GitHub Release note
   `CheckedListBox` row always starts unchecked (no check-state field), and a
   bound `TreeView` is always one level deep (`Value::List` is flat).
 
-- **XML views: `Splitter` drag.** The divider now actually drags — mouse
+- **XML views: `Splitter` drag.** The divider now actually drags - mouse
   (press-and-hold on the grab band follows the pointer, `Splitter::drag_to`'s
   own contract) and keyboard (once the bar is focused: the two arrows along
   the split axis, Shift for a larger step, Home/End, Enter to collapse/
-  restore — `Splitter::handle_key`'s own WAI-ARIA "window splitter"
-  behaviour) — writing `Distance` back when bound `Mode=TwoWay` and
+  restore - `Splitter::handle_key`'s own WAI-ARIA "window splitter"
+  behaviour) - writing `Distance` back when bound `Mode=TwoWay` and
   dispatching the new `OnDistanceChanged` event.
 
 - **Office ribbon component.** The ribbon used by the web Office editors is now a
@@ -1919,9 +1919,9 @@ number at release time, and CI publishes that section as the GitHub Release note
   undo and redo, and scrolling. The gallery's new « richtext » page drives it
   from the existing toolbar.
 
-- **A composition page in the component gallery.** Six realistic screens —
+- **A composition page in the component gallery.** Six realistic screens -
   settings, a data table, a file explorer, feedback states, a form dialog and
-  an overflow audit — built from the components nested several levels deep,
+  an overflow audit - built from the components nested several levels deep,
   plus a live form in a scrolled container whose drop-downs, menus, help bubble
   and tooltip escape the container. It is the regression page for everything
   that only goes wrong once components are combined.
@@ -1929,8 +1929,8 @@ number at release time, and CI publishes that section as the GitHub Release note
 - **The help bubble from the web design system.** `help::HelpBubble` is the
   accent-coloured bubble the web console opens next to a « ? »: a bold title,
   a paragraph, an « OK » button and an optional second action, with an arrow
-  pointing at the control it explains. It goes on whichever side has room —
-  below first, then above, right, left — stays inside the window, and keeps its
+  pointing at the control it explains. It goes on whichever side has room -
+  below first, then above, right, left - stays inside the window, and keeps its
   arrow on the anchor even when pushed back from an edge. `help::HelpButton` is
   the « ? » itself (quiet at rest, accent while its bubble is open). The
   component gallery shows both on the fields page, with a live « ? » whose
@@ -1939,14 +1939,14 @@ number at release time, and CI publishes that section as the GitHub Release note
 - **Tooltips, menus and help bubbles can reach beyond their window.** Each is
   drawn in a transparent top-level window of its own, owned by the window that
   opened it, so it sits above everything and can hang past that window's edges,
-  kept inside the monitor rather than the window — as native menus do. Tooltips
+  kept inside the monitor rather than the window - as native menus do. Tooltips
   let the pointer through (`host::overlay`); menus, context menus and help
   bubbles take it (`host::popup`): hovering and clicking them works even where
   they lie outside the window, without taking the keyboard focus from it.
   Several can be open at once (a menu and its submenu). A click on the desktop
   or in another application closes them, as on the web. The host now also
   reports the right mouse button, so a real right-click context menu is
-  possible — the component gallery shows one on the lists page, and its help
+  possible - the component gallery shows one on the lists page, and its help
   bubble on the fields page.
 
 - **Every gallery page now carries a live column.** To the right of each page's
@@ -1958,14 +1958,14 @@ number at release time, and CI publishes that section as the GitHub Release note
   you pick, dialogs that open and dismiss, an accordion and a stepper that move,
   a data table you sort, select and page. Each control remembers its state
   between frames. Built on one shared helper (`pages/interact.rs`) so every page
-  works the same way, with the mouse and — since the host forwards it — the
+  works the same way, with the mouse and - since the host forwards it - the
   keyboard.
 
 - **The Kubuno UI gallery is now one navigable window.** It opened one page per
   launch before; a strip of tabs across the top now switches between every
-  component family — buttons, text, fields, lists, range, containers,
+  component family - buttons, text, fields, lists, range, containers,
   navigation, display, views, colour, date/time, dialogs, editors, feedback and
-  tables — so the whole design system is explorable from a single `gallery`
+  tables - so the whole design system is explorable from a single `gallery`
   example. `--page <name>` still opens straight to a page.
 
 - **kubuno-ui gained the outlined form field.** `fields::OutlinedField` is the
@@ -1975,7 +1975,7 @@ number at release time, and CI publishes that section as the GitHub Release note
   border and label in the primary colour, and it supports a leading icon, a
   trailing glyph, a required asterisk, a large variant, multiline, an invalid
   state and read-only. It is the base the Contacts-style composites
-  (address, phone, date, labelled groups) will be built on — the one part of the
+  (address, phone, date, labelled groups) will be built on - the one part of the
   web `@ui` library the desktop port had not yet covered.
 
 ### Changed
@@ -2017,7 +2017,7 @@ number at release time, and CI publishes that section as the GitHub Release note
   application closes it too.
 - **The title bar matches the ribbon.** In a desktop app with a ribbon, the
   window's title bar (and its border) now takes the colour of the ribbon's tab
-  strip — the app's tone, e.g. the Documents blue — so the two read as one
+  strip - the app's tone, e.g. the Documents blue - so the two read as one
   band, as on the web. The colour changes with the ribbon, and apps without a
   ribbon keep the usual Kubuno blue.
 - **Documents uses the shared Kubuno ribbon and window.** The desktop word
@@ -2032,7 +2032,7 @@ number at release time, and CI publishes that section as the GitHub Release note
   nothing yet, as before. Quick actions stay disabled until saving and undo
   exist. The status bar takes the web's light grey.
 - **The desktop apps share one component library, `kubuno_ui.dll`.** The Kubuno
-  design system — every component, the window host and the painting surface —
+  design system - every component, the window host and the painting surface -
   is now built once as a shared library that the shell, Drive, Chat, Documents
   and the component gallery all load, instead of each app carrying its own copy.
   The component gallery therefore exercises exactly the code the apps run. Drive,
@@ -2047,7 +2047,7 @@ number at release time, and CI publishes that section as the GitHub Release note
   - *Buttons, check boxes, radio buttons, switches*: transparent grounds,
     labels that wrap or end in an ellipsis instead of being clipped, the
     keyboard focus ring, a loading state, descriptions and smooth toggles.
-  - *Text fields, form fields*: fully editable — caret, selection by mouse and
+  - *Text fields, form fields*: fully editable - caret, selection by mouse and
     keyboard, clipboard, undo/redo, maximum length, horizontal scrolling and
     wrapping, a right-click edit menu; the outlined field's floating label no
     longer gets cut off by its container; search fields match the other
@@ -2085,7 +2085,7 @@ number at release time, and CI publishes that section as the GitHub Release note
 
 - **The desktop design system now renders text at the native OS form size.**
   The default body text moved from the web's 14 px to Segoe UI 9 pt (12 px), the
-  size Windows forms use — so a native desktop application reads at the
+  size Windows forms use - so a native desktop application reads at the
   platform's size rather than a browser's. It is one shared constant, so every
   component and every desktop app (shell, chat, the documents chrome) shifts
   together, and the controls keep their height: only the glyph shrank, giving
@@ -2102,19 +2102,19 @@ number at release time, and CI publishes that section as the GitHub Release note
   cleanly in both cases.
 - **XML views: `<MonthCalendar>`/`<DatePicker>` show the real « today »,
   not `01/01/2000`.** Neither node ever called `set_today_date`, so both
-  stayed at `kubuno_controls::datetime::DEFAULT_TODAY` — the replica's
-  deliberately implausible sentinel for "nobody set a real one" — forever.
+  stayed at `kubuno_controls::datetime::DEFAULT_TODAY` - the replica's
+  deliberately implausible sentinel for "nobody set a real one" - forever.
   A new `crate::clock::today()` (`GetLocalTime`, the local calendar date,
   not UTC's) now seeds it every frame on both. Each also gained an optional
   `Today` attribute (ISO `YYYY-MM-DD`) that overrides it when set, for a
   test or a screenshot that needs a fixed date instead of whatever day it
-  happens to be run on — the same reason the `kubuno-ui` gallery's own
+  happens to be run on - the same reason the `kubuno-ui` gallery's own
   demo pages hard-code a `TODAY` constant, now available per-view instead
   of only by editing Rust.
 - **XML views: a nested scrollable data control no longer swallows wheel
   notches it does not need.** `ListBox`/`CheckedListBox`/`ListView`/
   `TreeView`/`DataTable` used to `claim_wheel()` on any wheel travel over
-  their bounds, even a short list with every row already on screen — so
+  their bounds, even a short list with every row already on screen - so
   hovering one inside a `<ScrollArea>` (a `<Data>` tab with a three-row
   `<ListBox>` above a `<MonthCalendar>`, say) blocked the page from ever
   scrolling past it. Each one now claims the wheel only after checking that
@@ -2125,7 +2125,7 @@ number at release time, and CI publishes that section as the GitHub Release note
   repeating (and, for three of the five, getting slightly wrong) the same
   check. `TreeView`'s own scroll also gained an upper clamp it never had
   (`kubuno_ui::views::TreeView` has no `max_scroll` of its own, derived here
-  from its `rows()`/`row_height()`) — without one, scrolling down always
+  from its `rows()`/`row_height()`) - without one, scrolling down always
   "moved" even past the last row, which would have kept it claiming the
   wheel forever too. `MonthCalendar` is unchanged by design: its wheel
   changes the shown month, not a content offset with a limit, so it keeps
@@ -2134,25 +2134,25 @@ number at release time, and CI publishes that section as the GitHub Release note
   children.** `ViewNode` gained two default (opt-in) methods that
   `registry::families::containers::StackNode`/`crate::node::StackNode`
   (the `<Stack>` interpreter) now use:
-  - `measure_for_width` — a leaf whose height depends on the width it is
+  - `measure_for_width` - a leaf whose height depends on the width it is
     actually given (`<Callout>`, whose `kubuno_ui::feedback::Callout::measure`
     is `w-full` and otherwise wraps its body into a designer placeholder
     width) now reports its real height against the `<Stack>` column's real
     row width instead. Fixes a `<Callout>` sometimes claiming a wildly wrong
     (too tall) block and pushing every sibling after it out of view (an
     `<EmptyState>` after a `<Callout>` in the same column, say).
-  - `intrinsic_width` — a fixed-content-size leaf (`<Badge>`, `<IconButton>`,
+  - `intrinsic_width` - a fixed-content-size leaf (`<Badge>`, `<IconButton>`,
     `<SearchField>`, `<ColorField>`: each paints across whatever bounds it is
     given, by design, rather than limiting itself) is now narrowed to its own
     measured width and left-aligned inside its column's full-width block,
     instead of stretching edge to edge (a `<Badge>` reading as a full-width
     pill) or painting centred somewhere off to the right (an `<IconButton>`).
-    A `w-full` leaf (`<Separator>`, `<ProgressBar>`) is unaffected — its
+    A `w-full` leaf (`<Separator>`, `<ProgressBar>`) is unaffected - its
     default `None` answer keeps the existing full-width behaviour.
 - **XML views: a `<Stack>` child can now pin its own `Height`/`Width`.** A
   literal (non-`{Binding …}`) `Height` (in a vertical `<Stack>`) or `Width`
   (horizontal) attribute on a direct `<Stack>` child now overrides that
-  block's measured extent — the `Height`/`Width` attributes were already
+  block's measured extent - the `Height`/`Width` attributes were already
   accepted everywhere by `crate::validate` but, outside a `<Panel>`'s
   Dock/Anchor children, silently did nothing. Needed by `<Splitter>` (its own
   measured size is a designer placeholder unrelated to its two panes'
@@ -2162,10 +2162,10 @@ number at release time, and CI publishes that section as the GitHub Release note
   just the first.** `<Item Text="Alice" Role="Admin"/>` now fills the
   primary column from `Text` and any further declared `<Column Binding=
   "{Binding Role}">` from an attribute named exactly like that column's bare
-  binding field (`Role`) — previously only `Text` was ever read, so every
+  binding field (`Role`) - previously only `Text` was ever read, so every
   column past the first was blank for a static (non-`ItemsSource`) row.
   `<Item>` is now the one component whose attributes are not a fixed, closed
-  list (`ComponentMeta::open_attributes`) — its real fields are named by
+  list (`ComponentMeta::open_attributes`) - its real fields are named by
   whichever `<Column>`s its parent declares, which no static `properties`
   table could enumerate.
 - **No more "entry point not found" after a partial build.** Rebuilding one
@@ -2196,9 +2196,9 @@ number at release time, and CI publishes that section as the GitHub Release note
   stopped short of it. Both now reach the line, as on the web.
 
 - **Live tab strips behave the same everywhere.** A new `TabsController` owns
-  what a tab strip keeps between frames — the indicator sliding from tab to
+  what a tab strip keeps between frames - the indicator sliding from tab to
   tab, the scroll arrows, the wheel, the arrow keys and bringing the selected
-  tab into view — so every strip gets the component's full behaviour instead
+  tab into view - so every strip gets the component's full behaviour instead
   of a hand-copied part of it. The component gallery's own page navigation now
   uses it: its indicator slides, including on Ctrl+Tab, and the strip answers
   the arrow keys once focused.
@@ -2216,7 +2216,7 @@ number at release time, and CI publishes that section as the GitHub Release note
   so its metrics are exact.
 
 - **Keyboard focus in dialogs looks like the web's.** Buttons show one 2 px
-  accent ring, 1 px off the button, when reached with Tab — dialogs used to
+  accent ring, 1 px off the button, when reached with Tab - dialogs used to
   paint a second ring over the button's own.
 
 - **Menus keep their keyboard highlight.** After moving through a menu with the
@@ -2236,8 +2236,8 @@ number at release time, and CI publishes that section as the GitHub Release note
   longer closes in the same instant; the popover and font-picker demos no
   longer cover or overflow their neighbours.
 
-- **Spinners turn smoothly.** The moving arc of a spinner — and of a button's
-  loading ring — was drawn as a row of small dots, which read as a beaded edge
+- **Spinners turn smoothly.** The moving arc of a spinner - and of a button's
+  loading ring - was drawn as a row of small dots, which read as a beaded edge
   that shimmered as it turned. It is now one anti-aliased stroke with round
   ends, smooth at every size and angle. The component gallery's spinner row is
   also spaced so the large rings no longer touch.
@@ -2266,7 +2266,7 @@ number at release time, and CI publishes that section as the GitHub Release note
 
 - **The gallery tooltip is no longer hidden under the tab strip.** The
   pointer-following tooltip on the display page was painted onto the page, so the
-  navigation strip — drawn last, over the top edge — covered it whenever the
+  navigation strip - drawn last, over the top edge - covered it whenever the
   cursor rose toward the tabs, and it could never leave the window. It is now a
   floating surface in its own top-level popup: it sits above everything and
   overflows the window when the pointer is near an edge, the way a tooltip
@@ -2274,7 +2274,7 @@ number at release time, and CI publishes that section as the GitHub Release note
 
 - **The font picker no longer freezes a window that shows it open.** Building
   the open list classified every installed family (~260 of them) against three
-  keyword lists, and it did so afresh dozens of times per repaint — with the
+  keyword lists, and it did so afresh dozens of times per repaint - with the
   host repainting on every pointer move, a debug build pinned a CPU core and
   stopped responding. The classification of a family is now memoised (it never
   changes), the open list is cached until its inputs actually change, and the
@@ -2300,7 +2300,7 @@ number at release time, and CI publishes that section as the GitHub Release note
 
 - **A native desktop Documents app (work in progress).** A new `documents`
   binary opens a word-processor window modelled on Microsoft Word's desktop
-  layout — title bar, ribbon tab strip, ruler, a paginated page canvas on a grey
+  layout - title bar, ribbon tab strip, ruler, a paginated page canvas on a grey
   backdrop, and a status bar showing the current page and the zoom. The page is
   drawn directly with Direct2D and DirectWrite; the chrome around it comes from
   the shared Kubuno design system, so it matches Drive, the shell and Chat. Its
@@ -2316,8 +2316,8 @@ number at release time, and CI publishes that section as the GitHub Release note
   next.
 
 - **Documents now shows the full ribbon, matching the web editor.** The empty
-  band under the tabs is replaced by the real ribbon of the active tab —
-  Clipboard, Font, Paragraph, Styles and Editing on Home — declared from the
+  band under the tabs is replaced by the real ribbon of the active tab -
+  Clipboard, Font, Paragraph, Styles and Editing on Home - declared from the
   same command inventory as the web (`buildDocumentRibbon`), with group labels
   and separators, the Font and Size fields, the Bold/Italic/Underline toggles,
   hand-drawn glyphs where no icon is embedded (A▲, x₂, x², ¶), alignment and
@@ -2328,7 +2328,7 @@ number at release time, and CI publishes that section as the GitHub Release note
   drift apart.
 
 - **The pieces a Documents editor is built from.** Not yet reachable from the
-  window — they are written, tested and waiting to be wired: the caret and
+  window - they are written, tested and waiting to be wired: the caret and
   selection geometry, undo and redo (typing a word is one step), the Windows
   clipboard payloads, the Word-style ribbon declared as data, the typed client
   for the office routes, the open-document session with its save guard, list
@@ -2345,7 +2345,7 @@ number at release time, and CI publishes that section as the GitHub Release note
   justification rules, the same absolute 48 px tab grid, and the same
   three-branch line height. DirectWrite is used only to measure and to draw.
   The result is that the same document paginates identically in the browser and
-  on the desktop — a difference there is invisible on screen and obvious the
+  on the desktop - a difference there is invisible on screen and obvious the
   moment somebody prints. Paragraph alignment, line spacing and paragraph
   spacing are read from the document, and a paragraph longer than a page is
   split across pages line by line instead of jumping to the next page whole.
@@ -2353,7 +2353,7 @@ number at release time, and CI publishes that section as the GitHub Release note
 - **Documents reads and writes the stored format without losing anything.** A
   document is carried as the bytes it arrived as, and only the small part the
   app understands is parsed, so a save cannot drop what this version does not
-  model — tracked changes, anchored comments, header and footer definitions, or
+  model - tracked changes, anchored comments, header and footer definitions, or
   a rich text box's entire sub-document hidden inside an image attribute. Two
   storage shapes are handled and each is written back as it was read: a bare
   ProseMirror document stays bare (one stored document in five is bare, and
@@ -2368,7 +2368,7 @@ number at release time, and CI publishes that section as the GitHub Release note
   place the caret one position off at a line wrap.** A word made of an odd
   number of emoji stayed on one line and spilled past its column (in a table,
   into the next cell); it is now broken like every other over-wide word. A
-  zoomed document could not be scrolled to its last page — the scroll offset was
+  zoomed document could not be scrolled to its last page - the scroll offset was
   not scaled by the zoom. And a caret at the end of a wrapped line resolved to
   the wrong side of the dropped space, which would have inserted text one
   position too far right on every wrapped line once editing is wired.
@@ -2393,22 +2393,22 @@ number at release time, and CI publishes that section as the GitHub Release note
 - The desktop workspace now builds `serde_json` with the `raw_value` and
   `float_roundtrip` features. `raw_value` is what lets Documents carry a subtree
   through untouched; `float_roundtrip` stops a stored value such as
-  `47.999999999999996` — the shape a DOCX import's twips-to-pixels conversion
-  produces — from being written back as a different number. Features are
+  `47.999999999999996` - the shape a DOCX import's twips-to-pixels conversion
+  produces - from being written back as a different number. Features are
   additive across a workspace, so the other desktop binaries build with them
   too; neither changes behaviour for code that does not use them.
 
 - **A native desktop Chat module (work in progress).** A new `chat` binary
-  renders a two-pane messenger — a searchable conversation list on the left, the
-  open conversation (header, message bubbles, composer) on the right — natively
+  renders a two-pane messenger - a searchable conversation list on the left, the
+  open conversation (header, message bubbles, composer) on the right - natively
   in Win32/Direct2D, drawn with the shared Kubuno design system (`kubuno-ui`'s
   buttons, fields, badges and empty states) so it matches the shell and Drive.
   Its window/taskbar icon is the Chat module's own logo (built from
-  `chat-logo.png`), the same convention Drive follows — not the generic Kubuno
+  `chat-logo.png`), the same convention Drive follows - not the generic Kubuno
   mark. It mirrors the Kubuno web chat's layout and bubble rules. It now loads real
-  data from the server — the conversation list (`GET /api/v1/chat/conversations`)
+  data from the server - the conversation list (`GET /api/v1/chat/conversations`)
   and each opened conversation's messages (`GET …/messages`), decoded from the
-  web's base64url envelope — through `kubuno-sync` (which gained generic
+  web's base64url envelope - through `kubuno-sync` (which gained generic
   `get_json`/`post_json` helpers for core-proxied module routes), off the UI
   thread. You can type in the composer and press Enter to send (an optimistic
   bubble appears, then the server confirms). Messages now arrive **live** over a
@@ -2417,7 +2417,7 @@ number at release time, and CI publishes that section as the GitHub Release note
   thread and refreshes the list preview, dropping the echo of a message we just
   sent (by id, or by matching the optimistic copy). Opening a conversation marks
   it read (`POST …/read`, clearing its unread badge); presence and typing come
-  over the same socket — an online dot and status on a direct contact, an "en
+  over the same socket - an online dot and status on a direct contact, an "en
   train d'écrire…" note in the header (auto-clearing on a timer); list rows show
   relative times (Hier, weekday, date); and a meeting conversation carries a
   "Réunion" marker. The window wears its own title bar: the system caption is
@@ -2428,7 +2428,7 @@ number at release time, and CI publishes that section as the GitHub Release note
 - **`kubuno://` meeting hand-off (web → desktop, Zoom-style).** The chat app
   registers a `kubuno://` URL protocol pointing at itself, so the web can hand a
   meeting to the desktop: a `kubuno://meet/<id>` link opens (or raises) the app
-  on that conversation. It is single-instance — a launch carrying a link forwards
+  on that conversation. It is single-instance - a launch carrying a link forwards
   it to the already-running window (`WM_COPYDATA`) and exits, so a hand-off never
   opens a second chat; the running window comes to the front and opens the
   meeting. (The web still needs to emit the link, and the in-call UI follows.)
@@ -2438,10 +2438,10 @@ number at release time, and CI publishes that section as the GitHub Release note
   back to a flat single-colour glyph, while the web showed each module's real
   branded logo. The launcher now displays a logo the server serves for a module
   (a `logo_url`/`logo` on `/api/v1/modules`): it is downloaded and cached like
-  the profile photo, decoded once, and drawn on the tile in place of the glyph —
+  the profile photo, decoded once, and drawn on the tile in place of the glyph -
   so a logo added on the server appears on the desktop with no update. The
   module's own tile wears the module logo; a sub-app (Documents, Watch, Vertex…)
-  keeps its glyph unless the server serves a logo for that entry — the web's
+  keeps its glyph unless the server serves a logo for that entry - the web's
   `moduleGlyph` rule. Modules with no server logo keep their built-in logo or
   glyph, exactly as before.
 
@@ -2467,14 +2467,14 @@ number at release time, and CI publishes that section as the GitHub Release note
 - **The sync client now sends a `User-Agent`.** Its HTTP requests carried
   reqwest's blank default, so the server could only tell the desktop client's
   uploads apart by IP. It now announces `Kubuno-Desktop-Sync/<version> (<os>)`,
-  like the other Kubuno clients — the OS read at runtime, not hard-coded.
+  like the other Kubuno clients - the OS read at runtime, not hard-coded.
 
 ### Fixed
 
 - **Sync never trashes files a server-side reorganisation moved.** When the
   server repathed a folder whose files shared their bytes (same content) with
   files in another folder, the desktop could delete the moved-away copy on disk
-  and then push that as a deletion — trashing the still-valid file on the server.
+  and then push that as a deletion - trashing the still-valid file on the server.
   Two guards close it: a file whose exact content still exists on disk under
   another tracked path is treated as reorganised, never deleted (so its removal
   is never pushed), and a move no longer deletes a local file that a second entry
@@ -2491,7 +2491,7 @@ number at release time, and CI publishes that section as the GitHub Release note
 ### Added
 
 - **`kubuno-ui`: the Kubuno design system, rebuilt on the WinForms replicas.**
-  A Kubuno primitive is no longer a control written from scratch — it is a
+  A Kubuno primitive is no longer a control written from scratch - it is a
   replica from `kubuno-controls`, kept whole for its model, and repainted in the
   Kubuno look. The property surface, the defaults, the state machines (three-state
   check cycling, scroll-bar arithmetic, list selection with its `Ctrl`/`Shift`
@@ -2500,7 +2500,7 @@ number at release time, and CI publishes that section as the GitHub Release note
   and they come from theme tokens rather than from any colour literal.
 
   Eight families ship at once: buttons, text, lists, ranges, containers,
-  navigation, display and views — about sixty types, 205 tests. The desktop
+  navigation, display and views - about sixty types, 205 tests. The desktop
   gains the controls it simply did not have: a real **container** that places
   its children through the layout engine, check boxes and radios, combo boxes,
   tabs, group boxes, sliders, progress bars, badges, tooltips, list and tree
@@ -2515,7 +2515,7 @@ number at release time, and CI publishes that section as the GitHub Release note
 - **`kubuno-ui` text primitives**: `TextField`, `TextArea`, `SearchField` and
   `MaskedField`, each wrapping its WinForms replica (text, read-only, max
   length, password character, multiline, alignment and the whole mask engine
-  come from there) and adding the Kubuno look — icon columns, a placeholder, an
+  come from there) and adding the Kubuno look - icon columns, a placeholder, an
   invalid state, the accent focus ring. Editing itself is unchanged: the caret,
   the selection band and the scrolling that keeps the caret in view are still
   the shared editor the shell and Drive already use, so a focused plain field
@@ -2525,18 +2525,18 @@ number at release time, and CI publishes that section as the GitHub Release note
 - **`kubuno-ui` range primitives**: `ScrollBar`, `Slider`, `ProgressBar`,
   `NumericField` and `DomainField`, each wrapping its WinForms replica and
   painting the Kubuno look. The scroll bar is a drop-in replacement for the
-  hand-written one the shell and Drive use today — same rail, same thumb, same
-  chevrons, proven by a geometry-equality test — and it now takes its
+  hand-written one the shell and Drive use today - same rail, same thumb, same
+  chevrons, proven by a geometry-equality test - and it now takes its
   hover colour from the theme instead of a hard-coded pair of hex values.
   Progress bars gain the web's automatic warning/danger thresholds and its
   indeterminate sliver; numeric fields make the "set `Maximum` before `Value`"
   ordering trap unreachable.
 
 - **`kubuno-ui` list primitives**: `ListBox`, `CheckedListBox`, `ComboBox` and
-  `Menu`. Each wraps its WinForms replica and keeps its whole model — the items,
+  `Menu`. Each wraps its WinForms replica and keeps its whole model - the items,
   the four selection modes with their `Ctrl`/`Shift` rules, `TopIndex`,
   multi-column layout, `Sorted`, `MaxDropDownItems`/`DropDownHeight`, and the
-  per-item check states — while painting the Kubuno look. `Menu` **is** the
+  per-item check states - while painting the Kubuno look. `Menu` **is** the
   product's `MenuDropdown`, rebuilt to the pixel: 30 DIP rows, a full accent
   hover pill, icons and shortcuts in their own aligned columns, section labels,
   inset separators, checked and destructive entries, and cascading submenus.
@@ -2544,26 +2544,26 @@ number at release time, and CI publishes that section as the GitHub Release note
   before it dispatches instead of guessing.
 
 - **`kubuno-ui` data table**: `DataTable`, the desktop port of the product's one
-  table. It is a `ListView` — the same columns, rows, selection machine, sort
-  direction and virtualisation — wearing the web table's chrome and ink:
+  table. It is a `ListView` - the same columns, rows, selection machine, sort
+  direction and virtualisation - wearing the web table's chrome and ink:
   sortable headers with the ascending/descending/none cycle, a selection column
   whose « select all » box is genuinely three-state and covers the current page
   only, a bulk-action bar that replaces the toolbar as soon as something is
   selected (three actions inline, the rest folded into an overflow), a
   pagination footer with a page-size selector and first/previous/next/last
   jumps, the three empty states (nothing yet, no result, load failed) and a
-  loading skeleton. In a container under 700 DIP the rows become **cards** — the
-  primary column titles each one and the others become label/value pairs —
+  loading skeleton. In a container under 700 DIP the rows become **cards** - the
+  primary column titles each one and the others become label/value pairs -
   through a pure `layout_mode(width)` rather than a branch buried in a painter.
   A table of 100 000 rows with pagination off still paints exactly a screenful.
 
 - **`kubuno-ui` feedback primitives**: `Spinner`, `EmptyState`, `Callout`,
-  `Accordion` and `Stepper` — the five surfaces that tell you what is going on,
+  `Accordion` and `Stepper` - the five surfaces that tell you what is going on,
   none of which the desktop had. They are assemblies rather than new controls:
   every text run is a `Label` at a step of the web type scale, every glyph is an
   `Icon` (geometry, never a character), a section's count is a `Badge`, a
   section's card is a `Panel` on the card surface and an empty state's buttons
-  are real `Button`s — so a title painted here and a title painted anywhere else
+  are real `Button`s - so a title painted here and a title painted anywhere else
   in the system are the same title.
 
   `Spinner` is the family's one animated primitive and it owns no clock: the
@@ -2571,22 +2571,22 @@ number at release time, and CI publishes that section as the GitHub Release note
   bar's already is, so the same inputs always paint the same picture and the
   whole turn is capturable in one screenshot. `Callout` carries the four
   severities on a tinted ground (the accent stays on the mark, where contrast is
-  not a legibility requirement); the four lucide marks it needs — `Info`,
-  `CheckCircle2`, `AlertTriangle` and `AlertCircle` — join the shared icon
+  not a legibility requirement); the four lucide marks it needs - `Info`,
+  `CheckCircle2`, `AlertTriangle` and `AlertCircle` - join the shared icon
   geometries. `Accordion` publishes its section rectangles,
   its hit test and its total height as pure functions of what is open.
-  `Stepper` carries all five step states — including **error**, which is what
+  `Stepper` carries all five step states - including **error**, which is what
   makes the control more than a decoration: a wizard whose third step failed
   says so on the indicator instead of at submit time.
 
 - **`kubuno-ui` dialogs**: `FloatingWindow`, `ConfirmDialog`, `PromptDialog`,
-  `ConflictDialog`, `Popover` and `Toast` — the family the product's own rule
+  `ConflictDialog`, `Popover` and `Toast` - the family the product's own rule
   requires (« never a browser dialog: use `ConfirmDialog` / `PromptDialog` »),
   which until now had no desktop counterpart at all, so a shell that needed a
   confirmation had nothing to call. Each is a port of the web component that
-  ships: the accent title band, the one footer the whole product shares — the
+  ships: the accent title band, the one footer the whole product shares - the
   action on the left, the cancel on the right, both at least 96 wide, so a
-  hundred dialogs cannot each have an opinion — the modal veil that closes on a
+  hundred dialogs cannot each have an opinion - the modal veil that closes on a
   click outside, and the three-way name conflict Drive shows on a collision.
   A dialog **measures** itself from its own message (wrapped to its width) and
   is **placed** by a pure function that keeps it inside a host smaller than
@@ -2595,10 +2595,10 @@ number at release time, and CI publishes that section as the GitHub Release note
   stack of toasts is a pure function too, dropping the oldest past four.
   Nothing is rebuilt that already existed: the bands come from the layout
   engine, the buttons from `kubuno-ui`'s own, the prompt's input from
-  `TextField` — caret, selection and all.
+  `TextField` - caret, selection and all.
 
 - **`kubuno-ui` colour primitives**: `ColorField`, `ColorPicker`,
-  `SwatchPicker` and `GradientPicker` — the family WinForms has no control for
+  `SwatchPicker` and `GradientPicker` - the family WinForms has no control for
   (it ships a `ColorDialog`, not a widget), so the reference is the web alone.
   The swatch button wraps the button replica, every panel wraps the container
   replica, and the hue, alpha, angle and opacity sliders wrap the track-bar
@@ -2606,8 +2606,8 @@ number at release time, and CI publishes that section as the GitHub Release note
   that was already checked against the toolkit.
 
   The colour maths is a faithful port of the web's own `color.ts` and
-  `gradient.ts` — RGB ⇄ HSV ⇄ HSL ⇄ CMYK, the hex and `rgba()` serialisers, the
-  gradient's stop sampling — **rounding included**: it runs in double precision
+  `gradient.ts` - RGB ⇄ HSV ⇄ HSL ⇄ CMYK, the hex and `rgba()` serialisers, the
+  gradient's stop sampling - **rounding included**: it runs in double precision
   and breaks ties the way JavaScript does, so no channel can come out one unit
   from what the browser shows. Every one of the ninety-two colours the two
   shipped palettes contain survives a round trip through all three colour
@@ -2620,11 +2620,11 @@ number at release time, and CI publishes that section as the GitHub Release note
   three-layer recipe (a hue ground, a white ramp across, a black ramp down),
   which is exact but quantised to one DIP per strip, and the gradient preview
   is a grid of 2 DIP cells sampled from the gradient, so an angled or radial
-  one is visibly banded. The web's hue RING is not reproduced at all — there is
-  no conic brush — and the panel uses the same component's hue **slider**
+  one is visibly banded. The web's hue RING is not reproduced at all - there is
+  no conic brush - and the panel uses the same component's hue **slider**
   instead. No contrast check is offered, because the web computes none.
 
-  Four theme tokens were added for this family's chrome — the two squares of
+  Four theme tokens were added for this family's chrome - the two squares of
   the transparency chequer and the two strokes of a picker handle. They are
   deliberately identical in the light and dark palettes, because the web writes
   them as literals: a chequer and a handle outline have to stay readable over
@@ -2633,9 +2633,9 @@ number at release time, and CI publishes that section as the GitHub Release note
 ### Changed
 
 - **Drive's command bar, path trail and status bar now paint with
-  `kubuno-ui`.** The three bars kept their own description of themselves — a
+  `kubuno-ui`.** The three bars kept their own description of themselves - a
   flattened list of "visuals" for the paint on one side, a hand-rolled walk of
-  rectangles for the hit test on the other — and the two could, and did, drift
+  rectangles for the hit test on the other - and the two could, and did, drift
   apart. Each bar is now a design-system primitive that owns both: the commands
   are `Toolbar`'s `ToolStripItem`s (so a greyed-out command, a toggle's on
   state, a separator and a drop-down are the replica's own fields, stored once),
@@ -2660,8 +2660,8 @@ number at release time, and CI publishes that section as the GitHub Release note
   settings section had a hand-written copy of the design system in them, written
   before the primitives existed: its own two-variant button, its own selector,
   its own switch, its own warning box and its own keyboard-shortcut chip. Each
-  is now the shipped primitive — `Button`, `Dropdown`, `Switch`, `Callout` and
-  `Badge` — and, more importantly, each is now **measured** by the primitive
+  is now the shipped primitive - `Button`, `Dropdown`, `Switch`, `Callout` and
+  `Badge` - and, more importantly, each is now **measured** by the primitive
   against the real font instead of by a per-character estimate. Buttons and
   chips therefore hug their label exactly, in every language, rather than being
   a few pixels wide or narrow; the selectors gain the design system's solid
@@ -2669,12 +2669,12 @@ number at release time, and CI publishes that section as the GitHub Release note
   warning box carries the real `warning-light` ground and the `AlertTriangle`
   mark rather than a tint derived from the warning colour, and its row is three
   pixels taller because that is what the callout actually measures. What the
-  pages themselves are — the cards, the expanders, the group headers — is
+  pages themselves are - the cards, the expanders, the group headers - is
   untouched.
 
 - **The background-colour picker of Drive's appearance settings is now the
   Kubuno colour panel.** The flyout behind the "Background colours" button used
-  to be a port of the WinUI/Files `ColorPicker` — two tabs, a hue×saturation
+  to be a port of the WinUI/Files `ColorPicker` - two tabs, a hue×saturation
   square and a separate value slider. It is now `kubuno-ui`'s `ColorPicker`:
   a saturation/value area, a hue slider, an alpha slider, a live preview over
   the transparency chequer, the hex value and twelve one-click colour chips.
@@ -2685,8 +2685,8 @@ number at release time, and CI publishes that section as the GitHub Release note
 
 - **The shell now paints with `kubuno-ui`.** All 149 button call sites across
   thirteen files moved from the hand-written control to the rebuilt one. The
-  rendering is unchanged by construction — the replacement was proven
-  pixel-identical first — so this is a change of foundation, not of appearance:
+  rendering is unchanged by construction - the replacement was proven
+  pixel-identical first - so this is a change of foundation, not of appearance:
   buttons in the shell now carry the full WinForms model (enabled state,
   padding, alignment, auto-size) instead of a bespoke struct.
 
@@ -2694,8 +2694,8 @@ number at release time, and CI publishes that section as the GitHub Release note
   Audiences cibles sections say « loading », « nothing here » and « that
   failed » properly.** A grey line of text has become a spinner with a caption,
   a medallion with a title and a sentence explaining what would appear there,
-  and a danger callout. The badges on those pages — « Par défaut », « Système »
-  and the permission chips of an expanded group — are now the design system's
+  and a danger callout. The badges on those pages - « Par défaut », « Système »
+  and the permission chips of an expanded group - are now the design system's
   own badge, measured rather than sized by hand, so a long label no longer
   overflows its pill.
 
@@ -2704,8 +2704,8 @@ number at release time, and CI publishes that section as the GitHub Release note
   « Aucune donnée. » and a red line of error text have become a spinner with a
   caption, a medallion with a title and a sentence saying what would appear
   there, and a danger callout. On Applications, the service-state dot and its
-  wording are now one design-system badge — green while the module is on, quiet
-  neutral while it is off — and the « Par défaut » pill is measured rather than
+  wording are now one design-system badge - green while the module is on, quiet
+  neutral while it is off - and the « Par défaut » pill is measured rather than
   sized by hand.
 
 - **The bars on the Stockage and Tableau de bord pages are the design system's
@@ -2715,16 +2715,16 @@ number at release time, and CI publishes that section as the GitHub Release note
   automatic quota thresholds: these bars measure a row against the *largest*
   row, not against a quota, so amber at 75 % and red at 90 % would flag the top
   row of every card for being the top row. The instance's real threshold is
-  still the states card's « seuil N % ». The composition bars — accounts against
-  the volume, and the account-state tally — stay hand-stacked, since they carry
+  still the states card's « seuil N % ». The composition bars - accounts against
+  the volume, and the account-state tally - stay hand-stacked, since they carry
   several segments where a progress bar carries one; they now share the
   primitive's track thickness, so a card no longer shows two different bars.
 
 ### Added
 
 - **`--page <name>` opens a page directly at start-up** (`--page admin:storage`).
-  The administration console was otherwise unreachable without a mouse — avatar,
-  then menu entry, then rail row — which made every one of its sections
+  The administration console was otherwise unreachable without a mouse - avatar,
+  then menu entry, then rail row - which made every one of its sections
   impossible to capture from a script, and is how a whole console came to ship
   checked only by its tests. The request is held until the identity arrives,
   because the shell closes the console for a non-administrator and the first
@@ -2735,18 +2735,18 @@ number at release time, and CI publishes that section as the GitHub Release note
 - **A server-side folder MOVE no longer orphans its old directory.** The pull
   reconciled a moved/renamed FILE (write the new path, drop the old) but not a
   moved FOLDER: it created the new directory and left the old one on disk,
-  untracked — the folder-level twin of the file cascade, and the source of the
+  untracked - the folder-level twin of the file cascade, and the source of the
   `Vidéos (2) (2)` / `Livres (2) (2)` duplicates. The old directory is now
   removed once the file pass has emptied it, and ONLY if empty (`remove_dir`,
   never `remove_dir_all`), so an un-reconciled child is never deleted with it.
   Tested.
 
-- **Deleting a folder still did nothing in some cases** — the previous fix for
+- **Deleting a folder still did nothing in some cases** - the previous fix for
   this left two holes. Its « a folder is only deleted when the directory that
   should contain it is present » guard backfired on the common case: deleting a
   whole subtree removes that containing directory too, so the guard queued
   nothing. And trashing a folder dropped only its own row from the local index,
-  orphaning every descendant — present in the index, gone from disk and server,
+  orphaning every descendant - present in the index, gone from disk and server,
   and no longer detectable because their own parent was now gone and untracked.
   The guard now walks up to the nearest surviving, READABLE ancestor (which
   tells a real deletion apart from an unreadable drive), and the index removes a
@@ -2770,7 +2770,7 @@ number at release time, and CI publishes that section as the GitHub Release note
 - The Visual Studio design surface (`kubuno-views/examples/view_embed.rs`) no longer reports the DLL it loaded: its
   `surfaceInfo` handshake is version 2 and carries no DLL path or hash.
 - **Tauri**. The desktop application is now a native Win32 shell (`shell/`,
-  binary `kubuno-desktop`) drawn with the Drive components — no web view, no
+  binary `kubuno-desktop`) drawn with the Drive components - no web view, no
   WebView2, no bundler. The `app/` crate is gone, and with it the **28 IPC
   commands**, the **local caching proxy** and its axum/reqwest/tungstenite
   dependencies, the per-document native windows and the `desktop_bridge_js`
@@ -2781,12 +2781,12 @@ number at release time, and CI publishes that section as the GitHub Release note
   `GET /api/v1/desktop/wasm`.
 - `get_instance_modules` (module-contributed desktop settings) was NOT ported:
   the `/api/v1/desktop/modules` endpoint does not exist in the core and no
-  module declares such settings — it always returned an empty list.
+  module declares such settings - it always returned an empty list.
 
 ### Added
 
 - **`kubuno-controls` now paints the real themed Windows parts.** Controls used
-  to be drawn entirely from `GetSysColor` and a `DrawEdge` recipe — a coherent
+  to be drawn entirely from `GetSysColor` and a `DrawEdge` recipe - a coherent
   and correct *classic* look, but not the one the reference sheets show, because
   the toolkit renders them with visual styles **on**. Pixel-sampling the sheets
   found colours that exist in no system colour at all: a `#ABADB3` text-field
@@ -2800,10 +2800,10 @@ number at release time, and CI publishes that section as the GitHub Release note
   a machine with visual styles switched off, or under a high-contrast theme: the
   classic painting stays and is used automatically, and `KUBUNO_CONTROLS_CLASSIC`
   forces it on a themed machine for comparison. The rendered parts are cached
-  per size and per DPI — a redraw costs well under a microsecond — and rebuilt
+  per size and per DPI - a redraw costs well under a microsecond - and rebuilt
   when the display scale or the desktop theme changes.
 
-- **`kubuno-controls` — the primitive control library.** A native reproduction
+- **`kubuno-controls` - the primitive control library.** A native reproduction
   of the WinForms control surface on Direct2D, meant to become the one set of
   primitives every Kubuno desktop application builds on. 65 control types were
   read out of the shipping `System.Windows.Forms` assembly **by reflection**
@@ -2816,7 +2816,7 @@ number at release time, and CI publishes that section as the GitHub Release note
   properties inherited by all 64 other types, `ButtonBase` adds 18 shared by
   three controls, and `Button` itself declares two. The port mirrors that with
   **composition + `Deref`**, so each type owns exactly what its .NET counterpart
-  declares — including the subtlety that a subclass often *re-declares* a base
+  declares - including the subtlety that a subclass often *re-declares* a base
   property only to change its default (`RadioButton` starts `TabStop = false`),
   which gets a new default but never new storage.
 
@@ -2840,20 +2840,20 @@ number at release time, and CI publishes that section as the GitHub Release note
   **gallery example** (`cargo run -p kubuno-controls --example gallery`) that
   rebuilds each reference sheet out of the real controls, so the port and the
   toolkit can be put side by side (`tools/winforms-ref/compare.ps1`, which
-  normalises the two captures to one scale — the reference is written in logical
+  normalises the two captures to one scale - the reference is written in logical
   pixels and a screen grab is physical, and composing them raw would show a fact
   about the capture as if it were a fact about the port).
 
   Controls paint through `Control::paint` at rest and through the provided
   `paint_with_state(…, ControlState { hot, pressed, focused, default })` when
-  the host knows what the pointer is doing — which is what makes
+  the host knows what the pointer is doing - which is what makes
   `FlatAppearance.MouseOverBackColor`, `LinkBehavior::HoverUnderline` and the
   `Popup`/`System` flat styles expressible at all, since those differ *only*
   under the mouse. The state is a provided method, so a family with nothing to
   show under the pointer implements nothing.
 
   **The controls are painted as faithful .NET replicas**, not in the Kubuno
-  design system — square corners, real 3-D edges, and every colour, metric and
+  design system - square corners, real 3-D edges, and every colour, metric and
   font read from Windows rather than chosen: `GetSysColor` for the palette,
   `GetSystemMetricsForDpi` for scrollbar widths and edge thicknesses, and
   `SystemParametersInfoForDpi(SPI_GETNONCLIENTMETRICS)` → `lfMessageFont` for
@@ -2864,7 +2864,7 @@ number at release time, and CI publishes that section as the GitHub Release note
   Repainting against the reference is what caught the metrics that had been
   quietly taken from the Kubuno design system instead of the toolkit:
   `ListBox.ItemHeight` is 15 and not 20, a `CheckedListBox` row is 18, an item's
-  text inset is 2 and not 6, and a line box is `2724/2048` of the em — Segoe UI's
+  text inset is 2 and not 6, and a line box is `2724/2048` of the em - Segoe UI's
   own `hhea` spacing, which .NET agrees with to the hundredth. It also caught
   three colour traps worth naming: a `LinkLabel` is **not** `COLOR_HOTLIGHT`
   (the toolkit resolves the link colour through Internet Explorer's setting), a
@@ -2876,20 +2876,20 @@ number at release time, and CI publishes that section as the GitHub Release note
   than a claim:
 
   * `audit-coverage.ps1` cross-checks every property the catalogue says a type
-    declares against the source — 659 properties, classified as implemented,
+    declares against the source - 659 properties, classified as implemented,
     correctly inherited through `Deref`, documented, or missing.
   * `parity/` drives **real WinForms controls** and the port over the same case
     list (declared once, read by both sides, so they cannot drift) and diffs the
     numbers: `Dock`/`Anchor` including nesting and combinations, the layout
     panels' arithmetic, and the range controls' state machines.
   * `compare.ps1` puts a rendered page beside its reference sheet, normalising
-    the two captures to one scale — the reference is written in logical pixels
+    the two captures to one scale - the reference is written in logical pixels
     and a screen grab is physical, so composing them raw would present a fact
     about the capture as a fact about the port.
 
   The `Dock`/`Anchor` harness alone started at 31 of 52 cases disagreeing and
   found eight defects in the layout engine, none of which the unit tests could
-  see — because those tests encoded the port's own understanding rather than the
+  see - because those tests encoded the port's own understanding rather than the
   toolkit's, and two of them asserted the opposite of what WinForms does. `Fill`
   is resolved in place and consumes nothing (which is *why* the toolkit wants a
   Fill child at the back of the z-order); a band overflows rather than being
@@ -2903,15 +2903,15 @@ number at release time, and CI publishes that section as the GitHub Release note
   A harness that provokes toolkit code through a window procedure must set
   `UnhandledExceptionMode.ThrowException`: an exception thrown inside a
   `WndProc` does not come back out of the `SendMessage` that caused it, so
-  WinForms turns it into a modal dialog and an unattended run hangs — which
+  WinForms turns it into a modal dialog and an unattended run hangs - which
   makes a stuck run indistinguishable from a green one. It also hid two real
   results, where the toolkit's own scroll handler computes a value and then
   rejects it.
 
   Building the gallery is what found the defects that unit tests could not: a
   DPI factor applied twice (invisible at 100 %, and it pushed a tool strip's
-  last item into the overflow), a host that never initialised COM — so the
-  renderer failed and the window stayed blank with the error swallowed — glyphs
+  last item into the overflow), a host that never initialised COM - so the
+  renderer failed and the window stayed blank with the error swallowed - glyphs
   drawn as text characters the embedded face does not carry, child bounds kept
   in canvas space instead of parent-relative, a content rectangle read from the
   control's own field rather than the rectangle it was asked to paint into, and
@@ -2926,21 +2926,21 @@ number at release time, and CI publishes that section as the GitHub Release note
 - A `link_visited` colour token in the shared `Theme` (both palettes), so
   `LinkLabel` paints a followed link from the palette instead of a hard-coded
   purple; and `Check`, `Minus`, `Plus`, `ChevronUp` geometries in the shared
-  icon set — a check mark drawn as a text « ✓ » depends on whichever font
+  icon set - a check mark drawn as a text « ✓ » depends on whichever font
   resolves it and would not match at any size.
 - **The web shell's chrome**, replicated from `AppHeader` / `HeaderActions` /
   `WaffleMenu`: a 64px header carrying the hamburger, the wordmark, search, the
   storage gauge, notifications, settings, help, the waffle and the avatar, with
-  36px round buttons and 18px glyphs. The header is merged INTO the title bar —
+  36px round buttons and 18px glyphs. The header is merged INTO the title bar -
   `WM_NCCALCSIZE` drops the system caption while keeping the resize borders,
   `WM_NCHITTEST` makes the band draggable except over a control, and the shell
   draws the caption buttons (the Maximise one still reports as `HTMAXBUTTON`,
   so Windows 11 keeps offering its snap-layouts flyout).
 - **Waffle panel** holding the applications, fed by `/api/v1/modules`: each
-  module's own brand logo when it has one and its Lucide glyph otherwise — the
+  module's own brand logo when it has one and its Lucide glyph otherwise - the
   two families the web launcher uses. 360px wide, three columns, scrollable. It
   is hosted in its own popup window with a **blurred backdrop clipped to the
-  web's 28px corner radius** — something neither DWM (fixed radius) nor the
+  web's 28px corner radius** - something neither DWM (fixed radius) nor the
   legacy acrylic (rectangle only) can do. The popup builds a
   Windows.UI.Composition tree: a host-backdrop brush (fed by
   `ACCENT_ENABLE_HOSTBACKDROP`, already blurred by the compositor), the
@@ -2949,8 +2949,8 @@ number at release time, and CI publishes that section as the GitHub Release note
   itself handles no input.
 - **Account panel** behind the header's avatar, replicating `UserPanel`: the
   same chrome as the waffle (its popup, the tinted ground, the 28px radius, the
-  shadow), the email and close on a pinned header, then the hero — a 96px photo
-  ringed in the accent, « Bonjour <prénom> ! », and « Gérer votre compte » —
+  shadow), the email and close on a pinned header, then the hero - a 96px photo
+  ringed in the accent, « Bonjour <prénom> ! », and « Gérer votre compte » -
   over white cards. Measured on the running web panel: 320 wide, cards inset
   `mx-2`, 56.6 rows. The avatar used to jump straight to the accounts page.
   What the web calls the other accounts of the browser maps to the shell's own
@@ -2959,27 +2959,27 @@ number at release time, and CI publishes that section as the GitHub Release note
   counterpart and are left out rather than drawn dead.
 - **Étiquettes** and **Administration** in the account panel, as on the web. The
   console entry is shown only to an account that may enter it, read from
-  `privileges.is_admin` on `GET /api/v1/me` — the same question the web asks,
+  `privileges.is_admin` on `GET /api/v1/me` - the same question the web asks,
   which is not the raw role (a delegated administrator is still `role = 'user'`).
 - **Labels page** (`Page::Labels`), replicating `LabelsPage`: the list with each
   label's colour, name and link count, creation, recolouring from the web's own
-  palette, and deletion — every one of them a call to `/api/v1/labels`, nothing
+  palette, and deletion - every one of them a call to `/api/v1/labels`, nothing
   cached locally, so the web and the desktop always show one list. Deleting asks
   first: a label spans every module, so it unlabels items the user may not have
   in view. The web's browse pane (the items carrying the selected labels) is NOT
   ported yet, and the page says so rather than showing half a screen.
 - **Administration console** (`Page::Admin`), ported in waves. The console's
   navigation lives in the shell's **left rail**, below the main nav and a
-  separator, under an « ADMINISTRATION » header — the web's full navigation TREE
+  separator, under an « ADMINISTRATION » header - the web's full navigation TREE
   (`adminNav.ts`) verbatim: top-level groups carry an icon and a chevron;
   expanding one reveals its leaves, indented; a leaf selects its section and the
   content pane shows only that section. Groups collapse by default.
   The **Annuaire → Utilisateurs** page is laid out to match the web `UsersPanel`
   list: a breadcrumb and title, a toolbar (search field, count, « Nouvel
-  utilisateur »), then the table with the web's columns — Utilisateur (name over
+  utilisateur »), then the table with the web's columns - Utilisateur (name over
   email), Unité organisationnelle (resolved from `/admin/org-units`), Rôle,
   Quota, Dernière connexion (relative, « il y a N jours » / « Jamais ») and
-  Statut — with a per-row pencil that opens the account on the web console. The
+  Statut - with a per-row pencil that opens the account on the web console. The
   create/edit/bulk actions are not drawn as dead controls; they open the web.
   The **Tableau de bord** matches the web landing: a breadcrumb and title, the
   four summary cards (Utilisateurs total « +N cette semaine », actifs with a
@@ -2993,22 +2993,22 @@ number at release time, and CI publishes that section as the GitHub Release note
   **Annuaire → Groupes** (`/admin/groups`, matching the web `GroupsPanel`: a
   breadcrumb, the title with its count and a « Nouveau groupe » button, then each
   group as an expandable row carrying its « Par défaut » / « Système » badges,
-  its description and its member count — expanding it reveals the permission
+  its description and its member count - expanding it reveals the permission
   badges and the creation date; create, edit and member management open the web),
   **Annuaire → Audiences cibles** (`/admin/audiences`, the web
-  `AudiencesSection` table: Nom — with a globe on the seeded « tout le monde »
-  audience — Description, Membres, Comptes atteints and Proposée; the sheet and
+  `AudiencesSection` table: Nom - with a globe on the seeded « tout le monde »
+  audience - Description, Membres, Comptes atteints and Proposée; the sheet and
   create/delete open the web),
   **Annuaire → Unités organisationnelles** (`/admin/org-units`, matching the web
-  `OrgUnitsPanel`: the units as an indented tree — root first, each child under
-  its parent — carrying the name, the description and the subtree account count
+  `OrgUnitsPanel`: the units as an indented tree - root first, each child under
+  its parent - carrying the name, the description and the subtree account count
   (summed from `/admin/users?counts=true`); « Nouvelle unité », add-child and
   edit open the web),
   **Applications**
   (`/admin/modules`, laid out to match the web `ModulesPanel`: a breadcrumb and
   title with the count, a « Marketplace » button, a filter box, the
   « Application » / « État du service » columns, and rows carrying the module's
-  coloured brand logo — its Lucide glyph otherwise — its name, version, a
+  coloured brand logo - its Lucide glyph otherwise - its name, version, a
   « Par défaut » badge on the module the instance opens on
   (`navigation.default_module`), its description, and the service state as a dot
   and « Activé/Désactivé pour tout le monde » with a per-row ⋮ that flips it),
@@ -3016,7 +3016,7 @@ number at release time, and CI publishes that section as the GitHub Release note
   (`/admin/settings`, grouped read-only) and **Stockage**
   (`/admin/storage/overview`, matching the web `StorageSection`: a title and
   intro, an « Aperçu » card leading with the space used against the physical
-  volume — a composition bar of accounts / other / free and the volume path —
+  volume - a composition bar of accounts / other / free and the volume path -
   over the accounts and allocated figures; an « État des comptes » card with the
   ok/near/full bar and the « seuil N % » it is measured against; the split by
   organisational unit; and the per-category breakdown. A figure the server does
@@ -3024,8 +3024,8 @@ number at release time, and CI publishes that section as the GitHub Release note
   not yet ported says so and opens the web console at that exact section. A
   dashboard counter the server does not send is skipped rather than shown as
   zero. The `kubuno-sync` API gained the module, settings and storage endpoints.
-  The gate is applied at every layer — the menu row, the entry point, the hit
-  test and the drawing — so an administration surface is neither shown nor
+  The gate is applied at every layer - the menu row, the entry point, the hit
+  test and the drawing - so an administration surface is neither shown nor
   reachable for anyone else, and leaving the console is automatic if the account
   switches to one without access. The server enforces it regardless.
 - A native confirmation (`confirm.rs`) for destructive actions, and
@@ -3056,7 +3056,7 @@ number at release time, and CI publishes that section as the GitHub Release note
   first screen when no account is configured.
 - Windows toasts, autostart through the per-user `Run` key, and the Explorer
   integration (CloudFiles sync root + navigation-pane entry) carried over.
-- MSIX packaging moved to `packaging/` — it never depended on Tauri.
+- MSIX packaging moved to `packaging/` - it never depended on Tauri.
 - Shared controls gained a toggle switch (`switch.rs`, used by Drive and the
   shell), literal-colour and stroked icon layers, layer transforms and icon
   name aliases.
@@ -3064,7 +3064,7 @@ number at release time, and CI publishes that section as the GitHub Release note
   variants, the three sizes, the hover/active/disabled states and the intrinsic
   content-driven width. Every metric was MEASURED on the running web app over
   CDP rather than read off the Tailwind classes, because the project scales its
-  radius ramp — `rounded-md` resolves to **4**, so the web has no pill-shaped
+  radius ramp - `rounded-md` resolves to **4**, so the web has no pill-shaped
   buttons at all. The shell now draws its buttons through it (home, accounts,
   sign-in, and the waffle's edit controls) instead of hand-rolling 55 rounded
   rectangles across eight files; the radius is a constant, matching the web
@@ -3080,7 +3080,7 @@ number at release time, and CI publishes that section as the GitHub Release note
 
 - **Deleting a folder locally never removed it from the server.** Change
   detection only ever walked the FILE index, so a folder deleted on disk had its
-  contents trashed and the folder itself left behind, empty — and no later sync
+  contents trashed and the folder itself left behind, empty - and no later sync
   could ever catch up, because nothing re-examined it. Folders are now checked
   too and trashed through `POST /folders/:id/trash`, deepest first. Two guards
   come with it: a folder is only considered deleted when the directory that
@@ -3093,8 +3093,8 @@ number at release time, and CI publishes that section as the GitHub Release note
 - **Duplicate entries in Explorer's navigation pane.** An instance could be
   registered both as a CloudFiles sync root (HKLM) and as a shell namespace
   entry (HKCU). Ownership no longer rests on the `KubunoInstanceId` marker
-  alone — entries written by older builds carry none and were therefore
-  invisible to pruning — and stale entries are matched by their expected CLSID,
+  alone - entries written by older builds carry none and were therefore
+  invisible to pruning - and stale entries are matched by their expected CLSID,
   compared case-insensitively.
 - **Unpainted (black) areas after a resize.** The window left its background
   transparent for the system backdrop to show through, and that backdrop does
@@ -3104,7 +3104,7 @@ number at release time, and CI publishes that section as the GitHub Release note
   instead of swallowed.
 - **An expired access token emptied the launcher.** The module list is fetched
   through the engine (`modules_for`), which refreshes and rotates the token,
-  instead of reading the stored one — the same flaw the Tauri build had, hidden
+  instead of reading the stored one - the same flaw the Tauri build had, hidden
   there by the background loop keeping the token fresh.
 - The waffle no longer draws an outline around itself. The web's `border-border`
   resolves to a 0.6px hairline over an opaque panel; stroked at a whole DIP it
@@ -3121,8 +3121,8 @@ number at release time, and CI publishes that section as the GitHub Release note
   the bar), the track pages towards a click, and the thumb darkens under the
   pointer as the web's rule does.
 - **The waffle would not scroll.** The panel lives in its own popup window, and
-  "scroll inactive windows when I hover over them" — on by default since
-  Windows 10 — routes the wheel to the window under the CURSOR rather than to
+  "scroll inactive windows when I hover over them" - on by default since
+  Windows 10 - routes the wheel to the window under the CURSOR rather than to
   the focused one. That window is the popup, which owns no scroll state, so
   every notch fell on the floor. The popup now forwards wheel messages to its
   owner. Mouse capture does not help here: the routing is settled before the
@@ -3131,7 +3131,7 @@ number at release time, and CI publishes that section as the GitHub Release note
 - **The page reacted to the pointer THROUGH the open waffle.** The panel's hit
   test returned the same answer for "outside the panel" and "inside it, but on
   a gap", so hovering the panel's own background fell through to the header,
-  the rail and the page underneath — and a click there closed the menu, which
+  the rail and the page underneath - and a click there closed the menu, which
   the web never does. The two are now distinct answers, and moving onto the
   panel clears whatever was left lit beneath it.
 - **The waffle's margins did not match the web's.** Its panel reserves a

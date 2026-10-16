@@ -1,4 +1,4 @@
-<!-- CreateTokenForm — converted from CreateTokenForm.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- CreateTokenForm - converted from CreateTokenForm.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="CreateTokenFormProps">
   <Card Title="{Res settings.tok_new}" IconSize="15" Icon="Plus" Dense="true" Class="mb-5">
     <Panel HtmlTag="Form" Class="space-y-4" OnSubmit="panel_submit">

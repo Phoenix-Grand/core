@@ -1,4 +1,4 @@
-<!-- PrimitivesGroup — converted from PrimitivesGroup.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- PrimitivesGroup - converted from PrimitivesGroup.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl>
   <Panel Class="contents">
     <Stack Direction="LeftToRight" CrossAlign="Center" WrapContents="true" Class="mb-3">

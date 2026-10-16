@@ -40,14 +40,14 @@ export interface Segment {
   id:    string
   label: string
   value: number
-  /** A CSS colour *expression* — always `var(--…)`, never a literal. */
+  /** A CSS colour *expression* - always `var(--…)`, never a literal. */
   color: string
   /**
    * The remainder, not a part: it is left as bare track rather than painted.
    *
    * "Free space" is what the bar has not filled, and painting it in a near-track
    * grey produces two adjacent light greys nobody can tell apart. It keeps its
-   * legend entry — the number is the point — with a hairline ring so the swatch
+   * legend entry - the number is the point - with a hairline ring so the swatch
    * is visible against the card.
    */
   track?: boolean

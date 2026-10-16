@@ -1,4 +1,4 @@
-# Kubuno Desktop — macOS
+# Kubuno Desktop - macOS
 
 What macOS does differently from the portable app of [`../common`](../common), and nothing else
 (desktop/README.md, "Platform extension points"). Today macOS overrides nothing:

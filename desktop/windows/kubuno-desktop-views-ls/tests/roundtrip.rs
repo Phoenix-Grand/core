@@ -1,6 +1,6 @@
 //! In-process LSP round-trip harness: `initialize` → `initialized` →
 //! `didOpen` → `completion`/`hover`/diagnostics → `shutdown`/`exit`, all over
-//! an in-memory [`lsp_server::Connection::memory`] pair — no child process,
+//! an in-memory [`lsp_server::Connection::memory`] pair - no child process,
 //! no real stdio, the whole exchange driven and observed inside one test
 //! process. This is exactly what `Cargo.toml`'s doc comment on the
 //! `lsp-server` dependency choice promised: "`Connection::memory()` is what
@@ -420,7 +420,7 @@ fn registry_round_trip() {
     let _serial = serial();
     // Work package DSG-1 (`vskubuno/docs/DESIGNER.md` §5/§8): `kubuno/registry`
     // needs no open document, so this exercises it straight after
-    // `initialize`, before any `didOpen` — the same way the VS designer's
+    // `initialize`, before any `didOpen` - the same way the VS designer's
     // toolbox would query it once at editor start.
     let (client, handle) = spawn_server();
     initialize(&client);
@@ -481,7 +481,7 @@ fn unknown_method_returns_a_method_not_found_error_instead_of_hanging() {
 
 /// Creates a fresh temp directory (`kubuno-views-ls-roundtrip-<tag>-<pid>`),
 /// returning it alongside the `file://` URI for `<dir>/<kbview_name>` (which
-/// need not itself exist on disk — only its directory and siblings do).
+/// need not itself exist on disk - only its directory and siblings do).
 fn temp_kbview(tag: &str, kbview_name: &str) -> (std::path::PathBuf, Uri) {
     let dir = std::env::temp_dir().join(format!("kubuno-views-ls-roundtrip-{tag}-{}", std::process::id()));
     std::fs::create_dir_all(&dir).expect("create temp dir");
@@ -725,7 +725,7 @@ fn handler_commands_round_trip() {
     std::fs::remove_dir_all(&dir).ok();
 }
 
-/// EVT-7b: a view of a package whose sources declare a control knows it at once — validation,
+/// EVT-7b: a view of a package whose sources declare a control knows it at once - validation,
 /// completion, hover, go-to-definition, the registry export and `kubuno/crateComponents`.
 #[test]
 fn project_controls_round_trip() {

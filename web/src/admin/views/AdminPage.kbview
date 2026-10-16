@@ -1,4 +1,4 @@
-<!-- AdminPage — converted from AdminPage.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- AdminPage - converted from AdminPage.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <Panel Class="contents">
   <!-- TODO(views-migrate): <Navigate> is no .kbview element (react-router-dom#Navigate) -->
   <ReactHost Component="{Binding Navigate}" Props="{Binding navigate_props}" Visible="{Binding show_case_1}"/>

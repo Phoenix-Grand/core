@@ -28,7 +28,7 @@ use super::secret::{self, SecretVerdict};
 /// The core has no "is this connection encrypted" helper: `X-Forwarded-Proto`
 /// is read in two places to build URLs, without ever checking who sent it. So
 /// the probe is taken here, on the very request being served, and the header is
-/// believed only when the socket peer is a configured trusted proxy — the same
+/// believed only when the socket peer is a configured trusted proxy - the same
 /// rule `auth::client_ip` applies to `X-Forwarded-For`. An untrusted peer
 /// claiming `https` proves nothing and is recorded as such.
 #[derive(Debug, Clone, Copy, Default)]
@@ -44,8 +44,8 @@ pub struct RequestProbe {
 /// Sticky memory of what has ever been observed, since start-up.
 ///
 /// A single request is a poor witness. The same instance is routinely reachable
-/// two ways — through the TLS reverse proxy for its users, and on the plain port
-/// for whoever is on the machine — so the verdict of "is traffic encrypted"
+/// two ways - through the TLS reverse proxy for its users, and on the plain port
+/// for whoever is on the machine - so the verdict of "is traffic encrypted"
 /// would otherwise flip depending on which request happened to refresh the
 /// cache. That is worse than either answer: an operator who reloads twice and
 /// reads two different verdicts stops believing the page.
@@ -106,7 +106,7 @@ const SETTING_KEYS: &[&str] = &[
 #[derive(Debug, Clone)]
 struct SettingRow {
     value: Value,
-    /// The instance scope holds a row of its own — see [`load_settings`] for why
+    /// The instance scope holds a row of its own - see [`load_settings`] for why
     /// that, and not `core.settings.updated_by`, is the question.
     chosen: bool,
 }
@@ -164,7 +164,7 @@ pub struct Facts {
     /// this instance is protected.
     pub backup: crate::backup::Policy,
     pub backup_stats: crate::backup::runs::RunStats,
-    /// Declared, never verified — the setting says so and the check repeats it.
+    /// Declared, never verified - the setting says so and the check repeats it.
     pub backup_restore_tested_at: Option<DateTime<Utc>>,
 
     // ── Communications ──────────────────────────────────────────────────────
@@ -326,7 +326,7 @@ pub async fn gather(db: &DbPool, settings: &Settings, probe: RequestProbe) -> Re
         // What account creation would actually hand out right now, for an account
         // in no organisational unit. It reads the setting through the same helper
         // the three creation paths use, so the check keeps comparing the number
-        // an operator sees with the number the code applies — and still catches a
+        // an operator sees with the number the code applies - and still catches a
         // regression to a constant, which is the whole reason it exists.
         applied_default_quota: crate::models::user::default_quota_for(db, None).await,
 
@@ -400,8 +400,8 @@ async fn load_settings(db: &DbPool) -> Result<SettingMap, AppError> {
     //
     // The two answer differently, and only one of them is right. `updated_by`
     // lives on the compatibility mirror (migration `000060`), which is written
-    // when an instance value is set and — by design, see
-    // `core.setting_values_mirror` — is NOT cleared when that value is reverted:
+    // when an instance value is set and - by design, see
+    // `core.setting_values_mirror` - is NOT cleared when that value is reverted:
     // the DELETE branch restores `value` and leaves `updated_by` behind. An
     // operator who sets a value and then reverts it would therefore keep reading
     // "decided" on a setting that is back at its factory value, which is the one
@@ -445,7 +445,7 @@ async fn count(db: &DbPool, sql: &str, what: &str) -> Result<i64, AppError> {
 /// Modules the operator enabled that are not answering.
 ///
 /// A module with no instance row at all is the worst case and the easiest to
-/// miss — it never registered, so it never had a status to degrade. Internal
+/// miss - it never registered, so it never had a status to degrade. Internal
 /// infrastructure modules are excluded, exactly as they are from the module
 /// list: they are not something an operator installed.
 async fn load_failing_modules(db: &DbPool) -> Result<Vec<FailingModule>, AppError> {
@@ -521,7 +521,7 @@ async fn load_mutes(db: &DbPool) -> Result<HashMap<String, Muted>, AppError> {
         .collect())
 }
 
-/// Set equality, order-insensitive and whitespace-tolerant — the configured
+/// Set equality, order-insensitive and whitespace-tolerant - the configured
 /// list is free text from a TOML file or a comma-separated environment
 /// variable, so `10.0.0.0/8, ::1/128` and `::1/128,10.0.0.0/8` are the same
 /// policy and must not read as a customisation.

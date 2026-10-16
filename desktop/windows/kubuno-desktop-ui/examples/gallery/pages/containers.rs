@@ -1,27 +1,27 @@
-//! Gallery page — **containers**.
+//! Gallery page - **containers**.
 //!
 //! Every rectangle a container owns on this page is placed by the family, not by
 //! the page: the only `Rect::new` calls below carve the page itself into demo
 //! areas, and each demo then hands its area to a container and paints what comes
-//! back. That is the whole exercise — if a demo had to compute a child's
+//! back. That is the whole exercise - if a demo had to compute a child's
 //! rectangle to make the container look right, the container would not be doing
 //! its job.
 //!
 //! What to look at:
 //!
-//! * **Dock** — a Top band, a Left column and a Fill body, resolved in the
+//! * **Dock** - a Top band, a Left column and a Fill body, resolved in the
 //!   toolkit's reverse z-order (the child added *last* takes the outer edge).
-//! * **Anchors** — resize the window and watch the three children react: one
+//! * **Anchors** - resize the window and watch the three children react: one
 //!   stretches, one rides the right edge, one stays put.
-//! * **Card** (`@ui/Card.tsx`) — the surface-0 ground, an icon, a subtitle, a
+//! * **Card** (`@ui/Card.tsx`) - the surface-0 ground, an icon, a subtitle, a
 //!   header actions cluster, `dense`, `flush` (rows bleeding to the rounded
 //!   edges), a footer on surface-1, raised and the console's layer look. Every
 //!   body is painted through `Card::paint_body`, so the check boxes inside read
 //!   the card's ground: no square block of the window colour behind them.
-//! * **GroupBox** — the caption sits in a GAP of the frame (no erased patch),
+//! * **GroupBox** - the caption sits in a GAP of the frame (no erased patch),
 //!   a long caption ends in an ellipsis, and the frame keeps its corners.
-//! * **Splitter** — the desktop hairline and the web's `ResizeHandle` grip.
-//! * **ScrollView** — content clipped to a rounded viewport inside the
+//! * **Splitter** - the desktop hairline and the web's `ResizeHandle` grip.
+//! * **ScrollView** - content clipped to a rounded viewport inside the
 //!   hairline, and the `range` family's scroll bar in the view's track.
 
 use std::cell::RefCell;
@@ -55,7 +55,7 @@ fn slot(c: &dyn Canvas, r: Rect, label: &str, tint: u8) {
     c.text_ellipsis_center(label, &r, &f.caption, &t.text_secondary);
 }
 
-/// A list row that bleeds to its container's edges — what a `flush` card or a
+/// A list row that bleeds to its container's edges - what a `flush` card or a
 /// scroll view holds. Separated by a hairline, selected rows on the accent tint.
 fn list_row(c: &dyn Canvas, r: Rect, label: &str, selected: bool, hot: bool) {
     let t = c.theme();
@@ -96,14 +96,14 @@ fn cells(row: Rect, n: usize, gap: f32) -> Vec<Rect> {
         .collect()
 }
 
-/// A small caption under a demo — the live values a demo wants to show.
+/// A small caption under a demo - the live values a demo wants to show.
 fn note(c: &dyn Canvas, r: Rect, s: &str) {
     let t = c.theme();
     let f = c.formats();
     c.text_ellipsis(s, &Rect::new(r.left, r.bottom + 2.0, r.right, r.bottom + 18.0), &f.caption, &t.text_tertiary);
 }
 
-/// One check box row — a control with an opaque-ground preamble, which is what
+/// One check box row - a control with an opaque-ground preamble, which is what
 /// shows whether the container pushed its surface.
 fn check_row(c: &dyn Canvas, r: Rect, label: &str, on: bool, state: WidgetState) {
     let st = if on { CheckState::Checked } else { CheckState::Unchecked };
@@ -119,8 +119,8 @@ pub fn draw(c: &dyn Canvas, f: &Frame) {
     let mut p = Page::new(c, f.size.0 - interact::PANEL_W(), f.size.1);
 
     // ── Dock and anchors, side by side ───────────────────────────────────
-    p.section("Panel — le conteneur qui manquait");
-    let top = p.caption("À gauche : Top · Left · Fill.   À droite : ancres — redimensionne la fenêtre.");
+    p.section("Panel - le conteneur qui manquait");
+    let top = p.caption("À gauche : Top · Left · Fill.   À droite : ancres - redimensionne la fenêtre.");
     let (dock_box, anchor_box) = halves(area(&p, top, 84.0));
 
     let docked = Panel::new()
@@ -155,14 +155,14 @@ pub fn draw(c: &dyn Canvas, f: &Frame) {
     p.advance(84.0);
 
     // ── Cards ────────────────────────────────────────────────────────────
-    p.section("Card — @ui/Card.tsx");
+    p.section("Card - @ui/Card.tsx");
     let top = p.caption(
         "surface-0 · icône · sous-titre + actions · dense · flush · pied de carte · surélevée · look console",
     );
     let row1 = area(&p, top, 112.0);
     let r1 = cells(row1, 4, space::MD);
 
-    // Plain, with an icon — its body holds a real control.
+    // Plain, with an icon - its body holds a real control.
     let plain = Card::titled("Aperçu").with_icon("FolderOpen");
     plain.paint_body(c, r1[0], WidgetState::REST, |c, body| {
         check_row(c, Rect::new(body.left, body.top, body.right, body.top + CHECK_ROW), "Notifications", true, WidgetState::REST);
@@ -183,7 +183,7 @@ pub fn draw(c: &dyn Canvas, f: &Frame) {
     dense.paint_body(c, r1[2], WidgetState::REST, |c, body| {
         check_row(c, Rect::new(body.left, body.top, body.right, body.top + CHECK_ROW), "Compacte", false, WidgetState::REST);
     });
-    // Flush — rows bleed to the rounded edges, the frame stays on top.
+    // Flush - rows bleed to the rounded edges, the frame stays on top.
     let flush = Card::titled("Membres").flush();
     flush.paint_body(c, r1[3], WidgetState::REST, |c, body| {
         let names = ["Amélie Durand", "Bastien Leroy", "Chloé Martin", "David Petit"];
@@ -243,7 +243,7 @@ pub fn draw(c: &dyn Canvas, f: &Frame) {
             .with_distance((sbox.right - sbox.left) * 0.5)
             .with_minimums(40.0, 40.0);
         // Stateless on purpose: the bar follows the pointer while it is over the
-        // demo — the same `drag_to` a real drag calls.
+        // demo - the same `drag_to` a real drag calls.
         if sbox.contains(f.mouse.0, f.mouse.1) {
             split.drag_to(sbox, f.mouse.0, f.mouse.1);
             host::set_cursor(split.cursor());
@@ -316,7 +316,7 @@ pub fn draw(c: &dyn Canvas, f: &Frame) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// The live column — the same containers, driven by the real pointer and the
+// The live column - the same containers, driven by the real pointer and the
 // keyboard.
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -374,7 +374,7 @@ const ID_CARD: FocusId = FocusId::of("containers.card");
 const ID_MORE: FocusId = FocusId::of("containers.more");
 const ID_GROUP: FocusId = FocusId::of("containers.group");
 
-/// The right-hand column: the container family, live — mouse AND keyboard.
+/// The right-hand column: the container family, live - mouse AND keyboard.
 pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
     UI.with(|ui| {
         let mut ui = ui.borrow_mut();
@@ -410,8 +410,8 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
         let column_bg = Surface::Layer.ground(c).unwrap_or(c.theme().layer_background);
         let _column = kubuno_desktop_ui::containers::Scope::bg(c, column_bg);
 
-        // ── Splitter — drag, double-click to reset, keys when focused ─────
-        y = interact::caption(c, left, right, y, "Splitter — glisser · double-clic · ←/→ Début/Fin Entrée");
+        // ── Splitter - drag, double-click to reset, keys when focused ─────
+        y = interact::caption(c, left, right, y, "Splitter - glisser · double-clic · ←/→ Début/Fin Entrée");
         let split_box = Rect::new(left, y, right, y + 84.0);
         let half = (right - left) * 0.5;
         if !ui.seeded {
@@ -462,8 +462,8 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
         );
         y += 16.0 + 12.0;
 
-        // ── ScrollView — wheel, thumb, keys when focused, click a row ─────
-        y = interact::caption(c, left, right, y, "ScrollView — molette · pouce · ↑↓ PgPr/PgSv Début/Fin Espace");
+        // ── ScrollView - wheel, thumb, keys when focused, click a row ─────
+        y = interact::caption(c, left, right, y, "ScrollView - molette · pouce · ↑↓ PgPr/PgSv Début/Fin Espace");
         let view_box = Rect::new(left, y, right, y + 140.0);
         const ROW_H: f32 = 32.0;
         const ROWS: usize = 12;
@@ -548,7 +548,7 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
                     continue;
                 }
                 let hot = r.contains(mouse.0, mouse.1) && lane.contains(mouse.0, mouse.1);
-                list_row(c, r, &format!("Fichier {:02} — rapport trimestriel des ventes régionales", i + 1), i == selected, hot);
+                list_row(c, r, &format!("Fichier {:02} - rapport trimestriel des ventes régionales", i + 1), i == selected, hot);
             }
         });
         if let Some(bar) = view.scroll_bar(view_box, Axis::Vertical).map(|b| b.with_expanded(over_track)) {
@@ -556,8 +556,8 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
         }
         y += 140.0 + 12.0;
 
-        // ── Card — header toggles, « … » opens a menu (popup) ─────────────
-        y = interact::caption(c, left, right, y, "Card — en-tête : clic/Entrée replie · « … » : menu clavier");
+        // ── Card - header toggles, « … » opens a menu (popup) ─────────────
+        y = interact::caption(c, left, right, y, "Card - en-tête : clic/Entrée replie · « … » : menu clavier");
         let mut card = Card::titled("Détails du compte")
             .with_icon("Users")
             .with_subtitle("42 actifs · 3 suspendus")
@@ -651,13 +651,13 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
         }
         y += card_h + 12.0;
 
-        // ── GroupBox — Space / click toggles the group ────────────────────
-        y = interact::caption(c, left, right, y, "GroupBox — cliquez ou Espace pour activer/désactiver");
+        // ── GroupBox - Space / click toggles the group ────────────────────
+        y = interact::caption(c, left, right, y, "GroupBox - cliquez ou Espace pour activer/désactiver");
         let gb_rect = Rect::new(left, y, right, y + 76.0);
         let title = if ui.group_enabled {
-            "Quotas de stockage par unité organisationnelle — actif"
+            "Quotas de stockage par unité organisationnelle - actif"
         } else {
-            "Quotas de stockage par unité organisationnelle — désactivé"
+            "Quotas de stockage par unité organisationnelle - désactivé"
         };
         let gb = GroupBox::titled(title).with_padding(Padding::all(space::SM));
         let inner = gb.inner_rect(gb_rect);
@@ -673,8 +673,8 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
         });
         y += 76.0 + 12.0;
 
-        // ── Panel — static, on purpose ───────────────────────────────────────
-        y = interact::caption(c, left, right, y, "Panel — statique : un conteneur ne réagit pas au pointeur");
+        // ── Panel - static, on purpose ───────────────────────────────────────
+        y = interact::caption(c, left, right, y, "Panel - statique : un conteneur ne réagit pas au pointeur");
         let panel_rect = Rect::new(left, y, right, y + 56.0);
         let panel = Panel::new()
             .with_surface(Surface::Card)

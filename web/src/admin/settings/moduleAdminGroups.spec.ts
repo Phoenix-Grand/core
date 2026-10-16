@@ -1,10 +1,10 @@
-// Addressing a module's PAGES — the third path segment of
+// Addressing a module's PAGES - the third path segment of
 // `/admin/modules/<module>/<group>`.
 //
 // This is the one place in the console where a pane is not in a closed list:
 // the pages belong to the module, which declares them in its own manifest, so
 // the core cannot enumerate them without naming modules. What the tests below
-// pin is that deferring the VOCABULARY did not defer the SHAPE — the second
+// pin is that deferring the VOCABULARY did not defer the SHAPE - the second
 // segment is still the record and only the record, and a page id nobody
 // declares still resolves to something rather than to a blank page.
 import { describe, expect, it } from 'vitest'
@@ -14,7 +14,7 @@ import { groupsOf, type ModuleSettingGroup } from './moduleSettingSchema'
 /** Just the part of an inventory row these tests are about. */
 const module = (setting_groups?: ModuleSettingGroup[]) => ({ setting_groups })
 
-describe('placeFromPath — a module and its pages', () => {
+describe('placeFromPath - a module and its pages', () => {
   it('reads the module alone, with no page', () => {
     expect(placeFromPath('/admin/modules/mail'))
       .toEqual({ tab: 'modules', entity: 'mail', pane: null })
@@ -41,7 +41,7 @@ describe('placeFromPath — a module and its pages', () => {
   })
 })
 
-describe('adminPath / buildAdminUrl — the same declaration, writing', () => {
+describe('adminPath / buildAdminUrl - the same declaration, writing', () => {
   it('spells a page under its module', () => {
     expect(adminPath('modules', 'mail', 'filtering')).toBe('/admin/modules/mail/filtering')
     expect(buildAdminUrl({ tab: 'modules', params: { module: 'mail', pane: 'filtering' } }))
@@ -66,7 +66,7 @@ describe('adminPath / buildAdminUrl — the same declaration, writing', () => {
   })
 })
 
-describe('groupsOf — what the inventory says a module is split into', () => {
+describe('groupsOf - what the inventory says a module is split into', () => {
   const groups = [
     { id: 'overview', label: "Vue d'ensemble" },
     { id: 'services', label: 'Services et ports' },
@@ -87,7 +87,7 @@ describe('groupsOf — what the inventory says a module is split into', () => {
     expect(groupsOf({ groups }).map(g => g.id)).toEqual(['overview', 'services'])
   })
 
-  it('drops an entry with no id — it could not be addressed', () => {
+  it('drops an entry with no id - it could not be addressed', () => {
     const broken = [{ id: '', label: 'Sans adresse' }, ...groups]
     expect(groupsOf(module(broken)).map(g => g.id))
       .toEqual(['overview', 'services'])

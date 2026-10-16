@@ -1,4 +1,4 @@
-<!-- SupportCard — converted from SupportCard.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- SupportCard - converted from SupportCard.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="SupportCardProps">
   <Card Title="{Res admin.sub_support_title}"
         IconSize="16"

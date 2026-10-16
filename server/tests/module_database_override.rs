@@ -103,7 +103,7 @@ async fn insert_module(pool: &DbPool, id: &str) {
     .expect("insert module");
 }
 
-/// Inserts (or, if present, would need deleting first — tests use fresh ids) an
+/// Inserts (or, if present, would need deleting first - tests use fresh ids) an
 /// override row.
 #[allow(clippy::too_many_arguments)]
 async fn insert_override(
@@ -161,7 +161,7 @@ async fn run_flow(pool: &DbPool) {
     assert!(r.schema_prefix.is_none());
 
     // Open the resolved target the way a module does, create its schema and a
-    // table, and read a row back — proving the override engine actually works.
+    // table, and read a row back - proving the override engine actually works.
     let module_settings = settings(
         &r.credentials.engine,
         serde_json::json!({ "path": r.credentials.path }),

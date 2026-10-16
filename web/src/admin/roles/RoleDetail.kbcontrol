@@ -1,4 +1,4 @@
-<!-- RoleDetail — converted from RoleDetail.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- RoleDetail - converted from RoleDetail.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="RoleDetailProps">
   <Panel>
     <Panel Class="grid grid-cols-1 lg:grid-cols-[minmax(240px,320px)_1fr] gap-4 items-start">

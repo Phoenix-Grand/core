@@ -1,6 +1,6 @@
 [package]
 name         = "kubuno-mobile-account"
-description  = "The Kubuno mobile account / network base (M2): the sign-in flow (login + TOTP, native client), the token owner that holds its own rotating refresh token in the OS secret store (no broker — the phone is the owner), and the typed Kubuno API client (reused from the desktop, rustls / no OpenSSL so it cross-compiles to Android and iOS)."
+description  = "The Kubuno mobile account / network base (M2): the sign-in flow (login + TOTP, native client), the token owner that holds its own rotating refresh token in the OS secret store (no broker - the phone is the owner), and the typed Kubuno API client (reused from the desktop, rustls / no OpenSSL so it cross-compiles to Android and iOS)."
 version.workspace    = true
 edition.workspace    = true
 license.workspace    = true

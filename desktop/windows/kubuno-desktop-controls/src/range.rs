@@ -14,7 +14,7 @@
 //! ## Why the field counts are smaller than the catalogue's "declared" counts
 //!
 //! The reflection catalogue lists, for `ScrollBar`, properties such as
-//! `BackColor`, `Font`, `Text`, `TabStop`, `AutoSize` as *declared* — but the
+//! `BackColor`, `Font`, `Text`, `TabStop`, `AutoSize` as *declared* - but the
 //! toolkit only **re-declares** them (with `new`/attributes) to hide them from
 //! the designer or to change one default; the *state* still lives on `Control`.
 //! Restating those as fields here would duplicate what `ControlBase` already
@@ -30,10 +30,10 @@
 //! tested here:
 //!
 //! * The highest `Value` the scroll box can *reach* is `Maximum - LargeChange
-//!   + 1`, **not** `Maximum` — because the thumb represents `LargeChange` units
+//!   + 1`, **not** `Maximum` - because the thumb represents `LargeChange` units
 //!   of content and its far edge is what lines up with `Maximum`.
 //! * The thumb's length is proportional to `LargeChange / (Maximum - Minimum +
-//!   1)` — a bigger page is a bigger grip.
+//!   1)` - a bigger page is a bigger grip.
 //!
 //! And for `NumericUpDown`, `Value` is a decimal that **throws** if set outside
 //! `Minimum`/`Maximum`; the documented consequence is that `Maximum` must be
@@ -52,7 +52,7 @@ use crate::enums::{BorderStyle, HorizontalAlignment, LeftRightAlignment, RightTo
 // Only `Orientation` and `TickStyle` live here: `TrackBar` is the sole type that
 // declares them, so they are correctly family-local. `HorizontalAlignment` and
 // `LeftRightAlignment` are general WinForms enums shared with other families and
-// live in `enums.rs` — several families had each grown their own copy, and the
+// live in `enums.rs` - several families had each grown their own copy, and the
 // `LeftRightAlignment` copies had already drifted apart on their default.
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -86,7 +86,7 @@ pub struct OutOfRange {
 }
 
 impl OutOfRange {
-    /// A refusal of the form « must be at least `floor` » — the shape WinForms
+    /// A refusal of the form « must be at least `floor` » - the shape WinForms
     /// uses for `SmallChange`, `LargeChange`, `Increment` and `DecimalPlaces`,
     /// which have a floor but no meaningful ceiling.
     pub(crate) fn at_least(value: f64, floor: f64) -> Self {
@@ -116,7 +116,7 @@ impl std::error::Error for OutOfRange {}
 //
 // They are used AS-IS by the painter, never multiplied by `Canvas::scale()`:
 // `Renderer` calls `ID2D1DeviceContext::SetDpi`, so the Direct2D coordinate
-// space is ALREADY in DIP — a rectangle at `y = 10.0` lands at 10 DIP whatever
+// space is ALREADY in DIP - a rectangle at `y = 10.0` lands at 10 DIP whatever
 // the monitor scaling. Multiplying here would apply the DPI factor a second
 // time (every metric 1.75× too large at 175 %), which is invisible at 100 %.
 // The rest of `kubuno-drive-desktop-app-controls` multiplies by `scale()` in zero places, for
@@ -132,9 +132,9 @@ const SCROLLBAR_MIN_THUMB: f32 = 8.0;
 const ARROW_GLYPH: f32 = 8.0;
 
 // TrackBar metrics, in DIP, measured off the reference sheet at 4× zoom
-// (`shots/06-range.png`, the "TrackBar — TickStyle" group):
+// (`shots/06-range.png`, the "TrackBar - TickStyle" group):
 //   * the channel is a thin recessed groove ~4 DIP thick running the full width,
-//   * the ticks are SHORT marks ~4 DIP long, ~3 DIP clear of the thumb — not
+//   * the ticks are SHORT marks ~4 DIP long, ~3 DIP clear of the thumb - not
 //     full-height lines, which is what made all three rows read as one picket
 //     fence,
 //   * the thumb is ~22-27 DIP on the cross axis and is anchored to the top of
@@ -155,7 +155,7 @@ const TRACKBAR_THUMB_EXTENT: f32 = 22.0;
 pub struct TrackBands {
     pub thumb_lo: f32,
     pub thumb_hi: f32,
-    /// Centre of the thumb — the channel is centred on this.
+    /// Centre of the thumb - the channel is centred on this.
     pub centre:   f32,
     /// The tick row BEFORE the thumb (above / to the left), as `(lo, hi)`.
     pub tick_before: Option<(f32, f32)>,
@@ -165,7 +165,7 @@ pub struct TrackBands {
 
 /// Resolves the cross-axis layout for `style` inside the extent `lo..hi`.
 ///
-/// Pure — no canvas — so the three `TickStyle` rows are asserted in tests
+/// Pure - no canvas - so the three `TickStyle` rows are asserted in tests
 /// instead of eyeballed against a screenshot.
 pub fn track_bands(lo: f32, hi: f32, style: TickStyle) -> TrackBands {
     let before = matches!(style, TickStyle::TopLeft | TickStyle::Both);
@@ -208,15 +208,15 @@ pub struct NumberFormat {
 }
 
 impl NumberFormat {
-    /// fr-FR — the convention the rest of the library already speaks, and the
+    /// fr-FR - the convention the rest of the library already speaks, and the
     /// one the reference sheet was captured under (`3,50`, `10 000`).
     ///
     /// The group separator is U+202F NARROW NO-BREAK SPACE, which is what
-    /// current Windows/ICU fr-FR uses — a plain space would allow a line break
+    /// current Windows/ICU fr-FR uses - a plain space would allow a line break
     /// in the middle of a number.
     pub const FR: Self = Self { decimal_separator: ",", group_separator: "\u{202F}" };
 
-    /// The invariant culture (`3.50`, `10,000`) — kept because it is what a
+    /// The invariant culture (`3.50`, `10,000`) - kept because it is what a
     /// caller formatting for a machine-readable field wants.
     pub const INVARIANT: Self = Self { decimal_separator: ".", group_separator: "," };
 }
@@ -243,7 +243,7 @@ impl Default for NumberFormat {
 /// `ScrollBar` is abstract: only `HScrollBar` and `VScrollBar` are constructed.
 /// The eight other properties the catalogue lists as declared (`BackColor`,
 /// `Font`, `Text`, `AutoSize`, `BackgroundImage(Layout)`, `ForeColor`) are
-/// re-declarations that only hide the property from the designer — their state
+/// re-declarations that only hide the property from the designer - their state
 /// is `ControlBase`'s. The one changed default that matters, `TabStop = false`,
 /// is applied in [`ScrollBar::default`].
 #[derive(Clone)]
@@ -257,7 +257,7 @@ pub struct ScrollBar {
     value: i32,
     small_change: i32,
     large_change: i32,
-    /// `ScaleScrollBarForDpiChange` — whether the bar rescales on a DPI change.
+    /// `ScaleScrollBarForDpiChange` - whether the bar rescales on a DPI change.
     /// Stored to honour the property; the painter already works in scaled DIP,
     /// so it has no separate effect here and is documented as not-yet-acted-on.
     scale_for_dpi: bool,
@@ -295,7 +295,7 @@ impl ScrollBar {
     pub fn value(&self) -> i32 {
         self.value
     }
-    /// `SmallChange` — the line step, **as the toolkit reports it**: never more
+    /// `SmallChange` - the line step, **as the toolkit reports it**: never more
     /// than [`ScrollBar::large_change`], because a line may not outrun a page.
     ///
     /// The clamp lives in the GETTER, not the setter: WinForms keeps the value
@@ -305,7 +305,7 @@ impl ScrollBar {
         self.small_change.min(self.large_change())
     }
 
-    /// `LargeChange` — the page step, as the toolkit reports it: never more than
+    /// `LargeChange` - the page step, as the toolkit reports it: never more than
     /// the whole range, `Maximum - Minimum + 1`. Also a getter-side clamp.
     pub fn large_change(&self) -> i32 {
         self.large_change.min(self.span())
@@ -324,12 +324,12 @@ impl ScrollBar {
         self.scale_for_dpi = v;
     }
 
-    /// `LargeChange` — the page step. A negative value is **refused**, as the
+    /// `LargeChange` - the page step. A negative value is **refused**, as the
     /// WinForms setter throws `ArgumentOutOfRangeException`.
     ///
     /// It deliberately does **not** touch `Value`. WinForms leaves `Value` where
-    /// it is even when the new page size puts it above the scroll ceiling — only
-    /// the native thumb position is clamped — and the next scroll gesture snaps
+    /// it is even when the new page size puts it above the scroll ceiling - only
+    /// the native thumb position is clamped - and the next scroll gesture snaps
     /// it down. Clamping here would both diverge and compound.
     pub fn set_large_change(&mut self, v: i32) -> Result<(), OutOfRange> {
         if v < 0 {
@@ -339,7 +339,7 @@ impl ScrollBar {
         Ok(())
     }
 
-    /// `SmallChange` — the line step. Negative is refused, like `LargeChange`.
+    /// `SmallChange` - the line step. Negative is refused, like `LargeChange`.
     pub fn set_small_change(&mut self, v: i32) -> Result<(), OutOfRange> {
         if v < 0 {
             return Err(OutOfRange::at_least(v as f64, 0.0));
@@ -351,7 +351,7 @@ impl ScrollBar {
     /// Setting `Minimum` above `Maximum` drags `Maximum` up with it, matching
     /// the toolkit (the two are kept consistent, never inverted).
     ///
-    /// `Value` is pulled into `[Minimum, Maximum]` — the ASSIGNABLE range, not
+    /// `Value` is pulled into `[Minimum, Maximum]` - the ASSIGNABLE range, not
     /// the scroll ceiling: `Value = 100` then `Maximum = 50` leaves 50, not 41.
     pub fn set_minimum(&mut self, v: i32) {
         self.minimum = v;
@@ -371,7 +371,7 @@ impl ScrollBar {
     }
 
     /// Assigns `Value` exactly. Errors if it is outside `[Minimum, Maximum]`,
-    /// as the WinForms setter throws — the caller must widen the range first.
+    /// as the WinForms setter throws - the caller must widen the range first.
     pub fn set_value(&mut self, v: i32) -> Result<(), OutOfRange> {
         if v < self.minimum || v > self.maximum {
             return Err(OutOfRange {
@@ -386,7 +386,7 @@ impl ScrollBar {
 
     /// The raw ceiling a scroll gesture aims at: `Maximum - LargeChange + 1`.
     ///
-    /// **Not** clamped — this is the bare arithmetic the toolkit performs, and
+    /// **Not** clamped - this is the bare arithmetic the toolkit performs, and
     /// when `LargeChange` is 0 it lands one PAST `Maximum`. The assignment that
     /// follows then fails, which is exactly why a gesture on a zero-page bar
     /// moves nothing (verified against the real control).
@@ -396,7 +396,7 @@ impl ScrollBar {
 
     /// The highest `Value` a scroll gesture can actually reach: the ceiling
     /// `Maximum - LargeChange + 1`, confined to the assignable range. This is
-    /// the trap — the thumb's far edge lines up with `Maximum`, so its near edge
+    /// the trap - the thumb's far edge lines up with `Maximum`, so its near edge
     /// (the `Value`) stops `LargeChange - 1` short.
     ///
     /// The confinement matters: with `LargeChange = 0` the bare ceiling is
@@ -420,7 +420,7 @@ impl ScrollBar {
         Ok(())
     }
 
-    /// Scrolls toward `v` — what dragging the thumb or clicking the track does,
+    /// Scrolls toward `v` - what dragging the thumb or clicking the track does,
     /// as opposed to the exact [`ScrollBar::set_value`]. `i32::MIN` / `i32::MAX`
     /// are the two ends, which is how the native `SB_TOP` / `SB_BOTTOM` arrive.
     ///
@@ -436,9 +436,9 @@ impl ScrollBar {
 
     // The four step gestures cannot fail, so they return nothing. Each clamps
     // its target to a value that is provably inside `[Minimum, Maximum]`:
-    // the increments stop at `min(…, ceiling)` — and when the ceiling is the
+    // the increments stop at `min(…, ceiling)` - and when the ceiling is the
     // out-of-range `Maximum + 1`, `LargeChange` is 0, which makes both steps 0
-    // and the target the current value — while the decrements stop at
+    // and the target the current value - while the decrements stop at
     // `Minimum`.
 
     /// One line step toward `Maximum` (`SmallChange`).
@@ -533,8 +533,8 @@ impl ScrollBar {
     }
 }
 
-/// A horizontal scroll bar. It declares **nothing** of its own — every property
-/// it exposes is `ScrollBar`'s — which is exactly why the abstract base exists.
+/// A horizontal scroll bar. It declares **nothing** of its own - every property
+/// it exposes is `ScrollBar`'s - which is exactly why the abstract base exists.
 #[derive(Clone, Default)]
 pub struct HScrollBar {
     base: ScrollBar,
@@ -579,11 +579,11 @@ impl Control for HScrollBar {
 }
 
 /// A vertical scroll bar. It re-declares exactly one property, `RightToLeft`,
-/// which the base does not — so the port carries it here, and nowhere else.
+/// which the base does not - so the port carries it here, and nowhere else.
 #[derive(Clone, Default)]
 pub struct VScrollBar {
     base: ScrollBar,
-    /// `RightToLeft` — re-declared by `VScrollBar` (WinForms hides it from the
+    /// `RightToLeft` - re-declared by `VScrollBar` (WinForms hides it from the
     /// designer for a vertical bar). Kept for fidelity; the default is
     /// `Inherit`, as on `Control`.
     pub right_to_left: RightToLeft,
@@ -629,7 +629,7 @@ impl Control for VScrollBar {
 // TrackBar
 // ═════════════════════════════════════════════════════════════════════════════
 
-/// `System.Windows.Forms.TrackBar` — a slider. It descends straight from
+/// `System.Windows.Forms.TrackBar` - a slider. It descends straight from
 /// `Control` (not from `ScrollBar`, despite the shared vocabulary), and adds the
 /// nine range/appearance fields below. The re-declared `Text`, `Font`,
 /// `ForeColor`, `BackgroundImage(Layout)` keep their `ControlBase` state; the
@@ -643,11 +643,11 @@ pub struct TrackBar {
     value: i32,
     small_change: i32,
     large_change: i32,
-    /// `TickFrequency` — one tick every N units. Coerced to `>= 1`.
+    /// `TickFrequency` - one tick every N units. Coerced to `>= 1`.
     tick_frequency: i32,
     tick_style: TickStyle,
     orientation: Orientation,
-    /// `RightToLeftLayout` — mirror the slider when `RightToLeft` is `Yes`.
+    /// `RightToLeftLayout` - mirror the slider when `RightToLeft` is `Yes`.
     /// Stored to honour the property; the painter does not yet mirror, and this
     /// is documented as not-yet-honoured.
     right_to_left_layout: bool,
@@ -706,7 +706,7 @@ impl TrackBar {
         self.right_to_left_layout
     }
 
-    /// Negative is **refused** — the WinForms setter throws
+    /// Negative is **refused** - the WinForms setter throws
     /// `ArgumentOutOfRangeException` rather than coercing to zero.
     pub fn set_small_change(&mut self, v: i32) -> Result<(), OutOfRange> {
         if v < 0 {
@@ -725,7 +725,7 @@ impl TrackBar {
         Ok(())
     }
 
-    /// `TickFrequency` — stored **verbatim**, including 0 and negatives.
+    /// `TickFrequency` - stored **verbatim**, including 0 and negatives.
     ///
     /// The toolkit does not validate or clamp this one: it stores `-3` and
     /// reports `-3` back (its native `TBM_GETNUMTICS` then returns nonsense).
@@ -762,7 +762,7 @@ impl TrackBar {
         self.value = self.value.clamp(self.minimum, self.maximum);
     }
 
-    /// Assigns `Value`. Errors outside `[Minimum, Maximum]` — the WinForms
+    /// Assigns `Value`. Errors outside `[Minimum, Maximum]` - the WinForms
     /// setter throws `ArgumentOutOfRangeException` for a TrackBar too.
     pub fn set_value(&mut self, v: i32) -> Result<(), OutOfRange> {
         if v < self.minimum || v > self.maximum {
@@ -798,14 +798,14 @@ impl TrackBar {
     /// step strictly below `Maximum`, then `Maximum`.
     ///
     /// The final gap is therefore SHORTER whenever the range is not a whole
-    /// multiple of the frequency — max 20 / frequency 3 gives
+    /// multiple of the frequency - max 20 / frequency 3 gives
     /// `0,3,6,9,12,15,18,20`, eight marks, not seven spread evenly. Spacing them
     /// evenly (the port's first attempt) put every interior tick in the wrong
     /// place.
     ///
     /// A non-positive `TickFrequency` yields just the two ends, matching the
     /// toolkit's own two-tick report for frequency 0. (Its native count for a
-    /// NEGATIVE frequency is meaningless — it returns `-4` — so there is nothing
+    /// NEGATIVE frequency is meaningless - it returns `-4` - so there is nothing
     /// there to reproduce.)
     pub fn tick_values(&self) -> Vec<i32> {
         if self.maximum <= self.minimum {
@@ -823,7 +823,7 @@ impl TrackBar {
         out
     }
 
-    /// How many ticks [`TrackBar::tick_values`] draws — the counterpart of the
+    /// How many ticks [`TrackBar::tick_values`] draws - the counterpart of the
     /// native `TBM_GETNUMTICS`.
     ///
     /// The real control reports one FEWER for wide ranges on an unsized bar
@@ -886,7 +886,7 @@ impl TrackBar {
         }
         let th = c.theme();
         // Each tick is placed at its own VALUE, through the same mapping the
-        // thumb uses — so a tick and the thumb at that value line up exactly,
+        // thumb uses - so a tick and the thumb at that value line up exactly,
         // and an uneven final gap is drawn uneven.
         for value in self.tick_values() {
             let along = start + self.offset_of(value, track_len);
@@ -965,7 +965,7 @@ impl Control for TrackBar {
 /// `MinimumSize`, `MaximumSize`, `BackgroundImage(Layout)`, `Text` keep their
 /// base state; `ContextMenuStrip` is likewise a `Control` property, and it now
 /// lives on `ControlBase` (as `context_menu_strip`, an opaque key the host
-/// resolves) — reached through `Deref`, never restated here.
+/// resolves) - reached through `Deref`, never restated here.
 /// `PreferredHeight` is a computed getter, not
 /// stored state, and is exposed as [`UpDownBase::preferred_height`].
 ///
@@ -1037,12 +1037,12 @@ impl UpDownBase {
         self.up_down_align = v;
     }
 
-    /// `PreferredHeight` — the font's line height plus the 3-D border, the way
+    /// `PreferredHeight` - the font's line height plus the 3-D border, the way
     /// the toolkit derives it. Read-only, so a getter rather than a field.
     pub fn preferred_height(&self, c: &dyn Canvas) -> f32 {
         let line = c.measure("0", &c.formats().body).max(1.0);
         // `measure` returns a width; the line box is roughly the body size.
-        // Border adds 2 DIP top and bottom in Fixed3D. All DIP — `Canvas` is
+        // Border adds 2 DIP top and bottom in Fixed3D. All DIP - `Canvas` is
         // already a DIP coordinate space, so nothing is scaled here.
         let border = if self.border_style == BorderStyle::None { 0.0 } else { 4.0 };
         line.max(16.0) + 4.0 + border
@@ -1070,8 +1070,8 @@ impl std::ops::DerefMut for UpDownBase {
     }
 }
 
-/// Draws the shared UpDown chrome — the framed edit box on the left and the
-/// stacked up/down spin buttons on the right — and returns the rectangle left
+/// Draws the shared UpDown chrome - the framed edit box on the left and the
+/// stacked up/down spin buttons on the right - and returns the rectangle left
 /// for the text, so each concrete control only has to render its own string.
 fn paint_updown_frame(base: &UpDownBase, c: &dyn Canvas, bounds: Rect) -> Rect {
     let th = c.theme();
@@ -1112,14 +1112,14 @@ fn paint_updown_frame(base: &UpDownBase, c: &dyn Canvas, bounds: Rect) -> Rect {
 
 // ── NumericUpDown ────────────────────────────────────────────────────────────
 
-/// `System.Windows.Forms.NumericUpDown` — a spinner over a decimal `Value`.
+/// `System.Windows.Forms.NumericUpDown` - a spinner over a decimal `Value`.
 ///
 /// WinForms stores `Value`/`Minimum`/`Maximum`/`Increment` as `System.Decimal`;
 /// the port uses `f64`, which reproduces every behaviour the reference exercises
 /// (decimal places, hex, thousands grouping) and is documented as the one place
 /// exact base-10 arithmetic is traded for a float.
 ///
-/// # Known limitation — binary floating point
+/// # Known limitation - binary floating point
 ///
 /// This is the one place the port cannot match the toolkit digit for digit.
 /// `Decimal` is base-10 and exact for these values; `f64` is base-2 and is not.
@@ -1190,7 +1190,7 @@ impl NumericUpDown {
         self.thousands_separator
     }
 
-    /// `Increment` — the spin step. A negative increment is **refused**: the
+    /// `Increment` - the spin step. A negative increment is **refused**: the
     /// WinForms setter throws. Coercing instead was actively harmful, because a
     /// negative step made `up_button` walk *below* `Minimum`.
     pub fn set_increment(&mut self, v: f64) -> Result<(), OutOfRange> {
@@ -1201,7 +1201,7 @@ impl NumericUpDown {
         Ok(())
     }
 
-    /// `DecimalPlaces` — digits shown after the separator. The toolkit accepts
+    /// `DecimalPlaces` - digits shown after the separator. The toolkit accepts
     /// `0..=99` and throws outside that, so this refuses rather than coerces.
     pub fn set_decimal_places(&mut self, v: i32) -> Result<(), OutOfRange> {
         if !(0..=99).contains(&v) {
@@ -1218,7 +1218,7 @@ impl NumericUpDown {
     }
 
     /// Setting `Minimum` above `Maximum` raises `Maximum` too, and pulls `Value`
-    /// up if needed — the toolkit keeps `Minimum <= Value <= Maximum` here by
+    /// up if needed - the toolkit keeps `Minimum <= Value <= Maximum` here by
     /// coercion, unlike the `Value` setter which throws.
     pub fn set_minimum(&mut self, v: f64) {
         self.minimum = v;
@@ -1235,7 +1235,7 @@ impl NumericUpDown {
         self.value = self.value.clamp(self.minimum, self.maximum);
     }
 
-    /// Assigns `Value`. **Errors** if outside `[Minimum, Maximum]** — this is the
+    /// Assigns `Value`. **Errors** if outside `[Minimum, Maximum]** - this is the
     /// documented trap: `numeric.Value = 255` throws while `Maximum` is still
     /// the default 100, so `Maximum` must be raised *first*. Reproduced as a
     /// `Result` so the failure cannot be swallowed.
@@ -1248,7 +1248,7 @@ impl NumericUpDown {
     }
 
     /// Steps `Value` by `+Increment` (the spin button never throws, it stops at
-    /// the edge). Clamped to BOTH bounds, not just the one it moves toward — a
+    /// the edge). Clamped to BOTH bounds, not just the one it moves toward - a
     /// step must never be able to leave the value outside the range.
     pub fn up_button(&mut self) {
         self.value = (self.value + self.increment).clamp(self.minimum, self.maximum);
@@ -1371,7 +1371,7 @@ impl Control for NumericUpDown {
 
 // ── DomainUpDown ─────────────────────────────────────────────────────────────
 
-/// `System.Windows.Forms.DomainUpDown` — a spinner over a list of strings
+/// `System.Windows.Forms.DomainUpDown` - a spinner over a list of strings
 /// instead of a number. Adds the items collection, the selection, and the two
 /// behaviour switches `Sorted` and `Wrap`.
 #[derive(Clone)]
@@ -1379,7 +1379,7 @@ pub struct DomainUpDown {
     base: UpDownBase,
 
     items: Vec<String>,
-    /// `SelectedIndex` — `-1` when nothing is selected (the default).
+    /// `SelectedIndex` - `-1` when nothing is selected (the default).
     selected_index: i32,
     sorted: bool,
     wrap: bool,
@@ -1420,7 +1420,7 @@ impl DomainUpDown {
     ///
     /// **`SelectedIndex` is preserved, not the selected item.** Verified against
     /// the real control: Charlie/Alpha/Bravo with index 0 selected, sorted, ends
-    /// with index 0 — which is now `Alpha`, not `Charlie`. The port used to
+    /// with index 0 - which is now `Alpha`, not `Charlie`. The port used to
     /// chase the item to its new position, which looks more helpful and is
     /// simply not what the toolkit does.
     pub fn set_sorted(&mut self, v: bool) {
@@ -1453,7 +1453,7 @@ impl DomainUpDown {
     /// anything else is **refused**, as the WinForms setter throws
     /// `ArgumentOutOfRangeException`.
     ///
-    /// Clearing with `-1` does **not** clear [`DomainUpDown::text`] — the
+    /// Clearing with `-1` does **not** clear [`DomainUpDown::text`] - the
     /// toolkit leaves the last shown string in place, which is visible in the
     /// control long after `SelectedItem` has become empty.
     pub fn set_selected_index(&mut self, index: i32) -> Result<(), OutOfRange> {
@@ -1473,7 +1473,7 @@ impl DomainUpDown {
         self.items.get(self.selected_index as usize).map(String::as_str)
     }
 
-    /// `Text` — the string the control displays.
+    /// `Text` - the string the control displays.
     ///
     /// It tracks the selection, but is **not** cleared when the selection is:
     /// after `SelectedIndex = -1` the toolkit still shows the previous item.
@@ -1482,7 +1482,7 @@ impl DomainUpDown {
     }
 
     /// Copies the selected item into `Text`. A cleared selection leaves the
-    /// previous text alone — that asymmetry is the toolkit's, not an oversight.
+    /// previous text alone - that asymmetry is the toolkit's, not an oversight.
     fn sync_text(&mut self) {
         if let Some(item) = self.selected_item().map(str::to_owned) {
             self.control_mut().text = item;
@@ -1621,7 +1621,7 @@ mod tests {
         assert_eq!(n.up_down_align(), LeftRightAlignment::Right);
     }
 
-    /// `LeftRightAlignment` has no `Default` on purpose — `UpDownBase.UpDownAlign`
+    /// `LeftRightAlignment` has no `Default` on purpose - `UpDownBase.UpDownAlign`
     /// is `Right` while `DateTimePicker.DropDownAlign` is `Left`, so the default
     /// belongs to the property. This asserts THIS property's own default, which
     /// is the half of that divergence this family owns.
@@ -1684,7 +1684,7 @@ mod tests {
     }
 
     /// Setting `LargeChange` must LEAVE `Value` alone, even when the value now
-    /// sits above the scroll ceiling — the toolkit strands it there deliberately
+    /// sits above the scroll ceiling - the toolkit strands it there deliberately
     /// and the next gesture snaps it down.
     #[test]
     fn setting_large_change_does_not_move_value() {
@@ -1735,7 +1735,7 @@ mod tests {
     }
 
     /// With `LargeChange = 0` the ceiling lands one PAST `Maximum`, so the
-    /// assignment a gesture would make is refused and nothing moves — verified
+    /// assignment a gesture would make is refused and nothing moves - verified
     /// against the real control, which behaves the same from 0 and from 50.
     #[test]
     fn a_zero_page_bar_does_not_scroll() {
@@ -1745,7 +1745,7 @@ mod tests {
         assert_eq!(s.max_reachable_value(), 100, "never past Maximum");
 
         // Scrolling to the end aims one PAST Maximum, so it is refused outright
-        // rather than silently doing nothing — the toolkit throws here too.
+        // rather than silently doing nothing - the toolkit throws here too.
         assert!(s.scroll_to(i32::MAX).is_err());
         assert_eq!(s.value(), 0, "and the value is untouched");
 
@@ -1761,7 +1761,7 @@ mod tests {
         assert_eq!(s.value(), 0);
     }
 
-    /// Moving the range pulls `Value` into `[Minimum, Maximum]` — the
+    /// Moving the range pulls `Value` into `[Minimum, Maximum]` - the
     /// assignable range, NOT the scroll ceiling.
     #[test]
     fn moving_the_range_clamps_value_to_maximum_not_to_the_ceiling() {
@@ -1778,7 +1778,7 @@ mod tests {
         let mut n = NumericUpDown::new(); // max 100
         // The documented trap: Value = 255 fails while Maximum is 100.
         assert!(n.set_value(255.0).is_err());
-        // Raise Maximum first, then the assignment succeeds — the required order.
+        // Raise Maximum first, then the assignment succeeds - the required order.
         n.set_maximum(255.0);
         assert!(n.set_value(255.0).is_ok());
         assert_eq!(n.value(), 255.0);
@@ -1802,7 +1802,7 @@ mod tests {
     }
 
     /// The default must be French, so a form never shows a French date beside
-    /// an English number — the inconsistency this setting exists to remove.
+    /// an English number - the inconsistency this setting exists to remove.
     #[test]
     fn the_default_number_convention_is_french_like_the_dates() {
         assert_eq!(NumberFormat::default(), NumberFormat::FR);
@@ -1820,7 +1820,7 @@ mod tests {
     // ── TrackBar cross-axis layout: the three TickStyle rows differ ─────────
 
     /// `BottomRight` puts ticks below only, `Both` above and below, `None`
-    /// neither — the three rows must not paint alike.
+    /// neither - the three rows must not paint alike.
     #[test]
     fn the_tick_styles_produce_three_different_layouts() {
         let none = track_bands(0.0, 45.0, TickStyle::None);
@@ -1840,7 +1840,7 @@ mod tests {
         assert_ne!(both.thumb_lo, bottom.thumb_lo);
     }
 
-    /// Ticks are SHORT marks clear of the thumb, not full-height lines — the
+    /// Ticks are SHORT marks clear of the thumb, not full-height lines - the
     /// defect that made every row look like a picket fence.
     #[test]
     fn ticks_are_short_marks_that_never_overlap_the_thumb() {
@@ -1986,7 +1986,7 @@ mod tests {
         assert_eq!(d.selected_item(), Some("Lundi"), "DownButton picks the first");
     }
 
-    /// Sorting keeps the INDEX, not the item — index 0 was Charlie and is Alpha
+    /// Sorting keeps the INDEX, not the item - index 0 was Charlie and is Alpha
     /// afterwards. The port used to chase the item, which reads as more helpful
     /// and is not what the toolkit does.
     #[test]
@@ -2022,7 +2022,7 @@ mod tests {
         assert!(d.set_selected_index(1).is_ok());
     }
 
-    /// Clearing the selection does not clear the displayed `Text` — the toolkit
+    /// Clearing the selection does not clear the displayed `Text` - the toolkit
     /// keeps showing the last item after `SelectedIndex = -1`.
     #[test]
     fn domain_clearing_the_selection_keeps_the_text() {
@@ -2058,7 +2058,7 @@ mod tests {
     // ── TrackBar ticks ──────────────────────────────────────────────────────
 
     /// Ticks sit at `Minimum`, every `TickFrequency` below `Maximum`, then
-    /// `Maximum` — so the LAST gap is short when the range is not a whole
+    /// `Maximum` - so the LAST gap is short when the range is not a whole
     /// multiple of the frequency. Spreading them evenly misplaced every one.
     #[test]
     fn tick_values_close_on_maximum_with_a_short_last_gap() {
@@ -2077,8 +2077,8 @@ mod tests {
         assert_eq!(d.tick_count(), 11);
     }
 
-    /// `TickFrequency` is stored verbatim — the toolkit neither clamps nor
-    /// refuses — and a non-positive one simply leaves the two end marks.
+    /// `TickFrequency` is stored verbatim - the toolkit neither clamps nor
+    /// refuses - and a non-positive one simply leaves the two end marks.
     #[test]
     fn a_non_positive_tick_frequency_is_kept_but_draws_only_the_ends() {
         let mut t = TrackBar::new();

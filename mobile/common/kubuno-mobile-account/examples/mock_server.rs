@@ -10,7 +10,7 @@ mod mock;
 async fn main() {
     let addr = std::env::args().nth(1).unwrap_or_else(|| "127.0.0.1:8787".to_string());
     let (bound, mock) = mock::serve(&addr, 900, 900).await;
-    println!("mock Kubuno core on http://{bound} — zoe@kubuno.test / secret, totp@kubuno.test / secret (code 123456)");
+    println!("mock Kubuno core on http://{bound} - zoe@kubuno.test / secret, totp@kubuno.test / secret (code 123456)");
     let mut last = (0, 0);
     loop {
         tokio::time::sleep(std::time::Duration::from_secs(1)).await;

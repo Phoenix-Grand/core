@@ -23,13 +23,13 @@ const LBL: Record<RadioVariant, { label: string; desc: string }> = {
   dark:    { label: 'text-xs text-[#cccccc]', desc: 'text-[11px] text-[#808080]' },
 }
 
-const DURATION = 100   // ms — the CSS transition this replaces
+const DURATION = 100   // ms - the CSS transition this replaces
 
 /**
  * The control is drawn on a canvas; the hidden `<input type="radio">` keeps every
  * native behaviour (label association, keyboard, form submission, assistive
  * technologies, radio-group semantics). The input remains the single source of
- * truth, exactly as when CSS read `:checked` — the canvas only mirrors it.
+ * truth, exactly as when CSS read `:checked` - the canvas only mirrors it.
  *
  * Same architecture as `Toggle`, including its four repaint triggers: a canvas is a
  * bitmap, so everything CSS used to redo for free has to be re-wired.
@@ -45,7 +45,7 @@ export function Radio({
   const raf       = useRef(0)
   const painted   = useRef(false)
   const [hovered, setHovered] = useState(false)
-  // Read inside `draw`, which is not recreated on every hover — a ref keeps the
+  // Read inside `draw`, which is not recreated on every hover - a ref keeps the
   // painter in sync without re-arming the observers below.
   const hoverRef = useRef(false)
   hoverRef.current = hovered
@@ -72,7 +72,7 @@ export function Radio({
     const start = performance.now()
     const step = (now: number) => {
       const t = Math.min(1, (now - start) / DURATION)
-      // The same curve as the CSS transition this replaces — sampled, not approximated.
+      // The same curve as the CSS transition this replaces - sampled, not approximated.
       progress.current = from + (target - from) * easeStandard(t)
       draw()
       if (t < 1) raf.current = requestAnimationFrame(step)
@@ -90,7 +90,7 @@ export function Radio({
     painted.current = true
   }, [checked, syncFromInput])
 
-  // Hover only recolours the ring — repaint in place, no animation.
+  // Hover only recolours the ring - repaint in place, no animation.
   useEffect(() => { draw() }, [hovered, draw])
 
   useEffect(() => {
@@ -98,7 +98,7 @@ export function Radio({
     const form  = input?.form
 
     // `change` covers pointer and keyboard toggles. `reset` covers a form restoring
-    // its defaults, which does NOT fire `change` — free with CSS, explicit here.
+    // its defaults, which does NOT fire `change` - free with CSS, explicit here.
     const onChangeEv = () => syncFromInput()
     const onReset    = () => requestAnimationFrame(() => syncFromInput(true))
     input?.addEventListener('change', onChangeEv)
@@ -107,7 +107,7 @@ export function Radio({
     /* A canvas is a bitmap, so unlike CSS it must be repainted when its rendering
      * conditions change. `device-pixel-content-box` is the primitive meant for this:
      * it reports the box in DEVICE pixels, so it fires exactly when the backing store
-     * needs resizing. A `resize` listener is NOT a substitute — changing the pixel
+     * needs resizing. A `resize` listener is NOT a substitute - changing the pixel
      * ratio while the CSS viewport keeps its size fires no resize event at all.
      *
      * The resolution query is the fallback for engines without that box (Safari). It
@@ -119,7 +119,7 @@ export function Radio({
         observer = new ResizeObserver(() => syncFromInput(true))
         observer.observe(canvasRef.current, { box: 'device-pixel-content-box' })
       } catch {
-        observer = null   // box unsupported — the media query below takes over
+        observer = null   // box unsupported - the media query below takes over
       }
     }
 

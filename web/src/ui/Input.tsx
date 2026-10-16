@@ -20,7 +20,7 @@ export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> 
   /**
    * No chrome: no frame, no background, the focus stroke under the text.
    *
-   * For a TITLE line — of a document, of an event — which is not a form field
+   * For a TITLE line - of a document, of an event - which is not a form field
    * and must not look like one. The variant lives here rather than as a bare
    * `<input>` copied into every screen: that is the only way it stays the same
    * everywhere, and the only way the rule "always the primitive" avoids an
@@ -95,7 +95,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(function Inp
           className={cn(cn(
             'w-full text-text-primary placeholder:text-text-tertiary',
             bare
-              // One stroke, under the text, and nothing else — least of all the
+              // One stroke, under the text, and nothing else - least of all the
               // browser's own ring on top of it. Three pixels, the thickness the
               // focus stroke has on every other field: a title is not the place
               // to make the mark harder to see. The transparent border is there

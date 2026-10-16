@@ -2,7 +2,7 @@
 //! token per signed-in account (`kb_account_<slot>`, see
 //! [`super::tokens`]), the `refresh_token` cookie designating the ACTIVE one.
 //!
-//! `GET /auth/accounts` enumerates the jar — the panel's account list — and
+//! `GET /auth/accounts` enumerates the jar - the panel's account list - and
 //! `POST /auth/switch` re-points the active cookie at another slot. Switching
 //! never touches any other account's session: each slot is an independent
 //! `core.refresh_tokens` row, so revoking, expiring or idle-closing one leaves
@@ -81,7 +81,7 @@ async fn slot_row(state: &AppState, raw: &str) -> Result<Option<AccountRow>, App
         })
 }
 
-/// GET /auth/accounts — the signed-in accounts of THIS browser.
+/// GET /auth/accounts - the signed-in accounts of THIS browser.
 ///
 /// Unauthenticated on purpose: it reads nothing but the caller's own cookies,
 /// exactly like the sign-in page's account chooser. A caller with no account
@@ -111,7 +111,7 @@ pub struct SwitchDto {
     pub slot: u8,
 }
 
-/// POST /auth/switch — make the account parked in `slot` the active session.
+/// POST /auth/switch - make the account parked in `slot` the active session.
 ///
 /// Validated exactly like a web refresh (live token, active user, device not
 /// blocked, idle window): a parked account that no longer qualifies answers

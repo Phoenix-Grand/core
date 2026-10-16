@@ -1,6 +1,6 @@
 //! The instance's HTTP/HTTPS configuration, read from `core.settings`.
 //!
-//! Only non-secret knobs live here — ports, protocol floor, HSTS, which mode
+//! Only non-secret knobs live here - ports, protocol floor, HSTS, which mode
 //! issues the certificate. The key material itself is deliberately absent: it is
 //! held on disk by [`super::store`], never in the database.
 
@@ -23,7 +23,7 @@ pub const KEY_CERT_MODE: &str = "network.cert_mode";
 // The TLS private key is NOT stored in the database and therefore not encrypted
 // with a derived key any more: it lives on disk under the service's own state
 // directory, protected by POSIX permissions like every other web server does
-// (see `super::store`). That also removes a real failure mode — material sealed
+// (see `super::store`). That also removes a real failure mode - material sealed
 // with the JWT secret became unreadable the day that secret was rotated.
 
 /// The minimum TLS version the core will accept. rustls cannot speak anything
@@ -55,12 +55,12 @@ pub struct HstsConfig {
     pub preload: bool,
 }
 
-/// Upper bound on the HSTS max-age, in days (two years — above what any
+/// Upper bound on the HSTS max-age, in days (two years - above what any
 /// preload list asks for).
 ///
 /// Clamped at the point of USE rather than only at the point of write: the value
 /// comes from the database, where a row can predate the validation or be edited
-/// by other means, and `days * 86_400` on an unbounded `i64` overflows — which
+/// by other means, and `days * 86_400` on an unbounded `i64` overflows - which
 /// panics in a debug build and wraps to a negative max-age in release.
 const MAX_HSTS_DAYS: i64 = 730;
 
@@ -182,7 +182,7 @@ pub fn validate_setting(key: &str, value: &serde_json::Value) -> Result<(), AppE
 ///     use) to anyone on the path;
 ///   * a URL naming loopback, a link-local or a private address turns this
 ///     endpoint into a request forwarder aimed at the infrastructure behind the
-///     server — the cloud metadata service being the classic target, with the
+///     server - the cloud metadata service being the classic target, with the
 ///     answer partly readable from the console's "last attempt" detail.
 ///
 /// This blocks address LITERALS. A hostname that resolves to an internal address

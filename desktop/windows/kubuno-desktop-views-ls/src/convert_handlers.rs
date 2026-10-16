@@ -3,7 +3,7 @@
 //!
 //! Each `"name" => |vm, value| body` entry of the `handlers!` table becomes a method of the
 //! view model in a `#[kubuno_desktop_views::event_handlers]` impl (appended to an existing one), with
-//! the legacy parameters bound the way the table bound them — `vm` to `self` (the concrete
+//! the legacy parameters bound the way the table bound them - `vm` to `self` (the concrete
 //! view model, still a `ViewModel`), `value` to `e.legacy_value()` (exactly the value the event
 //! produced for the table):
 //!

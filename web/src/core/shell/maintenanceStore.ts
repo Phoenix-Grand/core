@@ -16,7 +16,7 @@ export interface MaintenanceNotice {
 
 interface MaintenanceState {
   notices: MaintenanceNotice[]
-  /** Replace the whole set — used to seed from `/config` on load and reconnect. */
+  /** Replace the whole set - used to seed from `/config` on load and reconnect. */
   seed: (notices: MaintenanceNotice[]) => void
   /** A `start` event: add the notice if not already present. */
   start: (notice: MaintenanceNotice) => void

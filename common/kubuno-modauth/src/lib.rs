@@ -8,7 +8,7 @@
 //! now that identity travelled as plain `X-Kubuno-User-Id` / `-Role` / `-Email`
 //! headers which the module read and trusted unconditionally. Any process able
 //! to reach the module's loopback port could therefore forge those headers and
-//! impersonate any user, administrators included — a lateral-movement primitive
+//! impersonate any user, administrators included - a lateral-movement primitive
 //! that a single compromised module (or the two modules exempt from the seccomp
 //! `execve` ban) turns into a full takeover.
 //!
@@ -31,7 +31,7 @@
 //! ```
 //!
 //! The signature covers the **exact canonical bytes** that travel on the wire
-//! (`"v1." + base64url(payload)`), never a re-serialised payload — this removes
+//! (`"v1." + base64url(payload)`), never a re-serialised payload - this removes
 //! any encoding ambiguity between signer and verifier. The verifier accepts
 //! **only** HMAC-SHA256: no algorithm field is read from the message, which is
 //! precisely the class of bug (`alg=none`, algorithm confusion) that makes naive
@@ -96,7 +96,7 @@ struct Claims {
 pub enum VerifyError {
     /// Not three dot-separated parts, wrong version, or undecodable base64/JSON.
     Malformed,
-    /// The HMAC did not match — forged, tampered, or wrong module secret.
+    /// The HMAC did not match - forged, tampered, or wrong module secret.
     BadSignature,
     /// `exp` is in the past.
     Expired,
@@ -182,7 +182,7 @@ pub fn verify_at(
     }
 
     // Recompute the MAC over the exact wire bytes and compare in constant time.
-    // The verifier fixes the algorithm here — it never reads one from the token,
+    // The verifier fixes the algorithm here - it never reads one from the token,
     // which is the whole reason JWT's `alg` pitfalls do not apply.
     let signing_input = format!("{VERSION}.{payload_b64}");
     let presented_sig = B64URL.decode(sig_b64).map_err(|_| VerifyError::Malformed)?;
@@ -304,7 +304,7 @@ mod tests {
     #[test]
     fn accepts_within_skew() {
         let t = sign_at(SECRET, &user(), "drive", 1_000, 30);
-        // now is 3s before iat — inside MAX_CLOCK_SKEW_SECS.
+        // now is 3s before iat - inside MAX_CLOCK_SKEW_SECS.
         assert!(verify_at(SECRET, &t, "drive", 997).is_ok());
     }
 

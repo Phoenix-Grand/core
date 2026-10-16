@@ -9,7 +9,7 @@
 //! any non-ASCII text (an accented placeholder, an emoji icon name…) would
 //! otherwise put every diagnostic/completion/hover after that point at the
 //! wrong column in the editor. So this module is a second, LSP-shaped index,
-//! built fresh per document text — see `kubuno-desktop-views` §6 note in
+//! built fresh per document text - see `kubuno-desktop-views` §6 note in
 //! `XML_VIEWS.md`: this crate is one of exactly the "language server" readers
 //! that design anticipated needing its own UTF-16 conversion.
 
@@ -17,7 +17,7 @@ use lsp_types::Position;
 use rowan::TextSize;
 
 /// Precomputed byte offsets of each line's start, for O(log n) line lookup.
-/// Rebuilt whenever a document's text changes (full sync — see
+/// Rebuilt whenever a document's text changes (full sync - see
 /// `documents.rs`), same lifetime as the text it indexes.
 #[derive(Debug, Clone)]
 pub struct PositionIndex {
@@ -25,7 +25,7 @@ pub struct PositionIndex {
     /// the `i`-th `\n`. Mirrors `kubuno_desktop_views::syntax::LineIndex`'s own
     /// construction exactly (byte offset of the character right after each
     /// `\n`), which is what keeps a line's `\r` (CRLF) attached to the
-    /// *previous* line's content rather than the next line's — consistent
+    /// *previous* line's content rather than the next line's - consistent
     /// with how `kubuno-desktop-views` itself treats line boundaries.
     line_starts: Vec<u32>,
 }
@@ -46,13 +46,13 @@ impl PositionIndex {
     /// from (or an equal-prefix superset up to `offset`).
     pub fn offset_to_position(&self, text: &str, offset: TextSize) -> Position {
         let offset: u32 = offset.into();
-        let offset = offset.min(text.len() as u32); // Defensive clamp — never index out of bounds.
+        let offset = offset.min(text.len() as u32); // Defensive clamp - never index out of bounds.
         let line = match self.line_starts.binary_search(&offset) {
             Ok(exact) => exact,
             Err(insert_at) => insert_at.saturating_sub(1),
         };
         let line_start = self.line_starts[line];
-        // UTF-16 code units from the line's start up to `offset` — correct
+        // UTF-16 code units from the line's start up to `offset` - correct
         // regardless of what lies beyond `offset` on the line (a trailing
         // `\r`, more content, or the line terminator itself never enters this
         // slice).
@@ -62,7 +62,7 @@ impl PositionIndex {
 
     /// The inverse of [`Self::offset_to_position`]: a 0-based LSP `Position`
     /// → a UTF-8 byte offset into `text`. Out-of-range input (a line past the
-    /// end of the file, or a character past the end of its line — both
+    /// end of the file, or a character past the end of its line - both
     /// legitimate transiently while an editor's buffer and the server's last
     /// known text are briefly out of sync) is clamped rather than rejected,
     /// so a caller never has to fall back to "do nothing" for a slightly
@@ -71,13 +71,13 @@ impl PositionIndex {
         let line = (pos.line as usize).min(self.line_starts.len() - 1);
         let line_start = self.line_starts[line] as usize;
         let line_end = self.line_starts.get(line + 1).map(|&e| e as usize).unwrap_or(text.len());
-        // `line_end` (per `line_starts`' own construction — the byte right
+        // `line_end` (per `line_starts`' own construction - the byte right
         // after a `\n`) includes the line terminator itself in
         // `text[line_start..line_end]`. That is the right boundary for
         // *finding* which line an offset falls on (`offset_to_position`
         // mirrors it), but clamping an out-of-range `character` to "end of
         // line" must land *before* the terminator (`\n`, or `\r\n`), never
-        // consume it — otherwise a character far past a short line's end
+        // consume it - otherwise a character far past a short line's end
         // would clamp one byte into the next line instead of to this line's
         // true end.
         let mut line_text = &text[line_start..line_end];
@@ -134,7 +134,7 @@ mod tests {
     #[test]
     fn astral_character_counts_as_two_utf16_units() {
         // An emoji outside the BMP is 4 UTF-8 bytes but a UTF-16 surrogate
-        // pair (2 code units) — the case a naive "one code point = one
+        // pair (2 code units) - the case a naive "one code point = one
         // column" mapping gets wrong.
         let text = "<A Icon=\"🚀\"/>";
         let idx = PositionIndex::new(text);
@@ -162,7 +162,7 @@ mod tests {
     fn crlf_line_breaks_keep_carriage_return_on_the_previous_line() {
         let text = "abc\r\ndef";
         let idx = PositionIndex::new(text);
-        // 'd' is right after the '\n' — line 1, character 0.
+        // 'd' is right after the '\n' - line 1, character 0.
         let d_offset = text.find('d').unwrap() as u32;
         assert_eq!(idx.offset_to_position(text, TextSize::from(d_offset)), Position { line: 1, character: 0 });
         // The '\r' itself is still on line 0, at character 3.

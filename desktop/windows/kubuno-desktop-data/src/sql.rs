@@ -1,4 +1,4 @@
-//! SQL text helpers — never for values: values are always parameters.
+//! SQL text helpers - never for values: values are always parameters.
 //!
 //! - [`rewrite_named`]: provider-neutral named parameters `@name` → the provider's placeholders
 //!   (`$1` on PostgreSQL, `?1` on SQLite), skipping string literals, quoted identifiers, comments

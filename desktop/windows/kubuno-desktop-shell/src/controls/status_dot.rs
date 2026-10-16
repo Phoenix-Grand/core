@@ -1,4 +1,4 @@
-//! `StatusDot` — a small filled circle in a theme colour: the connection state at the foot of
+//! `StatusDot` - a small filled circle in a theme colour: the connection state at the foot of
 //! the rail, the sync state and the server line of the launcher. The design system has no
 //! filled-dot primitive (a `Badge` dot is tied to its pill), so this custom control paints the
 //! one shape the former pages drew by hand: a pill as wide as it is tall.

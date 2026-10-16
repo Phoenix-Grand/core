@@ -4,7 +4,7 @@ use uuid::Uuid;
 
 use crate::crypto::password::hash_password;
 
-/// The organisation's root unit — the single row of `core.org_units` with no
+/// The organisation's root unit - the single row of `core.org_units` with no
 /// parent.
 ///
 /// It lives in this module because this module owns what an instance is
@@ -23,7 +23,7 @@ use crate::crypto::password::hash_password;
 /// Never propagates a failure: an account must not be refused because the tree
 /// could not be read. `None` leaves `org_unit_id` unset in the INSERT, and the
 /// `users_place_in_tree` trigger (`000107`) places the account at the root
-/// anyway — the invariant is enforced by the database, this function only makes
+/// anyway - the invariant is enforced by the database, this function only makes
 /// the intention visible at the call site and lets the quota resolve from the
 /// right unit.
 pub async fn root_org_unit(db: &DbPool) -> Option<Uuid> {
@@ -76,7 +76,7 @@ pub fn initial_password_file() -> std::path::PathBuf {
 /// There is NO default password any more. A value shipped in the source is
 /// known to everyone who can read the source, and an instance reachable before
 /// its owner's first sign-in is an instance anyone can take. So one is drawn at
-/// random, written where only the service can read it, and never logged — the
+/// random, written where only the service can read it, and never logged - the
 /// project's rule on secrets in logs holds here too.
 fn generate_initial_password() -> String {
     // Ambiguous glyphs left out: this is meant to be retyped from a terminal.
@@ -90,7 +90,7 @@ fn generate_initial_password() -> String {
 ///
 /// The credentials come from the environment (handy for Docker / CI):
 ///   - `KUBUNO_ADMIN_USER`     (default: `admin`)
-///   - `KUBUNO_ADMIN_PASSWORD` (no default — see below)
+///   - `KUBUNO_ADMIN_PASSWORD` (no default - see below)
 ///   - `KUBUNO_ADMIN_EMAIL`    (default: `admin@kubuno.local`)
 ///
 /// **There is no default password.** When none is supplied, one is drawn at
@@ -101,7 +101,7 @@ fn generate_initial_password() -> String {
 /// secret and is left alone.
 ///
 /// Note that this path only runs when the instance is configured but has no
-/// administrator — an unattended deployment, typically. A fresh installation
+/// administrator - an unattended deployment, typically. A fresh installation
 /// goes through the setup wizard instead, where the operator picks the password
 /// on screen and nothing is ever generated.
 pub async fn ensure_default_admin(pool: &DbPool) -> Result<()> {
@@ -194,7 +194,7 @@ pub async fn ensure_default_admin(pool: &DbPool) -> Result<()> {
                 tracing::warn!(
                     username = %username,
                     file = %path.display(),
-                    "Compte administrateur créé avec un mot de passe ALÉATOIRE — il est dans ce fichier, \
+                    "Compte administrateur créé avec un mot de passe ALÉATOIRE - il est dans ce fichier, \
                      à changer à la première connexion"
                 );
             }
@@ -203,7 +203,7 @@ pub async fn ensure_default_admin(pool: &DbPool) -> Result<()> {
                 // operator can still reset it with `kubuno reset-admin`.
                 tracing::error!(
                     error = %e, file = %path.display(),
-                    "Mot de passe administrateur initial NON écrit — utilisez « kubuno reset-admin »"
+                    "Mot de passe administrateur initial NON écrit - utilisez « kubuno reset-admin »"
                 );
             }
         }
@@ -231,7 +231,7 @@ async fn warn_if_password_change_pending(pool: &DbPool) {
             tracing::warn!(
                 accounts = %names,
                 "SECURITY: these accounts still use the built-in default password. \
-                 Sign in and change it — administrative writes are refused until then. \
+                 Sign in and change it - administrative writes are refused until then. \
                  Set KUBUNO_ADMIN_PASSWORD before the first boot to avoid this."
             );
         }
@@ -267,7 +267,7 @@ fn env_or(key: &str, default: &str) -> String {
 /// default, but the consolidated MySQL/SQLite schema cannot express a random
 /// per-install default for a `BINARY(16)`/`BLOB` primary identity. So the row
 /// is written here in Rust after the migrations run: a brand-new random
-/// `instance_id`, drawn once per installation. Idempotent — an install that
+/// `instance_id`, drawn once per installation. Idempotent - an install that
 /// already has the row (every PostgreSQL one, and any MySQL/SQLite one past its
 /// first boot) is left untouched, so the identity is never re-minted. Never
 /// fatal: an instance must still boot if this write races or fails.

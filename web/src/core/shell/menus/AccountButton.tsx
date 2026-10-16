@@ -1,5 +1,5 @@
 /**
- * `AccountButton` — the header's avatar button and the popover that carries the `AccountMenu` user control
+ * `AccountButton` - the header's avatar button and the popover that carries the `AccountMenu` user control
  * (contract: vskubuno `docs/SHELL-CONTROLS.md`). The popover is platform chrome, kept out of the user
  * control: portalled to <body> above the page (never clipped by an ancestor's overflow, transform or stacking
  * context), anchored to the button's bottom-end corner, flipped above it when there is more room there and
@@ -244,7 +244,7 @@ function AccountButtonImpl({ onAddAccount }: AccountButtonProps) {
         <>
           {/* A click outside closes (the backdrop takes it, as the panel always did). */}
           <div className="fixed inset-0 z-[9990]" onClick={() => close()} />
-          {/* The panel — the launcher's visual language: the tinted ground, 28px radius (explicit: the global
+          {/* The panel - the launcher's visual language: the tinted ground, 28px radius (explicit: the global
               radius scale flattens rounded-2xl to 8px), the same elevation, white cards on the tint. */}
           <div
             ref={panelRef}

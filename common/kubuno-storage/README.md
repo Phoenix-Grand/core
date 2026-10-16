@@ -33,7 +33,7 @@ returns the backend named by the configuration. `StorageBackend` is an
 | Multipart upload | `init_multipart`, `put_part`, `complete_multipart`, `abort_multipart` (→ `MultipartPart { part_number, etag }`) |
 | Links | `presign_get` |
 
-Streams are `ByteStream` — a boxed, `Send` stream of `StorageResult<Bytes>`.
+Streams are `ByteStream` - a boxed, `Send` stream of `StorageResult<Bytes>`.
 Errors are `StorageError`: `NotFound`, `InvalidPath`, `Io`, `S3`,
 `MultipartNotFound`, `Internal`.
 
@@ -67,11 +67,11 @@ turns `report.pdf` into `report (2).pdf`, `unique_dir_name` turns `Documents` in
 
 ## Backends
 
-- **Local filesystem** (`LocalStorage`) — the backend in use. Every path is
+- **Local filesystem** (`LocalStorage`) - the backend in use. Every path is
   resolved against the storage root and normalised; anything that would land
   outside it (`../`) is refused with `InvalidPath`. `presign_get` returns the
   path itself, since a local file needs no signed URL.
-- **S3-compatible** — declared in the configuration and in the `s3` feature, but
+- **S3-compatible** - declared in the configuration and in the `s3` feature, but
   **not implemented yet**: every call returns an error.
 
 ## Features

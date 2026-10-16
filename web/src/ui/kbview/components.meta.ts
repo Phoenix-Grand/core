@@ -1,6 +1,6 @@
 /**
  * Non-visual components and their items: `ContextMenu`/`MenuItem` (rendered with the `@ui`
- * `MenuDropdown` — the "menus = MenuDropdown" rule holds by construction) and `ToolTip`
+ * `MenuDropdown` - the "menus = MenuDropdown" rule holds by construction) and `ToolTip`
  * (the options of the `@ui` `Tooltip` every element's `ToolTip` property uses).
  */
 import type { ComponentProps } from 'react'

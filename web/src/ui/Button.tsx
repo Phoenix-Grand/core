@@ -6,13 +6,13 @@ type ButtonSize    = 'sm' | 'md' | 'lg'
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?:  ButtonVariant
   size?:     ButtonSize
-  /** Leading icon — rendered before children */
+  /** Leading icon - rendered before children */
   icon?:     React.ReactNode
   loading?:  boolean
   children?: React.ReactNode
 }
 
-// rounded-md is FIXED — border radius is never overridable
+// rounded-md is FIXED - border radius is never overridable
 const BASE = [
   'inline-flex items-center justify-center select-none',
   'transition-colors rounded-md',

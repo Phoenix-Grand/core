@@ -43,7 +43,7 @@ import com.kubuno.android.ui.R
  * established; extracting it here keeps the whole suite reading the same, while
  * each app tailors which actions it shows.
  *
- * Every action is optional — pass null to hide its slot — and [actions] lets an
+ * Every action is optional - pass null to hide its slot - and [actions] lets an
  * app insert or override buttons before the avatar. The bell carries an
  * optional [notificationCount] badge. Search is a plain icon here; an app that
  * wants an inline search field swaps its own header in that mode.

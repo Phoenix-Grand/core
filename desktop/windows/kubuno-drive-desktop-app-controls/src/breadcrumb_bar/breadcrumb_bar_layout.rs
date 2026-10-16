@@ -1,4 +1,4 @@
-//! Breadcrumb segment layout — PURE logic ported from `BreadcrumbBarLayout`
+//! Breadcrumb segment layout - PURE logic ported from `BreadcrumbBarLayout`
 //! (`Files.App.Controls/BreadcrumbBar/BreadcrumbBarLayout.cs`).
 //!
 //! The WinUI control measures its `BreadcrumbBarItem`s, then `MeasureOverride`

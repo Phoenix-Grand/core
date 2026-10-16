@@ -335,7 +335,7 @@ impl KeyValueStore {
 }
 
 handle!(
-    /// `<FileStore>`: the app's own files by name — data, a cache with eviction, temporary files.
+    /// `<FileStore>`: the app's own files by name - data, a cache with eviction, temporary files.
     FileStore
 );
 

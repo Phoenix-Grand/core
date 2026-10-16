@@ -85,7 +85,7 @@ use tower_http::{
 pub fn build(state: AppState, frontend_dist: String) -> Router {
     // HSTS comes from live state rather than a constant: its value follows the
     // `network.*` settings (see `crate::network`), and it is emitted only on
-    // requests that actually arrived over TLS — whether this process terminated
+    // requests that actually arrived over TLS - whether this process terminated
     // it or a trusted reverse proxy did.
     let hsts_holder = state.tls.clone();
 
@@ -105,7 +105,7 @@ pub fn build(state: AppState, frontend_dist: String) -> Router {
         // donc ne peut pas servir à sonder l'existence d'un compte.
         .route("/methods",                  get(crate::handlers::auth::public_auth_methods))
         // A fresh CAPTCHA challenge for the sign-in form, once repeated failures
-        // have armed the gate. Takes no login and reads no account — like
+        // have armed the gate. Takes no login and reads no account - like
         // /methods, it cannot be used to probe whether an account exists.
         .route("/captcha",                  get(crate::handlers::auth::captcha_challenge))
         .route("/totp",                     post(totp_verify))
@@ -132,7 +132,7 @@ pub fn build(state: AppState, frontend_dist: String) -> Router {
     // privilege each operation actually needs (defence in depth, see
     // `crate::authz::guard`).
     //
-    // Paths here are declared WITHOUT the `/admin` prefix — `.nest("/admin", …)`
+    // Paths here are declared WITHOUT the `/admin` prefix - `.nest("/admin", …)`
     // below supplies it. Re-adding it inside would serve `/api/v1/admin/admin/…`
     // and nothing else, which is the single most likely way to get this wrong.
     let admin_routes = Router::new()
@@ -144,7 +144,7 @@ pub fn build(state: AppState, frontend_dist: String) -> Router {
         // ── Comptes ───────────────────────────────────────────────
         .route("/users",          get(list_users).post(create_user))
         // Déplacement groupé vers une unité : une transaction, une entrée
-        // d'audit récapitulative — pas N appels PATCH (cf. handlers::admin::users).
+        // d'audit récapitulative - pas N appels PATCH (cf. handlers::admin::users).
         // Segment statique déclaré avant `/users/:id/…` par convention de lecture.
         .route("/users/bulk/org-unit", post(bulk_set_org_unit))
         // Même forme que le déplacement groupé : une transaction, une entrée
@@ -169,7 +169,7 @@ pub fn build(state: AppState, frontend_dist: String) -> Router {
         // révoque aussi toutes ses sessions (cf. handlers::admin::password_reset).
         .route("/users/:id/reset-password",
                post(crate::handlers::admin::password_reset::reset_user_password))
-        // « Ce mot de passe est suspect » — distinct de « ce mot de passe est
+        // « Ce mot de passe est suspect » - distinct de « ce mot de passe est
         // remplacé ». Arme (ou lève) le changement imposé sans toucher au
         // mot de passe : mêmes gardes que la réinitialisation, même audit.
         .route("/users/:id/require-password-change",
@@ -199,10 +199,10 @@ pub fn build(state: AppState, frontend_dist: String) -> Router {
         // Les agrégats d'instance et la liste des comptes qui consomment le
         // plus. Aucune route d'écriture : le quota d'un compte passe par
         // PATCH /admin/users/:id, la politique par défaut par
-        // PUT/DELETE /admin/settings/scoped/:key — les deux déjà audités.
+        // PUT/DELETE /admin/settings/scoped/:key - les deux déjà audités.
         .route("/storage/overview",  get(crate::handlers::admin::storage::overview))
         .route("/storage/consumers", get(crate::handlers::admin::storage::consumers))
-        // One account's sheet: modules, categories, volumes and object counts —
+        // One account's sheet: modules, categories, volumes and object counts -
         // and deliberately nothing that would say *what* the person stores.
         .route("/storage/accounts/:id/usage", get(crate::handlers::admin::storage::account_usage))
         // ── Sauvegarde planifiée ──────────────────────────────────────
@@ -241,7 +241,7 @@ pub fn build(state: AppState, frontend_dist: String) -> Router {
         // ── Annuaires LDAP / Active Directory ─────────────────────────
         // Mêmes privilèges que les fournisseurs SSO (core.auth_providers.*) :
         // un annuaire est un fournisseur d'authentification. Les deux sondes
-        // sont synchrones — c'est ce qui rend une configuration diagnosticable.
+        // sont synchrones - c'est ce qui rend une configuration diagnosticable.
         .route("/ldap/directories",
                get(crate::handlers::admin::ldap::list_directories)
               .post(crate::handlers::admin::ldap::create_directory))
@@ -343,7 +343,7 @@ pub fn build(state: AppState, frontend_dist: String) -> Router {
                                     .delete(crate::handlers::admin::devices::forget_device))
         .route("/devices/:id/approval", post(crate::handlers::admin::devices::set_approval))
         .route("/devices/:id/sign-out", post(crate::handlers::admin::devices::sign_out_device))
-        // Liste globale des sessions actives — vue qui n'existait pas.
+        // Liste globale des sessions actives - vue qui n'existait pas.
         .route("/sessions",            get(crate::handlers::admin::devices::list_sessions))
         // ── Moteur de règles d'administration ─────────────────────
         // Mêmes précautions d'ordre que pour /audit et /alerts : les segments
@@ -363,7 +363,7 @@ pub fn build(state: AppState, frontend_dist: String) -> Router {
         // ── Tableau de bord sécurité ──────────────────────────────
         // Une seule lecture pour toute la page : chaque panneau est un agrégat
         // à portée instance, filtré par le privilège qui le gouverne (sessions,
-        // audit, alertes, règles). Aucune écriture — chaque panneau renvoie
+        // audit, alertes, règles). Aucune écriture - chaque panneau renvoie
         // vers le rapport détaillé qui, lui, a déjà ses routes.
         .route("/security/dashboard",
                get(crate::handlers::admin::security_dashboard::security_dashboard))
@@ -405,7 +405,7 @@ pub fn build(state: AppState, frontend_dist: String) -> Router {
         .route("/domains/:id/primary",         post(crate::handlers::admin::domains::promote))
         // Migration de données : le core tient le plan et l'avancement, le
         // module propriétaire de la destination fait la copie. Segments
-        // statiques d'abord — « probe » doit précéder `/:id`, sinon il serait lu
+        // statiques d'abord - « probe » doit précéder `/:id`, sinon il serait lu
         // comme un identifiant de campagne.
         .route("/data-migration/probe",         post(crate::handlers::admin::data_migration::probe))
         .route("/data-migration",                get(crate::handlers::admin::data_migration::list)
@@ -422,9 +422,9 @@ pub fn build(state: AppState, frontend_dist: String) -> Router {
         // demande, l'annulation, la suppression et le téléchargement.
         //
         // Le téléchargement est une route et non un fichier servi : quatre
-        // conditions doivent tenir à l'instant de la requête — exécution
+        // conditions doivent tenir à l'instant de la requête - exécution
         // terminée, délai de sécurité écoulé, archive non supprimée, rétention
-        // non expirée — et chaque téléchargement est audité et compté.
+        // non expirée - et chaque téléchargement est audité et compté.
         .route("/data-export",                   get(crate::handlers::admin::data_export::get_data_export)
                                                 .post(crate::handlers::admin::data_export::request_export))
         .route("/data-export/:id",            delete(crate::handlers::admin::data_export::delete_export))
@@ -432,7 +432,7 @@ pub fn build(state: AppState, frontend_dist: String) -> Router {
         .route("/data-export/:id/download",      get(crate::handlers::admin::data_export::download_export))
         .route("/data-export/:id/subjects",      get(crate::handlers::admin::data_export::export_subjects))
         // Licence du logiciel et contrat de support. Une seule lecture pour
-        // toute la page — elle compose la licence (une constante), l'identité de
+        // toute la page - elle compose la licence (une constante), l'identité de
         // l'instance, l'inventaire des modules et le contrat, chaque bloc
         // n'étant inclus que si l'appelant a le droit de le voir. Aucun
         // identifiant dans l'URL : la section n'a qu'un seul objet.
@@ -441,7 +441,7 @@ pub fn build(state: AppState, frontend_dist: String) -> Router {
                                              .delete(crate::handlers::admin::subscription::remove_key))
         // Jours fériés : le référentiel mondial, ses corrections locales et la
         // surcouche par unité. Même précaution d'ordre que les sections
-        // voisines — `/holidays/preview`, `/holidays/reload` et
+        // voisines - `/holidays/preview`, `/holidays/reload` et
         // `/holidays/overview` précèdent tout segment paramétré, et les
         // journées vivent sous `/holidays/days/:id` plutôt que sous
         // `/holidays/:id` pour ne jamais être confondues avec un calendrier.
@@ -462,7 +462,7 @@ pub fn build(state: AppState, frontend_dist: String) -> Router {
         .route("/holidays/units/:unit_id",      get(crate::handlers::admin::holidays::unit_overlay)
                                                 .put(crate::handlers::admin::holidays::set_unit_pref))
         // Bâtiments et ressources : la partie de l'annuaire qui n'est pas des
-        // personnes. Même précaution d'ordre qu'au-dessus — `/resources/overview`
+        // personnes. Même précaution d'ordre qu'au-dessus - `/resources/overview`
         // précède `/resources/:id`, sinon « overview » serait lu comme un
         // identifiant et renverrait un 400 sur une page qui existe.
         .route("/resources/overview",           get(crate::handlers::admin::resources::overview))
@@ -532,7 +532,7 @@ pub fn build(state: AppState, frontend_dist: String) -> Router {
         .route("/me/password",          patch(change_password))
         .route("/users/search",         get(search_users))
         .route("/users/lookup",         get(lookup_users))
-        // One person, as the directory publishes them — for a contact card.
+        // One person, as the directory publishes them - for a contact card.
         .route("/users/:id/card",       get(crate::handlers::users::user_card))
         .route("/me/sessions",          get(list_sessions).delete(revoke_all_sessions))
         .route("/me/sessions/:id",     delete(revoke_session))
@@ -556,7 +556,7 @@ pub fn build(state: AppState, frontend_dist: String) -> Router {
                                .delete(crate::handlers::clipboard::delete))
         // Jours fériés et journées spéciales : information publique, lisible par
         // tout compte authentifié. Les segments statiques précèdent tout
-        // paramètre — il n'y en a aucun ici, mais l'ordre reste celui des
+        // paramètre - il n'y en a aucun ici, mais l'ordre reste celui des
         // sections voisines.
         .route("/holidays",             get(crate::handlers::holidays::feed))
         .route("/holidays/applicable",  get(crate::handlers::holidays::applicable))
@@ -581,7 +581,7 @@ pub fn build(state: AppState, frontend_dist: String) -> Router {
         .route("/me/security",           get(crate::handlers::users::security_overview))
         // « Télécharger mes données » : l'export de données, ouvert au compte
         // qu'il concerne. Aucune de ces routes n'accepte d'identifiant de compte
-        // — le sujet est toujours l'appelant, pris du jeton. Les trois répondent
+        // - le sujet est toujours l'appelant, pris du jeton. Les trois répondent
         // 404 quand `data_export.self_service` est désactivé pour la portée de
         // l'utilisateur : la fonction disparaît au lieu d'être refusée.
         .route("/me/export",              get(crate::handlers::me_export::get_my_export)
@@ -622,7 +622,7 @@ pub fn build(state: AppState, frontend_dist: String) -> Router {
         // content behind it (REST save from outside the room).
         .route("/collab/rooms/close",       post(crate::collab::close_room))
         // Portail de protection des données : un module demande, AVANT de
-        // valider une opération, si elle est autorisée. Interne par nature —
+        // valider une opération, si elle est autorisée. Interne par nature -
         // pouvoir soumettre un texte et lire « bloqué » depuis un navigateur,
         // c'est pouvoir cartographier la politique par dichotomie.
         .route("/rules/gate",               post(crate::handlers::gate::gate))
@@ -631,11 +631,11 @@ pub fn build(state: AppState, frontend_dist: String) -> Router {
         .route("/mcp",                      post(crate::handlers::mcp::internal_mcp_endpoint))
         // Provenance du stockage : un module déclare ce qu'il occupe pour un
         // compte. L'identité du déclarant vient du secret interne dérivé, jamais
-        // du corps de la requête — un module ne peut déclarer que pour lui-même.
+        // du corps de la requête - un module ne peut déclarer que pour lui-même.
         .route("/storage/usage",            post(crate::handlers::storage_usage::declare))
         // Catalogue des ressources réservables, en LECTURE seule. Un module qui
         // pourrait écrire ici serait un module qui décide du contenu de
-        // l'annuaire — c'est le travail de l'administrateur. Aucun module n'est
+        // l'annuaire - c'est le travail de l'administrateur. Aucun module n'est
         // nommé : le secret interne prouve que l'appelant est dans l'instance,
         // et tous lisent la même réponse.
         .route("/directory/resources",       get(crate::handlers::admin::resources::internal_list_resources))
@@ -705,7 +705,7 @@ pub fn build(state: AppState, frontend_dist: String) -> Router {
         .fallback(ServeFile::new(format!("{frontend_dist}/index.html")));
 
     // CSP : l'import map ESM du host est un <script type="importmap"> inline.
-    // Sa valeur est recalculée à chaque changement de `importmap.sha256` — voir
+    // Sa valeur est recalculée à chaque changement de `importmap.sha256` - voir
     // `CspHeaderCache` pour la raison (un déploiement frontend-only ne redémarre
     // pas le serveur).
     let csp_cache = std::sync::Arc::new(crate::router::csp::CspHeaderCache::new(&frontend_dist));
@@ -721,7 +721,7 @@ pub fn build(state: AppState, frontend_dist: String) -> Router {
     Router::new()
         .route("/health", get(health))
         .route("/ready",  get(ready))
-        // Public ACME HTTP-01 challenge — unauthenticated by design, answers only
+        // Public ACME HTTP-01 challenge - unauthenticated by design, answers only
         // tokens the core itself is currently proving (see crate::network::acme).
         .route("/.well-known/acme-challenge/:token",
                get(crate::handlers::acme::http01_challenge))
@@ -748,7 +748,7 @@ pub fn build(state: AppState, frontend_dist: String) -> Router {
             HeaderName::from_static("x-frame-options"),
             HeaderValue::from_static("DENY"),
         ))
-        // `if_not_present`: a response may ask for a STRICTER policy — the module
+        // `if_not_present`: a response may ask for a STRICTER policy - the module
         // proxy sets `no-referrer` on anything fetched with a signed ticket, whose
         // URL must never travel on as a Referer (see `crate::auth::tickets`).
         .layer(SetResponseHeaderLayer::if_not_present(
@@ -874,7 +874,7 @@ async fn module_proxy_middleware(
 /// `no-cache` ne veut PAS dire « ne pas mettre en cache » (c'est `no-store`) :
 /// le navigateur garde la copie et REVALIDE avant chaque réutilisation. Ces
 /// fichiers portent un nom stable, donc `no-store` les faisait re-télécharger
-/// intégralement à chaque montage — le lanceur d'applications, qui affiche une
+/// intégralement à chaque montage - le lanceur d'applications, qui affiche une
 /// vignette par module, repayait ~650 ko à chaque ouverture. Avec `no-cache`,
 /// `ServeDir` répond 304 (corps vide) tant que le fichier n'a pas changé, et
 /// sert le nouveau contenu dès qu'il change : aucun risque de version périmée,
@@ -893,7 +893,7 @@ async fn cache_control_middleware(req: Request<Body>, next: Next) -> Response {
         .map(str::to_owned);
     let mut response = next.run(req).await;
     // A handler (or proxied module) that set Cache-Control itself did so on
-    // purpose — e.g. drive's font endpoints, which are content-addressed via
+    // purpose - e.g. drive's font endpoints, which are content-addressed via
     // ETag and would be re-downloaded on every page load under `no-store`.
     // Axum/reqwest never add the header on their own, so its presence is
     // always a deliberate upstream decision.
@@ -960,7 +960,7 @@ async fn with_content_etag(response: Response, if_none_match: Option<String>) ->
 
     // A cached copy that still matches: answer 304 and send no body at all.
     // `If-None-Match` may carry a list, and a proxy may have weakened the tag
-    // with the `W/` prefix — both are matches for our purposes.
+    // with the `W/` prefix - both are matches for our purposes.
     if let Some(candidates) = if_none_match.as_deref() {
         let hit = candidates
             .split(',')
@@ -1010,7 +1010,7 @@ fn is_content_hashed_asset(path: &str) -> bool {
 }
 
 /// Vrai si le chemin désigne un média statique à nom stable (image, icône,
-/// police) servi depuis le disque — donc revalidable par `Last-Modified`/ETag
+/// police) servi depuis le disque - donc revalidable par `Last-Modified`/ETag
 /// plutôt que re-téléchargé intégralement.
 ///
 /// Les routes applicatives sont exclues : `/api/*` et `/internal/*` peuvent

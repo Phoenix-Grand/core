@@ -1,7 +1,7 @@
 //! Visual inheritance of views (`vskubuno/docs/EVENTS.md`, "User controls", Windows Forms' inherited forms and
 //! inherited user controls): a view whose root names a base view, `x:Inherits="base_form.kbview"` (relative to the
 //! view's file), shows every control of the base view plus its own, and may change the properties of the base's
-//! controls whose `Modifiers` is `Protected` or `Public` — never those of a private one, which stays locked.
+//! controls whose `Modifiers` is `Protected` or `Public` - never those of a private one, which stays locked.
 //!
 //! The derived view writes:
 //!
@@ -12,7 +12,7 @@
 //! - any other element: a control of its own.
 //!
 //! [`merge`] produces the view the program compiles (and the designer renders): the derived elements first, in their
-//! order — so an element of the derived file keeps its place (its designer id) —, then the base controls it does not
+//! order - so an element of the derived file keeps its place (its designer id) -, then the base controls it does not
 //! override, marked `x:Inherited="true"` (their descendants `x:Inherited="inner"`); an override is marked
 //! `x:Inherited="override"`. Dependency-free: the `#[kubuno_desktop::view]` and `#[derive(UserControl)]` macros embed the
 //! merged view, the runtime and the design surface merge again on a hot reload or a designer edit.

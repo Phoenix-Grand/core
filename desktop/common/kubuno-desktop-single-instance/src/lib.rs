@@ -22,7 +22,7 @@
 //! |---|---|---|---|
 //! | lock | `Local\kubuno-<app>-<digest>` named mutex, DACL: current user only | `flock` on `<runtime>/kubuno-<app>-<digest>.lock` | same as Linux |
 //! | hand-off | `\\.\pipe\kubuno-<app>-<digest>`, DACL: current user only, remote clients rejected | Unix socket `<runtime>/kubuno-<app>-<digest>.sock`, `0600`, peer uid checked | same as Linux |
-//! | runtime dir | — | `$XDG_RUNTIME_DIR/kubuno`, else `/tmp/kubuno-<uid>` (`0700`, owner checked) | `$TMPDIR/kubuno` (per user) |
+//! | runtime dir | - | `$XDG_RUNTIME_DIR/kubuno`, else `/tmp/kubuno-<uid>` (`0700`, owner checked) | `$TMPDIR/kubuno` (per user) |
 //! | user, session | SID, Terminal Services session id | uid, `XDG_SESSION_ID` | uid |
 //!
 //! On macOS a bundled app is also activated by the system itself (LaunchServices reopens the running bundle); this

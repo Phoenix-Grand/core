@@ -1,7 +1,7 @@
 //! Real, cross-engine integration matrix for the two administrative schema
 //! operations that back the database console:
 //!
-//! * **#3 — engine switch by data copy** ([`copy_schema`]): every ordered pair
+//! * **#3 - engine switch by data copy** ([`copy_schema`]): every ordered pair
 //!   `(src, dst)` of the available engines is exercised on a rich schema (uuid,
 //!   timestamptz, json, bool, int4/int8, bytea/blob, JSON-encoded arrays, text,
 //!   NULLs, two tables with a foreign key). Each case verifies row counts,
@@ -10,7 +10,7 @@
 //!   `LONGTEXT`) into a strict destination is destination-directed, so those
 //!   directions are faithful too; a dedicated test covers writing into a native
 //!   PostgreSQL array column (`text[]`/`uuid[]`).
-//! * **#2 — schema-prefix rename** ([`rename_schema_prefix`] /
+//! * **#2 - schema-prefix rename** ([`rename_schema_prefix`] /
 //!   [`discover_prefixed_schemas`]): a miniature instance (core + a primary
 //!   module + its *secondary* schemas `office_data/maths/script/wb` + the two
 //!   newly-added `build`/`stt`, plus a non-Kubuno schema left alone) is renamed
@@ -29,7 +29,7 @@
 //!
 //! * PostgreSQL: every case runs inside a throwaway `CREATE DATABASE
 //!   kubuno_switchtest_*`, dropped at the end, so nothing touches shared data and
-//!   the prefix chain — including the bare (`''`) prefix — is safe.
+//!   the prefix chain - including the bare (`''`) prefix - is safe.
 //! * MySQL: a database *is* a schema server-wide, and this server already holds
 //!   real bare-named Kubuno databases (`core`, `office`, …). The prefix chain
 //!   therefore uses only unique, non-colliding prefixes (never the bare `''`),
@@ -210,8 +210,8 @@ fn avatar_ref() -> Vec<u8> {
 /// `boolean`/`uuid`/timestamp/date/json on a strict destination out of SQLite's
 /// ambiguous storage classes.
 ///
-/// `with_json` includes the two JSON columns. Every direction — including
-/// MySQL→PostgreSQL, where MariaDB reports a `JSON` column as `LONGTEXT` — now
+/// `with_json` includes the two JSON columns. Every direction - including
+/// MySQL→PostgreSQL, where MariaDB reports a `JSON` column as `LONGTEXT` - now
 /// copies them faithfully, so the copy tests keep the JSON columns on.
 async fn create_rich(pool: &DbPool, schema: &str, with_json: bool) {
     let json_cols = match (pool.backend(), with_json) {
@@ -367,7 +367,7 @@ async fn person_col<T: kubuno_db::exec::ScalarAnyRow>(
 /// (a richly-typed source, or SQLite→SQLite). Timestamps and dates are read at
 /// the type the destination engine decodes them as.
 async fn verify_faithful(dst: &DbPool, schema: &str, with_json: bool) {
-    // uuid, text, bool, bigint, bytea — portable to read on all three engines.
+    // uuid, text, bool, bigint, bytea - portable to read on all three engines.
     assert_eq!(person_col::<uuid::Uuid>(dst, schema, "id", "Ada").await, a1_id(), "uuid");
     assert_eq!(person_col::<String>(dst, schema, "name", "Ada").await, "Ada", "text");
     assert!(person_col::<bool>(dst, schema, "active", "Ada").await, "bool true");
@@ -376,7 +376,7 @@ async fn verify_faithful(dst: &DbPool, schema: &str, with_json: bool) {
     assert_eq!(person_col::<i64>(dst, schema, "big", "Alan").await, -5, "int8 negative");
     assert_eq!(person_col::<Vec<u8>>(dst, schema, "avatar", "Ada").await, avatar_ref(), "bytea");
 
-    // json — the object and the array both round-trip as a value.
+    // json - the object and the array both round-trip as a value.
     if with_json {
         assert_eq!(
             person_col::<serde_json::Value>(dst, schema, "meta", "Ada").await,
@@ -400,7 +400,7 @@ async fn verify_faithful(dst: &DbPool, schema: &str, with_json: bool) {
         "NULL score"
     );
 
-    // timestamp — PostgreSQL/SQLite decode UTC directly; MySQL DATETIME is naive.
+    // timestamp - PostgreSQL/SQLite decode UTC directly; MySQL DATETIME is naive.
     match dst.backend() {
         Backend::Postgres | Backend::Sqlite => {
             assert_eq!(
@@ -421,8 +421,8 @@ async fn verify_faithful(dst: &DbPool, schema: &str, with_json: bool) {
 }
 
 /// The whole copy flow: seed the source, copy into the (empty) destination,
-/// verify counts on both sides, prove the source is untouched, and — when
-/// `faithful` — check pointwise fidelity. Returns nothing; panics on mismatch.
+/// verify counts on both sides, prove the source is untouched, and - when
+/// `faithful` - check pointwise fidelity. Returns nothing; panics on mismatch.
 async fn run_copy(src: &Scope, dst: &Scope, faithful: bool, with_json: bool) {
     seed(&src.pool, &src.schema, with_json).await;
     assert_eq!(count(&src.pool, &src.schema, "people").await, 2);
@@ -457,7 +457,7 @@ async fn run_copy(src: &Scope, dst: &Scope, faithful: bool, with_json: bool) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// #3 — copy matrix
+// #3 - copy matrix
 // ─────────────────────────────────────────────────────────────────────────────
 
 // SQLite → SQLite (always runs) ------------------------------------------------
@@ -480,7 +480,7 @@ async fn copy_sqlite_to_sqlite() {
 #[tokio::test]
 async fn copy_pg_to_pg() {
     if pg_base_url().is_none() {
-        eprintln!("KUBUNO_PG_TEST_URL non défini — copy_pg_to_pg ignoré");
+        eprintln!("KUBUNO_PG_TEST_URL non défini - copy_pg_to_pg ignoré");
         return;
     }
     let src = open_pg().await;
@@ -495,7 +495,7 @@ async fn copy_pg_to_pg() {
 #[tokio::test]
 async fn copy_pg_to_sqlite() {
     if pg_base_url().is_none() {
-        eprintln!("KUBUNO_PG_TEST_URL non défini — copy_pg_to_sqlite ignoré");
+        eprintln!("KUBUNO_PG_TEST_URL non défini - copy_pg_to_sqlite ignoré");
         return;
     }
     let src = open_pg().await;
@@ -513,7 +513,7 @@ async fn copy_pg_to_sqlite() {
 #[tokio::test]
 async fn copy_sqlite_to_pg_is_faithful() {
     if pg_base_url().is_none() {
-        eprintln!("KUBUNO_PG_TEST_URL non défini — copy_sqlite_to_pg ignoré");
+        eprintln!("KUBUNO_PG_TEST_URL non défini - copy_sqlite_to_pg ignoré");
         return;
     }
     let dir = TempDir::new();
@@ -525,7 +525,7 @@ async fn copy_sqlite_to_pg_is_faithful() {
     // SQLite stored the uuid as BLOB, the bool as INTEGER and the timestamp/date/
     // json as TEXT. The destination-directed copy reads the strict PostgreSQL
     // catalog and rebuilds each of those from the target type, so the migration
-    // is now fully faithful — the identifiers, booleans, dates and JSON survive.
+    // is now fully faithful - the identifiers, booleans, dates and JSON survive.
     run_copy(&src, &dst, true, true).await;
 
     src.cleanup().await;
@@ -537,7 +537,7 @@ async fn copy_sqlite_to_pg_is_faithful() {
 #[tokio::test]
 async fn copy_mysql_to_mysql() {
     if mysql_base_url().is_none() {
-        eprintln!("KUBUNO_MYSQL_TEST_URL non défini — copy_mysql_to_mysql ignoré");
+        eprintln!("KUBUNO_MYSQL_TEST_URL non défini - copy_mysql_to_mysql ignoré");
         return;
     }
     let src = open_mysql().await;
@@ -552,7 +552,7 @@ async fn copy_mysql_to_mysql() {
 #[tokio::test]
 async fn copy_pg_to_mysql() {
     if pg_base_url().is_none() || mysql_base_url().is_none() {
-        eprintln!("PG ou MySQL non défini — copy_pg_to_mysql ignoré");
+        eprintln!("PG ou MySQL non défini - copy_pg_to_mysql ignoré");
         return;
     }
     let src = open_pg().await;
@@ -567,7 +567,7 @@ async fn copy_pg_to_mysql() {
 #[tokio::test]
 async fn copy_mysql_to_pg() {
     if pg_base_url().is_none() || mysql_base_url().is_none() {
-        eprintln!("PG ou MySQL non défini — copy_mysql_to_pg ignoré");
+        eprintln!("PG ou MySQL non défini - copy_mysql_to_pg ignoré");
         return;
     }
     let src = open_mysql().await;
@@ -575,7 +575,7 @@ async fn copy_mysql_to_pg() {
     // JSON columns are included: on MariaDB a `JSON` column is reported as
     // `LONGTEXT` in the catalog, so the generic read carries it as text; the
     // destination-directed copy now reparses that text into the strict PostgreSQL
-    // `jsonb` column, so the whole rich schema — including JSON — copies faithfully.
+    // `jsonb` column, so the whole rich schema - including JSON - copies faithfully.
     create_rich(&src.pool, &src.schema, true).await;
     create_rich(&dst.pool, &dst.schema, true).await;
     run_copy(&src, &dst, true, true).await;
@@ -590,7 +590,7 @@ async fn copy_mysql_to_pg() {
 #[tokio::test]
 async fn copy_mariadb_json_into_pg_jsonb_is_faithful() {
     if pg_base_url().is_none() || mysql_base_url().is_none() {
-        eprintln!("PG ou MySQL non défini — copy_mariadb_json ignoré");
+        eprintln!("PG ou MySQL non défini - copy_mariadb_json ignoré");
         return;
     }
     let src = open_mysql().await;
@@ -635,7 +635,7 @@ async fn copy_mariadb_json_into_pg_jsonb_is_faithful() {
 #[tokio::test]
 async fn copy_mysql_to_sqlite() {
     if mysql_base_url().is_none() {
-        eprintln!("KUBUNO_MYSQL_TEST_URL non défini — copy_mysql_to_sqlite ignoré");
+        eprintln!("KUBUNO_MYSQL_TEST_URL non défini - copy_mysql_to_sqlite ignoré");
         return;
     }
     let src = open_mysql().await;
@@ -651,7 +651,7 @@ async fn copy_mysql_to_sqlite() {
 #[tokio::test]
 async fn copy_sqlite_to_mysql_is_faithful() {
     if mysql_base_url().is_none() {
-        eprintln!("KUBUNO_MYSQL_TEST_URL non défini — copy_sqlite_to_mysql ignoré");
+        eprintln!("KUBUNO_MYSQL_TEST_URL non défini - copy_sqlite_to_mysql ignoré");
         return;
     }
     let dir = TempDir::new();
@@ -687,7 +687,7 @@ async fn make_pg_array_dst(pool: &DbPool, schema: &str) {
     .expect("create pg arr");
 }
 
-/// Row 1 has populated arrays, row 2 has a NULL `tags` and an empty `ids` — so
+/// Row 1 has populated arrays, row 2 has a NULL `tags` and an empty `ids` - so
 /// both the empty-array and the typed-NULL array paths are checked.
 async fn verify_pg_arrays(dst: &DbPool, schema: &str) {
     let tags: serde_json::Value = dst
@@ -724,7 +724,7 @@ async fn verify_pg_arrays(dst: &DbPool, schema: &str) {
 #[tokio::test]
 async fn copy_native_pg_arrays_pg_to_pg() {
     if pg_base_url().is_none() {
-        eprintln!("KUBUNO_PG_TEST_URL non défini — copy_native_pg_arrays_pg_to_pg ignoré");
+        eprintln!("KUBUNO_PG_TEST_URL non défini - copy_native_pg_arrays_pg_to_pg ignoré");
         return;
     }
     let src = open_pg().await;
@@ -732,7 +732,7 @@ async fn copy_native_pg_arrays_pg_to_pg() {
     make_pg_array_dst(&src.pool, &src.schema).await;
     make_pg_array_dst(&dst.pool, &dst.schema).await;
     // Seed the source arrays with array literals (a jsonb value cannot bind into
-    // a text[]/uuid[] column — the very reason the copy needs its cast).
+    // a text[]/uuid[] column - the very reason the copy needs its cast).
     src.pool
         .execute(
             &format!(
@@ -757,7 +757,7 @@ async fn copy_native_pg_arrays_pg_to_pg() {
 #[tokio::test]
 async fn copy_native_pg_arrays_sqlite_to_pg() {
     if pg_base_url().is_none() {
-        eprintln!("KUBUNO_PG_TEST_URL non défini — copy_native_pg_arrays_sqlite_to_pg ignoré");
+        eprintln!("KUBUNO_PG_TEST_URL non défini - copy_native_pg_arrays_sqlite_to_pg ignoré");
         return;
     }
     let dir = TempDir::new();
@@ -803,7 +803,7 @@ async fn copy_native_pg_arrays_sqlite_to_pg() {
 #[tokio::test]
 async fn copy_native_pg_arrays_mysql_to_pg() {
     if pg_base_url().is_none() || mysql_base_url().is_none() {
-        eprintln!("PG ou MySQL non défini — copy_native_pg_arrays_mysql_to_pg ignoré");
+        eprintln!("PG ou MySQL non défini - copy_native_pg_arrays_mysql_to_pg ignoré");
         return;
     }
     let src = open_mysql().await;
@@ -849,7 +849,7 @@ async fn copy_native_pg_arrays_mysql_to_pg() {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// #2 — prefix matrix
+// #2 - prefix matrix
 // ─────────────────────────────────────────────────────────────────────────────
 
 /// The Kubuno schemas of the miniature instance: core, a primary module, its
@@ -902,7 +902,7 @@ async fn pg_label(pool: &DbPool, eff: &str) -> Option<String> {
 #[tokio::test]
 async fn pg_prefix_matrix_full_chain() {
     if pg_base_url().is_none() {
-        eprintln!("KUBUNO_PG_TEST_URL non défini — pg_prefix_matrix ignoré");
+        eprintln!("KUBUNO_PG_TEST_URL non défini - pg_prefix_matrix ignoré");
         return;
     }
     // A throwaway database makes the bare ('') prefix safe: only our schemas and
@@ -1016,7 +1016,7 @@ async fn mysql_label(pool: &DbPool, eff: &str) -> Option<String> {
 #[tokio::test]
 async fn mysql_prefix_matrix_covers_secondary_schemas() {
     if mysql_base_url().is_none() {
-        eprintln!("KUBUNO_MYSQL_TEST_URL non défini — mysql_prefix_matrix ignoré");
+        eprintln!("KUBUNO_MYSQL_TEST_URL non défini - mysql_prefix_matrix ignoré");
         return;
     }
     let base = mysql_base_url().unwrap();
@@ -1072,7 +1072,7 @@ async fn mysql_prefix_matrix_covers_secondary_schemas() {
             let eff_old = format!("{old}{bare}");
             let eff_new = format!("{new}{bare}");
             // The row's `label` was seeded at creation time (under p1) and is
-            // never rewritten by a rename, so it still reads the original name —
+            // never rewritten by a rename, so it still reads the original name -
             // that is the proof the *data* travelled with the renamed database.
             let original = format!("{p1}{bare}");
             assert!(!mysql_db_exists(&admin, &eff_old).await, "{eff_old} must be gone");

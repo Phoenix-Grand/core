@@ -10,7 +10,7 @@ export interface ProgressBarProps {
   /** Denominator. Defaults to 100, i.e. `value` read as a percentage. */
   max?:   number
   /**
-   * `auto` (default) colours the fill from the thresholds below — the behaviour
+   * `auto` (default) colours the fill from the thresholds below - the behaviour
    * every hand-rolled quota bar in the admin was re-implementing, each with its
    * own hard-coded `#d93025`. Pass an explicit variant to pin a colour (a
    * download bar is not "dangerous" at 95 %).
@@ -53,7 +53,7 @@ const FILL: Record<Exclude<ProgressVariant, 'auto'>, string> = {
 }
 
 /**
- * ProgressBar — one bar for quotas, uploads, indexing and any bounded task.
+ * ProgressBar - one bar for quotas, uploads, indexing and any bounded task.
  *
  * Thresholds are the point of the component: a storage bar must go amber before
  * it goes red, and it must do so at the SAME ratio everywhere. They default to
@@ -61,7 +61,7 @@ const FILL: Record<Exclude<ProgressVariant, 'auto'>, string> = {
  * re-derived at each call site.
  *
  * Colours come from `bg-primary` / `bg-warning` / `bg-danger`, so a theme
- * remapping those variables recolours every bar — including in dark mode, where
+ * remapping those variables recolours every bar - including in dark mode, where
  * the hard-coded `#d93025` of the current admin bars reads far too heavy.
  */
 export function ProgressBar({

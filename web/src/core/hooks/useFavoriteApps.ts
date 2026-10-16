@@ -23,7 +23,7 @@ function loadFav(): string[] {
 /**
  * The user's favourite apps (from the waffle launcher), resolved to live
  * WaffleApp entries and ordered as saved. Empty until module bundles register
- * their apps — recomputed when `loadedVersion` bumps.
+ * their apps - recomputed when `loadedVersion` bumps.
  */
 export function useFavoriteApps(): WaffleApp[] {
   const user = useAuthStore(s => s.user)

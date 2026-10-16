@@ -1,4 +1,4 @@
-<!-- Nothing — converted from Nothing.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- Nothing - converted from Nothing.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="NothingProps">
   <Panel HtmlTag="P" ForeColor="TextSecondary" Class="[font-size:var(--kb-text-body)]">
     <!-- TODO(views-migrate): elements held in an expression -->

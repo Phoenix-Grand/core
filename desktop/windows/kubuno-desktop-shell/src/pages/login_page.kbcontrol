@@ -1,7 +1,7 @@
 <!--
   The sign-in page: the one screen without which a fresh install is a dead end, since no account can be
   added from anywhere else. Server, username, password and the local folder (typed, or picked with
-  « Parcourir… »), then « Se connecter » (Enter) — and « Annuler » when there is an account to go back to.
+  « Parcourir… »), then « Se connecter » (Enter) - and « Annuler » when there is an account to go back to.
   A failed attempt shows a danger callout under the actions. The window signs in (Command: submit,
   browse, cancel) and reads the fields through typed access.
 -->

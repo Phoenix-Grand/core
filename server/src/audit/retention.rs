@@ -9,7 +9,7 @@
 //!    in the settings handler, *and* by a `CHECK` constraint on
 //!    `core.settings`, so the direct-SQL path is closed too.
 //!
-//! Changing the setting is itself audited — see the settings handler.
+//! Changing the setting is itself audited - see the settings handler.
 
 use crate::audit::model::{AuditContext, AuditEntry};
 use crate::errors::AppError;
@@ -76,8 +76,8 @@ pub async fn configured_days(db: &DbPool) -> i64 {
 pub async fn purge_expired(db: &DbPool) -> Result<u64, AppError> {
     let days = configured_days(db).await;
 
-    // The append-only guard is a `BEFORE UPDATE` trigger only — DELETE is
-    // deliberately allowed for retention — so the purge is a plain, portable
+    // The append-only guard is a `BEFORE UPDATE` trigger only - DELETE is
+    // deliberately allowed for retention - so the purge is a plain, portable
     // `DELETE` with the cut-off computed in Rust, in place of the former
     // PostgreSQL stored function `core.purge_admin_audit` (`make_interval`).
     let cutoff = chrono::Utc::now() - chrono::Duration::days(days);

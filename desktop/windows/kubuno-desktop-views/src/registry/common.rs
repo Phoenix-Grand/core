@@ -1,6 +1,6 @@
 //! The properties each level of the control hierarchy declares (`vskubuno/docs/EVENTS.md` §16,
 //! "WinForms-rich property sets"): every control inherits [`CONTROL_PROPERTIES`], a button the
-//! [`BUTTON_BASE_PROPERTIES`] too, and so on — like `System.Windows.Forms.Control` and its bases. The
+//! [`BUTTON_BASE_PROPERTIES`] too, and so on - like `System.Windows.Forms.Control` and its bases. The
 //! view's root element also takes the [`VIEW_PROPERTIES`] (the `Form`'s). Categories are WinForms'
 //! (`Accessibility`, `Appearance`, `Behavior`, `Data`, `Design`, `Focus`, `Layout`, `Window Style`,
 //! `Misc`); a component's own property of the same name wins (its own default or kind).
@@ -207,7 +207,7 @@ pub const VIEW_PROPERTIES: &[PropertyMeta] = &[
     p("UnreadCount", PropKind::F32, "0", "Number of unread notifications shown on the bell (0 shows no counter).", TITLE_BAR).bindable(),
 ];
 
-/// How an icon is drawn: what every element with an icon property (`editor("icon")`) accepts too —
+/// How an icon is drawn: what every element with an icon property (`editor("icon")`) accepts too -
 /// honoured by every control that paints an icon, carried with the icon value as its drawing options
 /// (`crate::icon::with_options`).
 pub const ICON_OPTION_PROPERTIES: &[PropertyMeta] = &[

@@ -1,6 +1,6 @@
 <!--
-  The console's « Tableau de bord » (the web's dashboard): four figures in a row (StatCard) — the accounts,
-  the active ones (a bar of their share), who is connected, the modules — a line that says where the figures
+  The console's « Tableau de bord » (the web's dashboard): four figures in a row (StatCard) - the accounts,
+  the active ones (a bar of their share), who is connected, the modules - a line that says where the figures
   come from, then two daily series as bar charts. Nothing is estimated: every figure is read from the
   server's statistics. While they load, or when they fail, the StatusPresenter says so.
 -->

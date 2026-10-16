@@ -1,6 +1,6 @@
 //! The classes of the ribbon family (`vskubuno/docs/RIBBON.md` §3): `<Ribbon>` (a `Control`)
 //! and every element composing it, in the `RibbonControl` → `RibbonItem` levels. The ribbon's node
-//! paints them (`crate::registry::families::ribbon`); each is still an object of its own — the
+//! paints them (`crate::registry::families::ribbon`); each is still an object of its own - the
 //! `Sender` of its events, a named component of its view, and a base to derive from:
 //! `#[derive(Component)] #[kubuno(extends = RibbonButton)] struct MyButton { base: RibbonButton }`.
 

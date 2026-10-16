@@ -1,4 +1,4 @@
-<!-- List — a list of rows. -->
+<!-- List - a list of rows. -->
 <Panel x:Props="ListProps">
   <ReactHost Component="{Binding Part1}"/>
 </Panel>

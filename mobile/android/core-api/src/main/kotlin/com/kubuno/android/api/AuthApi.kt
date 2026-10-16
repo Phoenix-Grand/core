@@ -74,7 +74,7 @@ interface AuthApi {
     suspend fun revokeSession(@Path("id") id: String): Response<Unit>
 
     /**
-     * Revokes EVERY session of the account, this one included — the server has
+     * Revokes EVERY session of the account, this one included - the server has
      * no "all the others" variant. The caller must sign out locally afterwards.
      */
     @DELETE("api/v1/me/sessions")

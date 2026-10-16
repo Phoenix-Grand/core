@@ -1,10 +1,10 @@
-// The `detector` leaf — "this content carries sensitive data of a named kind".
+// The `detector` leaf - "this content carries sensitive data of a named kind".
 //
 // ── Why it is a separate file that registers itself ──────────────────────────
 // Content inspection is somebody else's feature: the detectors, their patterns,
 // their trial screen and their audit trail live under `../detectors`. What the
 // condition builder needed was not knowledge of any of that, but one entry in
-// its registry. So this file registers a kind and nothing else — no `switch` was
+// its registry. So this file registers a kind and nothing else - no `switch` was
 // added to ConditionTree, to the summary or to the tester for it to exist.
 //
 // ── Thresholds, never logic ──────────────────────────────────────────────────
@@ -13,14 +13,14 @@
 // an expression language arriving with it. The three numbers are independent on
 // purpose and each answers a different question:
 //
-//   • confidence  — how sure a single match must be before it counts at all;
-//   • matches     — how much of the text is about the thing;
-//   • unique      — how many DISTINCT values it carries, which is the only one
+//   • confidence  - how sure a single match must be before it counts at all;
+//   • matches     - how much of the text is about the thing;
+//   • unique      - how many DISTINCT values it carries, which is the only one
 //                   of the three that measures how many people are exposed.
 //                   Fifty copies of one account number are not fifty accounts.
 //
-// A leaf asking for more distinct values than occurrences is unreachable —
-// distinct values are a subset of occurrences — and the server refuses it. The
+// A leaf asking for more distinct values than occurrences is unreachable -
+// distinct values are a subset of occurrences - and the server refuses it. The
 // editor refuses it first, and says why, because a threshold that can never be
 // met would sit in the console looking armed.
 //
@@ -30,7 +30,7 @@
 // second implementation here would be a second truth, it would drift from the
 // first, and the moment it drifted it would hand an operator a reassuring green
 // tick for a rule that does not fire. The tester already knows how to say "this
-// build cannot decide it" — that is the honest answer and it is the one given.
+// build cannot decide it" - that is the honest answer and it is the one given.
 
 import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -93,13 +93,13 @@ function contentPartsOf(ctx: LeafContext): FieldDef[] {
 function partLabel(ctx: LeafContext, name: string): string {
   const label = contentPartsOf(ctx).find(f => f.name === name)?.label
   if (!label) return name
-  // Mid-sentence in the summary, so a leading capital reads as a mistake —
+  // Mid-sentence in the summary, so a leading capital reads as a mistake -
   // unless the label opens on an acronym ("IBAN du bénéficiaire").
   if (label.length > 1 && label[1] === label[1].toUpperCase()) return label
   return label.charAt(0).toLowerCase() + label.slice(1)
 }
 
-/** "a, b ou c" — the comma-then-conjunction form every locale expects. */
+/** "a, b ou c" - the comma-then-conjunction form every locale expects. */
 function joinOr(items: string[], t: TFunction): string {
   if (items.length <= 1) return items[0] ?? ''
   return `${items.slice(0, -1).join(t('admin.rl_join_comma'))} ${t('admin.rl_det_or')} ${items[items.length - 1]}`
@@ -213,7 +213,7 @@ function DetectorLeafEditor({ node, onChange, ctx, disabled }: LeafEditorProps) 
         </label>
 
         {current && (
-          // The detector is tuned where it can be tried against a real sample —
+          // The detector is tuned where it can be tried against a real sample -
           // this row states thresholds, that screen shows what they do.
           <a
             href={detectorHref}

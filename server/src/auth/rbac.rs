@@ -7,7 +7,7 @@ pub enum Role {
 }
 
 impl Role {
-    /// Not `FromStr`: that trait is fallible and this mapping is not — an
+    /// Not `FromStr`: that trait is fallible and this mapping is not - an
     /// unknown string is a plain user, never an error. Naming it `from_str`
     /// invited the confusion clippy points at, and a caller reaching for `?` on
     /// it would not compile for a reason nobody would enjoy diagnosing.

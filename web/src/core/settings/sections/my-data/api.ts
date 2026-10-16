@@ -3,15 +3,15 @@
 // ## Three routes, and none of them names an account
 //
 // The subject is always the caller, taken from the token by the server. There is
-// no account identifier anywhere in this file — not as a parameter, not as a
-// query string — because the surface that cannot express somebody else's id
+// no account identifier anywhere in this file - not as a parameter, not as a
+// query string - because the surface that cannot express somebody else's id
 // cannot be tricked into asking for their data.
 //
 // ## What a 404 means here
 //
 // `data_export.self_service` can be switched off for an instance, an
 // organisational unit, a group or one account. Where it is off, the server
-// answers 404 to all three routes and the section is not rendered at all — the
+// answers 404 to all three routes and the section is not rendered at all - the
 // nav entry itself is gated on the `/me` feature switch (see
 // `settings/navigation.tsx`). This query therefore never has to picture a
 // "refused" state: it is only ever mounted where the feature exists.
@@ -20,7 +20,7 @@
 //
 // A download is a full-page navigation (see `downloadUrl`). Pulling a
 // multi-gigabyte ZIP through axios would buffer it in the tab's memory before
-// the browser ever offered to save it — and the account large enough to need an
+// the browser ever offered to save it - and the account large enough to need an
 // export is exactly the one it would break on.
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -34,7 +34,7 @@ export type MyExportStatus =
 /** One body of data the archive may include. `core` is always present. */
 export interface MyExportService {
   id:          string
-  /** Which module declared it — `core` for the account sheet itself. */
+  /** Which module declared it - `core` for the account sheet itself. */
   module_id:   string
   label:       string
   format:      string | null
@@ -98,7 +98,7 @@ export interface MyExportOverview {
 }
 
 /**
- * Everything the page opens on, in one round trip — and it polls only while
+ * Everything the page opens on, in one round trip - and it polls only while
  * something is actually moving. A page that needed three requests to paint would
  * show three different moments of the same instance.
  */

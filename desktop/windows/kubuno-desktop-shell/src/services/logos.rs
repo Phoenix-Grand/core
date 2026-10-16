@@ -1,4 +1,4 @@
-//! The launcher's pictures — the modules' brand logos and the account's photo — and the module list,
+//! The launcher's pictures - the modules' brand logos and the account's photo - and the module list,
 //! kept on disk so the header looks the same offline as online.
 //!
 //! The source of truth is the web's: the core answers `/api/v1/modules` with each app's `logo_url`,
@@ -9,8 +9,8 @@
 //! rewritten. A small index remembers which file answers which URL, for the next start offline.
 //!
 //! Before the first download (a first start offline, the `--sample`), the fallback is the same web
-//! files again, embedded at BUILD time (by `kubuno-desktop-header-data`'s build script) from `core/web/public` — never a copy kept
-//! by hand — and written out once to the user's cache directory, because the painters decode from a
+//! files again, embedded at BUILD time (by `kubuno-desktop-header-data`'s build script) from `core/web/public` - never a copy kept
+//! by hand - and written out once to the user's cache directory, because the painters decode from a
 //! path.
 //!
 //! The mechanics (content-addressed files, index, embedded fallback) live in `kubuno_desktop_header_data::logos`,
@@ -44,7 +44,7 @@ fn cache(instance: &str) -> Option<PictureCache> {
 /// The picture the server serves at `url` for `key` (an app id, `avatar`) of `instance`, as a local file.
 ///
 /// `online`: downloaded (the server is the source of truth), stored under its content's name, and
-/// recorded in the index — the previous file of that key goes. When the download fails, or `online`
+/// recorded in the index - the previous file of that key goes. When the download fails, or `online`
 /// is false, the file last downloaded from that same URL, if any. The offline sample has no cache.
 pub fn cached(instance: &str, key: &str, url: &str, online: bool) -> Option<PathBuf> {
     if backend::is_sample() {

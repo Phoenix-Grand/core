@@ -1,4 +1,4 @@
-// Kubuno Dark — override JS de l'objet emblématique : la tuile de fichier
+// Kubuno Dark - override JS de l'objet emblématique : la tuile de fichier
 // du Drive ('drive.file-card'). Reproduction STRUCTURELLE fidèle (mêmes classes,
 // états de sélection, case flottante, en-tête nom + zone d'aperçu). Point de
 // départ éditable : la logique d'icône/miniature du Drive n'est pas accessible à

@@ -1,6 +1,6 @@
 //! The catalogue: every check, and the pure function that decides its verdict.
 //!
-//! Nothing in this file touches the database or the network — it maps
+//! Nothing in this file touches the database or the network - it maps
 //! [`Facts`] to [`Check`]s. That is what makes the interesting rules testable
 //! without a server: the thresholds, the severity escalations, and the handful
 //! of places where "not configured" and "configured wrong" must not be
@@ -11,20 +11,20 @@
 //! Two checks were left out of the first version rather than faked: **instance
 //! language** and **instance time zone** had no setting behind them, so a check
 //! reporting "ok" against them would have been an outright lie. Migration
-//! `000080` declares both, and — the part that matters — code reads both: the
+//! `000080` declares both, and - the part that matters - code reads both: the
 //! sign-in page obeys `instance.locale` before anybody is authenticated, and
 //! every outgoing message is dated in `instance.timezone`. The checks below are
 //! therefore about a real thing, and each of them can go red for a reason an
 //! operator can act on.
 //!
-//! Note the shape of the two new verdicts: neither asks "is a value present?" —
+//! Note the shape of the two new verdicts: neither asks "is a value present?" -
 //! one always is. They ask "did somebody decide?" and, for the zone, "is what
 //! they typed something the formatter can actually use?". A zone name that fails
 //! to parse falls back to UTC in [`crate::settings::intl`]; without this check
 //! that fallback would be invisible, and every message would be dated in the
 //! wrong zone with nothing on any screen saying so.
 //!
-//! `continuity.backup` used to be permanently `Blocked` — the honest rendering
+//! `continuity.backup` used to be permanently `Blocked` - the honest rendering
 //! of an instance that had `kubuno db:backup` and nothing that ran it. It now
 //! reads the real thing (`crate::backup`): whether a policy is armed, when a
 //! backup last actually succeeded, and whether the last attempt failed. The
@@ -54,7 +54,7 @@ const DISK_CRITICAL_BELOW: f64 = 0.10;
 /// session out, is a credential that outlives the laptop it sits on.
 const LONG_SESSION_DAYS: i64 = 30;
 
-/// Backup and restore procedure — what the scheduled dump does *not* cover, and
+/// Backup and restore procedure - what the scheduled dump does *not* cover, and
 /// how to load one back.
 const BACKUP_DOC: &str = "https://github.com/kubuno/core/blob/main/man/kubuno.1";
 
@@ -182,7 +182,7 @@ fn admin_2fa(f: &Facts) -> Check {
     // Two distinct failures behind the same status, and the difference is worth
     // stating: the policy is off (nothing forces anybody), or the policy is on
     // but somebody has not enrolled yet. The second is a transient state with a
-    // grace period; the first is a decision nobody took — which is why the
+    // grace period; the first is a decision nobody took - which is why the
     // severity below, and the value shown, differ even though both read "todo".
     let status = if f.admin_2fa_required && missing == 0 { Status::Ok } else { Status::Todo };
     Check {
@@ -197,13 +197,13 @@ fn admin_2fa(f: &Facts) -> Check {
             Observed::new(
                 "twofa_not_required",
                 json!({ "with": with, "total": total }),
-                format!("not required — {with}/{total} enrolled"),
+                format!("not required - {with}/{total} enrolled"),
             )
         } else {
             Observed::new(
                 "twofa_required",
                 json!({ "with": with, "total": total, "missing": missing }),
-                format!("required — {with}/{total} enrolled"),
+                format!("required - {with}/{total} enrolled"),
             )
         },
         action: (status == Status::Todo).then_some(Action {
@@ -353,7 +353,7 @@ fn internal_secret(f: &Facts) -> Check {
         title: "The internal shared secret is not guessable",
         why: "That secret is the only thing guarding /internal/*: a guessable value \
               lets anyone register a module and publish events as the server.",
-        // A verdict, never the value — see `health::secret`. The key IS the
+        // A verdict, never the value - see `health::secret`. The key IS the
         // verdict, so there is not even a field a future refactor could widen
         // into carrying something derived from the secret.
         value: Observed::new(
@@ -375,7 +375,7 @@ fn internal_secret(f: &Facts) -> Check {
         // substring list can both be wrong about a genuinely random value, and
         // a finding an operator cannot dismiss is one they learn to scroll past.
         // Whether a check may be silenced is a property of the CATALOGUE, never
-        // of the outcome — otherwise the mute endpoint, which knows the id and
+        // of the outcome - otherwise the mute endpoint, which knows the id and
         // not the current verdict, would answer differently from this page.
         ignorable: true,
         muted: None,
@@ -424,7 +424,7 @@ fn trusted_proxies(f: &Facts) -> Check {
 // ── Continuity ───────────────────────────────────────────────────────────────
 
 fn backup_policy(f: &Facts) -> Check {
-    // The question is NOT "is the switch on?" — that is the version of this
+    // The question is NOT "is the switch on?" - that is the version of this
     // check that would go green while the instance is unprotected. It is "does a
     // recent, successful backup exist?", which is the only form an operator can
     // act on and the only one a disk failure respects.
@@ -437,7 +437,7 @@ fn backup_policy(f: &Facts) -> Check {
 
     // Green only when BOTH hold: a recent backup exists AND the schedule that
     // produced it is still armed. A yesterday's dump with the policy switched
-    // off is a countdown, not a protection — reporting it as satisfied would
+    // off is a countdown, not a protection - reporting it as satisfied would
     // hand the operator a green light for the three days it takes to expire.
     let fresh = recent && f.backup.enabled;
     let status = if fresh { Status::Ok } else { Status::Todo };
@@ -478,10 +478,10 @@ fn backup_policy(f: &Facts) -> Check {
     } else if !f.backup.enabled && stats.last_success_at.is_none() {
         // The genuine "no policy at all" case, which is what most instances
         // upgrading into this feature will read.
-        Observed::new("backup_none", args, "no policy — manual command only")
+        Observed::new("backup_none", args, "no policy - manual command only")
     } else if !f.backup.enabled {
         // Armed once, switched off since. Worth its own wording: the operator
-        // remembers configuring it, and needs to be told it is not running —
+        // remembers configuring it, and needs to be told it is not running -
         // including on the days a still-recent file makes everything look fine.
         Observed::new("backup_disabled", args, "policy switched off")
     } else if let Some(d) = age_days {
@@ -500,7 +500,7 @@ fn backup_policy(f: &Facts) -> Check {
         title: "A recent backup exists",
         why: "Nobody backs up a self-hosted instance for you: without a scheduled \
               dump that is proven to have run, a single disk failure is the end of \
-              every account. This covers the database only — the stored files are \
+              every account. This covers the database only - the stored files are \
               not in it.",
         value,
         action,
@@ -553,7 +553,7 @@ fn restore_tested(f: &Facts) -> Check {
         status,
         title: "A restore has been tested (declared)",
         why: "A backup nobody has ever restored is a file, not a recovery plan. \
-              This records a statement by an administrator — the platform verifies \
+              This records a statement by an administrator - the platform verifies \
               nothing and never restores anything on its own.",
         value: if !has_backup {
             Observed::new("restore_no_backup", json!({}), "no backup to restore yet")
@@ -630,7 +630,7 @@ fn disk_space(f: &Facts) -> Check {
         status,
         title: "The data volume has room left",
         why: "A full data volume stops uploads and can leave the database unable to \
-              write — including the log that would have told you why.",
+              write - including the log that would have told you why.",
         value,
         action: None,
         doc_href: None,
@@ -641,7 +641,7 @@ fn disk_space(f: &Facts) -> Check {
 }
 
 fn default_quota(f: &Facts) -> Check {
-    // The question is not "is a default quota set?" — one always is — but "does
+    // The question is not "is a default quota set?" - one always is - but "does
     // the value the operator sees actually apply?". Account creation now reads
     // the setting, so the two agree by construction and this check is the guard
     // that says so: the day somebody reintroduces a constant, it goes red.
@@ -696,7 +696,7 @@ fn mail_configured(f: &Facts) -> Check {
         status: if ready { Status::Ok } else { Status::Todo },
         title: "An outbound mail relay is configured",
         why: "Without a relay the instance can send nothing: no password reset, no \
-              invitation, no notification — and no warning that it could not.",
+              invitation, no notification - and no warning that it could not.",
         value: {
             let args = json!({ "host": f.mail_host });
             if !f.mail_enabled {
@@ -724,7 +724,7 @@ fn mail_configured(f: &Facts) -> Check {
 fn mail_tested(f: &Facts) -> Check {
     let configured = f.mail_enabled && f.mail_host_set && f.mail_from_set;
     // A relay that was proven to work, then reconfigured, is an untested relay
-    // again. That is the case this check exists for — "it worked last month"
+    // again. That is the case this check exists for - "it worked last month"
     // is exactly what an operator believes right up to the outage.
     let stale = match (f.mail_last_test_ok, f.mail_settings_changed_at) {
         (Some(tested), Some(changed)) => changed > tested,
@@ -813,7 +813,7 @@ fn instance_name(f: &Facts) -> Check {
 /// The premise is the sign-in page: it is served before authentication, so no
 /// account preference exists yet and the only thing that can decide is the
 /// instance. Left at its seeded English, an instance whose users are all French
-/// greets every one of them in English — and the operator has no way to know
+/// greets every one of them in English - and the operator has no way to know
 /// that a setting would have fixed it, because nothing on that page says so.
 fn instance_locale(f: &Facts) -> Check {
     let raw = f.instance_locale.trim();
@@ -840,7 +840,7 @@ fn instance_locale(f: &Facts) -> Check {
             None => Observed::new(
                 "locale_unknown",
                 json!({ "locale": raw }),
-                format!("'{raw}' — aucune langue livrée"),
+                format!("'{raw}' - aucune langue livrée"),
             ),
             Some(code) if f.instance_locale_chosen => {
                 Observed::new("locale_chosen", json!({ "locale": code }), code.to_string())
@@ -884,15 +884,15 @@ fn instance_timezone(f: &Facts) -> Check {
         severity: if parsed.is_none() { Severity::Warning } else { Severity::Info },
         status,
         title: "The instance time zone is one the server can use",
-        why: "Every date the instance writes for a human — starting with the timestamp \
-              on the messages it sends — is stated in this zone. A name the time-zone \
+        why: "Every date the instance writes for a human - starting with the timestamp \
+              on the messages it sends - is stated in this zone. A name the time-zone \
               database does not know silently falls back to universal time, and every \
               message goes out hours off with nothing saying why.",
         value: match parsed {
             None => Observed::new(
                 "timezone_invalid",
                 json!({ "timezone": raw }),
-                format!("'{raw}' — identifiant IANA inconnu"),
+                format!("'{raw}' - identifiant IANA inconnu"),
             ),
             Some(_) if f.instance_timezone_chosen => {
                 Observed::new("timezone_chosen", json!({ "timezone": raw }), raw.to_string())
@@ -982,7 +982,7 @@ fn audit_retention(f: &Facts) -> Check {
         status: if chosen { Status::Ok } else { Status::Todo },
         title: "Log retention is a decision",
         why: "How long the administration trail is kept decides what you can still \
-              reconstruct after an incident — and it is regulated in most places.",
+              reconstruct after an incident - and it is regulated in most places.",
         value: Observed::new(
             if chosen { "retention_chosen" } else { "retention_default" },
             json!({ "days": f.audit_retention_days }),
@@ -1021,7 +1021,7 @@ pub fn is_ignorable(id: &str) -> Option<bool> {
         .map(|c| c.ignorable)
 }
 
-/// A neutral set of facts — used only to enumerate the catalogue, never to
+/// A neutral set of facts - used only to enumerate the catalogue, never to
 /// answer a request.
 fn blank_facts() -> Facts {
     Facts {
@@ -1271,7 +1271,7 @@ mod tests {
         assert_eq!(one(&f, "exposure.trusted_proxies").status, Status::Ok);
 
         // Proxied but nothing configured: the headers are dropped, and the
-        // recorded client address is the proxy's — also worth saying.
+        // recorded client address is the proxy's - also worth saying.
         f.trusted_proxy_cidrs.clear();
         assert_eq!(one(&f, "exposure.trusted_proxies").status, Status::Todo);
     }
@@ -1319,7 +1319,7 @@ mod tests {
         assert!(one(&f, "continuity.backup").action.is_none());
     }
 
-    /// A weekly policy gets a wider window than a daily one — otherwise every
+    /// A weekly policy gets a wider window than a daily one - otherwise every
     /// weekly instance is permanently red six days out of seven.
     #[test]
     fn the_staleness_window_follows_the_cadence() {
@@ -1414,7 +1414,7 @@ mod tests {
         f.configured_default_quota = Some(crate::models::user::DEFAULT_QUOTA_BYTES);
         assert_eq!(one(&f, "continuity.default_quota").status, Status::Ok);
 
-        // The operator raised it — and nothing changed.
+        // The operator raised it - and nothing changed.
         f.configured_default_quota = Some(50 * 1024 * 1024 * 1024);
         assert_eq!(one(&f, "continuity.default_quota").status, Status::Blocked);
     }
@@ -1482,7 +1482,7 @@ mod tests {
         assert_eq!(one(&f, "identity.instance_locale").status, Status::Todo);
         assert_eq!(one(&f, "identity.instance_locale").value.key, "locale_default");
 
-        // Decided — even when the decision is the same value.
+        // Decided - even when the decision is the same value.
         f.instance_locale_chosen = true;
         assert_eq!(one(&f, "identity.instance_locale").status, Status::Ok);
         f.instance_locale = "fr".into();
@@ -1513,7 +1513,7 @@ mod tests {
         assert_eq!(c.status, Status::Blocked);
         assert_eq!(c.value.key, "timezone_invalid");
 
-        // An abbreviation is not an identifier — same verdict.
+        // An abbreviation is not an identifier - same verdict.
         f.instance_timezone = "CEST".into();
         assert_eq!(one(&f, "identity.instance_timezone").status, Status::Blocked);
 

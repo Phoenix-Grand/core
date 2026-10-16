@@ -10,7 +10,7 @@ export interface CalloutProps {
   variant?:     CalloutVariant
   title?:       ReactNode
   children?:    ReactNode
-  /** Single inline action — "Retry", "Configure", "See the log"… */
+  /** Single inline action - "Retry", "Configure", "See the log"… */
   action?:      { label: string; onClick: () => void; icon?: ReactNode }
   /** Adds a close button. Pair it with `onDismiss` to be told about it. */
   dismissible?: boolean
@@ -22,17 +22,17 @@ export interface CalloutProps {
 }
 
 /**
- * Callout — an inline banner that qualifies the block it sits in: a hint, a
+ * Callout - an inline banner that qualifies the block it sits in: a hint, a
  * confirmation, a caveat, a failure. Not a toast (which is transient and floats
  * over the page) and not a dialog (which blocks).
  *
  * Colour rules, deliberate:
- *  • the tinted BACKGROUND carries the severity — the project forbids the
+ *  • the tinted BACKGROUND carries the severity - the project forbids the
  *    left accent bar, so the whole surface is tinted instead;
  *  • body text stays `text-text-primary`. Painting a paragraph in
  *    `--color-warning` (#f9ab00 on #fef7e0) would fail contrast outright; the
  *    accent colour is reserved for the ICON, where contrast is not a legibility
- *    requirement. The hairline stays neutral (`border-border`) — an accent
+ *    requirement. The hairline stays neutral (`border-border`) - an accent
  *    border would need an opacity modifier, and every Tailwind opacity modifier
  *    bakes a static light-theme hex as its fallback.
  * Everything resolves through theme variables, so the dark theme's remapped

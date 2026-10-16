@@ -7,7 +7,7 @@ import { TreeView } from './TreeView'
 
 const items = ['Abricot', 'Banane', 'Cerise', 'Citron'].map((text) => ({ text }))
 
-describe('@ui lists — keyboard and ARIA (jsdom)', () => {
+describe('@ui lists - keyboard and ARIA (jsdom)', () => {
   it('ListBox: arrows select, Enter activates, the active option is announced', () => {
     const onSel = vi.fn()
     const onAct = vi.fn()

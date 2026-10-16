@@ -2,7 +2,7 @@ import type React from 'react'
 
 /* Per-module customisation of the header settings menu (the gear ⚙).
  *
- * The core always renders the permanent entries — Paramètres, Apparence, Imprimer,
+ * The core always renders the permanent entries - Paramètres, Apparence, Imprimer,
  * Télécharger des modules complémentaires. A module opts into the conditional ones and
  * adds its own via this registry (imported from `@kubuno/sdk`, resolved at runtime to
  * the host's single instance):

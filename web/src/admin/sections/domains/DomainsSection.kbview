@@ -1,4 +1,4 @@
-<!-- DomainsSection — converted from DomainsSection.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- DomainsSection - converted from DomainsSection.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <Panel x:Props="AdminSectionProps" Class="contents">
   <DomainDetail DomainId="{Binding domainId}" CanManage="{Binding canManage}" OnGone="handleGone" Visible="{Binding show_case_1}"/>
   <Stack Gap="16" Visible="{Binding show_main}" Class="min-w-0">

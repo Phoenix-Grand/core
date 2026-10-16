@@ -1,5 +1,5 @@
 /**
- * The host side of the design page: exactly what the running web gives a view — the host CSS (`index.css`, its
+ * The host side of the design page: exactly what the running web gives a view - the host CSS (`index.css`, its
  * theme tokens and the production fonts at `fonts/`), the `@kubuno/views` host registrations (`viewsHost`: `@ui`,
  * the sdk workspace components, icons, `{Res}` through i18next), i18next with the core's translations, and the
  * Kubuno themes applied through the core's own theme store (`themeStore.applyTheme`: the theme's CSS variables,

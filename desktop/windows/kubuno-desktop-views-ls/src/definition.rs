@@ -5,7 +5,7 @@
 //!
 //! A real "go to the Rust definition" would mean understanding which
 //! `handlers! { … }` table (`XML_VIEWS.md` §2/§7) the view's code-behind
-//! registers and resolving through it — that requires the interpreter/
+//! registers and resolving through it - that requires the interpreter/
 //! binding layer (`crate::binding`, `crate::compile`) another agent is
 //! actively building in `kubuno-desktop-views` right now, and this crate is asked
 //! not to depend on that work-in-progress shape. So this is intentionally a
@@ -32,7 +32,7 @@ use crate::tree;
 
 /// Finds `fn <name>` definitions in every sibling `.rs` file of `uri`'s
 /// directory, when the cursor sits on an event attribute's value
-/// (`OnClick="handler_name"` — any attribute the element's registry entry
+/// (`OnClick="handler_name"` - any attribute the element's registry entry
 /// declares as an [`kubuno_desktop_views::registry::EventMeta`], not just `OnClick`
 /// by name, per `XML_VIEWS.md` §2's "Events are dispatched by string name").
 pub fn goto_definition(doc: &Document, uri: &Uri, pos: Position) -> Vec<Location> {
@@ -62,12 +62,12 @@ fn class_definition(doc: &Document, pos: Position) -> Option<Location> {
     Some(Location { uri, range: Range { start, end: start } })
 }
 
-/// Every `*.rs` file directly inside `dir`, in `fs::read_dir`'s own order —
+/// Every `*.rs` file directly inside `dir`, in `fs::read_dir`'s own order -
 /// the "sibling `.rs` files of the open `.kbview` file" set this module's doc
 /// comment describes. Shared with [`crate::handler_insert`] (DSG-10, `vskubuno
 /// /docs/DESIGNER.md`), which needs the exact same set to decide whether a
 /// handler a designer gesture is about to wire up already exists somewhere,
-/// before creating a new one — "found the same way `definition.rs` finds
+/// before creating a new one - "found the same way `definition.rs` finds
 /// handlers" per that package's own brief.
 pub(crate) fn sibling_rs_files(dir: &Path) -> Vec<std::path::PathBuf> {
     let Ok(entries) = fs::read_dir(dir) else { return Vec::new() };
@@ -79,7 +79,7 @@ pub(crate) fn sibling_rs_files(dir: &Path) -> Vec<std::path::PathBuf> {
 }
 
 /// `None` unless the cursor is inside an attribute value whose attribute is
-/// a declared event on the enclosing element — in which case, the value text
+/// a declared event on the enclosing element - in which case, the value text
 /// (the handler name) is returned.
 fn event_handler_name_at(doc: &Document, pos: Position) -> Option<String> {
     let offset = doc.position_index.position_to_offset(&doc.text, pos);
@@ -99,7 +99,7 @@ fn event_handler_name_at(doc: &Document, pos: Position) -> Option<String> {
     attr.value()
 }
 
-/// Scans `path` line by line for a top-level-looking `fn <name>` — a
+/// Scans `path` line by line for a top-level-looking `fn <name>` - a
 /// standalone regex-free word-boundary check (`fn` then whitespace then
 /// `name` then `(`/whitespace), intentionally not a Rust parser: this is the
 /// "simple text search is acceptable" fallback the brief calls for.

@@ -168,7 +168,7 @@ pub async fn start_all(settings: Arc<Settings>, modules_dir: &Path, db: DbPool) 
         match std::fs::create_dir_all(&install_dir) {
             Ok(()) => tracing::info!(dir = %install_dir.display(), "Store des modules créé"),
             Err(e) => tracing::error!(dir = %install_dir.display(), error = %e,
-                "Création du store des modules impossible — les installations depuis la marketplace échoueront"),
+                "Création du store des modules impossible - les installations depuis la marketplace échoueront"),
         }
     }
     let mut manifests = load_all(&install_dir);
@@ -191,7 +191,7 @@ pub async fn start_all(settings: Arc<Settings>, modules_dir: &Path, db: DbPool) 
         dir   = %modules_dir.display(),
         store = %install_dir.display(),
         count = manifests.len(),
-        "Modules découverts — synchronisation DB…"
+        "Modules découverts - synchronisation DB…"
     );
 
     for (module_dir, manifest) in manifests {
@@ -199,7 +199,7 @@ pub async fn start_all(settings: Arc<Settings>, modules_dir: &Path, db: DbPool) 
     }
 }
 
-/// Démarre (et supervise) UN module déjà présent sur disque, à chaud — utilisé au
+/// Démarre (et supervise) UN module déjà présent sur disque, à chaud - utilisé au
 /// démarrage (`start_all`) et après une installation marketplace. Synchronise les
 /// métadonnées en DB puis lance la boucle de supervision dans une tâche dédiée.
 /// Retourne `true` si le module a été lancé (activé), `false` s'il est désactivé.
@@ -211,7 +211,7 @@ pub async fn spawn_module(
 ) -> bool {
     let enabled = sync_to_db(&db, &manifest).await;
     if !enabled {
-        tracing::info!(module_id = %manifest.module.id, "Module désactivé — non démarré");
+        tracing::info!(module_id = %manifest.module.id, "Module désactivé - non démarré");
         return false;
     }
 
@@ -233,7 +233,7 @@ pub async fn spawn_module(
     {
         Ok(r) => r,
         Err(e) => {
-            tracing::error!(error = %e, module_id = %manifest.module.id, "Credentials DB indisponibles — module non démarré");
+            tracing::error!(error = %e, module_id = %manifest.module.id, "Credentials DB indisponibles - module non démarré");
             return false;
         }
     };
@@ -247,7 +247,7 @@ pub async fn spawn_module(
         );
     }
     // Secret propre à ce module (dérivé du maître) lorsque la dérivation est
-    // active — le module le lit comme n'importe quel secret partagé, il ignore
+    // active - le module le lit comme n'importe quel secret partagé, il ignore
     // qu'il lui est spécifique. Voir `crate::auth::internal_secret`.
     let secret   = settings.server.module_secret(&manifest.module.id);
     tracing::debug!(
@@ -327,8 +327,8 @@ async fn supervise(
         tracing::warn!(module_id = %module_id, dir = %data_dir, error = %e, "Création du répertoire de données du module impossible");
     }
 
-    // Working directory: `spawn` reports a missing CWD as ENOENT — the very same
-    // error as a missing executable — so a module whose configuration directory
+    // Working directory: `spawn` reports a missing CWD as ENOENT - the very same
+    // error as a missing executable - so a module whose configuration directory
     // could not be created died five times over with a message pointing at the
     // binary, which was there all along. Only a directory that EXISTS is handed
     // to the child; the module's own directory is the last resort, and it is
@@ -343,7 +343,7 @@ async fn supervise(
             module_id = %module_id,
             prevu     = %config_dir,
             retenu    = %work_dir.display(),
-            "Répertoire de configuration du module inaccessible — le module démarre \
+            "Répertoire de configuration du module inaccessible - le module démarre \
              depuis un répertoire de repli et n'aura pas sa configuration propre"
         );
     }
@@ -406,7 +406,7 @@ async fn supervise(
                     status = child.wait() => Some(status),
                     _ = stop_rx.changed() => {
                         if *stop_rx.borrow() {
-                            tracing::info!(module_id = %module_id, "Arrêt demandé — kill du module");
+                            tracing::info!(module_id = %module_id, "Arrêt demandé - kill du module");
                             let _ = child.start_kill();
                             let _ = child.wait().await;
                             let _ = mark_stopped(&db, &module_id).await;
@@ -449,7 +449,7 @@ async fn supervise(
                 if consecutive_failures >= 5 {
                     tracing::error!(
                         module_id = %module_id,
-                        "5 échecs de lancement consécutifs — supervision abandonnée"
+                        "5 échecs de lancement consécutifs - supervision abandonnée"
                     );
                     let _ = mark_stopped(&db, &module_id).await;
                     break;
@@ -461,7 +461,7 @@ async fn supervise(
         let delay = std::cmp::min(2u64.pow(consecutive_failures.saturating_sub(1).min(4)), 30);
         tokio::time::sleep(tokio::time::Duration::from_secs(delay)).await;
     }
-    // NB : on ne retire PAS l'entrée du registre ici — elle a pu être remplacée par un
+    // NB : on ne retire PAS l'entrée du registre ici - elle a pu être remplacée par un
     // nouveau superviseur (mise à jour). `stop_module` la retire explicitement ; une
     // entrée résiduelle (module arrêté seul) est inoffensive (récepteur disparu).
 }

@@ -2,8 +2,8 @@
 //
 // One cache entry for the whole page: the list is short (an instance has a
 // handful of domains, not a directory of them), every mutation changes several
-// rows at once — a promotion demotes another, an alias appears under its parent
-// — and refetching the lot is both simpler and more honest than patching a
+// rows at once - a promotion demotes another, an alias appears under its parent
+// - and refetching the lot is both simpler and more honest than patching a
 // cached row into a state the server did not confirm.
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -22,7 +22,7 @@ export interface Domain {
   verified:        boolean
   verified_at:     string | null
   last_checked_at: string | null
-  /** Why the last probe did not find the record — a sentence, already French. */
+  /** Why the last probe did not find the record - a sentence, already French. */
   last_error:      string | null
   /** `"10 mx.exemple.fr."`, exactly as the domain publishes them. */
   mx_hosts:        string[]
@@ -30,7 +30,7 @@ export interface Domain {
   has_dmarc:       boolean | null
   mail_checked_at: string | null
   created_at:      string
-  /** Accounts carrying an address at this domain — what a removal would break. */
+  /** Accounts carrying an address at this domain - what a removal would break. */
   account_count:   number
   /** The TXT value to publish, prefix included. */
   expected_record: string
@@ -83,7 +83,7 @@ export function useAddDomain() {
   })
 }
 
-/** Reads the DNS now. Slow by nature — the button shows it. */
+/** Reads the DNS now. Slow by nature - the button shows it. */
 export function useVerifyDomain() {
   const invalidate = useInvalidate()
   return useMutation({
@@ -118,7 +118,7 @@ export function useRemoveDomain() {
   })
 }
 
-/** The server's message when it has one — it is more specific than ours. */
+/** The server's message when it has one - it is more specific than ours. */
 export function errorMessage(err: unknown, fallback: string): string {
   const detail = (err as { response?: { data?: { message?: string; error?: string } } })
     ?.response?.data

@@ -1,15 +1,15 @@
-//! Gallery page — **range**.
+//! Gallery page - **range**.
 //!
 //! The top of the page is the one that matters: [`super::sheet::pair`] hands the
 //! *same* rectangle to `kubuno_drive_desktop_app_controls::scrollbar` (what the shell paints
 //! today) and to [`kubuno_desktop_ui::range::ScrollBar`], driven from the same
-//! content/viewport/scroll description. The two must be indistinguishable —
+//! content/viewport/scroll description. The two must be indistinguishable -
 //! `scrollbar_geometry_matches_the_predecessor` asserts it, this page shows it.
 //!
 //! Below that come the three primitives with no predecessor, in every state the
-//! design system distinguishes — focus-visible ring, disabled, invalid, a
+//! design system distinguishes - focus-visible ring, disabled, invalid, a
 //! hovered or spent step button, a field being typed into, text too long for
-//! its box, a slider on a card (no ground of its own) — and the interactive
+//! its box, a slider on a card (no ground of its own) - and the interactive
 //! column drives all four with the real pointer, the keyboard (ARIA keys,
 //! typing, clipboard) and the wheel, the slider's value bubble floating in a
 //! `host::overlay` above everything.
@@ -68,7 +68,7 @@ fn scrollbar_pair(
         |b| {
             content_backdrop(c, b);
             // The viewport is the content rectangle's own length on the bar's
-            // axis — exactly what the predecessor derives internally.
+            // axis - exactly what the predecessor derives internally.
             let viewport = if horizontal { b.right - b.left } else { b.bottom - b.top };
             if let Some(mut bar) = ScrollBar::from_content(horizontal, extent, viewport, scroll) {
                 bar.expanded = expanded;
@@ -106,14 +106,14 @@ pub fn draw(c: &dyn Canvas, f: &Frame) {
     p.y -= scroll;
     let avail = p.area.right - 2.0 * MARGIN - SCROLLBAR;
 
-    // ── ScrollBar — the non-regression pairs ────────────────────────────────
-    p.section("ScrollBar — actuel / reconstruit");
+    // ── ScrollBar - the non-regression pairs ────────────────────────────────
+    p.section("ScrollBar - actuel / reconstruit");
 
     let top = p.caption("Vertical · 1000 DIP de contenu · repos, déplié, déplié survolé");
     let cell_w = 56.0;
     let cell_h = 110.0;
     let pitch = 2.0 * cell_w + 40.0 + 28.0;
-    // (scroll, expanded, hot) — the resting indicator, then the unfolded gutter
+    // (scroll, expanded, hot) - the resting indicator, then the unfolded gutter
     // at both ends of the travel.
     let vertical: [(f32, bool, bool); 4] =
         [(0.0, false, false), (0.0, true, false), (440.0, true, true), (872.0, true, false)];
@@ -157,9 +157,9 @@ pub fn draw(c: &dyn Canvas, f: &Frame) {
     p.advance(used);
 
     // ── Slider ──────────────────────────────────────────────────────────────
-    p.section("Slider — @ui/RangeSlider sur TrackBar");
+    p.section("Slider - @ui/RangeSlider sur TrackBar");
 
-    let top = p.caption("Valeurs et états — focus clavier = anneau hors du halo · désactivé = opacity-60");
+    let top = p.caption("Valeurs et états - focus clavier = anneau hors du halo · désactivé = opacity-60");
     let row_h = 38.0;
     let row = fit(avail, top, 170.0, row_h, 24.0, 5);
 
@@ -185,7 +185,7 @@ pub fn draw(c: &dyn Canvas, f: &Frame) {
     p.advance(row_h);
 
     // The bubble variant with `showValue`, painted in place (the live column
-    // floats the same bubble in a `host::overlay`), and a slider on a card —
+    // floats the same bubble in a `host::overlay`), and a slider on a card -
     // the card's surface must show all around the rail.
     let top = p.caption("showValue (bulle au-dessus du curseur) · sur une carte : aucun fond propre");
     let row = fit(avail, top + 24.0, 220.0, 44.0, 28.0, 2);
@@ -208,7 +208,7 @@ pub fn draw(c: &dyn Canvas, f: &Frame) {
     on_card.paint(c, Rect::new(inner.left, cy - sh / 2.0, inner.right, cy + sh / 2.0), keyboard_focus());
     p.advance(24.0 + 44.0);
 
-    let top = p.caption("TickStyle — les crans viennent de TrackBar::tick_values (dernier écart plus court)");
+    let top = p.caption("TickStyle - les crans viennent de TrackBar::tick_values (dernier écart plus court)");
     let tick_h = 44.0;
     let tick_row = fit(avail - 3.0 * 36.0 - 24.0, top, 200.0, tick_h, 24.0, 3);
     for (i, style) in [TickStyle::BottomRight, TickStyle::TopLeft, TickStyle::Both]
@@ -239,7 +239,7 @@ pub fn draw(c: &dyn Canvas, f: &Frame) {
     p.advance(vh.max(tick_h));
 
     // ── ProgressBar ─────────────────────────────────────────────────────────
-    p.section("ProgressBar — @ui/ProgressBar sur la réplique labels::ProgressBar");
+    p.section("ProgressBar - @ui/ProgressBar sur la réplique labels::ProgressBar");
 
     let top = p.caption("Variante « auto » : primaire → avertissement (75 %) → danger (90 %)");
     let bar_h = 18.0;
@@ -281,7 +281,7 @@ pub fn draw(c: &dyn Canvas, f: &Frame) {
     dead.set_value(45);
     dead.paint(c, bars[4], WidgetState::REST.disabled(true));
 
-    // The indeterminate sliver, sampled at three points of its keyframe — the
+    // The indeterminate sliver, sampled at three points of its keyframe - the
     // control owns no timer, the host advances `phase`. Stacked in one cell, so
     // the `sm` track is the one that fits three bands in the row's height.
     let mut spinner = ProgressBar::new().with_size(ProgressSize::Sm);
@@ -311,7 +311,7 @@ pub fn draw(c: &dyn Canvas, f: &Frame) {
     p.advance(30.0);
 
     // ── Spinners ────────────────────────────────────────────────────────────
-    p.section("NumericField / DomainField — @ui/NumberInput sur UpDownBase");
+    p.section("NumericField / DomainField - @ui/NumberInput sur UpDownBase");
 
     let top = p.caption("Repos, bouton survolé, focus, désactivé (opacity-50), invalide, invalide + focus");
     let field_h = 36.0;
@@ -468,12 +468,12 @@ fn expo_scroll_end(c: &dyn Canvas, f: &Frame, area: Rect, bottom: f32) {
 }
 
 // ═════════════════════════════════════════════════════════════════════════════
-// Interactive column — the four primitives, driven by pointer, keyboard, wheel.
+// Interactive column - the four primitives, driven by pointer, keyboard, wheel.
 // ═════════════════════════════════════════════════════════════════════════════
 
 /// Rows of the live scrolled list.
 const LIST_ROWS: usize = 40;
-/// One list row — also the scroll bar's `SmallChange`, so an arrow key or an
+/// One list row - also the scroll bar's `SmallChange`, so an arrow key or an
 /// arrow button moves exactly one row.
 const LIST_ROW_H: f32 = 24.0;
 /// The live list's viewport height.
@@ -500,7 +500,7 @@ struct Ui {
     edit: Option<NumericEdit>,
     /// A drag-selection started in the field's text.
     edit_drag: bool,
-    /// When the field was last edited or focused — the caret's blink phase.
+    /// When the field was last edited or focused - the caret's blink phase.
     last_input: u64,
     field_wheel: WheelSteps,
 
@@ -565,12 +565,12 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
     });
 }
 
-/// Slider — drag (the host captures the mouse, so the drag follows outside the
+/// Slider - drag (the host captures the mouse, so the drag follows outside the
 /// window), click on the rail, ARIA keys, wheel; the value bubble floats in a
 /// `host::overlay` while dragging, escaping the column and the window.
 fn live_slider(c: &dyn Canvas, f: &Frame, live: &Live, ui: &mut Ui, left: f32, right: f32, y: f32) -> f32 {
     let (mx, my) = live.mouse;
-    let y = interact::caption(c, left, right, y, "Slider — glisser, clic sur le rail, ←→↑↓ PgUp/PgDn Début/Fin, molette");
+    let y = interact::caption(c, left, right, y, "Slider - glisser, clic sur le rail, ←→↑↓ PgUp/PgDn Début/Fin, molette");
     let mut slider = Slider::new();
     slider.set_maximum(100);
     let _ = slider.set_large_change(10);
@@ -618,7 +618,7 @@ fn live_slider(c: &dyn Canvas, f: &Frame, live: &Live, ui: &mut Ui, left: f32, r
     let state = focus.apply(WidgetState::REST.hot(hover || ui.slider_drag).pressed(ui.slider_drag));
     slider.paint(c, sl, state);
 
-    // `showBubble = showValue || dragging` — a floating surface, so it is drawn
+    // `showBubble = showValue || dragging` - a floating surface, so it is drawn
     // in its own top-level window and may hang over the window's edge.
     if ui.slider_drag {
         let text = format!("{} %", ui.slider);
@@ -642,10 +642,10 @@ fn live_slider(c: &dyn Canvas, f: &Frame, live: &Live, ui: &mut Ui, left: f32, r
     y + BLOCK_GAP
 }
 
-/// ProgressBar — driven by the slider, with a truncating label and the value;
+/// ProgressBar - driven by the slider, with a truncating label and the value;
 /// plus the indeterminate sliver animated at the web's 1.3 s ease-in-out.
 fn live_progress(c: &dyn Canvas, ui: &mut Ui, left: f32, right: f32, y: f32) -> f32 {
-    let y = interact::caption(c, left, right, y, "ProgressBar — pilotée par le slider (auto : ambre 75 %, rouge 90 %)");
+    let y = interact::caption(c, left, right, y, "ProgressBar - pilotée par le slider (auto : ambre 75 %, rouge 90 %)");
     let slider_value = ui.slider;
     let mut bar = ProgressBar::new()
         .with_label("Espace utilisé par l'équipe documentation partagée")
@@ -664,13 +664,13 @@ fn live_progress(c: &dyn Canvas, ui: &mut Ui, left: f32, right: f32, y: f32) -> 
     y + ProgressSize::Sm.track() + BLOCK_GAP
 }
 
-/// NumericField — typing (digits, sign, decimal comma), caret and selection by
+/// NumericField - typing (digits, sign, decimal comma), caret and selection by
 /// click / Shift+click / drag / double-click, arrows, Home/End, Backspace /
 /// Delete, Ctrl+A/C/X/V, ↑↓ step, Enter commits, Escape reverts, focus loss
 /// commits; spin buttons with hover, spent at the bounds; wheel while focused.
 fn live_numeric(c: &dyn Canvas, live: &Live, ui: &mut Ui, left: f32, right: f32, y: f32) -> f32 {
     let (mx, my) = live.mouse;
-    let y = interact::caption(c, left, right, y, "NumericField — saisie, ↑↓, Entrée, Échap, Ctrl+A/C/X/V, molette");
+    let y = interact::caption(c, left, right, y, "NumericField - saisie, ↑↓, Entrée, Échap, Ctrl+A/C/X/V, molette");
     let mut field = NumericField::ranged(0.0, 500.0);
     let _ = field.set_decimal_places(1);
     let _ = field.set_increment(0.5);
@@ -814,10 +814,10 @@ fn live_numeric(c: &dyn Canvas, live: &Live, ui: &mut Ui, left: f32, right: f32,
     y + BLOCK_GAP
 }
 
-/// DomainField — spin buttons, ↑↓ and Début/Fin when focused.
+/// DomainField - spin buttons, ↑↓ and Début/Fin when focused.
 fn live_domain(c: &dyn Canvas, live: &Live, ui: &mut Ui, left: f32, right: f32, y: f32) -> f32 {
     let (mx, my) = live.mouse;
-    let y = interact::caption(c, left, right, y, "DomainField — ▲▼, ↑↓, Début/Fin");
+    let y = interact::caption(c, left, right, y, "DomainField - ▲▼, ↑↓, Début/Fin");
     let mut d = DomainField::with_items(["Brouillon", "En relecture", "Validé", "Publié", "Archivé"]);
     let _ = d.set_selected_index(ui.domain);
     let r = Rect::new(left, y, left + FIELD_W, y + d.measure(c).height);
@@ -846,7 +846,7 @@ fn live_domain(c: &dyn Canvas, live: &Live, ui: &mut Ui, left: f32, right: f32, 
 fn live_scroll(c: &dyn Canvas, f: &Frame, live: &Live, ui: &mut Ui, left: f32, right: f32, y: f32) {
     let (mx, my) = live.mouse;
     let t = c.theme();
-    let y = interact::caption(c, left, right, y, "ScrollBar — poignée, flèches, piste, molette, clavier");
+    let y = interact::caption(c, left, right, y, "ScrollBar - poignée, flèches, piste, molette, clavier");
     let content = Rect::new(left, y, left + (right - left).min(260.0), y + LIST_H);
     let extent = LIST_ROWS as f32 * LIST_ROW_H;
     let viewport = content.bottom - content.top;
@@ -925,7 +925,7 @@ fn live_scroll(c: &dyn Canvas, f: &Frame, live: &Live, ui: &mut Ui, left: f32, r
             break;
         }
         let row = Rect::new(content.left + 12.0, top, rail.left - 4.0, top + LIST_ROW_H);
-        c.text_ellipsis(&format!("Ligne {} — document de l'équipe", i + 1), &row, &c.formats().body, &t.text_primary);
+        c.text_ellipsis(&format!("Ligne {} - document de l'équipe", i + 1), &row, &c.formats().body, &t.text_primary);
     }
     let thumb_hot = bar.thumb_rect(rail).contains(mx, my) || ui.scroll_drag;
     bar.paint(c, rail, WidgetState::REST.hot(thumb_hot).pressed(ui.scroll_drag));

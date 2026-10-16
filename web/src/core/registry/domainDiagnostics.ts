@@ -12,7 +12,7 @@
  *
  * So the core states the QUESTION and lets whoever can answer it answer:
  * a module registers a provider under `DOMAIN_DIAGNOSTICS`, and the domain
- * sheet renders that instead of its own reading. The core names no module — if
+ * sheet renders that instead of its own reading. The core names no module - if
  * nothing is registered, or the provider fails, the sheet keeps its own
  * reading. A section is never left empty.
  *
@@ -30,7 +30,7 @@ export const DOMAIN_DIAGNOSTICS = 'admin.domain-diagnostics'
 
 /**
  * The colour of one line. `info` = published, but only the operator can judge
- * it; `unknown` = the check could not be made — explicitly not a failure.
+ * it; `unknown` = the check could not be made - explicitly not a failure.
  */
 export type DomainDiagnosticVerdict = 'ok' | 'warn' | 'fail' | 'info' | 'unknown'
 
@@ -44,7 +44,7 @@ export interface DomainDiagnosticCheck {
   verdict:   DomainDiagnosticVerdict
   /** One sentence, already translated by the provider. */
   summary:   string
-  /** What a correct configuration looks like — shown verbatim, to be copied. */
+  /** What a correct configuration looks like - shown verbatim, to be copied. */
   expected?: string | null
   /** What is actually published. Empty means nothing was found. */
   found?:    string[]
@@ -57,7 +57,7 @@ export interface DomainDiagnosticCheck {
 }
 
 export interface DomainDiagnosticReport {
-  /** Who produced this, in words. Displayed — the operator must know who speaks. */
+  /** Who produced this, in words. Displayed - the operator must know who speaks. */
   source:  string
   /**
    * False when the provider does not handle this domain at all. The sheet then
@@ -66,7 +66,7 @@ export interface DomainDiagnosticReport {
    */
   covered: boolean
   checks:  DomainDiagnosticCheck[]
-  /** A sentence shown above the lines — why a domain is not covered, typically. */
+  /** A sentence shown above the lines - why a domain is not covered, typically. */
   note?:   string
   /** Where the operator can open the provider's full report (a real address). */
   href?:   string

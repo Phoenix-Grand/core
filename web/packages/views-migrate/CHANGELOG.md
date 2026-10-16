@@ -1,4 +1,4 @@
-# Changelog — @kubuno/views-migrate
+# Changelog - @kubuno/views-migrate
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Entries are
 added under `[Unreleased]` **as the change is made**; on npm publish, the section is stamped
@@ -14,9 +14,9 @@ under the published version number.
   place (JSX, a view's `ReactHost`, a host's slot or extension point) becomes a user control (`X.kbcontrol`, its markup
   inside `<UserControl x:Props="…">`, its props its properties and its callbacks its events). The report says what each
   screen is and why.
-- **`--layout --app-root <dir>`**: the converted files go to the folder of their role under the app root — `views/`
+- **`--layout --app-root <dir>`**: the converted files go to the folder of their role under the app root - `views/`
   (pages, windows), `dialogs/`, `pages/` (the user controls one component places, and the rows its lists repeat) and
-  `controls/` (the user controls several components place) — and every importer follows.
+  `controls/` (the user controls several components place) - and every importer follows.
 - **`--relayout`** does the same for the views a project already has: each one classified again (`.kbview` ↔
   `.kbcontrol`, the root wrapped in or taken out of `<UserControl>`), moved with `git mv` so its history follows,
   every relative import of the project rewritten (`import`, `export … from`, `import()`, `vi.mock()`), the headers of
@@ -58,7 +58,7 @@ under the published version number.
 - A memoized getter calling a method of the class depends on what that method reads (the rules run log stayed on « Loading… »); an aliased condition (`const snapshot = previous == null`) narrows its value in the getter that reads both; a part's prop no longer pulls in a module-level helper of the same name; the importers of a file split into several views are switched even when the old file ends up empty.
 - A screen whose other cases render nothing (`if (!x) return null`) has its element as the view's root, without a wrapper (a parent's `divide-y` line landed on an invisible `display: contents` box); a bare `disabled` gives `Enabled="false"`; a narrowed property passed to a part is read with `?.` (the narrowing may come from inside the part); functions keep their declared return type; an effect reading a nullable getter in its callbacks reads it through a local constant.
 - A nullable value read inside a callback of a getter or of a component's props is read through a local constant (the narrowing holds there, as in the TSX); a boolean in a text run prints nothing (`{busy && ' · busy'}`); a component returning `cond ? <A/> : <B/>` is recognised; a code-behind keeping a helper component is a `.tsx`; row-scoped part props are typed from the non-null rows; a narrowed intermediate property (`reading.trash.used_bytes`) is passed to a part; an identifier inside a string or a URL path no longer counts as a use (unused imports).
-- Code-behinds of larger screens: a hook result is published as soon as its hook ran (a later hook's dependencies read getters built on it — a module's page crashed); getters and hook fields carry their written types when they can (no type depending on itself); a local component rendered by the code itself is imported from the parts file; a type declared in the component body moves to the module level; `list?.map(…)` gives no rows instead of failing; a functional state update keeps its parameter.
+- Code-behinds of larger screens: a hook result is published as soon as its hook ran (a later hook's dependencies read getters built on it - a module's page crashed); getters and hook fields carry their written types when they can (no type depending on itself); a local component rendered by the code itself is imported from the parts file; a type declared in the component body moves to the module level; `list?.map(…)` gives no rows instead of failing; a functional state update keeps its parameter.
 - Code-behinds that did not type-check: a binding path through a value that can be null (now a guarded getter); a
   template row whose parameter is called `key`; a hook reading what another hook gave (both now in `useHooks()`, read
   through local constants so the TSX's narrowing still applies); functions declared after an early return and

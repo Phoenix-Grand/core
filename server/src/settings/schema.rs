@@ -1,4 +1,4 @@
-//! The setting *schema* — what `core.settings` still owns after `000060`.
+//! The setting *schema* - what `core.settings` still owns after `000060`.
 //!
 //! A row of `core.settings` no longer holds "the" value; it declares what the
 //! key is: its type, its enum domain, its owning module, its factory default,
@@ -19,7 +19,7 @@ pub struct SettingSchema {
     pub label: Option<String>,
     pub description: Option<String>,
     pub is_public: bool,
-    /// `global` | `user` | `overridable` — the *declared* editability, kept from
+    /// `global` | `user` | `overridable` - the *declared* editability, kept from
     /// the module manifest. Orthogonal to the four storage scopes: it says who
     /// may edit, not where the value lives.
     pub scope: String,
@@ -57,7 +57,7 @@ impl SettingSchema {
                     // list of values (`["month","week"]`) and the labelled form a
                     // module ships to drive a picker
                     // (`[{"value":"month","label":"Mois"}, …]`). Comparing the raw
-                    // array only would reject every labelled enum — silently, and
+                    // array only would reject every labelled enum - silently, and
                     // only for the modules that took the trouble to translate
                     // their options.
                     let accepted = domain.iter().any(|candidate| match candidate {

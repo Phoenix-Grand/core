@@ -8,10 +8,10 @@
 //! high-quality filter, an `.ico` gives the frame closest to that size) and keeps the result per
 //! device.
 //!
-//! * **SVG** — Direct2D's own SVG renderer (`ID2D1DeviceContext5`, Windows 10 1703+). The icon's
+//! * **SVG** - Direct2D's own SVG renderer (`ID2D1DeviceContext5`, Windows 10 1703+). The icon's
 //!   colour is the document's `currentColor`, so an SVG drawn with `currentColor` (Lucide's) follows
 //!   the control's colour and the theme; any other colour is kept.
-//! * **PNG, JPEG, BMP, GIF (first frame), ICO, TIFF, WebP** — Windows Imaging Component (WebP
+//! * **PNG, JPEG, BMP, GIF (first frame), ICO, TIFF, WebP** - Windows Imaging Component (WebP
 //!   needs the system's WebP codec, present on Windows 10 1809+ and Windows 11).
 //!
 //! Options (`tint`, `size`, `scaling`, `mirror`): a tint recolours every pixel, its transparency
@@ -59,7 +59,7 @@ pub struct Raster {
 }
 
 impl Raster {
-    /// The pixels with straight (not premultiplied) alpha — what a Windows icon or a WPF
+    /// The pixels with straight (not premultiplied) alpha - what a Windows icon or a WPF
     /// `Bgra32` bitmap takes.
     pub fn straight_alpha(&self) -> Vec<u8> {
         let mut out = self.pixels.clone();
@@ -80,7 +80,7 @@ impl Raster {
 static TINT_RESOLVER: OnceLock<fn(&str, &Theme) -> Option<D2D1_COLOR_F>> = OnceLock::new();
 
 /// Installs how a tint that names a theme colour (`Accent`, `TextSecondary`…) is resolved against a
-/// theme — `kubuno_desktop_views` installs its colour tokens. The first call wins.
+/// theme - `kubuno_desktop_views` installs its colour tokens. The first call wins.
 pub fn set_tint_resolver(resolver: fn(&str, &Theme) -> Option<D2D1_COLOR_F>) {
     let _ = TINT_RESOLVER.set(resolver);
 }
@@ -179,13 +179,13 @@ fn modified(path: &str) -> Option<SystemTime> {
 static RESOURCE_LOADER: OnceLock<ResourceLoader> = OnceLock::new();
 
 /// Installs where the bytes of a resource image (`kbres:<set>/<name>`, a `{Res key}` value at run
-/// time) come from — the resources runtime installs it. The first call wins. Call [`release`] when
+/// time) come from - the resources runtime installs it. The first call wins. Call [`release`] when
 /// the resources change (another culture), so they are read again.
 pub fn set_resource_loader(loader: ResourceLoader) {
     let _ = RESOURCE_LOADER.set(loader);
 }
 
-/// The decoded image at `path` — a file, or a resource (`kbres:…`) — cached; a file is read again
+/// The decoded image at `path` - a file, or a resource (`kbres:…`) - cached; a file is read again
 /// when it changed on disk.
 fn source(path: &str, wic: &IWICImagingFactory) -> Option<Rc<Source>> {
     let now = Instant::now();
@@ -232,12 +232,12 @@ pub fn is_svg(bytes: &[u8]) -> bool {
 }
 
 /// Decodes an image held in memory: an SVG document, or anything WIC reads (every frame of an
-/// icon file, the first of anything else — a GIF's first frame, a TIFF's first page) as
+/// icon file, the first of anything else - a GIF's first frame, a TIFF's first page) as
 /// premultiplied BGRA pixels.
 ///
 /// The decoding runs on a short-lived worker thread of the multithreaded apartment while the
 /// caller waits: some codecs (the WebP one, installed as a Store extension) make cross-apartment
-/// COM calls, and from the UI thread those pump window messages in the middle of a paint — a
+/// COM calls, and from the UI thread those pump window messages in the middle of a paint - a
 /// `WM_SIZE` then resizes the swap chain while it is being drawn on (`DXGI_ERROR_INVALID_CALL`).
 /// A plain thread join does not pump.
 fn decode_bytes(bytes: &[u8], _wic: &IWICImagingFactory) -> windows::core::Result<Source> {
@@ -288,7 +288,7 @@ fn decode_raster(bytes: &[u8]) -> windows::core::Result<Vec<Frame>> {
 }
 
 /// An SVG document held in memory as a bitmap of `renderer`'s device at its intrinsic size (its
-/// `viewBox`, else `width`/`height`) — what an image property (`Image`, `BackgroundImage`) shows
+/// `viewBox`, else `width`/`height`) - what an image property (`Image`, `BackgroundImage`) shows
 /// for an SVG resource. `currentColor` is the theme's text colour.
 pub fn decode_svg_bytes(renderer: &kubuno_drive_desktop_app_controls::Renderer, bytes: &[u8]) -> windows::core::Result<ID2D1Bitmap1> {
     let fail = || windows::core::Error::new(windows::core::HRESULT(0x8007_000D_u32 as i32), "not an SVG document Direct2D can render");
@@ -526,8 +526,8 @@ pub fn mirror(raster: &mut Raster) {
 
 // ── On screen ──────────────────────────────────────────────────────────────────────────────────
 
-/// Draws icon `name` (an image file, or a glyph with options — see the module doc) `size` DIP
-/// square — or its own `size` option — centred in `rect` on device context `ctx` at DPI `scale`,
+/// Draws icon `name` (an image file, or a glyph with options - see the module doc) `size` DIP
+/// square - or its own `size` option - centred in `rect` on device context `ctx` at DPI `scale`,
 /// in `color` (the context's transform places it). Returns the DIP rectangle drawn, `None`
 /// when nothing could be (the file is missing or unreadable).
 #[allow(clippy::too_many_arguments)]

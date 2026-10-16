@@ -1,4 +1,4 @@
-// Visionneuse de fichiers TEXTE (txt, md, csv, log, json, code…) — agnostique de la
+// Visionneuse de fichiers TEXTE (txt, md, csv, log, json, code…) - agnostique de la
 // source : alimentée par un `load()` qui renvoie le Blob via le chemin AUTHENTIFIÉ
 // de la source (local, System, distant). Fenêtre flottante redimensionnable avec
 // numéros de ligne, retour à la ligne, copie et téléchargement.
@@ -139,7 +139,7 @@ export default function FilesTextViewer({ name, load, onClose }: Props) {
       <div className="flex flex-col flex-1 min-h-0">
         {truncated && (
           <div className="px-4 py-1.5 text-xs text-warning bg-warning-light border-b border-border shrink-0">
-            {t('txtview.truncated', { defaultValue: 'Fichier volumineux — aperçu tronqué.' })}
+            {t('txtview.truncated', { defaultValue: 'Fichier volumineux - aperçu tronqué.' })}
           </div>
         )}
         {error ? (

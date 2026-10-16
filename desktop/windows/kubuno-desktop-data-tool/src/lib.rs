@@ -1,4 +1,4 @@
-//! # `kubuno-desktop-data-tool` — the helper process of the Visual Studio data tooling
+//! # `kubuno-desktop-data-tool` - the helper process of the Visual Studio data tooling
 //!
 //! `vskubuno/docs/DATA.md` §9: a tool window and wizards backed by a small Rust process speaking
 //! JSON lines over stdio, so schema introspection, connection tests, queries and migrations use

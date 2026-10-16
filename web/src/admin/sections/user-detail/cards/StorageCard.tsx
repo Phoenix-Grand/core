@@ -16,14 +16,14 @@ import { accountError, useUpdateAccount } from '../useAccountEdit'
  * The account's ceiling, edited where it is read.
  *
  * `QuotaField` is the storage page's own control, borrowed rather than
- * re-implemented: a byte count is the thing an operator gets wrong —
+ * re-implemented: a byte count is the thing an operator gets wrong -
  * `53687091200` and `5368709120` differ by one character and by a factor of ten
- * — and the two screens that set a quota must not disagree about how it is
+ * - and the two screens that set a quota must not disagree about how it is
  * typed. It also replaces the 0–200 Go slider the edit window used, which could
  * not express the ceiling of an account already above 200 Go.
  *
- * Lowering below current usage is allowed — it is a legitimate way to stop
- * growth — and warned about rather than refused, exactly as on the storage page.
+ * Lowering below current usage is allowed - it is a legitimate way to stop
+ * growth - and warned about rather than refused, exactly as on the storage page.
  */
 export default function StorageCard({ user }: { user: User }) {
   const { t } = useTranslation()
@@ -34,7 +34,7 @@ export default function StorageCard({ user }: { user: User }) {
   const [amount, setAmount] = useState(initial.amount)
   const [unit, setUnit]     = useState<QuotaUnit>(initial.unit)
 
-  // The breakdown the storage page already computes — reused, not recounted.
+  // The breakdown the storage page already computes - reused, not recounted.
   const usage = useAccountStorageUsage(user.id)
 
   const canEdit = can(PRIV.USERS_UPDATE, user.org_unit_id)
@@ -51,7 +51,7 @@ export default function StorageCard({ user }: { user: User }) {
   }
   const stop = () => { setEditing(false); save.reset(); reset() }
 
-  // `…?action=set-quota` — the verb a full-account alert points at, and the one
+  // `…?action=set-quota` - the verb a full-account alert points at, and the one
   // the storage page forwards here now that the ceiling is edited on the sheet.
   // It opens the card already in edit mode rather than dropping the operator on
   // a page and leaving them to find the pencil.
@@ -85,7 +85,7 @@ export default function StorageCard({ user }: { user: User }) {
     >
       {/* What is actually stored, before what is allowed. The total is the
           number enforcement reads; the modules beside it say where it comes
-          from — the question an operator asks the moment the total surprises
+          from - the question an operator asks the moment the total surprises
           them. Read from the storage page's own endpoint rather than a second
           count of our own, so the sheet and that page can never disagree. */}
       <div className="mb-4 flex flex-wrap items-start gap-x-10 gap-y-4">

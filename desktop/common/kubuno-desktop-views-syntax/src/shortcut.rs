@@ -1,5 +1,5 @@
 //! The keyboard shortcut grammar of `ShortcutKeys` and `Shortcut` (`vskubuno/docs/MENUS.md` §4):
-//! modifiers then one key, joined by `+` — `Ctrl+S`, `Ctrl+Shift+N`, `Alt+F4`, `F5`, `Ctrl++`,
+//! modifiers then one key, joined by `+` - `Ctrl+S`, `Ctrl+Shift+N`, `Alt+F4`, `F5`, `Ctrl++`,
 //! `Shift+Delete`. Platform-neutral: the desktop maps a [`Key`] to its virtual-key code, the web to
 //! `KeyboardEvent.key`, the language server checks the text and finds two commands sharing one
 //! shortcut.

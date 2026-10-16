@@ -53,11 +53,11 @@ impl JobRegistry {
     }
 
     /// Registers a handler. A second registration of the same type replaces the
-    /// first one and is logged — silently ignoring it would hide a real bug.
+    /// first one and is logged - silently ignoring it would hide a real bug.
     pub fn register<H: JobHandler + 'static>(&mut self, job_type: impl Into<String>, handler: H) {
         let job_type = job_type.into();
         if self.handlers.insert(job_type.clone(), Arc::new(handler)).is_some() {
-            tracing::warn!(job_type = %job_type, "Type de tâche enregistré deux fois — le dernier gestionnaire l'emporte");
+            tracing::warn!(job_type = %job_type, "Type de tâche enregistré deux fois - le dernier gestionnaire l'emporte");
         }
     }
 
@@ -74,7 +74,7 @@ impl JobRegistry {
         self.handlers.get(job_type).cloned()
     }
 
-    /// Types this runner is able to execute — the filter used when claiming.
+    /// Types this runner is able to execute - the filter used when claiming.
     pub fn job_types(&self) -> Vec<String> {
         let mut types: Vec<String> = self.handlers.keys().cloned().collect();
         types.sort();

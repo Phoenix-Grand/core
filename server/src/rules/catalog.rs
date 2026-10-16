@@ -2,8 +2,8 @@
 //!
 //! ## A module can only write under its own name
 //!
-//! A module declares a trigger or an action by its **bare name** —
-//! `document_shared`, not `office.document_shared` — and the core prefixes it
+//! A module declares a trigger or an action by its **bare name** -
+//! `document_shared`, not `office.document_shared` - and the core prefixes it
 //! with the module identifier at registration. Identical to `settings_schema`
 //! and to [`crate::authz::catalog`], and for the same reason: a namespace a
 //! module can choose is a namespace it can *claim*, and the first thing a
@@ -21,8 +21,8 @@
 //! ## What happens to a departed module's entries
 //!
 //! A trigger a rule still references cannot be deleted (`ON DELETE RESTRICT`),
-//! and must not be: deleting it would either cascade into the rule — silently
-//! changing what the instance does — or leave the rule pointing at nothing.
+//! and must not be: deleting it would either cascade into the rule - silently
+//! changing what the instance does - or leave the rule pointing at nothing.
 //! Entries that disappeared from a re-registration are therefore **deleted when
 //! nothing references them and flagged `is_orphan` when something does**, which
 //! is the same answer [`crate::authz::catalog`] gives for privileges.
@@ -211,7 +211,7 @@ pub async fn register_module(
 }
 
 /// Upserts the **core's** own declarations. Same table, same validation, same
-/// forced prefixing — see the module header for why that matters.
+/// forced prefixing - see the module header for why that matters.
 pub async fn register_core(
     tx: &mut DbTx,
     triggers: &[TriggerDef],
@@ -354,7 +354,7 @@ async fn upsert(
     purge_vanished(tx, namespace, &trigger_keys, &action_keys).await
 }
 
-/// Removes entries this namespace no longer declares — and only those a rule
+/// Removes entries this namespace no longer declares - and only those a rule
 /// does not depend on. The rest survive, flagged, so an existing rule keeps
 /// meaning something and the console can grey it out.
 async fn purge_vanished(
@@ -553,7 +553,7 @@ pub async fn resolve_action(db: &DbPool, key: &str) -> Result<Option<ResolvedAct
     })
 }
 
-/// The trigger a rule points at, with its declared fields — used to validate a
+/// The trigger a rule points at, with its declared fields - used to validate a
 /// rule's comparisons against the vocabulary its trigger actually offers.
 pub async fn get_trigger(db: &DbPool, key: &str) -> Result<Option<TriggerRow>, AppError> {
     db.fetch_optional_as::<TriggerRow>(

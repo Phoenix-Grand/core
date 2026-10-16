@@ -24,7 +24,7 @@ const OUTCOMES: Outcome[] = [
 interface Props {
   /** Pre-filter on one rule (the rule sheet's own log). */
   ruleId?: string | null
-  /** Hide the page header — the section already painted one. */
+  /** Hide the page header - the section already painted one. */
   embedded?: boolean
 }
 
@@ -181,7 +181,7 @@ export class ExecutionsPanel extends ViewBase {
                 className="flex w-full min-w-0 flex-col gap-1 px-3 py-2 text-start hover:bg-surface-1">
                 <span className="flex min-w-0 items-center gap-2">
                   {this.expanded.has(r.id) ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
-                  <span className="min-w-0 truncate text-text-primary">{r.rule_name ?? '—'}</span>
+                  <span className="min-w-0 truncate text-text-primary">{r.rule_name ?? '-'}</span>
                 </span>
                 <span className="flex flex-wrap items-center gap-1.5">
                   <Badge variant={modeVariant(r.mode)} size="sm">
@@ -230,7 +230,7 @@ export class ExecutionsPanel extends ViewBase {
                   <td className="whitespace-nowrap px-3 py-2 text-text-secondary">
                     {formatWhen(r.occurred_at, this.i18n.language)}
                   </td>
-                  <td className="max-w-[16rem] truncate px-3 py-2 text-text-primary">{r.rule_name ?? '—'}</td>
+                  <td className="max-w-[16rem] truncate px-3 py-2 text-text-primary">{r.rule_name ?? '-'}</td>
                   <td className="px-3 py-2">
                     <Badge variant={modeVariant(r.mode)} size="sm">
                       {sim && <FlaskConical size={10} />}{modeLabel(this.tr, r.mode)}
@@ -241,16 +241,16 @@ export class ExecutionsPanel extends ViewBase {
                   </td>
                   <td className="max-w-[12rem] truncate px-3 py-2 font-mono text-text-secondary"
                     style={{ fontSize: 'var(--kb-text-meta)' }}>
-                    {r.actor_user_id ?? '—'}
+                    {r.actor_user_id ?? '-'}
                   </td>
                   <td className="max-w-[12rem] truncate px-3 py-2 text-text-secondary"
                     style={{ fontSize: 'var(--kb-text-meta)' }}>
-                    {r.resource_type ? `${r.resource_type}: ${r.resource_id ?? '—'}` : '—'}
+                    {r.resource_type ? `${r.resource_type}: ${r.resource_id ?? '-'}` : '-'}
                   </td>
                   <td className="px-3 py-2">
                     {severity
                       ? <Badge variant={severityVariant(severity)} size="sm">{severityLabel(this.tr, severity)}</Badge>
-                      : <span className="text-text-tertiary">—</span>}
+                      : <span className="text-text-tertiary">-</span>}
                   </td>
                 </tr>,
                 open && (

@@ -1,4 +1,4 @@
-<!-- AudienceRow — converted from AudienceRow.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- AudienceRow - converted from AudienceRow.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="RowProps">
   <Panel Visible="{Binding show_main}" Class="py-1">
     <Panel Class="space-y-3">

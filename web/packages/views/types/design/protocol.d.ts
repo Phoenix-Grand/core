@@ -4,7 +4,7 @@
  * `DesignSurfaceDragDropProtocol`, `DesignSurfaceContextMenuProtocol`) plus the web additions.
  *
  * Transport: page → host with `window.chrome.webview.postMessage(obj)`; host → page as `message` events of
- * `window.chrome.webview` (`e.data` is the object — a JSON string is accepted too). Without WebView2 (a browser,
+ * `window.chrome.webview` (`e.data` is the object - a JSON string is accepted too). Without WebView2 (a browser,
  * tests), `window.__kbDesign = { send(msg), outbox }`: `send` delivers a host message, `outbox` collects what the
  * page posts. A message that is not an object with a known `type`, or whose fields have the wrong types, is
  * ignored (never an error): a stale or malformed message must not break the surface.
@@ -270,9 +270,9 @@ export interface Channel {
 export declare function openChannel(win?: Window): Channel;
 /**
  * The registry texts a page compiles with once the designer sent the project's host registry (`setHostRegistry`):
- * the bundled page (no `project.json`) replaces the host registry it was built with — older than the project's
+ * the bundled page (no `project.json`) replaces the host registry it was built with - older than the project's
  * whenever the project upgraded `@kubuno/ui` after the extension was built, which made the designer report
- * « `Label` has no property `HtmlTag` » where `kbview-tsc` compiles clean — and keeps the project registries.
+ * « `Label` has no property `HtmlTag` » where `kbview-tsc` compiles clean - and keeps the project registries.
  * `null` when nothing changes (the project-mode page already has the project's registry, or the same text).
  */
 export declare function withHostRegistry(texts: readonly string[], projectLoaded: boolean, host: string): string[] | null;

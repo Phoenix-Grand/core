@@ -54,8 +54,8 @@ pub struct ElementRef<'a> {
 }
 
 impl<'a> ElementRef<'a> {
-    /// A sender that is no element of a view — a view model, a service, a
-    /// test — named `name` (empty element name and id, empty bounds).
+    /// A sender that is no element of a view - a view model, a service, a
+    /// test - named `name` (empty element name and id, empty bounds).
     pub fn detached(name: &'a str) -> Self {
         Self { name: Some(name), element: "", id: "", bounds: Rect::default(), focus_id: None, attributes: &[] }
     }
@@ -73,7 +73,7 @@ impl<'a> ElementRef<'a> {
         x >= b.left && x < b.right && y >= b.top && y < b.bottom
     }
 
-    /// `x:Name`, else the element name, else the id — for logs and messages.
+    /// `x:Name`, else the element name, else the id - for logs and messages.
     pub fn display_name(&self) -> &'a str {
         match self.name {
             Some(n) => n,
@@ -182,7 +182,7 @@ impl ElementProps {
         }
     }
 
-    /// The `Text` property (`""` when the element sets none) — `((Button)sender).Text`.
+    /// The `Text` property (`""` when the element sets none) - `((Button)sender).Text`.
     pub fn text(&self) -> String {
         self.string("Text").unwrap_or_default()
     }
@@ -204,7 +204,7 @@ impl ElementType for AnyElement {
 }
 
 /// A control type a [`Sender`] can be typed with: every class of the control hierarchy
-/// (`#[derive(Component)]` implements it — [`crate::controls::Button`], a custom
+/// (`#[derive(Component)]` implements it - [`crate::controls::Button`], a custom
 /// `RoundButton`…) and [`AnyElement`].
 ///
 /// Minimal on purpose: only what `Sender<C>` needs. It was named `Component` before EVT-7a,

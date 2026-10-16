@@ -33,7 +33,7 @@ pub fn lock_down_process_execution(module: &str) {
             Err(e) => tracing::error!(
                 module,
                 error = %e,
-                "seccomp : impossible d'installer le filtre anti-exécution — le module continue sans cette protection"
+                "seccomp : impossible d'installer le filtre anti-exécution - le module continue sans cette protection"
             ),
         }
     }

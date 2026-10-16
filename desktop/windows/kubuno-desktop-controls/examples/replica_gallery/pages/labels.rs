@@ -1,4 +1,4 @@
-//! `05-labels` — Label, LinkLabel, PictureBox, ProgressBar.
+//! `05-labels` - Label, LinkLabel, PictureBox, ProgressBar.
 
 use kubuno_desktop_controls::labels::{
     Label, LinkBehavior, LinkLabel, PictureBox, PictureBoxSizeMode, ProgressBar, ProgressBarStyle,
@@ -29,7 +29,7 @@ fn plain() -> Group {
     disabled.enabled = false;
 
     group(
-        "Label — BorderStyle / align",
+        "Label - BorderStyle / align",
         300.0,
         vec![
             kid(label("AutoSize label")),
@@ -51,7 +51,7 @@ fn links() -> Group {
     visited.link_visited = true;
 
     group(
-        "LinkLabel — LinkBehavior",
+        "LinkLabel - LinkBehavior",
         300.0,
         vec![
             kid(link("AlwaysUnderline", LinkBehavior::AlwaysUnderline)).w(240.0),
@@ -61,15 +61,15 @@ fn links() -> Group {
     )
 }
 
-/// The library models `Image` as its SIZE only — the bitmap lives host-side per
-/// the `shell_icon` contract — so the box, its border and the zoom rectangle are
+/// The library models `Image` as its SIZE only - the bitmap lives host-side per
+/// the `shell_icon` contract - so the box, its border and the zoom rectangle are
 /// reproduced, but nothing is blitted inside them.
 fn picture() -> Group {
     let mut p = PictureBox::new();
     p.border_style = BorderStyle::FixedSingle;
     p.size_mode = PictureBoxSizeMode::Zoom;
     p.image = Some(Size::new(64.0, 48.0));
-    group("PictureBox — SizeMode=Zoom", 300.0, vec![kid(p).size(120.0, 80.0)])
+    group("PictureBox - SizeMode=Zoom", 300.0, vec![kid(p).size(120.0, 80.0)])
 }
 
 fn progress() -> Group {
@@ -80,7 +80,7 @@ fn progress() -> Group {
         kid(b).w(240.0)
     };
     group(
-        "ProgressBar — Style",
+        "ProgressBar - Style",
         300.0,
         vec![
             bar(45, ProgressBarStyle::Blocks),

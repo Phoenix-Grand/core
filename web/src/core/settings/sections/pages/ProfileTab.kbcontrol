@@ -1,4 +1,4 @@
-<!-- ProfileTab — converted from ProfileTab.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- ProfileTab - converted from ProfileTab.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl>
   <Panel HtmlTag="Form" Class="max-w-4xl" OnSubmit="panel_submit">
     <Panel Class="space-y-5">

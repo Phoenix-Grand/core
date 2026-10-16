@@ -1,11 +1,11 @@
 # Advisories `cargo audit` reports that this workspace cannot act on.
 #
 # An entry here is a claim that the vulnerable code is NOT reachable, and it
-# must say why. Anything else — anything an upgrade can fix — gets upgraded.
+# must say why. Anything else - anything an upgrade can fix - gets upgraded.
 
 [advisories]
 ignore = [
-  # rsa — Marvin attack (timing side-channel on RSA key operations).
+  # rsa - Marvin attack (timing side-channel on RSA key operations).
   #
   # Reached only through `sqlx-mysql`, an OPTIONAL dependency of sqlx's macro
   # crate. This workspace enables PostgreSQL alone, so the MySQL driver is never

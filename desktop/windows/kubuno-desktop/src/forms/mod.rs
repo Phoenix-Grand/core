@@ -7,9 +7,9 @@
 //! including what the user typed. The typed handles ([`Button`], [`TextField`]…) deref to
 //! [`Control`] and add their own properties, builder methods and events.
 //!
-//! How it works: a form's view is composed in memory — the `.kbview` text, with the properties of
+//! How it works: a form's view is composed in memory - the `.kbview` text, with the properties of
 //! its named controls bound to the controls' values and every event routed to the form, plus the
-//! controls created in code — and handed to the `kubuno_desktop_views` runtime. Nothing is written to disk:
+//! controls created in code - and handed to the `kubuno_desktop_views` runtime. Nothing is written to disk:
 //! the `.kbview` stays the single source of truth. Changing a property the runtime reads through a
 //! binding (`Text`, `Enabled`, `Visible`, `Checked`, `Value`…) costs nothing; changing another one
 //! (`Variant`, the geometry) or adding a control recomposes the view for the next frame.
@@ -207,7 +207,7 @@ pub(crate) struct ControlInner {
     pub from_view: Cell<bool>,
 }
 
-/// One control of a form — a clonable handle (`Rc`) to it. See the [module](self) documentation.
+/// One control of a form - a clonable handle (`Rc`) to it. See the [module](self) documentation.
 #[derive(Clone)]
 pub struct Control(pub(crate) Rc<ControlInner>);
 
@@ -282,7 +282,7 @@ impl Control {
         self.0.form.borrow().upgrade().map(|shared| Form { shared })
     }
 
-    /// Runs `f` on the instance of this control's class as a `T` — a custom control of the
+    /// Runs `f` on the instance of this control's class as a `T` - a custom control of the
     /// project or of a library (`#[derive(Component)]`, `#[derive(UserControl)]`), Windows Forms'
     /// `((MessageThread)thread).Append(…)`:
     /// `self.thread.with(|t: &mut MessageThread| t.append(message))`. `None` when the control is
@@ -641,7 +641,7 @@ impl Control {
     }
 }
 
-/// The controls of a form (its top level) or of a container control, in their order — Windows
+/// The controls of a form (its top level) or of a container control, in their order - Windows
 /// Forms' `Control.ControlCollection`.
 #[derive(Clone)]
 pub struct ControlCollection {
@@ -757,7 +757,7 @@ pub struct ControlEvent<'a, C, A> {
 
 impl<C: SenderParam, A: EventArgs + ArgsChain> ControlEvent<'_, C, A> {
     /// Runs `handler` each time the event is raised, after the handler the `.kbview` names (if
-    /// any) — Windows Forms' `+=`. It stays subscribed until [`unsubscribe`](Self::unsubscribe)
+    /// any) - Windows Forms' `+=`. It stays subscribed until [`unsubscribe`](Self::unsubscribe)
     /// (or the control is dropped).
     pub fn subscribe(&self, mut handler: impl FnMut(&C, &mut A) + 'static) -> HandlerId {
         let event = self.event;

@@ -5,7 +5,7 @@
 // The list is short and changes only when somebody acts on it, so it is a plain
 // query. The detail is not: a campaign that is running moves on its own, in a
 // background job, and a page that shows a frozen progress bar is a page an
-// operator stops trusting. So the detail polls — but only while there is
+// operator stops trusting. So the detail polls - but only while there is
 // something to see (`refetchInterval` returns `false` once nothing is left in
 // flight), because a finished campaign that keeps hitting the server every few
 // seconds is a page nobody closed.
@@ -14,7 +14,7 @@
 //
 // Nothing in these types can hold a source password: the server does not return
 // one, and adding a field for it here is the mistake this comment exists to
-// prevent. It travels in one direction only — into `createCampaign` and into
+// prevent. It travels in one direction only - into `createCampaign` and into
 // `probe`, once each.
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -59,7 +59,7 @@ export interface Campaign {
   created_at:      string
   started_at:      string | null
   finished_at:     string | null
-  /** Why the campaign itself could not run — a sentence, already French. */
+  /** Why the campaign itself could not run - a sentence, already French. */
   error:           string | null
   tally:           CampaignTally
 }

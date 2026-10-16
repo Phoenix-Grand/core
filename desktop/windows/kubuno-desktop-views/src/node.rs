@@ -5,14 +5,14 @@
 //! ## Why this is not just `kubuno_desktop_ui::Widget`
 //!
 //! `kubuno_desktop_ui::Widget::paint` takes one [`kubuno_desktop_ui::WidgetState`] the
-//! *caller* computed — a container's own `Widget` impl (`Panel::paint`,
+//! *caller* computed - a container's own `Widget` impl (`Panel::paint`,
 //! `Card::paint`) applies exactly one state (`WidgetState::REST`, `disabled`
 //! aside) to *every* child, because a generic container has no way to know
 //! which child the pointer is over (see `containers.rs`'s own comment on
 //! `paint_children_unclipped`: "the caller that tracks hover passes it to the
 //! child itself"). That is correct for `kubuno_desktop_ui`'s existing callers, which
 //! hand-write their own hit-testing per screen (`shell/src/admin_users.rs`'s
-//! `DataTable`) — but it means routing `<Button OnClick="…">` through
+//! `DataTable`) - but it means routing `<Button OnClick="…">` through
 //! `Card`/`Stack`'s own `Widget::paint` would silently paint every button at
 //! rest and fire no clicks at all.
 //!
@@ -21,7 +21,7 @@
 //! own chrome and layout arithmetic only** (`Card::paint_body`'s body
 //! closure, `Stack::layout_children`) and then recurses into its own
 //! [`ViewNode`] children itself, computing each one's `hot`/`pressed`/
-//! `focused` from the live [`Frame`] — the same per-child interactivity
+//! `focused` from the live [`Frame`] - the same per-child interactivity
 //! `admin_users.rs` hand-writes today, generalised once instead of per
 //! screen.
 //!
@@ -29,7 +29,7 @@
 //!
 //! Per §0, the concrete `kubuno_desktop_ui` widget (`Button`, `Switch`…) a node wraps
 //! is cheap to construct and is rebuilt fresh every frame from
-//! [`crate::binding::PropSource`] — there is nothing to keep. Two things
+//! [`crate::binding::PropSource`] - there is nothing to keep. Two things
 //! *do* persist on the node itself, because losing them would be visibly
 //! wrong: a leaf's `pressed` flag (press-then-release-inside is how a click
 //! is recognised; see [`ButtonNode::paint`]) and [`TextFieldNode`]'s actual
@@ -67,7 +67,7 @@ pub struct ViewEvent {
     /// The `x:Name`-derived id of the node that raised it, when it has one.
     pub focus_id: Option<FocusId>,
     /// The `On*="handler_name"` attribute's value, when the element declared
-    /// one — `None` for a two-way-bound control with no explicit handler.
+    /// one - `None` for a two-way-bound control with no explicit handler.
     pub handler: Option<String>,
     pub kind: ViewEventKind,
 }
@@ -123,7 +123,7 @@ pub(crate) type CurrentElement = Option<(Rc<SlotEvents>, Rect)>;
 /// input, the view model bindings read from and write to, the focus ring
 /// leaves register with, the named handler table, and the event sink. Built
 /// once per frame by [`crate::runtime::Runtime::frame`] and reborrowed down
-/// the tree (see [`PaintCx::reborrow`]) — a container cannot simply pass its
+/// the tree (see [`PaintCx::reborrow`]) - a container cannot simply pass its
 /// own `&mut PaintCx` to more than one child, so each recursion borrows a
 /// fresh, field-disjoint copy.
 pub struct PaintCx<'a> {
@@ -133,7 +133,7 @@ pub struct PaintCx<'a> {
     pub focus: &'a mut FocusRing,
     pub handlers: &'a mut HandlerTable,
     pub events: &'a mut Vec<ViewEvent>,
-    /// The frame's layout map (`vskubuno/docs/DESIGNER.md` §6, DSG-6) —
+    /// The frame's layout map (`vskubuno/docs/DESIGNER.md` §6, DSG-6) -
     /// `None` outside design mode, so recording costs one branch and no
     /// allocation for every ordinary (non-designer) frame. Populated by
     /// [`crate::design::DesignSlot::paint`], which every compiled element is
@@ -158,7 +158,7 @@ pub struct PaintCx<'a> {
 
 impl<'a> PaintCx<'a> {
     /// A fresh [`PaintCx`] borrowing the same underlying `vm`/`focus`/
-    /// `handlers`/`events`/`design` — what a container hands each child in
+    /// `handlers`/`events`/`design` - what a container hands each child in
     /// turn, since `self`'s own fields cannot be moved twice.
     pub fn reborrow(&mut self) -> PaintCx<'_> {
         PaintCx {
@@ -185,7 +185,7 @@ impl<'a> PaintCx<'a> {
         crate::common::mnemonic_text(text, use_mnemonic, self.frame, self.services.as_deref_mut(), element.as_deref(), action)
     }
 
-    /// [`Self::reborrow`] with another canvas and frame — what a container that paints
+    /// [`Self::reborrow`] with another canvas and frame - what a container that paints
     /// its content through its own transformed canvas/frame (a scroll area's viewport)
     /// hands its child.
     pub fn with_surface<'b>(&'b mut self, canvas: &'b dyn ControlCanvas, frame: &'b Frame) -> PaintCx<'b> {
@@ -195,7 +195,7 @@ impl<'a> PaintCx<'a> {
         cx
     }
 
-    /// The canvas-independent slice of `self` — what a leaf's `interact`
+    /// The canvas-independent slice of `self` - what a leaf's `interact`
     /// (see [`InteractCx`]) actually needs. Borrowing it and then painting
     /// afterwards is how [`ButtonNode::paint`]/[`SwitchNode::paint`] get
     /// same-frame visual feedback from a binding write-back or a handler:
@@ -217,7 +217,7 @@ impl<'a> PaintCx<'a> {
     /// Raises one of the node's own events (`vskubuno/docs/EVENTS.md` EVT-2, "typed
     /// fire"): dispatches the handler the element names with its typed `args` (the
     /// typed handler if the table has one, else the legacy handler with
-    /// `args.legacy_value()` — exactly the value this event always produced), and
+    /// `args.legacy_value()` - exactly the value this event always produced), and
     /// records `kind` as a [`ViewEvent`], so both consumers §2 names (a hand-written
     /// `match` over returned events, or a `handlers!` table) see it. The sender is the
     /// element painting (see [`CurrentElement`]). `pub(crate)` so every component
@@ -230,8 +230,8 @@ impl<'a> PaintCx<'a> {
 
 /// What a leaf node's interaction step needs: the frame's input, the
 /// bindings to read/write, the focus ring, the handler table and the event
-/// sink — everything [`PaintCx`] carries *except* the canvas, so this half of
-/// a frame can run (and be unit-tested — see `node::tests`) without a live
+/// sink - everything [`PaintCx`] carries *except* the canvas, so this half of
+/// a frame can run (and be unit-tested - see `node::tests`) without a live
 /// `kubuno_desktop_ui::Canvas`. Built from a [`PaintCx`] with [`PaintCx::interact_cx`].
 pub struct InteractCx<'a> {
     pub frame: &'a Frame,
@@ -260,7 +260,7 @@ impl<'a> InteractCx<'a> {
         Self { frame, vm, focus, handlers, events, sender: None, control: None, activate: false }
     }
 
-    /// See [`PaintCx::fire`] — the same dispatch, from the canvas-free side.
+    /// See [`PaintCx::fire`] - the same dispatch, from the canvas-free side.
     /// `pub(crate)` for the same reason as [`PaintCx::fire`].
     pub(crate) fn fire(&mut self, event: &'static str, focus_id: Option<FocusId>, handler: Option<&str>, kind: ViewEventKind, args: &mut dyn EventArgs) {
         let control = reborrow_control(&mut self.control);
@@ -281,8 +281,8 @@ pub(crate) fn reborrow_control<'b>(control: &'b mut Option<&mut dyn Control>) ->
 /// to, so the two contexts cannot drift on what "firing an event" means.
 ///
 /// With the element's control (EVT-7a), the event (`event`, its attribute name) is delivered
-/// through the control's `on_…` method; its base behaviour raises it to [`FireSink`] — the
-/// handler, then the reported [`ViewEvent`] — and to the control's Rust subscribers. An override
+/// through the control's `on_…` method; its base behaviour raises it to [`FireSink`] - the
+/// handler, then the reported [`ViewEvent`] - and to the control's Rust subscribers. An override
 /// that does not call its base suppresses both.
 #[allow(clippy::too_many_arguments)]
 fn fire(
@@ -349,7 +349,7 @@ impl RaiseSink for FireSink<'_> {
 }
 
 /// The [`RaiseSink`] of a paint-time event (`Paint`, `DrawItem`, `MeasureItem`): the element's
-/// handler runs, and — raised for every paint or item — nothing is reported in the frame's events.
+/// handler runs, and - raised for every paint or item - nothing is reported in the frame's events.
 pub(crate) struct QuietSink<'s> {
     pub handlers: &'s mut HandlerTable,
     pub vm: &'s mut dyn ViewModel,
@@ -379,7 +379,7 @@ impl RaiseSink for QuietSink<'_> {
 
 impl<'a> PaintCx<'a> {
     /// Raises a paint-time event (`OnDrawItem`, `OnMeasureItem`, `OnPaint`) of the element painting:
-    /// through its class's `on_…` method when it has one (`on_event`), then to its handler — never
+    /// through its class's `on_…` method when it has one (`on_event`), then to its handler - never
     /// reported in the frame's events (it is raised for every paint or item).
     pub(crate) fn fire_quiet(&mut self, event: &'static str, handler: Option<&str>, args: &mut dyn EventArgs) {
         let focus_id = self.sender.as_ref().and_then(|(slot, _)| slot.focus_id);
@@ -395,20 +395,20 @@ impl<'a> PaintCx<'a> {
 /// itself (and its children, for a container) into a live frame. See the
 /// module doc for why this is not simply `kubuno_desktop_ui::Widget`.
 pub trait ViewNode {
-    /// The node's own desired size — a leaf's is its `kubuno_desktop_ui::Widget`
+    /// The node's own desired size - a leaf's is its `kubuno_desktop_ui::Widget`
     /// measurement; a container's folds its children's (see
     /// [`StackNode::measure`]).
     fn measure(&self, c: &dyn Canvas, vm: &dyn ViewModel) -> Size;
 
     /// [`Self::measure`], told how much width it is actually about to get.
-    /// Defaults to [`Self::measure`]'s own unconstrained answer — exactly
+    /// Defaults to [`Self::measure`]'s own unconstrained answer - exactly
     /// right for a leaf whose height does not depend on its width. Override
     /// this only for a widget whose `kubuno_desktop_ui::Widget::measure` itself
     /// documents "no intrinsic width" and derives its height by wrapping
     /// content into an assumed width (`Callout`'s own designer-width default,
-    /// for one) — that assumed width is almost never the real one a `<Stack>`
+    /// for one) - that assumed width is almost never the real one a `<Stack>`
     /// column is about to give it (`StackNode`
-    /// hands every block the FULL row width — `kubuno_desktop_ui::containers::Stack::
+    /// hands every block the FULL row width - `kubuno_desktop_ui::containers::Stack::
     /// column`'s own "each block as wide as the client area" design), so
     /// without this the reported height is wrong, sometimes wildly so.
     fn measure_for_width(&self, c: &dyn Canvas, vm: &dyn ViewModel, _width: f32) -> Size {
@@ -416,19 +416,19 @@ pub trait ViewNode {
     }
 
     /// The width this node wants for ITSELF when it is a direct child of a
-    /// `<Stack>` column — `None` (the default) keeps the full row width
+    /// `<Stack>` column - `None` (the default) keeps the full row width
     /// `StackNode` otherwise hands every
     /// block, correct for a widget that already limits itself within
     /// whatever bounds it paints into (a checkbox, a switch…) or that
     /// legitimately has no intrinsic width and should span the row
-    /// (`Separator`, `ProgressBar` — both documented `w-full` in
+    /// (`Separator`, `ProgressBar` - both documented `w-full` in
     /// `kubuno-desktop-ui`). `Some(width)` narrows the block to exactly that many
-    /// DIP, left-aligned — what a fixed-content-size widget like `Badge`/
+    /// DIP, left-aligned - what a fixed-content-size widget like `Badge`/
     /// `IconButton` needs: their own `kubuno_desktop_ui::Widget::paint` fills
     /// whatever rectangle it is handed, by design (documented on `Badge`'s
     /// own `paint`: "When the caller sized the badge from `measure` this is
-    /// identical to laying it out from the left"), so the CALLER — this
-    /// crate's own node — must size that rectangle first.
+    /// identical to laying it out from the left"), so the CALLER - this
+    /// crate's own node - must size that rectangle first.
     fn intrinsic_width(&self, _c: &dyn Canvas, _vm: &dyn ViewModel) -> Option<f32> {
         None
     }
@@ -443,13 +443,13 @@ pub trait ViewNode {
     }
 
     /// Whether the node covers the whole page of the panel that holds it (a ribbon's open Backstage): that
-    /// panel then lays out and paints nothing else — the page's other controls are hidden under it, as in Office.
+    /// panel then lays out and paints nothing else - the page's other controls are hidden under it, as in Office.
     fn covers_page(&self) -> bool {
         false
     }
 
     /// Whether the element is hidden this frame (`Visible="false"` at run time): a container lays it
-    /// out like WinForms lays out an invisible control — a hidden docked child takes no band.
+    /// out like WinForms lays out an invisible control - a hidden docked child takes no band.
     fn is_hidden(&self, _vm: &dyn ViewModel) -> bool {
         false
     }
@@ -565,7 +565,7 @@ impl ButtonNode {
         b.image_align = self.base.image_align;
         b.text_image_relation = self.base.relation;
         // The icon: its own size and spacing, and laid out like an image when `ImageAlign` or
-        // `TextImageRelation` is written — before the text unless a relation says otherwise.
+        // `TextImageRelation` is written - before the text unless a relation says otherwise.
         b.icon_size = self.base.icon_size.or(image_icon.map(|(_, natural)| natural));
         b.gap = self.base.icon_spacing;
         b.icon_aligned = self.base.icon_aligned || image_icon.is_some();
@@ -621,7 +621,7 @@ impl ButtonNode {
 
     /// The canvas-independent half of a frame: hit-tests `bounds` against
     /// `ix.frame`'s pointer, tracks press/release (see [`press_release`]),
-    /// and — on a completed click — dispatches `OnClick` and records a
+    /// and - on a completed click - dispatches `OnClick` and records a
     /// [`ViewEvent`]. Returns the [`WidgetState`] the caller should paint
     /// with. `pub(crate)` so this crate's own tests exercise click → handler
     /// dispatch without a live `Canvas` (see `node::tests`); the sole
@@ -662,7 +662,7 @@ impl ViewNode for ButtonNode {
         // The mnemonic (`&Save`): registered for Alt + its letter, underlined while Alt is held.
         let raw = self.text.resolve(cx.vm);
         let (_, underline) = cx.mnemonic_text(&raw, self.base.use_mnemonic, crate::common::MnemonicAction::Activate);
-        // The element's class instance (EVT-7a) — a `controls::Button`, or a class extending it —
+        // The element's class instance (EVT-7a) - a `controls::Button`, or a class extending it -
         // gets the resolved properties and paints through its `on_paint` (an override draws
         // instead). Without one, the widget is painted directly, as before.
         // A class that clears `USER_PAINT` leaves the painting to the built-in look (WinForms: the
@@ -758,12 +758,12 @@ impl SwitchNode {
         sw
     }
 
-    /// The canvas-independent half of a frame — see [`ButtonNode::interact`],
+    /// The canvas-independent half of a frame - see [`ButtonNode::interact`],
     /// whose shape this mirrors exactly, plus the toggle's write-back: on a
     /// completed click, the *new* checked state is written to `ix.vm` when
     /// the binding is `Mode=TwoWay` (§3), and `OnToggled` is dispatched
     /// regardless (§7's `Offline` switch: one-way, no write-back, but the
-    /// handler still fires — see that worked example for why binding cannot
+    /// handler still fires - see that worked example for why binding cannot
     /// be trusted to guess the side effect). `pub(crate)` for the same
     /// reason as `ButtonNode::interact`: `node::tests` exercises toggle →
     /// handler dispatch and the write-back without a live `Canvas`.
@@ -800,7 +800,7 @@ impl ViewNode for SwitchNode {
             self.interact(&mut ix, bounds)
         };
         // Re-resolved AFTER `interact`, so a `Mode=TwoWay` write-back (or a
-        // handler that itself calls `vm.set` on this same path — the fix for
+        // handler that itself calls `vm.set` on this same path - the fix for
         // the "handled but the switch stays put" case: `OnToggled` is the
         // one place a handler is trusted to own the value, per §3/§7) shows
         // up on THIS frame's paint, not one frame late.
@@ -830,7 +830,7 @@ pub struct TextFieldNode {
     pub focus_id: Option<FocusId>,
     pub on_changed: Option<String>,
     field: UiTextField,
-    /// Whether [`Self::field`] has been seeded with an initial value yet —
+    /// Whether [`Self::field`] has been seeded with an initial value yet -
     /// the reconciliation [`Self::paint`] does between the bound value and
     /// live edit state only overwrites the field's text before the field has
     /// ever been focused/edited once, so a keystroke is never clobbered by a
@@ -908,7 +908,7 @@ impl ViewNode for TextFieldNode {
 }
 
 // ─────────────────────────────────────────────────────────────────────────
-// Card — a single-child surface, painted through the real `Card::paint_body`
+// Card - a single-child surface, painted through the real `Card::paint_body`
 // so the header/footer/frame chrome stays byte-for-byte what a hand-written
 // caller gets; only the body's child is routed through this crate's own
 // recursion (see the module doc).
@@ -967,7 +967,7 @@ impl ViewNode for CardNode {
 }
 
 // ─────────────────────────────────────────────────────────────────────────
-// Stack — every child laid out by the real `flow_layout` (via
+// Stack - every child laid out by the real `flow_layout` (via
 // `kubuno_desktop_ui::containers::Stack::layout_children`), painted by this crate.
 // ─────────────────────────────────────────────────────────────────────────
 
@@ -976,7 +976,7 @@ impl ViewNode for CardNode {
 /// already validates these as allowed on any element; a `<Stack>` child is
 /// now the second place, after `<Panel>`'s Dock/Anchor children, that
 /// actually reads them). `None` keeps the block sized from the child's own
-/// [`ViewNode::measure`]/[`ViewNode::measure_for_width`] — right for the
+/// [`ViewNode::measure`]/[`ViewNode::measure_for_width`] - right for the
 /// overwhelming majority of children; `Some(extent)` is the escape hatch for
 /// a widget whose own measurement is a designer placeholder unrelated to how
 /// tall/wide it is actually meant to be in this view (`<Splitter>`, whose
@@ -992,7 +992,7 @@ pub struct StackChild {
 }
 
 impl StackChild {
-    /// A child with no explicit extent — measured normally.
+    /// A child with no explicit extent - measured normally.
     pub fn measured(node: Box<dyn ViewNode>) -> Self {
         Self { node, explicit_height: None, explicit_width: None, fill: false }
     }
@@ -1012,7 +1012,7 @@ pub struct StackNode {
 }
 
 impl StackNode {
-    /// Unconstrained — what [`ViewNode::measure`] (a parent asking "how big
+    /// Unconstrained - what [`ViewNode::measure`] (a parent asking "how big
     /// do you want to be", with no known final width yet) uses. Each
     /// vertical child's own extent comes from its plain, unconstrained
     /// [`ViewNode::measure`], same as before this node gained
@@ -1021,13 +1021,13 @@ impl StackNode {
         self.build_inner(c, vm, None)
     }
 
-    /// What [`ViewNode::paint`] uses, now that the real `bounds` — and so
-    /// the real row width a vertical child is about to be painted into — is
+    /// What [`ViewNode::paint`] uses, now that the real `bounds` - and so
+    /// the real row width a vertical child is about to be painted into - is
     /// known: each vertical child is measured with
     /// [`ViewNode::measure_for_width`] against that width instead of its own
     /// unconstrained guess. See that method's doc for why this matters (a
     /// `<Callout>` measured against the wrong width reports the wrong
-    /// height, sometimes wildly so — this is the fix).
+    /// height, sometimes wildly so - this is the fix).
     fn build_for_bounds(&self, c: &dyn Canvas, vm: &dyn ViewModel, bounds: Rect) -> Stack {
         self.build_inner(c, vm, Some(bounds))
     }
@@ -1039,7 +1039,7 @@ impl StackNode {
         let mut stack = stack.with_padding(Padding::all(self.padding.resolve(vm))).with_surface(parse_surface(&self.surface.resolve(vm)));
         let horizontal = matches!(direction, FlowDirection::LeftToRight | FlowDirection::RightToLeft);
         // A column's blocks are always the FULL row wide (`Stack::column`'s
-        // own design — see `ViewNode::measure_for_width`'s doc); that width
+        // own design - see `ViewNode::measure_for_width`'s doc); that width
         // is `display_rect`'s, independent of the blocks' own extents, so it
         // is known before the loop below computes them.
         let row_width = if horizontal {
@@ -1051,7 +1051,7 @@ impl StackNode {
             })
         };
         // A hidden child takes no room (WinForms lays an invisible control out nowhere): no block,
-        // no gap — its explicit `Width`/`Height` included.
+        // no gap - its explicit `Width`/`Height` included.
         for child in self.children.iter().filter(|ch| !ch.node.is_hidden(vm)) {
             let explicit = if horizontal { child.explicit_width } else { child.explicit_height };
             let extent = match explicit {
@@ -1196,7 +1196,7 @@ impl ViewNode for StackNode {
             let rect = if shown { rects.next().unwrap_or(Rect::new(bounds.left, bounds.top, bounds.left, bounds.top)) } else { Rect::new(bounds.left, bounds.top, bounds.left, bounds.top) };
             // A vertical column's block is always full-row-wide (see
             // `build_inner`'s own note); narrow it to the child's own
-            // `intrinsic_width`, left-aligned, when it declares one — see
+            // `intrinsic_width`, left-aligned, when it declares one - see
             // `ViewNode::intrinsic_width`'s doc for which widgets need this
             // (a fixed-content-size one like `Badge`/`IconButton`) and which
             // must NOT get it (a `w-full` one like `Separator`/`ProgressBar`,
@@ -1207,7 +1207,7 @@ impl ViewNode for StackNode {
                 // An explicit `Width` already says exactly how wide this
                 // child wants to be, the same way `explicit_height`/
                 // `explicit_width` already overrode its main-axis extent
-                // above — `intrinsic_width` would only be a second, weaker
+                // above - `intrinsic_width` would only be a second, weaker
                 // opinion.
                 rect
             } else {
@@ -1243,9 +1243,9 @@ fn parse_surface(s: &str) -> Surface {
 
 #[cfg(test)]
 mod tests {
-    //! Exercises [`ButtonNode::interact`]/[`SwitchNode::interact`] directly —
+    //! Exercises [`ButtonNode::interact`]/[`SwitchNode::interact`] directly -
     //! the canvas-independent half of a frame [`PaintCx::interact_cx`] splits
-    //! out — so a click/toggle's effect on the view model and the event/
+    //! out - so a click/toggle's effect on the view model and the event/
     //! handler dispatch can be checked without a live `kubuno_desktop_ui::Canvas`
     //! (see this crate's other tests, and `compile::tests`' own note, for why
     //! that matters: nothing in `kubuno-desktop-ui`'s own test suite constructs one
@@ -1255,8 +1255,8 @@ mod tests {
     //! regression test for the bug the live preview caught: a `Mode=OneWay`
     //! `On` binding with an `OnToggled` handler stayed visually unchanged
     //! after a click, because nothing ever wrote the new value back to the
-    //! path the binding reads. `SwitchNode::interact` was already correct —
-    //! it always resolves `on_value` fresh — the missing piece was that nei
+    //! path the binding reads. `SwitchNode::interact` was already correct -
+    //! it always resolves `on_value` fresh - the missing piece was that nei
     //! ther the write-back (deliberately skipped for `OneWay`, per §3) nor
     //! the demo's own handler (`examples/view_preview.rs`'s `offline_toggled`,
     //! fixed alongside this test) updated the view model. This test pins the
@@ -1507,7 +1507,7 @@ mod tests {
         assert_eq!(h.vm.get("On"), Some(Value::Bool(true)));
         assert_eq!(h.events.len(), 1);
         assert!(matches!(h.events[0].kind, ViewEventKind::Toggled(true)));
-        // What the widget would be rebuilt with on the very next resolve —
+        // What the widget would be rebuilt with on the very next resolve -
         // proof the DISPLAY would follow, not just the raw view-model value.
         assert!(node.on.resolve(&h.vm));
     }
@@ -1536,7 +1536,7 @@ mod tests {
         h.frame(bounds, (10.0, 10.0), false, |ix, b| node.interact(ix, b));
 
         // The interpreter's OWN two-way write-back is skipped (`Mode=OneWay`)
-        // — this is the handler's write taking effect, exactly §7's "binding
+        // - this is the handler's write taking effect, exactly §7's "binding
         // cannot guess [the side effect]; a handler can".
         assert_eq!(h.vm.get("Offline"), Some(Value::Bool(true)));
         assert_eq!(h.events.len(), 1);
@@ -1547,7 +1547,7 @@ mod tests {
     #[test]
     fn switch_with_no_handler_and_a_one_way_binding_does_not_silently_write_back() {
         // The interpreter itself must never promote a `Mode=OneWay` binding
-        // to a write — that is exactly what `Mode=TwoWay` is for (§3). A
+        // to a write - that is exactly what `Mode=TwoWay` is for (§3). A
         // one-way switch with NO handler is legitimately "display only, the
         // click is dropped visually" (the design note's own escape hatch:
         // the caller is expected to give it a handler, or `Mode=TwoWay`).
@@ -1566,7 +1566,7 @@ mod tests {
         h.frame(bounds, (10.0, 10.0), false, |ix, b| node.interact(ix, b));
 
         assert_eq!(h.vm.get("Offline"), Some(Value::Bool(false)));
-        // The click still happened and is still reported — a caller with no
+        // The click still happened and is still reported - a caller with no
         // handler registered can still see it in the returned events.
         assert_eq!(h.events.len(), 1);
     }
@@ -1576,8 +1576,8 @@ mod tests {
         // `XML_VIEWS.md` §5: "reloading is naturally non-destructive: only
         // the recipe … is replaced". The view model lives OUTSIDE the
         // compiled tree, so a value a handler wrote before a reload is still
-        // there for a brand-new node — built with none of the old node's
-        // `pressed`/whatever internal state — to read on its very first
+        // there for a brand-new node - built with none of the old node's
+        // `pressed`/whatever internal state - to read on its very first
         // resolve, with no replayed interaction at all.
         let vm = MapViewModel::new().with("Offline", Value::Bool(true));
         let fresh_after_reload = SwitchNode::new(
@@ -1644,7 +1644,7 @@ pub(crate) fn top_layer_holds(x: f32, y: f32) -> bool {
     TOP_LAYER_HOLD.with(|h| h.borrow().iter().any(|r| r.is_none_or(|r| r.contains(x, y))))
 }
 
-/// Keeps the pointer from the rest of the view next frame — `None`: all of it (a light-dismiss drop-down: a press
+/// Keeps the pointer from the rest of the view next frame - `None`: all of it (a light-dismiss drop-down: a press
 /// outside only closes it), `Some(r)`: over `r`. The node that asks reads the real pointer through
 /// [`real_frame`]; everything else sees it away, until the button is released if a press began while held (the
 /// press on a drop-down's item never reaches the control under the drop-down, nor does its release).

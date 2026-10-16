@@ -1,4 +1,4 @@
-//! The splash screen's artwork: procedural, vector, drawn with Direct2D — nothing but code.
+//! The splash screen's artwork: procedural, vector, drawn with Direct2D - nothing but code.
 //!
 //! One artwork per application, in the colour family of its web logo
 //! (`core/web/public/<module>-logo.png`), and one composition for all of them so they read
@@ -11,7 +11,7 @@
 //! * light beams and out-of-focus specks;
 //! * the hero: the module's mark, drawn large as vectors after the web logo, with its glow, a
 //!   gloss, a rim light and its shadow on the ground;
-//! * the type on the left — the Kubuno mark and eyebrow, the product name set large, its tagline,
+//! * the type on the left - the Kubuno mark and eyebrow, the product name set large, its tagline,
 //!   version, and at the foot the live status line, a thin progress bar, the legal and credits
 //!   lines.
 //!
@@ -57,7 +57,7 @@ const TEXT: &str = "Segoe UI Variable Text";
 /// Which application's artwork.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Artwork {
-    /// The shell (`kubuno-desktop`): the Kubuno mark — aperture rings and floating cubes.
+    /// The shell (`kubuno-desktop`): the Kubuno mark - aperture rings and floating cubes.
     Kubuno,
     /// Drive: stacked storage slabs and data streams, amber status lights.
     Drive,
@@ -540,7 +540,7 @@ impl TextStyle {
 /// Which parts of the splash to paint.
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum Parts {
-    /// The card: ground, motif, hero, type — all but the status line and the progress bar.
+    /// The card: ground, motif, hero, type - all but the status line and the progress bar.
     Static,
     /// The status line and the progress bar (`progress` as displayed; `phase` drives the
     /// indeterminate shimmer, `0..1`).

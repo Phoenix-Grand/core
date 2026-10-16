@@ -1,7 +1,7 @@
 //! Getting the result of background work back onto the UI thread.
 //!
 //! The app's state and data context live on the UI thread (the host-control registry and the data context are
-//! `thread_local`), so a worker thread — a network call, a file read — cannot touch them directly. Instead it hands
+//! `thread_local`), so a worker thread - a network call, a file read - cannot touch them directly. Instead it hands
 //! the UI thread a closure with [`post_ui`]: the shell drains and runs those closures on its own thread each frame
 //! ([`run_ui_tasks`]), and the closure is where the app applies the result (updates its state, calls
 //! [`crate::set_data`]). Posting also fires the shell's waker ([`set_waker`]), so the loop wakes at once instead of
@@ -26,7 +26,7 @@ static INBOX: Mutex<Vec<Box<dyn FnOnce() + Send>>> = Mutex::new(Vec::new());
 static WAKER: Mutex<Option<Box<dyn Fn() + Send + Sync>>> = Mutex::new(None);
 
 /// Hand the UI thread a closure to run on its next frame (callable from any thread), and wake the shell. The closure
-/// is where the app applies a background result — it runs on the UI thread, so it may touch the app's state and the
+/// is where the app applies a background result - it runs on the UI thread, so it may touch the app's state and the
 /// data context.
 pub fn post_ui(task: impl FnOnce() + Send + 'static) {
     if let Ok(mut inbox) = INBOX.lock() {

@@ -1,6 +1,6 @@
 # kubuno-desktop-shell-controls
 
-The menus of a Kubuno header — the app launcher and the account panel every module's header shows on the web — as
+The menus of a Kubuno header - the app launcher and the account panel every module's header shows on the web - as
 user controls any Kubuno desktop app can place in its views. Names, properties, events and data shapes are shared
 with the web: see vskubuno `docs/SHELL-CONTROLS.md` (the contract).
 
@@ -63,7 +63,7 @@ find its controls like any control library's: only the framework's own crates (a
 ## Strings
 
 `resources/shell_controls.kbres` (+ `shell_controls.fr.kbres`), class `ShellControlsResources`. The views read them
-with an explicit set — `{Res launcher_title, Source=shell_controls}` — because a `{Res key}` lookup searches every
+with an explicit set - `{Res launcher_title, Source=shell_controls}` - because a `{Res key}` lookup searches every
 registered set, and an app may have a key of the same name (the shell's `launcher_title` is its home page's title).
 
 ## Tests

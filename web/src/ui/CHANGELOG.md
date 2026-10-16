@@ -1,4 +1,4 @@
-# Changelog — @kubuno/ui
+# Changelog - @kubuno/ui
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Entries are
 added under `[Unreleased]` **as the change is made**; on npm publish, the section is stamped
@@ -94,12 +94,12 @@ under the published version number.
 - **A label field, `LabelField`.** Chips for the labels an element carries and a
   list to add or drop one, for putting the instance's labels on something from
   inside its own form rather than from a context menu. Presentational: it is
-  handed the labels that exist and the ones chosen, and reports back — which is
+  handed the labels that exist and the ones chosen, and reports back - which is
   what lets it work on something that does not exist yet.
 
 - **A help bubble, `HelpBubble`.** The filled answer behind a "?": the
   instance's accent, white text, and an arrow pointing at the control that
-  raised the question — which a floating white card never does, and which
+  raised the question - which a floating white card never does, and which
   matters most where several little "?" sit near each other. It goes on
   whichever side of that control has room (below, above, right, left) and the
   arrow follows, always on the edge facing it. Near a screen edge the bubble
@@ -113,7 +113,7 @@ under the published version number.
 - **The × on a mention chip fills its side of the chip.** Its box was narrower
   than it was tall and the leftover interline piled up above and below it, so
   its hover square sat inset at the top and bottom while sitting flush on the
-  right — three different margins, visible the moment you pointed at it. It is
+  right - three different margins, visible the moment you pointed at it. It is
   now a square as tall as the chip's line, flush against the name and against
   the chip's inner edge; what keeps it off the outer edge is a two-pixel rim
   around the chip, drawn in the accent. Whole pixels, deliberately: at a
@@ -123,7 +123,7 @@ under the published version number.
   them equal to a hundredth of a pixel.
 
 - **The × on a mention chip is centred.** It was a typed character, and a
-  glyph sits wherever its typeface puts it inside the em box — low, here — so it
+  glyph sits wherever its typeface puts it inside the em box - low, here - so it
   read a touch below the middle however the button was aligned, and the offset
   would have moved again with a different font. It is now drawn rather than
   typed, which centres it by construction at any size.
@@ -155,7 +155,7 @@ under the published version number.
   the trigger decides at the click, refusing the focus only when the active
   element is a contenteditable surface that is not a form field (see
   `focusGuard.ts`). Toolbar lists over a document keep behaving exactly as
-  before — the selection they act on survives — while every list in a form now
+  before - the selection they act on survives - while every list in a form now
   behaves like a native select: the field just left goes dark, the list keeps
   the focus after closing, the keyboard follows the pointer. `true` and `false`
   keep their meanings for callers that want to force either way.
@@ -164,7 +164,7 @@ under the published version number.
 
 - **`OutlinedField`: labels no longer lose their descenders.** The label was laid
   out on a line box exactly as tall as its own type size, while the ellipsis it
-  needs clips whatever falls outside — so the tails of `p`, `g`, `q`, `j` and `y`
+  needs clips whatever falls outside - so the tails of `p`, `g`, `q`, `j` and `y`
   were sliced flat along the bottom (visible on any label that has one, such as
   the French "Mot de passe"). The label now uses the same line box as the text it
   stands in for, in both the resting and the floated position, and every offset
@@ -173,7 +173,7 @@ under the published version number.
 
 ### Added
 
-- **`Input` accepts `bare`** — a field with no frame, drawn as a single stroke
+- **`Input` accepts `bare`** - a field with no frame, drawn as a single stroke
   under the text, for a title line at the head of a sheet where a boxed field
   would read as one more form row. The stroke is three pixels when the field has
   focus, the thickness the focus mark has on every other control, and it is
@@ -185,12 +185,12 @@ under the published version number.
   address form built from this field lost the suggestions a bare `<input>` got
   for free. Optional: fields that pass nothing behave exactly as before.
 
-- **`cn()` — class names composed in house.** Eight repositories pulled in `clsx`
+- **`cn()` - class names composed in house.** Eight repositories pulled in `clsx`
   to do what fits in a dozen lines, and one more added `tailwind-merge`. Neither
   earns a place in a supply chain meant to stay small: this is finished logic
   with no security surface to track upstream. `cn()` accepts what the call sites
-  already passed — strings, conditions that fall through when false, arrays,
-  objects keyed by class name — and `clsx` is exported as an alias so a file can
+  already passed - strings, conditions that fall through when false, arrays,
+  objects keyed by class name - and `clsx` is exported as an alias so a file can
   move without being rewritten.
 ### Added
 

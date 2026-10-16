@@ -11,7 +11,7 @@ import { PRIV, type CanFn } from '../core/authz/types'
  * ── The action registry ──────────────────────────────────────────────────────
  *
  * An experienced administrator does not walk the tree: they type what they want
- * to *do*. This registry is the catalogue of those verbs — the first category
+ * to *do*. This registry is the catalogue of those verbs - the first category
  * the search offers, ahead of every place and every record.
  *
  * Each entry is a task, not a page. Most carry an `action` verb that opens the
@@ -25,7 +25,7 @@ import { PRIV, type CanFn } from '../core/authz/types'
  * only ever worked in French: an English operator typing "add user" matched
  * nothing, because the synonyms said "ajouter". `keysKey` now points at a
  * COMMA-SEPARATED i18n entry, translated like any other string, so each locale
- * carries the words its administrators actually type. Diacritics do not matter —
+ * carries the words its administrators actually type. Diacritics do not matter -
  * matching folds both sides (see `adminSearchIndex.ts`).
  *
  * ── Visibility ───────────────────────────────────────────────────────────────
@@ -167,7 +167,7 @@ export const ADMIN_ACTIONS: AdminAction[] = [
   },
 ]
 
-/** URL of an action — the same convention every other producer uses. */
+/** URL of an action - the same convention every other producer uses. */
 export const actionUrl = (a: AdminAction): string => adminUrl(a.target)
 
 /**

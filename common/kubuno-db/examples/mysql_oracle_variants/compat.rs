@@ -4,13 +4,13 @@
 //! constructs MariaDB accepts are refused by Oracle MySQL 8:
 //!
 //! * a literal default on a `TEXT`/`BLOB`/`JSON` column (`kind TEXT NOT NULL
-//!   DEFAULT 'text'`) — error 1101. MySQL ≥ 8.0.13 takes the same default as an
+//!   DEFAULT 'text'`) - error 1101. MySQL ≥ 8.0.13 takes the same default as an
 //!   expression: `DEFAULT ('text')`.
-//! * a `TEXT`/`BLOB` column in a key without a prefix length — error 1170
+//! * a `TEXT`/`BLOB` column in a key without a prefix length - error 1170
 //!   (MariaDB hashes long unique keys on its own). A `UNIQUE` key part becomes
 //!   the functional part `(SHA2(col, 256))`, which keeps the exact uniqueness the
 //!   column had; a plain index gets a prefix length instead.
-//! * an index on a `JSON` column (a `LONGTEXT` alias on MariaDB) — error 3152.
+//! * an index on a `JSON` column (a `LONGTEXT` alias on MariaDB) - error 3152.
 //!   MySQL cannot index JSON directly, so such an index is skipped: it only ever
 //!   served as a lookup accelerator.
 //!
@@ -85,7 +85,7 @@ fn alter_table_re() -> &'static Regex {
     re(&R, r"(?i)^\s*ALTER\s+TABLE\s+(?:`?\w+`?\.)?`?(\w+)`?")
 }
 
-/// A column definition: `[ADD|MODIFY [COLUMN]] `name` TYPE…` — captures the lead
+/// A column definition: `[ADD|MODIFY [COLUMN]] `name` TYPE…` - captures the lead
 /// (keyword + name), the name, and the type keyword.
 fn column_re() -> &'static Regex {
     static R: OnceLock<Regex> = OnceLock::new();

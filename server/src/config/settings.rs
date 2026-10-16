@@ -19,7 +19,7 @@ pub struct Settings {
     pub paths:    crate::config::paths::PathsSettings,
 }
 
-/// `[search]` — applied to the core at start-up and carried to every module it
+/// `[search]` - applied to the core at start-up and carried to every module it
 /// starts (`KUBUNO_DB_SEARCH_MAX_TERMS`), so the whole instance shares it.
 #[derive(Debug, Clone, Default, Deserialize)]
 pub struct SearchSettings {
@@ -71,7 +71,7 @@ pub struct ServerSettings {
     /// anti-déni de service.
     ///
     /// Défaut : bouclage et plages privées (127.0.0.0/8, ::1/128, 10.0.0.0/8,
-    /// 172.16.0.0/12, 192.168.0.0/16, fc00::/7) — voir
+    /// 172.16.0.0/12, 192.168.0.0/16, fc00::/7) - voir
     /// [`crate::auth::client_ip::DEFAULT_TRUSTED_PROXY_CIDRS`]. Un mandataire
     /// atteignant le core depuis une adresse PUBLIQUE (tunnel VPN, répartiteur
     /// de charge distant) doit être déclaré explicitement ici.
@@ -100,7 +100,7 @@ pub struct ServerSettings {
     #[serde(default)]
     pub shared_secret_modules: Vec<String>,
     /// Durcissement : refuse le secret **maître** sur `/internal/*` et sur le
-    /// chemin d'authentification interne du proxy — seuls les secrets dérivés
+    /// chemin d'authentification interne du proxy - seuls les secrets dérivés
     /// sont alors acceptés. À n'activer qu'une fois tous les modules supervisés
     /// par le core (un module lancé à la main avec le secret maître, en
     /// développement, serait rejeté).
@@ -150,7 +150,7 @@ impl ServerSettings {
         Ok(())
     }
 
-    /// Secret interne remis au module `module_id` au démarrage — et donc celui
+    /// Secret interne remis au module `module_id` au démarrage - et donc celui
     /// que le core doit lui présenter quand il l'appelle (le module compare le
     /// `X-Internal-Secret` reçu à sa propre valeur).
     ///
@@ -215,7 +215,7 @@ fn default_system_modules_dir() -> String {
 /// Configuration HTTPS / TLS native.
 ///
 /// Quand `enabled = true`, le core termine lui-même le TLS (HTTPS direct, sans
-/// reverse-proxy). Quand `enabled = false` (défaut), il sert en HTTP nu — la
+/// reverse-proxy). Quand `enabled = false` (défaut), il sert en HTTP nu - la
 /// terminaison TLS peut alors être faite par un reverse-proxy (nginx…).
 #[derive(Debug, Clone, Deserialize, Default)]
 pub struct TlsSettings {
@@ -263,7 +263,7 @@ pub use kubuno_db::DbSettings as DatabaseSettings;
 
 /// "The database engine follows the connection URL": when the URL is what the
 /// pool connects with (no discrete `host`/`user`, see `kubuno_db::connect`), its
-/// scheme decides the engine — `postgres://`/`postgresql://`, `mysql://`/
+/// scheme decides the engine - `postgres://`/`postgresql://`, `mysql://`/
 /// `mariadb://`, `sqlite://`. `engine` used to keep its `postgres` default, so a
 /// lone `KV__DATABASE__URL=mysql://…` (how a development core is pointed at its
 /// database) was dialled with the PostgreSQL protocol.
@@ -552,8 +552,8 @@ impl Settings {
     }
 
     /// Merged configuration WITHOUT the checks `load()` applies. A fresh
-    /// installation is precisely the state `load()` rejects — no database, the
-    /// shipped placeholder secrets — and the first-run installer has to read it
+    /// installation is precisely the state `load()` rejects - no database, the
+    /// shipped placeholder secrets - and the first-run installer has to read it
     /// to know it must offer the wizard.
     pub fn load_unvalidated() -> Result<Self, ConfigError> {
         Self::load_unvalidated_from(None)
@@ -609,7 +609,7 @@ mod tests {
     use super::*;
     use config::Config;
 
-    /// 64 hex characters, i.e. what `openssl rand -hex 32` produces — the tests
+    /// 64 hex characters, i.e. what `openssl rand -hex 32` produces - the tests
     /// must use a value that passes `validate_internal_secret()`.
     const TEST_INTERNAL_SECRET: &str =
         "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef";
@@ -737,7 +737,7 @@ mod tests {
             .set_default("server.internal_secret", TEST_INTERNAL_SECRET).unwrap()
             .set_default("server.modules_dir", "/usr/lib/kubuno/modules").unwrap()
             .set_default("server.themes_dir", "/var/lib/kubuno/themes").unwrap()
-            // ni url ni user/database — tous absents
+            // ni url ni user/database - tous absents
             .set_default("database.max_connections", 5u32).unwrap()
             .set_default("database.min_connections", 1u32).unwrap()
             .set_default("database.connect_timeout", 5u64).unwrap()
@@ -896,7 +896,7 @@ mod tests {
         assert!(settings.server.validate_internal_secret().is_ok());
     }
 
-    /// Défaut : compatibilité stricte — chaque module reçoit le secret maître.
+    /// Défaut : compatibilité stricte - chaque module reçoit le secret maître.
     #[test]
     fn test_module_secret_defaults_to_the_master_secret() {
         let settings: Settings = minimal_config().try_deserialize().unwrap();

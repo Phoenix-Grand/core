@@ -9,7 +9,7 @@
  * nothing, and are maintained by the platform rather than by us.
  *
  * WHAT CHANGES FOR CALLERS, AND WHY IT IS AN IMPROVEMENT
- * A hard-coded pattern is replaced by an INTENT — `formatDate(d, 'date')`.
+ * A hard-coded pattern is replaced by an INTENT - `formatDate(d, 'date')`.
  * A hard-coded pattern is a localisation bug in a product shipped in thirteen
  * languages: it prints 03/09/2026 to a reader who expects 2026/09/03 or
  * ٢٠٢٦/٩/٣. Saying *what* the date is for, and letting the platform decide how
@@ -38,7 +38,7 @@ export type DatePreset =
   | 'weekdayNarrow' // L, M, M…  (en-têtes de colonnes d'un calendrier)
   | 'weekdayShort'  // lun.
   | 'weekdayTime'   // jeudi 14:05
-  | 'hour'          // 14 h — l'axe horaire d'une journée
+  | 'hour'          // 14 h - l'axe horaire d'une journée
 
 const PRESETS: Record<DatePreset, Intl.DateTimeFormatOptions> = {
   date:        { day: 'numeric', month: 'short', year: 'numeric' },
@@ -62,7 +62,7 @@ function locale(): string {
   return i18n?.language || 'en'
 }
 
-// Building an Intl formatter is expensive — measurably so in a list of a
+// Building an Intl formatter is expensive - measurably so in a list of a
 // thousand rows, where the same one is asked for over and over. They are
 // immutable, so one per (language, shape) is kept.
 const cache = new Map<string, Intl.DateTimeFormat>()
@@ -87,14 +87,14 @@ export function resetDateFormatters(): void {
 /**
  * Accepts what an API actually returns: an ISO string, a timestamp, a Date.
  *
- * An ISO string goes straight to `new Date`, which parses that format natively —
+ * An ISO string goes straight to `new Date`, which parses that format natively -
  * this is what `parseISO` was doing for us.
  */
 export function toDate(value: DateInput): Date {
   return value instanceof Date ? value : new Date(value)
 }
 
-/** True when the value cannot be read as a date — checked before printing it. */
+/** True when the value cannot be read as a date - checked before printing it. */
 export function isValidDate(value: DateInput): boolean {
   return !Number.isNaN(toDate(value).getTime())
 }
@@ -133,7 +133,7 @@ const UNITS: [Intl.RelativeTimeFormatUnit, number][] = [
 ]
 
 /**
- * "il y a 3 heures", "dans 2 jours" — localised by the platform.
+ * "il y a 3 heures", "dans 2 jours" - localised by the platform.
  *
  * `numeric: 'auto'` is what turns "il y a 1 jour" into "hier", which is the
  * whole point of using the platform rather than counting units ourselves.
@@ -255,7 +255,7 @@ export function subYears(value: DateInput, n: number): Date     { return addYear
 
 export function endOfMonth(value: DateInput): Date {
   const d = toDate(value)
-  // Day 0 of the NEXT month is the last day of this one — no month-length table.
+  // Day 0 of the NEXT month is the last day of this one - no month-length table.
   return new Date(d.getFullYear(), d.getMonth() + 1, 0, 23, 59, 59, 999)
 }
 
@@ -268,7 +268,7 @@ export function isSameMonth(a: DateInput, b: DateInput): boolean {
   return x.getFullYear() === y.getFullYear() && x.getMonth() === y.getMonth()
 }
 
-/** Every day from `start` to `end` inclusive — what calendars grid over. */
+/** Every day from `start` to `end` inclusive - what calendars grid over. */
 export function eachDayOfInterval(start: DateInput, end: DateInput): Date[] {
   const out: Date[] = []
   let cur = startOfDay(start)
@@ -282,7 +282,7 @@ export function eachDayOfInterval(start: DateInput, end: DateInput): Date[] {
 }
 
 // ── Machine formats ─────────────────────────────────────────────────────────
-// Keys, sort values, `<input type="date">` values: these must NOT be localised —
+// Keys, sort values, `<input type="date">` values: these must NOT be localised -
 // they are read by code, not by people.
 //
 // Built from the LOCAL calendar fields rather than `toISOString()`, which
@@ -297,7 +297,7 @@ export function toISODate(value: DateInput): string {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`
 }
 
-/** `YYYY-MM` — month keys. */
+/** `YYYY-MM` - month keys. */
 export function toISOMonth(value: DateInput): string {
   const d = toDate(value)
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}`
@@ -309,13 +309,13 @@ export function toISOTime(value: DateInput): string {
   return `${pad(d.getHours())}:${pad(d.getMinutes())}`
 }
 
-/** `YYYY-MM-DDTHH:MM` — the value an `<input type="datetime-local">` expects. */
+/** `YYYY-MM-DDTHH:MM` - the value an `<input type="datetime-local">` expects. */
 export function toISODateTimeLocal(value: DateInput): string {
   return `${toISODate(value)}T${toISOTime(value)}`
 }
 
 /**
- * ISO 8601 week number — what `date-fns` wrote as `'I'`.
+ * ISO 8601 week number - what `date-fns` wrote as `'I'`.
  *
  * The rule is not "the nth block of seven days": week 1 is the one holding the
  * first Thursday of the year, which is why the calculation moves to that

@@ -11,7 +11,7 @@ import type { HealthCheck, HealthSeverity, HealthStatus } from './types'
  * and every lookup falls back to the server's own text.
  *
  * That fallback is the point. A check added to the server before its catalogue
- * entry lands — or a locale that has not caught up — must still render a
+ * entry lands - or a locale that has not caught up - must still render a
  * sentence, not a raw key. A health page that displays
  * `admin.hc_exposure_https_title` to an operator has failed at the one thing it
  * exists to do.
@@ -64,8 +64,8 @@ export function checkValue(t: TFunction, c: HealthCheck, locale: string): string
   // `count` is the reserved option i18next reads to pick a plural form, so it
   // is passed through rather than renamed away: "1 administrator" and "5
   // administrators" are two sentences, not one with a parenthesis. An entry
-  // that has no suffixed variants still resolves — i18next falls back to the
-  // base key — so single-form values are unaffected.
+  // that has no suffixed variants still resolves - i18next falls back to the
+  // base key - so single-form values are unaffected.
   const governing = PLURAL_FIELD[c.value.key] ?? 'count'
   const observed = c.value.args?.[governing]
   if (typeof observed === 'number') args.count = observed

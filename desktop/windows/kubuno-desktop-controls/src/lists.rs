@@ -5,7 +5,7 @@
 //! `ListControl` is the abstract base that WinForms puts *between* `Control` and
 //! the two list widgets. It is where the toolkit parks the data-binding surface
 //! (`DataSource`/`DisplayMember`/`ValueMember`/`SelectedValue`) and the one piece
-//! of shared selection state every list has — `SelectedIndex`. It is abstract, so
+//! of shared selection state every list has - `SelectedIndex`. It is abstract, so
 //! it is modelled here as [`ListControlBase`] and never constructed on its own.
 //!
 //! The chain is mirrored with composition + `Deref`, exactly as `control.rs`
@@ -30,15 +30,15 @@
 //!
 //! ## Selection is state, not paint
 //!
-//! Everything a test wants to check about a list — the items, `SelectedIndex` /
+//! Everything a test wants to check about a list - the items, `SelectedIndex` /
 //! `SelectedIndices`, the four `SelectionMode` rules, `TopIndex`, the integral
-//! height, and a `CheckedListBox`'s per-item `CheckState` — is modelled as plain
+//! height, and a `CheckedListBox`'s per-item `CheckState` - is modelled as plain
 //! data with pure methods. `paint` only reads that state. So the state machines
 //! are unit-tested with no canvas at all.
 //!
 //! ## What it paints with
 //!
-//! The **system** — [`crate::system`] — for every colour, length and glyph, and
+//! The **system** - [`crate::system`] - for every colour, length and glyph, and
 //! [`crate::theme`] for the four pieces of chrome the system colours cannot
 //! reach. Each of those four was chosen by rendering the candidate parts and
 //! sampling them against `C:\kubuno-build\winforms-ref\shots\03-listcontrol.png`,
@@ -54,25 +54,25 @@
 //! | check well | `BUTTON` / `BP_CHECKBOX` / `CBS_*` | `#626262`+`#F3F3F3`, `#005FB8`, `#C3C3C3` | the same three |
 //!
 //! Each is drawn behind `if !c.draw_theme_part(…)`, so a machine with visual
-//! styles **off** — where the classic `DrawEdge` bevel is not a fallback but the
-//! only correct rendering — keeps exactly the painting it had. `KUBUNO_CONTROLS_CLASSIC`
+//! styles **off** - where the classic `DrawEdge` bevel is not a fallback but the
+//! only correct rendering - keeps exactly the painting it had. `KUBUNO_CONTROLS_CLASSIC`
 //! ([`crate::theme::CLASSIC_ENV`]) exercises that branch on a themed machine.
 //!
 //! ### The two parts that were measured and REFUSED
 //!
 //! **`LISTVIEW` / `LVP_LISTITEM` for the selected row.** It is the obvious part,
-//! and it is wrong twice over. Opened the way [`crate::theme`] opens a class —
+//! and it is wrong twice over. Opened the way [`crate::theme`] opens a class -
 //! `OpenThemeDataForDpi(NULL, "LISTVIEW", dpi)`, with no window to hang an
-//! application name on — all **six** `LISS_*` states render the *identical*
+//! application name on - all **six** `LISS_*` states render the *identical*
 //! picture: a hollow one-pixel `#828790` rectangle over the ground, with no fill
 //! and no selection colour anywhere. `LISS_SELECTED` and `LISS_SELECTEDNOTFOCUS`
 //! are not merely close, they are byte-for-byte the same, which is the signature
 //! of a part the class does not define; the modern item states live under the
 //! *application* class `Explorer::ListView`, which this renderer cannot open and
-//! which paints Win11's translucent light-blue band — also not the sheet.
+//! which paints Win11's translucent light-blue band - also not the sheet.
 //!
 //! The sheet settles it: both list boxes on it show a **flat `#0078D7`** band,
-//! and `#0078D7` is `COLOR_HIGHLIGHT` on the same machine — which the classic
+//! and `#0078D7` is `COLOR_HIGHLIGHT` on the same machine - which the classic
 //! fill already produces exactly. So the row keeps `SystemColors.Highlight`, and
 //! [`tests::the_listview_row_part_carries_no_selection_colour`] pins the refusal
 //! so a Windows update that starts defining those states fails a test instead of
@@ -80,7 +80,7 @@
 //!
 //! That also disposes of the grey unfocused band: a `ListView` greys its
 //! selection when it loses focus, a **`ListBox` does not**, and the sheet proves
-//! it — its second list box is not the focused control and its three bands are
+//! it - its second list box is not the focused control and its three bands are
 //! the same `#0078D7` as the first one's. Focus is modelled all the same, on the
 //! one control where it does change a pixel: see [`ComboBox::paint`].
 //!
@@ -88,7 +88,7 @@
 //! `Indeterminate` item as a **greyed tick**, not as the theme's mixed glyph:
 //! the sheet's `Delta` well is `#C3C3C3` carrying two light strokes at the exact
 //! offsets the checked well carries its tick, whereas `CBS_MIXEDDISABLED` draws
-//! one wide `#F0F0F0` bar. The part is `CBS_CHECKEDDISABLED` — which is also what
+//! one wide `#F0F0F0` bar. The part is `CBS_CHECKEDDISABLED` - which is also what
 //! the toolkit asks for, since it converts `Indeterminate` to
 //! `ButtonState.Checked | ButtonState.Inactive`.
 
@@ -110,21 +110,21 @@ use crate::{Canvas, Rect};
 // only the ids already adopted crate-wide and several families are measuring
 // their own at once; they belong there once the wave has landed.
 //
-// Nothing is listed speculatively — every constant below is drawn by this file,
+// Nothing is listed speculatively - every constant below is drawn by this file,
 // and the ones that were measured and refused (`LVP_LISTITEM`, `CBS_MIXED*`) are
 // deliberately absent, because a constant nobody draws is an invitation to draw
 // it without measuring it.
 
-/// `COMBOBOX` — the frame of an **editable** combo (`DropDown`, `Simple`).
+/// `COMBOBOX` - the frame of an **editable** combo (`DropDown`, `Simple`).
 const CP_BORDER: i32 = windows::Win32::UI::Controls::CP_BORDER.0;
-/// `COMBOBOX` — the whole face of a **`DropDownList`**, which is a button, not a
+/// `COMBOBOX` - the whole face of a **`DropDownList`**, which is a button, not a
 /// field: the theme draws it with a push button's edges rather than a frame.
 const CP_READONLY: i32 = windows::Win32::UI::Controls::CP_READONLY.0;
-/// `COMBOBOX` — the drop-down button at the trailing edge. **A chevron and
+/// `COMBOBOX` - the drop-down button at the trailing edge. **A chevron and
 /// nothing else**: sampled, the part paints no face and no bevel, which is why
 /// the themed branch does not fill the button rectangle first.
 const CP_DROPDOWNBUTTONRIGHT: i32 = windows::Win32::UI::Controls::CP_DROPDOWNBUTTONRIGHT.0;
-/// `BUTTON` — the check well of a `CheckedListBox` row. The same part
+/// `BUTTON` - the check well of a `CheckedListBox` row. The same part
 /// `CheckBox` draws with, at the same 13 DIP size.
 const CP_CHECKBOX: i32 = windows::Win32::UI::Controls::BP_CHECKBOX.0;
 
@@ -132,42 +132,42 @@ const CP_CHECKBOX: i32 = windows::Win32::UI::Controls::BP_CHECKBOX.0;
 mod state {
     use windows::Win32::UI::Controls as sdk;
 
-    /// `CP_BORDER` — at rest. A grey `#8D8D8D` frame; **not** what the sheet
+    /// `CP_BORDER` - at rest. A grey `#8D8D8D` frame; **not** what the sheet
     /// shows, which is why [`super::ComboBox::paint`] paints focused.
     pub const CBB_NORMAL: i32 = sdk::CBB_NORMAL.0;
-    /// `CP_BORDER` — the pointer is over the combo.
+    /// `CP_BORDER` - the pointer is over the combo.
     pub const CBB_HOT: i32 = sdk::CBB_HOT.0;
-    /// `CP_BORDER` — the combo holds the focus: the accent frame `#0078D4`.
+    /// `CP_BORDER` - the combo holds the focus: the accent frame `#0078D4`.
     pub const CBB_FOCUSED: i32 = sdk::CBB_FOCUSED.0;
-    /// `CP_BORDER` — the combo is disabled.
+    /// `CP_BORDER` - the combo is disabled.
     pub const CBB_DISABLED: i32 = sdk::CBB_DISABLED.0;
 
-    /// `CP_READONLY` — at rest.
+    /// `CP_READONLY` - at rest.
     pub const CBRO_NORMAL: i32 = sdk::CBRO_NORMAL.0;
-    /// `CP_READONLY` — the pointer is over it.
+    /// `CP_READONLY` - the pointer is over it.
     pub const CBRO_HOT: i32 = sdk::CBRO_HOT.0;
-    /// `CP_READONLY` — the pointer is down on it (the list is dropping).
+    /// `CP_READONLY` - the pointer is down on it (the list is dropping).
     pub const CBRO_PRESSED: i32 = sdk::CBRO_PRESSED.0;
-    /// `CP_READONLY` — disabled.
+    /// `CP_READONLY` - disabled.
     pub const CBRO_DISABLED: i32 = sdk::CBRO_DISABLED.0;
 
-    /// `CP_DROPDOWNBUTTONRIGHT` — at rest.
+    /// `CP_DROPDOWNBUTTONRIGHT` - at rest.
     pub const CBXSR_NORMAL: i32 = sdk::CBXSR_NORMAL.0;
-    /// `CP_DROPDOWNBUTTONRIGHT` — the pointer is over the combo.
+    /// `CP_DROPDOWNBUTTONRIGHT` - the pointer is over the combo.
     pub const CBXSR_HOT: i32 = sdk::CBXSR_HOT.0;
-    /// `CP_DROPDOWNBUTTONRIGHT` — the pointer is down on it.
+    /// `CP_DROPDOWNBUTTONRIGHT` - the pointer is down on it.
     pub const CBXSR_PRESSED: i32 = sdk::CBXSR_PRESSED.0;
-    /// `CP_DROPDOWNBUTTONRIGHT` — disabled.
+    /// `CP_DROPDOWNBUTTONRIGHT` - disabled.
     pub const CBXSR_DISABLED: i32 = sdk::CBXSR_DISABLED.0;
 
-    /// `BP_CHECKBOX` — an empty well: `#626262` frame over `#F3F3F3`.
+    /// `BP_CHECKBOX` - an empty well: `#626262` frame over `#F3F3F3`.
     pub const CBS_UNCHECKEDNORMAL: i32 = sdk::CBS_UNCHECKEDNORMAL.0;
-    /// `BP_CHECKBOX` — an empty well on a dead control.
+    /// `BP_CHECKBOX` - an empty well on a dead control.
     pub const CBS_UNCHECKEDDISABLED: i32 = sdk::CBS_UNCHECKEDDISABLED.0;
-    /// `BP_CHECKBOX` — a ticked well: the accent fill `#005FB8`.
+    /// `BP_CHECKBOX` - a ticked well: the accent fill `#005FB8`.
     pub const CBS_CHECKEDNORMAL: i32 = sdk::CBS_CHECKEDNORMAL.0;
-    /// `BP_CHECKBOX` — a greyed tick, `#C3C3C3`. Drawn for a dead control **and**
-    /// for an `Indeterminate` row — see the module docs on `CBS_MIXED*`.
+    /// `BP_CHECKBOX` - a greyed tick, `#C3C3C3`. Drawn for a dead control **and**
+    /// for an `Indeterminate` row - see the module docs on `CBS_MIXED*`.
     pub const CBS_CHECKEDDISABLED: i32 = sdk::CBS_CHECKEDDISABLED.0;
 }
 
@@ -181,7 +181,7 @@ mod state {
 pub enum ComboBoxStyle {
     /// The list is always shown; a separate edit field sits above it.
     Simple = 0,
-    /// An editable field with a drop-down list — the WinForms default.
+    /// An editable field with a drop-down list - the WinForms default.
     #[default]
     DropDown = 1,
     /// A non-editable field: the user may only pick an existing item.
@@ -192,13 +192,13 @@ pub enum ComboBoxStyle {
 ///
 /// The distinction between `MultiSimple` and `MultiExtended` is purely an
 /// INTERACTION rule (which modifier keys extend a selection), not a difference in
-/// what can be stored — both hold an arbitrary set. It is honoured in
+/// what can be stored - both hold an arbitrary set. It is honoured in
 /// [`ListBox::click`], the one method that takes modifier state.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum SelectionMode {
     /// No item can ever be selected; `SelectedIndex` stays `-1`.
     None = 0,
-    /// At most one item — the default.
+    /// At most one item - the default.
     #[default]
     One = 1,
     /// Any number; a plain click TOGGLES one item, leaving the rest.
@@ -209,7 +209,7 @@ pub enum SelectionMode {
 
 /// Whether item drawing is owner-drawn (`DrawMode`). The port only paints
 /// `Normal`; the two owner-draw modes are recorded but not honoured, because
-/// there is no user draw callback in this surface — see the field docs.
+/// there is no user draw callback in this surface - see the field docs.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum DrawMode {
     #[default]
@@ -219,7 +219,7 @@ pub enum DrawMode {
 }
 
 /// The auto-complete behaviour of a `ComboBox` edit field (`AutoCompleteMode`).
-/// Recorded but not honoured — auto-completion is an input-loop concern this
+/// Recorded but not honoured - auto-completion is an input-loop concern this
 /// value-type control does not own.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum AutoCompleteMode {
@@ -247,7 +247,7 @@ pub enum AutoCompleteSource {
 }
 
 // ── Metrics ──────────────────────────────────────────────────────────────────
-// DIP constants — and they are the TOOLKIT's numbers, not a design system's.
+// DIP constants - and they are the TOOLKIT's numbers, not a design system's.
 //
 // This family used to reskin the WinForms surface onto Kubuno's own (rounded
 // corners, the 20 DIP body line-height). That is reversed: a list here is a
@@ -259,24 +259,24 @@ pub enum AutoCompleteSource {
 //
 // Everything is drawn in DIP; the `Canvas` applies `scale()` internally, so no
 // metric here multiplies by the DPI itself. The two lengths that are genuinely
-// the *system's* — the drop-down button width (`SM_CXVSCROLL`) and the one-pixel
-// thickness of a bevel ring — never appear as constants at all: they are read
+// the *system's* - the drop-down button width (`SM_CXVSCROLL`) and the one-pixel
+// thickness of a bevel ring - never appear as constants at all: they are read
 // per paint from `ControlCanvas::visuals()`.
 
 /// One-pixel chrome border around a list/box, for MEASURING only. The paint
 /// takes the real thickness from the rectangle `ControlCanvas::draw_edge`
 /// returns, which is one *device* pixel per ring at any DPI.
 const BORDER: f32 = 1.0;
-/// The row height used when `ItemHeight` is left at its auto value — the
+/// The row height used when `ItemHeight` is left at its auto value - the
 /// `ListBox.ItemHeight` the toolkit reports for the default UI font. See
 /// [`auto_item_height`], which derives the same number from the font actually
 /// installed; this constant is the fallback for the measuring path, which cannot
 /// reach the system font (see [`widest_item`]).
 const ITEM_HEIGHT_DEFAULT: f32 = 15.0;
-/// A `CheckedListBox` row is taller than a `ListBox` one by this much — 18 vs 15
+/// A `CheckedListBox` row is taller than a `ListBox` one by this much - 18 vs 15
 /// with the default font, the toolkit's own room for the check well.
 const CHECK_ROW_EXTRA: f32 = 3.0;
-/// Horizontal inset of item text from the list's client edge — the couple of
+/// Horizontal inset of item text from the list's client edge - the couple of
 /// pixels the native list box leaves, not a design-system gutter.
 const LIST_PAD_X: f32 = 2.0;
 /// The check-box glyph square in a `CheckedListBox` row: the same 13 DIP well
@@ -306,14 +306,14 @@ fn item_height_dip(item_height: i32) -> f32 {
 /// The auto row height for a UI font whose em size is `font_dip`.
 ///
 /// `ListBox.ItemHeight` is the font's **GDI cell height** (`TEXTMETRIC.tmHeight`),
-/// which the toolkit reports as **15** for the default Segoe UI 9 pt (12 DIP) —
+/// which the toolkit reports as **15** for the default Segoe UI 9 pt (12 DIP) -
 /// the 1.25 ratio used here.
 ///
 /// The ratio is not perfectly DPI-independent, because GDI rounds the face's
 /// ascent and descent at the *device* resolution: the same toolkit reports 30 px
 /// at 168 DPI, which is 17.1 DIP rather than 15. Reproducing that would need
 /// `tmHeight` itself, and [`Visuals`] publishes the font's em size but neither its
-/// cell height nor its line spacing — so the DIP-constant ratio is used and the
+/// cell height nor its line spacing - so the DIP-constant ratio is used and the
 /// gap is stated rather than hidden.
 fn auto_item_height(font_dip: f32) -> f32 {
     (font_dip * 1.25).round().max(1.0)
@@ -329,7 +329,7 @@ fn item_height_for(v: &Visuals, item_height: i32) -> f32 {
 }
 
 /// The tallest client height not greater than `available` that shows only WHOLE
-/// rows — WinForms' `IntegralHeight`. A pure function so the arithmetic is tested
+/// rows - WinForms' `IntegralHeight`. A pure function so the arithmetic is tested
 /// without a window. `available` and the result are DIP.
 pub fn integral_height(available: f32, item_h: f32, border: f32) -> f32 {
     if item_h <= 0.0 {
@@ -340,7 +340,7 @@ pub fn integral_height(available: f32, item_h: f32, border: f32) -> f32 {
     rows * item_h + 2.0 * border
 }
 
-// ── ListControlBase — the abstract `ListControl` (+7) ─────────────────────────
+// ── ListControlBase - the abstract `ListControl` (+7) ─────────────────────────
 
 /// The properties `System.Windows.Forms.ListControl` declares. Abstract in the
 /// toolkit, so it is only ever a field of a concrete list, never built alone.
@@ -349,22 +349,22 @@ pub struct ListControlBase {
     pub control: ControlBase,
 
     // ── Data binding (declared here, not yet honoured) ───────────────────
-    /// `DataSource` — the bound list. The port has no boxed-object binding, so
+    /// `DataSource` - the bound list. The port has no boxed-object binding, so
     /// this is kept as an opaque marker: present so the property is not silently
     /// dropped, but items are supplied through each list's own collection.
     pub data_source: Option<String>,
-    /// `DisplayMember` — which bound field to show. Stored, not yet honoured
+    /// `DisplayMember` - which bound field to show. Stored, not yet honoured
     /// (there is nothing to bind against without a data source).
     pub display_member: String,
-    /// `ValueMember` — which bound field is the value. Stored, not yet honoured.
+    /// `ValueMember` - which bound field is the value. Stored, not yet honoured.
     pub value_member: String,
-    /// `SelectedValue` — the value of the selected row under binding. Stored,
+    /// `SelectedValue` - the value of the selected row under binding. Stored,
     /// not yet honoured; use `SelectedIndex` instead.
     pub selected_value: Option<String>,
-    /// `FormatString` — a .NET format string applied to each item. Stored, not
+    /// `FormatString` - a .NET format string applied to each item. Stored, not
     /// yet honoured (items here are already strings).
     pub format_string: String,
-    /// `FormattingEnabled` — whether `FormatString` is applied. Default `false`.
+    /// `FormattingEnabled` - whether `FormatString` is applied. Default `false`.
     pub formatting_enabled: bool,
 
     // ── Selection ────────────────────────────────────────────────────────
@@ -409,12 +409,12 @@ impl std::ops::DerefMut for ListControlBase {
 pub struct ComboBox {
     pub base: ListControlBase,
 
-    /// `Items` — the `ComboBox.ObjectCollection`, kept as strings (the port has
+    /// `Items` - the `ComboBox.ObjectCollection`, kept as strings (the port has
     /// no boxed items). Mutated through [`ComboBox::add_item`] so `Sorted` and
     /// the selection stay consistent.
     pub items: Vec<String>,
 
-    /// `AutoCompleteCustomSource` — candidate strings for custom auto-complete.
+    /// `AutoCompleteCustomSource` - candidate strings for custom auto-complete.
     /// Stored; auto-complete itself is not honoured (see [`AutoCompleteMode`]).
     pub auto_complete_custom_source: Vec<String>,
     /// `AutoCompleteMode`. Stored, not honoured.
@@ -423,11 +423,11 @@ pub struct ComboBox {
     pub auto_complete_source: AutoCompleteSource,
     /// `DrawMode`. Only `Normal` is painted; owner-draw is not honoured.
     pub draw_mode: DrawMode,
-    /// `DropDownHeight` — the popup's pixel height. Default `106`.
+    /// `DropDownHeight` - the popup's pixel height. Default `106`.
     pub drop_down_height: i32,
     /// `DropDownStyle`. Default `DropDown`.
     pub drop_down_style: ComboBoxStyle,
-    /// `DropDownWidth` — the popup's width; `0` means « match the control », the
+    /// `DropDownWidth` - the popup's width; `0` means « match the control », the
     /// toolkit's default (its real default is the control width, computed lazily).
     pub drop_down_width: i32,
     /// `FlatStyle`. Default `Standard`. Honoured by the paint: `Standard` and
@@ -435,20 +435,20 @@ pub struct ComboBox {
     /// ring (`Popup` lifts only under the pointer, which a resting paint never
     /// sees).
     pub flat_style: FlatStyle,
-    /// `IntegralHeight` — for `Simple`, trim the list to whole rows. Default
+    /// `IntegralHeight` - for `Simple`, trim the list to whole rows. Default
     /// `true`. Honoured by [`integral_height`] at paint time.
     pub integral_height: bool,
-    /// `ItemHeight` — row height in DIP; `0` means « derive from the font ».
+    /// `ItemHeight` - row height in DIP; `0` means « derive from the font ».
     pub item_height: i32,
-    /// `MaxDropDownItems` — how many rows the popup shows before scrolling.
+    /// `MaxDropDownItems` - how many rows the popup shows before scrolling.
     /// Default `8`.
     pub max_drop_down_items: i32,
-    /// `MaxLength` — max characters in the edit field (`0` = unlimited). Stored;
+    /// `MaxLength` - max characters in the edit field (`0` = unlimited). Stored;
     /// this control does not run an editor, so it only bounds a set `Text`.
     pub max_length: i32,
-    /// `Sorted` — keep `Items` sorted. Default `false`.
+    /// `Sorted` - keep `Items` sorted. Default `false`.
     pub sorted: bool,
-    /// `BackgroundImage` — an `Image` the port has no type for. Not honoured;
+    /// `BackgroundImage` - an `Image` the port has no type for. Not honoured;
     /// present so the declared property is not dropped.
     pub background_image: Option<String>,
     // Re-declared overrides honoured through the inherited slots, NOT duplicated:
@@ -596,7 +596,7 @@ impl Control for ComboBox {
     /// focus: `CP_BORDER` frames it in the accent `#0078D4` when it has it and in
     /// `#8D8D8D` when it does not, and an editable combo shows its text selected
     /// only while it holds it. A `paint` with no state has no way to know, so it
-    /// paints the focused look — which is both the reference sheet's (every
+    /// paints the focused look - which is both the reference sheet's (every
     /// editable combo on `03-listcontrol.png` carries the accent frame) and the
     /// convention `views.rs` already set for `ListView`/`TreeView`.
     ///
@@ -606,7 +606,7 @@ impl Control for ComboBox {
         self.paint_with_state(c, bounds, ControlState { focused: true, ..ControlState::default() });
     }
 
-    /// The real painter — see [`paint_combo`].
+    /// The real painter - see [`paint_combo`].
     fn paint_with_state(&self, c: &dyn ControlCanvas, bounds: Rect, state: ControlState) {
         paint_combo(self, c, bounds, state);
     }
@@ -624,7 +624,7 @@ impl Control for ComboBox {
 pub struct ListBox {
     pub base: ListControlBase,
 
-    /// `Items` — the `ListBox.ObjectCollection`. Mutate via [`ListBox::add_item`]
+    /// `Items` - the `ListBox.ObjectCollection`. Mutate via [`ListBox::add_item`]
     /// / [`ListBox::remove_item`] so selection and scroll stay consistent.
     pub items: Vec<String>,
 
@@ -633,33 +633,33 @@ pub struct ListBox {
     pub selection_mode: SelectionMode,
     /// `BorderStyle`. Default `Fixed3D`.
     pub border_style: BorderStyle,
-    /// `ColumnWidth` — width of a column in multi-column mode (`0` = auto).
+    /// `ColumnWidth` - width of a column in multi-column mode (`0` = auto).
     pub column_width: i32,
-    /// `CustomTabOffsets` — tab-stop positions. Stored; honoured only with
+    /// `CustomTabOffsets` - tab-stop positions. Stored; honoured only with
     /// `UseCustomTabOffsets`, and tab expansion is not painted here.
     pub custom_tab_offsets: Vec<i32>,
     /// `DrawMode`. Only `Normal` is painted.
     pub draw_mode: DrawMode,
-    /// `HorizontalExtent` — the scrollable width when `HorizontalScrollbar` is on.
+    /// `HorizontalExtent` - the scrollable width when `HorizontalScrollbar` is on.
     pub horizontal_extent: i32,
-    /// `HorizontalScrollbar` — show a horizontal scrollbar. Default `false`.
+    /// `HorizontalScrollbar` - show a horizontal scrollbar. Default `false`.
     pub horizontal_scrollbar: bool,
-    /// `IntegralHeight` — resize height to whole rows. Default `true`.
+    /// `IntegralHeight` - resize height to whole rows. Default `true`.
     pub integral_height: bool,
-    /// `ItemHeight` — row height in DIP; `0` means « derive from the font ».
+    /// `ItemHeight` - row height in DIP; `0` means « derive from the font ».
     pub item_height: i32,
-    /// `MultiColumn` — lay items out in columns. Default `false`. Stored; the
+    /// `MultiColumn` - lay items out in columns. Default `false`. Stored; the
     /// single-column layout is what is painted.
     pub multi_column: bool,
-    /// `ScrollAlwaysVisible` — keep the scrollbar shown even when it fits.
+    /// `ScrollAlwaysVisible` - keep the scrollbar shown even when it fits.
     pub scroll_always_visible: bool,
-    /// `Sorted` — keep `Items` sorted. Default `false`.
+    /// `Sorted` - keep `Items` sorted. Default `false`.
     pub sorted: bool,
     /// `UseCustomTabOffsets`. Default `false`.
     pub use_custom_tab_offsets: bool,
-    /// `UseTabStops` — expand tab characters. Default `true`.
+    /// `UseTabStops` - expand tab characters. Default `true`.
     pub use_tab_stops: bool,
-    /// `BackgroundImage` — no `Image` type in the port; not honoured.
+    /// `BackgroundImage` - no `Image` type in the port; not honoured.
     pub background_image: Option<String>,
     // Re-declared overrides honoured through the inherited slots, NOT duplicated:
     //   BackColor, ForeColor  → ControlBase::{back_color, fore_color}
@@ -668,12 +668,12 @@ pub struct ListBox {
     //   Text                  → ControlBase::text
 
     // ── Selection & scroll state (runtime, not designer properties) ──────
-    /// `SelectedIndices`, kept sorted-ascending and unique — the toolkit's own
+    /// `SelectedIndices`, kept sorted-ascending and unique - the toolkit's own
     /// invariant. `base.selected_index` mirrors its first member.
     selected: Vec<usize>,
     /// The `MultiExtended` range anchor. Pure interaction state, not a property.
     anchor: Option<usize>,
-    /// `TopIndex` — the first row scrolled into view.
+    /// `TopIndex` - the first row scrolled into view.
     pub top_index: usize,
 }
 
@@ -727,7 +727,7 @@ impl ListBox {
         self.items.len()
     }
 
-    /// `SelectedIndices` — sorted, unique, all in range.
+    /// `SelectedIndices` - sorted, unique, all in range.
     pub fn selected_indices(&self) -> &[usize] {
         &self.selected
     }
@@ -757,7 +757,7 @@ impl ListBox {
     }
 
     /// Narrows or widens `SelectionMode`, trimming an existing multi-selection to
-    /// its anchor when moving to `One`, and clearing it for `None` — the toolkit
+    /// its anchor when moving to `One`, and clearing it for `None` - the toolkit
     /// drops the extra selection rather than keeping it hidden.
     pub fn set_selection_mode(&mut self, mode: SelectionMode) {
         self.selection_mode = mode;
@@ -773,7 +773,7 @@ impl ListBox {
         self.resync();
     }
 
-    /// `SetSelected(index, value)` — programmatic selection, obeying the mode
+    /// `SetSelected(index, value)` - programmatic selection, obeying the mode
     /// (`None` refuses; `One` replaces on select).
     pub fn set_selected(&mut self, index: usize, value: bool) {
         if index >= self.items.len() {
@@ -824,11 +824,11 @@ impl ListBox {
     /// A user click on `index` with the `Ctrl`/`Shift` modifiers, resolved per
     /// `SelectionMode`. This is where `MultiSimple` and `MultiExtended` diverge:
     ///
-    /// * `None` — ignored.
-    /// * `One` — always the single clicked item.
-    /// * `MultiSimple` — a plain click TOGGLES that item; modifiers are ignored,
+    /// * `None` - ignored.
+    /// * `One` - always the single clicked item.
+    /// * `MultiSimple` - a plain click TOGGLES that item; modifiers are ignored,
     ///   because in simple mode every click already toggles.
-    /// * `MultiExtended` — `Shift` extends a range from the anchor (adding to the
+    /// * `MultiExtended` - `Shift` extends a range from the anchor (adding to the
     ///   set when `Ctrl` is also held, else replacing it); `Ctrl` alone toggles
     ///   the one item; a bare click replaces the selection.
     pub fn click(&mut self, index: usize, ctrl: bool, shift: bool) {
@@ -980,19 +980,19 @@ impl Control for ListBox {
 /// base), adding only the per-item `CheckState` and the check-related properties.
 ///
 /// Every field's default is the type's own (`ListBox::default()`, `false`, an
-/// empty `Vec`), so `Default` is derived — the check-related properties are all
+/// empty `Vec`), so `Default` is derived - the check-related properties are all
 /// `false` in the catalogue, matching the derived zero.
 #[derive(Clone, Default)]
 pub struct CheckedListBox {
     pub list: ListBox,
 
-    /// `CheckOnClick` — toggle the check on a single click rather than on the
+    /// `CheckOnClick` - toggle the check on a single click rather than on the
     /// second click of a selected row. Default `false`.
     pub check_on_click: bool,
-    /// `ThreeDCheckBoxes` — draw sunken (3-D) rather than flat boxes. Default
+    /// `ThreeDCheckBoxes` - draw sunken (3-D) rather than flat boxes. Default
     /// `false`. Recorded; the themed flat box is what is painted.
     pub three_d_check_boxes: bool,
-    /// `UseCompatibleTextRendering` — GDI vs GDI+ text metrics. Default `false`.
+    /// `UseCompatibleTextRendering` - GDI vs GDI+ text metrics. Default `false`.
     /// Irrelevant to the DirectWrite paint; recorded for completeness.
     pub use_compatible_text_rendering: bool,
     // Re-declared overrides honoured through the composed `ListBox`, NOT
@@ -1045,7 +1045,7 @@ impl CheckedListBox {
         self.check_states.get(index).copied().unwrap_or_default()
     }
 
-    /// `SetItemCheckState` — the only path to `Indeterminate`, which a click
+    /// `SetItemCheckState` - the only path to `Indeterminate`, which a click
     /// never produces.
     pub fn set_item_check_state(&mut self, index: usize, state: CheckState) {
         if let Some(slot) = self.check_states.get_mut(index) {
@@ -1053,13 +1053,13 @@ impl CheckedListBox {
         }
     }
 
-    /// `GetItemChecked` — true when the row is Checked OR Indeterminate, matching
+    /// `GetItemChecked` - true when the row is Checked OR Indeterminate, matching
     /// `CheckedIndices`/`CheckedItems`, which both include the indeterminate rows.
     pub fn get_item_checked(&self, index: usize) -> bool {
         self.get_item_check_state(index) != CheckState::Unchecked
     }
 
-    /// `SetItemChecked(index, true|false)` — sets Checked or Unchecked (never
+    /// `SetItemChecked(index, true|false)` - sets Checked or Unchecked (never
     /// Indeterminate; use [`CheckedListBox::set_item_check_state`] for that).
     pub fn set_item_checked(&mut self, index: usize, checked: bool) {
         self.set_item_check_state(
@@ -1068,14 +1068,14 @@ impl CheckedListBox {
         );
     }
 
-    /// `CheckedIndices` — the rows that are Checked or Indeterminate, ascending.
+    /// `CheckedIndices` - the rows that are Checked or Indeterminate, ascending.
     pub fn checked_indices(&self) -> Vec<usize> {
         (0..self.check_states.len()).filter(|&i| self.get_item_checked(i)).collect()
     }
 
     /// The click-time state cycle WinForms actually uses: any non-`Unchecked`
     /// state collapses to `Unchecked`, and `Unchecked` becomes `Checked`. So a
-    /// click on an `Indeterminate` row goes to `Unchecked`, NOT to `Checked` —
+    /// click on an `Indeterminate` row goes to `Unchecked`, NOT to `Checked` -
     /// the trap that catches ports which assume a three-way cycle.
     pub fn toggle_check(&mut self, index: usize) {
         if let Some(slot) = self.check_states.get_mut(index) {
@@ -1156,13 +1156,13 @@ impl Control for CheckedListBox {
 // ── Painting (the system's own surface) ───────────────────────────────────────
 // Every colour is a `SystemColors` entry read from `GetSysColor`, every length
 // either a DIP constant above or a `SystemMetrics` entry, and every string is
-// drawn in `Visuals::fonts::message` — the real UI font. Nothing here reaches
+// drawn in `Visuals::fonts::message` - the real UI font. Nothing here reaches
 // for `Canvas::theme()` or the shared Kubuno text formats, and nothing rounds a
 // corner: a WinForms list has none.
 
 /// A `CheckedListBox` row height: the list row plus the toolkit's own extra room
 /// for the check well (18 vs 15 with the default font). An explicit `ItemHeight`
-/// is taken as given — the toolkit lets it override.
+/// is taken as given - the toolkit lets it override.
 fn checked_row_height(item_height: i32, auto_row: f32) -> f32 {
     if item_height > 0 {
         item_height as f32
@@ -1174,7 +1174,7 @@ fn checked_row_height(item_height: i32, auto_row: f32) -> f32 {
 /// The widest item's measured text width (0 for an empty list).
 ///
 /// **Measurement only, and in the wrong face on purpose.** A list *paints* in the
-/// system UI font, which is what the toolkit measures against — but
+/// system UI font, which is what the toolkit measures against - but
 /// `Control::preferred_size` receives a bare [`Canvas`], not a [`ControlCanvas`],
 /// so `Visuals::fonts` is out of reach there and the shared Kubuno formats are
 /// the only ones available. Widening that signature is out of scope for a
@@ -1217,7 +1217,7 @@ struct ListPaint<'a> {
     /// The inherited block, for the ambient `BackColor`/`ForeColor` resolution.
     base:      &'a ControlBase,
     items:     &'a [String],
-    /// Already resolved — the caller knows whether it is a `ListBox` row or the
+    /// Already resolved - the caller knows whether it is a `ListBox` row or the
     /// taller `CheckedListBox` one.
     item_h:    f32,
     top_index: usize,
@@ -1229,7 +1229,7 @@ struct ListPaint<'a> {
 
 /// An explicit colour if set, else the system one. In WinForms an unset
 /// `BackColor`/`ForeColor` means « take the ambient default », never a literal
-/// transparent — and for a list that default is the WINDOW pair, not the control
+/// transparent - and for a list that default is the WINDOW pair, not the control
 /// face: a list is a field, like a text box.
 fn or_system(opt: Option<D2D1_COLOR_F>, fallback: D2D1_COLOR_F) -> D2D1_COLOR_F {
     opt.unwrap_or(fallback)
@@ -1247,7 +1247,7 @@ fn field_edge(flat_style: FlatStyle, sunken: Border3DStyle) -> Border3DStyle {
 
 /// Frames `bounds` per `BorderStyle` and returns the client rectangle inside it.
 ///
-/// `Fixed3D` is the one style with two correct renderings — see
+/// `Fixed3D` is the one style with two correct renderings - see
 /// [`fixed3d_frame`]. `FixedSingle` is the flat `WindowFrame` ring, and `None`
 /// frames nothing at all; neither is themed, in the toolkit or here.
 fn frame(
@@ -1267,12 +1267,12 @@ fn frame(
     }
 }
 
-/// `BorderStyle::Fixed3D` — the themed `EDIT` frame, falling back to the classic
+/// `BorderStyle::Fixed3D` - the themed `EDIT` frame, falling back to the classic
 /// `DrawEdge` well. Returns the **interior**, as `draw_edge` does.
 ///
 /// ## Two renderings, both correct
 ///
-/// With visual styles ON — how the reference sheet was captured — a `Fixed3D`
+/// With visual styles ON - how the reference sheet was captured - a `Fixed3D`
 /// list is framed by one flat theme line, `#ABADB3` on a default Windows 11,
 /// with the frame's inner pixel in the list's own ground; there is no bevel at
 /// all. With them OFF it is the classic two-ring sunken well built from
@@ -1286,13 +1286,13 @@ fn frame(
 /// ## Why two rings come back, and the pad is repainted
 ///
 /// `EP_EDITTEXT` paints a frame AND a fill, and its fill under `ETS_DISABLED` is
-/// the theme's own tint — whereas the toolkit shows the list's `BackColor` there,
+/// the theme's own tint - whereas the toolkit shows the list's `BackColor` there,
 /// because its client area covers everything but the frame. So the inner ring is
 /// put back explicitly in the list's ground.
 ///
 /// The interior is then reported **two** device pixels in, not one, and that is
 /// measured rather than tidy: on the sheet the list frame sits at x=362, the
-/// first `#FFFFFF` pad pixel at 363, and the selection band runs 364…482 — one
+/// first `#FFFFFF` pad pixel at 363, and the selection band runs 364…482 - one
 /// pixel of ground on each side that the rows never cover. Reporting one ring
 /// would push every band a pixel wide at both ends. It is also exactly what the
 /// classic `draw_edge(Sunken)` returns, so the two branches lay their rows out
@@ -1328,8 +1328,8 @@ fn paint_list(c: &dyn ControlCanvas, bounds: Rect, p: &ListPaint) {
     };
     c.fill_rect(&bounds, &back);
     let inner = frame(c, &bounds, p.border, p.base.enabled, &back);
-    // The themed `EDIT` frame brings its own fill — the theme's white, or its
-    // disabled tint — so the client area is put back in the list's own ground
+    // The themed `EDIT` frame brings its own fill - the theme's white, or its
+    // disabled tint - so the client area is put back in the list's own ground
     // over it. On a default list the two are the same `Window` white and this
     // changes no pixel; on a list with a `BackColor`, or a disabled one, it is
     // the difference between the toolkit's ground and the theme's.
@@ -1342,7 +1342,7 @@ fn paint_list(c: &dyn ControlCanvas, bounds: Rect, p: &ListPaint) {
             break;
         }
         let row = Rect::new(inner.left, y, inner.right, (y + p.item_h).min(inner.bottom));
-        // A selected row is the system `Highlight` band edge to edge — the real
+        // A selected row is the system `Highlight` band edge to edge - the real
         // system blue, and the text on it turns `HighlightText`.
         //
         // NOT `LISTVIEW`/`LVP_LISTITEM`, which is the obvious part and was
@@ -1363,8 +1363,8 @@ fn paint_list(c: &dyn ControlCanvas, bounds: Rect, p: &ListPaint) {
                 row.left + LIST_PAD_X + CHECK_BOX_SIZE,
                 row.top + (p.item_h + CHECK_BOX_SIZE) / 2.0,
             );
-            // The well is composited onto whatever the row already put down —
-            // the band when the row is selected, the list's ground otherwise —
+            // The well is composited onto whatever the row already put down -
+            // the band when the row is selected, the list's ground otherwise -
             // because the themed part does not cover its own rectangle.
             let under = if selected { colors.highlight } else { back };
             paint_check_box(c, &box_rect, state_of(i), p.base.enabled, &under);
@@ -1382,8 +1382,8 @@ fn paint_list(c: &dyn ControlCanvas, bounds: Rect, p: &ListPaint) {
 
 /// The `BP_CHECKBOX` state a row's well is drawn in.
 ///
-/// A pure function so the mapping — which is where the toolkit's one surprise
-/// lives — is asserted without a canvas.
+/// A pure function so the mapping - which is where the toolkit's one surprise
+/// lives - is asserted without a canvas.
 ///
 /// `Indeterminate` maps to `CBS_CHECKEDDISABLED`, **not** to any `CBS_MIXED*`.
 /// That is measured off the sheet (the `Delta` well carries the tick's two
@@ -1404,7 +1404,7 @@ fn check_glyph_state(check: CheckState, enabled: bool) -> i32 {
 
 /// Draws one check well in the three `CheckState`s, themed then classic.
 ///
-/// With visual styles ON the well is the real `BUTTON`/`BP_CHECKBOX` part — a
+/// With visual styles ON the well is the real `BUTTON`/`BP_CHECKBOX` part - a
 /// flat `#626262` square over `#F3F3F3` when empty, the solid accent `#005FB8`
 /// with a white tick when checked, and the same tick in `#C3C3C3` grey when
 /// indeterminate. `ground` is what the row has already painted underneath,
@@ -1464,8 +1464,8 @@ fn combo_border_state(st: ControlState, enabled: bool) -> i32 {
 
 /// The `CP_READONLY` state a `DropDownList`'s face is drawn in.
 ///
-/// There is deliberately no focused case: the part has none — the theme defines
-/// `CBRO_NORMAL`/`HOT`/`PRESSED`/`DISABLED` and nothing else — and the sheet
+/// There is deliberately no focused case: the part has none - the theme defines
+/// `CBRO_NORMAL`/`HOT`/`PRESSED`/`DISABLED` and nothing else - and the sheet
 /// agrees, showing the same `#FDFDFD` face on a `DropDownList` as a resting one.
 /// `pressed` is the list dropping, which is the only thing that darkens it.
 fn combo_readonly_state(st: ControlState, enabled: bool) -> i32 {
@@ -1496,8 +1496,8 @@ fn combo_button_state(st: ControlState, enabled: bool) -> i32 {
 /// Draws a combo in each of its three styles.
 ///
 /// The three genuinely differ in the toolkit, and the difference is the whole
-/// point of the property: `DropDown` and `Simple` carry an **editable field** —
-/// framed like a text box — while `DropDownList` is a **button face**, because
+/// point of the property: `DropDown` and `Simple` carry an **editable field** -
+/// framed like a text box - while `DropDownList` is a **button face**, because
 /// there is nothing to type into. The drop-down button is one vertical scroll bar
 /// wide (`SM_CXVSCROLL`, the metric the toolkit sizes it with); `Simple` has no
 /// button at all, only the always-open list.
@@ -1508,8 +1508,8 @@ fn combo_button_state(st: ControlState, enabled: bool) -> i32 {
 /// parts: `CP_BORDER` for the editable frame, `CP_READONLY` for the whole
 /// `DropDownList` face, and `CP_DROPDOWNBUTTONRIGHT` for the chevron. The last
 /// one is the surprise, and it is the reason the button is no longer filled
-/// before it is drawn: sampled, the part paints **only** a chevron — no face, no
-/// bevel, no separator — which is exactly what the sheet shows, a chevron
+/// before it is drawn: sampled, the part paints **only** a chevron - no face, no
+/// bevel, no separator - which is exactly what the sheet shows, a chevron
 /// floating on the field's own ground. Filling a `Control`-grey button under it
 /// first would put back the Windows 7 look the theme has stopped drawing.
 ///
@@ -1518,8 +1518,8 @@ fn combo_button_state(st: ControlState, enabled: bool) -> i32 {
 /// own vector chevron.
 ///
 /// `FlatStyle::Flat` and `Popup` never ask the theme at all. That is the
-/// property's meaning — they are the two values that opt a control *out* of the
-/// visual style — and their single flat ring is drawn from the system colours in
+/// property's meaning - they are the two values that opt a control *out* of the
+/// visual style - and their single flat ring is drawn from the system colours in
 /// both branches.
 fn paint_combo(combo: &ComboBox, c: &dyn ControlCanvas, bounds: Rect, st: ControlState) {
     let visuals = c.visuals();
@@ -1554,8 +1554,8 @@ fn paint_combo(combo: &ComboBox, c: &dyn ControlCanvas, bounds: Rect, st: Contro
     // colours in both branches. `Standard` and `System` are theme-drawn.
     //
     // The second gate is `BackColor`. A themed part is OPAQUE over the rectangle
-    // it covers, so a `DropDownList` face — which the theme owns entirely, and
-    // which nothing is painted back over — would silently swallow an explicit
+    // it covers, so a `DropDownList` face - which the theme owns entirely, and
+    // which nothing is painted back over - would silently swallow an explicit
     // `BackColor`. An editable combo needs no such gate: its client area is put
     // back in `ground` below, which is what makes the property visible there.
     let visual_styles = matches!(combo.flat_style, FlatStyle::Standard | FlatStyle::System);
@@ -1585,7 +1585,7 @@ fn paint_combo(combo: &ComboBox, c: &dyn ControlCanvas, bounds: Rect, st: Contro
         let interior = edge_interior(&field, 2, c.scale());
         // An editable combo's client area is the control's, so the theme's own
         // white fill is put back in `BackColor`; a `DropDownList` IS the part's
-        // face — painting over it would erase the very thing that was asked for.
+        // face - painting over it would erase the very thing that was asked for.
         if editable {
             c.fill_rect(&interior, &ground);
         }
@@ -1650,7 +1650,7 @@ fn paint_combo(combo: &ComboBox, c: &dyn ControlCanvas, bounds: Rect, st: Contro
         }
     } else {
         // What the chevron is composited onto. When the chrome came from the
-        // theme, that is the part's own fill — `#FFFFFF` for an editable combo,
+        // theme, that is the part's own fill - `#FFFFFF` for an editable combo,
         // which `Window` is exactly, and `#FDFDFD` for a `DropDownList`, which it
         // is within two levels on the glyph's antialiased edge only. Naming that
         // second colour is not an option: it is the theme's, not the system's,
@@ -1893,7 +1893,7 @@ mod tests {
     }
 
     /// The trap: clicking an `Indeterminate` row goes to `Unchecked`, not to
-    /// `Checked` — WinForms collapses any non-unchecked state on click.
+    /// `Checked` - WinForms collapses any non-unchecked state on click.
     #[test]
     fn clicking_an_indeterminate_item_goes_to_unchecked() {
         let mut cl = CheckedListBox::new();
@@ -1972,7 +1972,7 @@ mod tests {
     /// `CheckedListBox` at Segoe UI 9 pt.
     #[test]
     fn the_auto_row_is_the_toolkits_item_height() {
-        // 12 DIP is the default UI font's em size — Segoe UI 9 pt.
+        // 12 DIP is the default UI font's em size - Segoe UI 9 pt.
         assert_eq!(auto_item_height(12.0), ITEM_HEIGHT_DEFAULT);
         assert_eq!(ITEM_HEIGHT_DEFAULT, 15.0);
         assert_eq!(checked_row_height(0, ITEM_HEIGHT_DEFAULT), 18.0);
@@ -1983,10 +1983,10 @@ mod tests {
         assert!(auto_item_height(16.0) > ITEM_HEIGHT_DEFAULT);
     }
 
-    // ── The state mappings (pure — no theme, no canvas) ──────────────────
+    // ── The state mappings (pure - no theme, no canvas) ──────────────────
 
     /// `Indeterminate` is a **greyed tick**, i.e. the same state a checked row on
-    /// a dead control gets — see [`check_glyph_state`] and the module docs. This
+    /// a dead control gets - see [`check_glyph_state`] and the module docs. This
     /// is the mapping the reference sheet forced; it is not the obvious one.
     #[test]
     fn an_indeterminate_row_asks_for_the_greyed_tick() {
@@ -2005,7 +2005,7 @@ mod tests {
         );
     }
 
-    /// Disabled outranks everything, and focus outranks hot — a combo under the
+    /// Disabled outranks everything, and focus outranks hot - a combo under the
     /// pointer keeps its accent frame.
     #[test]
     fn the_combo_states_rank_disabled_then_focus_then_hot() {
@@ -2018,7 +2018,7 @@ mod tests {
         assert_eq!(combo_border_state(focused_hot, true), state::CBB_FOCUSED);
         assert_eq!(combo_border_state(focused_hot, false), state::CBB_DISABLED);
 
-        // `CP_READONLY` has no focused state — the theme does not define one.
+        // `CP_READONLY` has no focused state - the theme does not define one.
         assert_eq!(combo_readonly_state(focused_hot, true), state::CBRO_HOT);
         assert_eq!(combo_readonly_state(pressed, true), state::CBRO_PRESSED);
         assert_eq!(combo_readonly_state(pressed, false), state::CBRO_DISABLED);
@@ -2032,7 +2032,7 @@ mod tests {
     //
     // Every hex below was read out of
     // `C:\kubuno-build\winforms-ref\shots\03-listcontrol.png` first and matched
-    // by a part second — the order the `theme` module insists on, because the
+    // by a part second - the order the `theme` module insists on, because the
     // wrong part does not fail, it draws something plausible. Pinning them here
     // turns a Windows update that moves a part into a failing test rather than a
     // slow drift away from the toolkit.
@@ -2052,7 +2052,7 @@ mod tests {
     };
     use windows::Win32::UI::HiDpi::OpenThemeDataForDpi;
 
-    /// The `#F0F0F0` form ground the sheet was captured on, as a BGRA word — so a
+    /// The `#F0F0F0` form ground the sheet was captured on, as a BGRA word - so a
     /// sampled pixel is comparable with the sheet directly.
     const FORM: u32 = 0xFFF0_F0F0;
     /// The `#FFFFFF` a list, a field and an editable combo put behind their own
@@ -2065,9 +2065,9 @@ mod tests {
     /// the Direct2D upload so the assertions need no device, no window and no
     /// swap chain.
     ///
-    /// `None` is a **skip**, not a failure: with visual styles off — including
+    /// `None` is a **skip**, not a failure: with visual styles off - including
     /// under [`theme::CLASSIC_ENV`], which is how the classic branch is
-    /// exercised — the classic painting is the correct one and there is no
+    /// exercised - the classic painting is the correct one and there is no
     /// themed pixel to assert.
     fn sample(class: PCWSTR, part: i32, state: i32, w: i32, h: i32, bg: u32) -> Option<Vec<u32>> {
         if std::env::var_os(theme::CLASSIC_ENV).is_some() {
@@ -2085,7 +2085,7 @@ mod tests {
         pixels
     }
 
-    /// Pre-fill, draw, flush, read back — see [`sample`].
+    /// Pre-fill, draw, flush, read back - see [`sample`].
     ///
     /// # Safety
     ///
@@ -2108,7 +2108,7 @@ mod tests {
                 biSize: std::mem::size_of::<BITMAPINFOHEADER>() as u32,
                 biWidth: w,
                 // Negative: TOP-DOWN. A bottom-up DIB stores its first row last,
-                // so every row index below would be mirrored — invisible on a
+                // so every row index below would be mirrored - invisible on a
                 // symmetric part, and silently wrong on the `CP_READONLY` face,
                 // whose whole tell is that its bottom edge is the darker one.
                 biHeight: -h,
@@ -2133,7 +2133,7 @@ mod tests {
         let rect = RECT { left: 0, top: 0, right: w, bottom: h };
         let drawn = DrawThemeBackground(handle, dc, part, state, &rect, None).is_ok();
         // GDI batches per thread: reading the bits without this can read them
-        // BEFORE the theme has drawn — intermittently, and under load only.
+        // BEFORE the theme has drawn - intermittently, and under load only.
         let _ = GdiFlush();
         let out = drawn.then(|| pixels.to_vec());
         SelectObject(dc, previous);
@@ -2150,13 +2150,13 @@ mod tests {
 
     /// Sheet: the `ListBox` and `CheckedListBox` frames are `#ABADB3`, with one
     /// pixel of the list's own ground inside them (x=362 and x=363 on the sheet)
-    /// before the first row begins — which is why [`fixed3d_frame`] reports its
+    /// before the first row begins - which is why [`fixed3d_frame`] reports its
     /// interior two device pixels in.
     #[test]
     fn the_list_frame_is_the_sheets_border() {
         let (w, h) = (121usize, 15usize);
         let Some(px) = sample(w!("EDIT"), EP_EDITTEXT, ETS_NORMAL, w as i32, h as i32, FIELD) else {
-            eprintln!("[lists] visual styles unavailable — themed list frame not asserted");
+            eprintln!("[lists] visual styles unavailable - themed list frame not asserted");
             return;
         };
         let mid = h / 2;
@@ -2166,7 +2166,7 @@ mod tests {
     }
 
     /// Sheet: both editable combos are framed in the accent `#0078D4` over
-    /// `#FFFFFF` — `CBB_FOCUSED`, which is why [`ComboBox::paint`] paints
+    /// `#FFFFFF` - `CBB_FOCUSED`, which is why [`ComboBox::paint`] paints
     /// focused. `CBB_NORMAL` is a different, greyer frame, which is the proof
     /// that the state id reaches the theme rather than being ignored.
     #[test]
@@ -2176,7 +2176,7 @@ mod tests {
         let (Some(focused), Some(normal), Some(disabled)) =
             (at(state::CBB_FOCUSED), at(state::CBB_NORMAL), at(state::CBB_DISABLED))
         else {
-            eprintln!("[lists] visual styles unavailable — themed combo frame not asserted");
+            eprintln!("[lists] visual styles unavailable - themed combo frame not asserted");
             return;
         };
         let mid = h / 2;
@@ -2186,7 +2186,7 @@ mod tests {
         assert_eq!(hex(disabled[mid * w]), "#C8C8C8", "the dead frame");
     }
 
-    /// Sheet: the `DropDownList` is not a field at all — it is a button face,
+    /// Sheet: the `DropDownList` is not a field at all - it is a button face,
     /// `#FDFDFD` under a `#D2D2D2` top edge and over a `#BCBCBC` bottom one. The
     /// asymmetry is the tell, and it is why the top-down DIB in [`render`]
     /// matters: mirrored, this part still looks like a button.
@@ -2196,7 +2196,7 @@ mod tests {
         let Some(px) =
             sample(w!("COMBOBOX"), CP_READONLY, state::CBRO_NORMAL, w as i32, h as i32, FORM)
         else {
-            eprintln!("[lists] visual styles unavailable — themed readonly face not asserted");
+            eprintln!("[lists] visual styles unavailable - themed readonly face not asserted");
             return;
         };
         assert_eq!(hex(px[(h / 2) * w + w / 2]), "#FDFDFD", "the face");
@@ -2204,7 +2204,7 @@ mod tests {
         assert_eq!(hex(px[(h - 1) * w + w / 2]), "#BCBCBC", "the bottom edge, darker");
     }
 
-    /// Sheet: the drop-down button is a **chevron on the field's own ground** —
+    /// Sheet: the drop-down button is a **chevron on the field's own ground** -
     /// no face, no bevel, no separator. The corners prove it: they still hold the
     /// pre-fill the part was handed, so anything painted under the part would
     /// show through, which is why the themed branch fills nothing first.
@@ -2219,7 +2219,7 @@ mod tests {
             h as i32,
             FORM,
         ) else {
-            eprintln!("[lists] visual styles unavailable — themed chevron not asserted");
+            eprintln!("[lists] visual styles unavailable - themed chevron not asserted");
             return;
         };
         assert_eq!(hex(px[0]), "#F0F0F0", "the part paints no face: the corner is the pre-fill");
@@ -2239,7 +2239,7 @@ mod tests {
 
     /// Sheet: an empty well is `#626262` over `#F3F3F3`, a ticked one is the
     /// solid accent `#005FB8`, and an indeterminate one is the SAME tick in
-    /// `#C3C3C3` grey — not the theme's mixed glyph, which is one wide light bar
+    /// `#C3C3C3` grey - not the theme's mixed glyph, which is one wide light bar
     /// where the sheet has two separated strokes.
     #[test]
     fn the_check_wells_are_the_sheets_glyphs() {
@@ -2251,7 +2251,7 @@ mod tests {
             at(check_glyph_state(CheckState::Indeterminate, true)),
             at(sdk::CBS_MIXEDDISABLED.0),
         ) else {
-            eprintln!("[lists] visual styles unavailable — themed check wells not asserted");
+            eprintln!("[lists] visual styles unavailable - themed check wells not asserted");
             return;
         };
         let mid = h / 2;
@@ -2261,19 +2261,19 @@ mod tests {
         assert_eq!(hex(greyed[mid * w + 1]), "#C3C3C3", "the indeterminate well is grey");
 
         // The refusal, pinned: at the centre of its middle row the mixed glyph
-        // is its light BAR, where the greyed tick — the sheet's `Delta` well —
+        // is its light BAR, where the greyed tick - the sheet's `Delta` well -
         // is still fill. Two different pictures, and only one is on the sheet.
         assert_eq!(hex(greyed[mid * w + w / 2]), "#C3C3C3", "the tick leaves the centre filled");
         assert_eq!(hex(mixed[mid * w + w / 2]), "#F0F0F0", "the mixed glyph bars it");
     }
 
-    /// The part that was measured and **refused** — see the module docs.
+    /// The part that was measured and **refused** - see the module docs.
     ///
     /// `LVP_LISTITEM` is the obvious choice for a selected row, and it carries no
     /// selection colour at all: opened the way [`crate::theme`] opens a class,
     /// all six `LISS_*` states render one identical hollow rectangle and the
     /// centre of the row is still the pre-fill. `LISS_SELECTED` and
-    /// `LISS_SELECTEDNOTFOCUS` being byte-for-byte equal is the whole finding —
+    /// `LISS_SELECTEDNOTFOCUS` being byte-for-byte equal is the whole finding -
     /// there is no blue band and no grey one to be had here.
     ///
     /// If a future Windows starts defining them, this fails and the row goes back
@@ -2284,7 +2284,7 @@ mod tests {
         let at =
             |state| sample(w!("LISTVIEW"), sdk::LVP_LISTITEM.0, state, w as i32, h as i32, FIELD);
         let Some(normal) = at(sdk::LISS_NORMAL.0) else {
-            eprintln!("[lists] visual styles unavailable — the row refusal is not asserted");
+            eprintln!("[lists] visual styles unavailable - the row refusal is not asserted");
             return;
         };
         let mid = h / 2;
@@ -2301,7 +2301,7 @@ mod tests {
             sdk::LISS_HOTSELECTED.0,
         ] {
             let Some(other) = at(state) else { return };
-            assert_eq!(other, normal, "LISS state {state} differs from LISS_NORMAL — re-measure");
+            assert_eq!(other, normal, "LISS state {state} differs from LISS_NORMAL - re-measure");
         }
     }
 }

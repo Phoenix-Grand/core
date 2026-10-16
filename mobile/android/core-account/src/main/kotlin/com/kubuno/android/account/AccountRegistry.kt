@@ -37,7 +37,7 @@ class AccountRegistry @Inject constructor(
 
     /**
      * Adds an account, or refreshes the one already registered for the same
-     * (server, user) pair — signing in again must not create a duplicate, and
+     * (server, user) pair - signing in again must not create a duplicate, and
      * must keep the existing id so the local data stays attached.
      */
     fun upsert(
@@ -92,7 +92,7 @@ class AccountRegistry @Inject constructor(
 
     /**
      * Forgets an account. The caller is responsible for tearing down its graph
-     * and erasing its data — this only drops the registration.
+     * and erasing its data - this only drops the registration.
      */
     fun remove(id: AccountId) {
         _accounts.value = _accounts.value.filterNot { it.id == id }

@@ -5,7 +5,7 @@
 //! ## The software is not sold
 //!
 //! Kubuno is AGPL-3.0-or-later. Every instance already holds every right the
-//! licence grants — run it, study it, modify it, redistribute it — and no code
+//! licence grants - run it, study it, modify it, redistribute it - and no code
 //! here, now or later, may condition a feature on anything in this module. A
 //! "licence check" in a free-software product is a contradiction: the licence is
 //! granted by the copyright holder to everybody, unconditionally, and there is
@@ -19,7 +19,7 @@
 //!
 //! An instance is self-hosted and may have no route to the internet at all. A
 //! contract that had to be confirmed by calling a server would therefore be a
-//! contract that stops existing when the network does — and it would make the
+//! contract that stops existing when the network does - and it would make the
 //! product phone home, which it does not do and must not start doing.
 //!
 //! So the proof travels **with** the operator: the publisher signs the contract
@@ -31,14 +31,14 @@
 //!
 //! The trusted-key list ([`trusted_signing_keys`]) is **empty**, because the
 //! publisher has not minted a support signing key yet. The verifier below is
-//! complete and will start validating the day a key is added to that list —
+//! complete and will start validating the day a key is added to that list -
 //! including for contracts registered before it existed, since the pasted key is
 //! kept.
 //!
 //! Until then every registered contract is stored as **declarative**: the claims
 //! are read out of the key and shown, labelled as unverified, and the console
 //! says so in as many words. Refusing to store anything until the key exists
-//! would be worse — the information would live in somebody's spreadsheet, where
+//! would be worse - the information would live in somebody's spreadsheet, where
 //! nobody administering the instance can see it.
 
 pub mod store;
@@ -56,14 +56,14 @@ use crate::errors::AppError;
 /// misleading at best.
 pub const LICENCE_SPDX: &str = "AGPL-3.0-or-later";
 /// Canonical text of the licence. Also shipped verbatim as `LICENSE` at the root
-/// of every Kubuno repository — the link is a convenience, not the source.
+/// of every Kubuno repository - the link is a convenience, not the source.
 pub const LICENCE_URL: &str = "https://www.gnu.org/licenses/agpl-3.0.html";
 /// Where the source of the core actually lives. Taken from the repository this
 /// crate is built from, not invented: the AGPL obliges an operator running a
 /// modified instance over a network to offer that instance's source, and a
 /// wrong address here would make that obligation impossible to honour.
 pub const SOURCE_URL: &str = "https://github.com/kubuno/core";
-/// Where community support happens — the issue tracker of the same repository.
+/// Where community support happens - the issue tracker of the same repository.
 pub const ISSUES_URL: &str = "https://github.com/kubuno/core/issues";
 /// The organisation that hosts every component of the platform, one repository
 /// per component.
@@ -83,7 +83,7 @@ pub struct SigningKey {
 ///
 /// **Empty on purpose.** See the module preamble: the publisher has no support
 /// signing key yet, so nothing can be verified and every contract is stored as
-/// declarative. Adding an entry here — and nothing else — turns verification on,
+/// declarative. Adding an entry here - and nothing else - turns verification on,
 /// retroactively, for keys already registered.
 ///
 /// Ed25519 is the only algorithm accepted ([`Algorithm::EdDSA`]): one curve, one
@@ -93,7 +93,7 @@ const TRUSTED_SIGNING_KEYS: &[SigningKey] = &[];
 /// The trusted keys, behind an accessor.
 ///
 /// Call sites go through this rather than touching the constant, so that "can
-/// this build check a signature?" stays a question asked at run time — which is
+/// this build check a signature?" stays a question asked at run time - which is
 /// what it becomes the moment the list stops being empty.
 pub fn trusted_signing_keys() -> &'static [SigningKey] {
     TRUSTED_SIGNING_KEYS
@@ -129,7 +129,7 @@ pub struct SupportClaims {
     /// What the contract covers, in the publisher's words.
     #[serde(default)]
     pub perimeter: Option<String>,
-    /// Where to reach support — an e-mail address or an `https://` URL.
+    /// Where to reach support - an e-mail address or an `https://` URL.
     #[serde(default)]
     pub contact: Option<String>,
     /// The instance this contract was issued for, if the publisher bound it to
@@ -146,7 +146,7 @@ pub enum Trust {
     /// publisher's, not the operator's.
     Verified { key_id: String },
     /// The key is well formed and its claims are readable, but no trusted public
-    /// key could confirm them — either none is compiled in yet, or the `kid` is
+    /// key could confirm them - either none is compiled in yet, or the `kid` is
     /// not one this build knows. The claims are treated as **declarative** and
     /// the console labels them so.
     Declarative,
@@ -184,13 +184,13 @@ impl SupportKey {
 
 /// Reads a pasted support key: signature first, claims second.
 ///
-/// Never fails because the signature could not be *confirmed* — that is
+/// Never fails because the signature could not be *confirmed* - that is
 /// [`Trust::Declarative`], a state the product supports. It fails only when the
 /// string is not a support key at all: malformed, signed with an algorithm this
 /// build refuses, or missing the claims a contract is made of.
 ///
 /// `instance_id` is this installation's identifier. A key that names an instance
-/// is refused here when it names a different one — pasting somebody else's
+/// is refused here when it names a different one - pasting somebody else's
 /// contract must not silently succeed.
 pub fn read_key(raw: &str, instance_id: &str) -> Result<SupportKey, AppError> {
     let token = raw.trim();
@@ -288,7 +288,7 @@ fn verify(token: &str, signing: &SigningKey) -> Result<SupportKey, AppError> {
 /// Reads the claims of a well-formed key **without** checking anything.
 ///
 /// Only reached when no trusted public key can speak for the token. The result
-/// is stored and displayed as declarative, never as a verified fact — the caller
+/// is stored and displayed as declarative, never as a verified fact - the caller
 /// is what enforces that, by attaching [`Trust::Declarative`] to it.
 fn read_claims_unverified(token: &str) -> Result<SupportClaims, AppError> {
     let unreadable = || {
@@ -316,7 +316,7 @@ fn read_claims_unverified(token: &str) -> Result<SupportClaims, AppError> {
 /// The rules that hold whether or not a signature could be checked.
 ///
 /// Run on the verified path too: `jsonwebtoken` validates the expiry and the
-/// presence of the claims, and nothing else — the shape of what the publisher
+/// presence of the claims, and nothing else - the shape of what the publisher
 /// wrote is this function's business.
 fn validate_claims(claims: &SupportClaims, instance_id: &str) -> Result<(), AppError> {
     let subject = claims.sub.trim();

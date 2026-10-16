@@ -1,4 +1,4 @@
-# Changelog — @kubuno/views
+# Changelog - @kubuno/views
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Entries are
 added under `[Unreleased]` **as the change is made**; on npm publish, the section is stamped
@@ -20,7 +20,7 @@ under the published version number.
 - **A component hosted by `ReactHost` renders again with its view.** A converted screen's elements only render again
   when what they read changes, so a hosted React component lost the re-render it got from its TSX parent: whatever it
   read on render without subscribing (the shell's `<Slot name="app-dialogs">` reading the slot registry) stayed as
-  the first render left it — the dialogs a module registers once its bundle has loaded (Files open / save / folder
+  the first render left it - the dialogs a module registers once its bundle has loaded (Files open / save / folder
   picker, audio player, paint, remote storage) never appeared. It now renders whenever its view root does.
 - **An element inside a `display: contents` wrapper keeps the spacing its parent gives it.** An element that needs
   its DOM root (a DOM event, a name, attributes) and whose component has a wrapper root of its own (`TextField`) sits
@@ -39,7 +39,7 @@ under the published version number.
 
 ### Added
 
-- **`DataAttributes`** on `Panel` and `Stack` (web only): `data-*` attributes of the element (`app-chrome; module=drive`), bindable — the page's styles and scripts find the shell's chrome and panels by them.
+- **`DataAttributes`** on `Panel` and `Stack` (web only): `data-*` attributes of the element (`app-chrome; module=drive`), bindable - the page's styles and scripts find the shell's chrome and panels by them.
 - **`setTranslator(t)`** (host): the translator an `@ui` element receives as `t` when its view sets `HostStrings`;
   the `host-t` converter. Object props are built field by field along dotted paths (`actions` + `confirm.label`).
 

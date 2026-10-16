@@ -6,7 +6,7 @@
  *
  * A white card on a white panel is another panel: it reads as more of the form
  * rather than as an answer to the question just asked. A filled bubble reads as
- * a remark someone made — it is plainly not part of the page — and the arrow
+ * a remark someone made - it is plainly not part of the page - and the arrow
  * says which control it is about, which a floating card never does. That
  * matters most where several little "?" sit near each other.
  *
@@ -14,7 +14,7 @@
  *
  * Below the anchor by default, then above it, then to the right, then to the
  * left: the first side that actually fits, and failing that the roomiest. The
- * arrow follows — it is always on the edge facing the anchor, at the anchor's
+ * arrow follows - it is always on the edge facing the anchor, at the anchor's
  * own centre. Near a screen edge the bubble is pushed back into view and the
  * arrow keeps pointing, held only far enough from the corner not to straddle
  * the rounding.
@@ -22,7 +22,7 @@
  * Only the TIP of the arrow shows. A rotated square pokes out by its
  * half-diagonal if you let it, which is a whole wedge; the offset here accounts
  * for what the rotation adds, so the amount that shows is the amount asked for.
- * Its corners are square — the one that sticks out IS the point.
+ * Its corners are square - the one that sticks out IS the point.
  */
 import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode, type RefObject } from 'react'
 import { createPortal } from 'react-dom'
@@ -52,7 +52,7 @@ const SIDE = 14
 /**
  * Turning a square 45° makes its bounding box larger than the square by this
  * much on every side. It has to be subtracted, or the arrow pokes out by its
- * half-diagonal — a whole wedge — instead of by the amount asked for.
+ * half-diagonal - a whole wedge - instead of by the amount asked for.
  */
 const BLEED = SIDE * (Math.SQRT2 - 1) / 2
 /** How far the TIP shows beyond the bubble's edge. Just the tip. */
@@ -136,7 +136,7 @@ export function HelpBubble({
   }
 
   // Measured over a few frames rather than once: the box has to exist, and be
-  // laid out, before its height means anything — and a web font arriving a
+  // laid out, before its height means anything - and a web font arriving a
   // frame later changes that height.
   useLayoutEffect(() => {
     if (!open) { setP(null); return }

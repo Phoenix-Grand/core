@@ -11,14 +11,14 @@
 //!
 //! ### The re-declaration trap
 //!
-//! Three of `ButtonBase`'s 18 — `Text`, `BackColor`, `AutoSize` — are **not new
+//! Three of `ButtonBase`'s 18 - `Text`, `BackColor`, `AutoSize` - are **not new
 //! storage**: `Control` already declares all three, and `ButtonBase` merely
 //! re-declares them to change designer metadata (browsability, serialization).
 //! The port keeps them where they belong, on [`ControlBase`], and a
 //! `ButtonBase` reaches them through `Deref`. Duplicating them here would be the
 //! very drift the composition design exists to prevent. The same is true of
 //! `Button.AutoSizeMode` (already `ControlBase::auto_size_mode`) and of
-//! `RadioButton.TabStop` (already `ControlBase::tab_stop`) — both are
+//! `RadioButton.TabStop` (already `ControlBase::tab_stop`) - both are
 //! re-declarations that only *change the default*, which the leaf's `Default`
 //! impl does, without a second field.
 //!
@@ -31,7 +31,7 @@
 //! The family paints **real WinForms**, not the Kubuno skin: square corners, the
 //! `GetSysColor` palette, the `SPI_GETNONCLIENTMETRICS` UI font, and borders
 //! drawn as `DrawEdge` bevels ([`ControlCanvas::draw_edge`]) rather than as
-//! strokes. Nothing in this file names a colour, a family or a point size — they
+//! strokes. Nothing in this file names a colour, a family or a point size - they
 //! all come from [`crate::system::Visuals`], so the replica follows whatever the
 //! machine is configured with, which is the only way it can match a reference
 //! sheet the local toolkit painted.
@@ -39,8 +39,8 @@
 //! ### Two renderings, not one with an approximation
 //!
 //! That `GetSysColor` paint is the whole rendering on a machine with visual
-//! styles **off**, and the only one there. With them **on** — which is how the
-//! reference sheets were made — the toolkit hands the face and the glyph to
+//! styles **off**, and the only one there. With them **on** - which is how the
+//! reference sheets were made - the toolkit hands the face and the glyph to
 //! `uxtheme.dll`, and the difference is not a shade: the sheet's buttons are
 //! `#FDFDFD` inside `#D0D0D0`, its check boxes `#626262` around `#F3F3F3`, its
 //! ticked ones a solid accent `#005FB8`, and **not one** of those is any
@@ -53,29 +53,29 @@
 //! }
 //! ```
 //!
-//! Three parts are adopted — `BP_PUSHBUTTON` for the face, `BP_CHECKBOX` and
-//! `BP_RADIOBUTTON` for the two glyphs — and every `(part, state)` pair was
+//! Three parts are adopted - `BP_PUSHBUTTON` for the face, `BP_CHECKBOX` and
+//! `BP_RADIOBUTTON` for the two glyphs - and every `(part, state)` pair was
 //! chosen by rendering it and sampling it against the sheet, never by reading its
 //! name. The tests at the bottom of the file pin those pixels, so a Windows
 //! update that moves them is a failing test rather than a slow drift.
 //!
 //! Which `FlatStyle`s take that branch is itself a measurement:
 //! [`face_is_themed`] and [`glyph_is_themed`] carry the sheet evidence that
-//! `Standard` is theme-drawn just as `System` is, while `Flat` and `Popup` — on
-//! the same sheet, in the same form — are not.
+//! `Standard` is theme-drawn just as `System` is, while `Flat` and `Popup` - on
+//! the same sheet, in the same form - are not.
 //!
 //! One measurement is knowingly left behind: `Control::preferred_size` takes a
 //! bare `Canvas`, which cannot answer for the system font, so widths are still
 //! measured against the shared formats while the caption is *drawn* in the
 //! system face. Paint and measure will only agree once that signature widens.
 //!
-//! ### Defaults that change down the chain — order matters
+//! ### Defaults that change down the chain - order matters
 //!
 //! `TextAlign` is `MiddleCenter` on `ButtonBase` but `MiddleLeft` on both
 //! `CheckBox` and `RadioButton`; `CheckAlign` is `MiddleLeft`; `RadioButton`
 //! turns `TabStop` off. A `Default` impl that built the base and forgot to
 //! stamp these overrides would silently inherit the button's centering. Each
-//! leaf's `Default` therefore *builds the base, then overrides* — and a test
+//! leaf's `Default` therefore *builds the base, then overrides* - and a test
 //! pins every one of these values against the catalogue.
 
 use kubuno_drive_desktop_app_controls::TextFormats;
@@ -94,7 +94,7 @@ use crate::theme::state::{PBS_DEFAULTED, PBS_DISABLED, PBS_HOT, PBS_NORMAL, PBS_
 use crate::{Canvas, Rect};
 
 /// The two `BUTTON` parts this family draws that [`crate::theme::part`] does not
-/// publish — the check box and the radio glyphs — with the twenty state ids that
+/// publish - the check box and the radio glyphs - with the twenty state ids that
 /// go with them.
 ///
 /// They live **here** rather than in `theme.rs` because `theme.rs` publishes only
@@ -102,7 +102,7 @@ use crate::{Canvas, Rect};
 /// measures a part is the one that names it. As there, they are re-exported from
 /// the Windows SDK's own constants rather than written as numbers: a part id is
 /// exactly the kind of magic number that is copied wrong once and then merely
-/// looks « a bit off » forever, and a wrong id does not fail — it draws something
+/// looks « a bit off » forever, and a wrong id does not fail - it draws something
 /// plausible.
 ///
 /// Every one of them is pinned by a pixel test at the bottom of this file, and
@@ -111,10 +111,10 @@ use crate::{Canvas, Rect};
 mod glyph_theme {
     use windows::Win32::UI::Controls as sdk;
 
-    /// `BUTTON` — the check box glyph, tick and all. The theme draws the box,
+    /// `BUTTON` - the check box glyph, tick and all. The theme draws the box,
     /// its fill AND its mark, so the whole classic glyph is the fallback.
     pub const BP_CHECKBOX: i32 = sdk::BP_CHECKBOX.0;
-    /// `BUTTON` — the radio glyph, dot and all.
+    /// `BUTTON` - the radio glyph, dot and all.
     pub const BP_RADIOBUTTON: i32 = sdk::BP_RADIOBUTTON.0;
 
     /// `BP_CHECKBOX`, unticked: normal, hot, pressed, disabled (1–4).
@@ -129,7 +129,7 @@ mod glyph_theme {
     pub const CBS_CHECKEDDISABLED: i32 = sdk::CBS_CHECKEDDISABLED.0;
     /// `BP_CHECKBOX`, the third state (9–12). The theme calls it **MIXED**;
     /// WinForms calls it `Indeterminate`. Same thing, and the only pair of names
-    /// in this file that do not match — which is precisely why it is written down.
+    /// in this file that do not match - which is precisely why it is written down.
     pub const CBS_MIXEDNORMAL: i32 = sdk::CBS_MIXEDNORMAL.0;
     pub const CBS_MIXEDHOT: i32 = sdk::CBS_MIXEDHOT.0;
     pub const CBS_MIXEDPRESSED: i32 = sdk::CBS_MIXEDPRESSED.0;
@@ -153,22 +153,22 @@ use glyph_theme::*;
 // ─────────────────────────────────────────────────────────────────────────────
 // Layout metrics (DIP). These are geometry, not typography: the canvas paints in
 // DIP and pixel-aligns internally (see `Canvas`), so nothing here is multiplied
-// by `scale()`. Point sizes and font families are never named here — they come
-// from `Visuals::fonts`, which reads the real UI font from Windows — only box
+// by `scale()`. Point sizes and font families are never named here - they come
+// from `Visuals::fonts`, which reads the real UI font from Windows - only box
 // sizes are, the same way `ControlBase` hard-codes its `Margin` of 3 DIP.
 //
 // Every *colour* and every *border* below comes from `Visuals` too: this family
 // paints the WinForms surface, so a bevel is `ControlCanvas::draw_edge` (Win32's
 // `DrawEdge`) over a `SystemColors` face, never a rounded stroke over a Kubuno
-// palette. There is no corner radius anywhere in this file on purpose — a
+// palette. There is no corner radius anywhere in this file on purpose - a
 // WinForms button is square, and the one control that is genuinely round (the
 // radio glyph) says so where it is drawn.
 // ─────────────────────────────────────────────────────────────────────────────
 
-/// The classic check/radio glyph box, 13×13 DIP at 96 DPI — the size the toolkit
+/// The classic check/radio glyph box, 13×13 DIP at 96 DPI - the size the toolkit
 /// has drawn a checkbox tick in since forever.
 const GLYPH: f32 = 13.0;
-/// The tick / indeterminate bar drawn inside a glyph's **well** — the interior
+/// The tick / indeterminate bar drawn inside a glyph's **well** - the interior
 /// the 3-D edge leaves behind, not the [`GLYPH`] box itself. Two rings of bevel
 /// eat 2 DIP off each side of the 13 DIP box, so a mark sized to the box would
 /// climb over its own border.
@@ -182,7 +182,7 @@ const BTN_PAD_Y: f32 = 3.0;
 /// still yields a button-shaped box.
 const MIN_BTN_HEIGHT: f32 = 23.0;
 
-/// A role's line height in DIP — the vertical space one line of that format
+/// A role's line height in DIP - the vertical space one line of that format
 /// occupies. Taken from the shared formats' documented sizes (body 14/20,
 /// caption 12/16, heading 16/24, title 20/28), so the number tracks the format
 /// rather than a hard-coded point size.
@@ -209,7 +209,7 @@ const fn line_height(role: FontRole) -> f32 {
 /// still runs against the shared formats; the *painting* goes through
 /// [`message_format`] and uses the real UI font. Widening `preferred_size` to a
 /// `&dyn ControlCanvas` is what would let the two agree, and is deliberately not
-/// done here — this pass repaints, it does not re-measure.
+/// done here - this pass repaints, it does not re-measure.
 fn format_for(fmts: &TextFormats, role: FontRole) -> &IDWriteTextFormat {
     match role {
         FontRole::Caption => &fmts.caption,
@@ -221,14 +221,14 @@ fn format_for(fmts: &TextFormats, role: FontRole) -> &IDWriteTextFormat {
     }
 }
 
-/// The **system** UI font a control paints its `Text` with —
+/// The **system** UI font a control paints its `Text` with -
 /// `NONCLIENTMETRICS.lfMessageFont`, which is what .NET Core resolves
 /// `Control.DefaultFont` to (Segoe UI 9 pt on a default Windows 11).
 ///
 /// A `ButtonBase` carries a [`FontRole`] rather than a `Font`, and the system
 /// publishes exactly one UI face in three weights, so the role collapses to the
 /// only distinction that survives: whether it is a **strong** role, which takes
-/// the bold cut. Everything else — family, size, italic — is the machine's,
+/// the bold cut. Everything else - family, size, italic - is the machine's,
 /// never this file's.
 fn message_format(fonts: &SystemFonts, role: FontRole) -> &IDWriteTextFormat {
     match role {
@@ -239,7 +239,7 @@ fn message_format(fonts: &SystemFonts, role: FontRole) -> &IDWriteTextFormat {
 
 /// Maps a horizontal alignment fraction (0.0/0.5/1.0 from
 /// [`ContentAlignment::fractions`]) to the DirectWrite alignment the canvas
-/// wants. `RightToLeft` mirroring is not applied here yet — documented on the
+/// wants. `RightToLeft` mirroring is not applied here yet - documented on the
 /// call site.
 fn h_alignment(frac: f32) -> DWRITE_TEXT_ALIGNMENT {
     if frac <= 0.0 {
@@ -252,7 +252,7 @@ fn h_alignment(frac: f32) -> DWRITE_TEXT_ALIGNMENT {
 }
 
 /// Rebuilds a [`ContentAlignment`] from a `(horizontal, vertical)` fraction
-/// pair — the inverse of [`ContentAlignment::fractions`], needed because the
+/// pair - the inverse of [`ContentAlignment::fractions`], needed because the
 /// `System` coercions below mix one axis from one property with the other axis
 /// from another.
 fn align_from(h: f32, v: f32) -> ContentAlignment {
@@ -273,7 +273,7 @@ fn align_from(h: f32, v: f32) -> ContentAlignment {
 ///
 /// This is the one legitimate use of `Canvas::scale`, and it DIVIDES rather than
 /// multiplies: every ring of a WinForms border is one physical pixel at every
-/// scale — a 2 DIP border at 200 % would be four pixels of bevel, which is not a
+/// scale - a 2 DIP border at 200 % would be four pixels of bevel, which is not a
 /// shape the toolkit has.
 fn device_pixel(c: &dyn Canvas) -> f32 {
     1.0 / c.scale().max(0.01)
@@ -281,7 +281,7 @@ fn device_pixel(c: &dyn Canvas) -> f32 {
 
 /// The interaction state as it actually reaches the painting.
 ///
-/// A disabled control never reacts to the pointer — the toolkit stops routing
+/// A disabled control never reacts to the pointer - the toolkit stops routing
 /// mouse messages to it, so it can be neither hot nor pressed nor focused.
 /// Neutralising the state here, once, is what keeps a disabled button from
 /// lighting up under the cursor; testing `enabled` at each of the half-dozen
@@ -294,7 +294,7 @@ fn effective_state(enabled: bool, state: ControlState) -> ControlState {
     }
 }
 
-/// Which `BP_PUSHBUTTON` state a button is in — the themed counterpart of
+/// Which `BP_PUSHBUTTON` state a button is in - the themed counterpart of
 /// [`effective_state`] plus [`ButtonBase::paint_border`]'s pushed/resting choice.
 ///
 /// The ORDER is the whole content of the function, and it is the theme's own,
@@ -305,7 +305,7 @@ fn effective_state(enabled: bool, state: ControlState) -> ControlState {
 ///   on a default Windows 11), not a greyed caption over the resting one;
 /// * **pressed before hot**, because the pointer is necessarily over a control
 ///   it is pressing, so testing hot first would make a press unreachable;
-/// * a **checked** toggle in `Appearance::Button` reads as pressed — that is the
+/// * a **checked** toggle in `Appearance::Button` reads as pressed - that is the
 ///   same equivalence [`ButtonBase::paint_border`] makes for the classic bevel,
 ///   kept in one place so the two renderings cannot disagree about what
 ///   "pushed" means;
@@ -313,13 +313,13 @@ fn effective_state(enabled: bool, state: ControlState) -> ControlState {
 ///   accented frame instead of the classic `WindowFrame` ring.
 ///
 /// * **focused reads as defaulted**, which is a measurement rather than a guess:
-///   on the reference sheet the `Standard` button — the first control on the
-///   form, and the only one holding the focus — is framed in the accent
+///   on the reference sheet the `Standard` button - the first control on the
+///   form, and the only one holding the focus - is framed in the accent
 ///   `#0078D4`, while the button *labelled* « Default (accept) » is framed in the
 ///   resting `#D0D0D0`. The sheet's own source never sets `AcceptButton`, so the
 ///   accent cannot be coming from « is default »: it is coming from the focus.
 ///   `PBS_DEFAULTED` is the theme's only accented push-button state, and .NET's
-///   `ButtonStandardAdapter` picks it for `IsDefault || Focused` — which is
+///   `ButtonStandardAdapter` picks it for `IsDefault || Focused` - which is
 ///   exactly what the sheet shows.
 ///
 /// Pure, so the ordering is tested without a canvas or a theme.
@@ -343,13 +343,13 @@ fn push_button_state(enabled: bool, state: ControlState, checked: bool) -> i32 {
 /// Two independent conditions, and both are measured on the reference sheet:
 ///
 /// * **`Standard` is theme-drawn, not just `System`.** Every button on the sheet
-///   except the two that name another style is `FlatStyle::Standard` — the
-///   toolkit's default — and every one of them is a themed part: « Default
+///   except the two that name another style is `FlatStyle::Standard` - the
+///   toolkit's default - and every one of them is a themed part: « Default
 ///   (accept) » and « AutoSize » are `#D0D0D0`/`#FDFDFD`/`#BABABA`
 ///   (`PBS_NORMAL`), « Disabled » is `#E9E9E9`/`#F9F9F9` (`PBS_DISABLED`), and
 ///   the `Appearance=Button` check box is `#D0D0D0`/`#FDFDFD` too. A classic
 ///   `DrawEdge` bevel over `COLOR_BTNFACE` would be `#F0F0F0` inside
-///   `#FFFFFF`/`#A0A0A0` — it is not what the sheet holds. `Flat` (`#000000`
+///   `#FFFFFF`/`#A0A0A0` - it is not what the sheet holds. `Flat` (`#000000`
 ///   ring over `#F0F0F0`) and `Popup` (`#808080` ring over `#F0F0F0`) are on the
 ///   same sheet and are **not** themed, which is what makes this a distinction
 ///   rather than a blanket.
@@ -370,7 +370,7 @@ fn face_is_themed(flat_style: FlatStyle, fill: FaceFill) -> bool {
 /// The same two styles as [`face_is_themed`], and for the same reason: the
 /// sheet's check boxes and radio buttons are all `FlatStyle::Standard` and all
 /// themed parts (`#626262` over `#F3F3F3` unticked, accent `#005FB8` ticked),
-/// while `Flat` and `Popup` keep the flat/lite rendering [`glyph_edge`] draws —
+/// while `Flat` and `Popup` keep the flat/lite rendering [`glyph_edge`] draws -
 /// which is the whole reason those two members exist.
 ///
 /// Unlike a face, a glyph has **no** `BackColor` arm: `BackColor` is the
@@ -383,8 +383,8 @@ fn glyph_is_themed(flat_style: FlatStyle) -> bool {
 /// Where a glyph's state id sits **within** its check group: normal, hot,
 /// pressed or disabled, as the `0..=3` offset every group of four repeats.
 ///
-/// Both parts lay their states out the same way — `CBS_*` in three groups of
-/// four, `RBS_*` in two — so the ordering rule is written once. It is the same
+/// Both parts lay their states out the same way - `CBS_*` in three groups of
+/// four, `RBS_*` in two - so the ordering rule is written once. It is the same
 /// order [`push_button_state`] uses, and for the same reasons: **disabled first**
 /// (a dead control is never hot, and its themed glyph is a distinct rendering,
 /// not a greyed one), then **pressed before hot** (the pointer is necessarily
@@ -392,7 +392,7 @@ fn glyph_is_themed(flat_style: FlatStyle) -> bool {
 /// unreachable).
 ///
 /// There is deliberately no `focused` arm: unlike `BP_PUSHBUTTON`, neither glyph
-/// part has an accented state, so focus is shown by the focus rectangle alone —
+/// part has an accented state, so focus is shown by the focus rectangle alone -
 /// exactly as the toolkit does it.
 fn glyph_state_offset(enabled: bool, state: ControlState) -> i32 {
     if !enabled {
@@ -415,7 +415,7 @@ fn glyph_state_offset(enabled: bool, state: ControlState) -> i32 {
 /// that renumbers them a compile error instead of a glyph that quietly shows the
 /// wrong mark.
 ///
-/// `Indeterminate` maps to the theme's **MIXED** group — the one place where the
+/// `Indeterminate` maps to the theme's **MIXED** group - the one place where the
 /// toolkit's name and the theme's differ.
 fn check_box_state(enabled: bool, state: ControlState, check: CheckState) -> i32 {
     let group = match check {
@@ -435,7 +435,7 @@ fn check_box_state(enabled: bool, state: ControlState, check: CheckState) -> i32
     group[glyph_state_offset(enabled, state) as usize]
 }
 
-/// Which `BP_RADIOBUTTON` state a radio is in — the same shape as
+/// Which `BP_RADIOBUTTON` state a radio is in - the same shape as
 /// [`check_box_state`] with **two** groups instead of three, because a radio has
 /// no third state to be in.
 fn radio_button_state(enabled: bool, state: ControlState, checked: bool) -> i32 {
@@ -453,7 +453,7 @@ fn radio_button_state(enabled: bool, state: ControlState, checked: bool) -> i32 
 ///
 /// This is Button-only on purpose: the same Remarks carry a Note saying that for
 /// `CheckBox` and `RadioButton` under `System` « the text alignment remains
-/// unchanged » — only the CHECK alignment is coerced (see
+/// unchanged » - only the CHECK alignment is coerced (see
 /// [`system_check_align`]). Applying the button rule to all three would silently
 /// discard a `TextAlign` the toolkit honours.
 fn effective_text_align(flat_style: FlatStyle, declared: ContentAlignment) -> ContentAlignment {
@@ -472,7 +472,7 @@ fn effective_text_align(flat_style: FlatStyle, declared: ContentAlignment) -> Co
 ///
 /// So the horizontal axis collapses to left-or-right and the vertical axis is
 /// taken from `TextAlign`, not from `CheckAlign`. The property value itself is
-/// unchanged — only its appearance — which is why this is a paint-time function
+/// unchanged - only its appearance - which is why this is a paint-time function
 /// and never writes back to the field.
 fn system_check_align(
     flat_style: FlatStyle,
@@ -500,13 +500,13 @@ fn text_band(content: Rect, lh: f32, v: f32) -> Rect {
 // ─────────────────────────────────────────────────────────────────────────────
 // Family-local enums and value types. These are declared by ButtonBase/Button
 // and by no other family, so they live here rather than in the shared `enums`
-// module — the same rule the shared enums file states about not inventing.
+// module - the same rule the shared enums file states about not inventing.
 // ─────────────────────────────────────────────────────────────────────────────
 
-/// `TextImageRelation` — where the image sits relative to the text on a button.
+/// `TextImageRelation` - where the image sits relative to the text on a button.
 /// The discriminants are the toolkit's own (a flag-like set), so a round-trip is
 /// exact. Only `Overlay` affects painting today; the four positioned layouts are
-/// carried but not yet honoured (the port has no image pipeline — see [`ImageSource`]).
+/// carried but not yet honoured (the port has no image pipeline - see [`ImageSource`]).
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum TextImageRelation {
     #[default]
@@ -517,7 +517,7 @@ pub enum TextImageRelation {
     TextBeforeImage = 8,
 }
 
-/// `DialogResult` — what a `Button` reports to a modal form when clicked. The
+/// `DialogResult` - what a `Button` reports to a modal form when clicked. The
 /// discriminants match `System.Windows.Forms.DialogResult` exactly.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum DialogResult {
@@ -559,7 +559,7 @@ enum FaceFill {
 }
 
 /// Which of the three `FlatAppearance` fills the caller has actually set. Only
-/// « is it set », never the colour — the decision is about precedence, and
+/// « is it set », never the colour - the decision is about precedence, and
 /// keeping colours out is what lets it stay canvas-free.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
 struct FlatFillsSet {
@@ -580,7 +580,7 @@ struct FlatFillsSet {
 ///    `ImageIndex`, `ImageList`, and `TextAlign`. In addition, the
 ///    `Control.BackColor` property will be ignored for button controls. » So
 ///    `System` short-circuits to the visual-style face before anything else.
-/// 2. **The `FlatAppearance` fills apply only under `FlatStyle::Flat`** — the
+/// 2. **The `FlatAppearance` fills apply only under `FlatStyle::Flat`** - the
 ///    class is documented as « properties that specify the appearance of Button
 ///    controls whose `FlatStyle` is `Flat` ».
 /// 3. **The mouse states outrank an explicit `BackColor`**, which is the
@@ -591,13 +591,13 @@ struct FlatFillsSet {
 ///    is the RESTING face; `MouseOverBackColor`/`MouseDownBackColor` are what
 ///    replaces it while the pointer is there. Ranking `BackColor` above them
 ///    would mean that naming a face colour permanently disables hover feedback
-///    — the exact opposite of what those two properties exist for.
+///    - the exact opposite of what those two properties exist for.
 /// 4. `checked` only reaches `CheckedBackColor` when NOT hot, per the same
 ///    sentence.
 /// 5. Otherwise an explicit `BackColor`, else the visual-style face. An unset
 ///    `BackColor` is AMBIENT (« take the parent's »), and the ambient
 ///    resolution here *is* the theme face, so `UseVisualStyleBackColor == false`
-///    with no colour needs no branch — both paths land on `VisualStyle` and
+///    with no colour needs no branch - both paths land on `VisualStyle` and
 ///    nothing is silently dropped.
 fn face_fill_source(
     flat_style: FlatStyle,
@@ -634,20 +634,20 @@ fn face_fill_source(
 pub struct ImageListRef(pub String);
 
 /// An `ICommand` bound to the control's click. The port has no command bus, so
-/// this is an opaque identifier the host dispatches. **Not yet honoured** — the
+/// this is an opaque identifier the host dispatches. **Not yet honoured** - the
 /// control never invokes it, because a control owns no behaviour loop.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct CommandRef(pub String);
 
-/// `FlatButtonAppearance` — the get-only sub-object exposing the border colour,
+/// `FlatButtonAppearance` - the get-only sub-object exposing the border colour,
 /// border thickness and mouse-state fills used when `FlatStyle == Flat`. In .NET
 /// the *property* is read-only (you mutate the object, not the reference), which
 /// is why `ButtonBase` owns one by value.
 ///
 /// **All five are honoured** through `Control::paint_with_state`. Every one of
-/// them applies under `FlatStyle::Flat` only — the class is documented as
+/// them applies under `FlatStyle::Flat` only - the class is documented as
 /// « properties that specify the appearance of `Button` controls whose
-/// `FlatStyle` is `Flat` » — so a caller who sets them on a `Standard` button
+/// `FlatStyle` is `Flat` » - so a caller who sets them on a `Standard` button
 /// correctly sees nothing, exactly as in the toolkit.
 #[derive(Clone, Default)]
 pub struct FlatButtonAppearance {
@@ -656,7 +656,7 @@ pub struct FlatButtonAppearance {
     /// Border thickness in DIP. WinForms default is 1; **0 means no border**,
     /// which is why the paint tests the width before stroking.
     pub border_size: i32,
-    /// The face of a CHECKED `Flat` toggle — and, per its own description, only
+    /// The face of a CHECKED `Flat` toggle - and, per its own description, only
     /// « when the button is checked *and the mouse pointer is outside the bounds
     /// of the control* », which is what ranks it below the two mouse states.
     pub checked_back_color: Option<D2D1_COLOR_F>,
@@ -668,13 +668,13 @@ pub struct FlatButtonAppearance {
 }
 
 // ═════════════════════════════════════════════════════════════════════════════
-// ButtonBase — the 18 declared, of which 15 are new storage.
+// ButtonBase - the 18 declared, of which 15 are new storage.
 // ═════════════════════════════════════════════════════════════════════════════
 
 /// The abstract base of `Button`, `CheckBox` and `RadioButton`.
 ///
 /// `Text`, `BackColor` and `AutoSize` are declared here in .NET but are pure
-/// re-declarations of `Control` members — they live on [`ControlBase`] and are
+/// re-declarations of `Control` members - they live on [`ControlBase`] and are
 /// reached through `Deref`, never duplicated (see the module docs).
 // No `Debug`: it carries colours (`D2D1_COLOR_F`) and a `ControlBase`, neither of
 // which is `Debug`, matching the house rule in `control.rs`.
@@ -682,50 +682,50 @@ pub struct FlatButtonAppearance {
 pub struct ButtonBase {
     control: ControlBase,
 
-    /// `AutoEllipsis` — trim overflowing text with « … » instead of clipping.
+    /// `AutoEllipsis` - trim overflowing text with « … » instead of clipping.
     pub auto_ellipsis: bool,
-    /// `FlatStyle` — how the face is drawn. The four values are all painted.
+    /// `FlatStyle` - how the face is drawn. The four values are all painted.
     pub flat_style: FlatStyle,
-    /// `FlatAppearance` — read-only sub-object; see [`FlatButtonAppearance`].
+    /// `FlatAppearance` - read-only sub-object; see [`FlatButtonAppearance`].
     pub flat_appearance: FlatButtonAppearance,
 
-    /// `TextAlign` — where the label sits in the box. Painted via
+    /// `TextAlign` - where the label sits in the box. Painted via
     /// [`ContentAlignment::fractions`], except under `FlatStyle::System`, whose
-    /// Remarks list `TextAlign` among the values the OS ignores for buttons —
+    /// Remarks list `TextAlign` among the values the OS ignores for buttons -
     /// see [`effective_text_align`].
     pub text_align: ContentAlignment,
-    /// `ImageAlign` — where the image sits. Carried; **not yet honoured**.
+    /// `ImageAlign` - where the image sits. Carried; **not yet honoured**.
     pub image_align: ContentAlignment,
-    /// `TextImageRelation` — relative placement of text and image.
+    /// `TextImageRelation` - relative placement of text and image.
     pub text_image_relation: TextImageRelation,
 
-    /// `Image` — the bitmap on the face. **Not yet honoured** (no raster pipeline).
+    /// `Image` - the bitmap on the face. **Not yet honoured** (no raster pipeline).
     pub image: Option<ImageSource>,
-    /// `ImageIndex` — index into `ImageList`; WinForms default is `-1` (« none »).
+    /// `ImageIndex` - index into `ImageList`; WinForms default is `-1` (« none »).
     pub image_index: i32,
-    /// `ImageKey` — key into `ImageList`; empty means « none ».
+    /// `ImageKey` - key into `ImageList`; empty means « none ».
     pub image_key: String,
-    /// `ImageList` — the source list. **Not yet honoured.**
+    /// `ImageList` - the source list. **Not yet honoured.**
     pub image_list: Option<ImageListRef>,
 
-    /// `UseMnemonic` — treat `&&x` as a mnemonic. Carried; the port does not draw
+    /// `UseMnemonic` - treat `&&x` as a mnemonic. Carried; the port does not draw
     /// the underline or wire the accelerator yet, but the flag is honoured to the
     /// extent that the raw `&&` is left in `Text` unmodified when `false`.
     pub use_mnemonic: bool,
-    /// `UseCompatibleTextRendering` — GDI+ vs GDI text metrics. The port has one
+    /// `UseCompatibleTextRendering` - GDI+ vs GDI text metrics. The port has one
     /// text stack (DirectWrite), so this cannot change rendering; **carried, not
     /// honoured**.
     pub use_compatible_text_rendering: bool,
-    /// `UseVisualStyleBackColor` — draw the face with visual styles rather than
+    /// `UseVisualStyleBackColor` - draw the face with visual styles rather than
     /// with `BackColor`. The catalogue exposes no default attribute; Microsoft
     /// documents the default as `true`. Honoured through
     /// [`ButtonBase::face_fill_source`], where an explicit `BackColor` outranks
     /// it (assigning one is what clears this flag in the toolkit).
     pub use_visual_style_back_color: bool,
 
-    /// `Command` — `ICommand` fired on click. **Not yet honoured.**
+    /// `Command` - `ICommand` fired on click. **Not yet honoured.**
     pub command: Option<CommandRef>,
-    /// `CommandParameter` — payload passed to `Command`. Opaque, like `Tag`.
+    /// `CommandParameter` - payload passed to `Command`. Opaque, like `Tag`.
     pub command_parameter: Option<String>,
 }
 
@@ -763,7 +763,7 @@ impl ButtonBase {
         Self::default()
     }
 
-    /// The font role the control paints with — its own, else `Body`, the way the
+    /// The font role the control paints with - its own, else `Body`, the way the
     /// toolkit resolves an unset `Font` to the ambient default.
     fn role(&self) -> FontRole {
         self.control.font.unwrap_or(FontRole::Body)
@@ -786,32 +786,32 @@ impl ButtonBase {
         )
     }
 
-    /// The colour a check/radio GLYPH is composited onto — the control's own
+    /// The colour a check/radio GLYPH is composited onto - the control's own
     /// `BackColor` when one is set, else the form face.
     ///
     /// A glyph is not a face: it is a small part dropped onto the control's
     /// ground, and the ground is what its antialiased corners (a radio's whole
     /// circumference) blend into. So an unset `BackColor` resolves the same
-    /// ambient way `ControlBase::resolved_fore` does — to the system `Control` —
+    /// ambient way `ControlBase::resolved_fore` does - to the system `Control` -
     /// and a caller who named one gets the part blended into *that*, which is the
     /// difference between a clean glyph and one with a pale halo.
     fn glyph_ground(&self, c: &dyn ControlCanvas) -> D2D1_COLOR_F {
         self.control.back_color.unwrap_or(c.visuals().colors.control)
     }
 
-    /// Paints a button face — the shared drawing behind `Button` and behind a
+    /// Paints a button face - the shared drawing behind `Button` and behind a
     /// check/radio whose `Appearance` is `Button`.
     ///
     /// `checked_look` is `None` for a plain `Button`, `Some(true/false)` for a
     /// toggle in `Appearance::Button`: a checked toggle reads as pushed in
     /// (sunken edge over a lighter face), an unchecked one as a resting button.
     ///
-    /// The CLASSIC face — what a machine with visual styles off shows, and what
-    /// the three `FlatStyle`s other than `System` show everywhere — is three
+    /// The CLASSIC face - what a machine with visual styles off shows, and what
+    /// the three `FlatStyle`s other than `System` show everywhere - is three
     /// moves in the toolkit's own order: fill the box with a **system** colour,
     /// put a `DrawEdge` bevel (or a flat ring) round it, then lay the caption
     /// inside. Nothing is rounded and nothing is tinted; the face is
-    /// `ControlFace` at rest, at hover and while disabled — only its BORDER and
+    /// `ControlFace` at rest, at hover and while disabled - only its BORDER and
     /// its caption colour move.
     ///
     /// `FlatStyle::System` with visual styles on takes the first two moves from
@@ -832,7 +832,7 @@ impl ButtonBase {
         let px = device_pixel(c);
 
         // With visual styles on, a `Standard` or `System` button is `uxtheme`'s
-        // `BP_PUSHBUTTON` and not the `DrawEdge` bevel below — a themed Windows
+        // `BP_PUSHBUTTON` and not the `DrawEdge` bevel below - a themed Windows
         // 11 button is a `#FDFDFD` face inside a `#D0D0D0` frame with a darker
         // `#BABABA` bottom edge, and not one of those three is a `COLOR_*`. See
         // `face_is_themed` for why the two styles share this and why `Flat` and
@@ -846,7 +846,7 @@ impl ButtonBase {
         // The part is then asked for before the default-button ring and before
         // the fill, because when it answers it replaces both: it draws its own
         // frame, its own face and its own `PBS_DEFAULTED` marking. The ground it
-        // is composited onto is `Control` — the form's face, which is what shows
+        // is composited onto is `Control` - the form's face, which is what shows
         // through the corners the part rounds off.
         //
         // Everything after this point is shared with the classic path: the focus
@@ -862,11 +862,11 @@ impl ButtonBase {
                 colors.control,
             );
 
-        // The form's `AcceptButton` — « Default (accept) » on the reference
-        // sheet — wears an extra one-pixel `WindowFrame` rectangle and is drawn
+        // The form's `AcceptButton` - « Default (accept) » on the reference
+        // sheet - wears an extra one-pixel `WindowFrame` rectangle and is drawn
         // one pixel INSIDE it, so its own bevel is complete rather than
         // overdrawn. That ring, not a thicker border, is how the toolkit marks
-        // the control Enter activates — in the CLASSIC rendering. A themed
+        // the control Enter activates - in the CLASSIC rendering. A themed
         // button says the same thing with `PBS_DEFAULTED`, so drawing the ring
         // as well would say it twice.
         let bounds = if state.default && !themed {
@@ -884,7 +884,7 @@ impl ButtonBase {
         // The two mouse fallbacks are the one place this file approximates: the
         // toolkit computes them as `ControlPaint.Light/Dark(BackColor)`, an HLS
         // rotation of the *face*, and `SystemColors` publishes no such
-        // derivation — so the nearest published neighbours stand in.
+        // derivation - so the nearest published neighbours stand in.
         let fill = match source {
             FaceFill::MouseDown => {
                 self.flat_appearance.mouse_down_back_color.unwrap_or(colors.control_dark)
@@ -898,8 +898,8 @@ impl ButtonBase {
             FaceFill::Explicit => self.control.back_color.unwrap_or(colors.control),
             // The system face. A pushed-in toggle lightens to `ControlLight`
             // (the toolkit dithers `Control` with `ControlLightLight` there, a
-            // hatch this canvas cannot express); everything else — resting,
-            // hot, pressed, disabled — is plain `Control`, exactly as a classic
+            // hatch this canvas cannot express); everything else - resting,
+            // hot, pressed, disabled - is plain `Control`, exactly as a classic
             // button is. The sunken bevel below is what shows a press.
             FaceFill::VisualStyle => {
                 if checked {
@@ -910,12 +910,12 @@ impl ButtonBase {
             }
         };
         // The themed part has already put down both the face and the frame, so
-        // the classic pair is skipped rather than overdrawn — painting `fill`
+        // the classic pair is skipped rather than overdrawn - painting `fill`
         // under it would be invisible, but painting `paint_border` over it would
         // put a `DrawEdge` bevel on top of the theme's own frame.
         //
         // Its interior is TWO device pixels in, not one: the part reserves a
-        // one-pixel transparent margin around its border (measured — see the
+        // one-pixel transparent margin around its border (measured - see the
         // test in `theme.rs`), which is why a themed button's frame sits inside
         // its bounds while a classic bevel sits on them.
         let interior = if themed {
@@ -928,7 +928,7 @@ impl ButtonBase {
         // The focus rectangle sits one pixel inside the border. The toolkit
         // draws it as a dotted XOR pattern (`ControlPaint.DrawFocusRectangle`);
         // the canvas offers no dash pattern, so it is a solid `ControlText`
-        // hairline — the same rectangle, drawn solid.
+        // hairline - the same rectangle, drawn solid.
         if state.focused {
             c.stroke_rect(&interior.inflate(-px, -px), &colors.control_text);
         }
@@ -953,18 +953,18 @@ impl ButtonBase {
     ///
     /// * `Standard` and `System` are the classic bevel: `Border3DStyle::Raised`
     ///   at rest, `Sunken` while pressed (or while a toggle is checked).
-    ///   `System` differs from `Standard` only in what it IGNORES — `BackColor`,
-    ///   `Image`, `TextAlign` — which is settled before this point, so the two
+    ///   `System` differs from `Standard` only in what it IGNORES - `BackColor`,
+    ///   `Image`, `TextAlign` - which is settled before this point, so the two
     ///   share one arm rather than one being a copy of the other.
     /// * `Flat` carries its own `FlatAppearance` border: `BorderSize` rings of
     ///   `BorderColor`, and a `BorderSize` of **0** means no border at all.
-    /// * `Popup` is the member that exists FOR this distinction — the
+    /// * `Popup` is the member that exists FOR this distinction - the
     ///   `FlatStyle` Remarks: « The Popup style control initially appears Flat
     ///   until the mouse pointer moves over it. When the mouse pointer moves
     ///   over the Popup control, it appears as a Standard style control until
     ///   the mouse pointer is moved off of it again. » So it is one flat
-    ///   `ControlDark` ring at rest, and a single-ring « lite » bevel — raised
-    ///   under the pointer, sunken under the press — once the mouse arrives.
+    ///   `ControlDark` ring at rest, and a single-ring « lite » bevel - raised
+    ///   under the pointer, sunken under the press - once the mouse arrives.
     fn paint_border(
         &self,
         c: &dyn ControlCanvas,
@@ -984,7 +984,7 @@ impl ButtonBase {
             FlatStyle::Flat => {
                 // `BorderColor` unset falls back to the control's FOREGROUND,
                 // not to a shadow grey: the reference sheet's `Flat` button is
-                // outlined in pure black, which is `ControlText` here —
+                // outlined in pure black, which is `ControlText` here -
                 // `ControlDark` (#A0A0A0) and `WindowFrame` (#646464) are both
                 // visibly lighter than what the toolkit actually drew.
                 let color = self
@@ -1017,7 +1017,7 @@ impl ButtonBase {
     /// Draws the control's `Text` inside `content`, honouring `align`
     /// (`ContentAlignment` → horizontal DirectWrite alignment + vertical band)
     /// and `AutoEllipsis`. The face is the system UI font; the ink is the
-    /// control's `ForeColor`, else `ControlText`, and `GrayText` when disabled —
+    /// control's `ForeColor`, else `ControlText`, and `GrayText` when disabled -
     /// the one colour the toolkit greys a dead caption with.
     fn paint_label(&self, c: &dyn ControlCanvas, content: Rect, align: ContentAlignment) {
         if self.control.text.is_empty() {
@@ -1071,7 +1071,7 @@ impl std::ops::DerefMut for ButtonBase {
 }
 
 // ═════════════════════════════════════════════════════════════════════════════
-// Button — declares AutoSizeMode (a re-declaration of ControlBase) + DialogResult.
+// Button - declares AutoSizeMode (a re-declaration of ControlBase) + DialogResult.
 // ═════════════════════════════════════════════════════════════════════════════
 
 /// A plain command button.
@@ -1082,7 +1082,7 @@ impl std::ops::DerefMut for ButtonBase {
 #[derive(Clone)]
 pub struct Button {
     base: ButtonBase,
-    /// `DialogResult` — what this button reports when it closes a modal form.
+    /// `DialogResult` - what this button reports when it closes a modal form.
     pub dialog_result: DialogResult,
 }
 
@@ -1121,7 +1121,7 @@ impl Control for Button {
     /// `GetPreferredSize`: the label plus the face padding plus the control's
     /// own `Padding`, floored at the toolkit's default button height, then
     /// clamped by `MinimumSize`/`MaximumSize`. `AutoSize` is the caller's
-    /// concern — this returns the size the button *wants*; the layout applies it
+    /// concern - this returns the size the button *wants*; the layout applies it
     /// only when `AutoSize` is on.
     fn preferred_size(&self, c: &dyn Canvas) -> Size {
         let role = self.base.role();
@@ -1158,7 +1158,7 @@ fn button_preferred(text_w: f32, padding: Padding, lh: f32) -> Size {
 }
 
 // ═════════════════════════════════════════════════════════════════════════════
-// CheckBox — 7 declared: Appearance, AutoCheck, CheckAlign, CheckState, Checked,
+// CheckBox - 7 declared: Appearance, AutoCheck, CheckAlign, CheckState, Checked,
 // TextAlign (re-declared, default MiddleLeft), ThreeState.
 // ═════════════════════════════════════════════════════════════════════════════
 
@@ -1171,21 +1171,21 @@ fn button_preferred(text_w: f32, padding: Padding, lh: f32) -> Size {
 #[derive(Clone)]
 pub struct CheckBox {
     base: ButtonBase,
-    /// `Appearance` — a glyph (`Normal`) or a toggle button (`Button`).
+    /// `Appearance` - a glyph (`Normal`) or a toggle button (`Button`).
     pub appearance: Appearance,
-    /// `AutoCheck` — advance `CheckState` automatically on click.
+    /// `AutoCheck` - advance `CheckState` automatically on click.
     pub auto_check: bool,
-    /// `CheckAlign` — where the glyph sits in the box.
+    /// `CheckAlign` - where the glyph sits in the box.
     pub check_align: ContentAlignment,
-    /// `CheckState` — the source of truth for the check.
+    /// `CheckState` - the source of truth for the check.
     pub check_state: CheckState,
-    /// `ThreeState` — allow `Indeterminate` in the click cycle.
+    /// `ThreeState` - allow `Indeterminate` in the click cycle.
     pub three_state: bool,
 }
 
 impl Default for CheckBox {
     fn default() -> Self {
-        // CheckBox re-declares TextAlign to flip its default to MiddleLeft — a
+        // CheckBox re-declares TextAlign to flip its default to MiddleLeft - a
         // label reads left-to-right from the box, not centred over it.
         let base = ButtonBase { text_align: ContentAlignment::MiddleLeft, ..ButtonBase::default() };
         Self {
@@ -1204,19 +1204,19 @@ impl CheckBox {
         Self::default()
     }
 
-    /// `Checked` getter — true unless `Unchecked`, matching the toolkit
+    /// `Checked` getter - true unless `Unchecked`, matching the toolkit
     /// (`Indeterminate` reports as checked).
     pub fn checked(&self) -> bool {
         self.check_state != CheckState::Unchecked
     }
 
-    /// `Checked` setter — snaps `CheckState` to the two-state value.
+    /// `Checked` setter - snaps `CheckState` to the two-state value.
     pub fn set_checked(&mut self, checked: bool) {
         self.check_state = if checked { CheckState::Checked } else { CheckState::Unchecked };
     }
 
     /// Simulates a click: when `AutoCheck` is on, advance `CheckState` by the
-    /// same cycle the toolkit uses. Owns no event loop — the host calls this.
+    /// same cycle the toolkit uses. Owns no event loop - the host calls this.
     pub fn perform_click(&mut self) {
         if self.auto_check {
             self.check_state = next_check_state(self.check_state, self.three_state);
@@ -1274,7 +1274,7 @@ impl Control for CheckBox {
         self.base.control.clamp(size)
     }
 
-    /// See `Button::paint` — `paint` delegates here, never the reverse.
+    /// See `Button::paint` - `paint` delegates here, never the reverse.
     fn paint(&self, c: &dyn ControlCanvas, bounds: Rect) {
         self.paint_with_state(c, bounds, ControlState::default());
     }
@@ -1287,7 +1287,7 @@ impl Control for CheckBox {
             }
             Appearance::Normal => {
                 let content = self.base.inset(bounds, Rect::new(0.0, 0.0, 0.0, 0.0));
-                // `System` re-aligns the glyph but leaves `TextAlign` alone —
+                // `System` re-aligns the glyph but leaves `TextAlign` alone -
                 // see `system_check_align` for the toolkit's exact wording.
                 let align =
                     system_check_align(self.base.flat_style, self.check_align, self.base.text_align);
@@ -1314,26 +1314,26 @@ impl Control for CheckBox {
 }
 
 // ═════════════════════════════════════════════════════════════════════════════
-// RadioButton — 6 declared: Appearance, AutoCheck, CheckAlign, Checked, TabStop
+// RadioButton - 6 declared: Appearance, AutoCheck, CheckAlign, Checked, TabStop
 // (re-declared, default false), TextAlign (re-declared, default MiddleLeft).
 // ═════════════════════════════════════════════════════════════════════════════
 
 /// A mutually-exclusive option button.
 ///
 /// Unlike `CheckBox`, `RadioButton` has no `CheckState`/`ThreeState`: it is a
-/// plain two-state `Checked`. Selecting one clears its siblings — a container
+/// plain two-state `Checked`. Selecting one clears its siblings - a container
 /// rule the port models with [`select_radio`], since a control holds no parent
 /// pointer.
 #[derive(Clone)]
 pub struct RadioButton {
     base: ButtonBase,
-    /// `Appearance` — a glyph (`Normal`) or a toggle button (`Button`).
+    /// `Appearance` - a glyph (`Normal`) or a toggle button (`Button`).
     pub appearance: Appearance,
-    /// `AutoCheck` — check automatically on click (radios never self-uncheck).
+    /// `AutoCheck` - check automatically on click (radios never self-uncheck).
     pub auto_check: bool,
-    /// `CheckAlign` — where the dot sits in the box.
+    /// `CheckAlign` - where the dot sits in the box.
     pub check_align: ContentAlignment,
-    /// `Checked` — whether this option is selected.
+    /// `Checked` - whether this option is selected.
     pub checked: bool,
 }
 
@@ -1360,7 +1360,7 @@ impl RadioButton {
     }
 
     /// Simulates a click: when `AutoCheck` is on, select this button. A radio
-    /// does not toggle off on a second click — clearing happens by another
+    /// does not toggle off on a second click - clearing happens by another
     /// sibling being chosen (see [`select_radio`]).
     pub fn perform_click(&mut self) {
         if self.auto_check {
@@ -1410,7 +1410,7 @@ impl Control for RadioButton {
         self.base.control.clamp(size)
     }
 
-    /// See `Button::paint` — `paint` delegates here, never the reverse.
+    /// See `Button::paint` - `paint` delegates here, never the reverse.
     fn paint(&self, c: &dyn ControlCanvas, bounds: Rect) {
         self.paint_with_state(c, bounds, ControlState::default());
     }
@@ -1487,11 +1487,11 @@ fn split_glyph(content: Rect, align: ContentAlignment) -> (Rect, Rect) {
 /// The 3-D edge a check box's WELL is drawn with, for this `FlatStyle` in this
 /// state.
 ///
-/// `Standard` and `System` are the classic sunken well — two rings, dark then
+/// `Standard` and `System` are the classic sunken well - two rings, dark then
 /// darker on the top and left, so the box reads as a hole punched in the face.
 /// `Flat` has no bevel at all (one `ControlDark` ring), and `Popup` is flat
 /// until the pointer arrives, when it lifts into the single-ring « lite » bevel
-/// — the same rule the family's buttons follow, which is the whole point of the
+/// - the same rule the family's buttons follow, which is the whole point of the
 /// two styles existing.
 fn glyph_edge(flat_style: FlatStyle, state: ControlState) -> Border3DStyle {
     match flat_style {
@@ -1507,26 +1507,26 @@ fn glyph_edge(flat_style: FlatStyle, state: ControlState) -> Border3DStyle {
 ///
 /// **Themed first.** With visual styles on, a `Standard` or `System` check box is
 /// `uxtheme`'s `BP_CHECKBOX`, and the part draws the box, its fill AND its mark
-/// in one call — so the whole classic body below is the fallback, not a
+/// in one call - so the whole classic body below is the fallback, not a
 /// decoration over it. The reference sheet's unticked box is `#626262` around
 /// `#F3F3F3` and its ticked one is a solid accent `#005FB8`; the classic well is
 /// a `DrawEdge` bevel around `COLOR_WINDOW` white, and neither of those greys is
 /// any `GetSysColor` index.
 ///
-/// `ground` is the colour the glyph is composited onto — the control's own
-/// background — because the part antialiases its corners against it. Passing the
+/// `ground` is the colour the glyph is composited onto - the control's own
+/// background - because the part antialiases its corners against it. Passing the
 /// form face where a caller has named a `BackColor` would show as a pale fringe
 /// on the four corners, not as a missing glyph.
 ///
 /// The CLASSIC box is a **3-D well**: `DrawEdge` around a `Window`-coloured
 /// field, which is what makes a classic check box read as recessed rather than as
 /// a stroked square. The field drops to `Control` when the control is disabled or
-/// the pointer is holding it down — the toolkit's own two exceptions to « a check
+/// the pointer is holding it down - the toolkit's own two exceptions to « a check
 /// box is a white hole ».
 ///
 /// The classic tick and indeterminate bar stay **vector geometries**
 /// (`Canvas::vector_icon`), not text: a « ✓ » drawn through a text format is at
-/// the mercy of whichever family resolves it — its optical size and baseline
+/// the mercy of whichever family resolves it - its optical size and baseline
 /// would differ from the toolkit's, and it would not scale cleanly with the DPI
 /// factor. `vector_icon` scales the path from its own view box, so the mark is
 /// identical at every scale.
@@ -1553,7 +1553,7 @@ fn paint_check_glyph(
 
     let colors = c.visuals().colors;
     let interior = c.draw_edge(&box_rect, glyph_edge(flat_style, state), Border3DSide::ALL);
-    // A live field is `Window`; a dead one, or one held down, is the face —
+    // A live field is `Window`; a dead one, or one held down, is the face -
     // the toolkit's way of saying « this hole is not accepting a click ».
     let field = if enabled && !state.pressed { colors.window } else { colors.control };
     c.fill_rect(&interior, &field);
@@ -1574,15 +1574,15 @@ fn paint_check_glyph(
 /// Paints a radio button glyph: a recessed ring with an ink dot when checked.
 ///
 /// **Themed first**, on the same two `FlatStyle`s as the check box and for the
-/// same measured reason — `BP_RADIOBUTTON` is `#626262` around `#F3F3F3`
+/// same measured reason - `BP_RADIOBUTTON` is `#626262` around `#F3F3F3`
 /// unselected, a solid accent `#005FB8` ring around `#FFFFFF` selected, and
 /// `#C3C3C3` around `#F9F9F9` disabled, all three of which the reference sheet
 /// holds byte for byte. The part is a genuine circle with genuine antialiasing,
-/// which is exactly what the classic path below cannot draw — so `ground` (the
+/// which is exactly what the classic path below cannot draw - so `ground` (the
 /// control's own background) matters more here than anywhere else in the file:
 /// it is what the four corners the circle does not cover are filled with.
 ///
-/// The CLASSIC glyph is the one shape in the family that is **not** square — a
+/// The CLASSIC glyph is the one shape in the family that is **not** square - a
 /// WinForms radio button is a circle, and squaring it to match the rest of the
 /// repaint would be a different control. The canvas has no ellipse or arc
 /// primitive, so the circle is a rounded rectangle whose radius is half its side,
@@ -1617,7 +1617,7 @@ fn paint_radio_glyph(
     c.fill_rounded(&box_rect, r, &field);
     c.stroke_rounded(&box_rect, r, &colors.control_dark);
     if checked {
-        // Inner dot, inset by ~3.5 DIP all round — the classic 5×5 mark inside a
+        // Inner dot, inset by ~3.5 DIP all round - the classic 5×5 mark inside a
         // 13×13 glyph.
         let dot = Rect::new(
             box_rect.left + 3.5,
@@ -1631,7 +1631,7 @@ fn paint_radio_glyph(
 }
 
 // ═════════════════════════════════════════════════════════════════════════════
-// Tests — defaults against the catalogue, measurement arithmetic, the CheckState
+// Tests - defaults against the catalogue, measurement arithmetic, the CheckState
 // state machine, RadioButton exclusion, and the re-declaration ordering traps.
 // ═════════════════════════════════════════════════════════════════════════════
 
@@ -1763,7 +1763,7 @@ mod tests {
     }
 
     /// An unset `BackColor` is AMBIENT, not a literal colour, so clearing the
-    /// flag without naming a colour still lands on the theme face — the same
+    /// flag without naming a colour still lands on the theme face - the same
     /// rule `ControlBase::resolved_fore` uses.
     #[test]
     fn an_unset_back_color_stays_ambient_whatever_the_flag() {
@@ -1778,7 +1778,7 @@ mod tests {
 
     /// The trap the docs settle: `CheckedBackColor` is defined as the face
     /// « when the button is checked AND the mouse pointer is outside the bounds
-    /// of the control », so the two mouse states rank ABOVE it — and above an
+    /// of the control », so the two mouse states rank ABOVE it - and above an
     /// explicit `BackColor` too, since `BackColor` is only the RESTING face.
     /// Ranking `BackColor` first would mean naming a face colour permanently
     /// disables hover feedback.
@@ -1819,7 +1819,7 @@ mod tests {
         assert_eq!(b.base.face_fill_source(hot(), true), FaceFill::MouseOver);
     }
 
-    /// A fill that is not SET never wins its slot — otherwise an unset colour
+    /// A fill that is not SET never wins its slot - otherwise an unset colour
     /// would be painted as a literal black.
     #[test]
     fn an_unset_flat_fill_falls_through_to_the_next_source() {
@@ -1904,14 +1904,14 @@ mod tests {
             system_check_align(FlatStyle::System, A::MiddleRight, A::TopRight),
             A::TopRight
         );
-        // Untouched under any other style — the property value never changes.
+        // Untouched under any other style - the property value never changes.
         assert_eq!(
             system_check_align(FlatStyle::Standard, A::MiddleCenter, A::TopRight),
             A::MiddleCenter
         );
     }
 
-    /// A disabled control cannot be hot, pressed or focused — the toolkit does
+    /// A disabled control cannot be hot, pressed or focused - the toolkit does
     /// not route mouse messages to it. Without this, a disabled button would
     /// still light up under the cursor.
     #[test]
@@ -1925,7 +1925,7 @@ mod tests {
         );
     }
 
-    /// A disabled `Flat` button must not reach `MouseOverBackColor` either — the
+    /// A disabled `Flat` button must not reach `MouseOverBackColor` either - the
     /// neutralised state has to be what feeds the precedence, not the raw one.
     #[test]
     fn a_disabled_flat_button_never_reaches_its_mouse_over_colour() {
@@ -2117,13 +2117,13 @@ mod tests {
                 "{check:?} disabled"
             );
         }
-        // Focus has no themed glyph — unlike a push button, `BP_CHECKBOX` has no
+        // Focus has no themed glyph - unlike a push button, `BP_CHECKBOX` has no
         // accented state, so a focused check box is still `NORMAL`.
         let focused = ControlState { focused: true, ..ControlState::default() };
         assert_eq!(check_box_state(true, focused, S::Unchecked), CBS_UNCHECKEDNORMAL);
     }
 
-    /// `BP_RADIOBUTTON`'s eight — the same shape with two groups, because a radio
+    /// `BP_RADIOBUTTON`'s eight - the same shape with two groups, because a radio
     /// has no third state.
     #[test]
     fn the_radio_button_state_is_its_check_group_times_its_interaction() {
@@ -2159,7 +2159,7 @@ mod tests {
     }
 
     /// The twenty ids must be twenty DIFFERENT ids. Two colliding would make one
-    /// state silently draw as another — the failure mode this whole family is
+    /// state silently draw as another - the failure mode this whole family is
     /// migrating away from.
     #[test]
     fn the_twenty_glyph_state_ids_are_all_distinct() {
@@ -2192,8 +2192,8 @@ mod tests {
     }
 
     /// A **focused** push button wears the theme's accented frame, which is what
-    /// the reference sheet shows: its `Standard` button — the first control on
-    /// the form, and the only one with the focus — is framed in `#0078D4`, while
+    /// the reference sheet shows: its `Standard` button - the first control on
+    /// the form, and the only one with the focus - is framed in `#0078D4`, while
     /// the one *labelled* « Default (accept) » is framed in the resting
     /// `#D0D0D0`. The sheet's source never assigns `AcceptButton`, so the accent
     /// is the focus, not the default.
@@ -2212,7 +2212,7 @@ mod tests {
 
     /// Measured on the reference sheet, not assumed: `Standard` **is**
     /// theme-drawn (`#D0D0D0`/`#FDFDFD`/`#BABABA`, and `#E9E9E9`/`#F9F9F9` when
-    /// disabled — none of them a `COLOR_*`), exactly like `System`. `Flat`
+    /// disabled - none of them a `COLOR_*`), exactly like `System`. `Flat`
     /// (`#000000` ring) and `Popup` (`#808080` ring) are on the same sheet and
     /// are not.
     #[test]
@@ -2228,8 +2228,8 @@ mod tests {
     }
 
     /// The gate that keeps a named colour visible: a `Standard` button with an
-    /// explicit `BackColor` paints that colour, so the themed part — which draws
-    /// its own opaque face — must not be asked for at all. `System` cannot reach
+    /// explicit `BackColor` paints that colour, so the themed part - which draws
+    /// its own opaque face - must not be asked for at all. `System` cannot reach
     /// this arm (its Remarks say `BackColor` is ignored for button controls), so
     /// one condition covers both.
     #[test]
@@ -2249,7 +2249,7 @@ mod tests {
 
     // ── The pixels, pinned against the reference sheet. ─────────────────────
 
-    /// Renders one `BUTTON` part into a DIB and returns its pixels — the same GDI
+    /// Renders one `BUTTON` part into a DIB and returns its pixels - the same GDI
     /// path `theme::render_part` uses, stopping short of the Direct2D upload so
     /// the assertions need no device, no window and no swap chain.
     ///
@@ -2257,7 +2257,7 @@ mod tests {
     /// a themed-off machine (or under [`theme::CLASSIC_ENV`]) the classic path is
     /// the correct rendering and there is no themed pixel to assert.
     ///
-    /// Rendered at **96 DPI** into a 13×13 box — the classic [`GLYPH`] size, and
+    /// Rendered at **96 DPI** into a 13×13 box - the classic [`GLYPH`] size, and
     /// the one the theme draws its glyph at 1:1. The reference sheet was captured
     /// at 144 DPI, where the same part is 20×20; the flat regions asserted below
     /// are byte-identical at both, which is what makes a 96-DPI test comparable
@@ -2286,16 +2286,16 @@ mod tests {
     ///
     /// The sheet's check boxes are `FlatStyle::Standard` at 144 DPI:
     ///
-    /// * « Unchecked » — a `#626262` frame around a `#F3F3F3` field;
-    /// * « Checked » — a solid accent `#005FB8` box;
-    /// * « Indeterminate » — the same `#005FB8` box with a paler `#7FAFDB` bar.
+    /// * « Unchecked » - a `#626262` frame around a `#F3F3F3` field;
+    /// * « Checked » - a solid accent `#005FB8` box;
+    /// * « Indeterminate » - the same `#005FB8` box with a paler `#7FAFDB` bar.
     ///
     /// None of those three is a `GetSysColor` index, which is the whole reason
     /// this family had to stop drawing the glyph itself.
     #[test]
     fn the_check_box_glyph_is_the_reference_sheet() {
         let Some(unchecked) = sample_glyph(BP_CHECKBOX, CBS_UNCHECKEDNORMAL) else {
-            eprintln!("[buttons] visual styles unavailable — themed glyph not asserted");
+            eprintln!("[buttons] visual styles unavailable - themed glyph not asserted");
             return;
         };
         let (edge, centre) = edge_and_centre(&unchecked);
@@ -2306,7 +2306,7 @@ mod tests {
         let (edge, centre) = edge_and_centre(&checked);
         assert_eq!(edge, "#005FB8", "CBS_CHECKEDNORMAL frame");
         assert_eq!(centre, "#005FB8", "CBS_CHECKEDNORMAL is a SOLID accent box");
-        // The tick itself, one row below centre and two columns left of it —
+        // The tick itself, one row below centre and two columns left of it -
         // white laid over the accent, so its blend is the proof the theme drew a
         // mark and not just a filled square.
         let n = GLYPH as usize;
@@ -2323,7 +2323,7 @@ mod tests {
         assert_ne!(centre, "#005FB8", "a mixed box is not a checked one");
     }
 
-    /// The three `BP_RADIOBUTTON` states the sheet contains — « Option A »
+    /// The three `BP_RADIOBUTTON` states the sheet contains - « Option A »
     /// selected, « Option B » clear, and the disabled one.
     ///
     /// The unselected radio's frame is the SAME `#626262` as the check box's,
@@ -2332,7 +2332,7 @@ mod tests {
     #[test]
     fn the_radio_glyph_is_the_reference_sheet() {
         let Some(clear) = sample_glyph(BP_RADIOBUTTON, RBS_UNCHECKEDNORMAL) else {
-            eprintln!("[buttons] visual styles unavailable — themed glyph not asserted");
+            eprintln!("[buttons] visual styles unavailable - themed glyph not asserted");
             return;
         };
         let (edge, centre) = edge_and_centre(&clear);
@@ -2345,7 +2345,7 @@ mod tests {
         assert_eq!(centre, "#FFFFFF", "the dot's own white core");
 
         // The sheet's disabled radio: `#C3C3C3` around `#F9F9F9`. It is a
-        // distinct RENDERING, not a greyed copy — which is what makes passing
+        // distinct RENDERING, not a greyed copy - which is what makes passing
         // the control's real `enabled` through worth doing.
         let dead = sample_glyph(BP_RADIOBUTTON, RBS_UNCHECKEDDISABLED).expect("disabled");
         let (edge, centre) = edge_and_centre(&dead);
@@ -2355,7 +2355,7 @@ mod tests {
 
     /// Every state id must reach the theme and come back with its OWN pixels.
     ///
-    /// The states the sheet cannot show — nothing on it is hot or pressed — are
+    /// The states the sheet cannot show - nothing on it is hot or pressed - are
     /// pinned here instead: hot, pressed and disabled each render differently
     /// from normal and from each other, so an id mapped to the wrong slot fails
     /// rather than drawing a plausible neighbour.
@@ -2374,7 +2374,7 @@ mod tests {
         let mut seen: Vec<(&str, String, String)> = vec![];
         for (name, part, state) in states {
             let Some(px) = sample_glyph(part, state) else {
-                eprintln!("[buttons] visual styles unavailable — themed states not asserted");
+                eprintln!("[buttons] visual styles unavailable - themed states not asserted");
                 return;
             };
             let (edge, centre) = edge_and_centre(&px);
@@ -2387,7 +2387,7 @@ mod tests {
                     assert_ne!(
                         (&a.1, &a.2),
                         (&b.1, &b.2),
-                        "{} and {} render identically — one of the two ids is wrong",
+                        "{} and {} render identically - one of the two ids is wrong",
                         a.0,
                         b.0
                     );
@@ -2415,7 +2415,7 @@ mod tests {
     /// middle row is still the pre-fill, and the frame only starts at index 1.
     ///
     /// That is the measurement `paint_face` insets its themed interior by TWO
-    /// device pixels for, and it is what the sheet shows too — the `System`
+    /// device pixels for, and it is what the sheet shows too - the `System`
     /// button's `#D0D0D0` frame sits one pixel INSIDE its bounds, where a classic
     /// bevel would sit on them. Pinned here as well as in `theme.rs` because it
     /// is this file that depends on it.
@@ -2423,7 +2423,7 @@ mod tests {
     fn the_themed_push_button_keeps_its_one_pixel_margin() {
         let (w, h) = (60usize, 26usize);
         let Some(px) = sample_push_button(PBS_NORMAL, w as i32, h as i32) else {
-            eprintln!("[buttons] visual styles unavailable — themed margin not asserted");
+            eprintln!("[buttons] visual styles unavailable - themed margin not asserted");
             return;
         };
         let mid = h / 2;
@@ -2446,7 +2446,7 @@ mod tests {
         sample_part(BP_PUSHBUTTON, state, w, h)
     }
 
-    /// Renders one `BUTTON` part into a DIB and hands back its pixels — see
+    /// Renders one `BUTTON` part into a DIB and hands back its pixels - see
     /// [`sample_glyph`] for what the answer means and when it is `None`.
     fn sample_part(part: i32, state: i32, w: i32, h: i32) -> Option<Vec<u32>> {
         use windows::core::w as wide;
@@ -2463,7 +2463,7 @@ mod tests {
         if std::env::var_os(theme::CLASSIC_ENV).is_some() {
             return None;
         }
-        // SAFETY: as `sample_glyph` — every handle is released on every path.
+        // SAFETY: as `sample_glyph` - every handle is released on every path.
         unsafe {
             if !IsThemeActive().as_bool() || !IsAppThemed().as_bool() {
                 return None;
@@ -2504,7 +2504,7 @@ mod tests {
             let previous = SelectObject(dc, bitmap.into());
             let px = std::slice::from_raw_parts_mut(bits.cast::<u32>(), (w * h) as usize);
             // The sheet was captured on `COLOR_BTNFACE` (#F0F0F0), which is the
-            // ground a form puts behind all three of these parts — so a pixel
+            // ground a form puts behind all three of these parts - so a pixel
             // sampled here is directly comparable with one sampled from it.
             px.fill(0xFFF0_F0F0);
             let rect = RECT { left: 0, top: 0, right: w, bottom: h };

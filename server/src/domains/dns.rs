@@ -5,7 +5,7 @@
 //! Ownership of a domain cannot be asserted from inside the console: whoever
 //! filled the form is exactly the person whose claim is in doubt. The proof has
 //! to be something only the domain's controller can produce, and reading it has
-//! to happen somewhere they cannot forge — which leaves a DNS query.
+//! to happen somewhere they cannot forge - which leaves a DNS query.
 //!
 //! This is the one outward request this feature makes, it is made against the
 //! name an administrator typed, and it is made when they ask for it (or by the
@@ -17,7 +17,7 @@
 //!
 //! It reads. It never writes, never suggests a registrar, never proxies through
 //! anybody's API. An instance whose resolver is unreachable degrades to "je n'ai
-//! pas pu vérifier, voici pourquoi" — never to "vérifié" and never to a silent
+//! pas pu vérifier, voici pourquoi" - never to "vérifié" and never to a silent
 //! failure.
 
 use std::sync::OnceLock;
@@ -45,7 +45,7 @@ static RESOLVER: OnceLock<Option<SharedResolver>> = OnceLock::new();
 
 /// The system resolver, built once.
 ///
-/// `None` when the host has no usable configuration — a container without
+/// `None` when the host has no usable configuration - a container without
 /// `/etc/resolv.conf` is the realistic case. Every caller then reports that it
 /// could not check, which is the truth, rather than reporting a failed check.
 fn resolver() -> Option<&'static SharedResolver> {
@@ -69,7 +69,7 @@ fn resolver() -> Option<&'static SharedResolver> {
 pub enum ProbeError {
     /// The instance itself cannot resolve anything.
     NoResolver,
-    /// The name does not exist at all — almost always a typo in the domain.
+    /// The name does not exist at all - almost always a typo in the domain.
     UnknownDomain,
     /// The name exists but carries no record of the kind we asked for.
     NoRecord,

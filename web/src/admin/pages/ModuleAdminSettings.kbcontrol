@@ -1,4 +1,4 @@
-<!-- ModuleAdminSettings — converted from ModuleAdminSettings.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- ModuleAdminSettings - converted from ModuleAdminSettings.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="ModuleAdminSettingsProps">
   <Panel Class="contents">
     <Stack Direction="LeftToRight" Gap="0" Justify="Center" Visible="{Binding show_case_1}" Class="py-6">

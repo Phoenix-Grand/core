@@ -3,7 +3,7 @@
 //! Each secret (a refresh token, the account book, the device key) is encrypted with AES-256-GCM under a key that lives
 //! in the **Android Keystore** (`AndroidKeyStore`, hardware-backed where the device has it) and never leaves it, and
 //! the ciphertext is written to a file in the app's private storage (`<internal data>/kubuno-secrets/<hex key>.bin`,
-//! `IV ‖ ciphertext+tag`). Pure JNI from the NativeActivity — no Java/Kotlin of our own, no Gradle library. Uninstalling
+//! `IV ‖ ciphertext+tag`). Pure JNI from the NativeActivity - no Java/Kotlin of our own, no Gradle library. Uninstalling
 //! the app removes both the files and the key.
 
 use std::path::PathBuf;

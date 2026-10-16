@@ -2,7 +2,7 @@
 // grouped by family, each family screenshotted to a PNG.
 //
 // This is the visual ground truth the Kubuno control library is compared
-// against — the same controls, the same states (normal / hover-ish / disabled /
+// against - the same controls, the same states (normal / hover-ish / disabled /
 // checked / read-only), at a known DPI.
 //
 //   gallery.exe <outDir> [family...]      // default: every family
@@ -48,14 +48,14 @@ static class Program
     {
         using var f = new Form
         {
-            Text = $"WinForms reference — {name}",
+            Text = $"WinForms reference - {name}",
             ClientSize = new Size(1500, 1000),
             StartPosition = FormStartPosition.Manual,
             Location = new Point(-3000, -3000),   // off-screen: never steals focus
             // `AutoScaleMode.Dpi` scales against `AutoScaleDimensions`, and an
             // unset (0,0) baseline means it scales by nothing. The sheet then
             // came out INTERNALLY INCONSISTENT: fonts and system metrics at the
-            // real 175 %, but every explicit `Width`/`Height` still at 96 dpi —
+            // real 175 %, but every explicit `Width`/`Height` still at 96 dpi -
             // so a 240-wide combo carried 175 % text. Every comparison against
             // such a sheet reads as a port defect when it is a harness one.
             // Naming the design DPI makes the whole sheet scale together.

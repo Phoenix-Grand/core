@@ -1,4 +1,4 @@
-<!-- MobileFab — converted from MobileFab.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- MobileFab - converted from MobileFab.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl>
   <Panel Class="contents">
     <Panel AccessibleHidden="true"

@@ -1,4 +1,4 @@
-//! A small, position-tracking XML reader — enough for `.kbres` files and the `.resx`/`.resw` files
+//! A small, position-tracking XML reader - enough for `.kbres` files and the `.resx`/`.resw` files
 //! the conversion tool imports: elements, attributes, text, CDATA, comments, the XML declaration, a
 //! skipped DOCTYPE and the predefined/numeric entities. No namespaces processing (prefixes are kept
 //! in the names), no DTD. Every element and attribute value keeps its byte range in the source, so

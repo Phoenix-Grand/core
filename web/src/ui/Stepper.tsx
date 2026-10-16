@@ -46,13 +46,13 @@ export interface StepperProps {
 }
 
 /** Below this container width the horizontal indicator would wrap onto several
- *  lines — a shape the project explicitly rejects — so it collapses instead. */
+ *  lines - a shape the project explicitly rejects - so it collapses instead. */
 const COMPACT_WIDTH = 560
 
 /** Container-width watcher. The window is the wrong ruler here: a Stepper often
  *  lives in a narrow column (a dialog, a side panel, the admin theme preview's
  *  390 px stage) on a perfectly wide screen. A measured width of 0 (collapsed
- *  panel) counts as narrow — it is a real measurement, not a missing one. */
+ *  panel) counts as narrow - it is a real measurement, not a missing one. */
 function useCompact(ref: RefObject<HTMLElement | null>, threshold: number): boolean {
   const [compact, setCompact] = useState(false)
   useEffect(() => {
@@ -76,7 +76,7 @@ function resolveStatus(step: StepDef, index: number, currentIndex: number): Step
   return 'pending'
 }
 
-/** Bullet skin per status — token-backed, so themes recolour the whole trail. */
+/** Bullet skin per status - token-backed, so themes recolour the whole trail. */
 const BULLET: Record<StepStatus, string> = {
   complete: 'bg-primary text-white border-primary',
   current:  'bg-white text-primary border-primary',
@@ -94,7 +94,7 @@ const LABEL: Record<StepStatus, string> = {
 }
 
 /**
- * Stepper — the progress spine of a multi-step assistant.
+ * Stepper - the progress spine of a multi-step assistant.
  *
  * Semantics: an ordered list (`<ol>`), the active step carrying
  * `aria-current="step"`; each bullet is a real `<button>` when the step is
@@ -102,7 +102,7 @@ const LABEL: Record<StepStatus, string> = {
  * offers what can actually be activated. Status is announced in words through
  * the accessible name ("Completed" / "Needs attention"), never by colour alone.
  *
- * Narrow containers do not shrink the trail — they replace it: "Step 2 of 5",
+ * Narrow containers do not shrink the trail - they replace it: "Step 2 of 5",
  * the current label, and a slim progress rail. That is a different hierarchy,
  * not a squeezed one, and it never wraps onto a second row.
  */
@@ -222,7 +222,7 @@ export function Stepper({
                 onClick={() => onStepChange?.(step.id, i)}
                 // Status is part of the accessible name: colour alone never
                 // conveys "done" or "failed".
-                aria-label={extra ? `${step.label} — ${extra}` : step.label}
+                aria-label={extra ? `${step.label} - ${extra}` : step.label}
                 className="flex min-w-0 flex-1 items-center rounded-md px-1 py-1 text-left transition-colors
                            hover:bg-surface-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
               >
@@ -263,11 +263,11 @@ export interface UseStepperResult {
   next:    () => void
   prev:    () => void
   goTo:    (id: string) => void
-  /** Flag a step as failing (or clear it) — drives its `error` status. */
+  /** Flag a step as failing (or clear it) - drives its `error` status. */
   setError:  (id: string, failed: boolean) => void
   /** Statuses to spread onto the step definitions handed to `<Stepper>`. */
   statuses:  Record<string, StepStatus>
-  /** Steps with `status` already resolved — pass straight to `<Stepper steps>`. */
+  /** Steps with `status` already resolved - pass straight to `<Stepper steps>`. */
   resolved:  StepDef[]
 }
 

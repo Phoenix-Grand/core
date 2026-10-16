@@ -5,7 +5,7 @@
 //! The services are installed once per UI thread ([`install`]) and again at every snapshot ([`apply`]): the
 //! waffle reads its service when it opens, and `set_default_accounts` makes every avatar take its look again.
 //!
-//! What a pick does — every choice is a pure function ([`plan_launch`], [`plan_account`]) so it is tested, and
+//! What a pick does - every choice is a pure function ([`plan_launch`], [`plan_account`]) so it is tested, and
 //! carried out by a [`Performer`] (the default one below, or a stub in tests and demos):
 //!
 //! | Pick | Action |
@@ -206,7 +206,7 @@ pub fn perform(action: &Action, sample: bool) {
     }
 }
 
-/// Opens `url` in the user's browser — never in the offline sample nor in a sandboxed profile (tests,
+/// Opens `url` in the user's browser - never in the offline sample nor in a sandboxed profile (tests,
 /// captures), which only log it.
 pub fn open_url(url: &str, sample: bool) {
     if url.is_empty() || sample || !kubuno_desktop_account::paths::system_integration_allowed() {

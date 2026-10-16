@@ -1,6 +1,6 @@
 //! The project's own controls (EVT-7b of `vskubuno/docs/EVENTS.md`, §4.3 "Metadata without
 //! building"): the `#[derive(Component)]` / `#[derive(UserControl)]` classes of the package a view
-//! belongs to — and of its path dependencies — read from their sources with `syn`
+//! belongs to - and of its path dependencies - read from their sources with `syn`
 //! (`kubuno_desktop_views_meta::scan_source`, the very grammar the derive macros compile), and registered
 //! with the view registry as **declared** classes (`kubuno_desktop_views::registry::set_declared`). From
 //! then on completion, validation, hover, go-to-definition, the Properties window and the Toolbox
@@ -182,7 +182,7 @@ pub fn workspace_dependencies(manifest: &str, root: &Path) -> Vec<PathBuf> {
 /// Whether the package at `root` can hold controls of its own: it depends on `kubuno-desktop-views` or on the `kubuno-desktop`
 /// facade (a control library of an application: `uclib = { path = "../UcLib" }`, `kubuno-desktop-shell-controls`). The
 /// framework's own crates ([`kubuno_desktop_views_meta::FRAMEWORK_CRATES`], an explicit list, never a `kubuno` prefix) are
-/// not scanned: their classes are the built-in ones — except the facade and the crates of library components
+/// not scanned: their classes are the built-in ones - except the facade and the crates of library components
 /// ([`kubuno_desktop_views_meta::LIBRARY_COMPONENT_CRATES`]: `kubuno-desktop-print`, `kubuno-desktop-data`…, reached through the facade's
 /// workspace dependencies), whose components the language server learns from their sources.
 fn is_control_library(root: &Path) -> bool {
@@ -475,7 +475,7 @@ mod tests {
     }
 
     /// Found live: a user control in a library crate of a facade application (`kubuno = { path = … }` only) had an
-    /// empty Properties window — the library was not scanned.
+    /// empty Properties window - the library was not scanned.
     #[test]
     fn a_library_of_the_facade_holds_controls() {
         assert!(manifest_is_control_library("[package]\nname = \"uclib\"\n\n[dependencies]\nkubuno-desktop = { path = \"../kubuno\" }\n"));

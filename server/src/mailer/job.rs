@@ -1,4 +1,4 @@
-//! `core.send_email` — outgoing mail as a background job.
+//! `core.send_email` - outgoing mail as a background job.
 //!
 //! Delivery never happens on the request path. An SMTP relay that is slow,
 //! greylisting, or simply down would otherwise turn "I forgot my password" into
@@ -11,7 +11,7 @@
 //!
 //! Rendering happens at enqueue time (the request knows the recipient's locale,
 //! the instance name and the origin the link must point at; the worker does
-//! not). That puts the reset link — a bearer secret — in `core.jobs.payload`
+//! not). That puts the reset link - a bearer secret - in `core.jobs.payload`
 //! until delivery. Two mitigations: the row is scrubbed the moment the message
 //! is accepted by the relay ([`scrub_payload`]), and the tokens themselves are
 //! short-lived and single-use. A job that ends up `failed` keeps its payload, on
@@ -63,7 +63,7 @@ impl From<&EmailPayload> for Outgoing {
 }
 
 /// Queues a message. Returns the job id, or `None` when the relay is not
-/// configured — in which case nothing is queued and a warning is logged.
+/// configured - in which case nothing is queued and a warning is logged.
 ///
 /// Callers on public routes must treat both outcomes identically: whether a
 /// message was queued is exactly the kind of observable difference that turns
@@ -76,7 +76,7 @@ pub async fn enqueue(
     if !cfg.is_usable() {
         tracing::warn!(
             kind = payload.kind.as_deref().unwrap_or("-"),
-            "mailer: relais SMTP non configuré — message non envoyé"
+            "mailer: relais SMTP non configuré - message non envoyé"
         );
         return None;
     }
@@ -150,7 +150,7 @@ pub fn register(registry: &mut JobRegistry, jwt_secret: &str) {
             // on the next retry rather than have to re-trigger them.
             let cfg = MailConfig::load(&ctx.db, &jwt_secret).await?;
             if !cfg.is_usable() {
-                anyhow::bail!("Relais SMTP non configuré — envoi impossible");
+                anyhow::bail!("Relais SMTP non configuré - envoi impossible");
             }
 
             send::deliver(&cfg, &Outgoing::from(&payload))

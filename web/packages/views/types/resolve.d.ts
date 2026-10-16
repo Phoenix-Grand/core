@@ -1,6 +1,6 @@
 /**
  * What the runtime resolves at run time rather than through imports: components of interpreted plans (the
- * designer's — compiled plans import theirs), Lucide icons by name, `{Res}` strings, and the elements
+ * designer's - compiled plans import theirs), Lucide icons by name, `{Res}` strings, and the elements
  * modules register at load time (`registerElements`, the module isolation rule 2: a module's own controls
  * are registered dynamically, never statically linked from another module).
  */
@@ -40,7 +40,7 @@ export declare function interpolationOptions(args: ResourceArgs): Record<string,
 export type Translator = (key: string, options?: Record<string, unknown>) => string;
 /**
  * Sets the host's translator: what an `@ui` element receives as its `t` prop when its view sets `HostStrings`
- * (the strings it carries itself — a close button's name, a default « Cancel » — then come from the host's
+ * (the strings it carries itself - a close button's name, a default « Cancel » - then come from the host's
  * catalogue, as when a TSX screen passes its own `t`).
  */
 export declare function setTranslator(t: Translator | undefined): void;

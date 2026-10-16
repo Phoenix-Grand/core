@@ -11,7 +11,7 @@
 //! installation there are none: the administrator is created afterwards, by the
 //! installation wizard or by the headless seed, both of which wrote the cache
 //! alone. The result was an account flagged administrator, admitted to the
-//! console, and holding zero privileges — a console showing only the handful of
+//! console, and holding zero privileges - a console showing only the handful of
 //! pages that require none, and a 403 on everything else.
 //!
 //! Two answers, both here: [`grant_instance_superadmin`] for the accounts being
@@ -58,7 +58,7 @@ pub async fn grant_instance_superadmin(db: &DbPool, user_id: Uuid) -> Result<boo
 /// holds no superuser role at all.
 ///
 /// Runs at every start, and does nothing on an instance that is already
-/// coherent — which is every instance but the ones installed while the gap was
+/// coherent - which is every instance but the ones installed while the gap was
 /// open. It only ever ADDS what the flag already claims: an account reaches
 /// `role = 'admin'` through a path that demands super-administration to begin
 /// with, so this widens no door. Accounts holding it through a group are left
@@ -92,7 +92,7 @@ pub async fn reconcile_superadmins(db: &DbPool) -> Result<u64, sqlx::Error> {
         tracing::warn!(
             comptes = n,
             "Administrateur(s) sans attribution de rôle : super-administration instance rétablie \
-             (compte créé par l'assistant d'installation ou le semis avant le correctif — la \
+             (compte créé par l'assistant d'installation ou le semis avant le correctif - la \
               console n'affichait alors qu'une poignée de pages)"
         );
     }

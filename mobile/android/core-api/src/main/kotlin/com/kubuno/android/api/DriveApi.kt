@@ -28,7 +28,7 @@ import retrofit2.http.Streaming
  *
  * Every mutation takes an Idempotency-Key. The server caches the first 2xx for
  * 24h keyed by (user, method, path, key) and ignores the body on replay, so a
- * key must identify one logical operation — never reuse one for a new edit.
+ * key must identify one logical operation - never reuse one for a new edit.
  */
 interface DriveApi {
     /**

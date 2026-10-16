@@ -4,7 +4,7 @@
 //! opens one of three concrete pools and hands back a [`DbPool`] enum. All
 //! three drivers are compiled into the binary.
 //!
-//! `keestore.vaults` — a schema-qualified name — works on all three engines:
+//! `keestore.vaults` - a schema-qualified name - works on all three engines:
 //!
 //! * **PostgreSQL**: a real schema inside the database.
 //! * **MySQL/MariaDB**: no schemas; a database *is* the namespace, so
@@ -41,8 +41,8 @@ pub enum SetupError {
 /// A single `config.toml` can describe all three engines; `engine` selects
 /// which fields matter.
 ///
-/// `Debug` is written by hand so the password — the discrete field and the one a
-/// connection URL may carry — never reaches a log through `?settings`.
+/// `Debug` is written by hand so the password - the discrete field and the one a
+/// connection URL may carry - never reaches a log through `?settings`.
 #[derive(Clone, Deserialize)]
 pub struct DbSettings {
     /// `"postgres"` (default), `"mysql"`/`"mariadb"`, or `"sqlite"`. This is the
@@ -180,7 +180,7 @@ pub mod duration_secs {
 /// When `settings.schema_prefix` is set the effective schema is
 /// `<prefix><schema>` everywhere: the PostgreSQL `search_path`, the MySQL
 /// connection database, the SQLite file and its `ATTACH` alias, the
-/// `CREATE SCHEMA`/`CREATE DATABASE`, and — through the pool's [`SchemaPrefix`] —
+/// `CREATE SCHEMA`/`CREATE DATABASE`, and - through the pool's [`SchemaPrefix`] -
 /// every statement and migration. With no prefix (the default) the effective
 /// schema is just `schema` and nothing changes.
 pub async fn connect(settings: &DbSettings, schema: &'static str) -> Result<DbPool, SetupError> {
@@ -215,7 +215,7 @@ async fn open_pg(s: &DbSettings, eff_schema: &str, prefix: SchemaPrefix) -> Resu
     // bootstrap used to before the foundation owned it. Two reasons it must
     // live here:
     //   * a migration written before multi-engine support spelled its tables
-    //     unqualified (`CREATE TABLE foo`), trusting the search path —
+    //     unqualified (`CREATE TABLE foo`), trusting the search path -
     //     re-qualifying it to `<schema>.foo` would change its bytes and so its
     //     checksum, and an already migrated PostgreSQL instance would refuse to
     //     start. With the path set, those files stay byte-identical.
@@ -223,7 +223,7 @@ async fn open_pg(s: &DbSettings, eff_schema: &str, prefix: SchemaPrefix) -> Resu
     //     (uuid-ossp, pg_trgm) resolves unqualified.
     // `after_connect` wants a `'static` statement (like the MySQL literals
     // below). `eff_schema` is only borrowed, so leak the one formatted string
-    // once — a single bounded allocation for the life of the pool. The prefix
+    // once - a single bounded allocation for the life of the pool. The prefix
     // and schema are both validated bare identifiers, so nothing user-controlled
     // reaches this text.
     let set_path: &'static str =
@@ -260,13 +260,13 @@ async fn open_mysql(s: &DbSettings, eff_schema: &str, prefix: SchemaPrefix) -> R
     // default database must be the effective (possibly prefixed) schema: the
     // unqualified DDL in the migrations lands there, and it is the database the
     // qualified `<schema>.table` names resolve to after prefix rewriting. This
-    // overrides any database named in the URL/fields — that name is never the
+    // overrides any database named in the URL/fields - that name is never the
     // namespace on MySQL.
     //
     // A connection whose default database does not exist is refused by the
     // server (1049 "Unknown database"), so the pool below could never open onto
     // a fresh namespace and `ensure_schema` would never get the chance to create
-    // it — an engine switch onto an empty MySQL server failed right there. Create
+    // it - an engine switch onto an empty MySQL server failed right there. Create
     // the namespace first, over a one-off connection that keeps the configured
     // database (or none) as its default.
     create_mysql_namespace(&opts, eff_schema).await;
@@ -376,7 +376,7 @@ fn missing(field: &str) -> SetupError {
 }
 
 /// `CREATE SCHEMA IF NOT EXISTS`, in the local sense of "schema". `eff_schema` is
-/// the effective (possibly prefixed) name — the same `<prefix><schema>` the pool
+/// the effective (possibly prefixed) name - the same `<prefix><schema>` the pool
 /// was opened against.
 pub async fn ensure_schema(pool: &DbPool, eff_schema: &str) -> Result<(), sqlx::Error> {
     use crate::params;
@@ -401,8 +401,8 @@ pub async fn ensure_schema(pool: &DbPool, eff_schema: &str) -> Result<(), sqlx::
 ///
 /// The MySQL protocol is spoken by two servers that do not accept exactly the
 /// same DDL: Oracle MySQL and MariaDB. `mysql` is the one set both run; where a
-/// migration cannot be written for both, a **flavour variant** — a file with the
-/// same name in `migrations/mysql-mariadb/` or `migrations/mysql-oracle/` —
+/// migration cannot be written for both, a **flavour variant** - a file with the
+/// same name in `migrations/mysql-mariadb/` or `migrations/mysql-oracle/` -
 /// replaces it on that flavour only (see [`MySqlVariants`]).
 pub struct MigratorSet {
     pub postgres: sqlx::migrate::Migrator,
@@ -466,7 +466,7 @@ pub const ORACLE_VARIANT_DIR: &str = "mysql-oracle";
 /// * A variant must **translate** its base, never do something else: it is
 ///   recorded in `_sqlx_migrations` under the **base file's** version,
 ///   description and checksum. The bookkeeping is therefore identical on both
-///   flavours — a database dumped from MariaDB into MySQL (or back) keeps
+///   flavours - a database dumped from MariaDB into MySQL (or back) keeps
 ///   validating, and adding or fixing a variant later never makes an install
 ///   that already applied the base look modified.
 /// * A variant without a base file of the same version and kind is an error at
@@ -546,7 +546,7 @@ impl MigratorSet {
 
     /// Runs the migrations for the pool's engine, keeping `_sqlx_migrations`
     /// inside the module's own namespace (the same table PostgreSQL already
-    /// used through its search_path — so an applied migration is not re-run).
+    /// used through its search_path - so an applied migration is not re-run).
     /// On the MySQL protocol the server's flavour is detected first and its
     /// variants substituted.
     pub async fn run(
@@ -624,7 +624,7 @@ fn substitute_variants(
         else {
             return Err(MigrateError::Source(
                 format!(
-                    "{}: migration {} ({}) has no namesake in migrations/mysql — a variant only \
+                    "{}: migration {} ({}) has no namesake in migrations/mysql - a variant only \
                      replaces an existing file, it never adds a version",
                     flavor.variant_dir(),
                     v.version,
@@ -652,8 +652,8 @@ fn substitute_variants(
 /// It only changes anything where a migration spells a schema qualifier: the
 /// consolidated SQLite migrations do (`CREATE TABLE notes.foo`,
 /// `CREATE INDEX notes.idx ...`), and any PostgreSQL migration that references a
-/// sibling schema (`core.users`) does too. Unqualified DDL — the PostgreSQL and
-/// MySQL norm, which leans on the search_path / connection database — is left
+/// sibling schema (`core.users`) does too. Unqualified DDL - the PostgreSQL and
+/// MySQL norm, which leans on the search_path / connection database - is left
 /// untouched.
 ///
 /// When no prefix is set this returns immediately, leaving the migrator exactly

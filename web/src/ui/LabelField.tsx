@@ -8,7 +8,7 @@
  * writing the thing: an event being created has nowhere to attach them yet, and
  * a menu buried under "other actions" is not where anyone looks for a property
  * of what they are filling in. So labels get a line in the form like the date
- * or the location — visible, editable, and readable at a glance.
+ * or the location - visible, editable, and readable at a glance.
  *
  * ## Presentational on purpose
  *
@@ -68,7 +68,7 @@ export function LabelField({
     onChange(value.includes(id) ? value.filter(v => v !== id) : [...value, id])
 
   // Escape closes the LIST, and stops there. Racing the window for the event
-  // does not work — both listen in the capture phase and the window, having
+  // does not work - both listen in the capture phase and the window, having
   // mounted first, is first. The house convention is the other way round: an
   // open list MARKS itself, and a window declines Escape while such a mark is
   // on the page. So the list is marked below, and this only has to close it.

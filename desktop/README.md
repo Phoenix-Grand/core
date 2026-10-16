@@ -7,7 +7,7 @@
 
 <img src="common/assets/kubuno-desktop.svg" alt="Kubuno Desktop logo" width="120">
 
-# Kubuno — Desktop
+# Kubuno - Desktop
 
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](../LICENSE)
 ![Rust](https://img.shields.io/badge/Rust-edition_2021-orange.svg)
@@ -15,10 +15,10 @@
 ![Sync](https://img.shields.io/badge/sync-Linux_%7C_Windows_%7C_macOS-4D38DB.svg)
 ![Status](https://img.shields.io/badge/status-alpha-yellow.svg)
 
-**Desktop clients and the offline-first file synchronisation engine of [Kubuno](https://github.com/kubuno/core) — the self-hosted, libre (AGPLv3) cloud platform, a sovereign alternative to Google Workspace and Microsoft 365.**
+**Desktop clients and the offline-first file synchronisation engine of [Kubuno](https://github.com/kubuno/core) - the self-hosted, libre (AGPLv3) cloud platform, a sovereign alternative to Google Workspace and Microsoft 365.**
 
 A cross-platform sync daemon, and native desktop applications that draw every pixel
-themselves — no web view, no bundler, no Node.
+themselves - no web view, no bundler, no Node.
 
 </div>
 
@@ -104,24 +104,24 @@ programs keep their names (`kubuno-desktop.exe`, `kubuno-chat.exe`, `kubuno-docu
 
 ## Features
 
-### Sync engine — `common/kubuno-desktop-sync`
+### Sync engine - `common/kubuno-desktop-sync`
 
 A file synchronisation engine usable **as a library and as a CLI daemon**, on Linux,
 Windows and macOS:
 
-- **Bidirectional** — every sync runs **push then pull**. Local creates, edits and
+- **Bidirectional** - every sync runs **push then pull**. Local creates, edits and
   deletions are detected by comparing on-disk content hashes with the stored etags.
-- **Offline outbox** — local operations are recorded in a persistent outbox and
+- **Offline outbox** - local operations are recorded in a persistent outbox and
   replayed when the server is reachable again.
-- **Safe conflicts** — an edit is sent with `If-Match: <etag>`; if the server changed
+- **Safe conflicts** - an edit is sent with `If-Match: <etag>`; if the server changed
   meanwhile, the local copy is renamed `… (conflit <host> <ts>)` (never overwritten),
   the server version is restored, then the conflict copy is uploaded as a new file.
-- **Resumable pull** — server changes come from a monotonic cursor, files are fetched
+- **Resumable pull** - server changes come from a monotonic cursor, files are fetched
   only when their etag changed, deletions propagate through tombstones, and the cursor
   is saved after every page.
-- **Real time** — the `watch` mode combines a filesystem watcher, a WebSocket
+- **Real time** - the `watch` mode combines a filesystem watcher, a WebSocket
   change trigger and a polling fallback.
-- **Several instances** — each account has its own server, credentials, folder and
+- **Several instances** - each account has its own server, credentials, folder and
   local state; a folder can be moved without losing it.
 
 ```
@@ -134,28 +134,28 @@ kubuno-sync
 └── daemon   `watch`: FS watcher + WebSocket + poll fallback → auto push + pull
 ```
 
-### Windows desktop — `windows/`
+### Windows desktop - `windows/`
 
 Native **Win32 + Direct2D / DirectWrite / DirectComposition** applications sharing one
 design system (`kubuno-desktop-ui`), so they share one palette, one set of shape tokens, one
 icon set and one set of controls:
 
-- **Kubuno Desktop** (`kubuno-desktop.exe`) — opens on an **application launcher** with
+- **Kubuno Desktop** (`kubuno-desktop.exe`) - opens on an **application launcher** with
   one tile per app of the connected server, drawn with each module's own logo; a tile
   opens its app in the browser. Pages for **accounts** (several instances side by side),
   **activity** (what the sync loop has been doing) and **settings** (theme, sync
   interval, notifications, start with Windows, forced offline mode, outbound proxy).
   It embeds the sync engine and runs it in the background, with a system-tray menu
   (*Sync now / Open folder / Show / Quit*).
-- **Explorer integration, without admin rights** — a Cloud Files API sync root with
+- **Explorer integration, without admin rights** - a Cloud Files API sync root with
   native status overlays (in sync, syncing) and a *Status* column, a navigation-pane
   entry per instance, and on-demand files downloaded on first access.
-- **Kubuno Drive** (`drive.exe`, now in [`kubuno/drive`](https://github.com/kubuno/drive), `desktop/windows/`) — a native Windows file manager with tabs, views and
+- **Kubuno Drive** (`drive.exe`, now in [`kubuno/drive`](https://github.com/kubuno/drive), `desktop/windows/`) - a native Windows file manager with tabs, views and
   settings, sharing the Kubuno component library with the other apps. It is a Rust port of the MIT-licensed
   *Files* project; credits and architecture notes are in
   the drive repository's `desktop/windows/README.md`.
 - **Kubuno Chat** (now in [`kubuno/chat`](https://github.com/kubuno/chat), `desktop/windows/`) and **Kubuno Documents** (now in
-  [`kubuno/office`](https://github.com/kubuno/office), `desktop/`, with its engine in `common/core`) — native two-pane
+  [`kubuno/office`](https://github.com/kubuno/office), `desktop/`, with its engine in `common/core`) - native two-pane
   messaging, and a native word processor for the Office module.
 
 ### Single instance
@@ -181,7 +181,7 @@ JSON line) to its holder:
 |---|---|---|---|
 | lock | named mutex `Local\kubuno-<app>-<digest>`, DACL current user only; *abandoned* when its owner dies | `flock` on `<runtime>/kubuno-<app>-<digest>.lock` | as Linux |
 | hand-off | named pipe `\\.\pipe\kubuno-<app>-<digest>`, DACL current user only, remote clients rejected, `SECURITY_IDENTIFICATION` | Unix socket `.sock` next to the lock, `0600`, peer uid checked (`SO_PEERCRED`) | as Linux (`getpeereid`) |
-| runtime dir | — | `$XDG_RUNTIME_DIR/kubuno`, else `/tmp/kubuno-<uid>` (`0700`, owner checked) | `$TMPDIR/kubuno-<uid>` |
+| runtime dir | - | `$XDG_RUNTIME_DIR/kubuno`, else `/tmp/kubuno-<uid>` (`0700`, owner checked) | `$TMPDIR/kubuno-<uid>` |
 | focus | the second launch passes its foreground right (`AllowSetForegroundWindow`); the window restores, comes forward, or flashes when the system refuses | the window system | LaunchServices also reopens a running bundle |
 
 A crashed instance never blocks the next launch: the OS releases the lock with the process and the next instance
@@ -240,8 +240,8 @@ Every exe links the UI framework (`kubuno-desktop-ui`) and Rust's `std` statical
 on its own, with no DLL beside it. Kubuno Desktop is a service dependency of the
 other apps (account broker, sync, launcher), never a binary one.
 
-The full guide — per-machine build directory, memory-constrained builds, Microsoft
-Store submission — is in **[`BUILD.md`](BUILD.md)**.
+The full guide - per-machine build directory, memory-constrained builds, Microsoft
+Store submission - is in **[`BUILD.md`](BUILD.md)**.
 
 ## Roadmap
 
@@ -253,7 +253,7 @@ Store submission — is in **[`BUILD.md`](BUILD.md)**.
 
 ## Security
 
-Please report vulnerabilities privately — see [`SECURITY.md`](../SECURITY.md).
+Please report vulnerabilities privately - see [`SECURITY.md`](../SECURITY.md).
 
 ## Contributing
 

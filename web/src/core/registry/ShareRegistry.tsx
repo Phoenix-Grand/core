@@ -4,8 +4,8 @@ import type { ComponentType, ReactNode } from 'react'
  * Extra sections contributed to the core share dialog.
  *
  * The dialog itself only knows what every shareable thing has in common: an
- * owner, people it is shared with, and a permission each. Anything specific —
- * a public link, an expiry date, a password, per-module options — is registered
+ * owner, people it is shared with, and a permission each. Anything specific -
+ * a public link, an expiry date, a password, per-module options - is registered
  * here by the module that owns the resource. No cross-module import: the module
  * hands over a component, the core renders it under the common part.
  */
@@ -84,7 +84,7 @@ export const ShareRegistry = {
  * Kinds of recipient the share field can take, beyond what the core knows.
  *
  * The core only guarantees people and groups. A module that can resolve other
- * targets — calendar events, spaces, teams — declares its term here, and the
+ * targets - calendar events, spaces, teams - declares its term here, and the
  * field's label grows accordingly. Declaring a kind is a promise that the
  * module's `searchRecipients` actually returns it.
  */

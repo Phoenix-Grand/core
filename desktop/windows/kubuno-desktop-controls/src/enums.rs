@@ -4,7 +4,7 @@
 //! These are extracted from the shipping `System.Windows.Forms` surface (see
 //! `tools/winforms-ref/`), not from prose: a member that exists here exists
 //! there, with the same meaning and the same discriminant order. Nothing is
-//! invented, and nothing that the toolkit offers is quietly dropped — a control
+//! invented, and nothing that the toolkit offers is quietly dropped - a control
 //! that cannot yet honour a member must say so, never silently treat it as
 //! another.
 //!
@@ -54,7 +54,7 @@ impl AnchorStyles {
 }
 
 impl Default for AnchorStyles {
-    /// `Top | Left` — the WinForms default.
+    /// `Top | Left` - the WinForms default.
     fn default() -> Self {
         Self(1 | 4)
     }
@@ -97,7 +97,7 @@ pub enum ContentAlignment {
 }
 
 impl ContentAlignment {
-    /// `(horizontal, vertical)` as 0.0/0.5/1.0 fractions — what a painter needs.
+    /// `(horizontal, vertical)` as 0.0/0.5/1.0 fractions - what a painter needs.
     pub const fn fractions(self) -> (f32, f32) {
         let h = match self {
             Self::TopLeft | Self::MiddleLeft | Self::BottomLeft => 0.0,
@@ -116,7 +116,7 @@ impl ContentAlignment {
 /// Horizontal-only alignment (`HorizontalAlignment`).
 ///
 /// Distinct from [`ContentAlignment`], which is the nine-cell box alignment: the
-/// toolkit uses this one wherever only the horizontal axis is adjustable —
+/// toolkit uses this one wherever only the horizontal axis is adjustable -
 /// `TextBox.TextAlign` and a `ListView` column's `TextAlign`, among others. It
 /// lives here rather than in one family because more than one family needs it.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
@@ -148,7 +148,7 @@ impl HorizontalAlignment {
 /// **It deliberately implements no `Default`.** The catalogue shows the two
 /// properties that use it disagree: `UpDownBase.UpDownAlign` defaults to
 /// `Right`, `DateTimePicker.DropDownAlign` to `Left`. The default therefore
-/// belongs to the *property*, not to the type — a `#[default]` here would look
+/// belongs to the *property*, not to the type - a `#[default]` here would look
 /// harmless and would silently flip one of them. Each owner states its own in
 /// its `Default` impl.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -160,7 +160,7 @@ pub enum LeftRightAlignment {
 /// The Input Method Editor mode a control asks for (`ImeMode`).
 ///
 /// Carried because `Control` declares it; the port drives no IME, so the host
-/// is what would act on it. Dropping it would have been the wrong answer — a
+/// is what would act on it. Dropping it would have been the wrong answer - a
 /// caller porting a form must be able to round-trip the property.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum ImeMode {
@@ -325,7 +325,7 @@ pub struct Padding {
 impl Padding {
     pub const ZERO: Self = Self { left: 0.0, top: 0.0, right: 0.0, bottom: 0.0 };
 
-    /// The same amount on all four sides — `new Padding(all)`.
+    /// The same amount on all four sides - `new Padding(all)`.
     pub const fn all(v: f32) -> Self {
         Self { left: v, top: v, right: v, bottom: v }
     }
@@ -334,12 +334,12 @@ impl Padding {
         Self { left, top, right, bottom }
     }
 
-    /// `Padding.Horizontal` — left + right.
+    /// `Padding.Horizontal` - left + right.
     pub const fn horizontal(self) -> f32 {
         self.left + self.right
     }
 
-    /// `Padding.Vertical` — top + bottom.
+    /// `Padding.Vertical` - top + bottom.
     pub const fn vertical(self) -> f32 {
         self.top + self.bottom
     }

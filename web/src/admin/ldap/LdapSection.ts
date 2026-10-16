@@ -218,7 +218,7 @@ export class LdapSection extends ViewBase {
       connect_timeout_s: Number(this.form.connect_timeout_s) || 10,
       sync_interval_min: Number(this.form.sync_interval_min) || 60,
       // Absent and null are the same JSON, so "no unit" needs a word of its own
-      // on an update — otherwise a unit could be chosen and never un-chosen.
+      // on an update - otherwise a unit could be chosen and never un-chosen.
       clear_default_org_unit: this.form.default_org_unit_id === null,
     }
     // Absent = unchanged. Sending an empty string would CLEAR the stored one,

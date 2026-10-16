@@ -8,7 +8,7 @@
 //! restores faithfully onto another: the writer reads each value at its source
 //! type into a portable JSON shape (a PostgreSQL array/`inet`/`citext` is cast on
 //! the way out), and the loader is **directed by the destination column's own
-//! type** — the exact reconstruction a live engine switch performs
+//! type** - the exact reconstruction a live engine switch performs
 //! ([`kubuno_db::copy_schema`]): a `BLOB`/`TEXT` becomes a `uuid`, an integer a
 //! boolean, ISO text a timestamp, JSON text a `json`/`jsonb`, and a JSON array a
 //! native `text[]`/`uuid[]` through a `$n::<elem>[]` cast. That machinery is
@@ -129,7 +129,7 @@ async fn write_into(
         for (table, cols) in kubuno_db::portable_export_plan(db, schema).await? {
             // The backup's own bookkeeping is left out of the backup: a restore
             // must not overwrite the log of backups and restores with an older
-            // one — that would erase the record of the restore being performed,
+            // one - that would erase the record of the restore being performed,
             // and of every backup taken since the one being restored.
             if is_bookkeeping(&table) {
                 continue;
@@ -313,7 +313,7 @@ fn parse_dt(s: &str) -> Option<DateTime<Utc>> {
 // ── restore ─────────────────────────────────────────────────────────────────
 
 /// Loads a portable dump (`.ndjson.gz` or a legacy `.ndjson`) onto `db`,
-/// replacing the current contents of every table it names — on **any** engine.
+/// replacing the current contents of every table it names - on **any** engine.
 /// Returns the number of rows inserted.
 pub async fn restore(db: &DbPool, archive_path: &Path) -> anyhow::Result<u64> {
     let temp = archive::decompress_to_temp(archive_path).await?;
@@ -355,7 +355,7 @@ pub async fn restore(db: &DbPool, archive_path: &Path) -> anyhow::Result<u64> {
 
     // Load every covered table's destination plan up front. A table the
     // destination does not have (a module the current instance has not installed,
-    // or a schema not attached) is **skipped** — a cross-engine restore adapts to
+    // or a schema not attached) is **skipped** - a cross-engine restore adapts to
     // the instance it runs on rather than failing on a table it cannot hold.
     let mut plans: std::collections::HashMap<QTable, std::collections::HashMap<String, kubuno_db::ImportColumn>> =
         std::collections::HashMap::new();
@@ -363,17 +363,17 @@ pub async fn restore(db: &DbPool, archive_path: &Path) -> anyhow::Result<u64> {
     for t in &tables {
         // An absent schema/table is skipped, not fatal: on some engines the
         // catalog lookup returns empty, on SQLite it errors ("unknown database"
-        // for a schema this instance has not attached). Both mean the same thing —
-        // this instance does not hold that table — so a cross-engine restore
+        // for a schema this instance has not attached). Both mean the same thing -
+        // this instance does not hold that table - so a cross-engine restore
         // adapts to what it can hold rather than failing.
         let plan = match kubuno_db::portable_import_plan(db, &t.schema, &t.table).await {
             Ok(plan) if !plan.is_empty() => plan,
             Ok(_) => {
-                tracing::warn!(table = %format!("{}.{}", t.schema, t.table), "backup: table absente de cette instance — ignorée à la restauration");
+                tracing::warn!(table = %format!("{}.{}", t.schema, t.table), "backup: table absente de cette instance - ignorée à la restauration");
                 continue;
             }
             Err(e) => {
-                tracing::warn!(error = %e, table = %format!("{}.{}", t.schema, t.table), "backup: table injoignable sur cette instance — ignorée à la restauration");
+                tracing::warn!(error = %e, table = %format!("{}.{}", t.schema, t.table), "backup: table injoignable sur cette instance - ignorée à la restauration");
                 continue;
             }
         };
@@ -385,7 +385,7 @@ pub async fn restore(db: &DbPool, archive_path: &Path) -> anyhow::Result<u64> {
     {
         let mut tx = db.begin().await.context("Ouverture de la transaction de restauration")?;
 
-        // Relax foreign-key enforcement for the load — the strict engine keeps
+        // Relax foreign-key enforcement for the load - the strict engine keeps
         // its immediate constraints, satisfied by the core-first, parent-first
         // order the dump was written in.
         match backend {
@@ -652,7 +652,7 @@ mod tests {
     #[test]
     fn value_json_round_trips_each_codec() {
         // A UUID travels as its canonical string, a blob as base64, a timestamp
-        // as RFC 3339 — and comes back the same raw variant.
+        // as RFC 3339 - and comes back the same raw variant.
         let u = uuid::Uuid::parse_str("11111111-1111-4111-8111-111111111111").unwrap();
         let j = value_to_json(&DbValue::Uuid(Some(u)));
         assert_eq!(json_to_raw(Codec::Uuid, &j), DbValue::Uuid(Some(u)));

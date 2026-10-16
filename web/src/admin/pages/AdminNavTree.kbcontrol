@@ -1,4 +1,4 @@
-<!-- AdminNavTree — converted from AdminNavTree.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- AdminNavTree - converted from AdminNavTree.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="AdminNavTreeProps">
   <Panel Class="contents">
     <Panel HtmlTag="Nav" Visible="{Binding show_case_1}" Class="flex-1 min-h-0 overflow-y-auto px-2">

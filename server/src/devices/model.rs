@@ -8,7 +8,7 @@ use sqlx::FromRow;
 use uuid::Uuid;
 
 /// A signal that can be **unknown**, and whose unknown value must never be
-/// mistaken for a negative — or, far worse, absorbed into a positive.
+/// mistaken for a negative - or, far worse, absorbed into a positive.
 ///
 /// This exists because `Option<bool>` invites `unwrap_or(false)`, and because a
 /// plain `bool` column with `DEFAULT FALSE` turns "we never asked" into "we

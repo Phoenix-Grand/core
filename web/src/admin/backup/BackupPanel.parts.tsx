@@ -158,7 +158,7 @@ function PolicySummary({ data }: { data: BackupOverview }) {
       />
       <Fact
         label={t('admin.bk_fact_next')}
-        value={data.next_run_at ? formatWhen(data.next_run_at, i18n.language) : '—'}
+        value={data.next_run_at ? formatWhen(data.next_run_at, i18n.language) : '-'}
       />
       <Fact
         label={t('admin.bk_fact_retention')}
@@ -302,7 +302,7 @@ function History({ data, loading }: { data: BackupOverview | undefined; loading:
       align: 'right',
       minWidth: 100,
       sortValue: r => r.size_bytes ?? -1,
-      cell: r => (r.size_bytes == null ? '—' : formatBytes(r.size_bytes)),
+      cell: r => (r.size_bytes == null ? '-' : formatBytes(r.size_bytes)),
     },
     {
       id: 'rows',
@@ -313,7 +313,7 @@ function History({ data, loading }: { data: BackupOverview | undefined; loading:
       sortValue: r => r.rows_count ?? -1,
       cell: r =>
         r.rows_count == null
-          ? '—'
+          ? '-'
           : t('admin.bk_rows_value', { rows: r.rows_count, tables: r.tables_count ?? 0 }),
     },
     {
@@ -322,7 +322,7 @@ function History({ data, loading }: { data: BackupOverview | undefined; loading:
       align: 'right',
       minWidth: 100,
       sortValue: r => r.duration_ms ?? -1,
-      cell: r => (r.duration_ms == null ? '—' : formatDuration(r.duration_ms)),
+      cell: r => (r.duration_ms == null ? '-' : formatDuration(r.duration_ms)),
     },
     {
       id: 'file',
@@ -343,7 +343,7 @@ function History({ data, loading }: { data: BackupOverview | undefined; loading:
             )}
           </span>
         ) : (
-          '—'
+          '-'
         ),
     },
   ]
@@ -431,7 +431,7 @@ function RestoreFiles({ canRestore }: { canRestore: boolean }) {
       header: t('admin.bk_files_col_when'),
       minWidth: 150,
       sortValue: r => r.modified_at ?? '',
-      cell: r => (r.modified_at ? formatWhen(r.modified_at, i18n.language) : '—'),
+      cell: r => (r.modified_at ? formatWhen(r.modified_at, i18n.language) : '-'),
     },
     {
       id: 'size',

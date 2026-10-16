@@ -10,7 +10,7 @@ import { toParams } from './types'
  *
  * One shared cache entry per question: the queue, the summary, the facets and a
  * detail. The summary in particular is read by three surfaces at once (the
- * bell, the landing card, the queue header) — three components asking the same
+ * bell, the landing card, the queue header) - three components asking the same
  * thing three times per navigation is how a "free" badge becomes a request per
  * page.
  */
@@ -115,7 +115,7 @@ export function useAlertVerb() {
     api.post(`/admin/alerts/${id}/${verb}`))
 }
 
-/** "I just fixed it, check again" — the same code path as the scheduled scan. */
+/** "I just fixed it, check again" - the same code path as the scheduled scan. */
 export function useScanNow() {
   return useAlertMutation(() => api.post('/admin/alerts/scan'))
 }

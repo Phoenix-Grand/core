@@ -11,7 +11,7 @@
 ///
 /// `layout:` is optional (`vskubuno/docs/DESIGNER.md` §4/§6 DSG-1: "a small,
 /// additive registry field") and defaults to
-/// [`crate::registry::LayoutKind::None`] when omitted — most components are
+/// [`crate::registry::LayoutKind::None`] when omitted - most components are
 /// plain leaves or `SingleWidget` bodies with no layout engine of their own,
 /// so only the handful of real containers (`Panel`, `Stack`, `Splitter`,
 /// `Tabs`) need to name one, and every other one of this macro's ~50 other
@@ -76,7 +76,7 @@ macro_rules! component {
             pub const EVENTS: &[EventMeta] = &[ $( $event ),* ];
 
             /// Builds the real `kubuno_desktop_ui` widget tree for one `<$name>`
-            /// element — see [`crate::compile::build_node`], the only
+            /// element - see [`crate::compile::build_node`], the only
             /// caller. Reads every property through [`Props`]'s typed
             /// accessors, keyed by the same names `PROPERTIES` above
             /// declares (`crate::props`'s module doc: "one table", not a
@@ -100,7 +100,7 @@ macro_rules! component {
             // The drift guard `XML_VIEWS.md` §8's 2a row asks for: builds the
             // real component and calls every setter the metadata above
             // claims exists. A `kubuno-desktop-ui` rename/removal breaks this at
-            // `cargo test`, not silently — see `mod.rs`'s module doc.
+            // `cargo test`, not silently - see `mod.rs`'s module doc.
             #[cfg(test)]
             #[test]
             fn ctor_and_setters_match_kubuno_ui() {
@@ -114,7 +114,7 @@ macro_rules! component {
     // `@layout` is not a legal start of the main arm's `mod_name: …`, so
     // there is no ambiguity between them): `(@layout)` is what an omitted
     // `layout:` expands the field to, `(@layout $layout:expr)` is the
-    // explicit value. Not part of this macro's public call shape — only the
+    // explicit value. Not part of this macro's public call shape - only the
     // main arm's own expansion invokes these, recursively, through
     // `$crate::registry::macros::component!`.
     (@layout) => {

@@ -66,7 +66,7 @@ fun KubunoTabs(
                 // IntrinsicSize.Max sizes the column to its label. Without it
                 // the underline's fillMaxWidth() resolves against the row's
                 // remaining width, so the first tab swallows the whole row and
-                // every later tab is laid out at zero width — invisible.
+                // every later tab is laid out at zero width - invisible.
                 KubunoTabsVariant.UNDERLINED -> androidx.compose.foundation.layout.Column(
                     Modifier
                         .width(IntrinsicSize.Max)

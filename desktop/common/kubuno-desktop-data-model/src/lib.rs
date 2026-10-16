@@ -1,4 +1,4 @@
-//! # `kubuno-desktop-data-model` — the `.kbdata` data-source description
+//! # `kubuno-desktop-data-model` - the `.kbdata` data-source description
 //!
 //! A `.kbdata` file (TOML) is the developer-owned description of a *typed data source*
 //! (`vskubuno/docs/DATA.md`, DATA-4): the connection it uses (by name, never a connection string),

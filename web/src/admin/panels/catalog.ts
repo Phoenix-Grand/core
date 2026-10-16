@@ -4,13 +4,13 @@ import type { PanelSource } from './report'
 import type { PanelDef } from './types'
 
 /**
- * Every panel of every panelled page, in one place — for the surfaces that have
+ * Every panel of every panelled page, in one place - for the surfaces that have
  * to work across both dashboards rather than inside one.
  *
  * There is exactly one such surface today: the report page, which is opened
  * from either dashboard and has to spell a title, an explanation and a legend
  * for a panel it did not draw. It cannot import "the" panel table, because
- * there are two of them and the two are deliberately separate — a panel belongs
+ * there are two of them and the two are deliberately separate - a panel belongs
  * to the page that decided what it means.
  *
  * So this module joins them WITHOUT merging them: each entry keeps the source it
@@ -39,13 +39,13 @@ export function panelsOf(source: PanelSource): PanelDef[] {
 /**
  * The panel an address names.
  *
- * With a `source`, the lookup stays inside that catalogue — the only correct
+ * With a `source`, the lookup stays inside that catalogue - the only correct
  * answer, since the same id means two different documents on the two pages.
  * Without one (a hand-typed address, a bookmark from before the parameter
  * existed) the general dashboard is tried first, then the security overview:
  * a best effort that is stated here rather than left to a caller to reinvent.
  *
- * `null` for an id neither table knows — a panel a newer server grew, or a
+ * `null` for an id neither table knows - a panel a newer server grew, or a
  * typo. The report page says so instead of rendering a document with no title.
  */
 export function findPanel(panelId: string, source?: string | null): CataloguedPanel | null {

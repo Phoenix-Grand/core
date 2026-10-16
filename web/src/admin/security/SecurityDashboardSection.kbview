@@ -1,4 +1,4 @@
-<!-- SecurityDashboardSection — converted from SecurityDashboardSection.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- SecurityDashboardSection - converted from SecurityDashboardSection.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <Panel x:Props="AdminSectionProps" Class="contents">
   <EmptyState IconSize="28"
               Icon="Info"

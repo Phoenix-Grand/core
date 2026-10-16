@@ -1,4 +1,4 @@
-# Changelog — @kubuno/sdk
+# Changelog - @kubuno/sdk
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Entries are
 added under `[Unreleased]` **as the change is made**; on npm publish, the section is stamped
@@ -76,7 +76,7 @@ under the published version number.
 - **Four more date intents, and the ISO week number.** `weekdayNarrow` (the
   single-letter column heads of a calendar grid), `weekdayShort`, `weekdayTime`
   and `hour` (a day's time axis), plus `isoWeek` / `isoWeekYear`. Week 1 is the
-  one holding the year's first Thursday, not the first block of seven days — a
+  one holding the year's first Thursday, not the first block of seven days - a
   rule that only shows up once a year, in the days around New Year, on the
   screens nobody re-checks. Verified against the 2024→2027 boundaries.
 
@@ -85,7 +85,7 @@ under the published version number.
 - **Dates and times, formatted by the platform.** A small module built on `Intl`
   replaces `date-fns`, which seventeen repositories depended on and which needed
   thirteen locale bundles loaded just to write month names in the reader's
-  language. Callers now say what a date is FOR — `formatDate(d, 'date')` — and
+  language. Callers now say what a date is FOR - `formatDate(d, 'date')` - and
   the platform decides how to write it, which is what a product shipped in
   thirteen languages needs: a hard-coded `dd/MM/yyyy` prints 03/09/2026 to a
   reader expecting 2026年9月3日. Machine formats (`toISODate`, `toISOMonth`,

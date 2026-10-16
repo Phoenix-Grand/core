@@ -1,7 +1,7 @@
 // Material-Design "outlined" text field, shared @ui primitive (every module
 // has forms). The label starts
 // inside the box (in the placeholder's place) and, on focus or once the field
-// holds a value, ANIMATES up onto the top border — the border opening a notch
+// holds a value, ANIMATES up onto the top border - the border opening a notch
 // around it (the real fieldset/legend technique, so it works on any background,
 // not a white chip masking the line). Focus paints the border and label in the
 // form's primary colour. An optional leading icon sits outside the box, like
@@ -16,7 +16,7 @@ export interface OutlinedFieldProps {
   icon?: ReactNode
   /** HTML input type (text/email/url/tel/number). */
   type?: string
-  /** Shown only while floated (focused), like Material — the label IS the resting hint. */
+  /** Shown only while floated (focused), like Material - the label IS the resting hint. */
   placeholder?: string
   primaryColor: string
   /** Adds a red asterisk to the floating label (compact mode, where the title lives in the field). */
@@ -43,7 +43,7 @@ export interface OutlinedFieldProps {
  * and the previewed text would render straight through it.
  *
  * There is no event for that state, but the field does match `:-webkit-autofill`
- * — so we hang a zero-length animation on that selector and listen for
+ * - so we hang a zero-length animation on that selector and listen for
  * `animationstart`, the long-standing way to observe autofill from script.
  * `autocomplete="off"` is not an option: Chrome ignores it on name/e-mail/tel
  * fields, and switching autofill off would be a regression for the user. */
@@ -93,14 +93,14 @@ export function OutlinedField({
   }
 
   // Metrics: one place, so the input padding, the resting label and the notch
-  // legend stay in agreement. `pad` is the box's left padding — the resting
+  // legend stay in agreement. `pad` is the box's left padding - the resting
   // label sits exactly on the text it replaces.
   const fontSize = large ? 20 : 14
   const rtl = useIsRtl()
   const padX = 12
   const padY = large ? 14 : 11
   // Deterministic outer height so every field (and the selector boxes built on
-  // it) is the SAME height — no 6px notch overflow that made a plain box look
+  // it) is the SAME height - no 6px notch overflow that made a plain box look
   // shorter. Single-line only; the textarea keeps its intrinsic height.
   const FIELD_H = large ? 56 : 48
   // Single-line: SYMMETRIC vertical padding around a known line box so the text
@@ -163,7 +163,7 @@ export function OutlinedField({
   }
   // Growing the line box adds half-leading above and below, which would push the
   // glyphs down. Every offset below is lifted by that amount so the label lands
-  // exactly where it used to — only the crop is gone.
+  // exactly where it used to - only the crop is gone.
   const HALF_LEAD = (linePx - fontSize) / 2
   const labelStyle: React.CSSProperties = {
     position: 'absolute',

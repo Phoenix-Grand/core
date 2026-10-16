@@ -5,8 +5,8 @@
 //!
 //! ## Writing a rule always writes a version
 //!
-//! [`insert_rule`] and [`update_rule`] take a live transaction — in practice the
-//! [`crate::audit::AuditTx`] the handler opened — and write the snapshot in the
+//! [`insert_rule`] and [`update_rule`] take a live transaction - in practice the
+//! [`crate::audit::AuditTx`] the handler opened - and write the snapshot in the
 //! **same transaction** as the rule. There is no code path that produces a rule
 //! row without the matching `core.rule_versions` row, because the two statements
 //! are in one function and that function is the only way in. An execution log
@@ -30,7 +30,7 @@ pub const RULES_CHANNEL: &str = "kubuno_rules";
 
 // The column list every read shares. A macro rather than a `const` so call sites
 // can splice it with `concat!`: the result is a single `&'static str` literal,
-// which the driver accepts without an audit escape hatch — no query text here is
+// which the driver accepts without an audit escape hatch - no query text here is
 // ever built at run time.
 macro_rules! select_rule {
     () => {
@@ -72,7 +72,7 @@ impl RawRuleRow {
             description: self.description,
             trigger_key: self.trigger_key,
             // A tree stored by an older or newer core that this build cannot read
-            // degrades to "matches everything" — never to a panic on the hot path.
+            // degrades to "matches everything" - never to a panic on the hot path.
             // The console shows the raw JSON so the drift is visible.
             conditions: serde_json::from_value(self.conditions).unwrap_or_default(),
             actions: serde_json::from_value(self.actions).unwrap_or_default(),
@@ -394,7 +394,7 @@ pub async fn notify_reload(db: &DbPool) {
 
 // ── Execution log ────────────────────────────────────────────────────────────
 
-/// One line to append. Structural fields and counters only — see the header of
+/// One line to append. Structural fields and counters only - see the header of
 /// migration `000061` for why the inspected content is not among them.
 #[derive(Debug, Clone)]
 pub struct NewExecution {
@@ -414,7 +414,7 @@ pub struct NewExecution {
     pub depth: i16,
     pub duration_ms: i32,
     /// The reference handed to a user the synchronous gate stopped. `None` for
-    /// every execution that did not come from the gate — which is what makes
+    /// every execution that did not come from the gate - which is what makes
     /// the column a usable index rather than one that is set on every row.
     pub gate_reference: Option<String>,
 }
@@ -587,8 +587,8 @@ pub async fn list_executions(
 ///
 /// ## Two statements, on purpose
 ///
-/// The obvious one-round-trip form —
-/// `WITH inserted AS (INSERT …) SELECT COUNT(*) FROM core.rule_hits …` — is
+/// The obvious one-round-trip form -
+/// `WITH inserted AS (INSERT …) SELECT COUNT(*) FROM core.rule_hits …` - is
 /// **wrong**, and silently so. Every sub-statement of a `WITH` sees the snapshot
 /// taken at the start of the whole statement, so the `SELECT` cannot see the row
 /// the `INSERT` just wrote: the count came back one short, for ever, and a rule
@@ -713,7 +713,7 @@ pub async fn purge_executions(db: &DbPool, days: i64) -> Result<u64, AppError> {
 /// Everything a scope test needs about an account.
 ///
 /// Called **only after a rule's conditions matched and its scope is non-empty**.
-/// The hot path — deciding which rules an event concerns — is served entirely
+/// The hot path - deciding which rules an event concerns - is served entirely
 /// from the memory index and never touches the database.
 ///
 /// Rebuilt as portable steps: the original folded the ancestor chain with the

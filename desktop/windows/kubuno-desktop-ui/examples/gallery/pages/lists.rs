@@ -1,19 +1,19 @@
-//! Gallery page — the list family.
+//! Gallery page - the list family.
 //!
 //! None of these four primitives has a hand-written predecessor in
 //! `kubuno-drive-desktop-app-controls`, so there is no [`super::sheet::pair`] here: there is
 //! nothing to sit beside. What the page shows instead is every **state** the
 //! family can be in, painted from the same inputs the unit tests use:
 //!
-//! * list boxes — a selection with the keyboard's focus ring and active row, a
+//! * list boxes - a selection with the keyboard's focus ring and active row, a
 //!   multi-selection, three check states, a disabled list, then a list longer
 //!   than its box (scroll indicator, `TopIndex`) and labels too long for it
 //!   (ellipsis);
-//! * combos — closed, keyboard focus, hover, open with more items than
+//! * combos - closed, keyboard focus, hover, open with more items than
 //!   `MaxDropDownItems` (so the list scrolls and says so), disabled, and a long
 //!   selection ellipsized in a narrow field;
 //! * a full `MenuDropdown` with icons, shortcuts, a section label, separators,
-//!   a checked row, a dead row, a cascaded submenu and a destructive entry —
+//!   a checked row, a dead row, a cascaded submenu and a destructive entry -
 //!   and a second menu pressed against the pane's right edge, whose submenu
 //!   flips to the LEFT as the web's does.
 //!
@@ -45,7 +45,7 @@ const GAP: f32 = 16.0;
 const COLUMNS: usize = 4;
 /// Five rows is enough to show a selection, a hover and the rows around them.
 const ROWS: usize = 5;
-/// How many rows the open combo drops in the exposition — `MaxDropDownItems`,
+/// How many rows the open combo drops in the exposition - `MaxDropDownItems`,
 /// cut below the six languages so the list has to scroll.
 const DROP_ROWS: i32 = 4;
 /// The live combo shows five of its six languages: « Português » is reached by
@@ -83,7 +83,7 @@ pub fn draw(c: &dyn Canvas, f: &Frame) {
     let h = ListBox::new().height_for_rows(ROWS);
     let row = cells(MARGIN, top, cell_w, h, GAP, COLUMNS);
 
-    // 1 — single selection, focused from the keyboard: the ring and the active
+    // 1 - single selection, focused from the keyboard: the ring and the active
     //     row (moved with Ctrl+arrow, off the selection) are both visible.
     let mut single = filled_list(&FOLDERS);
     single.set_selected_index(1);
@@ -91,7 +91,7 @@ pub fn draw(c: &dyn Canvas, f: &Frame) {
     single.hot_index = single.item_at(row[0], mx, my);
     single.paint(c, row[0], WidgetState::REST.focused(true).focus_visible(true));
 
-    // 2 — a multi-selection, built with the replica's own click machine so the
+    // 2 - a multi-selection, built with the replica's own click machine so the
     //     page and the tests exercise the same code path.
     let mut multi = filled_list(&FOLDERS);
     multi.set_selection_mode(SelectionMode::MultiExtended);
@@ -100,7 +100,7 @@ pub fn draw(c: &dyn Canvas, f: &Frame) {
     multi.hot_index = multi.item_at(row[1], mx, my);
     multi.paint(c, row[1], WidgetState::REST);
 
-    // 3 — check boxes, including the Indeterminate state only
+    // 3 - check boxes, including the Indeterminate state only
     //     `SetItemCheckState` can produce.
     let mut checked = CheckedListBox::new();
     for (i, name) in FOLDERS.iter().enumerate() {
@@ -115,16 +115,16 @@ pub fn draw(c: &dyn Canvas, f: &Frame) {
     checked.hot_index = checked.item_at(row[2], mx, my);
     checked.paint(c, row[2], WidgetState::REST);
 
-    // 4 — disabled.
+    // 4 - disabled.
     let mut dead = filled_list(&FOLDERS);
     dead.set_selected_index(2);
     dead.paint(c, row[3], WidgetState::REST.disabled(true));
     page.advance(h);
 
     // ── ComboBox ─────────────────────────────────────────────────────────────
-    page.section("ComboBox — et, dessous, le débordement des listes");
+    page.section("ComboBox - et, dessous, le débordement des listes");
     let top = page.caption(
-        "fermée · focus clavier · ouverte (6 langues, 4 visibles : défile) · désactivée — dessous : défilée, ellipses",
+        "fermée · focus clavier · ouverte (6 langues, 4 visibles : défile) · désactivée - dessous : défilée, ellipses",
     );
     // The open one is the tallest: field + its 2 DIP offset + the drop-down.
     let band = {
@@ -153,7 +153,7 @@ pub fn draw(c: &dyn Canvas, f: &Frame) {
     let mut wordy = ListBox::new();
     for s in [
         "Rapport annuel de l'équipe documentation 2026.pdf",
-        "Présentation client — version définitive (3).pptx",
+        "Présentation client - version définitive (3).pptx",
         "Budget prévisionnel consolidé des filiales.xlsx",
     ] {
         wordy.add_item(s);
@@ -184,9 +184,9 @@ pub fn draw(c: &dyn Canvas, f: &Frame) {
     page.advance(band);
 
     // ── Menu ─────────────────────────────────────────────────────────────────
-    page.section("Menu — le MenuDropdown du produit");
+    page.section("Menu - le MenuDropdown du produit");
     let top = page.caption(
-        "icônes · raccourcis · séparateurs · en-tête · cochée · désactivée · sous-menu — au bord : sous-menu à GAUCHE",
+        "icônes · raccourcis · séparateurs · en-tête · cochée · désactivée · sous-menu - au bord : sous-menu à GAUCHE",
     );
 
     let viewport = Rect::new(page.area.left, page.area.top, right, f.size.1);
@@ -258,7 +258,7 @@ struct Ui {
     /// Last frame's geometry, in client DIP: the menu panel, its cascaded
     /// submenu, the combo's dropped list, the right-click zone and the combo
     /// field. A click is routed against these at the top of the frame, before
-    /// anything underneath can see it — the web's backdrop.
+    /// anything underneath can see it - the web's backdrop.
     menu_panel:  Option<Rect>,
     menu_sub:    Option<Rect>,
     combo_panel: Option<Rect>,
@@ -283,7 +283,7 @@ const ID_CLB: &str = "lists.checked";
 const ID_COMBO: &str = "lists.combo";
 const ID_MENU: &str = "lists.menu-trigger";
 
-/// The right-hand column: the same four primitives as the page, live — mouse
+/// The right-hand column: the same four primitives as the page, live - mouse
 /// AND keyboard.
 pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
     UI.with(|ui| {
@@ -336,7 +336,7 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
             // A click in the list picks a row; a click on the field toggles it
             // shut (both swallowed, so the field does not reopen it). Anywhere
             // else `Combobox.tsx`' outside `pointerdown` closes the list and
-            // the click still reaches what it landed on — there is no backdrop.
+            // the click still reaches what it landed on - there is no backdrop.
             let on_field = ui.combo_field.is_some_and(|r| r.contains(px, py));
             match ui.combo_panel.filter(|p| p.contains(px, py)) {
                 Some(panel) => {
@@ -363,8 +363,8 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
 
         let (left, mut y, right) = interact::panel(c, interact::panel_rect(f.size));
 
-        // ── ListBox — MultiExtended, 10 items in 5 rows ─────────────────────
-        y = interact::caption(c, left, right, y, "ListBox — clic, Maj, Ctrl, flèches, Début/Fin, PgPréc/Suiv, frappe");
+        // ── ListBox - MultiExtended, 10 items in 5 rows ─────────────────────
+        y = interact::caption(c, left, right, y, "ListBox - clic, Maj, Ctrl, flèches, Début/Fin, PgPréc/Suiv, frappe");
         let list_rect = Rect::new(left, y, right, y + list.height_for_rows(ROWS));
         let st = live.focus(ID_LIST, list_rect);
         if live.clicked {
@@ -395,8 +395,8 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
         list.paint(c, list_rect, st.apply(WidgetState::REST));
         y = list_rect.bottom + 16.0;
 
-        // ── CheckedListBox — the well toggles, the label selects ────────────
-        y = interact::caption(c, left, right, y, "CheckedListBox — case, Espace, flèches, frappe, molette");
+        // ── CheckedListBox - the well toggles, the label selects ────────────
+        y = interact::caption(c, left, right, y, "CheckedListBox - case, Espace, flèches, frappe, molette");
         let clb_rect = Rect::new(left, y, right, y + clb.height_for_rows(4));
         let st = live.focus(ID_CLB, clb_rect);
         if live.clicked {
@@ -428,8 +428,8 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
         clb.paint(c, clb_rect, st.apply(WidgetState::REST));
         y = clb_rect.bottom + 16.0;
 
-        // ── ComboBox — its list in a popup that may leave the window ────────
-        y = interact::caption(c, left, right, y, "ComboBox — clic, Alt+↓, ↓, Entrée, flèches, Échap, frappe");
+        // ── ComboBox - its list in a popup that may leave the window ────────
+        y = interact::caption(c, left, right, y, "ComboBox - clic, Alt+↓, ↓, Entrée, flèches, Échap, frappe");
         let combo_bounds = Rect::new(left, y, right, y + combo.field_height());
         let field = combo.field_rect(combo_bounds);
         let st = live.focus(ID_COMBO, field);
@@ -486,8 +486,8 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
         combo.paint_trigger(c, combo_bounds, st.apply(live.state(field)));
         y = combo_bounds.bottom + 16.0;
 
-        // ── Menu — from its trigger, or as a context menu on a right click ──
-        y = interact::caption(c, left, right, y, "Menu — clic, Entrée ou ↓, clic droit ; ↑↓ → ← Entrée Échap");
+        // ── Menu - from its trigger, or as a context menu on a right click ──
+        y = interact::caption(c, left, right, y, "Menu - clic, Entrée ou ↓, clic droit ; ↑↓ → ← Entrée Échap");
         let trigger = Rect::new(left, y, left + 200.0, y + 32.0);
         let tst = live.focus(ID_MENU, trigger);
         let trigger_state = tst.apply(live.state(trigger));
@@ -515,7 +515,7 @@ pub fn interactive_column(c: &dyn Canvas, f: &Frame) {
         let zone = Rect::new(left, y, right, y + 64.0);
         c.fill_rounded(&zone, 6.0, &t.surface_2);
         c.stroke_rounded(&zone, 6.0, &t.card_stroke);
-        c.text("Clic droit ici — le menu s'ouvre au pointeur", &zone, &c.formats().body, &t.text_secondary, true);
+        c.text("Clic droit ici - le menu s'ouvre au pointeur", &zone, &c.formats().body, &t.text_secondary, true);
         if right_click && zone.contains(f.mouse.0, f.mouse.1) {
             ui.menu = Some(context_menu());
             ui.menu_from = MenuFrom::Pointer;
@@ -774,8 +774,8 @@ fn chosen_label(menu: &Menu, index: usize, sub: Option<usize>) -> Option<String>
     }
 }
 
-/// The menu's anchor button. It is not a kubuno primitive — a menu is opened
-/// from a caller's own control — so it is painted plainly from theme tokens:
+/// The menu's anchor button. It is not a kubuno primitive - a menu is opened
+/// from a caller's own control - so it is painted plainly from theme tokens:
 /// a bordered field that lights on hover, shows its open state, and wears the
 /// accent ring on keyboard focus.
 fn paint_trigger(c: &dyn Canvas, r: Rect, open: bool, state: WidgetState) {
@@ -837,7 +837,7 @@ fn context_menu() -> Menu {
     ])
 }
 
-/// A data-table row menu with long labels — the composition audit's case.
+/// A data-table row menu with long labels - the composition audit's case.
 fn row_menu() -> Menu {
     Menu::with_items(vec![
         MenuEntry::new("Modifier le profil").icon("PenLine").build(),

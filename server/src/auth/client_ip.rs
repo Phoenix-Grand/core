@@ -2,21 +2,21 @@
 //!
 //! `X-Forwarded-For` and `X-Real-IP` are request headers: any client can set
 //! them to any value. Trusting them unconditionally lets a single host defeat
-//! every per-IP control — rate limiting, DDoS shedding — simply by rotating the
+//! every per-IP control - rate limiting, DDoS shedding - simply by rotating the
 //! header on each request, and poisons session records and access logs.
 //!
 //! This module implements the rule used by hardened reverse proxies: forwarding
 //! headers are honoured ONLY when the TCP peer (the socket address, which cannot
 //! be forged over an established connection) belongs to a configured trusted
-//! range. Inside `X-Forwarded-For` the chain is then walked from the RIGHT — the
-//! entry appended by the closest proxy, the only hop it actually observed — down
+//! range. Inside `X-Forwarded-For` the chain is then walked from the RIGHT - the
+//! entry appended by the closest proxy, the only hop it actually observed - down
 //! to the first address that is not itself a trusted proxy. Taking the leftmost
 //! entry, the naive implementation, is exactly what is forgeable: the client
 //! writes it.
 //!
 //! The trusted list is process-global and initialised once at startup from
 //! `server.trusted_proxy_cidrs` (see [`init`]). When it has not been
-//! initialised — CLI binaries, unit tests — the list is empty and forwarding
+//! initialised - CLI binaries, unit tests - the list is empty and forwarding
 //! headers are never honoured, which fails closed.
 
 use axum::extract::ConnectInfo;
@@ -33,8 +33,8 @@ pub const UNKNOWN_CLIENT: &str = "unknown";
 /// Default value of `server.trusted_proxy_cidrs`.
 ///
 /// Rationale: the overwhelmingly common self-hosted deployment puts a reverse
-/// proxy (nginx, Traefik, Caddy) either on the same host — the core then sees a
-/// loopback peer — or on the same private LAN / container network. Shipping an
+/// proxy (nginx, Traefik, Caddy) either on the same host - the core then sees a
+/// loopback peer - or on the same private LAN / container network. Shipping an
 /// empty list would silently collapse every remote user onto the proxy's own
 /// address and break per-user rate limiting, so these ranges are trusted out of
 /// the box. They are all non-routable on the public Internet: a header forged by
@@ -61,7 +61,7 @@ pub fn init(cidrs: &[String]) {
     let nets = parse_cidrs(cidrs);
     let rendered: Vec<String> = nets.iter().map(ToString::to_string).collect();
     if TRUSTED_PROXIES.set(nets).is_err() {
-        tracing::warn!("Liste des mandataires de confiance déjà initialisée — réinitialisation ignorée");
+        tracing::warn!("Liste des mandataires de confiance déjà initialisée - réinitialisation ignorée");
         return;
     }
     if rendered.is_empty() {
@@ -169,7 +169,7 @@ fn parse_forwarded_entry(raw: &str) -> Option<IpAddr> {
     if entry.is_empty() {
         return None;
     }
-    // Bare address first — this is also the only form that parses a
+    // Bare address first - this is also the only form that parses a
     // bracket-less IPv6 address correctly.
     if let Ok(ip) = entry.parse::<IpAddr>() {
         return Some(ip);
@@ -200,7 +200,7 @@ pub fn client_ip<B>(req: &Request<B>) -> Option<IpAddr> {
 }
 
 /// Rate-limiting key: the resolved address, or [`UNKNOWN_CLIENT`] when it cannot
-/// be determined. Sharing a single bucket in that case is deliberate — it fails
+/// be determined. Sharing a single bucket in that case is deliberate - it fails
 /// closed instead of handing out an unlimited budget.
 pub fn client_ip_key<B>(req: &Request<B>) -> String {
     client_ip(req).map_or_else(|| UNKNOWN_CLIENT.to_string(), |ip| ip.to_string())

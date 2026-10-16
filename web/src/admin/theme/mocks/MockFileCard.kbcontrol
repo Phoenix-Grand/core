@@ -1,4 +1,4 @@
-<!-- MockFileCard — converted from MockFileCard.tsx by @kubuno/views-migrate. -->
+<!-- MockFileCard - converted from MockFileCard.tsx by @kubuno/views-migrate. -->
 <UserControl x:Props="MockFileCardProps">
   <Panel Class="{Binding div_class}">
     <Stack Direction="LeftToRight" CrossAlign="Center" Class="px-3 h-10">

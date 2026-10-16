@@ -6,7 +6,7 @@ import { Input } from './Input'
 /**
  * One position of a mask (WinForms `MaskedTextBox` characters): `0` a digit, `9` an optional digit, `L` a letter,
  * `?` an optional letter, `A` a letter or digit, `a` an optional one, `&` / `C` any character (required / optional);
- * anything else — or a character after `\` — is a literal written by the field itself.
+ * anything else - or a character after `\` - is a literal written by the field itself.
  */
 export type MaskSlot =
   | { readonly kind: 'literal'; readonly char: string }

@@ -1,6 +1,6 @@
 //! The PostgreSQL extensions the migrations call unqualified (uuid-ossp,
 //! pg_trgm, unaccent, citext) must live in schema `public`, where every Kubuno
-//! connection — the core's and each module's (`<module>, public`) — finds them.
+//! connection - the core's and each module's (`<module>, public`) - finds them.
 //!
 //! Needs `KUBUNO_PG_FRESH_DB_URL`: a THROWAWAY database whose role owns it
 //! (the test runs the whole core migration set; its upgrade half, which moves

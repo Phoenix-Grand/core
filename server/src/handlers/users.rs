@@ -28,12 +28,12 @@ pub struct TotpCodeDto {
     pub code: String,
 }
 
-/// `GET /api/v1/me` — the caller's account row **and** what they may do.
+/// `GET /api/v1/me` - the caller's account row **and** what they may do.
 ///
 /// The privilege block is information about oneself, so it demands no privilege:
 /// exactly like the `role` field the account has always been able to read. Before
 /// it existed the only way for a client to learn its own privileges was
-/// `GET /admin/users/:id/privileges`, which requires `core.roles.read` — so a
+/// `GET /admin/users/:id/privileges`, which requires `core.roles.read` - so a
 /// delegated administrator who was not also granted that key read back a refusal
 /// and was shown no console at all, and an ordinary user provoked a failing
 /// request on every single page load.
@@ -44,7 +44,7 @@ pub struct TotpCodeDto {
 /// [`crate::auth::token_scope`]). An interface driven by a scoped token therefore
 /// offers precisely the actions the server will accept.
 ///
-/// The response shape is only ever added to — `user` keeps its place and its
+/// The response shape is only ever added to - `user` keeps its place and its
 /// contents for the frontend, the modules and the native applications.
 #[utoipa::path(
     get,
@@ -64,7 +64,7 @@ pub async fn get_me(
     let mut privileges = ctx.effective();
 
     // Mirrors the disjunction the `/admin/*` layer itself applies, so the console
-    // never hides a surface the server would admit — with one restriction the
+    // never hides a surface the server would admit - with one restriction the
     // layer has no need of: `users.role` describes the *account*, and a scoped
     // token must not inherit its owner's console from a denormalised flag.
     if user.role == "admin" && ctx.origin != crate::audit::ActorOrigin::ApiToken {
@@ -146,14 +146,14 @@ pub async fn me_activity(
     Ok(Json(json!({ "events": events })))
 }
 
-/// `PATCH /api/v1/me` — the account rewrites its own profile.
+/// `PATCH /api/v1/me` - the account rewrites its own profile.
 ///
 /// ## What the directory policy governs here
 ///
 /// Until migration `000110` this route accepted `display_name` and `avatar_url`
 /// from anybody, unconditionally. Both are now governed by
 /// `directory.profile_edit_name` / `directory.profile_edit_photo`, resolved for
-/// **this account** — so the answer walks the account, its groups, its
+/// **this account** - so the answer walks the account, its groups, its
 /// organisational unit and that unit's ancestors before falling back to the
 /// instance (`crate::settings::directory`).
 ///
@@ -175,8 +175,8 @@ pub async fn me_activity(
 /// ## What is logged, and what is not
 ///
 /// The audit line and the `UserUpdated` event carry the **names** of the fields
-/// touched and nothing else. No profile value — least of all a gender or a
-/// birthday — reaches a log, an event payload or the audit trail; the trail's
+/// touched and nothing else. No profile value - least of all a gender or a
+/// birthday - reaches a log, an event payload or the audit trail; the trail's
 /// own whitelist (`audit::redact`) does not list these columns either.
 pub async fn update_me(
     State(state): State<AppState>,
@@ -188,7 +188,7 @@ pub async fn update_me(
     dto.validate()
         .map_err(|e| AppError::Validation(e.to_string()))?;
     // Trims, turns an emptied box into an explicit erase, and refuses what will
-    // not fit or is not a plausible date — before the policy is even consulted,
+    // not fit or is not a plausible date - before the policy is even consulted,
     // so a malformed request never costs a settings resolution.
     dto.tidy_profile(chrono::Utc::now().date_naive())
         .map_err(AppError::Validation)?;
@@ -199,7 +199,7 @@ pub async fn update_me(
     // Only a field the request actually carries **and changes** is checked.
     // Clients send whole profile forms, and refusing a `display_name` that is
     // merely being echoed back unchanged would make the profile page unusable
-    // for everything else it contains — the check therefore asks "is this a
+    // for everything else it contains - the check therefore asks "is this a
     // change?", not "is this present?".
     let changed_text = |requested: &Option<Option<String>>, stored: &Option<String>| match requested
     {
@@ -248,7 +248,7 @@ pub async fn update_me(
     // `$n::boolean`/`$n::text`/`$n::date` casts, the `CASE WHEN <present>`
     // presence guards and the `preferences || $n` jsonb concatenation, none of
     // which MySQL/SQLite share. A `Some(_)` on a nullable text/date field means
-    // the request carried it (its inner value, possibly null, is written — an
+    // the request carried it (its inner value, possibly null, is written - an
     // explicit erase); an absent field is simply not assigned. When nothing is
     // carried the UPDATE is skipped rather than emitting an empty `SET`.
     let mut qb = DbQueryBuilder::new(state.db.backend(), "UPDATE core.users SET ");
@@ -259,7 +259,7 @@ pub async fn update_me(
         wrote = true;
     };
     // display_name / avatar_url: written only when the request supplies a value
-    // (the old `COALESCE($n, col)` — an absent field kept the stored value).
+    // (the old `COALESCE($n, col)` - an absent field kept the stored value).
     if let Some(v) = dto.display_name.clone() {
         lead(&mut qb, "display_name = ");
         qb.push_bind(v);
@@ -399,7 +399,7 @@ pub async fn change_password(
     }
 
     // Validate before touching the database: the DTO's own rules (length), plus
-    // the new password must actually differ from the current one — otherwise a
+    // the new password must actually differ from the current one - otherwise a
     // forced change could be "satisfied" by re-entering the default password.
     dto.validate()
         .map_err(|e| AppError::Validation(e.to_string()))?;
@@ -431,7 +431,7 @@ pub async fn change_password(
 
     // Clearing must_change_password here is what lifts the forced-change screen
     // and re-opens administrative writes. `password_changed_at` restarts the
-    // expiry clock — and is what a forced change, once made, actually resets.
+    // expiry clock - and is what a forced change, once made, actually resets.
     let now = chrono::Utc::now();
     tx.execute(
         "UPDATE core.users \
@@ -463,7 +463,7 @@ pub async fn change_password(
     Ok(Json(json!({ "message": "Mot de passe mis à jour" })))
 }
 
-/// `GET /api/v1/me/security` — everything the settings page needs to talk about
+/// `GET /api/v1/me/security` - everything the settings page needs to talk about
 /// the second factor without three separate round-trips.
 ///
 /// Counters only. No secret, no code, no token.
@@ -577,8 +577,8 @@ pub struct SearchUsersQuery {
 /// the test at the bottom of this file. The point is not to save typing: since
 /// migration `000114` the account row carries `gender` and `birthday`, and those
 /// two must never leave the account's own profile or the administration sheet.
-/// A single `SELECT *` here — or one column quietly appended to a hand-written
-/// list — would push a personal datum into every people picker of every module,
+/// A single `SELECT *` here - or one column quietly appended to a hand-written
+/// list - would push a personal datum into every people picker of every module,
 /// silently, because both routes serialise whatever they select. One constant
 /// and one test is what makes that regression fail in CI rather than in
 /// production.
@@ -599,14 +599,14 @@ const DIRECTORY_COLUMNS: &str = directory_columns!();
 /// The fuller projection, for ONE person whose card is being opened.
 ///
 /// A people picker answers a name and a face. A card answers "who is this
-/// person here" — how their name is said, the pronouns they asked for, where
-/// they work from, the line they wrote about themselves — because that is what
+/// person here" - how their name is said, the pronouns they asked for, where
+/// they work from, the line they wrote about themselves - because that is what
 /// the profile page exists to publish and what makes a directory worth having.
 ///
 /// ⚠️ `gender` and `birthday` are ABSENT and must stay absent. Migration
 /// `000114` states it in its own header: they are read by the account itself and
 /// by the administration sheet, and by nothing else. A card is not an
-/// exemption — it is exactly the sort of "just this once" that would put a date
+/// exemption - it is exactly the sort of "just this once" that would put a date
 /// of birth on a meeting invitation. Anything appended to this list is
 /// published to every colleague who clicks a name.
 // A macro rather than a `const` so the read below splices it with `concat!`:
@@ -618,7 +618,7 @@ macro_rules! directory_card_columns {
     };
 }
 
-/// Search active accounts — the staff directory, as the caller is entitled to
+/// Search active accounts - the staff directory, as the caller is entitled to
 /// see it.
 ///
 /// The three sharing keys of migration `000110` all land here, resolved for the
@@ -630,10 +630,10 @@ macro_rules! directory_card_columns {
 ///     directory; an error would surface in every module as a broken component;
 ///   * `directory.audience = same_unit` narrows the result to the caller's own
 ///     unit **and its sub-units** (`core.org_unit_descendants`, migration
-///     `000041`) — the per-unit directory, obtained from the scope engine rather
+///     `000041`) - the per-unit directory, obtained from the scope engine rather
 ///     than from a second object to administer;
 ///   * `directory.share_email` adds the address, which this route has never
-///     disclosed. It stays absent from the payload when the policy says so —
+///     disclosed. It stays absent from the payload when the policy says so -
 ///     omitted, not blanked, so no client can mistake `""` for an address.
 pub async fn search_users(
     State(state): State<AppState>,
@@ -666,7 +666,7 @@ pub async fn search_users(
     // The projection comes from `DIRECTORY_COLUMNS`, never from a list typed
     // here: see that constant for why. Built dynamically so the search predicate
     // (and its pattern) is only present when there is text to match, and the
-    // unit narrowing only when it applies — the former `$n = ''` / `NOT
+    // unit narrowing only when it applies - the former `$n = ''` / `NOT
     // $n::boolean` tricks are replaced by branching in Rust.
     // The subtree filter uses the portable recursive CTE of `database::compat`;
     // `ILIKE` goes through the builder's dialect layer and `NULLS LAST` is
@@ -743,12 +743,12 @@ pub struct LookupUsersQuery {
     pub ids: Option<String>,
 }
 
-/// `GET /api/v1/users/:id/card` — one person, as the directory publishes them.
+/// `GET /api/v1/users/:id/card` - one person, as the directory publishes them.
 ///
 /// The same three keys of migration `000110` as the search, and for the same
 /// reasons: a closed directory answers "not found" rather than an error, a
 /// narrowed one answers only within the caller's own unit, and the address is
-/// omitted — never blanked — unless the policy shares it.
+/// omitted - never blanked - unless the policy shares it.
 ///
 /// Every field is optional in the answer: a profile nobody filled in returns a
 /// name and a face, which is exactly what it did before this route existed.
@@ -794,7 +794,7 @@ pub async fn user_card(
         row.ok_or_else(|| AppError::NotFound("Compte introuvable".into()))?;
 
     // Narrowed directories answer only inside the caller's own unit and its
-    // sub-units — the same anchor the search uses, so one policy, one meaning.
+    // sub-units - the same anchor the search uses, so one policy, one meaning.
     if policy.audience == settings::directory::Audience::SameUnit && caller.id != id {
         // Portable subtree membership via the recursive CTE of `database::compat`.
         let same_sql = format!(
@@ -851,12 +851,12 @@ pub async fn user_card(
     Ok(Json(card))
 }
 
-/// Resolves accounts by id — public profile fields, plus the address when the
+/// Resolves accounts by id - public profile fields, plus the address when the
 /// directory policy publishes it.
 ///
 /// **Only `directory.share_email` applies here, and that is deliberate.** This
-/// route answers "who is this identifier I am already holding" — a document's
-/// author, a mention, an event organiser — not "show me the directory". Closing
+/// route answers "who is this identifier I am already holding" - a document's
+/// author, a mention, an event organiser - not "show me the directory". Closing
 /// it under `directory.enabled`, or narrowing it under `directory.audience`,
 /// would blank out authorship labels across every module for no privacy gain:
 /// the caller already possesses the uuid, which is only ever obtained from data
@@ -1087,7 +1087,7 @@ pub async fn disable_totp(
     Ok(Json(json!({ "enabled": false })))
 }
 
-/// POST /api/v1/me/avatar — upload d'avatar (multipart, champ "avatar")
+/// POST /api/v1/me/avatar - upload d'avatar (multipart, champ "avatar")
 pub async fn upload_avatar(
     State(state): State<AppState>,
     AuthUser(user): AuthUser,
@@ -1176,7 +1176,7 @@ pub async fn upload_avatar(
     Ok(Json(json!({ "user": updated })))
 }
 
-/// GET /api/v1/users/:id/avatar — serve l'avatar stocké
+/// GET /api/v1/users/:id/avatar - serve l'avatar stocké
 pub async fn get_avatar(
     State(state): State<AppState>,
     Path(user_id): Path<uuid::Uuid>,
@@ -1196,7 +1196,7 @@ pub async fn get_avatar(
     Err(AppError::NotFound("Avatar introuvable".into()))
 }
 
-/// GET /api/v1/users/:id/avatar/original — serve l'image originale (pour re-recadrage)
+/// GET /api/v1/users/:id/avatar/original - serve l'image originale (pour re-recadrage)
 pub async fn get_avatar_original(
     State(state): State<AppState>,
     Path(user_id): Path<uuid::Uuid>,
@@ -1296,20 +1296,20 @@ pub async fn linked_account_login(
 
 // ── The directory, as a MODULE sees it ───────────────────────────────────────
 //
-// A module that has to attach one of its objects to a person — a mailbox to its
-// owner, a resource to its manager — needs to name that person and to check the
+// A module that has to attach one of its objects to a person - a mailbox to its
+// owner, a resource to its manager - needs to name that person and to check the
 // name still exists. It cannot read `core.users`: a module owns its own schema
 // and nothing else, which is the rule that keeps a module from becoming a second
 // place where accounts are defined.
 //
 // The public directory route cannot serve it either: it resolves the sharing
-// policy for its CALLER, and a module has no caller — the proxy strips
+// policy for its CALLER, and a module has no caller - the proxy strips
 // `Authorization` before a module is reached, precisely so a module can never
 // borrow a user's authority.
 //
 // Hence these two, guarded by `InternalRequest` (there is no layer on
 // `/internal`; the guard is per handler). They answer the same projection the
-// people pickers get — `DIRECTORY_COLUMNS`, never a list typed here, so a
+// people pickers get - `DIRECTORY_COLUMNS`, never a list typed here, so a
 // personal column added to `core.users` cannot leak through this door either.
 // The sharing policy is deliberately NOT applied: it narrows what one person may
 // see of another, and an administrator configuring an instance-wide object is
@@ -1363,7 +1363,7 @@ pub async fn internal_list_users(
     Ok(Json(json!({ "users": rows.into_iter().map(directory_entry).collect::<Vec<_>>() })))
 }
 
-/// One account by id — what a module calls to check that an owner it stored is
+/// One account by id - what a module calls to check that an owner it stored is
 /// still there. `404` when it is not, so "unknown" and "the database is down"
 /// can never be confused for one another.
 pub async fn internal_get_user(
@@ -1391,7 +1391,7 @@ pub async fn internal_get_user(
     Ok(Json(directory_entry(row)))
 }
 
-/// The groups one account belongs to, in READ ONLY — for a module that gates
+/// The groups one account belongs to, in READ ONLY - for a module that gates
 /// access on group membership (e.g. the forum's per-group forum permissions).
 /// Same trust model as the rest of `/internal/directory/*`: the internal secret
 /// proves the caller is inside the instance; no module is named. Only the group
@@ -1430,7 +1430,7 @@ pub async fn internal_user_groups(
     })))
 }
 
-/// Every group of the instance (id + name only), READ ONLY — so a module can
+/// Every group of the instance (id + name only), READ ONLY - so a module can
 /// let an administrator pick which groups a per-group rule applies to.
 pub async fn internal_list_groups(
     State(state): State<AppState>,
@@ -1456,7 +1456,7 @@ pub async fn internal_list_groups(
 /// Columns the mail provisioning reads. NOT `DIRECTORY_COLUMNS`: the directory
 /// and every people picker must keep answering `display_name`, username and
 /// photo, and adding the structured names there would disclose them everywhere.
-/// This list exists so provisioning — and provisioning alone — can read them.
+/// This list exists so provisioning - and provisioning alone - can read them.
 macro_rules! provisioning_columns {
     () => {
         "id, username, display_name, first_name, last_name"
@@ -1477,7 +1477,7 @@ fn provisioning_entry(
     })
 }
 
-/// `GET /internal/mail/provisioning/users` — every active account, with the name
+/// `GET /internal/mail/provisioning/users` - every active account, with the name
 /// parts the mail module builds an address from.
 ///
 /// Its own endpoint rather than a field on the directory read: the directory is
@@ -1506,7 +1506,7 @@ pub async fn internal_provisioning_users(
     Ok(Json(json!({ "users": rows.into_iter().map(provisioning_entry).collect::<Vec<_>>() })))
 }
 
-/// `GET /internal/mail/provisioning/users/:id` — one account, same shape.
+/// `GET /internal/mail/provisioning/users/:id` - one account, same shape.
 pub async fn internal_provisioning_user(
     State(state): State<AppState>,
     _internal: InternalRequest,

@@ -14,7 +14,7 @@
 //! The engine is chosen when the process starts, from configuration, so these
 //! are methods on [`Backend`] rather than functions reading a `const`. A caller
 //! holds a [`crate::DbPool`] and asks it for `pool.backend()`, a cheap `Copy`
-//! value. sqlx underneath does **not** translate SQL — this module produces the
+//! value. sqlx underneath does **not** translate SQL - this module produces the
 //! right text per engine, and sqlx only carries it and encodes the parameters.
 
 use std::fmt::Write as _;
@@ -35,7 +35,7 @@ pub enum SqlType {
     Text,
     Double,
     /// A UUID column. PostgreSQL has a native type; MySQL stores `BINARY(16)`
-    /// and SQLite a `BLOB`, where a cast is meaningless — the expression is
+    /// and SQLite a `BLOB`, where a cast is meaningless - the expression is
     /// returned unchanged there.
     Uuid,
 }
@@ -93,7 +93,7 @@ impl Backend {
 
     /// MySQL and MariaDB have no `RETURNING` on `UPDATE`/`DELETE`, and MariaDB's
     /// `INSERT ... RETURNING` does not survive `ON DUPLICATE KEY UPDATE`. Treat
-    /// the whole family as lacking it — see [`crate::returning`].
+    /// the whole family as lacking it - see [`crate::returning`].
     pub fn supports_returning(self) -> bool {
         !matches!(self, Backend::MySql)
     }
@@ -206,7 +206,7 @@ impl Backend {
         }
     }
 
-    /// `INSERT` ... "skip it if it is already there" — the prefix half.
+    /// `INSERT` ... "skip it if it is already there" - the prefix half.
     pub fn insert_ignore_prefix(self) -> &'static str {
         match self {
             Backend::Postgres | Backend::Sqlite => "",
@@ -247,7 +247,7 @@ impl Backend {
         }
     }
 
-    /// Whether a JSON object has a key — PostgreSQL's `?` operator.
+    /// Whether a JSON object has a key - PostgreSQL's `?` operator.
     pub fn json_has_key(self, col: &'static str, key: &'static str) -> String {
         check_json_path(&[key]);
         match self {
@@ -257,12 +257,12 @@ impl Backend {
         }
     }
 
-    /// Whether a JSON object has **any** of these keys — PostgreSQL's `?|`.
+    /// Whether a JSON object has **any** of these keys - PostgreSQL's `?|`.
     pub fn json_has_any_key(self, col: &'static str, keys: &[&'static str]) -> String {
         self.json_has_keys(col, keys, "one", " OR ")
     }
 
-    /// Whether a JSON object has **all** of these keys — PostgreSQL's `?&`.
+    /// Whether a JSON object has **all** of these keys - PostgreSQL's `?&`.
     pub fn json_has_all_keys(self, col: &'static str, keys: &[&'static str]) -> String {
         self.json_has_keys(col, keys, "all", " AND ")
     }
@@ -294,21 +294,21 @@ impl Backend {
         }
     }
 
-    /// Whether a JSON **array** column contains a scalar value — the portable
+    /// Whether a JSON **array** column contains a scalar value - the portable
     /// replacement for PostgreSQL's `value = ANY(col)` over a `TEXT[]`/`UUID[]`.
     /// `n` is the placeholder number of the candidate, bound as plain text (for
     /// a UUID, bind `uuid.to_string()`); it is never interpolated.
     ///
-    /// * PostgreSQL: `col @> jsonb_build_array($n)` — a containment test a GIN
+    /// * PostgreSQL: `col @> jsonb_build_array($n)` - a containment test a GIN
     ///   index on the `jsonb` column can serve, so it replaces the old GIN on
     ///   the array.
-    /// * MySQL/MariaDB: `JSON_CONTAINS(col, JSON_QUOTE($n))` — `JSON_QUOTE`
+    /// * MySQL/MariaDB: `JSON_CONTAINS(col, JSON_QUOTE($n))` - `JSON_QUOTE`
     ///   turns the bound string into the JSON scalar `"…"` the function needs.
     /// * SQLite: `EXISTS (SELECT 1 FROM json_each(col) WHERE value = $n)`.
     ///
     /// The column must hold a JSON array of scalars (what a `Vec<String>` /
     /// `Vec<Uuid>` bound through [`crate::DbValue`] writes). On PostgreSQL it
-    /// must be `jsonb`, not `json` — see this crate's README for the migration.
+    /// must be `jsonb`, not `json` - see this crate's README for the migration.
     pub fn json_array_contains(self, col: &'static str, n: usize) -> String {
         match self {
             Backend::Postgres => format!("{col} @> jsonb_build_array(${n})"),
@@ -375,7 +375,7 @@ impl Backend {
     /// such clause. SQLite serializes writes at the database level (a write
     /// transaction holds an exclusive lock), so the pessimistic lock a
     /// `SELECT ... FOR UPDATE` takes on PostgreSQL/MySQL is already implied there
-    /// — dropping the clause keeps the same "no concurrent writer sees a stale
+    /// - dropping the clause keeps the same "no concurrent writer sees a stale
     /// row" guarantee. Where the lock backs a work-queue claim, keep the
     /// `UPDATE ... WHERE status = 'pending'` + `rows_affected == 1` check as the
     /// real arbiter; this clause is only an optimization on the engines that have
@@ -397,16 +397,16 @@ impl Backend {
         }
     }
 
-    /// The domain half of an email address — everything after the `@`, the
+    /// The domain half of an email address - everything after the `@`, the
     /// portable stand-in for PostgreSQL's `SPLIT_PART(col, '@', 2)`.
     ///
     /// `col` is a column reference written in source (`&'static str`); no request
     /// data is spliced. A well-formed address has exactly one `@`, so all three
-    /// spellings agree on it — the second field is the part after the separator.
+    /// spellings agree on it - the second field is the part after the separator.
     ///
     /// * PostgreSQL: `SPLIT_PART(col, '@', 2)`.
     /// * MySQL/MariaDB: `SUBSTRING_INDEX(SUBSTRING_INDEX(col, '@', 2), '@', -1)`
-    ///   — the outer `-1` trims the first field the inner call keeps, so a value
+    ///   - the outer `-1` trims the first field the inner call keeps, so a value
     ///   with no `@` yields the empty string rather than the whole address.
     /// * SQLite: `substr(col, instr(col, '@') + 1)`.
     pub fn email_domain(self, col: &'static str) -> String {
@@ -420,7 +420,7 @@ impl Backend {
     }
 
     /// Wraps a bound text value as a JSON **string** scalar (`"…"`), for storing
-    /// it in a JSON column — PostgreSQL's `to_jsonb($n::text)`. `n` is the
+    /// it in a JSON column - PostgreSQL's `to_jsonb($n::text)`. `n` is the
     /// placeholder number, bound as plain text; it is never interpolated.
     ///
     /// * PostgreSQL: `to_jsonb($n::text)`.
@@ -434,7 +434,7 @@ impl Backend {
         }
     }
 
-    /// Boolean OR over a group — PostgreSQL's `bool_or`. MySQL and SQLite store
+    /// Boolean OR over a group - PostgreSQL's `bool_or`. MySQL and SQLite store
     /// booleans as `0`/`1` and have no `bool_or`, but `MAX` over those integers
     /// is the same fold and decodes back to `bool`. PostgreSQL rejects
     /// `MAX(boolean)`, so the spelling genuinely differs.
@@ -457,7 +457,7 @@ impl Backend {
 
     // ── migration column types ─────────────────────────────────────────────────
 
-    /// `uuid::Uuid` — native on PostgreSQL, `BINARY(16)` on MySQL, `BLOB` on SQLite.
+    /// `uuid::Uuid` - native on PostgreSQL, `BINARY(16)` on MySQL, `BLOB` on SQLite.
     pub fn col_uuid(self) -> &'static str {
         match self {
             Backend::Postgres => "UUID",

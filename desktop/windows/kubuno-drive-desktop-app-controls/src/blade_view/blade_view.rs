@@ -1,4 +1,4 @@
-//! (mirror of BladeView.cs) — container level: horizontal layout of blades
+//! (mirror of BladeView.cs) - container level: horizontal layout of blades
 //! (`ItemsStackPanel Orientation="Horizontal"` inside a horizontal-only
 //! ScrollViewer). Only the port's pure geometric helpers live here (rect of a
 //! blade in the stack, ScrollViewer extent, viewport culling). The C# logic

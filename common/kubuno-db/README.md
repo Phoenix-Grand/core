@@ -1,7 +1,7 @@
 # kubuno-db
 
 The database foundation shared by the Kubuno core and every module: **one binary,
-three engines — PostgreSQL, MySQL/MariaDB or SQLite — chosen at run time**. The
+three engines - PostgreSQL, MySQL/MariaDB or SQLite - chosen at run time**. The
 administrator names the engine in configuration (`database.engine`), at install
 time or later, and the same binary connects to whichever is named. A dialect layer
 covers everything the three engines spell differently.
@@ -27,30 +27,30 @@ an instance can change engine without reinstalling anything.
 The two alternatives were rejected for concrete reasons:
 
 * **Generic over `sqlx::Database`.** Every function that binds a value would
-  have to carry the bounds that make it bindable — `for<'a> Uuid: Encode<'a, DB>`,
+  have to carry the bounds that make it bindable - `for<'a> Uuid: Encode<'a, DB>`,
   `Uuid: Type<DB>`, and one more pair per type. Those bounds are viral: they
   climb from the query into the service, the handler, and `AppState`, which
   Axum then has to be generic over too. Kubuno binds a `Uuid` in thousands of places.
 * **`sqlx::Any`.** It carries only Null/Bool/SmallInt/Integer/BigInt/Real/
-  Double/Text/Blob. The three types Kubuno uses most — `Uuid`,
-  `serde_json::Value` and `DateTime<Utc>` — cannot cross it at all.
+  Double/Text/Blob. The three types Kubuno uses most - `Uuid`,
+  `serde_json::Value` and `DateTime<Utc>` - cannot cross it at all.
 
 ### sqlx does not translate SQL
 
 The SQL text is made correct for the engine by the `dialect` layer (methods on
 `Backend`) before it ever reaches sqlx; sqlx only carries the text and
 encodes/decodes the parameters. `sql::prepare` rewrites `$1` into `?` where the
-engine wants it and rejects text no engine could run faithfully — it is not a
+engine wants it and rejects text no engine could run faithfully - it is not a
 translator.
 
 ### What else the crate provides
 
-* `returning` — how to get a row back on MySQL, which has no `RETURNING`;
-* `pool` — connecting, the per-engine session policy, migrations;
-* `events` — `pg_notify` and its outbox fallback on the other engines;
-* `journal` — the portable change journal (monotonic per-domain sequence,
+* `returning` - how to get a row back on MySQL, which has no `RETURNING`;
+* `pool` - connecting, the per-engine session policy, migrations;
+* `events` - `pg_notify` and its outbox fallback on the other engines;
+* `journal` - the portable change journal (monotonic per-domain sequence,
   tombstones, delta pull) behind the modules' sync APIs;
-* `search` — engine-independent full-text search (stemmed, accent-insensitive).
+* `search` - engine-independent full-text search (stemmed, accent-insensitive).
 
 ---
 
@@ -71,7 +71,7 @@ kubuno-db = { git = "https://github.com/kubuno/core", tag = "db-v0.9.0", package
 ```
 
 `derive` and `macros` are in sqlx's *default* features, which
-`default-features = false` has just removed — a module using `#[derive(FromRow)]`
+`default-features = false` has just removed - a module using `#[derive(FromRow)]`
 needs them back.
 
 ### 2.2 Declare the schema once
@@ -102,7 +102,7 @@ let row = kubuno_db::query("SELECT * FROM keestore.vaults WHERE owner_id = $1")?
     .await?;
 ```
 
-Keep writing `$1`, `$2` — PostgreSQL's style is the source dialect, translated
+Keep writing `$1`, `$2` - PostgreSQL's style is the source dialect, translated
 to `?` where the engine wants it. Same for `query_as` and `query_scalar`.
 
 ### 2.5 Connecting, migrating
@@ -129,7 +129,7 @@ already had it.
 
 ### 2.6 Migrations: three directories
 
-Move the existing files to `migrations/postgres/` **unchanged** — same
+Move the existing files to `migrations/postgres/` **unchanged** - same
 filenames, same bytes, so the version, description and checksum are identical
 and an applied migration stays applied. Then write the MySQL and SQLite
 versions.
@@ -139,9 +139,9 @@ versions.
 | `Uuid` | `UUID` | `BINARY(16)` | `BLOB` |
 | `DateTime<Utc>` | `TIMESTAMPTZ` | `DATETIME(6)` | `TEXT` (`%F %T%.f`, UTC) |
 | `serde_json::Value` | `JSONB` | `JSON` | `TEXT` |
-| `Vec<String>` / `Vec<Uuid>` (a small list) | `JSONB` | `JSON` | `TEXT` — as a JSON array; see §2.8 |
+| `Vec<String>` / `Vec<Uuid>` (a small list) | `JSONB` | `JSON` | `TEXT` - as a JSON array; see §2.8 |
 | `Vec<u8>` | `BYTEA` | `LONGBLOB` | `BLOB` |
-| `String` (indexed/unique) | `TEXT` | `VARCHAR(n)` — MySQL cannot index a `TEXT` without a prefix length | `TEXT` |
+| `String` (indexed/unique) | `TEXT` | `VARCHAR(n)` - MySQL cannot index a `TEXT` without a prefix length | `TEXT` |
 
 `dialect::column::*` returns these, so a generated migration and a hand-written
 one cannot drift.
@@ -158,7 +158,7 @@ SQLite.
 
 ### 2.6.1 MySQL and MariaDB: one set, flavour variants where they differ
 
-The MySQL protocol is spoken by two servers — **Oracle MySQL** and **MariaDB** —
+The MySQL protocol is spoken by two servers - **Oracle MySQL** and **MariaDB** -
 whose DDL is not quite the same. Kubuno supports both (tested on MySQL 8.4 and
 MariaDB 12.3 LTS). The rule:
 
@@ -190,7 +190,7 @@ MariaDB 12.3 LTS). The rule:
    (`…-MariaDB` → MariaDB, anything else → Oracle MySQL; an unreadable version is
    an error, never a guess) and substitutes that flavour's variants. A variant
    is recorded in `_sqlx_migrations` under its **base file's** version,
-   description and **checksum** — never its own. Consequences:
+   description and **checksum** - never its own. Consequences:
    * the bookkeeping is identical on both flavours, so a database moved from
      MariaDB to MySQL (or back) keeps validating;
    * adding a variant for an already released migration never invalidates an
@@ -199,7 +199,7 @@ MariaDB 12.3 LTS). The rule:
      same schema change), never a different change;
    * released files stay immutable, base and variants alike: the base checksum
      still guards every install against an edited base, and an edited variant
-     is a silent divergence between installs — fix forward with a new version.
+     is a silent divergence between installs - fix forward with a new version.
 5. **When a released `mysql` file turns out to fail on a flavour**, do not edit
    it: add the variant for that flavour. Installs that applied the base keep
    their checksum; installs where it failed (sqlx leaves the version marked
@@ -222,7 +222,7 @@ Differences met so far (MySQL 8.4 vs MariaDB 12.3):
 lists the `mysql` files that hit the first four rows; with `--write` it drafts
 their Oracle variants into `mysql-oracle/` (never overwriting one). The draft
 must be reviewed and the module's migrations applied to a real MySQL **and** a
-real MariaDB before it is committed — nothing is rewritten at run time.
+real MariaDB before it is committed - nothing is rewritten at run time.
 
 ### 2.7 SQL to rewrite
 
@@ -232,11 +232,11 @@ each non-portable construct and the helper that replaces it.
 | PostgreSQL | replacement |
 |---|---|
 | `x = ANY($n)` (an `IN`-list of bound values) | `format!("x IN ({})", dialect::in_list(start, n))` + one `.bind()` per element |
-| `x = ANY(col)` (`col` is a `TEXT[]`/`UUID[]` **column**) | store the column as a JSON array and filter with `Backend::json_array_contains("col", n)` — see §2.8 |
+| `x = ANY(col)` (`col` is a `TEXT[]`/`UUID[]` **column**) | store the column as a JSON array and filter with `Backend::json_array_contains("col", n)` - see §2.8 |
 | `expr::bigint` | `dialect::cast("expr", SqlType::BigInt)` |
-| `SUM(c)`, `COUNT(*)`, `AVG(c)` | `dialect::sum_bigint`, `count_bigint`, `avg_double` — the *return type* differs per engine (see §4) |
+| `SUM(c)`, `COUNT(*)`, `AVG(c)` | `dialect::sum_bigint`, `count_bigint`, `avg_double` - the *return type* differs per engine (see §4) |
 | `ON CONFLICT (a) DO UPDATE SET ...` | `dialect::upsert(table, &["a"], &[Assign::…])` |
-| `ON CONFLICT DO NOTHING` | `dialect::insert_ignore_prefix()` **and** `dialect::on_conflict_do_nothing(&[...])` — MySQL puts its marker in the prefix |
+| `ON CONFLICT DO NOTHING` | `dialect::insert_ignore_prefix()` **and** `dialect::on_conflict_do_nothing(&[...])` - MySQL puts its marker in the prefix |
 | `RETURNING ...` | `kubuno_db::returning::*` (see §3) |
 | `col->>'k'`, `col#>>'{a,b}'` | `dialect::json_text("col", &["a", "b"])` |
 | `col ? 'k'`, `?|`, `?&` | `dialect::json_has_key` / `json_has_any_key` / `json_has_all_keys` |
@@ -244,14 +244,14 @@ each non-portable construct and the helper that replaces it.
 | `NOW()`, `INTERVAL '7 days'` | bind `chrono::Utc::now()`, or `dialect::now()` / `dialect::interval_before()` |
 | `string_agg(...)` | `dialect::string_agg(...)` |
 | `SELECT pg_notify(...)` | `kubuno_db::events::notify(...)` |
-| `to_tsvector`, `plainto_tsquery`, `ts_rank`, `unaccent`, `pg_trgm` | `kubuno_db::search` — stem in Rust into a `TEXT` column (see §2.8) |
-| `DISTINCT ON`, `array_agg`, `SKIP LOCKED` | no portable form — restructure (see §5) |
+| `to_tsvector`, `plainto_tsquery`, `ts_rank`, `unaccent`, `pg_trgm` | `kubuno_db::search` - stem in Rust into a `TEXT` column (see §2.8) |
+| `DISTINCT ON`, `array_agg`, `SKIP LOCKED` | no portable form - restructure (see §5) |
 
 Two constructs are **refused outright**, on every backend including PostgreSQL:
 
-* a placeholder out of order or reused (`... $2 ... $1 ...`, or `$1` twice) —
+* a placeholder out of order or reused (`... $2 ... $1 ...`, or `$1` twice) -
   `?` is positional and cannot express it. Bind the value a second time.
-* a bare `?` — it would be mistaken for a placeholder and shift every parameter
+* a bare `?` - it would be mistaken for a placeholder and shift every parameter
   after it by one.
 
 Failing loudly is deliberate. A query that is silently one bind off is the kind
@@ -263,9 +263,9 @@ PostgreSQL's `TEXT[]` and `UUID[]` have no equivalent on MySQL or SQLite. The
 portable representation of a small list column is a **JSON array**, and the
 foundation makes writing, reading and filtering one ergonomic on all three
 engines. (A list that needs atomicity or an inverted index becomes a child
-table instead — out of scope here.)
+table instead - out of scope here.)
 
-**Write** — bind the vector; it becomes a JSON array through `DbValue::Json`:
+**Write** - bind the vector; it becomes a JSON array through `DbValue::Json`:
 
 ```rust
 let tags: Vec<String> = vec!["red".into(), "green".into()];
@@ -277,21 +277,21 @@ db.execute("INSERT INTO photos.items (id, tags) VALUES ($1, $2)",
 `Option<Vec<..>>` for a nullable column). `Vec<Uuid>` is written as an array of
 hyphenated strings, the spelling `uuid`'s own `Serialize` uses.
 
-**Read** — two paths, both portable across the three drivers:
+**Read** - two paths, both portable across the three drivers:
 
 ```rust
-// (a) the sqlx-native derive attribute — the common case:
+// (a) the sqlx-native derive attribute - the common case:
 #[derive(sqlx::FromRow)]
 struct Item { id: Uuid, #[sqlx(json)] tags: Vec<String> }
 
-// (b) the JsonVec<T> wrapper — needed on the hand-mapped DbRow::try_get path,
+// (b) the JsonVec<T> wrapper - needed on the hand-mapped DbRow::try_get path,
 //     where a plain Vec<String> would mean PostgreSQL's TEXT[], not a JSON array:
 #[derive(sqlx::FromRow)]
 struct Item2 { id: Uuid, tags: JsonVec<String> }   // Derefs to Vec<String>
 let tags: JsonVec<String> = row.try_get("tags")?;
 ```
 
-**Filter** — `Backend::json_array_contains(col, n)` replaces `value = ANY(col)`
+**Filter** - `Backend::json_array_contains(col, n)` replaces `value = ANY(col)`
 and its GIN index. The candidate is a bound value, never interpolated (for a
 UUID, bind `uuid.to_string()`):
 
@@ -307,7 +307,7 @@ serves it), `JSON_CONTAINS(col, JSON_QUOTE($n))` on MySQL, and
 `EXISTS (SELECT 1 FROM json_each(col) WHERE value = $n)` on SQLite.
 
 **Migrating an existing `TEXT[]`/`UUID[]` column (octet-safe).** The PostgreSQL
-migration that first created the column is *frozen* — its bytes and checksum
+migration that first created the column is *frozen* - its bytes and checksum
 must not change (§2.6), and its tables are named without a schema prefix,
 trusting the search path the pool sets. So the conversion is a **new** migration
 file appended to `migrations/postgres/`, spelled the same unqualified way:
@@ -326,15 +326,15 @@ CREATE INDEX idx_items_tags ON items USING gin (tags jsonb_path_ops);
 `jsonb_path_ops` is the smaller, faster GIN opclass for `@>`-only lookups; use
 the default `jsonb_ops` if you also need key-existence operators. The
 **MySQL and SQLite** migration directories are new, so their `CREATE TABLE`
-declares the column JSON from the start — `tags JSON NOT NULL` (MySQL) /
+declares the column JSON from the start - `tags JSON NOT NULL` (MySQL) /
 `tags TEXT NOT NULL` (SQLite), or `Backend::col_json()` in a generated migration
-— and never carry an `ALTER`.
+- and never carry an `ALTER`.
 ### 2.9 Delta sync: the change journal
 
 The local-first modules (calendar, tasks, notes, assistant, wiki, drive, mail,
 contacts, chat) share one delta-sync layer: a monotonic `change_seq` per record,
 a tombstone per deletion, a feed pulled from a cursor. On PostgreSQL that is a
-`SEQUENCE` plus a `BEFORE UPDATE`/`AFTER DELETE` trigger pair — neither of which
+`SEQUENCE` plus a `BEFORE UPDATE`/`AFTER DELETE` trigger pair - neither of which
 MySQL or SQLite has, and the child "no-op bump" (`UPDATE ... SET change_seq =
 change_seq`) does not even survive MySQL. The [`journal`](src/journal.rs) module
 lifts the whole mechanism into a portable, application-driven primitive.
@@ -391,10 +391,10 @@ stems (the same algorithm PostgreSQL's `french` dictionary uses) and stripped of
 diacritics **at write time**, then stored in a plain `TEXT` column; a query is
 put through the same reduction and matched with a portable `LIKE`. Because the
 stemming happens before any SQL, the stored and searched tokens are byte-for-byte
-identical whatever the engine — so a search returns the same rows and the same
+identical whatever the engine - so a search returns the same rows and the same
 ranking on PostgreSQL, MySQL and SQLite, with no extension.
 
-**Store** — one normalized `TEXT` column per weight class (the portable stand-in
+**Store** - one normalized `TEXT` column per weight class (the portable stand-in
 for `setweight A/B/C`). Compute the columns in Rust on insert/update instead of a
 `tsvector` trigger:
 
@@ -410,7 +410,7 @@ db.execute(
 ).await?;
 ```
 
-**Search** — `Query::build` returns a portable `WHERE` filter, an `ORDER BY`
+**Search** - `Query::build` returns a portable `WHERE` filter, an `ORDER BY`
 score and the bind values (every value bound, never interpolated). Placeholders
 are numbered from `start`, the `WHERE` block then the `ORDER BY` block, so the
 binds slot in between the caller's pre-conditions and its `LIMIT`/`OFFSET`:
@@ -435,9 +435,9 @@ if let Some(s) = Query::build(&user_query, &fields, 3) {   // $1,$2 already used
 
 The query is **bounded**: only the first `search::max_terms()` distinct stems
 are kept (16 by default), since each costs a `LIKE '%…%'` per field. The value is
-set per process with `search::set_max_terms` — the core applies its `[search]
+set per process with `search::set_max_terms` - the core applies its `[search]
 max_terms` and passes it to every module through `KUBUNO_DB_SEARCH_MAX_TERMS`,
-which `connect` reads — or per call with `Query::build_with_max_terms`. Both are
+which `connect` reads - or per call with `Query::build_with_max_terms`. Both are
 clamped to `1..=256`.
 
 A term matches when it is a substring of a normalized column, so a stored stem
@@ -445,13 +445,13 @@ A term matches when it is a substring of a normalized column, so a stored stem
 accent-free query (`resume`) finds an accented word (`résumé`). Every term must
 be present (`AND` across terms); within a term any field satisfies it (`OR`).
 
-**Migration** — drop the `TSVECTOR` column, its `GIN` index and its trigger;
+**Migration** - drop the `TSVECTOR` column, its `GIN` index and its trigger;
 add `title_norm`/`body_norm` `TEXT` columns and fill them in Rust. A plain
 `B-tree`/no index is enough for a `LIKE '%stem%'`; on a large corpus, an engine's
 own substring index (e.g. a trigram index where available) can be added later
 without changing the query.
 
-**What this does not do:** `pg_trgm`'s typo tolerance is gone — a `LIKE` needs
+**What this does not do:** `pg_trgm`'s typo tolerance is gone - a `LIKE` needs
 the stem to appear as a substring, so a misspelling that survives stemming will
 not match. Stemming still folds inflections and `normalize` folds accents, so
 inflected and accented queries match; only fuzzy/edit-distance matching is out
@@ -468,7 +468,7 @@ it; MySQL and MariaDB effectively do not.
 **The blocker is not the clause, it is the key.** 295 Kubuno tables declare
 `id UUID PRIMARY KEY DEFAULT gen_random_uuid()`, so the key is invented by the
 database and `RETURNING` is the only way the process learns it. On MySQL there
-is no other way — `LAST_INSERT_ID()` reports an `AUTO_INCREMENT` integer, which
+is no other way - `LAST_INSERT_ID()` reports an `AUTO_INCREMENT` integer, which
 a UUID column is not.
 
 So each such insert must **generate the key in Rust** and bind it:
@@ -498,7 +498,7 @@ tx.commit().await?;
 ```
 
 On PostgreSQL and SQLite: one statement, `RETURNING` appended. On MySQL: the
-write, then the re-select — **always inside a transaction**, or a concurrent
+write, then the re-select - **always inside a transaction**, or a concurrent
 session slips between them.
 
 `update_returning_row` and `delete_returning_row` follow the same shape;
@@ -539,7 +539,7 @@ on the three engines:
 ## 5. What this crate will never cover
 
 * **The event bus.** `LISTEN`/`NOTIFY` has no equivalent. `events::notify`
-  writes to a `<schema>.kubuno_event_outbox` table instead — durably, in the
+  writes to a `<schema>.kubuno_event_outbox` table instead - durably, in the
   same transaction as the data, which is better than `pg_notify`. **But the
   core has no poller for it yet.** On MySQL and SQLite, events are recorded and
   undelivered. This is the largest remaining piece of core work.
@@ -555,7 +555,7 @@ on the three engines:
   FTS5: three different engines with three different query languages.
 * **PostgreSQL-specific types**: the native array type (`TEXT[]`, `UUID[]`),
   `INET`, `CITEXT`, ranges, `INTERVAL` as a column type. A *small list* column is
-  the exception — it is carried portably as a JSON array (§2.8); it is only the
+  the exception - it is carried portably as a JSON array (§2.8); it is only the
   native array **type**, with its operators and GIN opclasses, that has no
   cross-engine form.
 * **Concurrency semantics.** `SERIALIZABLE` does not mean the same thing in the
@@ -570,7 +570,7 @@ All three drivers are always compiled in (there are no per-engine features), so
 one command builds and tests everything. SQLite round-trips run unconditionally
 on a temp file; the MySQL/MariaDB round-trips run only when a throwaway server
 URL is provided, and **fail** rather than skip if that URL is set but unreachable
-— a test that quietly does nothing is worse than no test.
+- a test that quietly does nothing is worse than no test.
 
 ```sh
 # SQLite round-trips run with no setup:
@@ -596,7 +596,7 @@ drivers linked; keep it green.
 
 `sqlx` 0.9 refuses non-literal query text unless it is wrapped in
 `AssertSqlSafe`. This crate contains exactly **one** such wrap,
-`sql::assert_safe`, applied to the output of `sql::prepare` — developer-written
+`sql::assert_safe`, applied to the output of `sql::prepare` - developer-written
 SQL with at most its placeholder syntax changed. `prepare` only ever *removes*
 characters and copies the rest verbatim, so it cannot introduce a construct the
 source did not already have.

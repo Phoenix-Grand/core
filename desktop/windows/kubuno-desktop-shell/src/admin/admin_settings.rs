@@ -39,7 +39,7 @@ pub fn format_value(v: &serde_json::Value) -> String {
         serde_json::Value::Bool(b) => if *b { Resources::isettings_on() } else { Resources::isettings_off() }.to_string(),
         serde_json::Value::Number(n) => n.as_i64().map(group_digits).unwrap_or_else(|| n.to_string()),
         serde_json::Value::String(s) => s.clone(),
-        serde_json::Value::Null => "—".to_string(),
+        serde_json::Value::Null => "-".to_string(),
         other => other.to_string(),
     }
 }

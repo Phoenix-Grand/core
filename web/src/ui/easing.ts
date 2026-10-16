@@ -44,7 +44,7 @@ export function cubicBezier(x1: number, y1: number, x2: number, y2: number): (t:
   return (t: number) => (t <= 0 ? 0 : t >= 1 ? 1 : sampleY(solve(t)))
 }
 
-/* The standard curve of the design system — `cubic-bezier(0.4, 0, 0.2, 1)` in the
+/* The standard curve of the design system - `cubic-bezier(0.4, 0, 0.2, 1)` in the
  * stylesheets. It leaves at once and settles gently: a control responds on the very
  * first frame after a click, which a symmetric ease-in-out does not. */
 export const easeStandard = cubicBezier(0.4, 0, 0.2, 1)

@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 import { fileURLToPath, URL } from 'node:url'
 
 // Build @kubuno/ui as a standalone ESM library. All bare imports (react,
-// lucide-react, clsx…) stay external — they are peer dependencies provided by
+// lucide-react, clsx…) stay external - they are peer dependencies provided by
 // the consumer (and, for modules, by the host at runtime).
 export default defineConfig({
   plugins: [react()],

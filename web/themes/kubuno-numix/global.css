@@ -1,11 +1,11 @@
 /* ============================================================================
-   Kubuno — theme "Numix". Inspired by the Numix GTK/icon project:
+   Kubuno - theme "Numix". Inspired by the Numix GTK/icon project:
    a dark charcoal header bar over a light body, the signature Numix red accent
    (#d64937), a flat design language (no gradients, minimal shadows) and small,
-   nearly-square corners. Pure CSS — applied globally by the host, no scripts.
+   nearly-square corners. Pure CSS - applied globally by the host, no scripts.
    ============================================================================ */
 
-/* Subtle macOS-style smoothing is NOT wanted here — Numix is a crisp, flat GTK
+/* Subtle macOS-style smoothing is NOT wanted here - Numix is a crisp, flat GTK
    look. Tinted text selection in the accent colour. */
 ::selection { background: color-mix(in srgb, var(--color-primary) 26%, transparent); }
 
@@ -51,7 +51,7 @@ button:focus-visible, a:focus-visible, [role="button"]:focus-visible, [role="tab
 }
 
 /* ── Selection (generalised to ALL left/right panels) ──────────────────────
-      The active/selected item — `bg-primary-light` — becomes a solid Numix-red
+      The active/selected item - `bg-primary-light` - becomes a solid Numix-red
       capsule with WHITE content (the Numix list-selection look). Same two reaches
       as the other themes: inside any shell chrome panel, and pill nav items. */
 [data-app-chrome] [class*="bg-primary-light"],
@@ -66,7 +66,7 @@ button:focus-visible, a:focus-visible, [role="button"]:focus-visible, [role="tab
 .shadow-xl { box-shadow: 0 5px 16px rgba(0,0,0,.18) !important; }
 
 /* ============================================================================
-   Dark header bar — the Numix signature. The shell top bar is the <header> that
+   Dark header bar - the Numix signature. The shell top bar is the <header> that
    carries `data-app-chrome` (a stable hook; module-internal headers do not have
    it, so they stay untouched). It becomes charcoal with light contents and a
    translucent dark search field.
@@ -99,7 +99,7 @@ header[data-app-chrome] input[type="search"]:focus {
 }
 
 /* ============================================================================
-   Floating windows & dialogs — Numix window chrome.
+   Floating windows & dialogs - Numix window chrome.
    Dark header bar (matching the top bar), light body, flat low shadow, small
    4px corners, a plain (non-traffic-light) close button. Targets the
    FloatingWindow used by Confirm/ConflictDialog too.

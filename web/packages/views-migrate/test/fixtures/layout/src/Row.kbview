@@ -1,4 +1,4 @@
-<!-- Row — converted from Row.tsx by @kubuno/views-migrate. -->
+<!-- Row - converted from Row.tsx by @kubuno/views-migrate. -->
 <Stack x:Props="RowProps"
        Direction="LeftToRight"
        Gap="8"

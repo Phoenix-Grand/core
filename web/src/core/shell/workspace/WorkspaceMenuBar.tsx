@@ -91,7 +91,7 @@ export function buildWorkspaceMenus(opts: {
 
 // La barre (rangée de boutons Fichier/Édition/… ouvrant chacun un MenuDropdown).
 // Style clair Office (repris de Documents) ; variante sombre `dark` pour les éditeurs
-// au thème sombre (ex. Script) — le bandeau suit le thème, les panneaux déroulants
+// au thème sombre (ex. Script) - le bandeau suit le thème, les panneaux déroulants
 // restent des overlays clairs portés (comme la recherche / HeaderActions).
 export function WorkspaceMenuBar({ menus, dark = false }: { menus: WsMenu[]; dark?: boolean }) {
   const [openMenu, setOpenMenu] = useState<string | null>(null)

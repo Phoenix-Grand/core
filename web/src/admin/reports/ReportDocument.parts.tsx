@@ -46,7 +46,7 @@ export function Part1({ barRef, crumbH, periodId, onPeriod, periodOptions, paper
                 onChange={e => setCover(e.currentTarget.checked)}
               />
               {/* The stamp opens its own panel rather than sitting in the toolbar:
-                  it is a picture OR words, with a size, an opacity and an angle —
+                  it is a picture OR words, with a size, an opacity and an angle -
                   four controls that have no business crowding the print button. */}
               <WatermarkPanel value={watermark} onChange={setWatermark} />
               <Button

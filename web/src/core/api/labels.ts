@@ -16,7 +16,7 @@ export interface CoreLabel {
   link_count: number
   /** The caller created this label. */
   is_owner: boolean
-  /** Full co-ownership: rename, recolor, re-share, delete — and see everyone's elements. */
+  /** Full co-ownership: rename, recolor, re-share, delete - and see everyone's elements. */
   can_manage: boolean
   owner_id: string
   owner_name: string

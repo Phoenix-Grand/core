@@ -1,4 +1,4 @@
-<!-- MockUploadPanel — converted from MockUploadPanel.tsx by @kubuno/views-migrate. -->
+<!-- MockUploadPanel - converted from MockUploadPanel.tsx by @kubuno/views-migrate. -->
 <UserControl>
   <Panel Class="w-72 bg-white rounded-xl shadow-xl border border-border overflow-hidden">
     <Stack Direction="LeftToRight" CrossAlign="Center" BackColor="Surface1" Class="px-4 py-3 border-b border-border">

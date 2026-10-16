@@ -1,4 +1,4 @@
-//! **The module export contract, v1** — how the core asks a module for one
+//! **The module export contract, v1** - how the core asks a module for one
 //! account's data.
 //!
 //! This file is the specification. A module implementing it needs nothing from
@@ -9,7 +9,7 @@
 //! # Why a contract exists at all
 //!
 //! The core owns the PostgreSQL schema `core` and **may never read another
-//! schema** — that rule is absolute in this product and it is what makes a
+//! schema** - that rule is absolute in this product and it is what makes a
 //! module independently installable, upgradable and removable. An export,
 //! however, is worth having precisely because it reaches the modules: an archive
 //! that carries an account's profile and none of its mail, files or calendar is
@@ -19,7 +19,7 @@
 //! data, so it must ASK the module for it. The module stays the only thing that
 //! understands its own schema, its own file layout and its own idea of what a
 //! meaningful export format is (a mail module answers with `.eml`, a contacts
-//! module with vCards, a drive with the files themselves) — and the core stays
+//! module with vCards, a drive with the files themselves) - and the core stays
 //! the only thing that knows about accounts, archives, holds and expiry.
 //!
 //! # Discovery is dynamic, always
@@ -28,7 +28,7 @@
 //! module that is currently registered, and a module that does not answer
 //! [`DESCRIBE_PATH`] simply does not take part. Adding the contract to a module
 //! is therefore the *only* thing needed for it to appear in the console's
-//! service picker — no core release, no entry in a table, nothing to keep in
+//! service picker - no core release, no entry in a table, nothing to keep in
 //! step. Removing it is equally silent.
 //!
 //! # The two routes
@@ -48,10 +48,10 @@
 //! }
 //! ```
 //!
-//! * `contract` — the version of THIS document the module implements. The core
+//! * `contract` - the version of THIS document the module implements. The core
 //!   refuses anything it does not know rather than guessing, because a guess
 //!   here produces a silently incomplete archive.
-//! * `services` — usually one entry whose `id` is the module id. A module that
+//! * `services` - usually one entry whose `id` is the module id. A module that
 //!   holds genuinely separate bodies of data may declare several; every id must
 //!   be stable, lowercase, and match `[a-z0-9_-]{1,40}`, because it becomes a
 //!   **directory name inside the archive** and is stored in the run history.
@@ -72,13 +72,13 @@
 //!   "services": ["contacts"] }
 //! ```
 //!
-//! * `user_id` — the account, as the core knows it. A module addresses its own
+//! * `user_id` - the account, as the core knows it. A module addresses its own
 //!   rows by that same id (it is the `x-kubuno-user-id` it receives on every
 //!   ordinary request), so no mapping table is needed anywhere.
-//! * `export_id` — the run this belongs to. Carried for one purpose: it lets the
+//! * `export_id` - the run this belongs to. Carried for one purpose: it lets the
 //!   module log, rate-limit and de-duplicate on something stable, and it is what
 //!   a module's own audit trail should record. Never a secret.
-//! * `services` — the subset of what the module declared that the operator kept.
+//! * `services` - the subset of what the module declared that the operator kept.
 //!   A module that declares one service can ignore the field.
 //!
 //! Responses:
@@ -98,7 +98,7 @@
 //!
 //! Entry paths are **relative and service-prefixed**: `contacts/carnet.vcf`,
 //! `contacts/avatars/9e6f….webp`. The core re-writes every entry under
-//! `comptes/<account>/`, so the module never knows — and must never assume —
+//! `comptes/<account>/`, so the module never knows - and must never assume -
 //! where its folder lands.
 //!
 //! Refused by the core, entry by entry, and reported in the manifest rather than
@@ -112,7 +112,7 @@
 //!
 //! Both routes are `/internal/*` and carry `X-Internal-Secret`, exactly like
 //! every other core→module call. The core presents
-//! [`ServerSettings::module_secret`] — the per-module derived
+//! [`ServerSettings::module_secret`] - the per-module derived
 //! value, never the master secret, or the call breaks the day
 //! `derive_module_secrets` is switched on. The module compares it to its own
 //! `KUBUNO_INTERNAL_SECRET` and answers `401` otherwise. **A module that skips
@@ -123,12 +123,12 @@
 //! Passwords and their hashes, any token or its hash, TOTP secrets, API keys,
 //! OAuth client secrets, share tokens that still grant access, encryption keys.
 //! An export leaves the instance on a laptop; a credential that reaches it has
-//! left for good. The core cannot enforce this — it is the one clause of this
+//! left for good. The core cannot enforce this - it is the one clause of this
 //! contract that rests entirely on the module.
 //!
 //! # Reference implementation
 //!
-//! `contacts` (`/internal/export/*`, vCard 4.0 + avatars) — the smallest
+//! `contacts` (`/internal/export/*`, vCard 4.0 + avatars) - the smallest
 //! complete example, and the one to copy.
 
 use std::path::{Path, PathBuf};
@@ -158,7 +158,7 @@ pub const ACCOUNT_PATH: &str = "/internal/export/account";
 const DESCRIBE_TIMEOUT: Duration = Duration::from_secs(3);
 
 /// Hard ceiling on one module's answer for one account, whatever the policy
-/// says. Not a tuning knob — a bound: without it, a module with a defect writes
+/// says. Not a tuning knob - a bound: without it, a module with a defect writes
 /// until the volume the instance runs on is full, and the export that was meant
 /// to protect the data takes the service down instead.
 const MAX_PAYLOAD_BYTES: u64 = 16 * 1024 * 1024 * 1024;
@@ -169,7 +169,7 @@ const MAX_PAYLOAD_BYTES: u64 = 16 * 1024 * 1024 * 1024;
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ServiceDescriptor {
     /// Stable, lowercase, `[a-z0-9_-]{1,40}`. Becomes a directory name in the
-    /// archive and is stored in the run history — renaming one splits a
+    /// archive and is stored in the run history - renaming one splits a
     /// service's history in two, exactly like renaming an alert kind.
     pub id: String,
     /// The operator's words for it, in French, from the module.
@@ -217,8 +217,8 @@ struct DescribeResponse {
 // ── Discovery ────────────────────────────────────────────────────────────────
 
 /// Every registered module, with its base URL. Read from SQL rather than from
-/// the in-memory registry so a background job — which holds a pool and nothing
-/// else — resolves exactly what a request handler would.
+/// the in-memory registry so a background job - which holds a pool and nothing
+/// else - resolves exactly what a request handler would.
 async fn live_modules(db: &DbPool) -> Result<Vec<(String, String)>, sqlx::Error> {
     #[derive(sqlx::FromRow)]
     struct ModuleRow {
@@ -245,7 +245,7 @@ async fn live_modules(db: &DbPool) -> Result<Vec<(String, String)>, sqlx::Error>
 ///
 /// Never fails as a whole: a module that is down, slow, or does not implement
 /// the contract is absent from the result and the rest of the list stands. The
-/// alternative — one unreachable module blanking the service picker — would make
+/// alternative - one unreachable module blanking the service picker - would make
 /// the feature unusable exactly when an instance is already unwell.
 pub async fn describe_all(db: &DbPool, server: &ServerSettings) -> Vec<ModuleOffer> {
     let modules = match live_modules(db).await {
@@ -295,7 +295,7 @@ pub async fn describe_all(db: &DbPool, server: &ServerSettings) -> Vec<ModuleOff
             Ok(b) => b,
             Err(e) => {
                 tracing::warn!(module_id = %module_id, error = %e,
-                    "export: réponse de découverte illisible — module ignoré");
+                    "export: réponse de découverte illisible - module ignoré");
                 continue;
             }
         };
@@ -306,7 +306,7 @@ pub async fn describe_all(db: &DbPool, server: &ServerSettings) -> Vec<ModuleOff
             // archive missing a service nobody noticed was missing.
             tracing::warn!(module_id = %module_id, annoncé = body.contract,
                 attendu = CONTRACT_VERSION,
-                "export: version de contrat non prise en charge — module ignoré");
+                "export: version de contrat non prise en charge - module ignoré");
             continue;
         }
 
@@ -355,7 +355,7 @@ pub enum ModulePayload {
 ///
 /// Returns `Err(message)` for anything that is not a clean answer. The message
 /// is the operator's only clue and ends up in the archive's manifest, so it names
-/// the module and the failing step — never a URL, which carries a port and a
+/// the module and the failing step - never a URL, which carries a port and a
 /// host that have no place in a file handed to somebody outside the instance.
 #[allow(clippy::too_many_arguments)]
 pub async fn fetch_account(

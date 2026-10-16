@@ -1,4 +1,4 @@
-//! Component family `items` — `<Repeater>`, a list whose items are views (WPF's `ItemsControl`,
+//! Component family `items` - `<Repeater>`, a list whose items are views (WPF's `ItemsControl`,
 //! WinUI's `ItemsRepeater`). Compiled with the `family-items` feature (on by default through
 //! `all-families`).
 //!
@@ -22,7 +22,7 @@
 //! ## Identity, virtualisation, cost
 //!
 //! Items are identified by their `ItemKey` field (the index when there is none): an item whose
-//! key survives a change of the list keeps its live tree — what the user typed, the hover, the
+//! key survives a change of the list keeps its live tree - what the user typed, the hover, the
 //! focus (every element of an item gets ids and focus ids of its own, see
 //! `crate::compile::with_item_scope`). Only the items in view (and a few around them) are built
 //! and painted; the others are laid out from their measured or estimated extent. The list itself
@@ -290,7 +290,7 @@ fn json_rows(parsed: &serde_json::Value) -> Option<Rows> {
 }
 
 /// A design-time sample of the row field `path` for item `n` (no `d:ItemsSource`): by the kind of the user
-/// control's property of that name when there is one, else by the field's name — initials are two letters, a count
+/// control's property of that name when there is one, else by the field's name - initials are two letters, a count
 /// a small number, a flag alternates, a colour, a time, a date, a picture (none: the control's placeholder), a
 /// person's name; anything else `Path n`.
 pub(crate) fn design_sample(path: &str, kind: Option<&crate::registry::PropKind>, n: usize) -> Value {

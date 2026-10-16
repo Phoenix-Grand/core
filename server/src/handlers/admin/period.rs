@@ -3,8 +3,8 @@
 //!
 //! # Why this is one module and not one per page
 //!
-//! The console has more than one dashboard — the security overview and the
-//! general one — and they answer the same three questions: *which* windows may
+//! The console has more than one dashboard - the security overview and the
+//! general one - and they answer the same three questions: *which* windows may
 //! be asked for, *where* a window starts and stops, and *what* it is compared
 //! against. Two implementations of that would drift on the first special case
 //! (the month still running, the week that starts on Monday, the axis that has
@@ -131,7 +131,7 @@ fn to_utc(tz: Tz, local: NaiveDateTime) -> DateTime<Utc> {
 
 /// Start of the bucket `local` falls in, in local wall-clock terms.
 ///
-/// Weeks start on Monday, matching PostgreSQL's `date_trunc('week', …)` — the
+/// Weeks start on Monday, matching PostgreSQL's `date_trunc('week', …)` - the
 /// two must agree or the generated axis and the grouped rows never join.
 fn floor_local(bucket: Bucket, local: NaiveDateTime) -> NaiveDateTime {
     let date = local.date();
@@ -243,7 +243,7 @@ pub fn resolve_window(id: &str, tz: Tz) -> Window {
 impl Window {
     /// The window as a pair of LOCAL calendar days, inclusive.
     ///
-    /// For the sources keyed on a `DATE` rather than on an instant — the daily
+    /// For the sources keyed on a `DATE` rather than on an instant - the daily
     /// storage sample, the module attendance counters. Both stamp their day in
     /// the instance's zone, so this is the same calendar their rows were written
     /// against, not a conversion of one into another.
@@ -278,7 +278,7 @@ pub struct Point {
 
 /// Where a figure comes from, as facts rather than as prose.
 ///
-/// A printed report has to be able to say *how* its number was obtained — six
+/// A printed report has to be able to say *how* its number was obtained - six
 /// months later, to somebody who was not there. Prose would have to be
 /// translated into thirteen languages and would drift from the query it
 /// describes; these three fields are the query itself, so they cannot drift, and
@@ -290,8 +290,8 @@ pub struct Provenance {
     /// Predicate narrowing it to the fact being measured. `TRUE` means the whole
     /// table, which the console spells in words rather than printing `TRUE`.
     pub filter: &'static str,
-    /// How the rows become one number. A CLOSED vocabulary — `count`,
-    /// `count_distinct`, `sum` — because the console turns it into a sentence,
+    /// How the rows become one number. A CLOSED vocabulary - `count`,
+    /// `count_distinct`, `sum` - because the console turns it into a sentence,
     /// and a value it does not know would leave the method section blank.
     pub measure: &'static str,
     /// The column `count_distinct` and `sum` apply to. `None` for `count`.
@@ -304,7 +304,7 @@ impl Provenance {
         Self { table, filter, measure: "count", column: None }
     }
 
-    /// How many DISTINCT values of `column` those rows carry — how many
+    /// How many DISTINCT values of `column` those rows carry - how many
     /// *somebodies*, not how many rows.
     pub const fn distinct(
         table: &'static str,
@@ -314,7 +314,7 @@ impl Provenance {
         Self { table, filter, measure: "count_distinct", column: Some(column) }
     }
 
-    /// The total of `column` over those rows — a volume, not a population.
+    /// The total of `column` over those rows - a volume, not a population.
     pub const fn sum(table: &'static str, filter: &'static str, column: &'static str) -> Self {
         Self { table, filter, measure: "sum", column: Some(column) }
     }
@@ -325,7 +325,7 @@ impl Provenance {
 pub struct Slice {
     pub key: String,
     pub value: i64,
-    /// What this slice's own ceiling is, when it has one — an account's quota
+    /// What this slice's own ceiling is, when it has one - an account's quota
     /// against the volume it holds. `None` for a slice that is simply a share of
     /// a whole, which the console then draws against the largest slice.
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -365,7 +365,7 @@ impl Counted {
         Self { table, time, filter, distinct: None }
     }
 
-    /// The distinct values of one column of `t` — how many *somebodies*, not how
+    /// The distinct values of one column of `t` - how many *somebodies*, not how
     /// many rows.
     pub const fn distinct(
         table: &'static str,
@@ -421,7 +421,7 @@ fn advance_bucket(bucket: Bucket, t: NaiveDateTime) -> NaiveDateTime {
     }
 }
 
-/// Formats a bucket boundary the way the series keys are compared and returned —
+/// Formats a bucket boundary the way the series keys are compared and returned -
 /// the portable equivalent of `to_char(d, 'YYYY-MM-DD"T"HH24:MI:SS')`.
 fn bucket_key(t: NaiveDateTime) -> String {
     t.format("%Y-%m-%dT%H:%M:%S").to_string()
@@ -512,7 +512,7 @@ pub async fn series(
         .collect())
 }
 
-/// The window's total and the total of the window of equal length before it —
+/// The window's total and the total of the window of equal length before it -
 /// read in ONE statement, so the two can never come from different instants.
 pub async fn totals(
     db: &DbPool,
@@ -524,7 +524,7 @@ pub async fn totals(
         // `agg FILTER (WHERE ...)` is PostgreSQL/SQLite-only (MySQL has no
         // `FILTER`), so the sub-range restriction moves inside the aggregate as a
         // `CASE` (see `aggregate_when`). Placeholders must appear once each, in
-        // ascending order — the prepare scanner rejects reuse on every engine —
+        // ascending order - the prepare scanner rejects reuse on every engine -
         // so `win.from` is bound twice, as $1 (current half) and $2 (previous).
         "SELECT {current}, {previous} \
            FROM {table} t \
@@ -557,8 +557,8 @@ pub async fn totals(
 ///
 /// A panel keeps a top-N because a chart with forty arcs is a texture; a printed
 /// report is read for its figures and must not stop at the eighth. The ceiling
-/// still exists — an unbounded `GROUP BY` over an account table is a page nobody
-/// can print and a statement nobody metered — and when it is reached the panel
+/// still exists - an unbounded `GROUP BY` over an account table is a page nobody
+/// can print and a statement nobody metered - and when it is reached the panel
 /// says so (`breakdown_truncated`) rather than letting a cut list read as a
 /// complete one.
 pub const FULL_SLICES: i64 = 1000;
@@ -587,7 +587,7 @@ pub async fn breakdown(
 ) -> Result<Vec<Slice>, AppError> {
     // `(expr)::text` becomes the dialect cast (`CAST(... AS CHAR/TEXT)` off
     // PostgreSQL); the grouping value is text on every engine. The `::bigint`
-    // cast on `COUNT(...)` is dropped — `COUNT` already decodes as `i64`. The
+    // cast on `COUNT(...)` is dropped - `COUNT` already decodes as `i64`. The
     // positional `GROUP BY 1 / ORDER BY 2` is portable.
     let key_expr = db.backend().cast(expr, SqlType::Text);
     let sql = format!(
@@ -663,7 +663,7 @@ mod tests {
         assert_eq!(resolve_window("today", Tz::UTC).bucket, Bucket::Hour);
     }
 
-    /// The generated axis starts on a bucket boundary — PostgreSQL's
+    /// The generated axis starts on a bucket boundary - PostgreSQL's
     /// `date_trunc` will only ever join on one.
     #[test]
     fn the_axis_starts_on_a_bucket_boundary() {
@@ -673,7 +673,7 @@ mod tests {
     }
 
     /// What a panel counts and what its report SAYS it counts are the same
-    /// statement, derived rather than restated — a report describing a query
+    /// statement, derived rather than restated - a report describing a query
     /// nobody runs is worse than one describing none.
     #[test]
     fn the_provenance_describes_the_count_it_came_from() {
@@ -698,7 +698,7 @@ mod tests {
 
     /// The day-keyed sources are read over the same calendar their rows were
     /// stamped in, and the comparison window stops the day before the reading
-    /// starts — never overlapping it by a day.
+    /// starts - never overlapping it by a day.
     #[test]
     fn the_local_day_bounds_are_contiguous_and_do_not_overlap() {
         let win = resolve_window("last_7_days", Tz::Europe__Paris);

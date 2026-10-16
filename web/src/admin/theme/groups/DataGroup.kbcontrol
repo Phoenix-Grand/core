@@ -1,4 +1,4 @@
-<!-- DataGroup — converted from DataGroup.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- DataGroup - converted from DataGroup.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl>
   <Stack Gap="24">
     <!-- TODO(views-migrate): <Block> is no .kbview element (a local or dynamic component) -->

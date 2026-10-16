@@ -9,7 +9,7 @@
 //! `Canvas` is the counterpart of the app's `Painter`: each method below maps
 //! one-to-one to an inherent method of `Painter`, with the SAME signature. On
 //! the app side, `impl Canvas for Painter` just FORWARDS (see
-//! `kubuno-drive-desktop/src/ui/painter.rs`). This is legal — foreign trait + local type —
+//! `kubuno-drive-desktop/src/ui/painter.rs`). This is legal - foreign trait + local type -
 //! and free: these are one-liners.
 //!
 //! # What is NOT in the trait (and why)
@@ -18,15 +18,15 @@
 //! COMPOSITES, not primitives, and they depend on types that live in
 //! `kubuno-drive-desktop` (so unknown here):
 //!
-//! * **`shell_icon`** — resolves an `ID2D1Bitmap1` from the app's
+//! * **`shell_icon`** - resolves an `ID2D1Bitmap1` from the app's
 //!   `IconCache`. A control NEVER does this resolution itself. The app
 //!   resolves the bitmap BEFORE drawing and passes it into the control's view
 //!   struct as `Option<&ID2D1Bitmap1>`; the control renders it via
 //!   [`Canvas::image`].
-//! * **`draw_scrollbar`** — takes a `Scrollbar` (a `kubuno-drive-desktop` type) and
+//! * **`draw_scrollbar`** - takes a `Scrollbar` (a `kubuno-drive-desktop` type) and
 //!   composes track + thumb + chevrons. Stays app-side, or moves to a
 //!   callback.
-//! * **`draw_edit_text`** — takes an `EditState` (a `kubuno-drive-desktop` type) and
+//! * **`draw_edit_text`** - takes an `EditState` (a `kubuno-drive-desktop` type) and
 //!   composes selection + text + caret with clipping. Stays app-side.
 //!
 //! See the detailed contract at the bottom of this file.
@@ -45,7 +45,7 @@ use windows::Win32::Graphics::DirectWrite::{IDWriteTextFormat, DWRITE_TEXT_ALIGN
 /// generic parameter/return, no bare `Self`.
 pub trait Canvas {
     // ------------------------------------------------------------------
-    // Accessors — the ambient state a control needs to paint.
+    // Accessors - the ambient state a control needs to paint.
     // ------------------------------------------------------------------
 
     /// The current theme (resolved light/dark colors + system accent).
@@ -64,11 +64,11 @@ pub trait Canvas {
     /// Fills a rounded-corner rectangle, aligned to the pixel grid.
     fn fill_rounded(&self, rect: &Rect, radius: f32, color: &D2D1_COLOR_F);
 
-    /// Fills a rectangle where ONLY the TOP corners are rounded — the shape of
+    /// Fills a rectangle where ONLY the TOP corners are rounded - the shape of
     /// a tab's `TabContainer` (`TopCornerRadiusFilterConverter`).
     fn fill_top_rounded(&self, rect: &Rect, radius: f32, color: &D2D1_COLOR_F);
 
-    /// Fills the triangle `a`→`b`→`c` with `color`, anti-aliased — used for the
+    /// Fills the triangle `a`→`b`→`c` with `color`, anti-aliased - used for the
     /// tooltip arrow. A stack of one-pixel bands rendered it as a hard, jagged
     /// staircase; worse, that staircase carries no shadow, so on the side the
     /// bubble's drop shadow is offset away from (the top) it read as bare and
@@ -78,12 +78,12 @@ pub trait Canvas {
     fn fill_triangle(&self, _a: (f32, f32), _b: (f32, f32), _c: (f32, f32), _color: &D2D1_COLOR_F) {}
 
     /// Strokes an arc of the circle of `radius` around `centre`, `width` DIP
-    /// thick with ROUND caps — the moving quarter of a spinner, the web's
+    /// thick with ROUND caps - the moving quarter of a spinner, the web's
     /// `border-t-*` on a `rounded-full` ring. Angles are radians, `0` pointing
     /// right and growing CLOCKWISE (y points down); `sweep` may be negative.
     ///
     /// A real renderer draws one anti-aliased path. This default, for a canvas
-    /// that has none, rasterises the arc as overlapping round dots — legible,
+    /// that has none, rasterises the arc as overlapping round dots - legible,
     /// but visibly beaded, which is why the renderers override it.
     fn stroke_arc(
         &self,
@@ -107,7 +107,7 @@ pub trait Canvas {
     /// pixel centers (crisp border at any DPI).
     fn stroke_rounded(&self, rect: &Rect, radius: f32, color: &D2D1_COLOR_F);
 
-    /// Strokes a rounded border `width` DIP thick, inward — the 2 DIP
+    /// Strokes a rounded border `width` DIP thick, inward - the 2 DIP
     /// selection border of the `ListViewItemPresenter`.
     fn stroke_rounded_w(&self, rect: &Rect, radius: f32, color: &D2D1_COLOR_F, width: f32);
 
@@ -130,7 +130,7 @@ pub trait Canvas {
     );
 
     /// Left-aligned text, truncated with an ELLIPSIS (« … ») at the right
-    /// edge — the `TextTrimming.CharacterEllipsis` of the original TextBlocks.
+    /// edge - the `TextTrimming.CharacterEllipsis` of the original TextBlocks.
     fn text_ellipsis(&self, text: &str, rect: &Rect, format: &IDWriteTextFormat, color: &D2D1_COLOR_F);
 
     /// Like [`Canvas::text_ellipsis`], but the text is horizontally CENTERED
@@ -139,7 +139,7 @@ pub trait Canvas {
     fn text_ellipsis_center(&self, text: &str, rect: &Rect, format: &IDWriteTextFormat, color: &D2D1_COLOR_F);
 
     // ------------------------------------------------------------------
-    // Image primitives (bitmaps ALREADY resolved — see `shell_icon` contract).
+    // Image primitives (bitmaps ALREADY resolved - see `shell_icon` contract).
     // ------------------------------------------------------------------
 
     /// Draws a bitmap as a square icon centered in `rect`, aligned to the
@@ -154,15 +154,15 @@ pub trait Canvas {
     // ------------------------------------------------------------------
 
     /// MONOCHROME ThemedIcon: all layers painted in the same `color`
-    /// (respecting each layer's opacity) — the "Outline" rendering of an
+    /// (respecting each layer's opacity) - the "Outline" rendering of an
     /// AppBarButton.
     ///
     /// `name` is the geometry's name (static literal: icons are code
     /// constants, as in the original).
     fn vector_icon(&self, name: &'static str, rect: &Rect, size: f32, color: &D2D1_COLOR_F);
 
-    /// MULTI-LAYER ThemedIcon: each layer is painted according to its role —
-    /// foreground (`fg`), accent (`accent`), or contrast (white) — the
+    /// MULTI-LAYER ThemedIcon: each layer is painted according to its role -
+    /// foreground (`fg`), accent (`accent`), or contrast (white) - the
     /// "treatment" that tints part of the icon.
     fn vector_icon_layered(
         &self,
@@ -184,7 +184,7 @@ pub trait Canvas {
     /// Soft drop shadow under a card (approximates WinUI's `ThemeShadow`).
     fn draw_card_shadow(&self, rect: &Rect, radius: f32);
 
-    /// An arbitrary layered CSS `box-shadow`, as the web writes it — one call per
+    /// An arbitrary layered CSS `box-shadow`, as the web writes it - one call per
     /// surface that publishes its own recipe (see
     /// [`crate::themes::shape::SHADOW_WAFFLE`]). The colour is a parameter
     /// because not every Kubuno shadow is [`crate::themes::shape::SHADOW_GREY`].
@@ -205,7 +205,7 @@ pub trait Canvas {
         colour: (f32, f32, f32),
     );
 
-    /// Replaces everything inside `rect` with TRANSPARENT, corners included —
+    /// Replaces everything inside `rect` with TRANSPARENT, corners included -
     /// an erase, not a blend, so it removes what is already drawn there.
     ///
     /// Exists for the case above: a panel hosted over a blurred backdrop draws
@@ -214,14 +214,14 @@ pub trait Canvas {
     fn erase_rounded(&self, rect: &Rect, radius: f32);
 
     // ------------------------------------------------------------------
-    // Clipping (axis-aligned clip) — for an editor's scrolling text or a
+    // Clipping (axis-aligned clip) - for an editor's scrolling text or a
     // list's scrollable area. Pushed/popped in pairs.
     // ------------------------------------------------------------------
 
     /// Restricts the following drawing to `rect` (`PushAxisAlignedClip`).
     fn push_clip(&self, rect: &Rect);
 
-    /// Clips to a ROUNDED rect — what a circular avatar needs, since an
+    /// Clips to a ROUNDED rect - what a circular avatar needs, since an
     /// axis-aligned clip would leave a square photo square. Paired with
     /// [`Canvas::pop_clip_rounded`], which is a different pop: D2D keeps
     /// axis-aligned clips and layers on separate stacks.
@@ -233,7 +233,7 @@ pub trait Canvas {
     fn pop_clip(&self);
 
     // ------------------------------------------------------------------
-    // Offset & extent — what a scrolling container needs: it paints content
+    // Offset & extent - what a scrolling container needs: it paints content
     // laid out in the content's own coordinates, shifted by the scroll, and
     // learns how far that content reached so it knows when to show a bar.
     // Defaults are no-ops, so a Canvas that does not implement them still
@@ -262,7 +262,7 @@ pub trait Canvas {
     }
 
     // ------------------------------------------------------------------
-    // Background colour stack — carries « the fill of the parent surface »
+    // Background colour stack - carries « the fill of the parent surface »
     // through the paint tree, so a widget can default its own background to
     // its container's without either knowing about the other.
     //
@@ -271,11 +271,11 @@ pub trait Canvas {
     // (a Card body, a Popover, a page area inside Tabs) wraps its children in
     // `push_bg(colour)` / `pop_bg()`, so a control that lands inside it reads
     // the card's colour, not the window's. Default is `theme.window_background`
-    // — the outermost surface a caller ever sees.
+    // - the outermost surface a caller ever sees.
     // ------------------------------------------------------------------
 
     /// The parent surface's fill, as most recently pushed. The default returns
-    /// the theme's window background — a Canvas that has not yet implemented
+    /// the theme's window background - a Canvas that has not yet implemented
     /// the stack still speaks the rule, from the outermost surface down.
     fn current_bg(&self) -> D2D1_COLOR_F {
         self.theme().window_background
@@ -290,7 +290,7 @@ pub trait Canvas {
     fn pop_bg(&self) {}
 
     // ------------------------------------------------------------------
-    // Device access — for a drawing layer built ABOVE the primitives (the
+    // Device access - for a drawing layer built ABOVE the primitives (the
     // WinForms-`Graphics`-like surface of `kubuno_desktop_ui::graphics`: paths,
     // gradients, transforms, dashed pens), which draws with Direct2D itself
     // in the same `BeginDraw` as the primitives. Defaults keep every existing

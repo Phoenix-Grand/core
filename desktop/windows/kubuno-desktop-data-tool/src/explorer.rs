@@ -3,7 +3,7 @@
 //! The list (name, provider, store, a redacted description) is `connections.json` under the tool's
 //! home; the connection string itself goes ONLY to the chosen secret store: a Windows Credential
 //! Manager generic credential `Kubuno:DataExplorer:ConnectionStrings:<name>`, or the user secrets
-//! file `UserSecrets\DataExplorer\secrets.json` key `ConnectionStrings:<name>` — the same stores
+//! file `UserSecrets\DataExplorer\secrets.json` key `ConnectionStrings:<name>` - the same stores
 //! (and the same chain) a project's connection is resolved from.
 
 use std::sync::Mutex;

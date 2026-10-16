@@ -1,6 +1,6 @@
 /**
  * Label marks shown on a labelled drive entry: the label glyph tinted with the
- * label colour, and NOTHING else — no names (they would eat the row; the
+ * label colour, and NOTHING else - no names (they would eat the row; the
  * tooltip carries them). Fed through a context rather than a prop so the
  * themeable card/row components keep their signatures.
  */
@@ -11,7 +11,7 @@ import type { LabelsOf } from './useDriveLabels'
 
 const NONE: CoreLabel[] = []
 
-/** Default: no labels — so an explorer that never provides one renders nothing. */
+/** Default: no labels - so an explorer that never provides one renders nothing. */
 export const DriveLabelsCtx = createContext<LabelsOf>(() => NONE)
 
 /** Beyond this, marks are replaced by a "+N" counter rather than wrapping. */

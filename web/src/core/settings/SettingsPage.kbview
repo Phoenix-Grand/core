@@ -1,4 +1,4 @@
-<!-- SettingsPage — converted from SettingsPage.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- SettingsPage - converted from SettingsPage.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <Panel Class="contents">
   <MobileSettingsIndex Visible="{Binding show_case_1}"/>
   <Panel Visible="{Binding show_main}" Class="max-w-4xl">

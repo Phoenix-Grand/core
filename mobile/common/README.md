@@ -1,4 +1,4 @@
-# Kubuno mobile — common
+# Kubuno mobile - common
 
 Reserved for the code shared by the Android and iOS apps: the Kotlin Multiplatform versions of the libraries of
 `../android` (API client, accounts, UI components, viewers), written once and used on both systems.

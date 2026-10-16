@@ -22,7 +22,7 @@ interface Props {
   mobile:   boolean
   busy:     boolean
   onToggleActive: () => void
-  /** Opens one of the sheet's tabs — the actions that already have a card there
+  /** Opens one of the sheet's tabs - the actions that already have a card there
    *  send the operator to it rather than growing a second way to do the job. */
   goPane:   (pane: 'profile' | 'security') => void
 }
@@ -99,7 +99,7 @@ export class IdentityCard extends ViewBase {
   }
 
   get content_meta_t_admin() {
-    return this.memo('content_meta_t_admin', [this.tr, this.props], () => ({ children: this.meta(this.tr('admin.ud_last_login'), this.props.user.last_login_at ? formatAgo(this.props.user.last_login_at) : '—') }))
+    return this.memo('content_meta_t_admin', [this.tr, this.props], () => ({ children: this.meta(this.tr('admin.ud_last_login'), this.props.user.last_login_at ? formatAgo(this.props.user.last_login_at) : '-') }))
   }
 
   get content_meta_t_admin2() {

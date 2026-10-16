@@ -1,4 +1,4 @@
-<!-- ExportSubjectsCard — converted from ExportSubjectsCard.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- ExportSubjectsCard - converted from ExportSubjectsCard.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="ExportSubjectsCardProps">
   <Card Flush="true" Title="{Res admin.dx_sub_title}" Subtitle="{Res admin.dx_sub_desc}" Class="mt-4">
     <Card.Actions>

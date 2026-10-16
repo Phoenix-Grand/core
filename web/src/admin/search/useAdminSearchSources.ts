@@ -21,7 +21,7 @@ import {
  *
  * ── Where each category comes from ───────────────────────────────────────────
  *   actions   the static registry (adminActions.ts)
- *   users     the server, debounced — the only source that cannot be held locally
+ *   users     the server, debounced - the only source that cannot be held locally
  *   groups    /admin/groups, matched locally
  *   units     /admin/org-units, matched locally
  *   modules   /admin/modules, matched locally
@@ -52,7 +52,7 @@ interface AdminModule { id: string; display_name: string; version: string; descr
 interface AdminSetting { key: string; label: string | null; description: string | null; category: string }
 
 export interface SearchSourcesArgs {
-  /** Raw field content — local categories use it directly, with no delay. */
+  /** Raw field content - local categories use it directly, with no delay. */
   query:      string
   /** Debounced copy, for the server-side user search only. */
   debounced:  string
@@ -69,7 +69,7 @@ export interface SearchSources {
   results:     AdminResult[]
   /** Actions offered when the field is empty. */
   suggestions: AdminResult[]
-  /** Closest entries when nothing matched — the way out of an empty list. */
+  /** Closest entries when nothing matched - the way out of an empty list. */
   nearMisses:  AdminResult[]
   /** A server round trip is still in flight for the current query. */
   usersLoading: boolean
@@ -165,7 +165,7 @@ export function useAdminSearchSources(args: SearchSourcesArgs): SearchSources {
         key: `user:${u.id}`, kind: 'user' as const,
         label: u.display_name || u.username, sublabel: u.email, avatarUrl: u.avatar_url,
         url: adminUrl({ tab: 'users', params: { user: u.id } }),
-        // The server already ranked and filtered — decreasing scores preserve
+        // The server already ranked and filtered - decreasing scores preserve
         // its order through the generic sort.
         score: 1000 - i,
       })),
@@ -179,7 +179,7 @@ export function useAdminSearchSources(args: SearchSourcesArgs): SearchSources {
       }), terms),
       module:     matchLocal(modules.data, m => fold(m.display_name, `${m.id} ${m.description ?? ''}`), m => ({
         key: `module:${m.id}`, kind: 'module', label: m.display_name, sublabel: `v${m.version}`,
-        // Opens that module's settings in place — a verb, not a tab change.
+        // Opens that module's settings in place - a verb, not a tab change.
         url: adminUrl({ tab: 'modules', action: 'settings', id: m.id }), Icon: Package, score: 0,
       }), terms),
       // The destination is read from the cartography, never hard-coded: a

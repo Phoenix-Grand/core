@@ -1,4 +1,4 @@
-<!-- RuleEditor — converted from RuleEditor.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- RuleEditor - converted from RuleEditor.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="Props">
   <Panel Class="contents">
     <Label HtmlTag="Div"

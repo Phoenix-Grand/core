@@ -96,7 +96,7 @@ impl SetupToken {
         tracing::warn!(
             "╔══════════════════════════════════════════════════════════════════╗"
         );
-        tracing::warn!("  KUBUNO N'EST PAS ENCORE INSTALLÉ — assistant d'installation actif");
+        tracing::warn!("  KUBUNO N'EST PAS ENCORE INSTALLÉ - assistant d'installation actif");
         tracing::warn!("  Jeton d'installation : {}", self.value);
         tracing::warn!("  (également dans {})", self.path.display());
         tracing::warn!(

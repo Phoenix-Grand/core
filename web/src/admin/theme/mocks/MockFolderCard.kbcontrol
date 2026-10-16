@@ -1,4 +1,4 @@
-<!-- MockFolderCard — converted from MockFolderCard.tsx by @kubuno/views-migrate. -->
+<!-- MockFolderCard - converted from MockFolderCard.tsx by @kubuno/views-migrate. -->
 <UserControl x:Props="MockFolderCardProps">
   <Panel Class="{Binding div_class}">
     <Icon Name="Folder" Class="shrink-0 text-text-secondary"/>

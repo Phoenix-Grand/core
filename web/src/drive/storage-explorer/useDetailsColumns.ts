@@ -24,7 +24,7 @@ export function useDetailsColumns({ details, persistDetails, sortedFolders, filt
     () => ({ order: DETAILS_COL_ORDER.filter(k => details.visible[k]), widths: details.widths }),
     [details],
   )
-  // « Ajuster la taille de toutes les colonnes » — fit each visible column to
+  // « Ajuster la taille de toutes les colonnes » - fit each visible column to
   // the widest cell it holds (header label + every folder/file value), measured
   // with a canvas at the row font.
   const autoFitCols = useCallback(() => {

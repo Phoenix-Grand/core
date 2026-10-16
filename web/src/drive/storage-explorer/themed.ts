@@ -1,5 +1,5 @@
 /**
- * Themeable Drive objects — a theme can override these (markup/behaviour) while
+ * Themeable Drive objects - a theme can override these (markup/behaviour) while
  * they are untouched by default (`themed` returns the base component when no
  * override is registered). Keys form the `drive.*` part of the theme catalog
  * (cf. THEMES.md).

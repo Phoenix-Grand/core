@@ -13,12 +13,12 @@
  * | props (`{ a, b }: Props`) | `this.props.a`, the root's `x:Props` |
  *
  * and the JSX becomes markup: `@ui` components by reverse registry lookup, intrinsic elements as `Panel` / `Stack` /
- * `Label` (with their HTML tag when it is not a `div` / `p`, so the DOM — and the accessibility tree — stay the
+ * `Label` (with their HTML tag when it is not a `div` / `p`, so the DOM - and the accessibility tree - stay the
  * same), classes mapped to properties where it is exact (`classes.ts`, the rest in `Class`), `t('k')` → `{Res k}`,
  * expressions → `{Binding …}` (a getter when not a plain path), `cond && <X/>` → `Visible`, `list.map(…)` →
  * `Repeater` over memoized rows, inline handlers → methods. What does not convert (a local component, a raw
- * `<input>`, an unmapped prop…) is cut out as a part — a component in `X.parts.tsx` rendered through
- * `<ReactHost Component=… Props=…/>` — so the screen still renders the same; each cut is a reason in the report.
+ * `<input>`, an unmapped prop…) is cut out as a part - a component in `X.parts.tsx` rendered through
+ * `<ReactHost Component=… Props=…/>` - so the screen still renders the same; each cut is a reason in the report.
  */
 import { basename, dirname, isAbsolute, join, relative, resolve } from 'node:path'
 
@@ -900,7 +900,7 @@ function convert(m: Migration, target: FoundComponent): { outputs: Record<string
           continue
         }
         if (init && containsHookCall(init)) {
-          // (A hook inside an expression — `useLocation().pathname`, `useStore(sel) ?? fallback` — is a hook statement too.)
+          // (A hook inside an expression - `useLocation().pathname`, `useStore(sel) ?? fallback` - is a hook statement too.)
           const callee = isHookCall(init) ? (skipParens(init) as ts.CallExpression).expression : undefined
           const hookName = !callee ? '' : ts.isIdentifier(callee) ? callee.text : ts.isPropertyAccessExpression(callee) ? callee.name.text : ''
           for (const n of declaredNames(d.name)) {
@@ -940,11 +940,11 @@ function convert(m: Migration, target: FoundComponent): { outputs: Record<string
     }
     if (ts.isExpressionStatement(s) && containsHookCall(s.expression)) {
       // A hook whose value the TSX dropped (`useModulesStore((s) => s.loadedVersion)`) was there to render the screen
-      // again when it changes — so that what the body computes from a registry or a store is computed again: its value
+      // again when it changes - so that what the body computes from a registry or a store is computed again: its value
       // is kept in a field every memoized getter depends on.
       const callee = isHookCall(s.expression) ? (skipParens(s.expression) as ts.CallExpression).expression : undefined
       const hookName = !callee ? '' : ts.isIdentifier(callee) ? callee.text : ts.isPropertyAccessExpression(callee) ? callee.name.text : ''
-      // (A store read through a selector — `useXStore(sel)` — not a hook run for its effects: those give nothing to follow.)
+      // (A store read through a selector - `useXStore(sel)` - not a hook run for its effects: those give nothing to follow.)
       if (/^use[A-Z]\w*Store$/.test(hookName) && (skipParens(s.expression) as ts.CallExpression).arguments.length > 0) {
         const member = m.member(`rerender${m.rerenderMembers.length + 1}`)
         m.rerenderMembers.push(member)
@@ -1075,10 +1075,10 @@ function convert(m: Migration, target: FoundComponent): { outputs: Record<string
       const params = f.parameters.map((p) => m.rewrite(p)).join(', ')
       const isAsync = !!f.modifiers?.some((x) => x.kind === ts.SyntaxKind.AsyncKeyword)
       // A function declared after an early return existed only when it did not return: its body starts with the same
-      // conditions (what the TSX narrowed — `data` after `if (!data) return …` — stays narrowed).
+      // conditions (what the TSX narrowed - `data` after `if (!data) return …` - stays narrowed).
       const guards = guardsOf(d)
       // A value the body reads inside a callback, nullable by its declaration: read through a local constant (the
-      // narrowing of `this.x` stops at a callback, a constant's does not — as in the TSX).
+      // narrowing of `this.x` stops at a callback, a constant's does not - as in the TSX).
       const paramNames = new Set(f.parameters.map((p) => p.name.getText()))
       const bare = new Set([...nestedNullables(m, f.body)].filter((x) => !paramNames.has(x.name)))
       const prelude = [
@@ -1116,7 +1116,7 @@ function convert(m: Migration, target: FoundComponent): { outputs: Record<string
     })
     const vis = show(undefined, 'show_main')
     for (const n of convertBranch(m, jsx, { guards: earlier.map((c) => `!(${c})`) })) root.children.push(withVisible(m, n, vis, {}))
-    // One element in all (the other cases render nothing, `if (!x) return null`): it is the root itself — a wrapper,
+    // One element in all (the other cases render nothing, `if (!x) return null`): it is the root itself - a wrapper,
     // even a `display: contents` one, would take its place among its parent's children (`divide-y` draws the line
     // on it, where nothing shows).
     if (root.children.length === 1) root = root.children[0]
@@ -1128,7 +1128,7 @@ function convert(m: Migration, target: FoundComponent): { outputs: Record<string
   // ── Outputs ──
   const viewFile = join(m.dir, `${m.stem}.kbview`)
   const outputs: Record<string, string> = {}
-  outputs[viewFile] = writeXml(root, `${m.name} — converted from ${m.stem}.tsx by @kubuno/views-migrate${m.reasons.length ? ' (partial: see the TODO comments and the report)' : ''}.`)
+  outputs[viewFile] = writeXml(root, `${m.name} - converted from ${m.stem}.tsx by @kubuno/views-migrate${m.reasons.length ? ' (partial: see the TODO comments and the report)' : ''}.`)
   // A code-behind holding JSX (a derived element, a handler building one, a helper component it keeps) is a `.tsx`.
   const codeText = codeBehind(m, target, outputs[viewFile])
   const hasJsx = containsJsx(ts.createSourceFile('code.tsx', codeText, ts.ScriptTarget.Latest, false, ts.ScriptKind.TSX))
@@ -1213,7 +1213,7 @@ function binding(m: Migration, node: ts.Node, text: string, ctx: JsxCtx, base: s
 /**
  * Whether reading `a.b.c` goes through a value its declared type allows to be null (`status` of `status.remaining`
  * under `status && …`): the TSX read it narrowed; a binding path is typed from the declarations, so it would not
- * type-check — such a path is read by a (guarded) getter instead.
+ * type-check - such a path is read by a (guarded) getter instead.
  */
 function throughNullable(m: Migration, e: ts.Node): boolean {
   let x = skipParens(e)
@@ -1449,7 +1449,7 @@ function containsJsx(n: ts.Node): boolean {
 /**
  * The text of an element's children. `runs`: the element renders its `Text` as React children (a `Label`, a
  * `LinkLabel`), and several runs with a value among them (`{used} / {quota}`) stay several text nodes, as React
- * rendered them — one list of runs rather than one string: the page's text and its accessibility tree are the TSX's.
+ * rendered them - one list of runs rather than one string: the page's text and its accessibility tree are the TSX's.
  */
 function textValue(m: Migration, children: readonly ts.JsxChild[], ctx: JsxCtx, base: string, runs = false): string {
   const parts: Array<{ text?: string; expr?: ts.Expression }> = []
@@ -1821,7 +1821,7 @@ function guardPrelude(ctx: JsxCtx): string {
   if (text.some((g) => /\b__row\b/.test(g))) return ''
   return `    if (${text.map((g) => `!(${g})`).join(' || ')}) return undefined as never\n`
 }
-/** In a handler of a template: `const { theme, i } = args.row as Row` — the template's parameters, as locals again. */
+/** In a handler of a template: `const { theme, i } = args.row as Row` - the template's parameters, as locals again. */
 function rowPrelude(ctx: JsxCtx, body: string): string {
   const r = ctx.row!
   // Only the parameters the body reads (`noUnusedLocals`).
@@ -2403,7 +2403,7 @@ function buildRepeater(m: Migration, list: ts.Expression, cb: ts.ArrowFunction |
   const own = fieldLines.filter((l) => !locals.some((s) => s.declarationList.declarations.some((d) => l.startsWith(d.name.getText() + ':'))))
   const objectFields = [p0, ...(idx ? [idx] : []), ...locals.flatMap((s) => s.declarationList.declarations.map((d) => d.name.getText())), ...own]
   if (keyExpr) {
-    // The row object carries its key (`ItemKey` names a field of the row) — under another name when a parameter or a
+    // The row object carries its key (`ItemKey` names a field of the row) - under another name when a parameter or a
     // local of the template is called `key`.
     const taken = new Set(objectFields.map((f) => f.split(':')[0].trim()))
     let keyField = 'key'
@@ -2540,7 +2540,7 @@ function nestedNullables(m: Migration, body: ts.Node): Set<Local> {
 }
 
 /**
- * A method or setter passed as a value: bound once per view (the same function on every render — a new one would
+ * A method or setter passed as a value: bound once per view (the same function on every render - a new one would
  * change a `ref` callback or an effect dependency each time, and `ref={setNode}` would update without end).
  */
 function boundRef(member: string): string {
@@ -2562,7 +2562,7 @@ function refText(m: Migration, l: Local): string {
 
 /**
  * A component that is no `.kbview` element (another screen, a local helper component) used without children: a
- * `<ReactHost>` rendering that very component with its props — no wrapper part. A local component of the file
+ * `<ReactHost>` rendering that very component with its props - no wrapper part. A local component of the file
  * moves to `X.parts.tsx`. With children, or a spread, it becomes a part.
  */
 function hostComponent(m: Migration, e: ts.JsxElement | ts.JsxSelfClosingElement, ctx: JsxCtx, why: string): XNode {
@@ -2617,7 +2617,7 @@ function mentions(name: string, text: string): boolean {
 const namesCache = new Map<string, Set<string>>()
 
 /**
- * The names `text` refers to: its identifiers, read by TypeScript's parser — so neither comments (a getter's doc names
+ * The names `text` refers to: its identifiers, read by TypeScript's parser - so neither comments (a getter's doc names
  * the component it renders), nor string contents (`'/api/x'` names no `api`), nor JSX text count, while the
  * expressions of a template literal do (`url('${absUrl(v.url)}')` uses `absUrl`, though it sits between quotes of the
  * CSS the template writes). The name of a member access (`x.api`) is no reference either.
@@ -2715,7 +2715,7 @@ function codeBehind(m: Migration, target: FoundComponent, xmlText: string): stri
   }
   // The hooks split in two, in that order (a stable order for React): the ones that read nothing of the class (stores,
   // translations, queries on constants) in `useStores()`, then the ones reading its members (a state initialised from a
-  // getter, an effect) — or what such a hook gave — in `useHooks()`. The first ones' results land in the fields before
+  // getter, an effect) - or what such a hook gave - in `useHooks()`. The first ones' results land in the fields before
   // the second ones run (their getters read fresh values), and each method types its fields (`XStores['user']`,
   // `XHooks['n']`) without one type depending on itself.
   const indep: number[] = []
@@ -3070,7 +3070,7 @@ function declaredType(m: Migration, node: ts.Node): string | undefined {
 }
 
 /**
- * A type text the code-behind can write as it is: short, no \`any\`, and naming only what is in scope there — types
+ * A type text the code-behind can write as it is: short, no \`any\`, and naming only what is in scope there - types
  * reached through \`import("…")\`, the file's imports, the global ones.
  */
 function writableType(m: Migration, t: string | undefined): string | undefined {
@@ -3150,8 +3150,8 @@ function isPlainSetterCall(m: Migration, e: ts.Expression, setter: Local, args: 
 }
 
 /**
- * Whether an arrow function's expression body only acts — a state setter call (an assignment in the class), an
- * assignment, a `void` expression — rather than computing a value its callers read.
+ * Whether an arrow function's expression body only acts - a state setter call (an assignment in the class), an
+ * assignment, a `void` expression - rather than computing a value its callers read.
  */
 function actsOnly(m: Migration, body: ts.Node): boolean {
   const x = skipParens(body)

@@ -185,7 +185,7 @@ impl Color {
         Self { r, g, b, a }
     }
 
-    /// `#RRGGBB` (or `#AARRGGBB` when not opaque) — the form view properties take.
+    /// `#RRGGBB` (or `#AARRGGBB` when not opaque) - the form view properties take.
     pub fn to_hex(&self) -> String {
         if self.a == 255 {
             format!("#{:02X}{:02X}{:02X}", self.r, self.g, self.b)

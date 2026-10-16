@@ -37,14 +37,14 @@ jobs:
           npm run build
 
       # Sovereignty guard: the interface must not reference Google's font CDN in
-      # ANY form — stylesheet imports, but also preconnect/dns-prefetch/<link>
+      # ANY form - stylesheet imports, but also preconnect/dns-prefetch/<link>
       # hints, which runtime instrumentation (performance entries) cannot see.
       # The site's /security page invites visitors to verify this claim.
       - name: assert no Google font CDN references
         working-directory: web
         run: |
           if grep -RliE 'fonts\.googleapis\.com|fonts\.gstatic\.com' dist/; then
-            echo '::error::Google font CDN reference found in built frontend — fonts must stay self-hosted'
+            echo '::error::Google font CDN reference found in built frontend - fonts must stay self-hosted'
             exit 1
           fi
 

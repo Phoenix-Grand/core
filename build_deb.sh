@@ -32,7 +32,7 @@ DIST_DIR="${DIST_DIR:-dist}"
 STATE_DIR=".build_state"
 mkdir -p "$DIST_DIR" "$STATE_DIR"
 
-# Composants disponibles — ajouter ici le nom d'un nouveau module pour l'enregistrer
+# Composants disponibles - ajouter ici le nom d'un nouveau module pour l'enregistrer
 ALL_COMPONENTS=(
   core
   drive calendar photos notes office paintsharp forms
@@ -188,7 +188,7 @@ build_deb() {
   # --root-owner-group: without it, dpkg-deb records the uid/gid of whoever
   # built the package, and dpkg restores those NUMERIC ids on the target. A
   # package built by uid 1000 therefore installed /usr/lib/kubuno/modules and
-  # /etc/kubuno owned by whatever account happens to be uid 1000 over there —
+  # /etc/kubuno owned by whatever account happens to be uid 1000 over there -
   # a build-machine account leaking into every installation. Ownership is set
   # deliberately in postinst instead.
   dpkg-deb --root-owner-group --build "${PKG_DIR}" "${OUTPUT}"
@@ -262,12 +262,12 @@ LOGROTATE
 
     cat > "${PKG_DIR}/lib/systemd/system/kubuno.service" << 'SYSTEMD'
 [Unit]
-Description=Kubuno Core — plateforme cloud self-hosted
+Description=Kubuno Core - plateforme cloud self-hosted
 Documentation=https://github.com/kubuno/kubuno
 After=network.target postgresql.service
 # Wants, not Requires: a great many instances keep their database on another
 # machine, and `Requires` makes the service refuse to start when no local
-# postgresql.service exists — which is exactly the supported remote setup. The
+# postgresql.service exists - which is exactly the supported remote setup. The
 # RPM has always used Wants; this aligns the two.
 Wants=postgresql.service
 StartLimitIntervalSec=60
@@ -292,7 +292,7 @@ ProtectSystem=strict
 # /var/backups/kubuno : destination par défaut de la sauvegarde planifiée
 # (crate::backup). Sans cette entrée, ProtectSystem=strict rend le
 # répertoire en lecture seule et chaque exécution échoue sur
-# « Read-only file system » — une politique armée qui ne produit rien.
+# « Read-only file system » - une politique armée qui ne produit rien.
 # Chaque chemin est préfixé de « - » : sans cela, un répertoire absent fait
 # échouer la mise en place du namespace et le service ne démarre pas du tout
 # (« 226/NAMESPACE »), sur une machine neuve où aucun module n'est encore
@@ -313,7 +313,7 @@ Recommends: postgresql-16
 Section: web
 Priority: optional
 Homepage: https://github.com/kubuno/core
-Description: Kubuno Core — plateforme cloud self-hosted (build ${BUILD_NUM})
+Description: Kubuno Core - plateforme cloud self-hosted (build ${BUILD_NUM})
  Core haute performance (Rust + Axum) de la plateforme Kubuno.
  Alternative souverainiste et open-source à Google Workspace et Microsoft 365, architecture modulaire.
 EOF
@@ -325,8 +325,8 @@ if ! id -u kubuno &>/dev/null; then
     useradd --system --no-create-home --shell /usr/sbin/nologin kubuno
 fi
 # Store des modules : c'est là que le core et « kubuno modules:install »
-# déballent les .kbpkg. Absent, le premier qui écrit en devient propriétaire —
-# root quand l'installation passe par sudo — et le service ne peut plus rien y
+# déballent les .kbpkg. Absent, le premier qui écrit en devient propriétaire -
+# root quand l'installation passe par sudo - et le service ne peut plus rien y
 # installer ensuite. Le créer ici le donne au compte de service dès le départ.
 mkdir -p /var/lib/kubuno/drive /var/lib/kubuno/themes /var/lib/kubuno/modules-store
 # Répertoire des modules : l'unité le veut accessible en écriture, et une
@@ -335,7 +335,7 @@ mkdir -p /var/lib/kubuno/drive /var/lib/kubuno/themes /var/lib/kubuno/modules-st
 mkdir -p /usr/lib/kubuno/modules
 # The service installs modules from the marketplace and writes each module's
 # configuration itself, so both directories must belong to it. Left to root they
-# made every hot install fail — the module landed in the writable store but its
+# made every hot install fail - the module landed in the writable store but its
 # configuration directory could not be created.
 # L'assistant d'installation écrit /etc/kubuno/config.toml par renommage
 # atomique (.config.toml.new puis rename), ce qui exige le droit d'écriture sur le
@@ -373,7 +373,7 @@ if [ ! -f /etc/kubuno/config.toml ]; then
     echo "  et dans « journalctl -u kubuno -n 40 »."
 fi
 # Le service écrit lui-même ce fichier au terme de l'assistant d'installation :
-# il doit donc lui appartenir. 0640 le garde illisible hors du groupe — il porte
+# il doit donc lui appartenir. 0640 le garde illisible hors du groupe - il porte
 # le mot de passe de la base et le secret JWT.
 chmod 640 /etc/kubuno/config.toml
 chown kubuno:kubuno /etc/kubuno/config.toml
@@ -486,52 +486,52 @@ POSTINST
 
 setup_drive() {
     setup_module "$1" "$2" "drive" \
-        "Kubuno Drive — module de gestion de fichiers" \
+        "Kubuno Drive - module de gestion de fichiers" \
         "data" "temp"
 }
 
 setup_calendar() {
     setup_module "$1" "$2" "calendar" \
-        "Kubuno Calendar — module calendrier" \
+        "Kubuno Calendar - module calendrier" \
         "data"
 }
 
 setup_photos() {
     setup_module "$1" "$2" "photos" \
-        "Kubuno Photos — module galerie photo" \
+        "Kubuno Photos - module galerie photo" \
         "data" "temp"
 }
 
 setup_notes() {
     setup_module "$1" "$2" "notes" \
-        "Kubuno Notes — module prise de notes"
+        "Kubuno Notes - module prise de notes"
 }
 
 setup_office() {
     setup_module "$1" "$2" "office" \
-        "Kubuno Office — module documents collaboratifs"
+        "Kubuno Office - module documents collaboratifs"
 }
 
 setup_paintsharp() {
     setup_module "$1" "$2" "paintsharp" \
-        "Kubuno PaintSharp — suite créative (3D, raster, vectoriel, vidéo)"
+        "Kubuno PaintSharp - suite créative (3D, raster, vectoriel, vidéo)"
 }
 
 setup_forms() {
     setup_module "$1" "$2" "forms" \
-        "Kubuno Forms — module de création de formulaires" \
+        "Kubuno Forms - module de création de formulaires" \
         "uploads" "temp"
 }
 
 setup_chat() {
     setup_module "$1" "$2" "chat" \
-        "Kubuno Chat — messagerie chiffrée de bout en bout" \
+        "Kubuno Chat - messagerie chiffrée de bout en bout" \
         "media" "temp"
 }
 
 setup_contacts() {
     setup_module "$1" "$2" "contacts" \
-        "Kubuno Contacts — carnet d'adresses" \
+        "Kubuno Contacts - carnet d'adresses" \
         "avatars" "temp"
 }
 
@@ -541,7 +541,7 @@ setup_assistant() {
     local MODULE="assistant"
 
     setup_module "$PKG_DIR" "$PACKAGE" "$MODULE" \
-        "Kubuno Assistant — assistant IA multi-modèles"
+        "Kubuno Assistant - assistant IA multi-modèles"
 
     # Recommends: ollama (pas de hard-dep)
     sed -i "s/^Depends:/Recommends: ollama\nDepends:/" \
@@ -550,13 +550,13 @@ setup_assistant() {
 
 setup_mail() {
     setup_module "$1" "$2" "mail" \
-        "Kubuno Mail — module de messagerie IMAP/SMTP" \
+        "Kubuno Mail - module de messagerie IMAP/SMTP" \
         "data"
 }
 
 setup_code() {
     setup_module "$1" "$2" "code" \
-        "Kubuno Code — module IDE web" \
+        "Kubuno Code - module IDE web" \
         "projects" "extensions"
 }
 
@@ -566,7 +566,7 @@ setup_media() {
     local MODULE="media"
 
     setup_module "$PKG_DIR" "$PACKAGE" "$MODULE" \
-        "Kubuno Media — module Watch et Listen" \
+        "Kubuno Media - module Watch et Listen" \
         "cache" "thumbnails"
 
     # Dépendance supplémentaire : ffmpeg
@@ -576,23 +576,23 @@ setup_media() {
 
 setup_keestore() {
     setup_module "$1" "$2" "keestore" \
-        "Kubuno Keestore — gestionnaire de mots de passe KeePass"
+        "Kubuno Keestore - gestionnaire de mots de passe KeePass"
 }
 
 setup_maps() {
     setup_module "$1" "$2" "maps" \
-        "Kubuno Maps — cartographie OpenStreetMap self-hosted" \
+        "Kubuno Maps - cartographie OpenStreetMap self-hosted" \
         "gpx"
 }
 
 setup_flow() {
     setup_module "$1" "$2" "flow" \
-        "Kubuno Flow — orchestrateur de workflows visuels no-code"
+        "Kubuno Flow - orchestrateur de workflows visuels no-code"
 }
 
 setup_tasks() {
     setup_module "$1" "$2" "tasks" \
-        "Kubuno Tasks — tâches et tableaux Kanban (Tasks + Deck)" \
+        "Kubuno Tasks - tâches et tableaux Kanban (Tasks + Deck)" \
         "data"
 }
 
@@ -630,7 +630,7 @@ fi
 
 if [[ "${#BUILD_TARGETS[@]}" -eq 0 ]]; then
   echo ""
-  echo "Aucun changement détecté — rien à builder."
+  echo "Aucun changement détecté - rien à builder."
   echo "Pour forcer : bash build_deb.sh all  ou  bash build_deb.sh <composant...>"
   exit 0
 fi
@@ -646,7 +646,7 @@ for comp in "${BUILD_TARGETS[@]}"; do
 done
 
 echo ""
-echo "==> Kubuno — build Debian"
+echo "==> Kubuno - build Debian"
 echo "    Version : ${VERSION}"
 echo "    Arch    : ${ARCH}"
 echo "    Cibles  : ${BUILD_TARGETS[*]}"

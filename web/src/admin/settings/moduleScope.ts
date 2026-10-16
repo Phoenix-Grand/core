@@ -1,6 +1,6 @@
 // The scoped reading of ONE module's instance settings.
 //
-// A module's admin panel used to know a single value per setting — the one the
+// A module's admin panel used to know a single value per setting - the one the
 // whole instance runs on. But a setting a module declares `overridable` may
 // legitimately differ from one organisational unit to the next, and the core
 // has resolved settings per scope since migration `000060`
@@ -8,7 +8,7 @@
 // route about a MODULE rather than about the core, and a way to line the answer
 // up with the module's own declarative schema.
 //
-// This file is that join, and nothing else — no React tree, no markup:
+// This file is that join, and nothing else - no React tree, no markup:
 //
 //   • the module's schema (`GET /modules/:id/config`) carries the PRESENTATION:
 //     type, bounds, unit, placeholder, risk, `advanced`, `depends_on`, category;
@@ -90,9 +90,9 @@ export const hasScopableSettings = (items: SettingItem[]) => items.some(isScopab
  * The three states a scoped value can be in, named once so the chip, the row
  * and the section counter cannot drift apart.
  *
- *  • `own`       — this scope holds its own row: the value was decided HERE.
- *  • `inherited` — the value comes from a level above and will keep following it.
- *  • `locked`    — a level above pinned it; the control is read-only here.
+ *  • `own`       - this scope holds its own row: the value was decided HERE.
+ *  • `inherited` - the value comes from a level above and will keep following it.
+ *  • `locked`    - a level above pinned it; the control is read-only here.
  */
 export type Inheritance = 'own' | 'inherited' | 'locked'
 

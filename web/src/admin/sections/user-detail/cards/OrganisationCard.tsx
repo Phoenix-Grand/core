@@ -27,7 +27,7 @@ type SystemRole = 'user' | 'admin' | 'guest'
  *   server demands a super-user (`require_superuser`, `update_user`). Anyone
  *   else reads the badge.
  * - **Unit** needs `users.update` over both the unit the account is in *and* the
- *   one it is going to — the server checks both perimeters, and a delegated
+ *   one it is going to - the server checks both perimeters, and a delegated
  *   administrator must not be able to push accounts out of their own subtree.
  * - **Status** is a verb, not a field: it stays the confirmed action in the
  *   sheet header, where it cannot be flipped by a stray click inside a form.

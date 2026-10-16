@@ -18,7 +18,7 @@ const ORIGIN_ICON = {
 } as const
 
 function renderValue(v: unknown): string {
-  if (v === null || v === undefined) return '—'
+  if (v === null || v === undefined) return '-'
   if (typeof v === 'string') return v
   return JSON.stringify(v)
 }
@@ -254,7 +254,7 @@ export function Part9({ t, rows, isLoading, open, setOpen, i18n }: { t: NonNulla
                         </span>
                       </td>
                       <td className="px-3 py-2.5 text-text-primary font-mono">{e.action}</td>
-                      <td className="px-3 py-2.5 text-text-secondary">{e.target_label || '—'}</td>
+                      <td className="px-3 py-2.5 text-text-secondary">{e.target_label || '-'}</td>
                       <td className="px-3 py-2.5">
                         <span className={`inline-flex items-center gap-1 text-[11px] px-2 py-0.5 rounded-full ${OUTCOME_STYLE[e.outcome]}`}>
                           {e.outcome === 'denied' && <ShieldAlert size={11} />}
@@ -262,7 +262,7 @@ export function Part9({ t, rows, isLoading, open, setOpen, i18n }: { t: NonNulla
                           {t(`admin.audit_outcome_${e.outcome}`)}
                         </span>
                       </td>
-                      <td className="px-3 py-2.5 text-text-tertiary whitespace-nowrap font-mono">{e.ip_address || '—'}</td>
+                      <td className="px-3 py-2.5 text-text-tertiary whitespace-nowrap font-mono">{e.ip_address || '-'}</td>
                     </tr>,
                     expanded && (
                       <tr key={`${e.id}-detail`}>

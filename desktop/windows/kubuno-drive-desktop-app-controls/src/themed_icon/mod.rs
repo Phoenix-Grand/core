@@ -24,7 +24,7 @@ pub use data::{LayerRole, ThemedIconColorType, ThemedIconLayers, ThemedIconTypes
 /// the file explorer draws), then the module glyphs the launcher needs.
 const DATA_FILES: [&str; 4] = [
     include_str!("../../assets/themed-icons.txt"),
-    // lucide-react (ISC) — the very icons the web sidebar and launcher use.
+    // lucide-react (ISC) - the very icons the web sidebar and launcher use.
     include_str!("../../assets/lucide-icons.txt"),
     // The modules' own brand logos, in their own fixed colours.
     include_str!("../../assets/module-logos.txt"),
@@ -33,7 +33,7 @@ const DATA_FILES: [&str; 4] = [
 ];
 
 /// Every section header of [`DATA_FILES`], first occurrence wins: name → (file, byte offset of its header, alias target).
-/// Built once — a lookup by name is then a hash probe rather than a scan of the data.
+/// Built once - a lookup by name is then a hash probe rather than a scan of the data.
 type Headers = std::collections::HashMap<&'static str, (usize, usize, Option<&'static str>)>;
 
 fn headers() -> &'static Headers {
@@ -62,11 +62,11 @@ pub struct IconLayer {
     /// logos are multi-coloured with hard-coded fills, exactly as on the web.
     pub color: Option<D2D1_COLOR_F>,
     /// Stroke width in DESIGN units when the layer is drawn as an outline
-    /// rather than filled — Lucide icons are strokes, not solid shapes.
+    /// rather than filled - Lucide icons are strokes, not solid shapes.
     pub stroke: Option<f32>,
     /// The enclosing `<g transform="…">`, as `[a, b, c, d, e, f]` (identity by
     /// default). Kept as a transform so the path data stays verbatim from the
-    /// source — a translate is the common case, but a full matrix occurs too.
+    /// source - a translate is the common case, but a full matrix occurs too.
     pub transform: [f32; 6],
 }
 
@@ -77,7 +77,7 @@ pub struct VectorIcons {
 }
 
 impl VectorIcons {
-    /// Round caps and joins — how Lucide draws every icon.
+    /// Round caps and joins - how Lucide draws every icon.
     pub fn stroke_style(&mut self, factory: &ID2D1Factory) -> Option<&ID2D1StrokeStyle> {
         if self.stroke_style.is_none() {
             let props = D2D1_STROKE_STYLE_PROPERTIES {
@@ -120,7 +120,7 @@ impl VectorIcons {
             .map(|(l, v)| (l.as_slice(), *v))
     }
 
-    /// The `Base` geometry (foreground) and the viewbox — for single-color
+    /// The `Base` geometry (foreground) and the viewbox - for single-color
     /// callers (the vast majority of icons).
     pub fn get(&mut self, factory: &ID2D1Factory, name: &'static str) -> Option<(&ID2D1PathGeometry, f32)> {
         let (layers, v) = self.get_layers(factory, name)?;
@@ -134,8 +134,8 @@ impl VectorIcons {
 /// strings; this hands back the embedded one. It also answers "do we have this
 /// icon?" from the data itself, so no caller has to keep a list in sync.
 ///
-/// Also accepts what [`crate::icon_source`] describes — an image file (`images/save.svg`) and a
-/// source followed by drawing options — as the interned `&'static str` the painters take: the
+/// Also accepts what [`crate::icon_source`] describes - an image file (`images/save.svg`) and a
+/// source followed by drawing options - as the interned `&'static str` the painters take: the
 /// painters that know images draw those (the host painter of `kubuno_desktop_controls`).
 pub fn icon_name(name: &str) -> Option<&'static str> {
     if let Some(found) = embedded_name(name) {
@@ -184,13 +184,13 @@ pub struct CatalogEntry {
     pub set: &'static str,
     /// The glyph it is another name of (`=== Name -> Target`).
     pub alias_of: Option<&'static str>,
-    /// The comment line just above its section (`FolderOpen — lucide-react icon "folder-open"`).
+    /// The comment line just above its section (`FolderOpen - lucide-react icon "folder-open"`).
     pub comment: &'static str,
 }
 
 /// The layers of glyph `name` as their source text, without building any geometry: `(viewbox,
 /// layers)`, each layer `(path data, role, opacity, fixed colour as #rrggbb, stroke width, group
-/// transform)` — what a tool draws the glyph with outside Direct2D (the Visual Studio icon picker).
+/// transform)` - what a tool draws the glyph with outside Direct2D (the Visual Studio icon picker).
 pub fn glyph_source(name: &str) -> Option<(f32, Vec<GlyphLayer>)> {
     let mut name = name;
     for _ in 0..4 {
@@ -274,12 +274,12 @@ fn parse_hex(s: &str) -> Option<D2D1_COLOR_F> {
 /// A header of the form `=== Name -> Other` is an alias for `Other`.
 ///
 /// A layer line is `[<prefix>…] <path>`, where each prefix is one of:
-///   * `@<role>[@<opacity>]` — themed role (base, alt, accent, accentcontrast);
-///   * `@#rrggbb` — a fixed brand colour, overriding the role;
-///   * `t:<dx>,<dy>` — offset in design units (an SVG group transform);
-///   * `m:<a>,<b>,<c>,<d>,<e>,<f>` — the same, as a full matrix, for the group
+///   * `@<role>[@<opacity>]` - themed role (base, alt, accent, accentcontrast);
+///   * `@#rrggbb` - a fixed brand colour, overriding the role;
+///   * `t:<dx>,<dy>` - offset in design units (an SVG group transform);
+///   * `m:<a>,<b>,<c>,<d>,<e>,<f>` - the same, as a full matrix, for the group
 ///     transforms that scale as well as translate;
-///   * `s:<width>` — stroke width in design units, for an outlined layer.
+///   * `s:<width>` - stroke width in design units, for an outlined layer.
 ///
 /// A line with no prefix is a filled `Base` layer (the legacy form, and what
 /// nearly every ThemedIcon uses). `t:`/`s:` always carry the colon, which is
@@ -609,7 +609,7 @@ mod tests {
         assert!(layers.iter().all(|l| l.stroke == Some(2.0)));
     }
 
-    /// A module logo keeps its own colours, and the Files icons keep none —
+    /// A module logo keeps its own colours, and the Files icons keep none -
     /// they take the caller's.
     #[test]
     fn brand_logos_carry_fixed_colours() {
@@ -623,7 +623,7 @@ mod tests {
         assert!(plain.iter().all(|l| l.color.is_none() && l.stroke.is_none()));
     }
 
-    /// Every path must actually start with a move — a layer whose prefixes were
+    /// Every path must actually start with a move - a layer whose prefixes were
     /// mis-parsed would leave path data starting mid-command.
     #[test]
     fn every_layer_starts_with_a_move() {

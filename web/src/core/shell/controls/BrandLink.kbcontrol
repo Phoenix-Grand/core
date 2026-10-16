@@ -1,4 +1,4 @@
-<!-- BrandLink — converted from BrandLink.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- BrandLink - converted from BrandLink.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="BrandLinkProps">
   <Panel Href="{Binding to}" ToolTip="{Binding label}" OnClick="panel_click">
     <!-- TODO(views-migrate): <Icon> is no .kbview element (a local or dynamic component) -->

@@ -13,7 +13,7 @@ import type { SortField, TFunc } from './types'
 //
 // Remplace la SortFilterBar sur mobile : la barre de bureau (dropdown de tri,
 // filtre Type, menu « Afficher » à 8 modes) est trop dense pour un pouce. Ici :
-// une puce de tri qui ouvre une feuille, et une bascule liste/grille — les deux
+// une puce de tri qui ouvre une feuille, et une bascule liste/grille - les deux
 // seuls réglages qui comptent sur un petit écran.
 
 export function MobileControlBar({ sortField, sortDir, onSortField, onSortDir, grid, onGrid, t }: {
@@ -26,7 +26,7 @@ export function MobileControlBar({ sortField, sortDir, onSortField, onSortDir, g
   t:           TFunc
 }) {
   const [sheet, setSheet] = useState(false)
-  // Same four criteria as the desktop SortFilterBar — and the same i18n keys.
+  // Same four criteria as the desktop SortFilterBar - and the same i18n keys.
   const fields: { value: SortField; label: string }[] = [
     { value: 'name', label: t('common.name') },
     { value: 'date', label: t('app.sort_date') },
@@ -56,7 +56,7 @@ export function MobileControlBar({ sortField, sortDir, onSortField, onSortDir, g
         </button>
       </div>
 
-      {/* Bascule liste/grille — segmentée, l'état actif est plein. */}
+      {/* Bascule liste/grille - segmentée, l'état actif est plein. */}
       <div className="flex items-center gap-1.5 shrink-0">
         <button
           onClick={() => onGrid(false)}

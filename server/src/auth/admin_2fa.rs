@@ -13,7 +13,7 @@
 //! `core.users.admin_2fa_grace_until` is written the first time an administrator
 //! without a second factor is seen while the requirement is on. Deriving the
 //! deadline from "when the setting was flipped" instead would hand an account
-//! created a month later a window that had already elapsed — a new administrator
+//! created a month later a window that had already elapsed - a new administrator
 //! refused on their first sign-in, with nothing they did wrong to point at.
 //!
 //! Enrolling clears the stamp (see the `/me/2fa/enable` handler), so an operator
@@ -138,7 +138,7 @@ async fn arm_deadline(
     }
 }
 
-/// Clears the stamp — called when an account enrols a second factor.
+/// Clears the stamp - called when an account enrols a second factor.
 pub async fn clear_deadline(db: &DbPool, user_id: uuid::Uuid) {
     if let Err(e) = db
         .execute(
@@ -153,7 +153,7 @@ pub async fn clear_deadline(db: &DbPool, user_id: uuid::Uuid) {
 
 /// Refuses administrative access when the account's grace window has closed.
 ///
-/// Returns [`AppError::TwoFactorRequired`], whose message says what to do — a
+/// Returns [`AppError::TwoFactorRequired`], whose message says what to do - a
 /// bare "accès refusé" in front of an administrator who changed nothing is the
 /// kind of dead end that ends in a database edit.
 pub async fn enforce(db: &DbPool, user: &User) -> Result<(), AppError> {
@@ -163,7 +163,7 @@ pub async fn enforce(db: &DbPool, user: &User) -> Result<(), AppError> {
         // Turning the requirement off disarms whatever it armed. Leaving a
         // deadline behind would mean that switching it on again months later
         // locks out, on the spot, every administrator whose stale window had
-        // already elapsed — a delay they were never given a chance to use.
+        // already elapsed - a delay they were never given a chance to use.
         if user.admin_2fa_grace_until.is_some() {
             clear_deadline(db, user.id).await;
         }

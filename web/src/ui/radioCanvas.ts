@@ -1,6 +1,6 @@
 import { resolveCssColor } from './canvasColor'
 
-/* Canvas painter for the `Radio` control — pure drawing, no React. Same split as
+/* Canvas painter for the `Radio` control - pure drawing, no React. Same split as
  * `toggleCanvas.ts`: the geometry and the paint pass can be read (and tested) on
  * their own. All lengths are in CSS pixels; the device pixel ratio is applied at
  * paint time. */
@@ -31,7 +31,7 @@ export type RadioVariant = 'default' | 'dark'
 /* Colours come from the theme tokens rather than being hard-coded, so a runtime
  * theme or a per-module accent (`[data-module="<id>"]`) still applies. Read from the
  * canvas itself: custom properties inherit, so it sees what its ancestors resolved.
- * `dark` stays literal — it is fixed editor chrome, not the dark theme. */
+ * `dark` stays literal - it is fixed editor chrome, not the dark theme. */
 export function readRadioPalette(el: Element, variant: RadioVariant, color?: string): RadioPalette {
   const cs = getComputedStyle(el)
   const token = (name: string, fallback: string) => cs.getPropertyValue(name).trim() || fallback
@@ -83,7 +83,7 @@ export function paintRadio(canvas: HTMLCanvasElement, opts: PaintRadioOptions): 
 
   /* Ring. The unchecked colour is painted first, then the accent over it at `progress`
    * alpha. Cross-fading replaces interpolating the two colours, which would mean
-   * parsing them — and a theme is free to express them as hex, rgb() or oklch(). */
+   * parsing them - and a theme is free to express them as hex, rgb() or oklch(). */
   const strokeRing = (colour: string, alpha: number) => {
     ctx.globalAlpha = alpha
     ctx.beginPath()
@@ -96,7 +96,7 @@ export function paintRadio(canvas: HTMLCanvasElement, opts: PaintRadioOptions): 
   if (progress > 0) strokeRing(p.accent, progress)
   ctx.globalAlpha = 1
 
-  // Dot — grows from the centre, so only its RADIUS is animated.
+  // Dot - grows from the centre, so only its RADIUS is animated.
   if (progress > 0) {
     ctx.beginPath()
     ctx.arc(c, c, (g.dot / 2) * progress, 0, Math.PI * 2)

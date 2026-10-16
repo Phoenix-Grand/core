@@ -475,9 +475,9 @@ impl Gen<'_, '_, '_> {
 /// What to do about an error sqlx reported for a statement.
 fn hint(e: &str) -> &'static str {
     if e.contains("no cached data") || e.contains("set `DATABASE_URL`") {
-        " — not in the offline query cache (.sqlx): the .kbdata (or the schema) changed since the cache was prepared, or it never was. Regenerate the cache against a database that has the schema: set DATABASE_URL, SQLX_OFFLINE=false and SQLX_OFFLINE_DIR=<the crate's absolute path>/.sqlx (an existing folder), then `cargo check` (Visual Studio: Update the SQLx cache)"
+        " - not in the offline query cache (.sqlx): the .kbdata (or the schema) changed since the cache was prepared, or it never was. Regenerate the cache against a database that has the schema: set DATABASE_URL, SQLX_OFFLINE=false and SQLX_OFFLINE_DIR=<the crate's absolute path>/.sqlx (an existing folder), then `cargo check` (Visual Studio: Update the SQLx cache)"
     } else if e.contains("no such column") || e.contains("no such table") || e.contains("does not exist") || e.contains("Unknown column") {
-        " — the .kbdata does not match the database schema"
+        " - the .kbdata does not match the database schema"
     } else {
         ""
     }
@@ -625,7 +625,7 @@ params = [{ name = "id", rust_type = "i64" }]
         assert!(q.1.ends_with("FROM (SELECT * FROM customers WHERE name = ?1) AS \"kubuno_q\""), "{}", q.1);
         assert_eq!(q.3, ["name"]);
         // The stub failed `forget`: a compile error naming the file, the query and the cause.
-        assert!(s.contains("::core::compile_error!(\"`src/shop.kbdata`:forget:errorreturnedfromdatabase:nosuchtable:customers—the.kbdatadoesnotmatchthedatabaseschema\")"), "{s}");
+        assert!(s.contains("::core::compile_error!(\"`src/shop.kbdata`:forget:errorreturnedfromdatabase:nosuchtable:customers-the.kbdatadoesnotmatchthedatabaseschema\")"), "{s}");
         assert!(s.contains("pubasyncfnforget<'e,E>(executor:E,id:i64)->::core::result::Result<u64,"), "{s}");
     }
 

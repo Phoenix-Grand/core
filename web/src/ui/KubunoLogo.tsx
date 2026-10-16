@@ -1,4 +1,4 @@
-// Logo Kubuno — marque officielle (hexagone + cube 3D), image fournie par
+// Logo Kubuno - marque officielle (hexagone + cube 3D), image fournie par
 // l'utilisateur. Servi depuis `/kubuno-logo.png` (le host sert `public/`), donc
 // disponible partout où `@ui` est consommé (instance unique côté host).
 // Le logo est multicolore : une classe de couleur (`text-*`) n'a plus d'effet ;

@@ -281,7 +281,7 @@ pub fn claim_string(doc: &serde_json::Value, path: &str) -> Option<String> {
     }
 }
 
-/// A list-valued claim. Accepts an array of strings, and a single string —
+/// A list-valued claim. Accepts an array of strings, and a single string -
 /// several providers send one group as a bare string rather than a one-element
 /// array, and treating that as "no groups" loses exactly the people who belong
 /// to one.

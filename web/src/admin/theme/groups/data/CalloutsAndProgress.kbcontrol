@@ -1,4 +1,4 @@
-<!-- CalloutsAndProgress — converted from CalloutsAndProgress.tsx by @kubuno/views-migrate. -->
+<!-- CalloutsAndProgress - converted from CalloutsAndProgress.tsx by @kubuno/views-migrate. -->
 <UserControl>
   <Stack Gap="12">
     <Stack>

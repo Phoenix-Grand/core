@@ -162,7 +162,7 @@ pub enum PrintRange {
     #[default]
     AllPages,
     /// `from_page` to `to_page` (1-based, inclusive). Pages outside are rendered (the handler's state
-    /// advances) but not sent to the printer — WinForms leaves that to the handler.
+    /// advances) but not sent to the printer - WinForms leaves that to the handler.
     SomePages,
     /// The selection: what it is, the handler knows (`e.page_settings.printer_settings.print_range`).
     Selection,
@@ -271,7 +271,7 @@ impl PageSettings {
 // ── PrinterSettings ──────────────────────────────────────────────────────────────────────────────
 
 /// A printer and how to print on it (WinForms `PrinterSettings`): which printer, copies, collation,
-/// two-sided printing, the page range the user chose, printing to a file — and what the printer can
+/// two-sided printing, the page range the user chose, printing to a file - and what the printer can
 /// do (`paper_sizes`, `paper_sources`, `printer_resolutions`, `can_duplex`, `supports_color`,
 /// `maximum_copies`), asked of the spooler.
 #[derive(Debug, Clone, PartialEq)]

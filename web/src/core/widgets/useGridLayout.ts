@@ -171,7 +171,7 @@ export function useGridLayout(activeModuleIds: Set<string>) {
       .filter((i): i is GridItem => i !== undefined)
 
     // Pass 2: auto-place widgets without a saved position TOUT EN BAS, sous les
-    // widgets déjà positionnés — un module fraîchement activé n'intercale jamais
+    // widgets déjà positionnés - un module fraîchement activé n'intercale jamais
     // ses widgets au milieu de l'agencement existant.
     const startRow = bottomRow(result)
     for (const w of visible) {
@@ -187,7 +187,7 @@ export function useGridLayout(activeModuleIds: Set<string>) {
 
   // ── Mutations ─────────────────────────────────────────────────────────────
 
-  /** Upsert helper — adds the item if it's not yet in layout.items */
+  /** Upsert helper - adds the item if it's not yet in layout.items */
   function upsert(items: GridItem[], id: string, pos: GridPos): GridItem[] {
     const exists = items.some(i => i.id === id)
     if (exists) return items.map(i => i.id === id ? { ...i, pos } : i)

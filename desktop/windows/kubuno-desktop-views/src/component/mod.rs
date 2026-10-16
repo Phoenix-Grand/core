@@ -2,7 +2,7 @@
 //!
 //! Work package EVT-7a of `vskubuno/docs/EVENTS.md`: the cascading hierarchy rooted in
 //! WinForms' `System.ComponentModel.Component` → `System.Windows.Forms.Control`, and the
-//! overridable `On…` methods, in idiomatic Rust — **a trait per level, with default methods (the
+//! overridable `On…` methods, in idiomatic Rust - **a trait per level, with default methods (the
 //! "virtual" behaviour), an embedded base-state struct per level, and generated delegation**:
 //!
 //! ```text
@@ -21,7 +21,7 @@
 //!          └─ View         (ViewCore)                 the Form: Load, Shown, FormClosing…
 //! ```
 //!
-//! (the other controls — `Icon`, `ListView`, `DataTable`, `DatePicker`… — derive `Control`
+//! (the other controls - `Icon`, `ListView`, `DataTable`, `DatePicker`… - derive `Control`
 //! directly; the structural elements `<TabItem>`, `<Item>`… are non-visual `Component`s. See
 //! [`crate::controls`] for the whole list; `ScrollBarBase` of the design note is `RangeBase`, the
 //! base of every value-in-a-range control.)
@@ -73,10 +73,10 @@
 //!
 //! - `#[derive(Component)]` + `#[kubuno(extends = X)]` generates the plumbing: the chain's
 //!   hidden link traits (the base-state accessors and the upcasts), `base()` / `base_mut()`, the
-//!   type chain, and an empty `impl` of every level trait of the chain — except those listed in
+//!   type chain, and an empty `impl` of every level trait of the chain - except those listed in
 //!   `overrides(…)`, which you write yourself with the methods you override. `extends` names a
-//!   built-in control class (`Button`) — the base field is then that class — or a level
-//!   (`ButtonBase`, `Control`…) — the base field is then the level's core (`ButtonBaseCore`).
+//!   built-in control class (`Button`) - the base field is then that class - or a level
+//!   (`ButtonBase`, `Control`…) - the base field is then the level's core (`ButtonBaseCore`).
 //! - **A method you do not override runs the base's**: every default method first delegates to
 //!   the base object (`RoundButton` → its `Button`), and only the root behaviour raises the event.
 //!   So overriding and subscribing compose as in WinForms: an override that calls
@@ -84,7 +84,7 @@
 //! - Virtual dispatch happens on the object the host holds: the router, the nodes and
 //!   [`ControlHost`] call every `on_…` on the outermost control, so `RoundButton::on_click` runs
 //!   even though `Button` implements the rest. A base implementation reached by delegation calls
-//!   its own methods on itself, not on the derived object — keep behaviour that must reach an
+//!   its own methods on itself, not on the derived object - keep behaviour that must reach an
 //!   override in provided trait methods called on the outer object, as `perform_click` does.
 //!
 //! ## Where the hierarchy runs
@@ -118,9 +118,9 @@ pub use ribbon_levels::*;
 
 use crate::events::{ElementRef, EmptyEventArgs, Event, EventArgs};
 
-/// `#[derive(Component)]` — see the macro's documentation for its `#[kubuno(…)]` options.
+/// `#[derive(Component)]` - see the macro's documentation for its `#[kubuno(…)]` options.
 pub use kubuno_desktop_views_macros::Component;
-/// `#[derive(UserControl)]` (EVT-7b): a composite designed as a `.kbview` of its own — see the
+/// `#[derive(UserControl)]` (EVT-7b): a composite designed as a `.kbview` of its own - see the
 /// macro's documentation.
 pub use kubuno_desktop_views_macros::UserControl;
 /// `#[derive(PropertyValue)]` (EVT-7b): a fieldless enum as a property type.
@@ -314,7 +314,7 @@ pub trait ComponentLink: HasComponentCore + Any {
 }
 
 /// The root of the hierarchy (WinForms `System.ComponentModel.Component`): anything that can sit
-/// in a view — a control, or a non-visual component such as a `<TabItem>`. Implemented by
+/// in a view - a control, or a non-visual component such as a `<TabItem>`. Implemented by
 /// `#[derive(Component)]` (empty) unless the class lists `Component` in `overrides(…)`.
 #[diagnostic::on_unimplemented(
     message = "`{Self}` is not a component class",

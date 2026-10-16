@@ -102,7 +102,7 @@ export declare abstract class View<P extends object = object> {
     protected memo<T>(key: string, deps: readonly unknown[], compute: () => T): T;
     /**
      * Sets fields from what hooks gave this render (`this.publish({ user, items })` in `use()`), notifying the view only
-     * when one changed — compared shallowly, so a hook returning a fresh but equal object or list on every render does
+     * when one changed - compared shallowly, so a hook returning a fresh but equal object or list on every render does
      * not re-render the view without end, as a `@bind` field (compared by identity) would.
      */
     protected publish(values: Readonly<Record<string, unknown>>): void;
@@ -111,14 +111,14 @@ export declare abstract class View<P extends object = object> {
     /** The view as a React component (`export default MyView.component()`). */
     static component<T extends View<any>>(this: abstract new () => T): FunctionComponent<T['props']>;
 }
-/** @internal — set by the renderer (keeps this module free of React rendering code). */
+/** @internal - set by the renderer (keeps this module free of React rendering code). */
 export declare function setComponentFactory(f: (cell: Cell, cls: ViewClass) => ComponentType<object>): void;
 type Accessor<This, V> = {
     get(this: This): V;
     set(this: This, value: V): void;
 };
 /**
- * `@bind accessor name = value` — a bindable field: assigning it re-renders the elements bound to it
+ * `@bind accessor name = value` - a bindable field: assigning it re-renders the elements bound to it
  * (VIEWS-SPEC §9.1). Mutating an object in place is not seen: assign a new object, or call `invalidate()`.
  */
 export declare function bind<This extends View<object>, V>(target: Accessor<This, V>, context: ClassAccessorDecoratorContext<This, V>): ClassAccessorDecoratorResult<This, V>;

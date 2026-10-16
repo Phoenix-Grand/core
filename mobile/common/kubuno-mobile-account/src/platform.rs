@@ -20,7 +20,7 @@ pub fn set_platform_store(store: Arc<dyn SecretStore>) {
 }
 
 /// The OS secret store the shell installed. Without one (host tools, tests) a process-wide in-memory store stands in,
-/// so nothing survives a restart — logged once.
+/// so nothing survives a restart - logged once.
 pub fn platform_store() -> Arc<dyn SecretStore> {
     if let Some(store) = PLATFORM.lock().ok().and_then(|s| s.clone()) {
         return store;

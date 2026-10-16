@@ -18,7 +18,7 @@
 //!    required by the matched route, followed by a read of that privilege's
 //!    `sensitive` flag in the catalogue (cached like `crate::auth::ddos` does,
 //!    so the extractor stays one round-trip);
-//! 2. delete [`SENSITIVE_ACTIONS`] — the flag in the catalogue becomes the single
+//! 2. delete [`SENSITIVE_ACTIONS`] - the flag in the catalogue becomes the single
 //!    source of truth, and this table stops being a second place to forget;
 //! 3. keep [`Reauthenticated`](super::guard::Reauthenticated) exactly as it is:
 //!    the extractor asks "is this sensitive?" and never how the answer is found.

@@ -13,13 +13,13 @@
 //! # The key, and its limit
 //!
 //! `K` is derived from `server.internal_secret` with HKDF-SHA256 (RFC 5869) and
-//! never stored in the database — so an actor with SQL access but not the secret
+//! never stored in the database - so an actor with SQL access but not the secret
 //! cannot forge a valid chain. This is the honest boundary of the scheme: an
 //! attacker holding **both** the database and the internal secret could recompute
 //! the whole chain. Defending against that requires anchoring the head hash
 //! outside the database (an RFC 3161 timestamp, an external witness); that
 //! anchoring is future work and is documented as such. What this delivers today
-//! is detection of tampering by anyone who does not also hold the secret — which
+//! is detection of tampering by anyone who does not also hold the secret - which
 //! covers the DBA-only and SQL-injection threat models that matter most.
 //!
 //! Design confirmed against RFC 2104 (HMAC), RFC 5869 (HKDF) and the
@@ -135,7 +135,7 @@ pub fn canonical(f: &CanonFields) -> Vec<u8> {
     b
 }
 
-/// `HMAC-SHA256(key, canonical ‖ prev_hash)` — the row's chain hash.
+/// `HMAC-SHA256(key, canonical ‖ prev_hash)` - the row's chain hash.
 pub fn row_hash(key: &[u8; 32], canonical: &[u8], prev_hash: &[u8]) -> Vec<u8> {
     let mut mac = HmacSha256::new_from_slice(key).expect("HMAC accepts any key length");
     mac.update(canonical);

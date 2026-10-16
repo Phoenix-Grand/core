@@ -1,4 +1,4 @@
-//! OAuth / OIDC — generic providers (Keycloak, GitLab, Authentik, …).
+//! OAuth / OIDC - generic providers (Keycloak, GitLab, Authentik, …).
 //!
 //! Public provider list, authorization redirect (PKCE) and callback. User
 //! lookup/creation lives in [`super::oauth_users`].
@@ -52,7 +52,7 @@ async fn load_enabled_provider(db: &DbPool, slug: &str) -> Result<OAuthProvider,
 /// something behind them. It is a property of the configuration alone: it does
 /// not take a login, does not touch `core.users`, and therefore cannot be used
 /// to find out whether an account exists or which unit it belongs to. The
-/// per-unit rule is applied after identification — see
+/// per-unit rule is applied after identification - see
 /// [`crate::auth::methods`] for why that ordering is the safe one.
 pub async fn public_auth_methods(
     State(state): State<AppState>,
@@ -61,7 +61,7 @@ pub async fn public_auth_methods(
     Ok(Json(json!({
         "methods": methods.to_json(),
         // The password field serves BOTH the local password and the directory
-        // bind — same form, same two fields — so it is shown when either is
+        // bind - same form, same two fields - so it is shown when either is
         // accepted somewhere.
         "password_form": methods.local || methods.directory,
     })))
@@ -153,7 +153,7 @@ pub async fn oauth_callback(
 
     // Read and verify the PKCE cookie (CSRF protection via `state`).
     let pkce_value = extract_cookie_value(&headers, "oauth_pkce")
-        .ok_or_else(|| AppError::Validation("Session OAuth expirée — veuillez réessayer".into()))?;
+        .ok_or_else(|| AppError::Validation("Session OAuth expirée - veuillez réessayer".into()))?;
     let pkce = OAuthPkce::from_cookie_value(&pkce_value)
         .ok_or_else(|| AppError::Validation("Cookie OAuth corrompu".into()))?;
     if state_param != pkce.nonce {
@@ -224,7 +224,7 @@ pub async fn oauth_callback(
     };
 
     // The unit's policy applies here too. It is checked *after* the identity
-    // provider has authenticated the person — which is the only point at which
+    // provider has authenticated the person - which is the only point at which
     // the account, and therefore its unit, is known. Saying so plainly is safe
     // at this stage: reaching it required valid credentials at the provider, so
     // the message cannot be used to probe for accounts from outside.
@@ -246,7 +246,7 @@ pub async fn oauth_callback(
 
     // Groups the identity provider claims for this person. Applied after the
     // account exists and before the session is issued, so the very first
-    // sign-in already carries the right memberships — and so a role assignment
+    // sign-in already carries the right memberships - and so a role assignment
     // attached to an imported group takes effect immediately.
     if p.sync_groups {
         super::oauth_users::apply_claimed_groups(&state.db, &p.slug, user.id, &group_names).await;

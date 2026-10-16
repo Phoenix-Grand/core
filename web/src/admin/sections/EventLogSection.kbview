@@ -1,4 +1,4 @@
-<!-- EventLogSection — converted from EventLogSection.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- EventLogSection - converted from EventLogSection.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <Stack Gap="16" Class="min-w-0">
   <Panel HtmlTag="P" ForeColor="TextSecondary" Class="flex items-center gap-2 [font-size:var(--kb-text-body)]">
     <Icon Name="Radio" Size="15" Class="shrink-0 text-text-tertiary"/>

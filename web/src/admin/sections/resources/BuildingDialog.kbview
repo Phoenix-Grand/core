@@ -1,4 +1,4 @@
-<!-- BuildingDialog — converted from BuildingDialog.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- BuildingDialog - converted from BuildingDialog.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <Panel x:Props="BuildingDialogProps" OnMouseDown="panel_mouse_down">
   <FloatingWindow ConfirmText="{Res admin.res_save}"
                   ConfirmEnabled="{Binding enabled_unless_busy}"

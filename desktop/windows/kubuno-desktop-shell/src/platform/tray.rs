@@ -1,7 +1,7 @@
 //! The notification-area icon: Shell_NotifyIcon instead of Tauri's tray.
 //!
-//! Same four entries as before — Synchroniser / Ouvrir le dossier / Afficher /
-//! Quitter — because the window only hides on close and this menu is the one
+//! Same four entries as before - Synchroniser / Ouvrir le dossier / Afficher /
+//! Quitter - because the window only hides on close and this menu is the one
 //! way out of the app.
 //!
 //! The icon's callback reaches the window as [`WM_TRAY`], which the window
@@ -45,7 +45,7 @@ pub fn add(hwnd: HWND) {
 }
 
 pub fn remove(hwnd: HWND) {
-    // SAFETY: as in `add` — a plain, initialised structure passed by reference.
+    // SAFETY: as in `add` - a plain, initialised structure passed by reference.
     unsafe {
         let data = NOTIFYICONDATAW { cbSize: std::mem::size_of::<NOTIFYICONDATAW>() as u32, hWnd: hwnd, uID: 1, ..Default::default() };
         let _ = Shell_NotifyIconW(NIM_DELETE, &data);

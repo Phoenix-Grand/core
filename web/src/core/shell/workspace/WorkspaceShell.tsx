@@ -1,6 +1,6 @@
 // Core primitive: la chrome partagée de TOUTE application avancée (éditeurs Office
-// et PaintSharp). Disposition verticale — topbar · barre de menus · options bar (toolbar)
-// · (rail d'outils + corps) · bottom bar · status bar — entièrement data-driven via
+// et PaintSharp). Disposition verticale - topbar · barre de menus · options bar (toolbar)
+// · (rail d'outils + corps) · bottom bar · status bar - entièrement data-driven via
 // slots. L'hôte branche ses outils, panneaux, menus, options et statut ; le shell
 // possède le cadre cohérent et thémé (clair Office / sombre PaintSharp).
 //
@@ -25,7 +25,7 @@ import { WORKSPACE_DARK, type WorkspaceTheme } from './theme'
 
 export type { MenuItem, WorkspaceTheme }
 
-// Champ d'édition du titre de fichier — STANDARDISÉ (repris de Documents) : input
+// Champ d'édition du titre de fichier - STANDARDISÉ (repris de Documents) : input
 // auto-dimensionné (un span invisible mesure le texte → pas de saut de layout),
 // toujours éditable inline, commit sur blur ou Entrée. Tous les éditeurs partagent
 // CE composant ; ils ne passent que la valeur + les callbacks.
@@ -65,7 +65,7 @@ export function WorkspaceShell({
   titleIcon?: ReactNode         // icône de type devant le titre (Office : fichier, grille…)
   titleSlot?: ReactNode         // override total de la zone titre (rare)
   onTitleChange?: (v: string) => void  // → champ titre éditable standard (EditableTitle)
-  onTitleCommit?: () => void           // commit (blur/Entrée) — typiquement la sauvegarde
+  onTitleCommit?: () => void           // commit (blur/Entrée) - typiquement la sauvegarde
   titlePlaceholder?: string
   titleActions?: ReactNode      // actions juste après le titre, AVANT la recherche (ex. étoile)
   onDelete?: () => void         // → bouton corbeille STANDARD : confirme (ConfirmDialog) puis
@@ -80,7 +80,7 @@ export function WorkspaceShell({
   search?: ReactNode            // barre de recherche custom ; sinon SearchBar auto si chromeless
   showSearch?: boolean          // forcer/désactiver la SearchBar (défaut : = chromeless)
   menus?: { label: string; items: MenuItem[] }[]
-  menuBar?: ReactNode           // barre de menus custom (ex. DocMenuBar) — alternative à `menus`
+  menuBar?: ReactNode           // barre de menus custom (ex. DocMenuBar) - alternative à `menus`
   optionsBar?: ReactNode        // rangée d'options contextuelles (la toolbar)
   toolRail?: ReactNode          // rail d'outils vertical à gauche
   toolRailWidth?: number        // largeur du rail (44 = 1 col ; ~72 = 2 col)
@@ -89,7 +89,7 @@ export function WorkspaceShell({
   theme?: WorkspaceTheme
   chromeless?: boolean          // masque l'AppHeader global + héberge HeaderActions
   hideHeaderActions?: boolean   // masque le cluster HeaderActions (notifs/réglages/statut/avatar)
-                                //   même en chromeless — pour une vue immersive (ex. lecture mobile)
+                                //   même en chromeless - pour une vue immersive (ex. lecture mobile)
   topbarHeight?: number         // hauteur topbar (40 PaintSharp ; ~52 Office titre+statut)
   optionsBarHeight?: number     // hauteur options bar/toolbar (30 PaintSharp ; 40 Office)
   statusHeight?: number         // hauteur status bar (22)
@@ -177,12 +177,12 @@ export function WorkspaceShell({
     extraMenus,
   }) : null
 
-  // Topbar — UNE SEULE structure (source unique). Mêmes éléments, mêmes dimensions et
+  // Topbar - UNE SEULE structure (source unique). Mêmes éléments, mêmes dimensions et
   // mêmes interactions pour TOUS les éditeurs (Office clair / PaintSharp sombre) ; seules
   // les COULEURS changent selon `dark`. Calquée sur la barre de titre Documents :
   // retour · icône · (titre éditable + statut empilé) · sous-titre/dimensions · étoile
   // · corbeille · recherche · actions · HeaderActions. Modifier ICI change tout à
-  // l'identique partout — y compris le thème sombre.
+  // l'identique partout - y compris le thème sombre.
   const backBtn = onBack && (
     <button onClick={onBack}
       className={`p-1.5 rounded flex-shrink-0 transition-colors ${tbDark ? 'hover:bg-white/10' : 'hover:bg-surface-2 text-text-secondary'}`}
@@ -191,7 +191,7 @@ export function WorkspaceShell({
     </button>
   )
 
-  // Mobile : topbar sur DEUX rangées façon Word mobile — rangée 1 = titre entier
+  // Mobile : topbar sur DEUX rangées façon Word mobile - rangée 1 = titre entier
   // centré (+ statut), rangée 2 = retour à gauche, actions à droite (défilables).
   // Recherche interne, corbeille, sous-titre et docInfo restent hors mobile.
   const topbar = isMobileTb ? (
@@ -250,7 +250,7 @@ export function WorkspaceShell({
       {topbarActions}
       {chromeless && !hideHeaderActions && <HeaderActions compact dark={tbDark} />}
 
-      {/* Mode recherche — recouvre TOUTE la topbar : retour + champ centré, le reste
+      {/* Mode recherche - recouvre TOUTE la topbar : retour + champ centré, le reste
           masqué (fond opaque = topbarBg). Escape ou la flèche ferment. */}
       {searchEl && searchOpen && (
         <div

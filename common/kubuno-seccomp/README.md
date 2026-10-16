@@ -13,7 +13,7 @@ kubuno-seccomp = { git = "https://github.com/kubuno/core", tag = "seccomp-v0.1.1
 
 Kubuno's security objective here is simple: **no user of the application must be
 able to run a command on the machine that hosts it**. Most modules never need to
-start an external binary in normal operation — the database is reached over the
+start an external binary in normal operation - the database is reached over the
 network, inter-module calls are HTTP, Git goes through an in-process library, and
 cryptography, images and scripting all run in-process. For those modules the
 property can be made *unbreakable at the kernel level*: after the filter is
@@ -60,8 +60,8 @@ mail, maps, notes, office, paintsharp, photos, tasks and wiki.
 
 It must **not** be installed in a process that legitimately runs programs:
 
-- **drive** — remote mounts rely on external clients;
-- **media** — transcoding and probing run `ffmpeg` / `ffprobe`;
+- **drive** - remote mounts rely on external clients;
+- **media** - transcoding and probing run `ffmpeg` / `ffprobe`;
 - **the core** itself.
 
 ## Limits

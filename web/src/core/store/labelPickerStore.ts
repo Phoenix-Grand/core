@@ -19,7 +19,7 @@ interface LabelPickerStore {
   close: (changed: boolean) => void
 }
 
-/** djb2 — stable key for id-less payloads (e.g. a bare maps point). */
+/** djb2 - stable key for id-less payloads (e.g. a bare maps point). */
 function hash(s: string): string {
   let h = 5381
   for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) >>> 0

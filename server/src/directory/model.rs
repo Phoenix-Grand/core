@@ -4,7 +4,7 @@
 //! The row type and the admin-facing view are kept apart for the same reason as
 //! [`crate::models::oauth_provider`]: the row carries the encrypted service
 //! password, the view carries a boolean. Nothing that can be serialised to a
-//! client is ever built from the row by accident — the conversion drops it.
+//! client is ever built from the row by accident - the conversion drops it.
 
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
@@ -17,7 +17,7 @@ use uuid::Uuid;
 #[serde(rename_all = "lowercase")]
 pub enum Security {
     /// Plain LDAP on 389. Credentials cross the wire in the clear during the
-    /// bind — only defensible on a loopback or an already-encrypted link.
+    /// bind - only defensible on a loopback or an already-encrypted link.
     None,
     /// Connect in the clear, then upgrade with the StartTLS extended operation.
     Starttls,
@@ -34,8 +34,8 @@ impl Security {
         }
     }
 
-    /// Parses the stored string. Anything unknown — a typo, or a value written
-    /// by a future version — resolves to StartTLS rather than to plain LDAP: an
+    /// Parses the stored string. Anything unknown - a typo, or a value written
+    /// by a future version - resolves to StartTLS rather than to plain LDAP: an
     /// unreadable setting must never be the reason a bind password crosses the
     /// network unprotected.
     pub fn parse(value: &str) -> Self {
@@ -108,8 +108,8 @@ impl Scope {
 /// Deliberately not an open set, and deliberately without a `Delete`.
 ///
 /// A deletion cascades through every module's data and cannot be undone, and
-/// the input that would trigger it — "the directory did not return this person"
-/// — is exactly what a network incident, an expired service password or a typo
+/// the input that would trigger it - "the directory did not return this person"
+/// - is exactly what a network incident, an expired service password or a typo
 /// in the base DN produces. Disabling is reversible by one click; deleting is
 /// reversible by a restore.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -158,7 +158,7 @@ pub struct AttributeMap {
 }
 
 impl AttributeMap {
-    /// A standard LDAPv3 directory: OpenLDAP, 389 Directory Server, ApacheDS —
+    /// A standard LDAPv3 directory: OpenLDAP, 389 Directory Server, ApacheDS -
     /// anything speaking `inetOrgPerson`.
     pub fn standard() -> Self {
         Self {
@@ -174,7 +174,7 @@ impl AttributeMap {
     ///
     /// `sAMAccountName` rather than `uid` (which AD does not populate),
     /// `objectGUID` rather than `entryUUID`, and `memberOf` on the person's own
-    /// entry — AD maintains it, so a second search over the groups is wasted
+    /// entry - AD maintains it, so a second search over the groups is wasted
     /// work on a forest of any size.
     pub fn active_directory() -> Self {
         Self {
@@ -284,7 +284,7 @@ impl LdapDirectory {
         }
     }
 
-    /// `ldap://host:port` — what `ldap3` connects to. StartTLS keeps the plain
+    /// `ldap://host:port` - what `ldap3` connects to. StartTLS keeps the plain
     /// scheme; the upgrade is a connection setting, not a URL.
     pub fn url(&self) -> String {
         let port = self.port.clamp(1, 65_535);
@@ -305,7 +305,7 @@ impl LdapDirectory {
 // ── Admin-facing view ────────────────────────────────────────────────────────
 
 /// Everything an administrator may read. The service password is reported as a
-/// boolean and by nothing else — not masked, not by its length, both of which
+/// boolean and by nothing else - not masked, not by its length, both of which
 /// leak. The private certificate authority *is* returned: it is public material
 /// by construction, and an operator has to be able to see what they pasted.
 #[derive(Debug, Clone, Serialize)]
@@ -505,7 +505,7 @@ pub struct UpdateDirectoryDto {
     pub on_missing:        Option<String>,
     pub allow_signup:      Option<bool>,
     pub default_org_unit_id: Option<Uuid>,
-    /// `Option<Uuid>` cannot say "set this back to nothing" — absent and null
+    /// `Option<Uuid>` cannot say "set this back to nothing" - absent and null
     /// are the same JSON. This flag is how "no unit" is expressed on an update;
     /// without it, an operator could choose a unit and never un-choose it.
     #[serde(default)]

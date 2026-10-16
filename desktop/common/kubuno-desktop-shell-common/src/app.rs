@@ -87,7 +87,7 @@ impl TextUi {
     pub fn render() -> Vec<String> {
         let instances = backend::list_instances();
         let mut lines = vec![format!(
-            "Kubuno Desktop{} — {} sync folder(s)",
+            "Kubuno Desktop{} - {} sync folder(s)",
             if backend::is_sample() { " (sample)" } else { "" },
             instances.len()
         )];

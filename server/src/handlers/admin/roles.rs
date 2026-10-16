@@ -3,7 +3,7 @@
 //! Two objects, deliberately kept apart (see [`crate::authz`]): a **role** is a
 //! named bag of privileges, an **assignment** binds a subject to a role over a
 //! scope. Everything here is audited, and every write invalidates the resolution
-//! cache — a revoked privilege that keeps working for a minute is a revocation
+//! cache - a revoked privilege that keeps working for a minute is a revocation
 //! that did not happen.
 //!
 //! ## Who may do what here
@@ -11,7 +11,7 @@
 //! Defining roles is **superuser-only** (guard 1): whoever can write a role can
 //! write themselves a role, so no amount of per-privilege gating makes role
 //! editing safely delegable. Granting an existing role needs
-//! `core.roles.manage` *and* passes guard 2 — you cannot hand out what you do
+//! `core.roles.manage` *and* passes guard 2 - you cannot hand out what you do
 //! not hold, nor over a scope wider than your own.
 
 use axum::{
@@ -110,7 +110,7 @@ async fn privileges_of(db: &DbPool, role_id: Uuid) -> Result<Vec<String>, AppErr
 
 // ── Catalogue ─────────────────────────────────────────────────────────────────
 
-/// `GET /admin/privileges` — the catalogue, orphans included and flagged.
+/// `GET /admin/privileges` - the catalogue, orphans included and flagged.
 pub async fn list_privileges(
     State(state): State<AppState>,
     ctx: AdminCtx,
@@ -178,7 +178,7 @@ pub async fn list_roles(
         .map_err(|e| { tracing::error!(error = %e, "list_roles: assignments"); AppError::Database(e) })?;
 
     // A role is delegable to an organisational unit only when *every* one of its
-    // privileges is scopable — surfaced here so the console can say so before
+    // privileges is scopable - surfaced here so the console can say so before
     // the operator discovers it on a refusal.
     let non_scopable_sql = format!(
         "SELECT rp.role_id, {} \
@@ -284,7 +284,7 @@ async fn validate_privileges(db: &DbPool, keys_in: &[String]) -> Result<(), AppE
     Ok(())
 }
 
-/// `POST /admin/roles` — superuser only (guard 1).
+/// `POST /admin/roles` - superuser only (guard 1).
 pub async fn create_role(
     State(state): State<AppState>,
     ctx: AdminCtx,
@@ -363,7 +363,7 @@ pub struct UpdateRoleDto {
     pub privileges: Option<Vec<String>>,
 }
 
-/// `PATCH /admin/roles/:id` — superuser only (guard 1).
+/// `PATCH /admin/roles/:id` - superuser only (guard 1).
 pub async fn update_role(
     State(state): State<AppState>,
     ctx: AdminCtx,
@@ -466,7 +466,7 @@ pub async fn update_role(
         }
 
         // Widening a role can make an existing org-unit-scoped assignment carry a
-        // non-scopable privilege — the exact situation the scopability rule
+        // non-scopable privilege - the exact situation the scopability rule
         // exists to prevent, arrived at by the back door. Refuse the edit rather
         // than leave the instance in a state the rule says is impossible.
         let broken_sql = format!(
@@ -504,7 +504,7 @@ pub async fn update_role(
 
     // The resulting privilege set is known without another read: it is either the
     // freshly written list (sorted as the old `ORDER BY privilege_key` read it) or
-    // — when the request left privileges untouched — the "before" set.
+    // - when the request left privileges untouched - the "before" set.
     let after_privileges = match dto.privileges.as_ref() {
         Some(p) => {
             let mut v: Vec<String> = p.clone();
@@ -527,7 +527,7 @@ pub async fn update_role(
     Ok(Json(json!({ "role": role, "privileges": after_privileges })))
 }
 
-/// `DELETE /admin/roles/:id` — superuser only, system roles protected.
+/// `DELETE /admin/roles/:id` - superuser only, system roles protected.
 pub async fn delete_role(
     State(state): State<AppState>,
     ctx: AdminCtx,
@@ -675,7 +675,7 @@ fn assignment_snapshot(row: &AssignmentRow) -> Value {
     )
 }
 
-/// `POST /admin/role-assignments` — grants a role to a subject over a scope.
+/// `POST /admin/role-assignments` - grants a role to a subject over a scope.
 ///
 /// Runs, in order: the privilege check, the scopability rule, and guard 2.
 pub async fn create_assignment(
@@ -817,7 +817,7 @@ pub async fn create_assignment(
     Ok((StatusCode::CREATED, Json(json!({ "assignment": row }))))
 }
 
-/// `DELETE /admin/role-assignments/:id` — revokes a grant.
+/// `DELETE /admin/role-assignments/:id` - revokes a grant.
 ///
 /// Symmetric with the grant: you may only take away what you could have given
 /// (guard 2), and never the last super-administrator (guard 4).
@@ -882,7 +882,7 @@ pub async fn delete_assignment(
     Ok(Json(json!({ "message": "Affectation retirée" })))
 }
 
-/// `GET /admin/users/:id/privileges` — what one account effectively holds.
+/// `GET /admin/users/:id/privileges` - what one account effectively holds.
 ///
 /// The question an operator actually asks ("why can this person do that?"), and
 /// the one a flat list of assignments answers badly once groups and subtrees are

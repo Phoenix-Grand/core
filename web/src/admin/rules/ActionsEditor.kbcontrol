@@ -1,4 +1,4 @@
-<!-- ActionsEditor — converted from ActionsEditor.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- ActionsEditor - converted from ActionsEditor.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl x:Props="Props">
   <Panel Class="min-w-0">
     <Label Text="{Res admin.rl_actions_empty}"

@@ -19,20 +19,20 @@ ever bundled.
 
 ## What it provides
 
-- **The code-behind model** — `View` (base of every generated `ViewBase`), the `@bind` accessor decorator,
+- **The code-behind model** - `View` (base of every generated `ViewBase`), the `@bind` accessor decorator,
   `use()` for React hooks, `t()` for resources, `invalidate()`, `X.component()` to get a React component.
-- **Element handles** — one typed handle per `x:Name` (`this.save.text = 'Saved'`, `this.save.enabled`,
+- **Element handles** - one typed handle per `x:Name` (`this.save.text = 'Saved'`, `this.save.enabled`,
   `focus()`, `element`), with an interface per element (`Button`, `TextField`, `CheckBox`…).
-- **Event args** — `EventArgs`, `MouseEventArgs`, `KeyEventArgs`, `CancelEventArgs`,
+- **Event args** - `EventArgs`, `MouseEventArgs`, `KeyEventArgs`, `CancelEventArgs`,
   `ValueChangedEventArgs`, `ItemEventArgs`… (`e.handled` stops propagation, `e.cancel` prevents the default).
-- **Bindings** — one-way, two-way, one-time and one-way-to-source; `UpdateSourceTrigger=LostFocus`;
+- **Bindings** - one-way, two-way, one-time and one-way-to-source; `UpdateSourceTrigger=LostFocus`;
   converters (`Not`, `IsEmpty`, `ToUpper`, `Equals`, `BoolToText`, `Count`… and `registerConverter`);
   .NET-style `StringFormat` (`N2`, `C`, `dd/MM/yyyy`, `'{0} items'`); `FallbackValue` and `TargetNullValue`.
-- **Runtime elements** — `Repeater` (an item template per row), `Timer`, `Query` / `Mutation` (React Query,
+- **Runtime elements** - `Repeater` (an item template per row), `Timer`, `Query` / `Mutation` (React Query,
   with `QueryHandle` / `MutationHandle`), `ReactHost`, `defineControl` for custom controls, `KbView`.
-- **Dialogs** — `MessageBox.show(…)` and `Dialog.show(…)`, on the host's `ConfirmDialog` and
+- **Dialogs** - `MessageBox.show(…)` and `Dialog.show(…)`, on the host's `ConfirmDialog` and
   `FloatingWindow` (never browser dialogs).
-- **Compatibility** — `VIEWS_ABI`: a module exports `viewsAbi` next to `sdkVersion`; the host refuses a
+- **Compatibility** - `VIEWS_ABI`: a module exports `viewsAbi` next to `sdkVersion`; the host refuses a
   module whose views were compiled for another plan ABI.
 
 ## Install

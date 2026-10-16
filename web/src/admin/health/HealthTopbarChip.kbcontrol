@@ -1,4 +1,4 @@
-<!-- HealthTopbarChip — converted from HealthTopbarChip.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- HealthTopbarChip - converted from HealthTopbarChip.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl>
   <Panel AccessibleRole="StatusBar" Visible="{Binding show_main}" Class="{Binding div_class}">
     <!-- TODO(views-migrate): <Icon> is no .kbview element (a local or dynamic component) -->

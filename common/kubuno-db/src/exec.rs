@@ -6,7 +6,7 @@
 //! and this layer picks the driver, rewrites the placeholders through
 //! [`crate::sql::prepare`], binds the [`DbValue`]s and decodes the result.
 //!
-//! sqlx underneath does **no** dialect translation — the SQL text is already
+//! sqlx underneath does **no** dialect translation - the SQL text is already
 //! correct for the engine (that is the [`crate::dialect`] layer's job); sqlx
 //! only carries it and encodes/decodes the parameters.
 //!
@@ -57,7 +57,7 @@ pub(crate) enum PoolKind {
 }
 
 impl DbPool {
-    /// The concrete pool behind this handle — used by [`crate::pool::MigratorSet`]
+    /// The concrete pool behind this handle - used by [`crate::pool::MigratorSet`]
     /// to hand each engine's migrator its own driver pool.
     pub(crate) fn kind(&self) -> &PoolKind {
         &self.kind
@@ -153,7 +153,7 @@ macro_rules! bind_all {
     }};
 }
 
-/// A row read back without a target struct — for the [`crate::returning`]
+/// A row read back without a target struct - for the [`crate::returning`]
 /// helpers and any place that maps columns by hand.
 pub enum DbRow {
     Pg(PgRow),
@@ -419,7 +419,7 @@ impl DbPool {
         }
     }
 
-    /// Every row of a query, without a target struct — for callers that map
+    /// Every row of a query, without a target struct - for callers that map
     /// columns by name at run time (the portable backup writer). On SQLite this
     /// retries a transient `BUSY`/`LOCKED`.
     pub async fn fetch_all_row(

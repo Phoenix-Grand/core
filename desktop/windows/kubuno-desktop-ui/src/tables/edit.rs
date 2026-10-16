@@ -1,4 +1,4 @@
-//! In-place cell editing of a [`DataTable`] — WinForms `DataGridView` with its default
+//! In-place cell editing of a [`DataTable`] - WinForms `DataGridView` with its default
 //! `EditMode = EditOnKeystrokeOrF2`.
 //!
 //! Off unless [`DataTable::editable`] is set (a hand-built table keeps its look and its keys), and
@@ -8,12 +8,12 @@
 //! clipboard, the undo history, the context menu and the IME composition are the text field's own.
 //!
 //! The table never writes a value anywhere: it says what the user asked for as a [`CellAction`]
-//! and the caller (a view node, a page) decides — raises its cancelable events, writes the data
+//! and the caller (a view node, a page) decides - raises its cancelable events, writes the data
 //! back, then calls [`DataTable::begin_edit`] / [`DataTable::end_edit`] / [`DataTable::cancel_edit`].
 //!
 //! | input (the table holds the focus) | not editing | editing |
 //! |---|---|---|
-//! | F2 | [`CellAction::BeginEdit`] (the cell's text, caret at the end) | — |
+//! | F2 | [`CellAction::BeginEdit`] (the cell's text, caret at the end) | - |
 //! | a character typed | [`CellAction::BeginEdit`] with that text | typed into the editor |
 //! | double-click on a cell | [`CellAction::BeginEdit`] (whole text selected) | the editor's own |
 //! | ← → | the current cell moves one column | the caret moves |
@@ -21,7 +21,7 @@
 //! | Tab / Shift+Tab | next / previous cell, wrapping to the next / previous row; past the last / first cell [`CellAction::LeaveGrid`] | [`CellAction::Commit`] then move the same way |
 //! | Enter | [`crate::tables::TableEvent::RowActivated`] (unchanged) | [`CellAction::Commit`] then down |
 //! | Escape | [`CellAction::CancelRowEdit`] | [`CellAction::CancelEdit`] |
-//! | a click elsewhere, the focus leaving | — | [`CellAction::Commit`] (the caller commits, then moves) |
+//! | a click elsewhere, the focus leaving | - | [`CellAction::Commit`] (the caller commits, then moves) |
 
 use kubuno_drive_desktop_app_controls::{Canvas, Rect};
 use kubuno_desktop_controls::host::{self, vk, InputEvent, Modifiers};
@@ -51,7 +51,7 @@ pub enum CellMove {
     Previous,
 }
 
-/// What the user asked the table for — see the module doc for which input gives which.
+/// What the user asked the table for - see the module doc for which input gives which.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum CellAction {
     /// Begin editing `row` (an item index) / `column` (a **visible** column). `initial`: the text
@@ -129,7 +129,7 @@ impl DataTable {
         self.editable && self.visible_columns().get(column).is_some_and(|c| !has_flag(c, flags::READ_ONLY))
     }
 
-    /// The current cell — `(item row, visible column)`, WinForms `CurrentCell` — once the
+    /// The current cell - `(item row, visible column)`, WinForms `CurrentCell` - once the
     /// keyboard cursor stands on a row.
     pub fn current_cell(&self) -> Option<(usize, usize)> {
         let row = self.cursor.filter(|&r| r < self.list.item_count())?;
@@ -231,7 +231,7 @@ impl DataTable {
         self.editor.take()
     }
 
-    /// The box the editor is laid over — the cell's whole column span on its row, inset by
+    /// The box the editor is laid over - the cell's whole column span on its row, inset by
     /// 2 DIP so the text field's border shows inside the row. `None` without an editor or when
     /// the row is not laid out as a table row on this page.
     pub fn editor_rect(&self, bounds: Rect) -> Option<Rect> {
@@ -339,7 +339,7 @@ impl DataTable {
 
     /// One frame of the editor, before painting: the table's own keys ([`DataTable::editor_key`])
     /// are taken from the host's queue first, then the text field runs (pointer, typing, caret,
-    /// clipboard, IME) with `input` — whose `focused` says whether the TABLE holds the focus.
+    /// clipboard, IME) with `input` - whose `focused` says whether the TABLE holds the focus.
     /// Returns the action of the first table key pressed this frame, else a
     /// [`CellAction::Commit`] with [`CellMove::Stay`] when the table lost the focus.
     pub fn update_editor(&mut self, c: &dyn Canvas, bounds: Rect, input: &EditInput) -> Option<CellAction> {

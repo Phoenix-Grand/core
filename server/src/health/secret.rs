@@ -1,10 +1,10 @@
-//! Verdict on the shared internal secret — never its value.
+//! Verdict on the shared internal secret - never its value.
 //!
 //! `ServerSettings::validate_internal_secret` already refuses an empty secret
 //! and anything under 32 bytes at startup, which is a length test and nothing
 //! more: a secret of thirty-two `a`s boots the server happily. Since
 //! `X-Internal-Secret` is the only thing standing between the outside world and
-//! `/internal/*` — module registration, event publication — a guessable value
+//! `/internal/*` - module registration, event publication - a guessable value
 //! there is a full compromise, so the health page grades it.
 //!
 //! Everything in this file returns a VERDICT. There is deliberately no function
@@ -23,7 +23,7 @@ pub enum SecretVerdict {
     /// Under [`MIN_LEN`] bytes. Startup refuses this outright, so seeing it
     /// here means the value changed under a running process.
     TooShort,
-    /// Contains a word from the placeholder list — the value shipped in the
+    /// Contains a word from the placeholder list - the value shipped in the
     /// example configuration, or an obvious stand-in.
     Placeholder,
     /// Long enough, but with too little variety to be random (a repeated
@@ -96,7 +96,7 @@ pub fn grade(secret: &str) -> SecretVerdict {
     SecretVerdict::Strong
 }
 
-/// True when the value is one short block repeated — the shape of a secret
+/// True when the value is one short block repeated - the shape of a secret
 /// padded to length rather than generated.
 ///
 /// "Repeated" means at least three times: two halves that happen to match is
@@ -116,7 +116,7 @@ fn is_repetitive(value: &str) -> bool {
 }
 
 /// Shannon entropy of the value, in bits: `len × H` over the observed character
-/// distribution. It is an estimate, not a proof — but it separates a random
+/// distribution. It is an estimate, not a proof - but it separates a random
 /// 48-character token from `abababab…` without needing a dictionary, and it
 /// never has to hold on to the value.
 fn shannon_bits(value: &str) -> f64 {
@@ -149,7 +149,7 @@ mod tests {
         assert_eq!(grade(""), SecretVerdict::Missing);
         assert_eq!(grade("   "), SecretVerdict::Missing);
         assert_eq!(grade("short"), SecretVerdict::TooShort);
-        // 31 bytes — one under the floor.
+        // 31 bytes - one under the floor.
         assert_eq!(grade(&"k".repeat(31)), SecretVerdict::TooShort);
     }
 

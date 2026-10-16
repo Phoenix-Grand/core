@@ -1,4 +1,4 @@
-<!-- StartPageDemo — converted from StartPageDemo.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
+<!-- StartPageDemo - converted from StartPageDemo.tsx by @kubuno/views-migrate (partial: see the TODO comments and the report). -->
 <UserControl>
   <Panel Class="rounded-xl border border-border overflow-hidden bg-white [height:300px]">
     <!-- TODO(views-migrate): <StartPage> is no .kbview element (@ui#StartPage) -->

@@ -1,4 +1,4 @@
-// Label (étiquette) icon — traced shape provided by the user: a horizontal tag with a round eyelet.
+// Label (étiquette) icon - traced shape provided by the user: a horizontal tag with a round eyelet.
 // Colored through `currentColor`: `className="text-primary"`, `style={{ color: label.color }}`, etc.
 // The eyelet is a hole thanks to fill-rule="evenodd" (outline + circle in a single path).
 interface LabelIconProps {

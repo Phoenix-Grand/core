@@ -4,8 +4,8 @@
 //!
 //! ## Why `COPY` text, and why gzip
 //!
-//! `COPY … TO STDOUT` serialises every PostgreSQL type to text natively — the
-//! same representation `pg_dump` writes — so a dump covers `bytea`, `inet`,
+//! `COPY … TO STDOUT` serialises every PostgreSQL type to text natively - the
+//! same representation `pg_dump` writes - so a dump covers `bytea`, `inet`,
 //! arrays, `numeric`, `timestamptz` and sequences without a per-type codec. The
 //! stream is gzip-compressed on the way to disk (`.sql.gz`), streamed so a large
 //! instance never sits in RAM.
@@ -25,7 +25,7 @@
 //! * **Dependency order**, across schemas (Kahn over `pg_constraint`), because a
 //!   foreign key is a system trigger enforced whatever else is disabled.
 //! * **User triggers off during the load** (`DISABLE TRIGGER USER`, owner
-//!   privilege — not the superuser-only `session_replication_role`), so the
+//!   privilege - not the superuser-only `session_replication_role`), so the
 //!   `core.settings` mirror trigger does not collide with the rows it restores.
 //! * **Sequences.** Emitted as `setval` after the data.
 //!
@@ -33,8 +33,8 @@
 //!
 //! It never spawns anything, never reads the configuration file, and never
 //! writes a connection string, a password or a token into the file, the file
-//! name or a log line. The dump does contain password **hashes** — that is what
-//! a database backup is — which is why the directory is `0700` and the file
+//! name or a log line. The dump does contain password **hashes** - that is what
+//! a database backup is - which is why the directory is `0700` and the file
 //! `0600`.
 
 use std::collections::HashSet;
@@ -69,7 +69,7 @@ pub struct DumpOutcome {
     pub rows: u64,
 }
 
-/// Recognised by the retention pass — delegated so the rule lives in one place.
+/// Recognised by the retention pass - delegated so the rule lives in one place.
 pub fn is_dump_file(name: &str) -> bool {
     archive::is_dump_file(name)
 }
@@ -320,8 +320,8 @@ async fn write_into(
     // ── Header ────────────────────────────────────────────────────────────────
     let header = format!(
         "--\n\
-         -- Kubuno — logical DATA-ONLY backup of every Kubuno schema (PostgreSQL COPY)\n\
-         -- Kubuno — sauvegarde logique des DONNÉES de tous les schémas Kubuno\n\
+         -- Kubuno - logical DATA-ONLY backup of every Kubuno schema (PostgreSQL COPY)\n\
+         -- Kubuno - sauvegarde logique des DONNÉES de tous les schémas Kubuno\n\
          --\n\
          -- Version Kubuno : {}\n\
          -- Produite le / taken at : {}\n\
@@ -518,7 +518,7 @@ async fn restore_into(
     let mut copy_blocks: u64 = 0;
     while let Some(line) = lines.next_line().await.context("Lecture de l'archive")? {
         if let Some(stmt) = copy_statement(&line) {
-            // Guard: refuse a COPY into a table outside the covered set — an
+            // Guard: refuse a COPY into a table outside the covered set - an
             // archive must not steer a write anywhere else.
             if let Some(target) = copy_target(&line) {
                 if !covered.contains(&target) {
