@@ -89,7 +89,9 @@ number at release time, and CI publishes that section as the GitHub Release note
   the phone's secret store (Android Keystore: AES-256-GCM under a Keystore key, files private to the app; iOS:
   Keychain), so reopening the app goes straight back to the account, and Sign out closes the session on the server
   and forgets it on the phone. A per-installation device key is sent with every request, and network calls run off
-  the UI thread on a shared background runtime. Verified on the Android emulator against a mock Kubuno core that
+  the UI thread on a shared background runtime. On iOS the shell now also prints the engine's and the app's logs to
+  the run console. Verified in the iOS Simulator (the Keychain keeps the phone's state across launches) and on the
+  Android emulator against a mock Kubuno core that
   reproduces the real auth contract (sign-in, restore after a restart with token rotation, sign-out, secrets
   encrypted on disk, TLS to a public HTTPS host), and by integration tests (rotation single-flight, a rejected access
   token refreshed and retried, a replayed refresh token treated as an expired session, a transient failure that keeps
