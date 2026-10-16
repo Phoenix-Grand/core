@@ -60,6 +60,28 @@ pub const TOOLBAR_H: f32 = 56.0;
 /// The new button (`Button size="sm"`): `h-8`.
 const BUTTON_H: f32 = 32.0;
 const WHEEL_STEP: f32 = 48.0;
+/// The line height of the empty / signed-out hint of the recent column.
+const HINT_LINE_H: f32 = 18.0;
+
+/// Greedy word wrap: the words of `text` in lines no wider than `width` (as `measure` says). A word wider than the
+/// width gets a line of its own (drawn clipped) rather than being cut.
+fn wrap_lines(measure: impl Fn(&str) -> f32, text: &str, width: f32) -> Vec<String> {
+    let mut lines: Vec<String> = Vec::new();
+    let mut line = String::new();
+    for word in text.split_whitespace() {
+        let candidate = if line.is_empty() { word.to_string() } else { format!("{line} {word}") };
+        if line.is_empty() || measure(&candidate) <= width {
+            line = candidate;
+        } else {
+            lines.push(std::mem::take(&mut line));
+            line = word.to_string();
+        }
+    }
+    if !line.is_empty() {
+        lines.push(line);
+    }
+    lines
+}
 
 /// What the pointer is over.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -470,7 +492,12 @@ impl ViewNode for StartPageNode {
                 let cy = (body.top + body.bottom) / 2.0;
                 icon(item_icon, (body.left + body.right) / 2.0, cy - 18.0, 32.0, &with_alpha(t.text_tertiary, 0.3));
                 let hint = if other.is_some() { self.recent_empty.resolve(vm) } else { self.signed_out.resolve(vm) };
-                c.text(&hint, &Rect::new(body.left + 16.0, cy + 4.0, body.right - 16.0, cy + 44.0), &f.caption, &t.text_tertiary, true);
+                // Wrapped to the column (a translated hint is often longer than the column is wide), each line centred.
+                let lines = wrap_lines(|s| c.measure(s, &f.caption), &hint, body.right - body.left - 32.0);
+                for (i, line) in lines.iter().enumerate() {
+                    let top = cy + 4.0 + i as f32 * HINT_LINE_H;
+                    c.text(line, &Rect::new(body.left + 16.0, top, body.right - 16.0, top + HINT_LINE_H), &f.caption, &t.text_tertiary, true);
+                }
             }
         }
         // The column's edge (the resize handle's line).
@@ -534,6 +561,17 @@ impl ViewNode for StartPageNode {
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn hints_wrap_to_the_column() {
+        // 10 DIP per character: a 100 DIP column holds 10 characters per line.
+        let m = |s: &str| s.chars().count() as f32 * 10.0;
+        let lines = super::wrap_lines(m, "Sign in to Kubuno Desktop to see your files.", 100.0);
+        assert_eq!(lines, ["Sign in to", "Kubuno", "Desktop to", "see your", "files."]);
+        assert!(lines.iter().all(|l| m(l) <= 100.0));
+        assert_eq!(super::wrap_lines(m, "Supercalifragilistic word", 100.0), ["Supercalifragilistic", "word"]);
+        assert!(super::wrap_lines(m, "  ", 100.0).is_empty());
+    }
+
     use super::*;
 
     #[test]
