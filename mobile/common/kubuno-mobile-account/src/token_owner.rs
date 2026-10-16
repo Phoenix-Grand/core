@@ -10,7 +10,7 @@
 //! error, 429 or 5xx is transient and must never be reported as a lost session.
 
 use std::sync::Arc;
-use std::time::{SystemTime, UNIX_EPOCH};
+use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
 
 use async_trait::async_trait;
 use kubuno_desktop_api_client::{AccessToken, ApiError, ApiRequest, AuthError, TokenSource};
@@ -24,12 +24,18 @@ use crate::{AccountError, AUTH_REFRESH};
 /// Refresh once the access token has this many seconds or fewer left (or is missing / opaque).
 const REFRESH_SKEW_S: i64 = 60;
 
+/// After a transient refresh failure (network, 429, 5xx), wait this long before trying again: every request in the
+/// meantime fails fast as transient instead of hammering the server (refresh is rate-limited to 60/min).
+const COOLDOWN: Duration = Duration::from_secs(45);
+
 /// The mutable part, behind the refresh lock.
 struct State {
     /// The current access token, if one has been obtained and is cached.
     access: Option<AccessToken>,
     /// The current (un-spent) refresh token.
     refresh: String,
+    /// No refresh is attempted before this instant (set after a transient failure).
+    cooldown_until: Option<Instant>,
 }
 
 /// Owns an account's tokens and hands out access tokens. Build it from a fresh sign-in with [`TokenOwner::adopt`], or
@@ -57,7 +63,11 @@ impl TokenOwner {
             device_key: account.device_key.clone(),
             secret_key,
             store,
-            state: Mutex::new(State { access: Some(AccessToken::new(tokens.access_token)), refresh: tokens.refresh_token }),
+            state: Mutex::new(State {
+                access: Some(AccessToken::new(tokens.access_token)),
+                refresh: tokens.refresh_token,
+                cooldown_until: None,
+            }),
         })
     }
 
@@ -72,8 +82,13 @@ impl TokenOwner {
             device_key: account.device_key.clone(),
             secret_key,
             store,
-            state: Mutex::new(State { access: None, refresh }),
+            state: Mutex::new(State { access: None, refresh, cooldown_until: None }),
         }))
+    }
+
+    /// The current refresh token (to close the session on the server at sign-out). Never log it.
+    pub(crate) async fn current_refresh(&self) -> String {
+        self.state.lock().await.refresh.clone()
     }
 
     /// The server this owner authenticates against.
@@ -96,12 +111,26 @@ impl TokenOwner {
     /// Refresh the tokens (the caller holds the lock). Writes the rotated refresh token to the secret store **before**
     /// it is used, so a crash never leaves us with a spent token and no record of its successor.
     async fn refresh_locked(&self, state: &mut State) -> Result<AccessToken, AuthError> {
+        if state.cooldown_until.is_some_and(|t| Instant::now() < t) {
+            return Err(AuthError::Transient("cooling down after a failed refresh".into()));
+        }
         let req = ApiRequest::post(AUTH_REFRESH)
             .json(serde_json::json!({ "refresh_token": state.refresh }))
             .unauthenticated();
-        let resp = self.refresh_api.send(req).await.map_err(refresh_error)?;
-        let tokens: NativeTokens =
-            resp.json().map_err(|e| AuthError::Transient(format!("refresh response: {e}")))?;
+        let result = match self.refresh_api.send(req).await {
+            Ok(resp) => resp.json::<NativeTokens>().map_err(|e| AuthError::Transient(format!("refresh response: {e}"))),
+            Err(e) => Err(refresh_error(e)),
+        };
+        let tokens = match result {
+            Ok(tokens) => tokens,
+            Err(e) => {
+                if matches!(e, AuthError::Transient(_)) {
+                    state.cooldown_until = Some(Instant::now() + COOLDOWN);
+                }
+                return Err(e);
+            }
+        };
+        state.cooldown_until = None;
 
         // Persist the rotated refresh token first. If the store write fails we keep serving this process from memory
         // (the token is valid) but log it: on next launch the restore would otherwise use the spent token.

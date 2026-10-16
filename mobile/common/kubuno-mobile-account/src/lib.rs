@@ -13,19 +13,28 @@
 //!   phone is the owner — and is the [`TokenSource`] the API client refreshes access tokens from, with rotation and
 //!   single-flight.
 //!
-//! Typical flow: `login` → (`verify_totp`) → [`TokenOwner::adopt`] → [`authed_client`] with the owner. On a later
-//! launch: [`TokenOwner::restore`] → [`authed_client`]. Nothing here logs a token.
+//! - **Phone state.** A per-installation device key and the book of accounts signed in here ([`device_key`],
+//!   [`accounts`]), next to the refresh tokens in the secret store.
+//!
+//! Typical flow: [`probe_server`] → [`login`] → ([`verify_totp`]) → [`Session::adopt`]; at a later launch
+//! [`Session::restore_last`]. Network calls run on [`spawn`] (off the UI thread). Nothing here logs a token.
 
 mod auth;
+mod device;
 mod http;
 mod model;
+mod platform;
 mod secret;
+mod session;
 mod token_owner;
 
 pub use auth::{login, verify_totp, LoginOptions, LoginOutcome, TotpPending};
+pub use device::{accounts, device_key, forget_account, remember};
 pub use http::{authed_client, unauth_client, user_agent};
 pub use model::{Account, NativeTokens, User};
+pub use platform::{platform_store, set_platform_store, spawn};
 pub use secret::{refresh_key, MemorySecretStore, SecretError, SecretStore};
+pub use session::{normalize_server, probe_server, Session, HEALTH, ME};
 pub use token_owner::TokenOwner;
 
 /// The transport, re-exported so callers (and the app) use the same types without depending on the desktop crate
@@ -51,4 +60,18 @@ pub enum AccountError {
     Secret(#[from] SecretError),
     #[error("protocol error: {0}")]
     Protocol(String),
+    /// What was typed is not a server address.
+    #[error("invalid server address")]
+    InvalidServer,
+    /// The address answers, but not as a Kubuno server (no `/health` document).
+    #[error("not a Kubuno server")]
+    NotKubuno,
+}
+
+impl AccountError {
+    /// The session is over (the refresh token was rejected): the user must sign in again. Any other failure (network,
+    /// server error) leaves the session intact.
+    pub fn is_session_expired(&self) -> bool {
+        matches!(self, AccountError::Api(e) if e.class() == ErrorClass::SessionExpired)
+    }
 }

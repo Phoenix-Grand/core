@@ -23,9 +23,11 @@ mod text_input;
 mod view;
 pub use data::{set_data, Scope, Value};
 pub use tasks::{post_ui, run_ui_tasks, set_waker};
+/// Text input of the general input controls: the shells translate keys into [`InputKey`] and pass them to
+/// [`input_key`]; apps read and set field values ([`input_value`], [`input_set_value`]) and may move the focus.
 pub use text_input::{
-    backspace as input_backspace, blur as input_blur, buffer as input_buffer, focus as input_focus,
-    focused as input_focused, insert_str as input_str, submit as input_submit,
+    blur as input_blur, clear as input_clear, focus as input_focus, focused as input_focused, handle_key as input_key,
+    set_value as input_set_value, value as input_value, FieldSpec, Key as InputKey,
 };
 pub use host::{register_host_control, HostCanvas, HostControl, HostElement, HostRect};
 pub use images::{decode_jpeg, register_image};
@@ -61,20 +63,39 @@ pub struct App {
     pub view_index: Option<fn() -> usize>,
 }
 
-/// A resolved tap on a view: the top-most element with an `x:Name` or an event under the touch, and its `OnClick`
-/// handler (empty if it has a name but no click handler). The shells hand it to [`App::on_event`]; the engine runs
-/// no app logic itself.
+/// An event a view raised for the app: a tap on an element (its `OnClick`), or a text field's event (`OnTextChanged`,
+/// `OnSearch`, `OnKeyDown`). The shells hand it to [`App::on_event`]; the engine runs no app logic itself.
 #[derive(Clone, Debug, PartialEq)]
 pub struct TapEvent {
     /// The element's `x:Name`, if any.
     pub name: Option<String>,
-    /// Its `OnClick` handler, or empty.
+    /// The handler the view named for this event (`OnClick="…"`, `OnSearch="…"`…), or empty.
     pub handler: String,
-    /// The touch point (physical px).
+    /// The touch point (physical px); 0 for a keyboard event.
     pub x: f32,
     pub y: f32,
-    /// The typed text, for a text field's submit event (`OnSubmit`); `None` for an ordinary tap.
+    /// A text field's value, for its events; `None` for a tap.
     pub text: Option<String>,
+    /// The key behind an `OnKeyDown` / `OnSearch` (`"Enter"`); `None` otherwise.
+    pub key: Option<String>,
+}
+
+/// Tell the text input which editable fields the view on screen has (from its [`view_hits`]): their declarations,
+/// static text, events and tab order, for Enter's next-field and the fields' events. [`Painter::paint_view`] does it
+/// each time it lays a view out; a tool or a test that lays views out without a GPU calls it itself.
+pub fn register_input_fields(hits: &[Hit]) {
+    text_input::set_view_fields(
+        hits.iter()
+            .filter_map(|h| {
+                Some(text_input::ViewField {
+                    name: h.name.clone()?,
+                    spec: h.field.clone()?,
+                    initial: h.text.clone().unwrap_or_default(),
+                    events: h.events.clone(),
+                })
+            })
+            .collect(),
+    );
 }
 
 /// What a resolved tap asks of the shell, so it can manage the soft keyboard. The engine has already updated the
@@ -241,24 +262,21 @@ impl Painter {
     }
 
     /// Resolve a touch at `(x, y)` (physical px) against the view currently on screen, updating the keyboard focus and
-    /// telling the shell what to do about the soft keyboard. The top-most element under the touch wins: a text field
-    /// (`SearchField` / `TextField`) with an `x:Name` takes the focus ([`Tap::Focused`]); any other named / handler
-    /// element fires its `OnClick` ([`Tap::Event`]) and drops the focus; empty space drops the focus ([`Tap::Ignored`]).
+    /// telling the shell what to do about the soft keyboard. The top-most element under the touch wins: an editable
+    /// text field with an `x:Name` takes the focus ([`Tap::Focused`]); any other named / handler element fires its
+    /// `OnClick` ([`Tap::Event`]) and drops the focus; empty space drops the focus ([`Tap::Ignored`]).
     pub fn resolve_tap(&self, x: f32, y: f32) -> Tap {
         let Some(hit) = hit_test(&self.hits, x, y) else {
             text_input::blur();
             return Tap::Ignored;
         };
-        if hit.editable {
-            if let Some(name) = &hit.name {
-                let submit = hit.events.iter().find(|(e, _)| e == "Submit").map(|(_, h)| h.as_str());
-                text_input::focus(name, hit.value.as_deref().unwrap_or(""), submit);
-                return Tap::Focused;
-            }
+        if let (Some(_), Some(name)) = (&hit.field, &hit.name) {
+            text_input::focus(name);
+            return Tap::Focused;
         }
         text_input::blur();
         let handler = hit.events.iter().find(|(e, _)| e == "Click").map(|(_, h)| h.clone()).unwrap_or_default();
-        Tap::Event(TapEvent { name: hit.name.clone(), handler, x, y, text: None })
+        Tap::Event(TapEvent { name: hit.name.clone(), handler, x, y, text: None, key: None })
     }
 
     /// Set the safe-area insets (top: status bar / notch / Dynamic Island, bottom: home indicator / gesture bar)
@@ -290,8 +308,10 @@ impl Painter {
         if self.key != Some(key) || self.target.is_none() {
             let pixmap =
                 render_view(src, width, height, font, self.safe_area).ok_or("cannot allocate the view pixmap")?;
-            // Capture the tappable targets of this frame (same layout), for resolve_tap between frames.
+            // Capture the tappable targets of this frame (same layout), for resolve_tap between frames, and tell the
+            // text input which editable fields this view has (for Enter's next-field and the fields' events).
             self.hits = view_hits(src, width, height, font, self.safe_area);
+            register_input_fields(&self.hits);
             let stale = self.target.as_ref().is_none_or(|t| t.width != width || t.height != height);
             if stale {
                 self.target = Some(self.make_target(device, width, height));

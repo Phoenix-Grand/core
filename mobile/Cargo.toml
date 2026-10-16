@@ -19,6 +19,7 @@ resolver = "2"
 members  = [
     "common/kubuno-mobile-render",
     "common/kubuno-mobile-account",
+    "common/kubuno-mobile-signin",
     "android/kubuno-mobile-shell-android",
     "ios/kubuno-mobile-shell-ios",
 ]
@@ -32,6 +33,7 @@ repository = "https://github.com/kubuno/core"
 [workspace.dependencies]
 kubuno-mobile-render  = { path = "common/kubuno-mobile-render" }
 kubuno-mobile-account = { path = "common/kubuno-mobile-account" }
+kubuno-mobile-signin  = { path = "common/kubuno-mobile-signin" }
 
 # The account / network base (M2): it reuses the desktop's typed HTTP client (../desktop), which is TLS via
 # rustls (no OpenSSL) so it cross-compiles to Android and iOS, and adds the mobile token owner (holds its own

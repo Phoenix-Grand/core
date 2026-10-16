@@ -8,11 +8,13 @@
 //! default) keeps a demo binary showing the renderer's sample screen. Packaged into a
 //! `.app` bundle and run in the iOS Simulator or on an iPhone from a Mac. Tap anywhere to advance to the next screen.
 
+mod secret_store;
+
+pub use secret_store::KeychainSecretStore;
+
 use std::sync::Arc;
 
-use kubuno_mobile_render::{
-    input_backspace, input_focused, input_str, input_submit, App, FontHandle, Painter, Tap,
-};
+use kubuno_mobile_render::{input_focused, input_key, App, FontHandle, InputKey, Painter, Tap};
 use winit::application::ApplicationHandler;
 use winit::event::{ElementState, Touch, TouchPhase, WindowEvent};
 use winit::event_loop::{ActiveEventLoop, ControlFlow, EventLoop};
@@ -101,23 +103,21 @@ impl ApplicationHandler for Shell {
                     g.window.request_redraw();
                 }
             }
-            // Keyboard input (a hardware or Simulator keyboard) while a field is focused: edit its buffer, or submit on
-            // Enter (the field's handler then runs with the typed text).
+            // Keyboard input (a hardware or Simulator keyboard) while a field is focused: the shell only translates the
+            // key; the engine edits the field and returns the events the view declared, which go to the app.
             WindowEvent::KeyboardInput { event, .. }
                 if event.state == ElementState::Pressed && input_focused().is_some() =>
             {
-                match &event.logical_key {
-                    Key::Named(NamedKey::Backspace) => input_backspace(),
-                    Key::Named(NamedKey::Enter) => {
-                        if let (Some(ev), Some(on_event)) = (input_submit(), self.app.on_event) {
-                            log::info!("KUBUNO: submit -> {} = {:?}", ev.handler, ev.text);
-                            on_event(&ev);
-                        }
-                    }
-                    _ => {
-                        if let Some(t) = &event.text {
-                            input_str(t.as_str());
-                        }
+                let key = match &event.logical_key {
+                    Key::Named(NamedKey::Backspace) => Some(InputKey::Backspace),
+                    Key::Named(NamedKey::Enter) => Some(InputKey::Enter),
+                    Key::Named(NamedKey::Escape) => Some(InputKey::Escape),
+                    _ => event.text.as_ref().map(|t| InputKey::Text(t.to_string())),
+                };
+                for ev in key.map(input_key).unwrap_or_default() {
+                    log::info!("KUBUNO: field {:?} -> {} (key {:?})", ev.name, ev.handler, ev.key);
+                    if let Some(on_event) = self.app.on_event {
+                        on_event(&ev);
                     }
                 }
                 if let Some(g) = self.gpu.as_ref() {
@@ -332,6 +332,8 @@ pub fn run(app: App) {
         log::error!("KUBUNO: {} has no screen", app.label);
         return;
     }
+    // The OS secret store (Keychain) for the account layer, before the app restores its session in `setup`.
+    kubuno_mobile_account::set_platform_store(Arc::new(KeychainSecretStore::new(app.id)));
     // Register the app's host controls before the first frame.
     (app.setup)();
     // Logs show up in `xcrun simctl spawn booted log stream` / the run output.

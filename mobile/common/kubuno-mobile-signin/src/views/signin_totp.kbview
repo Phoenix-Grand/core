@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Sign-in · Two-step verification — shared by every Kubuno mobile app (derived from Drive's onboarding TotpScreen): the
+  code of the authenticator app (or a backup code), Verify, and Back. Enter in the field verifies. Light theme.
+-->
+<Panel xmlns="https://kubuno.com/views" xmlns:x="https://kubuno.com/views/x"
+       Layout="Dock" BackColor="#FFFFFF">
+  <Stack Dock="Fill" Justify="Center" CrossAlign="Stretch" Gap="0" Padding="24, 32, 24, 32">
+    <Label Text="Vérification en deux étapes" Role="Display" FontWeight="SemiBold" ForeColor="#202124"/>
+    <Label Text="Entrez le code de votre application d'authentification, ou un code de secours." Role="Body"
+           ForeColor="#5F6368" Overflow="Wrap" Padding="0, 8, 0, 0"/>
+    <Stack CrossAlign="Stretch" Padding="0, 24, 0, 0">
+      <TextField x:Name="signin_code" Label="Code" Placeholder="123456" InputType="Number" MaxLength="16"
+                 OnKeyDown="signin_verify"/>
+    </Stack>
+    <Label Text="{Bind signin_error}" Role="Meta" ForeColor="#D93025" Overflow="Wrap" Padding="0, 10, 0, 0"/>
+    <Label Text="{Bind signin_busy}" Role="Meta" ForeColor="#5F6368" Padding="0, 4, 0, 0"/>
+    <Stack CrossAlign="Stretch" Gap="4" Padding="0, 12, 0, 0">
+      <Button x:Name="signin_verify_button" Text="Vérifier" Variant="Primary" Size="Lg" OnClick="signin_verify"/>
+      <Button x:Name="signin_back" Text="Retour" Variant="Text" Size="Md" OnClick="signin_back"/>
+    </Stack>
+  </Stack>
+</Panel>

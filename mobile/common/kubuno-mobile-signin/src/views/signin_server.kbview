@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Sign-in · Server — shared by every Kubuno mobile app (derived from Drive's onboarding ServerScreen): the app's name,
+  the address of the Kubuno server, and Continue. The flow (kubuno-mobile-signin) binds the app name, the error line and
+  the busy line; Enter in the field or Continue checks the server (GET /health). Light theme, logical px.
+-->
+<Panel xmlns="https://kubuno.com/views" xmlns:x="https://kubuno.com/views/x"
+       Layout="Dock" BackColor="#FFFFFF">
+  <Stack Dock="Fill" Justify="Center" CrossAlign="Stretch" Gap="0" Padding="24, 32, 24, 32">
+    <Label Text="{Bind signin_app}" Role="Display" FontWeight="SemiBold" ForeColor="#202124"/>
+    <Label Text="Indiquez l'adresse de votre serveur Kubuno." Role="Body" ForeColor="#5F6368" Padding="0, 8, 0, 0"/>
+    <Stack CrossAlign="Stretch" Padding="0, 24, 0, 0">
+      <TextField x:Name="signin_server_url" Label="Adresse du serveur" Placeholder="https://kubuno.exemple.com"
+                 LeftIcon="Globe" InputType="Url" OnKeyDown="signin_server_next"/>
+    </Stack>
+    <Label Text="{Bind signin_error}" Role="Meta" ForeColor="#D93025" Overflow="Wrap" Padding="0, 10, 0, 0"/>
+    <Label Text="{Bind signin_busy}" Role="Meta" ForeColor="#5F6368" Padding="0, 4, 0, 0"/>
+    <Stack CrossAlign="Stretch" Padding="0, 12, 0, 0">
+      <Button x:Name="signin_continue" Text="Continuer" Variant="Primary" Size="Lg" OnClick="signin_server_next"/>
+    </Stack>
+  </Stack>
+</Panel>

@@ -8,10 +8,16 @@
 //! demo `android_main` showing the renderer's sample screen, to try the engine and this shell without any module; a
 //! module's crate depends on this shell with `default-features = false`.
 
+mod secret_store;
+
+pub use secret_store::AndroidSecretStore;
+
+use std::sync::Arc;
+
 use android_activity::input::{Keycode, MetaState};
 use android_activity::{AndroidApp, MainEvent, PollEvent};
 use kubuno_mobile_render::{
-    gesture_pan, gesture_zoom, input_backspace, input_focused, input_str, input_submit, App, FontHandle, Painter, Tap,
+    gesture_pan, gesture_zoom, input_focused, input_key, App, FontHandle, InputKey, Painter, Tap,
 };
 use raw_window_handle::{
     AndroidDisplayHandle, AndroidNdkWindowHandle, RawDisplayHandle, RawWindowHandle,
@@ -59,6 +65,12 @@ pub fn run(app: AndroidApp, kubuno_app: App) {
         android_logger::Config::default().with_max_level(log::LevelFilter::Info),
     );
     log::info!("KUBUNO: {} started (pure-Rust NativeActivity shell)", kubuno_app.label);
+    // The OS secret store (Android Keystore) for the account layer, before the app restores its session in `setup`.
+    match app.internal_data_path().map(|d| AndroidSecretStore::new(d.join("kubuno-secrets"))) {
+        Some(Ok(store)) => kubuno_mobile_account::set_platform_store(Arc::new(store)),
+        Some(Err(e)) => log::error!("KUBUNO: no secret store: {e}"),
+        None => log::error!("KUBUNO: no internal data path: no secret store"),
+    }
     // Register the app's host controls before the first frame.
     (kubuno_app.setup)();
     // Background work (network calls) posts its result to the UI thread; its waker nudges this loop so the result is
@@ -76,6 +88,8 @@ pub fn run(app: AndroidApp, kubuno_app: App) {
     }
     let mut view_idx: usize = 0;
     let mut touch = Touch::default();
+    // Whether the soft keyboard was last asked to show (it follows the text input's focus).
+    let mut keyboard_up = false;
 
     while !quit {
         // Apply any results background work posted back to the UI thread (updates the app's state / data context).
@@ -205,15 +219,15 @@ pub fn run(app: AndroidApp, kubuno_app: App) {
                                     log::info!("KUBUNO: tap -> {:?} / {}", ev.name, ev.handler);
                                     on_event(&ev);
                                 }
-                                Tap::Focused => log::info!("KUBUNO: tap -> focus text field"),
+                                // Tapping a field always brings the keyboard back (the user may have dismissed it
+                                // while the field kept the focus).
+                                Tap::Focused => {
+                                    log::info!("KUBUNO: tap -> focus text field");
+                                    app.show_soft_input(true);
+                                    keyboard_up = true;
+                                }
                                 Tap::Ignored => {}
                             }
-                        }
-                        // Show or hide the soft keyboard to match the focus the tap (and its handler) left us in.
-                        if input_focused().is_some() {
-                            app.show_soft_input(true);
-                        } else {
-                            app.hide_soft_input(true);
                         }
                     }
                     // Not wired yet: the demo advances to the next screen.
@@ -224,42 +238,47 @@ pub fn run(app: AndroidApp, kubuno_app: App) {
                 }
             }
 
-            // Apply the keys to the focused field: Backspace deletes, Enter submits (and the field's handler runs),
-            // any other key contributes its character (resolved through the device's key-character map).
+            // Keys while a field is focused: the shell only translates them; the engine edits the field and returns the
+            // events the view declared (OnTextChanged, OnSearch, OnKeyDown), which go to the app.
             if input_focused().is_some() {
                 use android_activity::input::KeyMapChar;
                 for (code, meta, dev) in keys {
-                    match code {
-                        Keycode::Del => input_backspace(),
-                        Keycode::Enter | Keycode::NumpadEnter => {
-                            if let (Some(ev), Some(on_event)) = (input_submit(), kubuno_app.on_event) {
-                                log::info!("KUBUNO: submit -> {} = {:?}", ev.handler, ev.text);
-                                on_event(&ev);
-                            }
-                        }
-                        _ => {
-                            // Map the keycode to a character through the device's key-character map (the virtual
-                            // keyboard, id -1, is the fallback for injected / unknown devices).
-                            let ch = app
-                                .device_key_character_map(dev)
-                                .or_else(|_| app.device_key_character_map(-1))
-                                .ok()
-                                .and_then(|m| m.get(code, meta).ok())
-                                .and_then(|c| match c {
-                                    KeyMapChar::Unicode(ch) => Some(ch),
-                                    _ => None,
-                                });
-                            if let Some(ch) = ch {
-                                input_str(ch.encode_utf8(&mut [0u8; 4]));
-                            }
+                    let key = match code {
+                        Keycode::Del => Some(InputKey::Backspace),
+                        Keycode::Enter | Keycode::NumpadEnter => Some(InputKey::Enter),
+                        Keycode::Escape => Some(InputKey::Escape),
+                        // A character, through the device's key-character map (the virtual keyboard, id -1, for
+                        // injected / unknown devices).
+                        _ => app
+                            .device_key_character_map(dev)
+                            .or_else(|_| app.device_key_character_map(-1))
+                            .ok()
+                            .and_then(|m| m.get(code, meta).ok())
+                            .and_then(|c| match c {
+                                KeyMapChar::Unicode(ch) => Some(InputKey::Text(ch.to_string())),
+                                _ => None,
+                            }),
+                    };
+                    for ev in key.map(input_key).unwrap_or_default() {
+                        log::info!("KUBUNO: field {:?} -> {} (key {:?})", ev.name, ev.handler, ev.key);
+                        if let Some(on_event) = kubuno_app.on_event {
+                            on_event(&ev);
                         }
                     }
                 }
-                // Enter submits and blurs: drop the keyboard when nothing is focused any more.
-                if input_focused().is_none() {
-                    app.hide_soft_input(true);
-                }
             }
+        }
+
+        // The soft keyboard follows the keyboard focus, whatever moved it: a tap, Enter going to the next field or
+        // closing the form, the app, or a network result posted back to the UI thread.
+        let want_keyboard = input_focused().is_some();
+        if want_keyboard != keyboard_up {
+            if want_keyboard {
+                app.show_soft_input(true);
+            } else {
+                app.hide_soft_input(true);
+            }
+            keyboard_up = want_keyboard;
         }
 
         if let Some(g) = gpu.as_mut() {

@@ -1,6 +1,6 @@
 //! The shapes the Kubuno auth API returns to a native client, and the account they describe.
 
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 /// The token pair a native sign-in / refresh returns in the JSON body (`NativeTokenResponse` on the server): a
 /// 15-minute access JWT and a 30-day opaque refresh token, plus who it belongs to. Unknown fields are ignored.
@@ -40,7 +40,7 @@ impl User {
 
 /// An account signed in on this device: which server, who, and the stable device key sent on every request
 /// (`X-Kubuno-Device-Key`). The refresh token is **not** here — it lives only in the OS secret store.
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct Account {
     pub server: String,
     pub user_id: String,

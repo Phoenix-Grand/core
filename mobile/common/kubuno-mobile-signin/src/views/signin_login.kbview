@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Sign-in · Credentials — shared by every Kubuno mobile app (derived from Drive's onboarding LoginScreen): the server
+  host, the identifier and the password (masked), Sign in, and Change server. Enter in the identifier moves to the
+  password (TabIndex); Enter in the password signs in. Light theme, logical px.
+-->
+<Panel xmlns="https://kubuno.com/views" xmlns:x="https://kubuno.com/views/x"
+       Layout="Dock" BackColor="#FFFFFF">
+  <Stack Dock="Fill" Justify="Center" CrossAlign="Stretch" Gap="0" Padding="24, 32, 24, 32">
+    <Label Text="Connexion" Role="Display" FontWeight="SemiBold" ForeColor="#202124"/>
+    <Label Text="{Bind signin_host}" Role="Body" ForeColor="#5F6368" Padding="0, 8, 0, 0"/>
+    <Stack CrossAlign="Stretch" Gap="12" Padding="0, 24, 0, 0">
+      <TextField x:Name="signin_login" Label="Identifiant" Placeholder="vous@exemple.com" InputType="Email" TabIndex="1"/>
+      <TextField x:Name="signin_password" Label="Mot de passe" Placeholder="Votre mot de passe" InputType="Password"
+                 TabIndex="2" OnKeyDown="signin_submit"/>
+    </Stack>
+    <Label Text="{Bind signin_error}" Role="Meta" ForeColor="#D93025" Overflow="Wrap" Padding="0, 10, 0, 0"/>
+    <Label Text="{Bind signin_busy}" Role="Meta" ForeColor="#5F6368" Padding="0, 4, 0, 0"/>
+    <Stack CrossAlign="Stretch" Gap="4" Padding="0, 12, 0, 0">
+      <Button x:Name="signin_submit_button" Text="Se connecter" Variant="Primary" Size="Lg" OnClick="signin_submit"/>
+      <Button x:Name="signin_change" Text="Changer de serveur" Variant="Text" Size="Md" OnClick="signin_change_server"/>
+    </Stack>
+  </Stack>
+</Panel>

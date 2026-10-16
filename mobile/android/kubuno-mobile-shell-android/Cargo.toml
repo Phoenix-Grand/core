@@ -20,8 +20,11 @@ default    = ["standalone"]
 standalone = []
 
 [dependencies]
-kubuno-mobile-render = { workspace = true }
-android-activity     = { workspace = true }
+kubuno-mobile-render  = { workspace = true }
+# The shell installs the Android Keystore secret store for the account layer before the app starts.
+kubuno-mobile-account = { workspace = true }
+jni                   = "0.22"
+android-activity      = { workspace = true }
 ndk                  = { workspace = true }
 wgpu                 = { workspace = true }
 raw-window-handle    = { workspace = true }

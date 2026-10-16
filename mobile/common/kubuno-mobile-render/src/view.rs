@@ -32,6 +32,7 @@ use tiny_skia as sk;
 
 use crate::host::{HostCanvas, HostElement, HostRect};
 use crate::icons::icon_paths;
+use crate::text_input::FieldSpec;
 use crate::FontHandle;
 
 /// The logical width a Kubuno view is authored in (a phone's CSS width), scaled to the real surface.
@@ -154,11 +155,32 @@ pub struct Hit {
     pub events: Vec<(String, String)>,
     /// The laid-out box, physical px.
     pub rect: HostRect,
-    /// True for a text field the user can type into (`SearchField` / `TextField`): a tap on it takes the keyboard
-    /// focus instead of firing a click.
-    pub editable: bool,
-    /// For an editable field, its current text, used to seed the edit buffer when it is focused.
-    pub value: Option<String>,
+    /// For an editable text field (`SearchField` / `TextField`, not `ReadOnly`), what kind of field it is: a tap on it
+    /// takes the keyboard focus instead of firing a click.
+    pub field: Option<FieldSpec>,
+    /// For an editable field, its static `Text` (resolved): its value until something is typed.
+    pub text: Option<String>,
+}
+
+/// The editable-field declaration of an input control, from the shared vocabulary's attributes: `InputType="Password"`
+/// (web / mobile) or `UseSystemPasswordChar` / `PasswordChar` (desktop) mask it, `MaxLength` caps it, `TabIndex` orders
+/// it, `ReadOnly="true"` makes it not editable. `None` for any other element.
+pub(crate) fn field_spec(el: &Element) -> Option<FieldSpec> {
+    let control = el.name()?;
+    if !matches!(control.as_str(), "SearchField" | "TextField") || attr(el, "ReadOnly").as_deref() == Some("true") {
+        return None;
+    }
+    let password_char = attr(el, "PasswordChar").and_then(|p| p.chars().next());
+    let masked = attr(el, "InputType").is_some_and(|t| t.eq_ignore_ascii_case("Password"))
+        || attr(el, "UseSystemPasswordChar").as_deref() == Some("true")
+        || password_char.is_some();
+    Some(FieldSpec {
+        control,
+        masked,
+        mask: password_char.unwrap_or('•'),
+        max_len: attr(el, "MaxLength").and_then(|m| m.trim().parse::<usize>().ok()).filter(|m| *m > 0),
+        tab_index: attr(el, "TabIndex").and_then(|t| t.trim().parse::<i32>().ok()),
+    })
 }
 
 /// The event handlers an element declares: `(event name without `On`, handler)`. An event attribute is the shared
@@ -625,16 +647,33 @@ impl Builder<'_> {
         if let Some(el) = self.els.get(&node) {
             let name = attr(el, "x:Name");
             let events = event_handlers(el);
-            let editable = matches!(el.name().as_deref(), Some("SearchField") | Some("TextField"));
-            if name.is_some() || !events.is_empty() || editable {
-                // An editable field keeps its current text, so focusing it seeds the edit buffer rather than wiping it.
-                let value = editable.then(|| self.resolve(&attr(el, "Text").unwrap_or_default()));
-                out.push(Hit { name, events, rect: HostRect { x, y, w, h }, editable, value });
+            let field = field_spec(el);
+            if name.is_some() || !events.is_empty() || field.is_some() {
+                let text = field.as_ref().map(|_| self.resolve(&attr(el, "Text").unwrap_or_default()));
+                out.push(Hit { name, events, rect: HostRect { x, y, w, h }, field, text });
             }
         }
         for c in self.tree.children(node).unwrap_or_default() {
             self.collect_hits(c, x, y, out);
         }
+    }
+
+    /// What an input control shows, and whether it holds the keyboard focus: the value typed into it (else its static
+    /// `Text`), masked for a password field; `None` when empty (the placeholder then shows). Shared by every input
+    /// control, so they all edit, mask and show their caret the same way.
+    fn field_text(&self, el: &Element) -> (Option<String>, bool) {
+        let name = attr(el, "x:Name");
+        let focused = name.as_deref().is_some_and(crate::text_input::is_focused);
+        let raw = name
+            .as_deref()
+            .and_then(crate::text_input::value)
+            .or_else(|| attr(el, "Text").map(|t| self.resolve(&t)))
+            .filter(|t| !t.is_empty());
+        let shown = match (raw, field_spec(el)) {
+            (Some(t), Some(spec)) if spec.masked => Some(spec.mask.to_string().repeat(t.chars().count())),
+            (raw, _) => raw,
+        };
+        (shown, focused)
     }
 
     /// Paint one element's own visuals (its box, or its control drawing) into its layout rect.
@@ -714,10 +753,7 @@ impl Builder<'_> {
                 let isize = 18.0 * d;
                 let gx = x + 12.0 * d;
                 draw_icon(pm, "Search", gx, y, isize, h, isize, grey, clip);
-                // While the field is focused, show the live edit buffer (and a caret) instead of its static text.
-                let focused = attr(el, "x:Name").as_deref().is_some_and(crate::text_input::is_focused);
-                let value = if focused { Some(crate::text_input::buffer()) } else { attr(el, "Text") }
-                    .filter(|t| !t.is_empty());
+                let (value, focused) = self.field_text(el);
                 let (txt, col) = match &value {
                     Some(t) => (t.clone(), Rgba::rgb(0x20, 0x21, 0x24)),
                     None => (attr(el, "Placeholder").unwrap_or_default(), Rgba::rgb(0x80, 0x86, 0x8b)),
@@ -752,9 +788,7 @@ impl Builder<'_> {
                     draw_icon(pm, &icon, tx, top, s, fh, s, grey, clip);
                     tx += s + 8.0 * d;
                 }
-                let focused = attr(el, "x:Name").as_deref().is_some_and(crate::text_input::is_focused);
-                let value = if focused { Some(crate::text_input::buffer()) } else { attr(el, "Text") }
-                    .filter(|t| !t.is_empty());
+                let (value, focused) = self.field_text(el);
                 let (txt, col) = match &value {
                     Some(t) => (t.clone(), Rgba::rgb(0x20, 0x21, 0x24)),
                     None => (attr(el, "Placeholder").unwrap_or_default(), Rgba::rgb(0x80, 0x86, 0x8b)),
@@ -1461,6 +1495,32 @@ mod tests {
         assert_eq!(hit_test(&hits, 80.0, 120.0).and_then(|h| h.name.as_deref()), Some("go"));
         assert_eq!(hit_test(&hits, 80.0, 220.0).and_then(|h| h.name.as_deref()), Some("stop"));
         assert!(hit_test(&hits, 300.0, 380.0).is_none());
+    }
+
+    #[test]
+    fn input_controls_declare_their_field_kind_from_the_shared_attributes() {
+        let src = r#"<Panel xmlns="https://kubuno.com/views" xmlns:x="https://kubuno.com/views/x" Layout="Absolute">
+            <TextField x:Name="login" X="0" Y="0" Width="200" Height="40" TabIndex="1" Text="zoe"/>
+            <TextField x:Name="password" InputType="Password" MaxLength="64" X="0" Y="50" Width="200" Height="40"/>
+            <TextField x:Name="pin" PasswordChar="*" X="0" Y="100" Width="200" Height="40"/>
+            <TextField x:Name="locked" ReadOnly="true" X="0" Y="150" Width="200" Height="40"/>
+            <SearchField x:Name="query" OnSearch="run" X="0" Y="200" Width="200" Height="40"/>
+          </Panel>"#;
+        let hits = view_hits(src, 390, 400, None, Some((0.0, 0.0)));
+        let spec = |n: &str| hits.iter().find(|h| h.name.as_deref() == Some(n)).and_then(|h| h.field.clone());
+        let login = spec("login").expect("login is editable");
+        assert!(!login.masked);
+        assert_eq!(login.tab_index, Some(1));
+        let password = spec("password").expect("password is editable");
+        assert!(password.masked && password.mask == '•' && password.max_len == Some(64));
+        assert_eq!(spec("pin").map(|s| (s.masked, s.mask)), Some((true, '*')));
+        assert!(spec("locked").is_none(), "ReadOnly is not editable");
+        assert_eq!(spec("query").map(|s| s.control), Some("SearchField".to_string()));
+        let login_hit = hits.iter().find(|h| h.name.as_deref() == Some("login")).expect("hit");
+        assert_eq!(login_hit.text.as_deref(), Some("zoe"), "the static Text seeds the value");
+        // A password field paints its mask, never the text.
+        crate::text_input::set_value("password", "secret");
+        assert!(render_view(src, 390, 400, None, Some((0.0, 0.0))).is_some());
     }
 
     #[test]

@@ -65,6 +65,13 @@ number at release time, and CI publishes that section as the GitHub Release note
   thread and posts its result back through a UI task queue that wakes the shell (Android's native waker, iOS's
   event-loop proxy); the next frame picks up the new data and re-renders — no polling, no touch needed. These are
   the engine foundations the apps' real behaviour (account, network, live map, logic) will build on.
+- **Text fields behave the same in every mobile app.** Typing is engine behaviour of the core, common to every input
+  control: each field keeps what was typed into it (a form keeps its values while the focus moves), a password field
+  (`InputType="Password"`, or `PasswordChar` / `UseSystemPasswordChar` as on the desktop) shows its mask, `MaxLength`
+  caps the value, `ReadOnly` fields are not editable, Enter moves to the next field (`TabIndex` order) and, on the last
+  one, raises its `OnKeyDown`; a search field raises `OnSearch`, every edit raises `OnTextChanged` (the events of the
+  shared vocabulary). The shells only translate their platform keys, and the soft keyboard follows the focus whatever
+  moved it.
 - **You can type into a search / text field.** Tapping a `SearchField` / `TextField` gives it the keyboard focus and
   the shell shows the soft keyboard; the field then displays what is typed, with a caret, and the keyboard's keys edit
   its buffer (characters, Backspace) — on Enter the field's `OnSubmit` handler fires with the typed text, so an app can
@@ -74,6 +81,19 @@ number at release time, and CI publishes that section as the GitHub Release note
   character keys arrive from a hardware or Simulator/emulator keyboard, which this path surfaces; committing text from
   the *on-screen* soft keyboard, and the on-screen iOS keyboard, still needs an input-connection shim — to come.)
 
+- **Mobile apps sign in to your Kubuno server, and stay signed in.** Every mobile app can now use the shared sign-in
+  of the core (`kubuno-mobile-signin`): three screens built from the shared controls (server address, identifier and
+  password, two-step code) and the flow behind them. The address is checked first (`GET /health`: an address that
+  answers but is not a Kubuno server is refused with a clear message), the sign-in is the native one, and a second
+  factor (TOTP or backup code) is asked when the account has one. The session is then kept: the refresh token lives in
+  the phone's secret store (Android Keystore: AES-256-GCM under a Keystore key, files private to the app; iOS:
+  Keychain), so reopening the app goes straight back to the account, and Sign out closes the session on the server
+  and forgets it on the phone. A per-installation device key is sent with every request, and network calls run off
+  the UI thread on a shared background runtime. Verified on the Android emulator against a mock Kubuno core that
+  reproduces the real auth contract (sign-in, restore after a restart with token rotation, sign-out, secrets
+  encrypted on disk, TLS to a public HTTPS host), and by integration tests (rotation single-flight, a rejected access
+  token refreshed and retried, a replayed refresh token treated as an expired session, a transient failure that keeps
+  the session with a 45 s cooldown).
 - **Mobile account / network base (foundation).** A new `kubuno-mobile-account` crate is the layer the mobile apps'
   real behaviour will stand on: signing in, keeping a session alive and talking to a Kubuno server. It reuses the
   desktop's typed API client as its transport — that client does TLS with rustls (no OpenSSL), so the whole stack
