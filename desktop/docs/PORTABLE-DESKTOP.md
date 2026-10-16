@@ -762,6 +762,12 @@ re-checked with `cargo deny` in CI.
 | D7 | Font delivery | Shared directory installed by Kubuno Desktop + small embedded core set |
 | D8 | Tray on GNOME | Accept "no tray unless AppIndicator extension"; notifications still work |
 
+**Decided by the owner on 2026-10-16:** D1 = **Selawik**, bundled on all three OS (Windows included). D2 = **the
+system fonts of each OS** for documents (not a bundled metric-compatible set): document pagination may therefore
+differ slightly between OS while the interface stays identical. D6 = **yes**, Windows moves to the portable renderer
+at the end of the work, Direct2D kept as fallback until then. D3, D4, D5, D7 and D8 follow the recommendations above
+until the owner says otherwise.
+
 ### 5.2 Spikes
 
 **S1 - Canvas parity spike (first, ~2-3 person-weeks).** Smallest end-to-end proof of the rendering architecture
