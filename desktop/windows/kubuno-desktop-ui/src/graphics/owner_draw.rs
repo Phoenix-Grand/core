@@ -261,8 +261,8 @@ pub fn measure_item(e: &mut MeasureItemEventArgs<'_>) -> bool {
 }
 
 /// Owner-drawn items **recorded ahead of time** and replayed later: what a list painted in its own
-/// popup window needs (a combo box's drop-down is painted after the page, when the owner's handler
-/// - its view model - is no longer at hand). The page's paint records each visible item through the
+/// popup window needs (a combo box's drop-down is painted after the page, when the owner's handler -
+/// its view model - is no longer at hand). The page's paint records each visible item through the
 /// real handler ([`RecordedItems::record`]); the popup lends the recording as its handler.
 #[derive(Clone, Default)]
 pub struct RecordedItems {

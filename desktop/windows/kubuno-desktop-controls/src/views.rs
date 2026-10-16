@@ -1701,8 +1701,8 @@ fn draw_sort_arrow(
 ///
 /// The sheet settles it: its unfocused `ListView` band is flat `#F0F0F0`, which
 /// is `Control` exactly, and its focused `TreeView` band is flat `#0078D7`,
-/// which is `Highlight` exactly. `Explorer::LISTVIEW`'s `LISS_SELECTEDNOTFOCUS`
-/// - which *is* defined - is a rounded `#CCCCCC` with `#8B8B8B` edges, and is
+/// which is `Highlight` exactly. `Explorer::LISTVIEW`'s `LISS_SELECTEDNOTFOCUS` -
+/// which *is* defined - is a rounded `#CCCCCC` with `#8B8B8B` edges, and is
 /// neither. See [`crate::views`]'s module docs and the test that pins it.
 fn selection_paint(
     colors: &SystemColors,

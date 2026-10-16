@@ -1017,8 +1017,8 @@ impl Widget for ListBox {
 ///
 /// The replica carries it usefully and this wrapper adds nothing to the model:
 /// the per-item `CheckState`, `CheckOnClick`, the `CheckedIndices` that include
-/// the indeterminate rows, the coercion of `SelectionMode` to `One`/`None`, and
-/// - the one that catches ports - [`replica::CheckedListBox::toggle_check`],
+/// the indeterminate rows, the coercion of `SelectionMode` to `One`/`None`, and -
+/// the one that catches ports - [`replica::CheckedListBox::toggle_check`],
 /// where a click on an `Indeterminate` row goes to `Unchecked`, **not** to
 /// `Checked`. All of it is reached through [`Deref`].
 ///

@@ -74,8 +74,8 @@ export const moduleAdminSlot = (moduleId: string): SlotName => `module-admin:${m
  * ── Why the placement travels with the contribution ──────────────────────────
  * `module-admin:<id>` alone answers "who renders something here"; it cannot
  * answer "on which page, and under which tab", which is the only question left
- * once a module's panel is more than one page. The module is the one that knows
- * - it declared those pages itself, in its manifest - so it says so here, with
+ * once a module's panel is more than one page. The module is the one that knows -
+ * it declared those pages itself, in its manifest - so it says so here, with
  * the same vocabulary: `group` is a `[[setting_groups]]` id of that module.
  *
  * ── The two ways a section shows up ──────────────────────────────────────────

@@ -566,8 +566,8 @@ pub fn section_item(icon: &str, text: &str, indent: f32) -> StripItem {
 }
 
 /// A sidebar navigation row: an icon, a label, and `Checked` for « this is the
-/// current location ». The indent is carried in the item's own `Padding.Left`
-/// - the replica field that already means « space before my content » - and a
+/// current location ». The indent is carried in the item's own `Padding.Left` -
+/// the replica field that already means « space before my content » - and a
 /// nesting level costs
 /// [`INDENT_PER_LEVEL`](kubuno_drive_desktop_app_controls::sidebar::INDENT_PER_LEVEL).
 pub fn nav_item(icon: &str, text: &str, active: bool, indent: f32) -> StripItem {

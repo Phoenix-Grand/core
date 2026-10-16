@@ -192,8 +192,8 @@ async function bootstrap() {
   await initialize()
   // Apply the user's per-user theme preference (follows them across devices),
   // but ONLY when this browser has no explicit local choice. Otherwise a theme
-  // just applied via the admin panel (which stores it locally) would be reverted
-  // - and clobbered - on every reload by a stale server-side preference.
+  // just applied via the admin panel (which stores it locally) would be reverted -
+  // and clobbered - on every reload by a stale server-side preference.
   // `fetchThemes` already honours localStorage first, so this is purely the
   // cross-device fallback for a fresh browser.
   await themesPromise

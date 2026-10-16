@@ -318,8 +318,8 @@ pub async fn load_self(db: &DbPool) -> SelfPolicy {
 /// Resolved through the scope chain of migration `000060` as seen from the
 /// account itself, which is what gives the setting the granularity the feature
 /// is specified with: the value may be written at the instance, on an
-/// organisational unit, on a group or on one account, and the most specific one
-/// - or the most general **lock** - wins. Nothing here knows about units; it
+/// organisational unit, on a group or on one account, and the most specific one -
+/// or the most general **lock** - wins. Nothing here knows about units; it
 /// asks the chain, exactly as the password policy does.
 ///
 /// A read failure falls back to the declared factory default (enabled) rather

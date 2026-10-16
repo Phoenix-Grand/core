@@ -503,8 +503,8 @@ pub async fn update_role(
     }
 
     // The resulting privilege set is known without another read: it is either the
-    // freshly written list (sorted as the old `ORDER BY privilege_key` read it) or
-    // - when the request left privileges untouched - the "before" set.
+    // freshly written list (sorted as the old `ORDER BY privilege_key` read it) or -
+    // when the request left privileges untouched - the "before" set.
     let after_privileges = match dto.privileges.as_ref() {
         Some(p) => {
             let mut v: Vec<String> = p.clone();

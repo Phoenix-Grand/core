@@ -890,8 +890,8 @@ impl Widget for LinkLabel {
         };
         canvas.text_aligned(&shown, &band, fmt, &base, DWRITE_TEXT_ALIGNMENT_LEADING);
 
-        // …then every link span overpainted in its own colour. Both decisions
-        // - which colour, and whether to underline - are the replica's pure
+        // …then every link span overpainted in its own colour. Both decisions -
+        // which colour, and whether to underline - are the replica's pure
         // functions, fed the Kubuno state converted to a `ControlState`.
         let whole: kubuno_desktop_controls::ControlState = state.into();
         let chars: Vec<char> = shown.chars().collect();

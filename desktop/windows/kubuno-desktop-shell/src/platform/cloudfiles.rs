@@ -298,8 +298,8 @@ pub fn prune_orphans(live_ids: &[String]) {
 
 /// Second pass, over the REGISTRY rather than the API.
 ///
-/// A registration can end up half-dead: its `SyncRootManager` key still exists
-/// - so Explorer keeps drawing the navigation entry - while WinRT no longer
+/// A registration can end up half-dead: its `SyncRootManager` key still exists -
+/// so Explorer keeps drawing the navigation entry - while WinRT no longer
 /// lists it, and `Unregister` then answers "element not found". Nothing in the
 /// API can clear those, so the leftover key is removed directly. Only keys
 /// carrying our display name are touched, and a failure (the key may be ACL'd)

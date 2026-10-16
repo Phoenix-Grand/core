@@ -1853,6 +1853,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "kubuno-desktop-gallery"
+version = "0.1.5-alpha"
+dependencies = [
+ "kubuno-desktop-controls",
+ "kubuno-desktop-ui",
+ "kubuno-drive-desktop-app-controls",
+ "windows 0.62.2",
+]
+
+[[package]]
 name = "kubuno-desktop-header-data"
 version = "0.1.5-alpha"
 dependencies = [

@@ -288,8 +288,8 @@ pub async fn get(db: &DbPool, id: Uuid) -> Result<Option<ExportRun>, AppError> {
 ///
 /// What the console reads, everywhere it reads one. A personal archive is not an
 /// administrative object: it is produced without the alert and without the hold
-/// that make an administrative export supervisable, and `core.data_export.read`
-/// - held by the read-only administrator out of the box - must therefore not be
+/// that make an administrative export supervisable, and `core.data_export.read` -
+/// held by the read-only administrator out of the box - must therefore not be
 /// a way to fetch one. Whoever needs somebody else's data asks for it with
 /// `core.data_export.execute`, which tells every administrator and waits.
 pub async fn get_admin(db: &DbPool, id: Uuid) -> Result<Option<ExportRun>, AppError> {

@@ -29,8 +29,8 @@ export interface CardProps {
  * It replaces the three hand-copied variants that had drifted apart across the
  * admin panels (different radii, different border colours, headers built with
  * three different markups). Everything here is token-driven: `bg-surface-0`,
- * `border-border` and the `--kb-*` scales, so a theme that remaps its variables
- * - light or dark - re-skins every card at once.
+ * `border-border` and the `--kb-*` scales, so a theme that remaps its variables -
+ * light or dark - re-skins every card at once.
  *
  * The root is `min-w-0` on purpose: a card is routinely a flex/grid child, and
  * without it a wide child (a table, a long path) would push the card past its

@@ -1323,8 +1323,8 @@ number at release time, and CI publishes that section as the GitHub Release note
   everywhere else, and the stroke is reserved at rest as well, so nothing moves
   when the field is clicked.
 
-- **A text field can now be asked to drop its frame** (`bare`), for a title line
-  - of a document, of an event - which is not a form field and must not look
+- **A text field can now be asked to drop its frame** (`bare`), for a title line -
+  of a document, of an event - which is not a form field and must not look
   like one. Written as a variant of the shared field rather than as bare markup
   copied into each screen, which is the only way it stays the same everywhere.
 

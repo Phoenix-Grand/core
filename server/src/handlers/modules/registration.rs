@@ -464,8 +464,8 @@ pub async fn get_module_config(
             "group":            def.group,
             "default":          def.default,
             // Presentation metadata, forwarded verbatim: the console renders
-            // the schema and nothing else, so a knob added by a module shows up
-            // - searchable, bounded, folded where it belongs - with no change
+            // the schema and nothing else, so a knob added by a module shows up -
+            // searchable, bounded, folded where it belongs - with no change
             // on this side of the wire.
             "advanced":         def.advanced,
             "risk":             def.risk,

@@ -1,5 +1,5 @@
-# No committed target-dir. It used to hardcode `C:\kubuno-build\desktop-target`
-# - a path specific to one machine - which broke every other checkout and made
+# No committed target-dir. It used to hardcode `C:\kubuno-build\desktop-target` -
+# a path specific to one machine - which broke every other checkout and made
 # the source tree hard to reason about.
 #
 # The reason it existed is real: the repo often lives on a network share (Z:),
