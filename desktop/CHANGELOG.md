@@ -9,6 +9,8 @@ number at release time, and CI publishes that section as the GitHub Release note
 
 ## [Unreleased]
 
+## [0.1.6-alpha] - 2026-10-16
+
 ### Added
 - **The system file dialogs: `OpenFileDialog`, `SaveFileDialog`, `FolderBrowserDialog`.** Under their Windows Forms
   names and with the Windows Forms filter syntax (`"Label|*.a;*.b|All files|*.*"`), shown with `show_dialog()` /

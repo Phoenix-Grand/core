@@ -59,7 +59,7 @@ members  = [
 ]
 
 [workspace.package]
-version    = "0.1.5-alpha"
+version    = "0.1.6-alpha"
 edition    = "2021"
 license    = "AGPL-3.0-or-later"
 repository = "https://github.com/kubuno/core"
