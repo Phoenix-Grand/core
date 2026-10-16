@@ -19,6 +19,23 @@ number at release time, and CI publishes that section as the GitHub Release note
   from the app's own translated resources, an optional danger look) and a one-line text question, in Kubuno's style.
   Closing a confirmation is `Answer::Dismissed`, never its second answer (often destructive). They replace the copies
   each Office app carried.
+- **`<ZoomControl>`: the zoom of a status bar.** Zoom out, a slider, zoom in and the percentage (which resets to
+  100 %), with a tooltip and an accessible name per part. The slider is linear (50-200 % by tens by default) or centred
+  on 100 % (`Scale="Centered100"`, the Documents zoom); the buttons add a step or snap to the next multiple; every word
+  is a property. `Value` binds both ways and `OnValueChanged` reports the user's changes. It replaces the `StatusZoom`
+  and `ZoomSlider` copies of the Office editors.
+- **`<StartPage>`: the home page of an editor's backstage.** The recent files on the left, every file on the right with
+  a new button and an empty state, the signed-out message, dates in the user's language; a click opens a file, a right
+  click asks for its menu, the new button asks for a file (`OnStartCommand`). The icon and every word are properties,
+  and the lists come from a binding or from `StartPage::set_lists`. It replaces the copies of Diagrams and
+  Presentations.
+- **`<AvatarStack>`: the people present.** Overlapping circles with each person's initials in their colour, ringed with
+  the surface colour, a few at most then a « +N » chip; each name is its circle's tooltip and accessible name. It
+  replaces the `PresenceAvatars` copies of Presentations and Spreadsheets.
+- **`NotifyIcon`: an icon in the notification area, with balloon notifications.** Under its Windows Forms name, in the
+  prelude: a tooltip, shown or hidden, the application's icon or one from an `.ico` file, and
+  `show_balloon_tip(title, text, timeout_ms)` (shown as a system notification on Windows 10 and later). Apps no longer
+  need their own `Shell_NotifyIcon` code for reminders.
 
 ## [0.1.5-alpha] - 2026-10-13
 

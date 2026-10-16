@@ -245,7 +245,7 @@ pub fn typed_handle_element(name: &str) -> Option<&'static str> {
         Accordion, Badge, Breadcrumb, Button, Callout, Card, CheckBox, CheckedListBox, ColorField, ComboBox, GradientField, DataTable, DatePicker, Dropdown, EmptyState, GroupBox, Icon,
         IconButton, Label, LinkLabel, ListBox, ListView, MaskedField, MonthCalendar, NumericField, PaintBox, Panel, ProgressBar, RadioButton, ScrollArea, SearchField,
         Separator, Slider, Spinner, Splitter, Stack, Stepper, Switch, Tabs, TextArea, TextField, Toolbar, TreeView, DockArea, WorkspaceShell, Avatar, PictureBox, Popover,
-        Repeater, Sidebar, StatusBar, TableLayoutPanel, Ribbon, RibbonTab, RibbonContextualTabGroup, RibbonGroup, RibbonControlGroup, RibbonBox,
+        Repeater, Sidebar, StatusBar, TableLayoutPanel, AvatarStack, ZoomControl, StartPage, Ribbon, RibbonTab, RibbonContextualTabGroup, RibbonGroup, RibbonControlGroup, RibbonBox,
         RibbonQuickAccessToolbar, RibbonBackstage, BackstageTab, BackstageButton, BackstageSeparator, RibbonButton, RibbonToggleButton, RibbonRadioButton,
         RibbonMenuButton, RibbonSplitButton, RibbonColorPicker, RibbonMenuItem, RibbonSplitMenuItem, RibbonCheckBox, RibbonComboBox, RibbonTextBox,
         RibbonNumericField, RibbonGallery, RibbonGalleryCategory, RibbonGalleryItem, RibbonLabel, RibbonSeparator, Command

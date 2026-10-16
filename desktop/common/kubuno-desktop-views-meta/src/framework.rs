@@ -15,7 +15,8 @@
 //! What is listed: the framework layers of `desktop/common` and `desktop/windows` (the facade, the toolkit, the views, data,
 //! printing, resources and storage-component layers, and their tools). What is not: the application crates
 //! (`kubuno-desktop-shell-controls`, `kubuno-desktop-header-data`, `kubuno-drive-desktop-*`, the apps…), and desktop/common's service crates (`kubuno-desktop-sync*`,
-//! `kubuno-desktop-account`, `kubuno-desktop-api-client`, `kubuno-desktop-secrets`, `kubuno-desktop-app-storage`, `kubuno-office-docs-core`): they declare
+//! `kubuno-desktop-account`, `kubuno-desktop-api-client`, `kubuno-desktop-secrets`, `kubuno-desktop-app-storage`, `kubuno-desktop-single-instance`,
+//! `kubuno-office-docs-core`) and the gallery sample (`kubuno-desktop-gallery`): they declare
 //! no control, so reading them finds nothing, and they are not a layer of the views framework.
 
 /// The framework's crates (package names, `-` form). Compare with [`is_framework_crate`] (`-` ≡ `_`).
@@ -140,7 +141,9 @@ mod tests {
             const NOT_FRAMEWORK: &[&str] = &[
                 "kubuno-desktop-shell", "kubuno-desktop-shell-common", "kubuno-desktop-shell-controls", "kubuno-desktop-header-data",
                 "kubuno-desktop-sync", "kubuno-desktop-sync-engine", "kubuno-desktop-account", "kubuno-desktop-api-client",
-                "kubuno-desktop-secrets", "kubuno-desktop-app-storage",
+                "kubuno-desktop-secrets", "kubuno-desktop-app-storage", "kubuno-desktop-single-instance",
+                // The control gallery: a sample application of the design system, not a layer of it.
+                "kubuno-desktop-gallery",
             ];
             if NOT_FRAMEWORK.contains(&folder.as_str()) || folder.starts_with("kubuno-drive-") || folder.starts_with("kubuno-office-") {
                 continue;

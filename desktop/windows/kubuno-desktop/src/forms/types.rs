@@ -275,6 +275,12 @@ control_types! {
     StatusBar;
     /// A grid of rows and columns (`<TableLayoutPanel>`).
     TableLayoutPanel;
+    /// The people present, as overlapping initials (`<AvatarStack>`).
+    AvatarStack;
+    /// The zoom of a status bar: buttons, slider and percentage (`<ZoomControl>`).
+    ZoomControl;
+    /// The home page of an editor: recent files and a browser (`<StartPage>`).
+    StartPage;
 }
 
 impl Button {
@@ -710,6 +716,95 @@ impl Avatar {
     /// The presence dot: `"None"`, `"Online"`, `"Away"`, `"Busy"` or `"Offline"`.
     pub fn set_presence(&self, presence: &str) {
         self.0.set_property("Presence", Value::Str(presence.to_string()));
+    }
+}
+
+impl AvatarStack {
+    /// The people, as `(name, colour)` pairs (`colour` a `#rrggbb`, or empty to pick one from the
+    /// name) - written to `Users`, one `name|colour` per line.
+    pub fn set_users<'a>(&self, users: impl IntoIterator<Item = (&'a str, &'a str)>) {
+        let text = users.into_iter().map(|(name, color)| if color.is_empty() { name.to_string() } else { format!("{name}|{color}") }).collect::<Vec<_>>().join("\n");
+        self.0.set_property("Users", Value::Str(text));
+    }
+
+    /// `Users` as written: one `name|#rrggbb` per line.
+    pub fn get_users(&self) -> String {
+        self.0.string("Users")
+    }
+}
+
+impl ZoomControl {
+    /// Its zoom, in percent.
+    pub fn value(self, percent: f32) -> Self {
+        self.0.set_property("Value", percent);
+        self
+    }
+
+    /// The range the buttons and the slider keep the zoom in, in percent.
+    pub fn range(self, minimum: f32, maximum: f32) -> Self {
+        self.0.set_property("Minimum", minimum);
+        self.0.set_property("Maximum", maximum);
+        self
+    }
+
+    /// The slider centred on 100 % from `minimum` to `maximum` (`Scale="Centered100"`), rounded to
+    /// whole percents - the Documents zoom.
+    pub fn centered(self, minimum: f32, maximum: f32) -> Self {
+        self.0.set_property("Scale", "Centered100");
+        self.0.set_property("SliderMinimum", minimum);
+        self.0.set_property("SliderMaximum", maximum);
+        self.0.set_property("SliderStep", 1.0);
+        self
+    }
+
+    /// The zoom, in percent.
+    pub fn get_value(&self) -> f32 {
+        self.0.number("Value").unwrap_or(100.0)
+    }
+
+    pub fn set_value(&self, percent: f32) {
+        self.0.set_property("Value", percent);
+    }
+
+    /// `ValueChanged`: the user changed the zoom (`e.new`, in percent).
+    pub fn value_changed(&self) -> ControlEvent<'_, Self, NumericValueChangedEventArgs> {
+        self.0.on("OnValueChanged")
+    }
+}
+
+/// A file of a [`StartPage`]'s lists.
+pub use kubuno_desktop_views::registry::families::navigation::start_page::StartItem;
+/// What the user asked of a [`StartPage`] (`open`, `menu`, `new`).
+pub use kubuno_desktop_views::events::StartCommandEventArgs;
+
+impl StartPage {
+    /// The recent files and every file; `None` when they cannot be read (no account: the
+    /// columns say so). Lists equal to the ones shown change nothing (the scroll stays).
+    pub fn set_lists(&self, recents: Option<Vec<StartItem>>, all: Option<Vec<StartItem>>) {
+        for (name, list) in [("Recents", recents), ("Items", all)] {
+            let current = match self.0.get_property(name) {
+                Some(Value::Object(o)) => o.downcast_ref::<Vec<StartItem>>().cloned(),
+                _ => None,
+            };
+            if current == list {
+                continue;
+            }
+            match list {
+                Some(items) => self.0.set_property(name, Value::Object(kubuno_desktop_views::binding::ObjectValue::new(items))),
+                None => self.0.set_property(name, Value::Str(String::new())),
+            }
+        }
+    }
+
+    /// Any of its words (`"NewText"`, `"BrowseTitle"`, `"MonthsShort"`…).
+    pub fn set_text_property(&self, name: &str, text: impl Into<String>) {
+        self.0.set_property(name, Value::Str(text.into()));
+    }
+
+    /// `StartCommand`: a row was clicked (`open`) or right-clicked (`menu`), or a new file asked
+    /// (`new`).
+    pub fn start_command(&self) -> ControlEvent<'_, Self, StartCommandEventArgs> {
+        self.0.on("OnStartCommand")
     }
 }
 

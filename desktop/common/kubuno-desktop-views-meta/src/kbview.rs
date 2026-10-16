@@ -202,6 +202,7 @@ pub const BUILTIN_ELEMENTS: &[&str] = &[
     "SearchField", "Separator", "Slider", "Spinner", "Splitter", "Stack", "Step", "Stepper", "Switch", "TabItem", "Tabs", "TextArea", "TextField", "Timer",
     "ToolTip", "Toolbar", "ToolbarItem", "TreeView", "UserControl", "WorkspaceShell",
     "Avatar", "PictureBox", "Popover", "Repeater", "Sidebar", "SidebarItem", "SidebarSection", "SplashArtwork", "StatusBar", "StatusLabel", "TableLayoutPanel",
+    "AvatarStack", "StartPage", "ZoomControl",
     // The ribbon family (vskubuno/docs/RIBBON.md).
     "Ribbon", "RibbonTab", "RibbonContextualTabGroup", "RibbonGroup", "RibbonControlGroup", "RibbonBox", "RibbonQuickAccessToolbar", "RibbonBackstage", "BackstageTab", "BackstageButton", "BackstageSeparator", "RibbonButton", "RibbonToggleButton", "RibbonRadioButton", "RibbonMenuButton", "RibbonSplitButton", "RibbonColorPicker", "RibbonMenuItem", "RibbonSplitMenuItem", "RibbonCheckBox", "RibbonComboBox", "RibbonTextBox", "RibbonNumericField", "RibbonGallery", "RibbonGalleryCategory", "RibbonGalleryItem", "RibbonLabel", "RibbonSeparator", "Command",
     // The menu family (vskubuno/docs/MENUS.md).
@@ -250,6 +251,7 @@ pub const TYPED_CONTROLS: &[&str] = &[
     "ProgressBar", "RadioButton", "ScrollArea", "SearchField", "Separator", "Slider", "Spinner", "Splitter", "Stack", "Stepper", "Switch", "Tabs", "TextArea",
     "TextField", "Toolbar", "TreeView", "DockArea", "WorkspaceShell",
     "Avatar", "PictureBox", "Popover", "Repeater", "Sidebar", "StatusBar", "TableLayoutPanel",
+    "AvatarStack", "StartPage", "ZoomControl",
     "Ribbon", "RibbonTab", "RibbonContextualTabGroup", "RibbonGroup", "RibbonControlGroup", "RibbonBox", "RibbonQuickAccessToolbar", "RibbonBackstage", "BackstageTab", "BackstageButton", "BackstageSeparator", "RibbonButton", "RibbonToggleButton", "RibbonRadioButton", "RibbonMenuButton", "RibbonSplitButton", "RibbonColorPicker", "RibbonMenuItem", "RibbonSplitMenuItem", "RibbonCheckBox", "RibbonComboBox", "RibbonTextBox", "RibbonNumericField", "RibbonGallery", "RibbonGalleryCategory", "RibbonGalleryItem", "RibbonLabel", "RibbonSeparator", "Command",
 ];
 

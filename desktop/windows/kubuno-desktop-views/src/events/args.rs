@@ -22,6 +22,7 @@
 //! | [`LayoutEventArgs`] | Layout |
 //! | [`ValueChangedEventArgs<T>`] (+ [`TextChangedEventArgs`], [`CheckedChangedEventArgs`], [`SelectionChangedEventArgs`]) | TextChanged, CheckedChanged, ValueChanged, SelectedIndexChanged |
 //! | [`CellEventArgs`] / [`CellCancelEventArgs`] / [`CellValidatingEventArgs`] | DataTable CellEndEdit, CellValueChanged / CellBeginEdit / CellValidating |
+//! | [`StartCommandEventArgs`] | StartPage StartCommand |
 //! | [`PropertyChangedEventArgs`] | view-model `PropertyChanged` |
 //! | [`HotReloadedEventArgs`] | Kubuno-specific |
 
@@ -698,6 +699,25 @@ fn item_legacy(e: &ItemEventArgs) -> Value {
 #[args(legacy = item_legacy)]
 pub struct ItemEventArgs {
     pub index: usize,
+}
+
+fn start_command_legacy(e: &StartCommandEventArgs) -> Value {
+    Value::Str(e.command.clone())
+}
+
+/// What the user asked of a `<StartPage>`: `command` is `"open"` (a click on a row, `id` is the
+/// item's), `"menu"` (a right click on a row, at `x`, `y` in the control - `client_x`, `client_y`
+/// in the window's client area, where a context menu opens) or `"new"` (the new button or the
+/// empty state's link, `id` empty). Its legacy value is the command as `Value::Str`.
+#[derive(EventArgs, Debug, Clone, Default, PartialEq)]
+#[args(legacy = start_command_legacy)]
+pub struct StartCommandEventArgs {
+    pub command: String,
+    pub id: String,
+    pub x: f32,
+    pub y: f32,
+    pub client_x: f32,
+    pub client_y: f32,
 }
 
 fn item_activate_legacy(e: &ItemActivateEventArgs) -> Value {

@@ -1,5 +1,6 @@
 //! Component family `media` - pictures: `<Avatar>` (a person's picture, or their initials on a
-//! tint, with a presence dot - the web's avatars) and `<PictureBox>` (WinForms `PictureBox`).
+//! tint, with a presence dot - the web's avatars), `<AvatarStack>` (the people present, as
+//! overlapping initials - the web's presence list) and `<PictureBox>` (WinForms `PictureBox`).
 //! Compiled with the `family-media` feature (on by default through `all-families`).
 //!
 //! An image comes from a file (`Image`, relative to the view, bindable) or from memory
@@ -214,6 +215,199 @@ impl ViewNode for AvatarNode {
 }
 
 // ═════════════════════════════════════════════════════════════════════════
+// AvatarStack
+// ═════════════════════════════════════════════════════════════════════════
+
+component! {
+    mod_name: avatar_stack,
+    name: "AvatarStack",
+    // Note: The web's `PresenceAvatarList` (`web/src/collab/presence.tsx`), formerly `PresenceAvatars` in the Presentations and Spreadsheets apps: discs in each person's colour with their initials, ringed with the surface colour, overlapping, a few at most then a « +N » chip.
+    doc: "The people present, as a row of overlapping circles with their initials in their colour; past a few, a chip counts the others. Each circle shows the person's name as its tooltip.",
+    ctor: kubuno_desktop_ui::display::Icon::new("Users"),
+    children: ChildrenModel::None,
+    props: [
+        PropertyMeta::new("Users", PropKind::String, "", "The people, one per line: a name, then optionally a bar and a colour (Alice|#1a73e8). Without a colour, one is picked from the name.").category("Data").bindable(),
+        PropertyMeta::new("AvatarSize", PropKind::F32, "28", "The diameter of each circle, in DIP.").category("Layout"),
+        PropertyMeta::new("Overlap", PropKind::F32, "8", "How much each circle covers the previous one, in DIP.").category("Layout"),
+        PropertyMeta::new("MaxVisible", PropKind::F32, "5", "How many people are shown before the chip that counts the others.").category("Behavior"),
+        PropertyMeta::new("RingColor", PropKind::String, "", "The colour of the ring around each circle: a theme colour or a colour of your choice. Empty: the colour of the surface.").category("Appearance").editor("color"),
+    ],
+    events: [],
+    smoke: |i| { i },
+    build: |props, _cx| {
+        Ok(Box::new(crate::registry::families::media::AvatarStackNode {
+            users: props.str("Users", "")?,
+            size: props.f32("AvatarSize", 28.0)?,
+            overlap: props.f32("Overlap", 8.0)?,
+            max_visible: props.f32("MaxVisible", 5.0)?,
+            ring: props.str("RingColor", "")?,
+            hot: None,
+        }) as Box<dyn ViewNode>)
+    },
+}
+
+/// The grey of the « +N » chip (`bg-gray-500` of the web's list).
+const STACK_MORE_FILL: u32 = 0x80868b;
+
+/// The people of an `<AvatarStack>`'s `Users`: one per line, `name|#rrggbb` (the colour optional),
+/// the empty names skipped.
+pub fn stack_users(users: &str) -> Vec<(String, Option<String>)> {
+    users
+        .lines()
+        .filter_map(|line| {
+            let (name, color) = match line.rsplit_once('|') {
+                Some((n, c)) => (n.trim(), Some(c.trim().to_string()).filter(|c| !c.is_empty())),
+                None => (line.trim(), None),
+            };
+            (!name.is_empty()).then(|| (name.to_string(), color))
+        })
+        .collect()
+}
+
+/// One circle of an `<AvatarStack>`.
+#[derive(Debug, Clone, PartialEq)]
+pub enum StackSlot {
+    /// The person of index `0` in the list.
+    User(usize),
+    /// The « +N » chip: how many people are not shown.
+    More(usize),
+}
+
+/// The circles of `count` people in `bounds`: `size` wide, each `size - overlap` after the
+/// previous, at most `max` people then the chip; centred vertically.
+pub fn stack_slots(count: usize, max: usize, size: f32, overlap: f32, bounds: Rect) -> Vec<(StackSlot, Rect)> {
+    let step = (size - overlap).max(1.0);
+    let top = bounds.top + ((bounds.bottom - bounds.top - size) / 2.0).max(0.0);
+    let at = |i: usize| {
+        let x = bounds.left + i as f32 * step;
+        Rect::new(x, top, x + size, top + size)
+    };
+    let mut out: Vec<(StackSlot, Rect)> = (0..count.min(max)).map(|i| (StackSlot::User(i), at(i))).collect();
+    if count > max {
+        out.push((StackSlot::More(count - max), at(max)));
+    }
+    out
+}
+
+/// `<AvatarStack>`'s live node.
+pub struct AvatarStackNode {
+    users: PropSource<String>,
+    size: PropSource<f32>,
+    overlap: PropSource<f32>,
+    max_visible: PropSource<f32>,
+    ring: PropSource<String>,
+    /// The circle under the pointer (its tooltip).
+    hot: Option<usize>,
+}
+
+impl AvatarStackNode {
+    fn metrics(&self, vm: &dyn ViewModel) -> (f32, f32, usize) {
+        let size = self.size.resolve(vm).max(8.0);
+        let overlap = self.overlap.resolve(vm).clamp(0.0, size - 1.0);
+        (size, overlap, self.max_visible.resolve(vm).max(0.0).round() as usize)
+    }
+}
+
+/// `color` (`#rrggbb`) as a Direct2D colour.
+fn hex_color(color: &str) -> Option<D2D1_COLOR_F> {
+    kubuno_desktop_ui::graphics::Color::from_hex(color).map(|c| c.to_d2d())
+}
+
+fn rgb(rgb: u32) -> D2D1_COLOR_F {
+    D2D1_COLOR_F { r: ((rgb >> 16) & 0xff) as f32 / 255.0, g: ((rgb >> 8) & 0xff) as f32 / 255.0, b: (rgb & 0xff) as f32 / 255.0, a: 1.0 }
+}
+
+impl ViewNode for AvatarStackNode {
+    fn measure(&self, _c: &dyn Canvas, vm: &dyn ViewModel) -> Size {
+        let (size, overlap, max) = self.metrics(vm);
+        let n = stack_users(&self.users.resolve(vm)).len().min(max + 1);
+        let w = if n == 0 { 0.0 } else { (size - overlap).max(1.0) * (n as f32 - 1.0) + size + 4.0 };
+        Size::new(w, size)
+    }
+
+    fn intrinsic_width(&self, c: &dyn Canvas, vm: &dyn ViewModel) -> Option<f32> {
+        Some(self.measure(c, vm).width)
+    }
+
+    fn paint(&mut self, cx: &mut PaintCx<'_>, bounds: Rect) {
+        use kubuno_desktop_ui::graphics::{Brush, Color, Font, FontStyle, Graphics, StringAlignment, StringFormat, StringFormatFlags, StringTrimming};
+        let vm: &dyn ViewModel = &*cx.vm;
+        let c = cx.canvas;
+        let (size, overlap, max) = self.metrics(vm);
+        let users = stack_users(&self.users.resolve(vm));
+        // Inset by the ring, so the first circle's ring is not cut by the element's edge.
+        let inner = Rect::new(bounds.left + 2.0, bounds.top, bounds.right, bounds.bottom);
+        let slots = stack_slots(users.len(), max, size, overlap, inner);
+        let theme = c.theme().clone();
+        let ring_text = self.ring.resolve(vm);
+        let ring = crate::style::parse_color(&ring_text)
+            .ok()
+            .flatten()
+            .map(|v| v.resolve_with(&theme, crate::style::high_contrast()))
+            .unwrap_or(theme.card_background);
+        let g = Graphics::new(c);
+        // The web's initials: white, 11 px bold on a 28 DIP circle, growing with it.
+        let font = Font::with_dip("Segoe UI", (11.0 * size / 28.0).max(6.0), FontStyle::BOLD);
+        let format = StringFormat { alignment: StringAlignment::Center, line_alignment: StringAlignment::Center, trimming: StringTrimming::None, flags: StringFormatFlags::NO_WRAP };
+        for (slot, r) in &slots {
+            let (fill, label) = match slot {
+                StackSlot::User(i) => {
+                    let (name, color) = &users[*i];
+                    let fill = color.as_deref().and_then(hex_color).unwrap_or_else(|| tint_of(name));
+                    let initials = initials_of(name);
+                    (fill, if initials.is_empty() { "?".to_string() } else { initials })
+                }
+                StackSlot::More(n) => (rgb(STACK_MORE_FILL), format!("+{n}")),
+            };
+            g.fill_ellipse(Brush::solid(Color::from(ring)), Rect::new(r.left - 2.0, r.top - 2.0, r.right + 2.0, r.bottom + 2.0));
+            g.fill_ellipse(Brush::solid(Color::from(fill)), *r);
+            g.draw_string(&label, &font, Brush::solid(Color::WHITE), *r, &format);
+        }
+        if cx.design.is_some() {
+            if users.is_empty() {
+                crate::node::custom::paint_placeholder(c, bounds, "AvatarStack", "Set Users to show people");
+            }
+            return;
+        }
+        // The circle under the pointer: the last one drawn there (they overlap left to right).
+        let frame = cx.frame;
+        let (mx, my) = frame.mouse;
+        self.hot = if frame.pointer_outside() { None } else { slots.iter().rposition(|(_, r)| r.contains(mx, my)) };
+        let Some((slot_events, _)) = cx.sender.clone() else { return };
+        let Some(services) = cx.services.as_deref_mut() else { return };
+        let name_of = |slot: &StackSlot| match slot {
+            StackSlot::User(i) => users[*i].0.clone(),
+            StackSlot::More(_) => users.iter().skip(max).map(|(n, _)| n.as_str()).collect::<Vec<_>>().join("\n"),
+        };
+        if let Some((slot, r)) = self.hot.and_then(|i| slots.get(i)) {
+            services.offer_tooltip(name_of(slot), crate::clip::visible_client(crate::common::to_client(*r)), &slot_events.id);
+        }
+        // Each person in the accessibility tree, under the element.
+        let parent = crate::common::access_id(&slot_events.id);
+        for (i, (slot, r)) in slots.iter().enumerate() {
+            let StackSlot::User(_) = slot else { continue };
+            let v = crate::clip::visible_client(crate::common::to_client(*r));
+            services.access.push(kubuno_desktop_controls::host::access::AccessNode {
+                id: crate::common::access_id(&format!("{}/part{i}", slot_events.id)),
+                parent: Some(parent),
+                role: kubuno_desktop_controls::host::access::AccessRole::Button,
+                name: name_of(slot),
+                description: String::new(),
+                value: None,
+                bounds: (v.left, v.top, v.right, v.bottom),
+                focusable: false,
+                disabled: false,
+                checked: None,
+                clickable: false,
+                read_only: true,
+                access_key: None,
+                expanded: None,
+            });
+        }
+    }
+}
+
+// ═════════════════════════════════════════════════════════════════════════
 // PictureBox
 // ═════════════════════════════════════════════════════════════════════════
 
@@ -302,7 +496,7 @@ impl ViewNode for PictureBoxNode {
 }
 
 /// Every component this family declares.
-pub const ALL: &[ComponentMeta] = &[avatar::META, picture_box::META, splash::splash_artwork::META];
+pub const ALL: &[ComponentMeta] = &[avatar::META, avatar_stack::META, picture_box::META, splash::splash_artwork::META];
 
 #[cfg(test)]
 mod tests {
@@ -322,8 +516,32 @@ mod tests {
     }
 
     #[test]
+    fn a_stack_reads_one_person_per_line() {
+        let users = stack_users("Martinien Olinga|#1a73e8\n|#000000\nana\n  Bob | #d93025 ");
+        assert_eq!(
+            users,
+            vec![("Martinien Olinga".to_string(), Some("#1a73e8".to_string())), ("ana".to_string(), None), ("Bob".to_string(), Some("#d93025".to_string()))]
+        );
+        // The core's initials (the first two words), not the web list's (first and last word).
+        assert_eq!(initials_of("Jean Paul Sartre"), "JP");
+        assert_eq!(hex_color("#1a73e8"), Some(rgb(0x1a73e8)));
+    }
+
+    #[test]
+    fn a_stack_shows_a_few_people_then_counts_the_others() {
+        let b = Rect::new(0.0, 0.0, 200.0, 32.0);
+        let slots = stack_slots(7, 5, 28.0, 8.0, b);
+        assert_eq!(slots.len(), 6);
+        assert_eq!(slots[5].0, StackSlot::More(2));
+        assert_eq!(slots[1].1.left - slots[0].1.left, 20.0, "28 DIP circles overlapping by 8");
+        assert_eq!(slots[0].1.top, 2.0, "centred vertically");
+        assert_eq!(stack_slots(3, 5, 28.0, 8.0, b).len(), 3);
+        assert!(stack_slots(0, 5, 28.0, 8.0, b).is_empty());
+    }
+
+    #[test]
     fn avatars_and_pictures_compile() {
-        let src = r#"<Panel><Avatar DisplayName="{Binding Name}" Presence="Online" AvatarSize="40"/><PictureBox Image="logo.png" SizeMode="Zoom" CornerRadius="8"/><Avatar ImageData="{Binding Photo}"/></Panel>"#;
+        let src = r##"<Panel><Avatar DisplayName="{Binding Name}" Presence="Online" AvatarSize="40"/><PictureBox Image="logo.png" SizeMode="Zoom" CornerRadius="8"/><Avatar ImageData="{Binding Photo}"/><AvatarStack Users="{Binding PresenceUsers}" MaxVisible="3" RingColor="#FFFFFF"/></Panel>"##;
         assert!(crate::compile::compile(src).is_ok(), "{:?}", crate::compile::compile(src).err());
         let bad = r#"<Panel><Avatar ImageData="photo.png"/></Panel>"#;
         assert!(crate::compile::compile(bad).is_err(), "ImageData takes a binding only");

@@ -82,6 +82,9 @@ pub mod popup;
 pub mod printing;
 /// Windows opened at most once (`singleton::show(key, make)`): a second open focuses the open one.
 pub mod singleton;
+/// An icon in the notification area of the taskbar, with balloon notifications (Windows Forms `NotifyIcon`).
+pub mod notify_icon;
+pub use notify_icon::{NotifyIcon, ToolTipIcon};
 pub mod storage;
 mod view;
 
@@ -284,6 +287,7 @@ pub mod prelude {
     pub use crate::forms::{Backdrop, CaptionButtonStyle, CaptionCommand, CornerPreference, HeaderItems, SizeGripStyle, TitleAlignment, WindowKind};
     pub use crate::{Application, Bindable, MdiLayout, MessageBox, MessageBoxButtons, MessageBoxIcon, Row, Rows, Shared, Value, View};
     pub use crate::{Answer, ConfirmBox, FolderBrowserDialog, InputBox, OpenFileDialog, SaveFileDialog};
+    pub use crate::{NotifyIcon, ToolTipIcon};
     /// The root of the args types, under its Windows Forms name: `e: &EventArgs` takes any event.
     pub use kubuno_desktop_views::events::EmptyEventArgs as EventArgs;
     pub use kubuno_desktop_views::events::{

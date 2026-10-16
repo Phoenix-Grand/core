@@ -747,6 +747,8 @@ pub fn default_role(meta: &ComponentMeta) -> host::access::AccessRole {
         "Callout" => R::Alert,
         "MenuBar" => R::MenuBar,
         "DropDownButton" | "SplitButton" => R::Button,
+        "ZoomControl" | "AvatarStack" => R::Group,
+        "StartPage" => R::Pane,
         _ if meta.children != crate::registry::ChildrenModel::None => R::Group,
         _ => R::Unknown,
     }

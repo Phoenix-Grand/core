@@ -2468,6 +2468,9 @@ pub fn default_drop_size(component: &str) -> (f32, f32) {
         "Icon" | "Spinner" => (24.0, 24.0),
         "TextArea" | "ListBox" | "CheckedListBox" | "ListView" | "TreeView" | "DataTable" => (200.0, 120.0),
         "MonthCalendar" => (280.0, 300.0),
+        "ZoomControl" => (228.0, 28.0),
+        "AvatarStack" => (132.0, 32.0),
+        "StartPage" => (640.0, 400.0),
         // A user control: the size it was designed at (its view's `DesignWidth` × `DesignHeight`),
         // as Windows Forms drops a UserControl at its own default `Size`.
         other => match (user_control_design_size(other), registry::lookup(other)) {

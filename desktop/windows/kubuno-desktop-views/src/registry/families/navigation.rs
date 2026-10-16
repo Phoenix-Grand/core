@@ -14,6 +14,9 @@
 //! * `<StatusBar>` - WinForms' `StatusStrip`: `<StatusLabel>` cells, a `Spring` cell sharing
 //!   the leftover width, a `Text="-"` cell drawn as a separator, a `Clickable` cell drawn as a
 //!   ghost button raising its `OnClick`.
+//! * `<ZoomControl>` - the zoom cluster at the right of an editor's status bar (`zoom_control.rs`).
+//! * `<StartPage>` - the home page of an editor's backstage: recent files and a browser
+//!   (`start_page.rs`).
 
 #[allow(unused_imports)] // Used by the `component!` invocations below.
 use crate::registry::macros::component;
@@ -637,8 +640,24 @@ impl ViewNode for StatusBarNode {
     }
 }
 
+/// `<ZoomControl>`, the zoom cluster of a status bar, in its own file.
+#[path = "zoom_control.rs"]
+pub mod zoom_control;
+
+/// `<StartPage>`, the home page of an editor's backstage, in its own file.
+#[path = "start_page.rs"]
+pub mod start_page;
+
 /// Every component this family declares.
-pub const ALL: &[ComponentMeta] = &[sidebar::META, sidebar_item::META, sidebar_section::META, status_bar::META, status_label::META];
+pub const ALL: &[ComponentMeta] = &[
+    sidebar::META,
+    sidebar_item::META,
+    sidebar_section::META,
+    status_bar::META,
+    status_label::META,
+    zoom_control::zoom_control::META,
+    start_page::start_page::META,
+];
 
 #[cfg(test)]
 mod tests {

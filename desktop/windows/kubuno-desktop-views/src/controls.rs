@@ -11,7 +11,7 @@
 //! | `RangeBase` | [`Slider`], [`ProgressBar`], [`NumericField`] |
 //! | `ScrollableControl` | [`ScrollArea`] |
 //! | `ContainerBase` | [`Panel`], [`GroupBox`], [`Card`], [`Stack`], [`Tabs`], [`Splitter`], [`Accordion`] |
-//! | `Control` | [`Icon`], [`Separator`], [`Spinner`], [`Callout`], [`EmptyState`], [`Toolbar`], [`Breadcrumb`], [`Stepper`], [`ListView`], [`TreeView`], [`DataTable`], [`MonthCalendar`], [`DatePicker`], [`ColorField`], [`GradientField`] |
+//! | `Control` | [`Icon`], [`Separator`], [`Spinner`], [`Callout`], [`EmptyState`], [`Toolbar`], [`Breadcrumb`], [`Stepper`], [`ListView`], [`TreeView`], [`DataTable`], [`MonthCalendar`], [`DatePicker`], [`ColorField`], [`GradientField`], [`AvatarStack`], [`ZoomControl`], [`StartPage`] |
 //! | `Component` (non-visual) | the structural elements, in [`items`]: `Item`, `Column`, `TabItem`, `Option`, `Step`, `AccordionSection`, `BreadcrumbItem`, `ToolbarItem` |
 //!
 //! They serve three purposes:
@@ -301,6 +301,12 @@ classes! {
     StatusBar: Control(ControlCore);
     /// `<Avatar>`: a person's picture or initials.
     Avatar: Control(ControlCore);
+    /// `<AvatarStack>`: the people present, as overlapping initials.
+    AvatarStack: Control(ControlCore);
+    /// `<ZoomControl>`: the zoom of a status bar (buttons, slider, percentage).
+    ZoomControl: Control(ControlCore);
+    /// `<StartPage>`: the home page of an editor (recent files and a browser).
+    StartPage: Control(ControlCore);
     /// `<PictureBox>`: an image (WinForms `PictureBox`).
     PictureBox: Control(ControlCore);
     /// `<SplashArtwork>`: the artwork of a splash screen (`kubuno_desktop_ui::splash`).
@@ -469,7 +475,7 @@ class_table! {
     "UserControl" => crate::component::UserControlCore, "Timer" => components::Timer, "ToolTip" => components::ToolTip,
     "ContextMenu" => components::ContextMenu,
     "Popover" => Popover, "TableLayoutPanel" => TableLayoutPanel, "Repeater" => Repeater, "Sidebar" => Sidebar, "StatusBar" => StatusBar,
-    "Avatar" => Avatar, "PictureBox" => PictureBox, "SplashArtwork" => SplashArtwork, "SidebarItem" => items::SidebarItem, "SidebarSection" => items::SidebarSection,
+    "Avatar" => Avatar, "AvatarStack" => AvatarStack, "ZoomControl" => ZoomControl, "StartPage" => StartPage, "PictureBox" => PictureBox, "SplashArtwork" => SplashArtwork, "SidebarItem" => items::SidebarItem, "SidebarSection" => items::SidebarSection,
     "StatusLabel" => items::StatusLabel,
     "Ribbon" => ribbon::Ribbon, "RibbonTab" => ribbon::RibbonTab, "RibbonContextualTabGroup" => ribbon::RibbonContextualTabGroup, "RibbonGroup" => ribbon::RibbonGroup, "RibbonControlGroup" => ribbon::RibbonControlGroup, "RibbonBox" => ribbon::RibbonBox, "RibbonQuickAccessToolbar" => ribbon::RibbonQuickAccessToolbar, "RibbonBackstage" => ribbon::RibbonBackstage, "BackstageTab" => ribbon::BackstageTab, "BackstageButton" => ribbon::BackstageButton, "BackstageSeparator" => ribbon::BackstageSeparator, "RibbonButton" => ribbon::RibbonButton, "RibbonToggleButton" => ribbon::RibbonToggleButton, "RibbonRadioButton" => ribbon::RibbonRadioButton, "RibbonMenuButton" => ribbon::RibbonMenuButton, "RibbonSplitButton" => ribbon::RibbonSplitButton, "RibbonColorPicker" => ribbon::RibbonColorPicker, "RibbonMenuItem" => ribbon::RibbonMenuItem, "RibbonSplitMenuItem" => ribbon::RibbonSplitMenuItem, "RibbonCheckBox" => ribbon::RibbonCheckBox, "RibbonComboBox" => ribbon::RibbonComboBox, "RibbonTextBox" => ribbon::RibbonTextBox, "RibbonNumericField" => ribbon::RibbonNumericField, "RibbonGallery" => ribbon::RibbonGallery, "RibbonGalleryCategory" => ribbon::RibbonGalleryCategory, "RibbonGalleryItem" => ribbon::RibbonGalleryItem, "RibbonLabel" => ribbon::RibbonLabel, "RibbonSeparator" => ribbon::RibbonSeparator, "Command" => ribbon::Command,
 }
@@ -479,7 +485,7 @@ pub const ALL: &[&str] = &[
     "Accordion", "Badge", "Breadcrumb", "Button", "Callout", "Card", "CheckBox", "CheckedListBox", "ColorField", "ComboBox", "DataTable", "DatePicker", "Dropdown",
     "EmptyState", "FloatingWindow", "GradientField", "GroupBox", "Icon", "IconButton", "Label", "LinkLabel", "ListBox", "ListView", "MaskedField", "MonthCalendar", "NumericField", "PaintBox", "Panel", "ProgressBar",
     "RadioButton", "ScrollArea", "SearchField", "Separator", "Slider", "Spinner", "Splitter", "Stack", "Stepper", "Switch", "Tabs", "TextArea", "TextField", "Toolbar",
-    "TreeView", "UserControl", "DockArea", "WorkspaceShell", "Ribbon", "Popover", "TableLayoutPanel", "Repeater", "Sidebar", "StatusBar", "Avatar", "PictureBox", "SplashArtwork",
+    "TreeView", "UserControl", "DockArea", "WorkspaceShell", "Ribbon", "Popover", "TableLayoutPanel", "Repeater", "Sidebar", "StatusBar", "Avatar", "AvatarStack", "ZoomControl", "StartPage", "PictureBox", "SplashArtwork",
     "MenuBar", "DropDownButton", "SplitButton",
 ];
 
