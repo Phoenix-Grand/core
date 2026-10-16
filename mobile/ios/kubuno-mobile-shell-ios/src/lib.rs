@@ -293,6 +293,33 @@ fn safe_area_px(_window: &Window) -> Option<(f32, f32)> {
     None
 }
 
+/// Sends the `log` records of the engine, the account layer and the app to stderr, which the run console
+/// (`xcrun simctl launch --console-pty`) and the device log show: the iOS counterpart of the Android shell's logcat
+/// logger.
+struct StderrLogger;
+
+impl log::Log for StderrLogger {
+    fn enabled(&self, metadata: &log::Metadata) -> bool {
+        metadata.level() <= log::Level::Info
+    }
+
+    fn log(&self, record: &log::Record) {
+        if self.enabled(record.metadata()) {
+            eprintln!("{} {}: {}", record.level(), record.target(), record.args());
+        }
+    }
+
+    fn flush(&self) {}
+}
+
+static LOGGER: StderrLogger = StderrLogger;
+
+fn init_logging() {
+    if log::set_logger(&LOGGER).is_ok() {
+        log::set_max_level(log::LevelFilter::Info);
+    }
+}
+
 /// Load a usable TTF. The packaging step copies a font next to the executable (the `.app` root), which is the
 /// most reliable source inside the sandbox; a few system paths are tried as a fallback.
 fn load_system_font() -> Option<FontHandle> {
@@ -327,6 +354,7 @@ fn load_system_font() -> Option<FontHandle> {
 
 /// Run `app` until the window closes. A module's iOS entry point (`fn main`) calls it.
 pub fn run(app: App) {
+    init_logging();
     log::info!("KUBUNO: {} started (iOS shell)", app.label);
     if app.views.is_empty() {
         log::error!("KUBUNO: {} has no screen", app.label);
