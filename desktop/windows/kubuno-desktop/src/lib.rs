@@ -75,6 +75,8 @@
 
 pub mod application;
 pub mod forms;
+mod dialogs;
+mod file_dialog;
 mod message_box;
 pub mod popup;
 pub mod printing;
@@ -93,6 +95,8 @@ pub use forms::{
 };
 /// The icon of a control, typed (`Button::new().icon("Save")`, `.icon(IconSource::file("save.svg"))`).
 pub use forms::{IconScaling, IconSource};
+pub use dialogs::{Answer, ConfirmBox, InputBox};
+pub use file_dialog::{safe_file_name, FolderBrowserDialog, OpenFileDialog, SaveFileDialog};
 pub use message_box::{MessageBox, MessageBoxButtons, MessageBoxIcon};
 pub use view::View;
 /// The splash screen: `kubuno_desktop::SplashScreen::new().artwork(..).product(..).version(..).show()`,
@@ -279,6 +283,7 @@ pub mod prelude {
     pub use crate::storage::{RegistryValueChangedEventArgs, SettingChangedEventArgs, SettingsSavingEventArgs};
     pub use crate::forms::{Backdrop, CaptionButtonStyle, CaptionCommand, CornerPreference, HeaderItems, SizeGripStyle, TitleAlignment, WindowKind};
     pub use crate::{Application, Bindable, MdiLayout, MessageBox, MessageBoxButtons, MessageBoxIcon, Row, Rows, Shared, Value, View};
+    pub use crate::{Answer, ConfirmBox, FolderBrowserDialog, InputBox, OpenFileDialog, SaveFileDialog};
     /// The root of the args types, under its Windows Forms name: `e: &EventArgs` takes any event.
     pub use kubuno_desktop_views::events::EmptyEventArgs as EventArgs;
     pub use kubuno_desktop_views::events::{

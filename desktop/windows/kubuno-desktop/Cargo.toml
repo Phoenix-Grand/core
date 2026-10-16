@@ -33,6 +33,8 @@ serde_json = { workspace = true }
 kubuno-desktop-data         = { workspace = true, optional = true }
 # `singleton::focus`: bringing a window to the front (restore, foreground, flash when the system refuses).
 kubuno-desktop-single-instance = { workspace = true }
+# The system file dialogs (`OpenFileDialog`, `SaveFileDialog`, `FolderBrowserDialog`: the shell's IFileDialog over COM).
+windows = { workspace = true, features = ["Win32_Foundation", "Win32_UI_Shell", "Win32_UI_Shell_Common", "Win32_System_Com", "Win32_UI_WindowsAndMessaging", "Win32_UI_Input_KeyboardAndMouse"] }
 
 [features]
 default = []

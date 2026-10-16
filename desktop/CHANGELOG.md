@@ -9,6 +9,17 @@ number at release time, and CI publishes that section as the GitHub Release note
 
 ## [Unreleased]
 
+### Added
+- **The system file dialogs: `OpenFileDialog`, `SaveFileDialog`, `FolderBrowserDialog`.** Under their Windows Forms
+  names and with the Windows Forms filter syntax (`"Label|*.a;*.b|All files|*.*"`), shown with `show_dialog()` /
+  `show_dialog_owned(owner)` and answering a `DialogResult`; the modern Explorer dialogs (`IFileOpenDialog` /
+  `IFileSaveDialog`), with a multi-selection, a proposed name and folder, a default extension and the overwrite prompt.
+  `safe_file_name` turns a document title into a valid file name. Apps no longer carry their own copy.
+- **The two everyday questions: `ConfirmBox` and `InputBox`.** A confirmation with two or three answers (every caption
+  from the app's own translated resources, an optional danger look) and a one-line text question, in Kubuno's style.
+  Closing a confirmation is `Answer::Dismissed`, never its second answer (often destructive). They replace the copies
+  each Office app carried.
+
 ## [0.1.5-alpha] - 2026-10-13
 
 ### Changed
