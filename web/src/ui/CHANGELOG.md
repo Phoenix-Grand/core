@@ -6,6 +6,17 @@ under the published version number.
 
 ## [Unreleased]
 
+## [0.1.18] - 2026-10-16
+
+### Added
+
+- `Ribbon`, `RibbonTabStrip` and `Backstage`: the Office-style ribbon, until now copied (and diverging) in the office,
+  app, build and flow modules, is part of the library. Data-driven (`RibbonTab` > `RibbonGroup` > `RibbonItem`; item
+  kinds button, toggle, dropdown, split, menu, gallery, separator, custom), with contextual tabs, the File tab and its
+  backstage, collapse and peek, right-to-left folding of groups into chips, and the mobile command bar and palette.
+  It takes a `RibbonTheme` (the shape of the workspace theme, so a module passes its own as is, plus an optional
+  `fileAccent`) and the collapse tooltips as props (`expandLabel`, `collapseLabel`), so it depends on no module code.
+
 ## [0.1.17] - 2026-10-06
 
 ### Changed

@@ -10,6 +10,11 @@ number at release time, and CI publishes that section as the GitHub Release note
 ## [Unreleased]
 
 ### Added
+- **One ribbon for every module, in `@kubuno/ui`.** The Office-style ribbon used by Office, App, Build and Flow was
+  copied into each of them and the copies had drifted apart (Build had lost the mobile ribbon and the menu buttons,
+  App and Flow the double-click and the larger icons). The complete one, from Office, is now `Ribbon` /
+  `RibbonTabStrip` / `Backstage` in the core library, made independent of any module (its colours and labels are
+  props); the modules move to it with the next `@kubuno/ui` release.
 - **The Kubuno mobile apps, converted to the shared `.kbview` view language.** The mobile apps' screens -
   previously Jetpack Compose (Kotlin) - are being rewritten as `.kbview` files in the shared view vocabulary
   (`kubuno-mobile-render/src/views/<app>/`), the same language the web and desktop designers edit, rendered on

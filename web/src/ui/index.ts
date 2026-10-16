@@ -274,3 +274,13 @@ export {
   ensureMentionStyles, buildMentionChipHtml, replaceMentionQueryWithChip,
   bindMentionChipRemoval, serializeMentions, MENTION_REMOVE_ATTR,
 } from './mention/mentionChip'
+
+// The Office-style ribbon (tabs, groups, items; contextual tabs; File tab with its backstage; collapse and peek; right
+// to left folding of groups; mobile command bar and palette). One implementation for every module that has a ribbon
+// (office, app, build, flow), data-driven: a module declares its tabs, the ribbon does the rendering.
+export { Ribbon, RibbonTabStrip } from './ribbon/Ribbon'
+export { Backstage } from './ribbon/Backstage'
+export type { BackstageSection } from './ribbon/Backstage'
+export type {
+  RibbonTheme, RibbonTab, RibbonGroup, RibbonItem, RibbonItemKind, RibbonOption,
+} from './ribbon/types'
