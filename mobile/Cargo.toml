@@ -18,6 +18,7 @@
 resolver = "2"
 members  = [
     "common/kubuno-mobile-render",
+    "common/kubuno-mobile-account",
     "android/kubuno-mobile-shell-android",
     "ios/kubuno-mobile-shell-ios",
 ]
@@ -29,7 +30,13 @@ license    = "AGPL-3.0-or-later"
 repository = "https://github.com/kubuno/core"
 
 [workspace.dependencies]
-kubuno-mobile-render = { path = "common/kubuno-mobile-render" }
+kubuno-mobile-render  = { path = "common/kubuno-mobile-render" }
+kubuno-mobile-account = { path = "common/kubuno-mobile-account" }
+
+# The account / network base (M2): it reuses the desktop's typed HTTP client (../desktop), which is TLS via
+# rustls (no OpenSSL) so it cross-compiles to Android and iOS, and adds the mobile token owner (holds its own
+# refresh token in the OS secret store — no broker) and the sign-in flow.
+kubuno-desktop-api-client = { path = "../desktop/common/kubuno-desktop-api-client" }
 
 # The shared .kbview/.kbcontrol grammar — the SAME parser the web and desktop use (platform-neutral,
 # builds for wasm32/Linux/macOS, no UI/Windows dependency). It lives in the desktop workspace

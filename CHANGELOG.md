@@ -74,6 +74,18 @@ number at release time, and CI publishes that section as the GitHub Release note
   character keys arrive from a hardware or Simulator/emulator keyboard, which this path surfaces; committing text from
   the *on-screen* soft keyboard, and the on-screen iOS keyboard, still needs an input-connection shim — to come.)
 
+- **Mobile account / network base (foundation).** A new `kubuno-mobile-account` crate is the layer the mobile apps'
+  real behaviour will stand on: signing in, keeping a session alive and talking to a Kubuno server. It reuses the
+  desktop's typed API client as its transport — that client does TLS with rustls (no OpenSSL), so the whole stack
+  cross-compiles to Android (verified: the account crate, reqwest, rustls and ring all build for
+  `x86_64-linux-android`) and will to iOS. It adds the native sign-in flow (`POST /auth/login` with the refresh token
+  returned in the body, and `POST /auth/totp` for a second factor) and the mobile token owner: the phone holds its own
+  rotating refresh token in the OS secret store (there is no broker — the phone is the owner) and hands out access
+  tokens, refreshing with rotation and single-flight, writing each rotated token to the store before it is used, and
+  telling a genuinely expired session (401/403 on refresh) apart from a transient failure. The one platform piece, the
+  OS keystore, is a trait the shell injects. Not yet wired to an app (sign-in screen, Android Keystore / iOS Keychain
+  store, and the live map that uses it are next).
+
 ### Fixed
 - **Ctrl+wheel zooms the desktop view designer.** In the Visual Studio design preview of a `.kbview`
   (the Direct2D `view_embed` surface), Ctrl+wheel now zooms the view (centred on the pointer) instead of
