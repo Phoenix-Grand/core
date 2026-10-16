@@ -41,8 +41,8 @@ internal static class Program
         Application.EnableVisualStyles();
         // An exception raised inside a control's `WndProc` does not surface at
         // the call that provoked it: WinForms routes it to
-        // `Application.OnThreadException`, which shows a modal dialog and waits
-        // - which hangs an unattended probe. `ThrowException` makes it
+        // `Application.OnThreadException`, which shows a modal dialog and waits -
+        // which hangs an unattended probe. `ThrowException` makes it
         // propagate so the caller can record it. Must precede the first window.
         Application.SetUnhandledExceptionMode(UnhandledExceptionMode.ThrowException);
 

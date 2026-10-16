@@ -22,8 +22,8 @@ export const DIR_EDIT_NAME     = 'directory.profile_edit_name'
 export const DIR_EDIT_PHOTO    = 'directory.profile_edit_photo'
 
 // Migration `000114`. Each one has a column on `core.users`, a variant of
-// `settings::directory::ProfileField`, and a check in `handlers::users::update_me`
-// - in that order, which is the order this file's rule below demands.
+// `settings::directory::ProfileField`, and a check in `handlers::users::update_me` -
+// in that order, which is the order this file's rule below demands.
 export const DIR_EDIT_NAME_PRONUNCIATION = 'directory.profile_edit_name_pronunciation'
 export const DIR_EDIT_PRONOUNS           = 'directory.profile_edit_pronouns'
 export const DIR_EDIT_WORK_LOCATION      = 'directory.profile_edit_work_location'

@@ -7,8 +7,8 @@
 //!
 //! [`ListBox`](kubuno_desktop_ui::lists::ListBox), [`CheckedListBox`](kubuno_desktop_ui::lists::CheckedListBox),
 //! [`ListView`](kubuno_desktop_ui::views::ListView), [`TreeView`](kubuno_desktop_ui::views::TreeView),
-//! [`DataTable`](kubuno_desktop_ui::tables::DataTable) and [`MonthCalendar`](kubuno_desktop_ui::datetime::MonthCalendar)
-//! - the six `kubuno-desktop-ui` primitives that hold a *collection* rather than a
+//! [`DataTable`](kubuno_desktop_ui::tables::DataTable) and [`MonthCalendar`](kubuno_desktop_ui::datetime::MonthCalendar) -
+//! the six `kubuno-desktop-ui` primitives that hold a *collection* rather than a
 //! single value.
 //!
 //! ## `ItemsSource`
@@ -28,8 +28,8 @@
 //!
 //! - `<Item Text=".."/>` - one row of a `<ListBox>`/`<CheckedListBox>`/
 //!   `<ListView>`; nested under itself, the same element also describes one
-//!   node of a `<TreeView>`'s tree (`<Item Text=".."><Item Text=".."/></Item>`)
-//!   - a hierarchy `ItemsSource` cannot express (`Value::List` is flat; a
+//!   node of a `<TreeView>`'s tree (`<Item Text=".."><Item Text=".."/></Item>`) -
+//!   a hierarchy `ItemsSource` cannot express (`Value::List` is flat; a
 //!   bound `<TreeView>` is always one level deep, see [`resolve_item_labels`]'s
 //!   callers).
 //! - `<Column Header=".." Binding=".." Width=".."/>` - one column of a
@@ -239,8 +239,8 @@ fn static_columns(element: &Element) -> Vec<(String, String, i32)> {
         .collect()
 }
 
-/// A stable column id (`ColumnHeader::name`, the replica's own identity key
-/// - see `kubuno_desktop_ui::tables::column`) derived from a `Binding` expression
+/// A stable column id (`ColumnHeader::name`, the replica's own identity key -
+/// see `kubuno_desktop_ui::tables::column`) derived from a `Binding` expression
 /// (`{Binding Name}` → `"Name"`) when there is one, else from the header
 /// text, else a positional fallback so two same-titled columns still get
 /// distinct identities (`DataTable::toggle_sort` keys the sort state on this).
@@ -418,8 +418,8 @@ fn resolve_item_labels(vm: &dyn ViewModel, items_source: &Option<BindingSpec>) -
 }
 
 /// The multi-column shape `ListView`/`DataTable` read a row as: one text
-/// value per declared `<Column Binding="{Binding Field}">`, in column order
-/// - `field_names` is each column's bare field name (`column_id`'s own
+/// value per declared `<Column Binding="{Binding Field}">`, in column order -
+/// `field_names` is each column's bare field name (`column_id`'s own
 /// `from_binding`, already derived once at build time; see each of those
 /// components' `build`). `None` under the same conditions as
 /// [`resolve_item_labels`].

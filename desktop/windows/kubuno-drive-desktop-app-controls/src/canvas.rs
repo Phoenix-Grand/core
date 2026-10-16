@@ -270,8 +270,8 @@ pub trait Canvas {
     // for something specific. A container that paints a distinct surface
     // (a Card body, a Popover, a page area inside Tabs) wraps its children in
     // `push_bg(colour)` / `pop_bg()`, so a control that lands inside it reads
-    // the card's colour, not the window's. Default is `theme.window_background`
-    // - the outermost surface a caller ever sees.
+    // the card's colour, not the window's. Default is `theme.window_background` -
+    // the outermost surface a caller ever sees.
     // ------------------------------------------------------------------
 
     /// The parent surface's fill, as most recently pushed. The default returns

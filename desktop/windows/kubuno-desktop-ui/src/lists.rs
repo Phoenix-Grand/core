@@ -1826,8 +1826,8 @@ impl ComboBox {
             if self.hot_index == Some(i) {
                 c.fill_rounded(&row, radius::SM, &t.row_hover);
             }
-            // `<span className="flex w-4 shrink-0 justify-center text-primary">`
-            // - the tick gutter, then `gap-2`, then the label.
+            // `<span className="flex w-4 shrink-0 justify-center text-primary">` -
+            // the tick gutter, then `gap-2`, then the label.
             let tick = Rect::new(
                 row.left + list_metrics::ROW_PAD_H,
                 row.top,

@@ -1535,8 +1535,8 @@ mod tests {
         h.frame(bounds, (10.0, 10.0), true, |ix, b| node.interact(ix, b));
         h.frame(bounds, (10.0, 10.0), false, |ix, b| node.interact(ix, b));
 
-        // The interpreter's OWN two-way write-back is skipped (`Mode=OneWay`)
-        // - this is the handler's write taking effect, exactly §7's "binding
+        // The interpreter's OWN two-way write-back is skipped (`Mode=OneWay`) -
+        // this is the handler's write taking effect, exactly §7's "binding
         // cannot guess [the side effect]; a handler can".
         assert_eq!(h.vm.get("Offline"), Some(Value::Bool(true)));
         assert_eq!(h.events.len(), 1);

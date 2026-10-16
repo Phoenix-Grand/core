@@ -728,8 +728,8 @@ mod tests {
     fn worked_example_settings_view_is_clean() {
         // `XML_VIEWS.md` §7's worked example, trimmed to what phase 2a's
         // five-component registry actually covers (`Panel`, `ScrollArea`,
-        // `RadioButtons`/`RadioOption`, `NumericField` are not declared yet
-        // - see the crate's top-level docs for why. This still exercises
+        // `RadioButtons`/`RadioOption`, `NumericField` are not declared yet -
+        // see the crate's top-level docs for why. This still exercises
         // Card/Stack/Switch/TextField together, nested, with bindings, Dock
         // and `x:Name` all at once.
         let src = r#"

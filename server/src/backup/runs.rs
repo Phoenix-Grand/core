@@ -191,8 +191,8 @@ pub async fn close_stalled(db: &DbPool) -> Result<u64, AppError> {
 
 /// Is a run already in flight?
 ///
-/// Two dumps at once are not a corruption - the file names differ to the second
-/// - but they double the I/O of the one operation an instance runs precisely
+/// Two dumps at once are not a corruption - the file names differ to the second -
+/// but they double the I/O of the one operation an instance runs precisely
 /// when it is least able to afford it.
 pub async fn is_running(db: &DbPool) -> Result<bool, AppError> {
     db.fetch_scalar::<bool>(

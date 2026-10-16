@@ -464,8 +464,8 @@ impl TypeAhead {
         // « A single repeated letter cycles ».
         let single = count > 1 && q.chars().all(|c| c == first);
         let needle: String = if single { first.to_string() } else { q.clone() };
-        // `from + 1` for a fresh letter or a repeat, `from` while a word grows
-        // - so « bo » stays on the « bo… » row the « b » found.
+        // `from + 1` for a fresh letter or a repeat, `from` while a word grows -
+        // so « bo » stays on the « bo… » row the « b » found.
         let from = from.map_or(-1, |f| f as i64);
         let start = if single || count == 1 { from + 1 } else { from.max(0) };
         (0..n as i64)
@@ -479,8 +479,8 @@ impl TypeAhead {
     }
 }
 
-/// Which edge of a selector is squared off so it can be glued to a neighbour
-/// - `FontSizeField.tsx`'s `buttonStyle` / `boxStyle`: « the joined edge is
+/// Which edge of a selector is squared off so it can be glued to a neighbour -
+/// `FontSizeField.tsx`'s `buttonStyle` / `boxStyle`: « the joined edge is
 /// squared (only the outer corners stay rounded) and the middle borders
 /// overlap into one divider line ».
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
@@ -1235,8 +1235,8 @@ impl Dropdown {
             }
 
             // The fixed gutters, « always the same width whether the check and
-            // the icon are there or not: labels of the same level must line up »
-            // - the file's own comment, recording a bug where a negative margin
+            // the icon are there or not: labels of the same level must line up » -
+            // the file's own comment, recording a bug where a negative margin
             // shifted the selected row out of column.
             let check = Rect::new(
                 row.left + dropdown_metrics::ROW_PAD,
@@ -1847,8 +1847,8 @@ impl Widget for Editable {
 
         let t = canvas.theme();
         if self.shows_frame(state) || dead {
-            // `@ui/Editable`: the same surface, border and radius as `<Input>`
-            // - `bg-white` (`disabled:bg-surface-2`) and `border-border`.
+            // `@ui/Editable`: the same surface, border and radius as `<Input>` -
+            // `bg-white` (`disabled:bg-surface-2`) and `border-border`.
             let face = if dead { t.surface_2 } else { t.layer_background };
             canvas.fill_rounded(&bounds, radius::SM, &face);
             canvas.stroke_rounded(&bounds, radius::SM, &t.card_stroke);
@@ -2464,8 +2464,8 @@ impl FontPicker {
         Some(Rect::new(right - w, cy - h / 2.0, right, cy + h / 2.0))
     }
 
-    /// Where row `k` of [`FontPicker::rows`] is drawn inside the panel `panel`
-    /// - `None` when it is scrolled wholly out of the list's window.
+    /// Where row `k` of [`FontPicker::rows`] is drawn inside the panel `panel` -
+    /// `None` when it is scrolled wholly out of the list's window.
     pub fn row_rect_in(&self, panel: Rect, k: usize) -> Option<Rect> {
         let list = self.list_rect_in(panel);
         let bar = if self.scrolls() { control::SCROLLBAR_THUMB } else { 0.0 };
@@ -2849,8 +2849,8 @@ impl FontPicker {
             let Some(rect) = self.row_rect_in(panel, k) else { continue };
             match row {
                 FontRow::Header(label) => {
-                    // `fontSize: 11, fontWeight: 600, textTransform: uppercase`
-                    // - the caption_strong face, uppercased here because
+                    // `fontSize: 11, fontWeight: 600, textTransform: uppercase` -
+                    // the caption_strong face, uppercased here because
                     // DirectWrite has no `text-transform`.
                     let r = Rect::new(
                         rect.left + font_metrics::HEADER_PAD_L,

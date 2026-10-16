@@ -70,8 +70,8 @@
 //! Everything above reacts *after* the fact. A message whose account numbers
 //! have already been sent is not saved by an alert raised a second later, so
 //! [`gate`] is a second entry point into the **same** evaluator: a module asks
-//! before it commits and waits for allow, warn or block. It adds no vocabulary
-//! - a data-protection rule is an ordinary rule, with a [`detect`] leaf in its
+//! before it commits and waits for allow, warn or block. It adds no vocabulary -
+//! a data-protection rule is an ordinary rule, with a [`detect`] leaf in its
 //! condition tree and a verdict in its action list - and it inherits scope,
 //! rollout, the five modes and the run log unchanged. Only `enforce` blocks;
 //! `monitor` writes down what it would have blocked, which is how a blocking

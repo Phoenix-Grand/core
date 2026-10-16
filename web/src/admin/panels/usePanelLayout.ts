@@ -24,8 +24,8 @@ import type { User } from '../../core/types'
  * ## One hook, several dashboards
  *
  * Each page passes its own preference key, its own mirror key and its own
- * factory order; everything else - the atomic write, the merge rules, the reset
- * - is identical, and identical is the point. Two dashboards that remembered
+ * factory order; everything else - the atomic write, the merge rules, the reset -
+ * is identical, and identical is the point. Two dashboards that remembered
  * their layout by two different disciplines would eventually disagree about what
  * "reset" means.
  */

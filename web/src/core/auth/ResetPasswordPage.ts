@@ -151,8 +151,8 @@ export class ResetPasswordPage extends ViewBase {
       await api.post('/auth/reset-password', { token: this.token, new_password: this.form.next })
       this.done = true
     } catch (err: unknown) {
-      // The server answers the same way for an unknown, used and expired token
-      // - deliberately, so this page says the same thing for all three.
+      // The server answers the same way for an unknown, used and expired token -
+      // deliberately, so this page says the same thing for all three.
       const message = apiErrorDetail(err)
       this.error = message || this.tr('resetpw.err_invalid')
     } finally {

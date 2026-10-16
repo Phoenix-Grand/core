@@ -1979,8 +1979,8 @@ impl SwatchPicker {
     }
 
     /// Where a navigation key moves the cursor from flat cell `i`: within a
-    /// grid as [`SwatchGrid::step`] does, and ACROSS the caption between them
-    /// - Down from the palette's last row lands on the custom row in the same
+    /// grid as [`SwatchGrid::step`] does, and ACROSS the caption between them -
+    /// Down from the palette's last row lands on the custom row in the same
     /// column (or its last cell), Up from the custom row's first row lands
     /// back on the palette.
     pub fn step_cursor(&self, i: usize, key: ColorKey) -> usize {

@@ -169,8 +169,8 @@ async fn main() -> Result<()> {
         .context("Création du compte administrateur initial")?;
 
     // An administrator whose account predates this repair holds the `role`
-    // flag but no role assignment, and the console - which reads the assignment
-    // - showed them almost nothing. The migration that granted it ran before
+    // flag but no role assignment, and the console - which reads the assignment -
+    // showed them almost nothing. The migration that granted it ran before
     // their account existed, so only a check at start can put it right.
     if let Err(e) = kubuno_core::authz::bootstrap::reconcile_superadmins(&pool).await {
         tracing::error!(error = %e, "Vérification des attributions de super-administration");

@@ -30,8 +30,8 @@
 //! `jobs/builtin.rs`: registered at bootstrap, armed once at startup, and
 //! re-armed at +24 h by its own handler.
 //!
-//! It can also be run on demand from SQL: `SELECT core.purge_admin_audit(400);`
-//! - though that path bypasses the trail entry the job writes.
+//! It can also be run on demand from SQL: `SELECT core.purge_admin_audit(400);` -
+//! though that path bypasses the trail entry the job writes.
 
 pub mod chain;
 pub mod context;

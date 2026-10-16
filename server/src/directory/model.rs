@@ -108,8 +108,8 @@ impl Scope {
 /// Deliberately not an open set, and deliberately without a `Delete`.
 ///
 /// A deletion cascades through every module's data and cannot be undone, and
-/// the input that would trigger it - "the directory did not return this person"
-/// - is exactly what a network incident, an expired service password or a typo
+/// the input that would trigger it - "the directory did not return this person" -
+/// is exactly what a network incident, an expired service password or a typo
 /// in the base DN produces. Disabling is reversible by one click; deleting is
 /// reversible by a restore.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]

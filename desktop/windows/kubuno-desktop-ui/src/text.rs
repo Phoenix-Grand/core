@@ -378,8 +378,8 @@ pub fn word_right(text: &str, i: usize) -> usize {
 }
 
 /// What a double-click on character `i` selects: its run (a word, a
-/// punctuation run or a space run). A word takes its trailing spaces with it
-/// - Chromium's `select_trailing_whitespace` on Windows, what Notepad and Word
+/// punctuation run or a space run). A word takes its trailing spaces with it -
+/// Chromium's `select_trailing_whitespace` on Windows, what Notepad and Word
 /// do too. A line break selects nothing.
 pub fn word_range_at(text: &str, i: usize) -> (usize, usize) {
     let ch: Vec<char> = text.chars().collect();

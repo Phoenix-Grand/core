@@ -1580,8 +1580,8 @@ const TAB_CAPTION_LINE: f32 = 14.0;
 /// and not at the strip height itself.
 const TAB_STRIP_INSET: f32 = 2.0;
 
-/// The raised frame the page sits inside, on the three edges away from the strip
-/// - **4** DIP, not the 2 the strip inset alone would suggest. A 300×200 control
+/// The raised frame the page sits inside, on the three edges away from the strip -
+/// **4** DIP, not the 2 the strip inset alone would suggest. A 300×200 control
 /// with a 20 DIP tab row gives its page `[4, 24, 292, 172]`.
 const TAB_PAGE_BORDER: f32 = 2.0 * TAB_STRIP_INSET;
 

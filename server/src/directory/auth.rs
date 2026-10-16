@@ -10,8 +10,8 @@
 //! > For the account in front of us, resolve the accepted methods. If `local` is
 //! > accepted (or the administrative fallback applies) and the account holds a
 //! > hash, the local password decides and nothing else is consulted. Otherwise,
-//! > if `directory` is accepted, the directory that governs the account decides
-//! > - or, when none does yet, each enabled directory gets a turn. If neither
+//! > if `directory` is accepted, the directory that governs the account decides -
+//! > or, when none does yet, each enabled directory gets a turn. If neither
 //! > applies, the password route admits nobody.
 //!
 //! Three consequences, all of them intentional:

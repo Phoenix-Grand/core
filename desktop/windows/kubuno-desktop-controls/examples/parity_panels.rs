@@ -65,8 +65,8 @@ struct ChildSpec {
     /// The case file's last `cell` token (`fill` / `topleft`), as the child's
     /// own `Dock`/`Anchor`. A table cell is a miniature container: `fill`
     /// stretches the child to the cell, `topleft` leaves it at its natural size
-    /// pinned to the cell's corner. The placement itself is not reproduced here
-    /// - [`place_in_cell`] is called, so the harness cannot drift from the rule
+    /// pinned to the cell's corner. The placement itself is not reproduced here -
+    /// [`place_in_cell`] is called, so the harness cannot drift from the rule
     /// the library actually applies.
     dock: DockStyle,
     anchor: AnchorStyles,

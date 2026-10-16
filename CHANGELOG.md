@@ -792,8 +792,8 @@ number at release time, and CI publishes that section as the GitHub Release note
 - **MySQL/MariaDB and SQLite installs get the complete core schema.** The whole
   server schema - every table an administrator's instance needs (accounts,
   sessions, API tokens, the module catalogue, roles and rules, jobs, audit,
-  devices, domains, alerts, holidays, storage accounting, settings and the rest)
-  - is now authored for MySQL/MariaDB and SQLite as a single consolidated form
+  devices, domains, alerts, holidays, storage accounting, settings and the rest) -
+  is now authored for MySQL/MariaDB and SQLite as a single consolidated form
   matching the PostgreSQL one, so a fresh install on either engine builds the
   same structure the PostgreSQL install has always had.
 - **A module's PostgreSQL migrations keep working untouched.** The engine puts
@@ -1315,8 +1315,8 @@ number at release time, and CI publishes that section as the GitHub Release note
   changes anywhere that does not ask for it.
 
 - **The focus stroke under a heading field is three pixels, like every other
-  field's.** The stripped-down text field - one stroke under the text and no box
-  - drew a one-pixel line when it took focus, thin enough to miss on a
+  field's.** The stripped-down text field - one stroke under the text and no box -
+  drew a one-pixel line when it took focus, thin enough to miss on a
   high-density screen. It now carries the thickness the focus mark has
   everywhere else, and the stroke is reserved at rest as well, so nothing moves
   when the field is clicked.
@@ -1443,8 +1443,8 @@ number at release time, and CI publishes that section as the GitHub Release note
   wherever they are held. Both are off by default - the rule applies unless
   somebody says otherwise.
 - **Install and list modules from the command line.**
-  `kubuno modules:install <file.kbpkg>` installs a module from a local package
-  - Kubuno's cross-platform `.kbpkg` (a ZIP holding the module directory at its
+  `kubuno modules:install <file.kbpkg>` installs a module from a local package -
+  Kubuno's cross-platform `.kbpkg` (a ZIP holding the module directory at its
   root), or a `.zip`/`.deb`/`.tar.gz` - with no network and no catalogue: the
   archive is extracted, its embedded `SHA256SUMS` are verified (a tampered
   package is refused), the module id is read from `module.toml`, and the module
@@ -1773,8 +1773,8 @@ number at release time, and CI publishes that section as the GitHub Release note
 - **New Tasks logo** - a green hexagon with a white checkmark inside a
   circle - served as the browser-tab icon of `/tasks` (`tasks-logo.png`),
   which previously had no tab icon of its own.
-- **New Photos logo** - a hexagon with a rainbow aperture inside a blue ring
-  - served as the browser-tab icon of `/photos` (`photos-logo.png`), which
+- **New Photos logo** - a hexagon with a rainbow aperture inside a blue ring -
+  served as the browser-tab icon of `/photos` (`photos-logo.png`), which
   previously had no tab icon of its own.
 - **New Keestore logo** - a violet hexagon with a white key - served as the
   browser-tab icon of `/keestore` (`keestore-logo.png`, raster PNG replacing
@@ -1782,8 +1782,8 @@ number at release time, and CI publishes that section as the GitHub Release note
 - **New Wiki logo** - a violet hexagon with a white book and a "W" - served
   as the browser-tab icon of `/wiki` (`wiki-logo.png`); the Wiki favicon now
   resolves, where the former `/wiki-logo.svg` path pointed at a missing file.
-- **New Forum logo** - a blue hexagon with three people and speech bubbles
-  - served as the browser-tab icon of `/forum` (`forum-logo.png`), which
+- **New Forum logo** - a blue hexagon with three people and speech bubbles -
+  served as the browser-tab icon of `/forum` (`forum-logo.png`), which
   previously had no tab icon of its own.
 
 - **New Mail module logo** served at `/mail-logo.png` (replacing the old

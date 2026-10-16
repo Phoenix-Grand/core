@@ -330,8 +330,8 @@ fn neutralize_frame(f: &Frame) -> Frame {
     }
 }
 
-/// Checks whether `code` was pressed this frame, with or without Shift held
-/// - consumes whichever matched ([`host::take_key`]), so a key held down
+/// Checks whether `code` was pressed this frame, with or without Shift held -
+/// consumes whichever matched ([`host::take_key`]), so a key held down
 /// does not keep re-triggering every single frame. `(pressed, shift_held)`.
 fn take_arrow(code: u16) -> (bool, bool) {
     if host::take_key(code, Modifiers::SHIFT) > 0 {
@@ -564,8 +564,8 @@ pub fn main() -> ExitCode {
     // DSG-9 toolbox drag/drop (`kubuno_desktop_views::protocol::HostMessage::{DragEnter,
     // DragOver, Drop, DragLeave}`). `dragOver`/`drop` carry a position that
     // must be resolved against THIS frame's freshly-painted `layout_map`, not
-    // the (possibly stale) one from whenever the stdin line actually arrived
-    // - so, like the arrow-nudge `doc` parse below, they are only STORED here
+    // the (possibly stale) one from whenever the stdin line actually arrived -
+    // so, like the arrow-nudge `doc` parse below, they are only STORED here
     // and processed after this frame's paint pass.
     let mut toolbox = ToolboxController::new();
     let mut pending_drag_over: Option<(f32, f32)> = None;

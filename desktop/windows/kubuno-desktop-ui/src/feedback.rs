@@ -146,8 +146,8 @@ fn is_inert(model: &ControlBase, state: WidgetState) -> bool {
 /// Breaks on whitespace, and on explicit line breaks (`\n`, `\r\n`): each
 /// paragraph starts a new line, the way a `<br>` or a second `<p>` does.
 ///
-/// A single word wider than `max_width` is **hard-broken** between characters
-/// - the web's `overflow-wrap: break-word` (`break-words`), which is what a
+/// A single word wider than `max_width` is **hard-broken** between characters -
+/// the web's `overflow-wrap: break-word` (`break-words`), which is what a
 /// browser does to an unbreakable run inside a `min-w-0` flex child: the word
 /// first moves to a line of its own, then splits wherever the line is full. No
 /// text is ever dropped and no intermediate line is ever ellipsized; every

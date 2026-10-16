@@ -42,8 +42,8 @@ export interface OutlinedFieldProps {
  * empty. A label driven by `value` alone would still be resting INSIDE the box,
  * and the previewed text would render straight through it.
  *
- * There is no event for that state, but the field does match `:-webkit-autofill`
- * - so we hang a zero-length animation on that selector and listen for
+ * There is no event for that state, but the field does match `:-webkit-autofill` -
+ * so we hang a zero-length animation on that selector and listen for
  * `animationstart`, the long-standing way to observe autofill from script.
  * `autocomplete="off"` is not an option: Chrome ignores it on name/e-mail/tel
  * fields, and switching autofill off would be a regression for the user. */

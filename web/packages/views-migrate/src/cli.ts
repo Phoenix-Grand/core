@@ -229,8 +229,8 @@ function setNested(doc: Record<string, unknown>, key: string, value: string): bo
 
 /**
  * Writes the `defaultValue`s of `t('k', { defaultValue })` whose key no bundle has (the TSX showed the default in
- * every language) where the project's strings are loaded from, in the fallback language every language falls back to
- * - so the view shows the same text:
+ * every language) where the project's strings are loaded from, in the fallback language every language falls back to -
+ * so the view shows the same text:
  *  1. `src/**\/locales/<lang>/<ns>.json` (the core's bundles);
  *  2. else a module's catalogue `src/i18n.data.json` (`{ <lang>: { … } }`) when its `src/i18n.ts` registers `ns`
  *     (`registerModuleTranslations('<ns>', …)`); `i18n.ts` is generated from it, so its generator

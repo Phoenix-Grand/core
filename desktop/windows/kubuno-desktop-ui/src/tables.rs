@@ -645,8 +645,8 @@ pub struct Cell<'a> {
 /// the table's clip, so it cannot spill out of the body.
 pub type CellPainter = Box<dyn Fn(&dyn Canvas, &Cell<'_>) -> bool>;
 
-/// Where a menu of `want` size opens against the monitor's work area `area`
-/// - `MenuDropdown`'s rule: at `at`, pulled back inside the viewport by
+/// Where a menu of `want` size opens against the monitor's work area `area` -
+/// `MenuDropdown`'s rule: at `at`, pulled back inside the viewport by
 /// [`grid::MENU_EDGE`], and flipped to END at `flip_bottom` (the trigger's
 /// top, or the pointer) when it would run off the bottom. Pure.
 pub fn place_menu(at: (f32, f32), flip_bottom: f32, want: Size, area: Rect) -> Rect {
@@ -2792,8 +2792,8 @@ impl DataTable {
         }
 
         // The resize grips: an 8 DIP strip whose only visible part is a 1 DIP
-        // rule - `hover:after:bg-border-strong`, `focus-visible:after:bg-primary`
-        // - so the header is not a permanent grid of lines.
+        // rule - `hover:after:bg-border-strong`, `focus-visible:after:bg-primary` -
+        // so the header is not a permanent grid of lines.
         if self.can_resize(l) {
             for i in 0..cols.len() {
                 let Some(grip) = self.resize_grip(l, i) else { continue };

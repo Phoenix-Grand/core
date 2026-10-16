@@ -2,8 +2,8 @@
 //
 // One cache entry for the whole page: the list is short (an instance has a
 // handful of domains, not a directory of them), every mutation changes several
-// rows at once - a promotion demotes another, an alias appears under its parent
-// - and refetching the lot is both simpler and more honest than patching a
+// rows at once - a promotion demotes another, an alias appears under its parent -
+// and refetching the lot is both simpler and more honest than patching a
 // cached row into a state the server did not confirm.
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'

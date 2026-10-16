@@ -590,8 +590,8 @@ struct FlatFillsSet {
 ///    the mouse pointer is outside the bounds of the control** ». `BackColor`
 ///    is the RESTING face; `MouseOverBackColor`/`MouseDownBackColor` are what
 ///    replaces it while the pointer is there. Ranking `BackColor` above them
-///    would mean that naming a face colour permanently disables hover feedback
-///    - the exact opposite of what those two properties exist for.
+///    would mean that naming a face colour permanently disables hover feedback -
+///    the exact opposite of what those two properties exist for.
 /// 4. `checked` only reaches `CheckedBackColor` when NOT hot, per the same
 ///    sentence.
 /// 5. Otherwise an explicit `BackColor`, else the visual-style face. An unset
@@ -1490,8 +1490,8 @@ fn split_glyph(content: Rect, align: ContentAlignment) -> (Rect, Rect) {
 /// `Standard` and `System` are the classic sunken well - two rings, dark then
 /// darker on the top and left, so the box reads as a hole punched in the face.
 /// `Flat` has no bevel at all (one `ControlDark` ring), and `Popup` is flat
-/// until the pointer arrives, when it lifts into the single-ring « lite » bevel
-/// - the same rule the family's buttons follow, which is the whole point of the
+/// until the pointer arrives, when it lifts into the single-ring « lite » bevel -
+/// the same rule the family's buttons follow, which is the whole point of the
 /// two styles existing.
 fn glyph_edge(flat_style: FlatStyle, state: ControlState) -> Border3DStyle {
     match flat_style {

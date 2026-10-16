@@ -78,8 +78,8 @@ function readInstanceLang(): string | null {
  * le cookie seul ne suffit pas : un compte dont la préférence change sur un
  * autre appareil doit se retrouver appliqué ici.
  *
- * Le cookie passe AVANT l'instance parce qu'il n'est écrit que par une décision
- * - `setLanguage` (l'utilisateur choisit) ou `applyUserLanguage` (son compte
+ * Le cookie passe AVANT l'instance parce qu'il n'est écrit que par une décision -
+ * `setLanguage` (l'utilisateur choisit) ou `applyUserLanguage` (son compte
  * l'a choisi). Il n'est jamais posé par la détection automatique. Un cookie
  * signifie donc « quelqu'un a décidé », et la langue d'instance est un défaut :
  * un défaut ne remplace pas une décision. Corollaire assumé : changer la langue

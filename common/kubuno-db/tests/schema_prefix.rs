@@ -93,8 +93,8 @@ async fn sqlite_prefix_round_trip() {
 
     round_trip(&pool).await;
 
-    // The file is named for the prefixed schema, and the unprefixed one is absent
-    // - two prefixed instances get distinct files.
+    // The file is named for the prefixed schema, and the unprefixed one is absent -
+    // two prefixed instances get distinct files.
     assert!(dir.path().join("kub_notes.sqlite").exists(), "kub_notes.sqlite exists");
     assert!(!dir.path().join("notes.sqlite").exists(), "no unprefixed notes.sqlite");
 }

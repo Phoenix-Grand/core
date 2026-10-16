@@ -27,8 +27,8 @@
 //! would create a handler "go to definition" could never find; generating
 //! *only* a free `fn` would leave it undispatched. So this module always
 //! creates a standalone `fn <name>(vm: &mut dyn ViewModel, value: Value)`
-//! (the one payload shape [`kubuno_desktop_views::registry::EventMeta`] models today
-//! - see that type's own doc, "No payload type is modelled yet"), and, only
+//! (the one payload shape [`kubuno_desktop_views::registry::EventMeta`] models today -
+//! see that type's own doc, "No payload type is modelled yet"), and, only
 //! when the target file already uses the `handlers!` table convention, also
 //! inserts one forwarding entry `"<name>" => |vm, value| <name>(vm, value),`
 //! registering it - "plus registering it in the `handlers!` table if the

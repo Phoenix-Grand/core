@@ -17,8 +17,8 @@ import { accountError, useUpdateAccount } from '../useAccountEdit'
  *
  * `QuotaField` is the storage page's own control, borrowed rather than
  * re-implemented: a byte count is the thing an operator gets wrong -
- * `53687091200` and `5368709120` differ by one character and by a factor of ten
- * - and the two screens that set a quota must not disagree about how it is
+ * `53687091200` and `5368709120` differ by one character and by a factor of ten -
+ * and the two screens that set a quota must not disagree about how it is
  * typed. It also replaces the 0–200 Go slider the edit window used, which could
  * not express the ceiling of an account already above 200 Go.
  *

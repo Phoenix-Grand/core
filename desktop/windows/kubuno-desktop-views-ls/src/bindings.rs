@@ -1,6 +1,6 @@
 //! `kubuno/bindingPaths { uri, openFiles }` → `{ paths }`: the paths a view's data context answers
-//! (its `#[bind]` fields, a user control's properties, the arms of a hand-written `impl ViewModel`
-//! - see [`crate::binding_sources::data_context`]). Kept for older clients: the designer now asks
+//! (its `#[bind]` fields, a user control's properties, the arms of a hand-written `impl ViewModel` -
+//! see [`crate::binding_sources::data_context`]). Kept for older clients: the designer now asks
 //! `kubuno/bindingSources`, which also carries types, locations, the item row of a template, the
 //! data components, the resources and the converters.
 

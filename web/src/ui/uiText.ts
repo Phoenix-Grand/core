@@ -90,8 +90,8 @@ export function uiT(t?: TFunction): (key: string, vars?: Record<string, unknown>
 
 /**
  * Fold a string for local, human-friendly matching: Unicode-decomposed, stripped
- * of diacritics, lower-cased. This is what makes typing "unites" match "Unités"
- * - and, symmetrically, "Unités" match "unites". Decomposition (NFD) splits an
+ * of diacritics, lower-cased. This is what makes typing "unites" match "Unités" -
+ * and, symmetrically, "Unités" match "unites". Decomposition (NFD) splits an
  * accented letter into base + combining mark, and the mark is then removed.
  */
 export function foldText(value: string): string {

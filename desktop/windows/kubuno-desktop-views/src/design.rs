@@ -2162,8 +2162,8 @@ impl DesignController {
 
     fn begin_reorder(&mut self, layout: &LayoutMap, id: String, entry: &LayoutEntry, x: f32, y: f32, confirmed: bool) {
         // The dragged element's own starting index among ALL of its
-        // parent's children (itself included, unlike `sibling_bounds` below)
-        // - what `end_drag` compares the final `reorder_index` against to
+        // parent's children (itself included, unlike `sibling_bounds` below) -
+        // what `end_drag` compares the final `reorder_index` against to
         // decide whether anything actually moved.
         let original_index =
             layout.entries().iter().filter(|e| e.parent_id == entry.parent_id).position(|e| e.id == id).unwrap_or(0);
@@ -4066,8 +4066,8 @@ mod tests {
         let changed = dc.press(&map, 50.0, 30.0);
         assert!(changed, "selection changed from nothing to \"0.0\"");
         assert_eq!(dc.selected(), Some("0.0"));
-        // Armed in the SAME press (`DESIGNER.md` DSG-9's press-and-drag fix)
-        // - but not yet confirmed, so no preview until the pointer moves.
+        // Armed in the SAME press (`DESIGNER.md` DSG-9's press-and-drag fix) -
+        // but not yet confirmed, so no preview until the pointer moves.
         assert!(dc.is_dragging());
         assert!(dc.drag_preview().is_none());
     }

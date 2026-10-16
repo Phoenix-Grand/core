@@ -17,8 +17,8 @@ under the published version number.
 - **`dist/kbview-registry.web.json`, the host element registry as a file.** The bundled page already embeds the host
   registry (its SHA-256 is in `design-host.json`); it is now also emitted beside the build as a standalone file.
   A consumer that reads a registry file rather than the live page - the Visual Studio Toolbox / Properties window for a
-  view bridged to the bundled host (a mobile `.kbview`, which has no `node_modules/@kubuno/ui/kbview-registry.web.json`)
-  - can then show the same host elements the page renders instead of an empty list. Listed in `design-host.json`'s
+  view bridged to the bundled host (a mobile `.kbview`, which has no `node_modules/@kubuno/ui/kbview-registry.web.json`) -
+  can then show the same host elements the page renders instead of an empty list. Listed in `design-host.json`'s
   `files`, so the extension's build ships and verifies it.
 
 ## [0.1.2] - 2026-10-06

@@ -9,8 +9,8 @@
 //! `image_align`, `border_style`, `size_mode`… through [`Deref`]. `Badge`,
 //! `Tooltip` and `Separator` have no counterpart in WinForms (a `ToolTip` is a
 //! *component* there, not a control), so they compose the closest replica that
-//! carries the properties a layout needs - an empty [`kubuno_desktop_controls::labels::Label`]
-//! - rather than declaring a rival property block.
+//! carries the properties a layout needs - an empty [`kubuno_desktop_controls::labels::Label`] -
+//! rather than declaring a rival property block.
 //!
 //! ## Where the pixels come from
 //!

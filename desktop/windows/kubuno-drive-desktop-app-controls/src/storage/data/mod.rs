@@ -15,8 +15,8 @@ pub use bar_shapes::BarShapes;
 pub use thickness_check::ThicknessCheck;
 
 /// Visual state of a storage bar/gauge based on fill level
-/// (`StorageBar`/`StorageRing` `UpdateVisualState`). Reification by the port
-/// - not a C# type (see the module note).
+/// (`StorageBar`/`StorageRing` `UpdateVisualState`). Reification by the port -
+/// not a C# type (see the module note).
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
 pub enum StorageSeverity {
     Safe,

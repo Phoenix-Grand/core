@@ -69,8 +69,8 @@ export interface SheetSpec {
  *              at its own content width.
  *
  * The indirection is what makes ORIENTATION PER SHEET possible: sheet 3 can be
- * landscape while its neighbours are portrait, and it is not merely drawn wider
- * - it is filled with the row heights the document actually has at that width,
+ * landscape while its neighbours are portrait, and it is not merely drawn wider -
+ * it is filled with the row heights the document actually has at that width,
  * which are not the portrait ones. A single set of measurements would put the
  * portrait cut on a landscape sheet and leave it either short or overflowing.
  */

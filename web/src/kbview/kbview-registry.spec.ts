@@ -8,8 +8,8 @@
  *    allowlisted with a reason. The JSON diff report is written to `KBVIEW_CONFORMANCE_REPORT`
  *    (default: `kbview-conformance-report.json` in the OS temp directory).
  *
- * The desktop side is the committed snapshot of the real export, or - `KUBUNO_DESKTOP_REGISTRY=<path>`
- * - a fresh full export (`view_embed --export-registry`).
+ * The desktop side is the committed snapshot of the real export, or - `KUBUNO_DESKTOP_REGISTRY=<path>` -
+ * a fresh full export (`view_embed --export-registry`).
  */
 import { readFileSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'

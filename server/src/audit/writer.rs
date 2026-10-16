@@ -34,8 +34,8 @@ async fn insert(
 
     let ip_owned = ctx.ip.map(|ip| ip.to_string());
     // Server-set timestamp, chosen here (not by the column default) so the exact
-    // value that is stored is the one the hash covers. Truncated to microseconds
-    // - PostgreSQL `timestamptz` keeps only microseconds, so hashing the raw
+    // value that is stored is the one the hash covers. Truncated to microseconds -
+    // PostgreSQL `timestamptz` keeps only microseconds, so hashing the raw
     // nanosecond `now()` would not match the value read back at verification.
     let occurred_at = chrono::Utc::now();
     let occurred_at =

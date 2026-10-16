@@ -750,8 +750,8 @@ function Done({ title, text, last }: { title: string; text: string; last?: boole
   )
 }
 
-/** The flow's illustration, served by the core itself out of `frontend/public/`
- *  - at this point in the life of an instance nothing else can serve anything.
+/** The flow's illustration, served by the core itself out of `frontend/public/` -
+ *  at this point in the life of an instance nothing else can serve anything.
  *
  *  Three sources are tried in turn, so artwork can be added without touching
  *  this file: the step's own picture (`setup-<step>.png`), the one shared by the

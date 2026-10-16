@@ -736,8 +736,8 @@ body[data-kb-dictating] [data-doc-scroll] > * { will-change: auto !important; }
      une deuxième page - d'où une page blanche en tête et un décompte faux (4
      feuilles sortaient sur 5 pages, en paysage où la marge de manœuvre est la
      plus faible). Une feuille doit commencer à l'ORIGINE de la page.
-     Mesuré, pas deviné : `Emulation.setEmulatedMedia` puis lecture des boîtes
-     - la première feuille était à `top: 24px`. */
+     Mesuré, pas deviné : `Emulation.setEmulatedMedia` puis lecture des boîtes -
+     la première feuille était à `top: 24px`. */
   /* TOUS les ancêtres d'une feuille, pas une liste de classes : le rembourrage
      se trouvait sur le conteneur défilant du panneau, deux niveaux au-dessus de
      `.kb-admin`, et une liste nommée l'aurait raté (elle l'a raté). `:has()`

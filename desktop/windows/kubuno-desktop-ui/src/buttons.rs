@@ -29,8 +29,8 @@
 //! tests pin it), but where the predecessor and the web disagree the web wins:
 //! the `secondary` outline is `border-border-strong`, the switch's off track is
 //! `--color-surface-3` and a disabled switch is `opacity-50`, and the whole
-//! family paints the web's `focus-visible:ring-2 ring-primary ring-offset-1`
-//! - only when [`WidgetState::show_focus_ring`] says so, so a mouse click
+//! family paints the web's `focus-visible:ring-2 ring-primary ring-offset-1` -
+//! only when [`WidgetState::show_focus_ring`] says so, so a mouse click
 //! never leaves a ring behind.
 //!
 //! ## Composition rules
@@ -96,8 +96,8 @@ const DISABLED_ALPHA: f32 = 0.5;
 const DANGER_HOVER_ALPHA: f32 = 0.9;
 const DANGER_ACTIVE_ALPHA: f32 = 0.8;
 
-/// `focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1`
-/// - `Button.tsx`'s BASE, and the canvas element of `Checkbox.tsx`,
+/// `focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1` -
+/// `Button.tsx`'s BASE, and the canvas element of `Checkbox.tsx`,
 /// `Radio.tsx` and `Toggle.tsx`.
 mod focus_metrics {
     pub const RING: f32 = 2.0;

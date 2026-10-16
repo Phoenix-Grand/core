@@ -2,8 +2,8 @@
 //! by every module's iOS app.
 //!
 //! winit owns the `UIWindow` and the run loop; it hands us a `CAMetalLayer`-backed surface that `wgpu` renders into
-//! with the Metal backend, driving the portable renderer ([`kubuno_mobile_render`]) over the app's `.kbview` screens
-//! - the very same files the Android shell renders. It holds no app: a module's iOS crate (e.g.
+//! with the Metal backend, driving the portable renderer ([`kubuno_mobile_render`]) over the app's `.kbview` screens -
+//! the very same files the Android shell renders. It holds no app: a module's iOS crate (e.g.
 //! `maps/mobile/ios/kubuno-maps-mobile-ios`) calls [`run`] with its [`App`]. The `standalone` feature (on by
 //! default) keeps a demo binary showing the renderer's sample screen. Packaged into a
 //! `.app` bundle and run in the iOS Simulator or on an iPhone from a Mac. Tap anywhere to advance to the next screen.

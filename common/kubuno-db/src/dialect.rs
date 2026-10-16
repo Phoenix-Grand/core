@@ -374,8 +374,8 @@ impl Backend {
     /// A `" FOR UPDATE"` row lock, or the empty string on SQLite, which has no
     /// such clause. SQLite serializes writes at the database level (a write
     /// transaction holds an exclusive lock), so the pessimistic lock a
-    /// `SELECT ... FOR UPDATE` takes on PostgreSQL/MySQL is already implied there
-    /// - dropping the clause keeps the same "no concurrent writer sees a stale
+    /// `SELECT ... FOR UPDATE` takes on PostgreSQL/MySQL is already implied there -
+    /// dropping the clause keeps the same "no concurrent writer sees a stale
     /// row" guarantee. Where the lock backs a work-queue claim, keep the
     /// `UPDATE ... WHERE status = 'pending'` + `rows_affected == 1` check as the
     /// real arbiter; this clause is only an optimization on the engines that have
@@ -405,8 +405,8 @@ impl Backend {
     /// spellings agree on it - the second field is the part after the separator.
     ///
     /// * PostgreSQL: `SPLIT_PART(col, '@', 2)`.
-    /// * MySQL/MariaDB: `SUBSTRING_INDEX(SUBSTRING_INDEX(col, '@', 2), '@', -1)`
-    ///   - the outer `-1` trims the first field the inner call keeps, so a value
+    /// * MySQL/MariaDB: `SUBSTRING_INDEX(SUBSTRING_INDEX(col, '@', 2), '@', -1)` -
+    ///   the outer `-1` trims the first field the inner call keeps, so a value
     ///   with no `@` yields the empty string rather than the whole address.
     /// * SQLite: `substr(col, instr(col, '@') + 1)`.
     pub fn email_domain(self, col: &'static str) -> String {

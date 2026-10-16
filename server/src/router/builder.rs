@@ -580,8 +580,8 @@ pub fn build(state: AppState, frontend_dist: String) -> Router {
         // Vue d'ensemble sécurité du compte courant (compteurs, échéance 2FA admin).
         .route("/me/security",           get(crate::handlers::users::security_overview))
         // « Télécharger mes données » : l'export de données, ouvert au compte
-        // qu'il concerne. Aucune de ces routes n'accepte d'identifiant de compte
-        // - le sujet est toujours l'appelant, pris du jeton. Les trois répondent
+        // qu'il concerne. Aucune de ces routes n'accepte d'identifiant de compte -
+        // le sujet est toujours l'appelant, pris du jeton. Les trois répondent
         // 404 quand `data_export.self_service` est désactivé pour la portée de
         // l'utilisateur : la fonction disparaît au lieu d'être refusée.
         .route("/me/export",              get(crate::handlers::me_export::get_my_export)

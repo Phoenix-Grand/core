@@ -77,8 +77,8 @@ foreach ($type in $json) {
         # reached through Deref.
         $isMentioned = $text -match ('\b' + [regex]::Escape($p.name) + '\b')
 
-        # A subclass that merely re-declares a base property must NOT restate it
-        # - the value lives on the base and is reached through `Deref`. So
+        # A subclass that merely re-declares a base property must NOT restate it -
+        # the value lives on the base and is reached through `Deref`. So
         # before calling anything missing, look for the field on `ControlBase`,
         # which is what every chain bottoms out at.
         if (-not $cache.ContainsKey('control.rs')) {

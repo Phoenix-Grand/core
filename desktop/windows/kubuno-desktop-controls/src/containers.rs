@@ -75,8 +75,8 @@
 //! * a container's ground is its own `BackColor`, else `SystemColors.Control`
 //!   (`Control.DefaultBackColor`) - the ambient value a real control would
 //!   inherit from its parent, which this library models as `back_color = None`;
-//! * `BorderStyle::FixedSingle` is one square line in `SystemColors.WindowFrame`
-//!   - measured on the reference sheet as `#646464`, the `COLOR_WINDOWFRAME` of
+//! * `BorderStyle::FixedSingle` is one square line in `SystemColors.WindowFrame` -
+//!   measured on the reference sheet as `#646464`, the `COLOR_WINDOWFRAME` of
 //!   this machine, not a shadow grey;
 //! * `BorderStyle::Fixed3D` is [`Border3DStyle::Sunken`] through
 //!   [`ControlCanvas::draw_edge`]: two rings, dark outside and darker inside on
@@ -1336,8 +1336,8 @@ impl Control for GroupBox {
 /// WinForms' `DisplayRectangle` means: measured against real WinForms, a 200×100
 /// panel with `Padding = 10` reports `10,10,190,90`.
 ///
-/// Deliberately derived from the control's SIZE, never from its `bounds` position
-/// - `bounds` is itself parent-relative, so reading its origin here would mix two
+/// Deliberately derived from the control's SIZE, never from its `bounds` position -
+/// `bounds` is itself parent-relative, so reading its origin here would mix two
 /// spaces and reintroduce the bug this convention removes.
 ///
 /// Containers with a symmetric inset call this through their own

@@ -421,8 +421,8 @@ pub struct TreeView {
     pub show_root_lines: bool,
     pub show_plus_minus: bool,
     /// `LineColor`. `None` means « the colour the control uses by default »,
-    /// which the reference sheet shows is `GrayText` (`#6D6D6D` on this machine)
-    /// - the property's documented default of `Color.Black` is what the
+    /// which the reference sheet shows is `GrayText` (`#6D6D6D` on this machine) -
+    /// the property's documented default of `Color.Black` is what the
     /// *managed* getter reports, not what comctl32 draws with.
     pub line_color: Option<D2D1_COLOR_F>,
 
@@ -2395,8 +2395,8 @@ mod tests {
     }
 
     /// The two states nothing can reach honestly yet are still measured, so the
-    /// day a `ColumnHeader` carries a hover flag the colours are already known
-    /// - and so `HIS_NORMAL` is demonstrably a state and not a constant.
+    /// day a `ColumnHeader` carries a hover flag the colours are already known -
+    /// and so `HIS_NORMAL` is demonstrably a state and not a constant.
     #[test]
     fn a_hot_or_pressed_header_item_has_its_own_face() {
         let (w, h) = (20usize, 39usize);

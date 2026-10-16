@@ -298,8 +298,8 @@ pub fn logfont_height_to_dip(lf_height: i32, dpi: f32) -> f32 {
 /// The real UI font, resolved from the system and turned into DirectWrite text
 /// formats.
 ///
-/// On .NET Core / .NET 5+, `Control.DefaultFont` is `SystemFonts.MessageBoxFont`
-/// - `NONCLIENTMETRICS.lfMessageFont`. That is what every reference sheet was
+/// On .NET Core / .NET 5+, `Control.DefaultFont` is `SystemFonts.MessageBoxFont` -
+/// `NONCLIENTMETRICS.lfMessageFont`. That is what every reference sheet was
 /// rendered with, so it is what the port measures and paints with.
 #[derive(Clone, Debug)]
 pub struct SystemFonts {

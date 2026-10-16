@@ -279,8 +279,8 @@ fn display_text(text: &str, use_mnemonic: bool) -> String {
     let mut chars = text.chars().peekable();
     while let Some(ch) = chars.next() {
         if ch == '&' {
-            // `&&` collapses to a literal `&`; a lone `&` is the mnemonic marker
-            // - consumed, with the next character kept as the (would-be
+            // `&&` collapses to a literal `&`; a lone `&` is the mnemonic marker -
+            // consumed, with the next character kept as the (would-be
             // underlined) access key.
             if chars.peek() == Some(&'&') {
                 out.push('&');

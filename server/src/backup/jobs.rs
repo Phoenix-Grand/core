@@ -14,8 +14,8 @@
 //!
 //! They are separate because `queue::reschedule_after` refuses to insert when a
 //! job of the same type is already pending: a manual run sitting in the queue
-//! would silently swallow the recurring job's re-arm and stop the schedule dead
-//! - a bug whose only symptom is that backups quietly stop, which is the exact
+//! would silently swallow the recurring job's re-arm and stop the schedule dead -
+//! a bug whose only symptom is that backups quietly stop, which is the exact
 //! failure this feature exists to prevent.
 //!
 //! ## A failed dump is not a failed job

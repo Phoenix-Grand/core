@@ -739,8 +739,8 @@ impl Panel {
 
     /// The topmost visible child under a canvas-space point, or `None`.
     ///
-    /// Walks in reverse order, so the child painted last - and therefore on top
-    /// - answers first, which is [`Children::child_at`]'s rule.
+    /// Walks in reverse order, so the child painted last - and therefore on top -
+    /// answers first, which is [`Children::child_at`]'s rule.
     pub fn child_at(&self, bounds: Rect, x: f32, y: f32) -> Option<usize> {
         let rects = self.layout_children(bounds);
         self.slots
@@ -757,8 +757,8 @@ impl Panel {
     /// `AutoScrollMinSize`.
     ///
     /// Computed by the replica -
-    /// [`kubuno_desktop_controls::containers::ScrollableControl::scroll_content_size_within`]
-    /// - over stand-in children carrying the rectangles this panel resolved, so
+    /// [`kubuno_desktop_controls::containers::ScrollableControl::scroll_content_size_within`] -
+    /// over stand-in children carrying the rectangles this panel resolved, so
     /// the rule is the toolkit's and not a second copy of it.
     pub fn content_size(&self, bounds: Rect) -> Size {
         let p = self.populated(bounds);

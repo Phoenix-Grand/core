@@ -513,8 +513,8 @@ pub trait Control: ControlClone {
     fn control(&self) -> &ControlBase;
     fn control_mut(&mut self) -> &mut ControlBase;
 
-    /// The size the control would like, given the ambient font and its content
-    /// - `GetPreferredSize`. Honours `Padding`; the caller applies `Margin`.
+    /// The size the control would like, given the ambient font and its content -
+    /// `GetPreferredSize`. Honours `Padding`; the caller applies `Margin`.
     fn preferred_size(&self, c: &dyn Canvas) -> Size;
 
     /// Paints the control into `bounds` (already positioned by the layout), in

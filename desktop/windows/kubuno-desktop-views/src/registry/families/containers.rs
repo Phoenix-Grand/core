@@ -1969,8 +1969,8 @@ mod tests {
 
     #[test]
     fn splitter_drag_on_the_grip_writes_back_live_and_fires_on_distance_changed() {
-        // Mirrors `choice::tests::slider_drag_writes_back_live_and_fires_on_value_changed`
-        // - the same "press near an edge, the resolved value follows the
+        // Mirrors `choice::tests::slider_drag_writes_back_live_and_fires_on_value_changed` -
+        // the same "press near an edge, the resolved value follows the
         // pointer, clamped" shape, over `Splitter::hit_test_grip`/
         // `distance_for` instead of `Slider::hit_test`/`drag_to`.
         let mut node = SplitterNode {

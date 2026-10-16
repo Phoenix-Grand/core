@@ -31,8 +31,8 @@
 //!   starts at `top + 44` » is written here;
 //! * the **body's children** are a `Panel`'s children, placed and painted by
 //!   that family;
-//! * the **action bar's buttons** are [`crate::buttons::Button`] as they ship
-//!   - variant, size, colours and hit-testing included;
+//! * the **action bar's buttons** are [`crate::buttons::Button`] as they ship -
+//!   variant, size, colours and hit-testing included;
 //! * [`PromptDialog`]'s input is [`crate::text::TextField`], not a second
 //!   field;
 //! * [`Popover`]'s anchoring is [`crate::display::place`] - the tooltip's own

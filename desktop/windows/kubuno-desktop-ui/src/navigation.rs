@@ -639,8 +639,8 @@ fn visual_of(item: &StripItem) -> Visual {
 /// The Kubuno command bar.
 ///
 /// Owns a [`ToolStrip`] for the item model - the buttons, the separators, the
-/// labels, the drop-downs, `Enabled`, `Checked` and the per-item overflow rule
-/// - and arranges them with [`toolbar::arrange`], the shipping predecessor's own
+/// labels, the drop-downs, `Enabled`, `Checked` and the per-item overflow rule -
+/// and arranges them with [`toolbar::arrange`], the shipping predecessor's own
 /// pure primitive. The paint is the Kubuno one: flat on the module panel, no
 /// card and no border, a full-pill hover, an `accent_light` pill under an active
 /// toggle.

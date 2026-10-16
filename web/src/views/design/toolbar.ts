@@ -13,8 +13,8 @@ export type DeviceChoice = 'phone' | 'tablet' | null
 
 /**
  * Device frames in logical (CSS) pixels - the scale the shared controls are sized in (their typographic roles, paddings
- * and gaps are theme values at this scale, like the web). The view is shown at this fixed size - scaled to fit the pane
- * - with phone/tablet proportions and a bezel, rather than as a responsive web page. Rotating swaps width and height.
+ * and gaps are theme values at this scale, like the web). The view is shown at this fixed size - scaled to fit the pane -
+ * with phone/tablet proportions and a bezel, rather than as a responsive web page. Rotating swaps width and height.
  */
 export const DEVICE_FRAMES: Record<Exclude<DeviceChoice, null>, { w: number; h: number; label: string }> = {
   phone: { w: 390, h: 844, label: 'Téléphone' },

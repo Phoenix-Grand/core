@@ -77,8 +77,8 @@ par système - resterait entier.
 **Option B - Assumer les paquets natifs jusqu'au bout.** Publier de vrais dépôts `apt`
 et `dnf` signés, un installateur silencieux Windows, un `.pkg` notarisé. *Rejetée* :
 c'est le chemin le plus coûteux (infrastructure de dépôts, signature de code Windows,
-compte développeur Apple, notarisation) pour un gain qui ne profite qu'à un cas d'usage
-- l'administrateur qui veut voir ses modules dans l'inventaire de sa distribution.
+compte développeur Apple, notarisation) pour un gain qui ne profite qu'à un cas d'usage -
+l'administrateur qui veut voir ses modules dans l'inventaire de sa distribution.
 
 **Option C - Un format unique, installé par le core.** *Retenue.* Détaillée ci-dessous.
 

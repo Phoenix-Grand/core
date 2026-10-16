@@ -4,8 +4,8 @@
 //! and this module is the smallest thing that can put such a surface on screen:
 //! a plain window, a Direct2D swap chain (built by
 //! [`kubuno_drive_desktop_app_controls::Renderer`]) and a message loop that, on every paint,
-//! hands a `&dyn Canvas` to a caller-supplied closure. That is the whole point
-//! - the demo binaries mount the control families over this host and compare
+//! hands a `&dyn Canvas` to a caller-supplied closure. That is the whole point -
+//! the demo binaries mount the control families over this host and compare
 //! them side by side with the reference sheets.
 //!
 //! It is a HOST, not an application framework. It carries no pages, no
@@ -2313,8 +2313,8 @@ impl Host {
         // Read the DPI back from the window rather than trusting the cached
         // field. `self.dpi` starts at 96 and is only refreshed on `init` and
         // `WM_DPICHANGED`, so any paint that slips in before or between those
-        // hands the caller a 1:1 line while the canvas draws at the real scale
-        // - layout then measures against a window far wider than the one it is
+        // hands the caller a 1:1 line while the canvas draws at the real scale -
+        // layout then measures against a window far wider than the one it is
         // drawn into, and the right-hand content is silently clipped away.
         // One call per frame removes the whole class of staleness.
         // A zoom asked for by the page (`input::set_zoom`, a designer's zoom) scales the DPI: every

@@ -3,8 +3,8 @@
 //!
 //! - [`CustomControlNode`]: a control of the application written from a level
 //!   (`#[kubuno(extends = Control)]`): painted by its class's `on_paint_background` / `on_paint`,
-//!   sized by its `get_preferred_size`. (A class extending a built-in class - `extends = Button`
-//!   - reuses that class's node: `<Button>`'s node paints through the class's `on_paint`.)
+//!   sized by its `get_preferred_size`. (A class extending a built-in class - `extends = Button` -
+//!   reuses that class's node: `<Button>`'s node paints through the class's `on_paint`.)
 //! - [`UserControlNode`]: a user control, `<RatingBar/>`: its own `.kbview` (embedded by
 //!   `#[derive(UserControl)]`), compiled once and painted inside the element with the user
 //!   control's instance as the view model - its bindings read its properties, its handlers are

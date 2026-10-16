@@ -327,8 +327,8 @@ CREATE INDEX idx_items_tags ON items USING gin (tags jsonb_path_ops);
 the default `jsonb_ops` if you also need key-existence operators. The
 **MySQL and SQLite** migration directories are new, so their `CREATE TABLE`
 declares the column JSON from the start - `tags JSON NOT NULL` (MySQL) /
-`tags TEXT NOT NULL` (SQLite), or `Backend::col_json()` in a generated migration
-- and never carry an `ALTER`.
+`tags TEXT NOT NULL` (SQLite), or `Backend::col_json()` in a generated migration -
+and never carry an `ALTER`.
 ### 2.9 Delta sync: the change journal
 
 The local-first modules (calendar, tasks, notes, assistant, wiki, drive, mail,
@@ -569,8 +569,8 @@ on the three engines:
 All three drivers are always compiled in (there are no per-engine features), so
 one command builds and tests everything. SQLite round-trips run unconditionally
 on a temp file; the MySQL/MariaDB round-trips run only when a throwaway server
-URL is provided, and **fail** rather than skip if that URL is set but unreachable
-- a test that quietly does nothing is worse than no test.
+URL is provided, and **fail** rather than skip if that URL is set but unreachable -
+a test that quietly does nothing is worse than no test.
 
 ```sh
 # SQLite round-trips run with no setup:
