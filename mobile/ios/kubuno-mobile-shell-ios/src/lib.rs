@@ -10,10 +10,13 @@
 
 use std::sync::Arc;
 
-use kubuno_mobile_render::{App, FontHandle, Painter};
+use kubuno_mobile_render::{
+    input_backspace, input_focused, input_str, input_submit, App, FontHandle, Painter, Tap,
+};
 use winit::application::ApplicationHandler;
-use winit::event::{Touch, TouchPhase, WindowEvent};
+use winit::event::{ElementState, Touch, TouchPhase, WindowEvent};
 use winit::event_loop::{ActiveEventLoop, ControlFlow, EventLoop};
+use winit::keyboard::{Key, NamedKey};
 use winit::window::{Window, WindowId};
 
 /// Everything that only exists once a window (and its Metal layer) is available.
@@ -76,14 +79,45 @@ impl ApplicationHandler for Shell {
                 let (x, y) = (location.x as f32, location.y as f32);
                 match self.app.on_event {
                     Some(on_event) => {
-                        if let Some(ev) = self.gpu.as_ref().and_then(|g| g.painter.resolve_tap(x, y)) {
-                            log::info!("KUBUNO: tap -> {:?} / {}", ev.name, ev.handler);
-                            on_event(&ev);
+                        if let Some(g) = self.gpu.as_ref() {
+                            match g.painter.resolve_tap(x, y) {
+                                Tap::Event(ev) => {
+                                    log::info!("KUBUNO: tap -> {:?} / {}", ev.name, ev.handler);
+                                    on_event(&ev);
+                                }
+                                // A hardware or Simulator keyboard types into the field at once; showing the on-screen
+                                // iOS keyboard (a UIKeyInput first responder) is still to come.
+                                Tap::Focused => log::info!("KUBUNO: tap -> focus text field"),
+                                Tap::Ignored => {}
+                            }
                         }
                     }
                     None => {
                         self.idx = (self.idx + 1) % self.app.views.len();
                         log::info!("KUBUNO: tap -> view {}/{}", self.idx + 1, self.app.views.len());
+                    }
+                }
+                if let Some(g) = self.gpu.as_ref() {
+                    g.window.request_redraw();
+                }
+            }
+            // Keyboard input (a hardware or Simulator keyboard) while a field is focused: edit its buffer, or submit on
+            // Enter (the field's handler then runs with the typed text).
+            WindowEvent::KeyboardInput { event, .. }
+                if event.state == ElementState::Pressed && input_focused().is_some() =>
+            {
+                match &event.logical_key {
+                    Key::Named(NamedKey::Backspace) => input_backspace(),
+                    Key::Named(NamedKey::Enter) => {
+                        if let (Some(ev), Some(on_event)) = (input_submit(), self.app.on_event) {
+                            log::info!("KUBUNO: submit -> {} = {:?}", ev.handler, ev.text);
+                            on_event(&ev);
+                        }
+                    }
+                    _ => {
+                        if let Some(t) = &event.text {
+                            input_str(t.as_str());
+                        }
                     }
                 }
                 if let Some(g) = self.gpu.as_ref() {

@@ -154,6 +154,11 @@ pub struct Hit {
     pub events: Vec<(String, String)>,
     /// The laid-out box, physical px.
     pub rect: HostRect,
+    /// True for a text field the user can type into (`SearchField` / `TextField`): a tap on it takes the keyboard
+    /// focus instead of firing a click.
+    pub editable: bool,
+    /// For an editable field, its current text, used to seed the edit buffer when it is focused.
+    pub value: Option<String>,
 }
 
 /// The event handlers an element declares: `(event name without `On`, handler)`. An event attribute is the shared
@@ -620,8 +625,11 @@ impl Builder<'_> {
         if let Some(el) = self.els.get(&node) {
             let name = attr(el, "x:Name");
             let events = event_handlers(el);
-            if name.is_some() || !events.is_empty() {
-                out.push(Hit { name, events, rect: HostRect { x, y, w, h } });
+            let editable = matches!(el.name().as_deref(), Some("SearchField") | Some("TextField"));
+            if name.is_some() || !events.is_empty() || editable {
+                // An editable field keeps its current text, so focusing it seeds the edit buffer rather than wiping it.
+                let value = editable.then(|| self.resolve(&attr(el, "Text").unwrap_or_default()));
+                out.push(Hit { name, events, rect: HostRect { x, y, w, h }, editable, value });
             }
         }
         for c in self.tree.children(node).unwrap_or_default() {
@@ -706,17 +714,24 @@ impl Builder<'_> {
                 let isize = 18.0 * d;
                 let gx = x + 12.0 * d;
                 draw_icon(pm, "Search", gx, y, isize, h, isize, grey, clip);
-                let value = attr(el, "Text").filter(|t| !t.is_empty());
+                // While the field is focused, show the live edit buffer (and a caret) instead of its static text.
+                let focused = attr(el, "x:Name").as_deref().is_some_and(crate::text_input::is_focused);
+                let value = if focused { Some(crate::text_input::buffer()) } else { attr(el, "Text") }
+                    .filter(|t| !t.is_empty());
                 let (txt, col) = match &value {
                     Some(t) => (t.clone(), Rgba::rgb(0x20, 0x21, 0x24)),
                     None => (attr(el, "Placeholder").unwrap_or_default(), Rgba::rgb(0x80, 0x86, 0x8b)),
                 };
                 let px = 13.5 * d;
                 let tx = gx + isize + 8.0 * d;
-                let clear = if value.is_some() { 18.0 * d + 12.0 * d } else { 12.0 * d };
-                let line = ellipsize(font, &txt, px, (x + w - clear - tx).max(0.0), false);
+                let clear = if value.is_some() && !focused { 18.0 * d + 12.0 * d } else { 12.0 * d };
+                let avail = (x + w - clear - tx).max(0.0);
+                let line = ellipsize(font, &txt, px, avail, false);
+                let cx = (tx + text_width(font, &line, px, false)).min(tx + avail);
                 self.draw_lines(&[line], px, col, "MiddleLeft", false, tx, y, w, h, pm, clip);
-                if value.is_some() {
+                if focused {
+                    caret(pm, cx, y, h, px, d, clip);
+                } else if value.is_some() {
                     let s = 18.0 * d;
                     draw_icon(pm, "X", x + w - s - 12.0 * d, y, s, h, s, grey, clip);
                 }
@@ -737,13 +752,21 @@ impl Builder<'_> {
                     draw_icon(pm, &icon, tx, top, s, fh, s, grey, clip);
                     tx += s + 8.0 * d;
                 }
-                let (txt, col) = match attr(el, "Text").filter(|t| !t.is_empty()) {
-                    Some(t) => (t, Rgba::rgb(0x20, 0x21, 0x24)),
+                let focused = attr(el, "x:Name").as_deref().is_some_and(crate::text_input::is_focused);
+                let value = if focused { Some(crate::text_input::buffer()) } else { attr(el, "Text") }
+                    .filter(|t| !t.is_empty());
+                let (txt, col) = match &value {
+                    Some(t) => (t.clone(), Rgba::rgb(0x20, 0x21, 0x24)),
                     None => (attr(el, "Placeholder").unwrap_or_default(), Rgba::rgb(0x80, 0x86, 0x8b)),
                 };
                 let px = 13.5 * d;
-                let line = ellipsize(font, &txt, px, (x + w - 12.0 * d - tx).max(0.0), false);
+                let avail = (x + w - 12.0 * d - tx).max(0.0);
+                let line = ellipsize(font, &txt, px, avail, false);
+                let cx = (tx + text_width(font, &line, px, false)).min(tx + avail);
                 self.draw_lines(&[line], px, col, "MiddleLeft", false, tx, top, w, fh, pm, clip);
+                if focused {
+                    caret(pm, cx, top, fh, px, d, clip);
+                }
             }
             "Switch" => {
                 let on = attr(el, "On").as_deref() == Some("true");
@@ -897,6 +920,15 @@ pub(crate) fn fill_rrect(pm: &mut sk::Pixmap, x0: f32, y0: f32, x1: f32, y1: f32
     if let Some(path) = rrect_path(x0, y0, x1, y1, r) {
         pm.fill_path(&path, &c.paint(), sk::FillRule::Winding, sk::Transform::identity(), clip);
     }
+}
+
+/// Draw the text caret of a focused field: a thin vertical bar at `cx`, centred in the `row_h`-tall row from `top`,
+/// as tall as the text. Shown by the `SearchField` / `TextField` paint while the field holds the keyboard focus.
+fn caret(pm: &mut sk::Pixmap, cx: f32, top: f32, row_h: f32, px: f32, d: f32, clip: Option<&sk::Mask>) {
+    let ch = (px * 1.2).min(row_h);
+    let cy = top + (row_h - ch) / 2.0;
+    let wline = (1.5 * d).max(1.0);
+    fill_rrect(pm, cx, cy, cx + wline, cy + ch, 0.0, Rgba::rgb(0x1a, 0x73, 0xe8), clip);
 }
 
 #[allow(clippy::too_many_arguments)]

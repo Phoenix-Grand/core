@@ -65,6 +65,14 @@ number at release time, and CI publishes that section as the GitHub Release note
   thread and posts its result back through a UI task queue that wakes the shell (Android's native waker, iOS's
   event-loop proxy); the next frame picks up the new data and re-renders — no polling, no touch needed. These are
   the engine foundations the apps' real behaviour (account, network, live map, logic) will build on.
+- **You can type into a search / text field.** Tapping a `SearchField` / `TextField` gives it the keyboard focus and
+  the shell shows the soft keyboard; the field then displays what is typed, with a caret, and the keyboard's keys edit
+  its buffer (characters, Backspace) — on Enter the field's `OnSubmit` handler fires with the typed text, so an app can
+  run a real search for what the user wrote. The focus is the renderer's own state (the painter draws the live buffer
+  in the focused field); the Android shell routes key events through the device's key-character map and shows/hides the
+  soft keyboard with the focus, the iOS shell routes winit key input. (Known limit: on Android `native-activity`,
+  character keys arrive from a hardware or Simulator/emulator keyboard, which this path surfaces; committing text from
+  the *on-screen* soft keyboard, and the on-screen iOS keyboard, still needs an input-connection shim — to come.)
 
 ### Fixed
 - **Ctrl+wheel zooms the desktop view designer.** In the Visual Studio design preview of a `.kbview`

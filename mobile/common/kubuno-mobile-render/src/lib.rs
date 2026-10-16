@@ -19,9 +19,14 @@ mod host;
 mod icons;
 mod images;
 mod tasks;
+mod text_input;
 mod view;
 pub use data::{set_data, Scope, Value};
 pub use tasks::{post_ui, run_ui_tasks, set_waker};
+pub use text_input::{
+    backspace as input_backspace, blur as input_blur, buffer as input_buffer, focus as input_focus,
+    focused as input_focused, insert_str as input_str, submit as input_submit,
+};
 pub use host::{register_host_control, HostCanvas, HostControl, HostElement, HostRect};
 pub use images::{decode_jpeg, register_image};
 pub use view::{hit_test, render_view, view_hits, Hit, Rgba};
@@ -68,6 +73,21 @@ pub struct TapEvent {
     /// The touch point (physical px).
     pub x: f32,
     pub y: f32,
+    /// The typed text, for a text field's submit event (`OnSubmit`); `None` for an ordinary tap.
+    pub text: Option<String>,
+}
+
+/// What a resolved tap asks of the shell, so it can manage the soft keyboard. The engine has already updated the
+/// keyboard focus (focusing a text field, or blurring on any other tap), so the shell may simply show the keyboard
+/// while [`input_focused`] is `Some` and hide it otherwise; the variant spells out the common cases.
+#[derive(Clone, Debug, PartialEq)]
+pub enum Tap {
+    /// The touch hit nothing tappable: focus was dropped, the shell hides the keyboard.
+    Ignored,
+    /// The touch focused a text field: the shell shows the soft keyboard.
+    Focused,
+    /// The touch fired an app handler: the shell runs it ([`App::on_event`]) and hides the keyboard.
+    Event(TapEvent),
 }
 
 use std::borrow::Cow;
@@ -220,12 +240,25 @@ impl Painter {
         Ok(Self { pipeline, layout, sampler, tex_format, target: None, safe_area: None, key: None, hits: Vec::new() })
     }
 
-    /// The app-level tap for a touch at `(x, y)` (physical px) against the view currently on screen: the top-most
-    /// element with an `x:Name` or an event, with its `OnClick` handler. `None` if the touch hits no such element.
-    pub fn resolve_tap(&self, x: f32, y: f32) -> Option<TapEvent> {
-        let hit = hit_test(&self.hits, x, y)?;
+    /// Resolve a touch at `(x, y)` (physical px) against the view currently on screen, updating the keyboard focus and
+    /// telling the shell what to do about the soft keyboard. The top-most element under the touch wins: a text field
+    /// (`SearchField` / `TextField`) with an `x:Name` takes the focus ([`Tap::Focused`]); any other named / handler
+    /// element fires its `OnClick` ([`Tap::Event`]) and drops the focus; empty space drops the focus ([`Tap::Ignored`]).
+    pub fn resolve_tap(&self, x: f32, y: f32) -> Tap {
+        let Some(hit) = hit_test(&self.hits, x, y) else {
+            text_input::blur();
+            return Tap::Ignored;
+        };
+        if hit.editable {
+            if let Some(name) = &hit.name {
+                let submit = hit.events.iter().find(|(e, _)| e == "Submit").map(|(_, h)| h.as_str());
+                text_input::focus(name, hit.value.as_deref().unwrap_or(""), submit);
+                return Tap::Focused;
+            }
+        }
+        text_input::blur();
         let handler = hit.events.iter().find(|(e, _)| e == "Click").map(|(_, h)| h.clone()).unwrap_or_default();
-        Some(TapEvent { name: hit.name.clone(), handler, x, y })
+        Tap::Event(TapEvent { name: hit.name.clone(), handler, x, y, text: None })
     }
 
     /// Set the safe-area insets (top: status bar / notch / Dynamic Island, bottom: home indicator / gesture bar)
@@ -250,7 +283,9 @@ impl Painter {
     ) -> Result<(), String> {
         let insets = self.safe_area.map_or(0, |(t, b)| ((t.to_bits() as u64) << 32) | b.to_bits() as u64);
         // The data context contributes to the key, so a changed binding / repeater list re-rasterises.
-        let state_version = crate::host::version().wrapping_add(crate::data::version().wrapping_mul(1_000_003));
+        let state_version = crate::host::version()
+            .wrapping_add(crate::data::version().wrapping_mul(1_000_003))
+            .wrapping_add(crate::text_input::version().wrapping_mul(1_000_033));
         let key = (src.as_ptr() as usize, src.len(), width, height, insets, state_version);
         if self.key != Some(key) || self.target.is_none() {
             let pixmap =
