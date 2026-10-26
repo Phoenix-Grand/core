@@ -1,8 +1,15 @@
 import { eachDayOfInterval, endOfMonth, endOfWeek, formatDate, isValidDate, startOfMonth, startOfWeek, toDate, toISODate, toISODateTimeLocal } from '../../core/intl/datetime'
 import type { DatePickerMode } from './types'
 
-export const WEEKDAYS  = ['L', 'M', 'M', 'J', 'V', 'S', 'D']
-export const MONTHS_FR = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sep', 'Oct', 'Nov', 'Déc']
+export function weekdayLabels(locale: string): string[] {
+  const format = new Intl.DateTimeFormat(locale, { weekday: 'narrow' })
+  return Array.from({ length: 7 }, (_, i) => format.format(new Date(2024, 0, 1 + i)))
+}
+
+export function monthLabels(locale: string, width: 'short' | 'long' = 'short'): string[] {
+  const format = new Intl.DateTimeFormat(locale, { month: width })
+  return Array.from({ length: 12 }, (_, i) => format.format(new Date(2024, i, 1)))
+}
 
 /** Parse a controlled value (ISO date/time) into a Date, `null` when unusable. */
 export function parseDateValue(v: string | null | undefined, mode: DatePickerMode): Date | null {

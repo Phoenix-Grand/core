@@ -123,7 +123,7 @@ export default function AvatarCropModal({ initialSrc, initialCrop, saving, onCan
   }
 
   return (
-    <FloatingWindow title="Photo de profil" onClose={onCancel} defaultWidth={360} backdrop>
+    <FloatingWindow title="Profile photo" onClose={onCancel} defaultWidth={360} backdrop>
       <div className="p-5 flex flex-col items-center gap-4">
         {/* Zone de recadrage */}
         <div
@@ -143,11 +143,11 @@ export default function AvatarCropModal({ initialSrc, initialCrop, saving, onCan
           {!nat && (
             <button
               type="button"
-              onClick={() => { void pickImageFile({ title: 'Photo de profil' }).then(useFile) }}
+              onClick={() => { void pickImageFile({ title: "Profile photo" }).then(useFile) }}
               className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-text-tertiary hover:text-primary transition-colors"
             >
               {loadError ? <ImageOff size={36} /> : <ImagePlus size={36} />}
-              <span className="text-sm">{loadError ? 'Image illisible - importez-en une' : 'Importer une image'}</span>
+              <span className="text-sm">{loadError ? "Cannot read this image — upload another" : "Upload an image"}</span>
             </button>
           )}
           {/* Masque circulaire */}
@@ -170,22 +170,23 @@ export default function AvatarCropModal({ initialSrc, initialCrop, saving, onCan
         {/* Import (toujours dispo) */}
         <button
           type="button"
-          onClick={() => { void pickImageFile({ title: 'Photo de profil' }).then(useFile) }}
+          onClick={() => { void pickImageFile({ title: "Profile photo" }).then(useFile) }}
           className="flex items-center gap-1.5 text-sm text-primary hover:text-primary-hover transition-colors"
         >
-          <ImagePlus size={15} /> Importer une autre image
+          <ImagePlus size={15} />  Upload another image
         </button>
 
         {nat && (
           <p className="text-xs text-text-tertiary text-center">
-            Glissez pour positionner, utilisez le curseur pour zoomer.
+
+            Drag to position; use the slider to zoom.
           </p>
         )}
 
         {/* Actions */}
         <div className="flex gap-3 w-full">
-          <Button variant="secondary" className="flex-1" onClick={onCancel}>Annuler</Button>
-          <Button className="flex-1" onClick={handleSave} loading={saving} disabled={!nat}>Enregistrer</Button>
+          <Button variant="secondary" className="flex-1" onClick={onCancel}>Cancel</Button>
+          <Button className="flex-1" onClick={handleSave} loading={saving} disabled={!nat}>Save</Button>
         </div>
       </div>
     </FloatingWindow>

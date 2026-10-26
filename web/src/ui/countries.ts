@@ -4,6 +4,12 @@
 // NOTE: broad list, not the full ISO set - extend as needed.
 export interface Country { iso2: string; dial: string; name: string }
 
+/** Localize both the displayed name and the searchable name. */
+export function localizedCountries(locale: string): Country[] {
+  const names = new Intl.DisplayNames([locale], { type: 'region' })
+  return COUNTRIES.map(country => ({ ...country, name: names.of(country.iso2) ?? country.iso2 }))
+}
+
 /** 🇫🇷 flag emoji from an ISO-3166 alpha-2 code. */
 export function flagEmoji(iso2: string): string {
   return iso2.toUpperCase().replace(/./g, c => String.fromCodePoint(127397 + c.charCodeAt(0)))

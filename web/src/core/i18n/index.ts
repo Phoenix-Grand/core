@@ -199,6 +199,16 @@ export function writeLangCookie(lng: string) {
   document.cookie = `${LANG_COOKIE}=${lng}; path=/; max-age=31536000; SameSite=Lax`
 }
 
+// A slow locale download must not undo a more recent language selection.
+let languageRequest = 0
+async function changeLoadedLanguage(lng: string): Promise<void> {
+  const request = ++languageRequest
+  await loadLocale(lng)
+  if (request !== languageRequest) return
+  await i18n.changeLanguage(lng)
+  applyDir(lng)
+}
+
 /**
  * Change la langue de l'application : applique, persiste en cookie, et - si
  * `persistUser` est fourni - sauvegarde dans les préférences de l'utilisateur.
@@ -211,7 +221,7 @@ export function setLanguage(lng: string, persistUser?: (lng: string) => void) {
   persistUser?.(lng)
   // Charger le bundle de la langue AVANT de basculer, sinon i18next afficherait
   // le fallback `en` le temps du chargement du chunk.
-  void loadLocale(lng).then(() => i18n.changeLanguage(lng))
+  void changeLoadedLanguage(lng)
 }
 
 /**
@@ -224,10 +234,10 @@ export function setLanguage(lng: string, persistUser?: (lng: string) => void) {
  * répond après lui, de repasser derrière.
  */
 export function applyUserLanguage(lng: unknown) {
-  if (typeof lng === 'string' && SUPPORTED.includes(lng) && lng !== i18n.language) {
-    applyDir(lng)
-    writeLangCookie(lng)
-    void loadLocale(lng).then(() => i18n.changeLanguage(lng))
+  if (typeof lng === 'string' && SUPPORTED.includes(lng)) {
+    // Persist an explicit account preference even when it matches the initial
+    // language, so a later instance response cannot replace it.
+    setLanguage(lng)
   }
 }
 
@@ -272,9 +282,7 @@ export async function syncInstanceLanguage(): Promise<void> {
   const decided = readCookie(LANG_COOKIE)
   if (decided && SUPPORTED.includes(decided)) return
   if (lng === i18n.language) return
-  await loadLocale(lng)
-  void i18n.changeLanguage(lng)
-  applyDir(lng)
+  await changeLoadedLanguage(lng)
 }
 
 /**

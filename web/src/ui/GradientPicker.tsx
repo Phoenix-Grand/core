@@ -16,12 +16,12 @@ import { hexToRgb, rgbToHex } from './color'
 import { type Gradient, type GradientStop, gradientToCss, DEFAULT_GRADIENT } from './gradient'
 
 const FALLBACK: Record<string, string> = {
-  gradient_linear:   'Linéaire',
-  gradient_radial:   'Radial',
-  gradient_angle:    'Angle',
-  gradient_position: 'Position',
-  gradient_opacity:  'Opacité',
-  gradient_add_stop: 'Ajouter un arrêt',
+  gradient_linear:   "Linear",
+  gradient_radial:   "Radial",
+  gradient_angle:    "Angle",
+  gradient_position: "Position",
+  gradient_opacity:  "Opacity",
+  gradient_add_stop: "Add a stop",
 }
 
 // Colour sampled along the gradient at position `p` (0..1) - used when inserting
@@ -50,7 +50,7 @@ export function GradientPicker({ t, value, onChange, onClose, C: CProp }: {
   // Sans thème explicite, on suit le thème de l'APPLICATION (clair/sombre).
   const appTheme = useAppPickerTheme()
   const C = CProp ?? appTheme
-  const tr = (k: string) => (t ? t(k) : (FALLBACK[k] ?? k))
+  const tr = (k: string) => (t ? t(k, { defaultValue: FALLBACK[k] ?? k }) : (FALLBACK[k] ?? k))
   const grad: Gradient = value ?? DEFAULT_GRADIENT
   const [sel, setSel] = useState(0)
   const barRef = useRef<HTMLDivElement>(null)

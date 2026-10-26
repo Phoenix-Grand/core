@@ -10,6 +10,7 @@ import { Button, Callout, Spinner, useToast } from "@ui"
 import ConfirmDialog from "@ui/ConfirmDialog"
 import { api } from "../../core/api/client"
 import { apiErrorMessage } from "../../core/api/errorMessage"
+import { formatDate } from '../../core/intl/datetime'
 import { useConfirm } from "../../core/hooks/useConfirm"
 import { usePrivileges } from "../../core/authz/usePrivileges"
 
@@ -40,7 +41,7 @@ interface ConnectionsResponse {
 function fmtDate(iso: string | null): string {
   if (!iso) return '-'
   const d = new Date(iso)
-  return Number.isNaN(d.getTime()) ? '-' : d.toLocaleString()
+  return Number.isNaN(d.getTime()) ? '-' : formatDate(d, 'dateTime')
 }
 
 export type KnownConnectionsCardProps = {

@@ -26,10 +26,10 @@ export const VIEW_SPECS: Record<ViewMode, ViewSpec> = {
 
 interface ModeDef { value: ViewMode; labelKey: string; fallback: string; icon: ReactNode }
 const MODES: ModeDef[] = [
-  { value: 'lg',      labelKey: 'view.icons_lg', fallback: 'Grandes icônes', icon: <LayoutGrid size={16} /> },
-  { value: 'sm',      labelKey: 'view.icons_sm', fallback: 'Petites icônes', icon: <Grid3x3 size={16} /> },
-  { value: 'list',    labelKey: 'view.list',     fallback: 'Liste',          icon: <List size={16} /> },
-  { value: 'details', labelKey: 'view.details',  fallback: 'Détails',        icon: <AlignJustify size={16} /> },
+  { value: 'lg',      labelKey: 'view.icons_lg', fallback: "Large icons", icon: <LayoutGrid size={16} /> },
+  { value: 'sm',      labelKey: 'view.icons_sm', fallback: "Small icons", icon: <Grid3x3 size={16} /> },
+  { value: 'list',    labelKey: 'view.list',     fallback: "List",          icon: <List size={16} /> },
+  { value: 'details', labelKey: 'view.details',  fallback: "Details",        icon: <AlignJustify size={16} /> },
 ]
 
 interface ViewMenuProps {
@@ -75,8 +75,8 @@ export function ViewMenu({ value, onChange, showHidden, onShowHidden, t }: ViewM
           single line - and it leaves the row free for what comes next. */}
       <button
         onClick={() => onShowHidden(!showHidden)}
-        title={t('view.hidden', { defaultValue: 'Éléments masqués' })}
-        aria-label={t('view.hidden', { defaultValue: 'Éléments masqués' })}
+        title={t('view.hidden', { defaultValue: "Hidden items" })}
+        aria-label={t('view.hidden', { defaultValue: "Hidden items" })}
         aria-pressed={showHidden}
         className={`flex items-center justify-center h-8 w-8 rounded-md border border-border transition-colors ${
           showHidden ? 'bg-primary-light text-primary' : 'text-text-secondary hover:bg-surface-1'

@@ -22,8 +22,8 @@ interface Props extends ConfirmOptions {
 export default function ConfirmDialog({
   title,
   message,
-  confirmLabel = 'Confirmer',
-  cancelLabel  = 'Annuler',
+  confirmLabel = "Confirm",
+  cancelLabel  = "Cancel",
   variant      = 'default',
   hideCancel   = false,
   onConfirm,

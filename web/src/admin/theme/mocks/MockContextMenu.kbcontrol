@@ -3,25 +3,25 @@
   <Panel Class="w-52 py-1 rounded-lg bg-white border border-border [box-shadow:0_2px_6px_2px_rgba(0,0,0,.12),_0_1px_2px_rgba(0,0,0,.18)]">
     <Panel Class="{Binding item}">
       <Icon Name="Download" Size="15" Class="text-text-secondary"/>
-      <Label HtmlTag="Span" InheritFontSize="true" Overflow="Wrap" Text=" Télécharger"/>
+      <Label HtmlTag="Span" InheritFontSize="true" Overflow="Wrap" Text=" Download"/>
       <Label HtmlTag="Span" Text="⌘S" Role="Meta" Overflow="Wrap" ForeColor="TextTertiary" Class="ml-auto"/>
     </Panel>
     <Panel Class="{Binding item}">
       <Icon Name="Share2" Size="15" Class="text-text-secondary"/>
-      <Label HtmlTag="Span" InheritFontSize="true" Overflow="Wrap" Text=" Partager"/>
+      <Label HtmlTag="Span" InheritFontSize="true" Overflow="Wrap" Text=" Share"/>
     </Panel>
     <Panel Class="{Binding item}">
       <Icon Name="Pencil" Size="15" Class="text-text-secondary"/>
-      <Label HtmlTag="Span" InheritFontSize="true" Overflow="Wrap" Text=" Renommer"/>
+      <Label HtmlTag="Span" InheritFontSize="true" Overflow="Wrap" Text=" Rename"/>
     </Panel>
     <Panel Class="{Binding item}">
       <Icon Name="Copy" Size="15" Class="text-text-secondary"/>
-      <Label HtmlTag="Span" InheritFontSize="true" Overflow="Wrap" Text=" Dupliquer"/>
+      <Label HtmlTag="Span" InheritFontSize="true" Overflow="Wrap" Text=" Duplicate"/>
     </Panel>
     <Panel Class="my-1 border-t border-border"/>
     <Panel Class="{Binding item}">
       <Icon Name="Info" Size="15" Class="text-text-secondary"/>
-      <Label HtmlTag="Span" InheritFontSize="true" Overflow="Wrap" Text=" Détails"/>
+      <Label HtmlTag="Span" InheritFontSize="true" Overflow="Wrap" Text=" Details"/>
     </Panel>
     <Panel Class="my-1 border-t border-border"/>
     <Stack Direction="LeftToRight"
@@ -30,7 +30,7 @@
            ForeColor="Danger"
            Class="px-3 py-1.5 text-sm hover:bg-danger-light cursor-default">
       <Icon Name="Trash2" Size="15"/>
-      <Label HtmlTag="Span" InheritFontSize="true" Overflow="Wrap" Text=" Supprimer"/>
+      <Label HtmlTag="Span" InheritFontSize="true" Overflow="Wrap" Text=" Delete"/>
     </Stack>
   </Panel>
 </UserControl>

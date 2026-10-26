@@ -44,12 +44,12 @@ export function Part1({ t, rows, columns, state, setState, query, setQuery, sele
               { id: 'role',    label: t('admin.t_prev_dt_b_role',    { defaultValue: 'Changer de rôle' }),    icon: <Shield size={14} />,    onClick: () => setSelected([]) },
               { id: 'suspend', label: t('admin.t_prev_dt_b_suspend', { defaultValue: 'Suspendre' }),          icon: <Ban size={14} />,       onClick: () => setSelected([]) },
               { id: 'remove',  label: t('admin.t_prev_dt_b_remove',  { defaultValue: 'Retirer de l’unité' }), icon: <UserMinus size={14} />, onClick: () => setSelected([]) },
-              { id: 'delete',  label: t('common.delete', { defaultValue: 'Supprimer' }), icon: <Trash2 size={14} />, danger: true, onClick: () => setSelected([]) },
+              { id: 'delete',  label: t('common.delete', { defaultValue: "Delete" }), icon: <Trash2 size={14} />, danger: true, onClick: () => setSelected([]) },
             ]}
             rowActions={[
               { id: 'edit',   label: t('admin.t_prev_dt_a_edit',  { defaultValue: 'Modifier' }), icon: <Pencil size={14} />, onClick: () => {} },
               { id: 'mail',   label: t('admin.t_prev_dt_b_mail',  { defaultValue: 'Envoyer un message' }), icon: <Mail size={14} />, onClick: () => {} },
-              { id: 'delete', label: t('common.delete', { defaultValue: 'Supprimer' }), icon: <Trash2 size={14} />, danger: true, onClick: () => {} },
+              { id: 'delete', label: t('common.delete', { defaultValue: "Delete" }), icon: <Trash2 size={14} />, danger: true, onClick: () => {} },
             ]}
           />
   )

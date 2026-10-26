@@ -28,7 +28,7 @@ const SWATCHES = [
 // Sélecteur de couleur « rapide » : grille de pastilles + option « Personnalisé »
 // qui ouvre le ColorPicker complet. Pensé pour la couleur de texte/surlignage.
 export function ColorSwatchPicker({
-  color, onChange, onClose, t, theme, customLabel = 'Personnalisé', confirmLabel, cancelLabel,
+  color, onChange, onClose, t, theme, customLabel = "Custom", confirmLabel, cancelLabel,
 }: {
   color: string
   onChange: (hex: string) => void
@@ -54,8 +54,8 @@ export function ColorSwatchPicker({
   })
 
   // Étiquettes sans fuite de clé i18n : on passe des libellés explicites au ColorPicker.
-  const confirm = confirmLabel ?? (t ? t('color_add',    { defaultValue: 'Ajouter' }) : 'Ajouter')
-  const cancel  = cancelLabel  ?? (t ? t('color_cancel', { defaultValue: 'Annuler' }) : 'Annuler')
+  const confirm = confirmLabel ?? (t ? t('color_add',    { defaultValue: "Add" }) : "Add")
+  const cancel  = cancelLabel  ?? (t ? t('color_cancel', { defaultValue: "Cancel" }) : "Cancel")
 
   // Écran « Personnalisé » : le ColorPicker complet édite un BROUILLON ; rien n'est
   // appliqué tant qu'on n'a pas cliqué « Ajouter ». Les deux boutons reviennent à
@@ -123,7 +123,7 @@ export function ColorSwatchPicker({
         {typeof window !== 'undefined' && 'EyeDropper' in window && (
           <button
             onClick={pickEyedropper}
-            title="Pipette"
+            title="Eyedropper"
             className="aspect-square flex items-center justify-center rounded-full border transition-colors"
             style={{ borderColor: C.border, color: C.textDim }}
             onMouseEnter={e => (e.currentTarget.style.background = C.surface ?? 'transparent')}

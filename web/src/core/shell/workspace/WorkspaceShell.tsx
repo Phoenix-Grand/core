@@ -95,6 +95,7 @@ export function WorkspaceShell({
   statusHeight?: number         // hauteur status bar (22)
   children: ReactNode           // le corps (typiquement un <DockArea>)
 }) {
+  const { t: translate } = useTranslation()
   // Mode chromeless : masque l'en-tête global pendant que le shell est monté.
   const setHeaderHidden = useUiStore(s => s.setHeaderHidden)
   useEffect(() => {
@@ -151,7 +152,7 @@ export function WorkspaceShell({
   const navigate = useNavigate()
   const triggerDelete = async () => {
     if (!onDelete) return
-    const ok = await confirm(deleteConfirm ?? { title: 'Supprimer ?', message: 'Cette action est irréversible.', confirmLabel: 'Supprimer', variant: 'danger' })
+    const ok = await confirm(deleteConfirm ?? { title: translate('workspace.delete_title'), message: translate('workspace.delete_warning'), confirmLabel: translate('common.delete'), variant: 'danger' })
     if (ok) onDelete()
   }
   const deleteButton = onDelete ? (

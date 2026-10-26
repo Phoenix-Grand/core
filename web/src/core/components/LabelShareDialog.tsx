@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 /**
  * Share dialog of a cross-module label: pick the users and/or groups that may
  * use it, and grant each of them plain access or full co-ownership.
@@ -28,6 +29,7 @@ export interface Props {
 }
 
 export default function LabelShareDialog({ label, onClose, onSaved }: Props) {
+  const { t: translate } = useTranslation()
   const [drafts, setDrafts]   = useState<Draft[] | null>(null)
   const [query, setQuery]     = useState('')
   const [targets, setTargets] = useState<{ kind: 'user' | 'group'; id: string; name: string; hint?: string }[]>([])
@@ -58,14 +60,14 @@ export default function LabelShareDialog({ label, onClose, onSaved }: Props) {
         .then(r => setTargets([
           ...r.groups.map(g => ({
             kind: 'group' as const, id: g.id, name: g.name,
-            hint: `${g.member_count} membre${g.member_count > 1 ? 's' : ''}`,
+            hint: translate('labels.members', { count: g.member_count }),
           })),
           ...r.users.map(u => ({ kind: 'user' as const, id: u.id, name: u.name })),
         ]))
         .catch(() => setTargets([]))
     }, 200)
     return () => clearTimeout(t)
-  }, [query])
+  }, [query, translate])
 
   const add = useCallback((t: { kind: 'user' | 'group'; id: string; name: string }) => {
     setDrafts(prev => {
@@ -87,7 +89,7 @@ export default function LabelShareDialog({ label, onClose, onSaved }: Props) {
       onSaved()
       onClose()
     } catch {
-      setError('Le partage n’a pas pu être enregistré.')
+      setError(translate('labels.share_error'))
       setSaving(false)
     }
   }
@@ -103,16 +105,13 @@ export default function LabelShareDialog({ label, onClose, onSaved }: Props) {
             <LabelIcon size={16} className="mt-0.5 flex-shrink-0" style={{ color: label.color }} />
             <div className="flex-1 min-w-0">
               <Dialog.Title className="text-base font-semibold text-text-primary truncate">
-                Partager « {label.name} »
+                {translate('sharing.item_title', { name: label.name })}
               </Dialog.Title>
               <Dialog.Description className="text-xs text-text-tertiary mt-0.5">
-                Les destinataires pourront étiqueter leurs propres éléments. Cochez
-                « Peut gérer » pour accorder la co-propriété : modification, partage,
-                suppression, et accès aux éléments étiquetés par les autres.
-              </Dialog.Description>
+                {translate('labels.share_help')}</Dialog.Description>
             </div>
             <Dialog.Close asChild>
-              <button aria-label="Fermer" className="p-1 rounded text-text-tertiary hover:text-text-primary hover:bg-surface-2">
+              <button aria-label={translate('common.close')} className="p-1 rounded text-text-tertiary hover:text-text-primary hover:bg-surface-2">
                 <X size={16} />
               </button>
             </Dialog.Close>
@@ -122,7 +121,7 @@ export default function LabelShareDialog({ label, onClose, onSaved }: Props) {
             <Input
               value={query}
               onChange={e => setQuery(e.target.value)}
-              placeholder="Rechercher un utilisateur ou un groupe…"
+              placeholder={translate('labels.search_recipients')}
               leftIcon={<Search size={14} />}
             />
             {!!visible.length && (
@@ -149,8 +148,7 @@ export default function LabelShareDialog({ label, onClose, onSaved }: Props) {
               <div className="flex justify-center py-8"><Spinner size="sm" /></div>
             ) : !drafts.length ? (
               <p className="py-8 text-center text-xs text-text-tertiary">
-                Cette étiquette n’est partagée avec personne. Elle n’est visible que par vous.
-              </p>
+                {translate('labels.private')}</p>
             ) : (
               <ul className="divide-y divide-border">
                 {drafts.map((d, i) => (
@@ -163,11 +161,11 @@ export default function LabelShareDialog({ label, onClose, onSaved }: Props) {
                       checked={d.can_manage}
                       onChange={v => setDrafts(prev =>
                         (prev ?? []).map((x, j) => (j === i ? { ...x, can_manage: v } : x)))}
-                      label="Peut gérer"
+                      label={translate('labels.can_manage')}
                       labelClassName="text-xs text-text-secondary"
                     />
                     <button
-                      aria-label={`Retirer ${d.name}`}
+                      aria-label={translate('labels.remove_recipient', { name: d.name })}
                       onClick={() => setDrafts(prev => (prev ?? []).filter((_, j) => j !== i))}
                       className="p-1 rounded text-text-tertiary hover:text-danger"
                     >
@@ -182,10 +180,9 @@ export default function LabelShareDialog({ label, onClose, onSaved }: Props) {
           {error && <p className="px-5 pb-1 text-xs text-danger">{error}</p>}
 
           <div className="flex justify-end gap-2 px-5 py-3 border-t border-border">
-            <Button variant="ghost" onClick={onClose}>Annuler</Button>
+            <Button variant="ghost" onClick={onClose}>{translate('common.cancel')}</Button>
             <Button variant="primary" onClick={save} loading={saving} disabled={drafts === null}>
-              Enregistrer
-            </Button>
+              {translate('common.save')}</Button>
           </div>
         </Dialog.Content>
       </Dialog.Portal>

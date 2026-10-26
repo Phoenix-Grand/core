@@ -3,6 +3,7 @@
  * TODO comments in the view). Each is rendered by a `<ReactHost>` with the values it reads as props.
  */
 import { NavLink } from "react-router-dom"
+import { useTranslation } from 'react-i18next'
 import { Plus, ChevronLeft } from "lucide-react"
 import { getIcon } from "../../utils/iconMap"
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu"
@@ -84,6 +85,7 @@ export function Part2({ ActiveConfig_SidebarBody }: { ActiveConfig_SidebarBody: 
 }
 
 export function Part3({ activeConfig }: { activeConfig: NonNullable<ShellSidebar['activeConfig']> }) {
+  const { t } = useTranslation()
   return (
     <DropdownMenu.Root>
                         <DropdownMenu.Trigger asChild>
@@ -93,7 +95,7 @@ export function Part3({ activeConfig }: { activeConfig: NonNullable<ShellSidebar
                                        transition-shadow w-full"
                           >
                             <Plus size={18} className="text-text-secondary" />
-                            {activeConfig.newButtonLabel ?? 'Nouveau'}
+                            {activeConfig.newButtonLabel ?? t('shell.new')}
                           </button>
                         </DropdownMenu.Trigger>
                         <DropdownMenu.Portal>
@@ -107,7 +109,7 @@ export function Part3({ activeConfig }: { activeConfig: NonNullable<ShellSidebar
                               name="sidebar-new-actions"
                               fallback={
                                 <div className="px-3 py-2 text-xs text-text-tertiary">
-                                  Aucune action disponible
+                                  {t('shell.no_actions')}
                                 </div>
                               }
                             />

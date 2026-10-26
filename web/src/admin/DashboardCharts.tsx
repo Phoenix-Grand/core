@@ -70,8 +70,8 @@ export function chartInk(el: Element | null) {
 
 /** Octets → chaîne lisible (Ko/Mo/Go…). */
 export function fmtBytes(n: number): string {
-  if (!n || n < 0) return '0 o'
-  const u = ['o', 'Ko', 'Mo', 'Go', 'To', 'Po']
+  if (!n || n < 0) return '0 B'
+  const u = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB']
   const i = Math.min(u.length - 1, Math.floor(Math.log(n) / Math.log(1024)))
   const v = n / Math.pow(1024, i)
   return `${v >= 100 || i === 0 ? Math.round(v) : v.toFixed(1)} ${u[i]}`

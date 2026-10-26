@@ -14,16 +14,16 @@ export class StartPageDemo extends ViewBase {
 
   get start_page_props() {
     return this.memo('start_page_props', [], () => ({ recentItems: [
-          { id: '1', name: 'Rapport annuel.docx', subtitle: '30 juin 2026', onClick: noop },
-          { id: '2', name: 'Budget.xlsx', subtitle: '28 juin 2026', onClick: noop },
-          { id: '3', name: 'Présentation.pptx', subtitle: '21 juin 2026', onClick: noop },
+          { id: '1', name: "Annual report.docx", subtitle: "June 30, 2026", onClick: noop },
+          { id: '2', name: 'Budget.xlsx', subtitle: "June 28, 2026", onClick: noop },
+          { id: '3', name: "Presentation.pptx", subtitle: "June 21, 2026", onClick: noop },
         ], tabs: [
           {
             id: 'modeles',
-            label: 'Modèles',
+            label: "Templates",
             content: (
               <div className="grid grid-cols-3 gap-3 p-4">
-                {['Vierge', 'CV', 'Lettre', 'Facture', 'Rapport', 'Affiche'].map((m) => (
+                {["Blank", 'CV', "Letter", "Invoice", "Report", "Poster"].map((m) => (
                   <div key={m} className="aspect-[3/4] rounded-lg border border-border bg-surface-1 flex items-end p-2 text-xs text-text-secondary hover:border-primary cursor-pointer">
                     {m}
                   </div>
@@ -31,7 +31,7 @@ export class StartPageDemo extends ViewBase {
               </div>
             ),
           },
-          { id: 'recents', label: 'Récents', content: <div className="p-4 text-sm text-text-tertiary">Vos documents récents…</div> },
+          { id: 'recents', label: "Recent", content: <div className="p-4 text-sm text-text-tertiary">Your recent documents…</div> },
         ] }))
   }
 

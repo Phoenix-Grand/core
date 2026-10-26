@@ -11,20 +11,22 @@ interface Props {
 
 export default function ConflictDialog({ type, name, onChoice }: Props) {
   const isFolder    = type === 'folder'
-  const actionLabel = isFolder ? 'Fusionner' : 'Écraser'
+  const actionLabel = isFolder ? "Merge" : "Overwrite"
 
   return (
     <FloatingWindow
-      title="Conflit de nom"
+      title="Name conflict"
       onClose={() => onChoice('cancel')}
       defaultWidth={400}
       backdrop
     >
       <div className="p-6 flex flex-col gap-5">
         <p className="text-sm text-text-secondary leading-relaxed">
-          Un {isFolder ? 'dossier' : 'fichier'} nommé{' '}
+
+          A {isFolder ? "folder" : "file"}  named{' '}
           <span className="font-medium text-text-primary">«&nbsp;{name}&nbsp;»</span>{' '}
-          existe déjà à cet emplacement.
+
+          already exists in this location.
         </p>
 
         {/* Option Écraser / Fusionner */}
@@ -41,8 +43,8 @@ export default function ConflictDialog({ type, name, onChoice }: Props) {
             <p className="text-sm font-medium text-text-primary">{actionLabel}</p>
             <p className="text-xs text-text-tertiary mt-0.5">
               {isFolder
-                ? 'Les deux dossiers seront fusionnés. Les fichiers en conflit seront remplacés.'
-                : 'Le fichier existant sera remplacé par le nouveau.'}
+                ? "The folders will be merged. Conflicting files will be replaced."
+                : "The existing file will be replaced with the new one."}
             </p>
           </div>
         </button>
@@ -58,9 +60,9 @@ export default function ConflictDialog({ type, name, onChoice }: Props) {
             <Copy size={15} className="text-primary" />
           </div>
           <div>
-            <p className="text-sm font-medium text-text-primary">Conserver les deux</p>
+            <p className="text-sm font-medium text-text-primary">Keep both</p>
             <p className="text-xs text-text-tertiary mt-0.5">
-              Le nouvel élément sera renommé automatiquement (ex.&nbsp;: «&nbsp;{name} (2)&nbsp;»).
+              The new item will be renamed automatically (e.g. “{name} (2)”).
             </p>
           </div>
         </button>
@@ -71,7 +73,8 @@ export default function ConflictDialog({ type, name, onChoice }: Props) {
           onClick={() => onChoice('cancel')}
           className="self-end text-sm text-text-secondary hover:text-text-primary transition-colors px-2 py-1"
         >
-          Annuler
+
+          Cancel
         </button>
       </div>
     </FloatingWindow>

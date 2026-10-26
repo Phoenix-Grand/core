@@ -33,7 +33,7 @@ export function DriveDetailsPanel() {
         <Info size={40} className="text-text-tertiary opacity-40" />
         {folderName && <p className="text-sm font-medium text-text-primary">{folderName}</p>}
         <p className="text-sm text-text-secondary">
-          {t('info.pick_item', { defaultValue: 'Sélectionnez un élément pour en afficher les détails.' })}
+          {t('info.pick_item', { defaultValue: "Select an item to view its details." })}
         </p>
       </div>
     )

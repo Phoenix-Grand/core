@@ -47,9 +47,9 @@ export interface LabelFieldProps {
 
 export function LabelField({
   options, value, onChange, disabled,
-  placeholder = 'Étiquettes…',
-  emptyHint = 'Aucune étiquette pour l’instant.',
-  searchPlaceholder = 'Rechercher',
+  placeholder = "Labels…",
+  emptyHint = "No labels yet.",
+  searchPlaceholder = "Search",
 }: LabelFieldProps) {
   const [open, setOpen] = useState(false)
   const [q, setQ] = useState('')

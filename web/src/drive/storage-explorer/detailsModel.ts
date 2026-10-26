@@ -37,11 +37,11 @@ export function mergeDetails(d?: Partial<DetailsSettings>): DetailsSettings {
 
 export function detailsColLabel(key: DetailsColKey, t: TFunc): string {
   switch (key) {
-    case 'labels':  return t('details.col_labels', { defaultValue: 'Étiquettes' })
+    case 'labels':  return t('details.col_labels', { defaultValue: "Labels" })
     case 'date':    return t('info.field_modified')
     case 'type':    return t('info.field_type')
     case 'size':    return t('common.size')
-    case 'created': return t('details.col_created', { defaultValue: 'Date de création' })
+    case 'created': return t('details.col_created', { defaultValue: "Date created" })
   }
 }
 export function longDate(iso: string, lng: string): string {

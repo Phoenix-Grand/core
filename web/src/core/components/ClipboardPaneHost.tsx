@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 /**
  * The CLIPBOARD PANE - Kubuno's equivalent of Office's clipboard task pane and
  * of Windows 11's clipboard history (Win+V).
@@ -19,16 +20,9 @@ import { useClipboardStore } from '../store/clipboardStore'
 import { clipboardApi, type ClipboardItem } from '../api/clipboard'
 import { copyKubunoData } from '../registry/DataTransferRegistry'
 import { DataCardView } from '../registry/DataCardView'
+import { formatRelative } from '../intl/datetime'
 
 /** "il y a 3 min" - the pane's only timestamp, kept deliberately coarse. */
-function ago(iso: string): string {
-  const s = Math.max(0, (Date.now() - new Date(iso).getTime()) / 1000)
-  if (s < 60) return 'à l’instant'
-  if (s < 3600) return `il y a ${Math.floor(s / 60)} min`
-  if (s < 86400) return `il y a ${Math.floor(s / 3600)} h`
-  return `il y a ${Math.floor(s / 86400)} j`
-}
-
 /**
  * Global shortcut, Windows' Win+V transposed: Ctrl/Cmd + Shift + V opens the
  * pane from anywhere. Declared here because this host is always mounted, and
@@ -49,6 +43,7 @@ function useClipboardShortcut(open: () => void) {
 }
 
 export default function ClipboardPaneHost() {
+  const { t: translate } = useTranslation()
   const current = useClipboardStore(s => s.current)
   const revision = useClipboardStore(s => s.revision)
   const close = useClipboardStore(s => s.close)
@@ -115,9 +110,9 @@ export default function ClipboardPaneHost() {
         <div className="flex items-start gap-2.5 px-5 pt-4 pb-2">
           <ClipboardList size={18} className="text-primary mt-0.5 flex-shrink-0" />
           <div className="min-w-0 flex-1">
-            <h3 className="text-sm font-semibold text-text-primary">Presse-papiers</h3>
+            <h3 className="text-sm font-semibold text-text-primary">{translate('clipboard.title')}</h3>
             <p className="text-xs text-text-tertiary">
-              {shown.length ? `${shown.length} élément${shown.length > 1 ? 's' : ''}` : 'Historique de vos copies'}
+              {shown.length ? translate('clipboard.items', { count: shown.length }) : translate('clipboard.history')}
             </p>
           </div>
           <button onClick={() => close(null)} className="p-1 rounded-full text-text-tertiary hover:bg-surface-2">
@@ -134,10 +129,9 @@ export default function ClipboardPaneHost() {
           {!loading && !shown.length && (
             <div className="flex flex-col items-center gap-2 py-10 text-center">
               <Package size={22} className="text-text-tertiary" />
-              <p className="text-xs text-text-secondary">Rien pour l’instant.</p>
+              <p className="text-xs text-text-secondary">{translate('clipboard.empty')}</p>
               <p className="text-[11px] text-text-tertiary max-w-[16rem]">
-                Les éléments copiés depuis un module de Kubuno apparaissent ici, sur tous vos onglets et appareils.
-              </p>
+                {translate('clipboard.empty_help')}</p>
             </div>
           )}
           {!loading && shown.map(item => (
@@ -148,7 +142,7 @@ export default function ClipboardPaneHost() {
                     {item.title || item.kind}
                   </p>
                   <p className="text-[11px] text-text-tertiary truncate">
-                    {item.module} · {ago(item.created_at)}
+                    {item.module} · {formatRelative(item.created_at)}
                   </p>
                   {item.preview && (
                     <p className="mt-1 text-[11px] text-text-secondary line-clamp-2 whitespace-pre-wrap break-words">
@@ -160,21 +154,21 @@ export default function ClipboardPaneHost() {
                   <button
                     onClick={() => paste(item)}
                     disabled={busy === item.id}
-                    title="Coller"
+                    title={translate('clipboard.paste')}
                     className="p-1.5 rounded-lg text-text-secondary hover:bg-surface-2 hover:text-primary"
                   >
                     {busy === item.id ? <Loader2 size={14} className="animate-spin" /> : <ClipboardPaste size={14} />}
                   </button>
                   <button
                     onClick={() => togglePin(item)}
-                    title={item.pinned ? 'Désépingler' : 'Épingler'}
+                    title={item.pinned ? translate('clipboard.unpin') : translate('clipboard.pin')}
                     className={`p-1.5 rounded-lg hover:bg-surface-2 ${item.pinned ? 'text-primary' : 'text-text-tertiary hover:text-text-secondary'}`}
                   >
                     {item.pinned ? <Pin size={14} /> : <PinOff size={14} />}
                   </button>
                   <button
                     onClick={() => remove(item)}
-                    title="Supprimer"
+                    title={translate('common.delete')}
                     className="p-1.5 rounded-lg text-text-tertiary hover:bg-surface-2 hover:text-danger"
                   >
                     <Trash2 size={14} />
@@ -185,7 +179,7 @@ export default function ClipboardPaneHost() {
                 onClick={() => setExpanded(e => (e === item.id ? null : item.id))}
                 className="w-full px-3 py-1 border-t border-border text-[10px] text-text-tertiary hover:text-text-secondary text-left"
               >
-                {expanded === item.id ? 'Masquer l’aperçu' : 'Aperçu'}
+                {expanded === item.id ? translate('clipboard.hide_preview') : translate('clipboard.preview')}
               </button>
               {expanded === item.id && (
                 <div className="p-2 border-t border-border bg-surface-1 flex justify-center">
@@ -198,15 +192,13 @@ export default function ClipboardPaneHost() {
 
         <div className="flex items-center justify-between gap-2 px-5 py-3 border-t border-border">
           <p className="text-[11px] text-text-tertiary">
-            Ctrl+Maj+V · les éléments épinglés sont conservés.
-          </p>
+            {translate('clipboard.shortcut_hint')}</p>
           <button
             onClick={async () => { await clipboardApi.clear(); reload() }}
             disabled={!items.some(i => !i.pinned)}
             className="text-xs px-3 py-1.5 rounded-lg border border-border text-text-secondary hover:bg-surface-2 disabled:opacity-40"
           >
-            Effacer l’historique
-          </button>
+            {translate('clipboard.clear')}</button>
         </div>
       </div>
     </div>

@@ -30,6 +30,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -104,7 +105,7 @@ fun FileViewer(
                     .padding(horizontal = 4.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                BarIcon(Icons.Outlined.Close, "Fermer", onClose)
+                BarIcon(Icons.Outlined.Close, stringResource(R.string.viewer_close), onClose)
                 Column(Modifier.weight(1f).padding(horizontal = 4.dp)) {
                     Text(
                         current.name,
@@ -122,10 +123,10 @@ fun FileViewer(
                     }
                 }
                 if (previewKind(current.name, current.mime) == ViewerKind.TEXT) {
-                    BarIcon(Icons.AutoMirrored.Outlined.WrapText, "Retour à la ligne") { wrap = !wrap }
+                    BarIcon(Icons.AutoMirrored.Outlined.WrapText, stringResource(R.string.viewer_wrap)) { wrap = !wrap }
                 }
-                BarIcon(Icons.Outlined.OpenInNew, "Ouvrir avec") { onOpenExternally(pager.currentPage) }
-                BarIcon(Icons.Outlined.FileDownload, "Télécharger") { onDownload(pager.currentPage) }
+                BarIcon(Icons.Outlined.OpenInNew, stringResource(R.string.viewer_open_with)) { onOpenExternally(pager.currentPage) }
+                BarIcon(Icons.Outlined.FileDownload, stringResource(R.string.viewer_download)) { onDownload(pager.currentPage) }
             }
         }
     }
@@ -195,13 +196,13 @@ private fun Unsupported(
             modifier = Modifier.size(48.dp),
         )
         Text(
-            if (failed) "Aperçu indisponible" else "Ce type de fichier ne peut pas être affiché",
+            stringResource(if (failed) R.string.viewer_preview_unavailable else R.string.viewer_unsupported),
             color = Color.White.copy(alpha = 0.85f),
             modifier = Modifier.padding(top = 12.dp),
         )
         Row(Modifier.padding(top = 16.dp)) {
             BarIcon(Icons.Outlined.OpenInNew, "Ouvrir avec", onOpenExternally)
-            BarIcon(Icons.Outlined.FileDownload, "Télécharger", onDownload)
+            BarIcon(Icons.Outlined.FileDownload, stringResource(R.string.viewer_download), onDownload)
         }
     }
 }

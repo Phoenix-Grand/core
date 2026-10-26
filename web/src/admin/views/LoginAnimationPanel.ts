@@ -3,6 +3,7 @@
  */
 import { bind, type MouseEventArgs } from '@kubuno/views'
 import { useState, useEffect } from "react"
+import { useTranslation } from 'react-i18next'
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { api } from "../../core/api/client"
 import LoginAnimationGL from "../../core/auth/LoginAnimationGL"
@@ -14,6 +15,7 @@ import * as __parts from './LoginAnimationPanel.parts.tsx'
 const SETTING_KEY = 'appearance.login_animation'
 
 export class LoginAnimationPanel extends ViewBase {
+  tr!: ReturnType<typeof useTranslation>['t']
   @bind accessor dirty = false
   qc!: LoginAnimationPanelStores['qc']
   params!: AnimParams
@@ -55,6 +57,7 @@ export class LoginAnimationPanel extends ViewBase {
 
   /** Runs the hooks and publishes what they give as fields (the bindings, the getters and the methods read them). */
   use(): void {
+    this.publish({ tr: useTranslation().t })
     const s = this.useStores()
     this.publish({ qc: s.qc, params: s.params, saved: s.saved })
     const h = this.useHooks()
@@ -73,7 +76,8 @@ export class LoginAnimationPanel extends ViewBase {
 
   /** The rows of the Repeater over `ANIM_SLIDERS`. */
   get rows_anim_sliders() {
-    return this.memo('rows_anim_sliders', [this.params, this.memo, this.dirty], () => ANIM_SLIDERS.map((s) => {
+    return this.memo('rows_anim_sliders', [this.params, this.memo, this.dirty, this.tr], () => ANIM_SLIDERS.map((slider) => {
+      const s = { ...slider, label: this.tr(`admin.login_animation_${slider.key}`) }
       return { s, text: this.params[s.key].toFixed(s.step < 0.01 ? 4 : 2), show_params_s_key: this.params[s.key] !== ANIM_DEFAULTS[s.key], part1_props: { s: s, params: this.params, onSlide: this.memo("onSlide:bound", [], () => this.onSlide.bind(this)) }, key: s.key }
     }))
   }

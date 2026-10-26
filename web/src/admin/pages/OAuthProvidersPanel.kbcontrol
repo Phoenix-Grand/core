@@ -11,7 +11,7 @@
           <Label HtmlTag="Span"
                  InheritFontSize="true"
                  Overflow="Wrap"
-                 Text="Connectez Keycloak, GitLab ou tout fournisseur OpenID Connect. La découverte des points d'accès est automatique ("/>
+                 Text="{Res oauth_admin.intro}"/>
           <Label HtmlTag="Code" Text=".well-known/openid-configuration" Overflow="Wrap" InheritFontSize="true"/>
           <Label HtmlTag="Span" InheritFontSize="true" Overflow="Wrap" Text=")."/>
         </Panel>
@@ -23,9 +23,9 @@
       <!-- TODO(views-migrate): <ProviderForm> is no .kbview element (a local or dynamic component) -->
       <ReactHost Component="{Binding ProviderForm}" Props="{Binding provider_form_props}"/>
     </Panel>
-    <Label HtmlTag="Div" Text="Chargement…" Overflow="Wrap" ForeColor="TextTertiary" Visible="{Binding isLoading}"/>
+    <Label HtmlTag="Div" Text="{Res common.loading}" Overflow="Wrap" ForeColor="TextTertiary" Visible="{Binding isLoading}"/>
     <Label HtmlTag="Div"
-           Text="Aucun fournisseur configuré. Cliquez sur « Ajouter » pour en créer un."
+           Text="{Res oauth_admin.empty}"
            TextAlign="TopCenter"
            Overflow="Wrap"
            ForeColor="TextTertiary"

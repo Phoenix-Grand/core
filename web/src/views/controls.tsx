@@ -157,8 +157,8 @@ export const MessageBox = {
       createElement(Confirm, {
         title: caption,
         message: text,
-        confirmLabel: yesNo ? 'Oui' : 'OK',
-        cancelLabel: yesNo ? 'Non' : 'Annuler',
+        confirmLabel: yesNo ? "Yes" : 'OK',
+        cancelLabel: yesNo ? "No" : "Cancel",
         hideCancel: buttons === 'OK',
         variant: icon === 'Error' ? 'danger' : icon === 'Warning' ? 'warning' : 'default',
         onConfirm: () => close(yesNo ? 'Yes' : 'OK'),

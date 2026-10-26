@@ -7,7 +7,8 @@ import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { MapPin, ChevronDown, ChevronUp } from 'lucide-react'
 import { OutlinedField } from './OutlinedField'
 import { LabelCombobox } from './LabelCombobox'
-import { COUNTRIES, countryOf, flagEmoji } from './countries'
+import { localizedCountries, flagEmoji } from './countries'
+import { useUiLocale } from './useUiLocale'
 
 export interface AddressValue {
   street: string
@@ -33,17 +34,18 @@ export interface AddressFieldProps {
   large?: boolean
 }
 
-const DEFAULT_ADDRESS_PRESETS = ['Domicile', 'Professionnel', 'Autre']
+const DEFAULT_ADDRESS_PRESETS = ["Home", "Work", "Other"]
 
 // ── Country NAME selector (searchable Material select) ───────────────────────
 function CountryNameSelect({ value, onChange, primaryColor, large }: {
   value: string; onChange: (iso2: string) => void; primaryColor: string; large?: boolean
 }) {
+  const countries = localizedCountries(useUiLocale())
   const [open, setOpen] = useState(false)
   const [query, setQuery] = useState('')
   const wrapRef = useRef<HTMLDivElement>(null)
   const searchRef = useRef<HTMLInputElement>(null)
-  const country = value ? countryOf(value) : undefined
+  const country = countries.find(c => c.iso2 === value)
 
   useEffect(() => {
     if (!open) { setQuery(''); return }
@@ -55,13 +57,13 @@ function CountryNameSelect({ value, onChange, primaryColor, large }: {
   }, [open])
 
   const q = query.trim().toLowerCase()
-  const list = q ? COUNTRIES.filter(c => c.name.toLowerCase().includes(q)) : COUNTRIES
+  const list = q ? countries.filter(c => c.name.toLowerCase().includes(q)) : countries
   const boxH = large ? 56 : 48
 
   return (
     <div ref={wrapRef} style={{ position: 'relative' }} onFocus={() => setOpen(true)}>
       <OutlinedField
-        label="Pays"
+        label="Country"
         value={country ? `${flagEmoji(country.iso2)}  ${country.name}` : ''}
         onChange={() => {}}
         readOnly
@@ -76,7 +78,7 @@ function CountryNameSelect({ value, onChange, primaryColor, large }: {
           border: '1px solid #dadce0', boxShadow: '0 4px 8px 3px rgba(0,0,0,.15),0 1px 3px rgba(0,0,0,.3)',
         }}>
           <div style={{ position: 'sticky', top: 0, background: '#fff', padding: 8, borderBottom: '1px solid #f1f3f4' }}>
-            <input ref={searchRef} value={query} onChange={e => setQuery(e.target.value)} placeholder="Rechercher un pays"
+            <input ref={searchRef} value={query} onChange={e => setQuery(e.target.value)} placeholder="Search countries"
               style={{ width: '100%', height: 34, padding: '0 10px', fontSize: 13.5, border: '1px solid #dadce0', borderRadius: 6, outline: 'none', boxSizing: 'border-box' }} />
           </div>
           {list.map(c => {
@@ -109,20 +111,20 @@ export function AddressField({ value, onChange, primaryColor, icon, withLabel, l
       <span style={{ height: rowH, display: 'flex', alignItems: 'center', flexShrink: 0, color: '#5f6368' }}>{lead}</span>
 
       <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 10 }}>
-        <OutlinedField label="Rue" value={value.street} onChange={v => set({ street: v })} primaryColor={primaryColor} large={large} />
+        <OutlinedField label="Street" value={value.street} onChange={v => set({ street: v })} primaryColor={primaryColor} large={large} />
         <div style={{ display: 'flex', gap: 10 }}>
           <div style={{ width: large ? 150 : 130, flexShrink: 0 }}>
-            <OutlinedField label="Code postal" value={value.postal} onChange={v => set({ postal: v })} primaryColor={primaryColor} large={large} />
+            <OutlinedField label="Postal code" value={value.postal} onChange={v => set({ postal: v })} primaryColor={primaryColor} large={large} />
           </div>
           <div style={{ flex: 1, minWidth: 0 }}>
-            <OutlinedField label="Ville" value={value.city} onChange={v => set({ city: v })} primaryColor={primaryColor} large={large} />
+            <OutlinedField label="City" value={value.city} onChange={v => set({ city: v })} primaryColor={primaryColor} large={large} />
           </div>
         </div>
         {expanded && (
           <>
-            <OutlinedField label="Boîte postale" value={value.poBox ?? ''} onChange={v => set({ poBox: v })} primaryColor={primaryColor} large={large} />
-            <OutlinedField label="Complément d’adresse" value={value.complement ?? ''} onChange={v => set({ complement: v })} primaryColor={primaryColor} large={large} />
-            <OutlinedField label="Région / Département" value={value.region ?? ''} onChange={v => set({ region: v })} primaryColor={primaryColor} large={large} />
+            <OutlinedField label="PO box" value={value.poBox ?? ''} onChange={v => set({ poBox: v })} primaryColor={primaryColor} large={large} />
+            <OutlinedField label="Address line 2" value={value.complement ?? ''} onChange={v => set({ complement: v })} primaryColor={primaryColor} large={large} />
+            <OutlinedField label="State / Region" value={value.region ?? ''} onChange={v => set({ region: v })} primaryColor={primaryColor} large={large} />
           </>
         )}
         <CountryNameSelect value={value.country} onChange={iso2 => set({ country: iso2 })} primaryColor={primaryColor} large={large} />
@@ -132,8 +134,8 @@ export function AddressField({ value, onChange, primaryColor, icon, withLabel, l
       </div>
 
       <span style={{ height: rowH, display: 'flex', alignItems: 'center', flexShrink: 0 }}>
-        <button type="button" onClick={() => setExpanded(e => !e)} title={expanded ? 'Moins' : 'Plus'}
-          aria-label={expanded ? 'Moins' : 'Plus'} aria-expanded={expanded}
+        <button type="button" onClick={() => setExpanded(e => !e)} title={expanded ? "Less" : "More"}
+          aria-label={expanded ? "Less" : "More"} aria-expanded={expanded}
           style={{ width: 32, height: 32, borderRadius: '50%', border: 'none', background: 'transparent', color: expanded ? primaryColor : '#5f6368', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'background 120ms' }}
           onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = '#f1f3f4' }}
           onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'transparent' }}>

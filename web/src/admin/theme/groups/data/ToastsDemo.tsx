@@ -14,7 +14,7 @@ function ToastButtons() {
     <div className="flex flex-wrap items-start gap-2 p-3">
       <Button size="sm" variant="secondary" icon={<CheckCircle2 size={14} />}
               onClick={() => toast.success(t('admin.t_prev_to_ok', { defaultValue: 'Paramètres enregistrés.' }))}>
-        {t('admin.t_prev_to_b_ok', { defaultValue: 'Succès' })}
+        {t('admin.t_prev_to_b_ok', { defaultValue: "Success" })}
       </Button>
       <Button size="sm" variant="secondary" icon={<Bell size={14} />}
               onClick={() => toast.info(t('admin.t_prev_to_info', { defaultValue: 'Import lancé en arrière-plan.' }))}>
@@ -33,7 +33,7 @@ function ToastButtons() {
                 setCount(n)
                 toast.toast({
                   message: t('admin.t_prev_to_undo', { defaultValue: 'Élément supprimé.' }),
-                  action: { label: t('admin.t_prev_to_undo_a', { defaultValue: 'Annuler' }), onClick: () => {} },
+                  action: { label: t('admin.t_prev_to_undo_a', { defaultValue: "Cancel" }), onClick: () => {} },
                   duration: 8000,
                 })
               }}>

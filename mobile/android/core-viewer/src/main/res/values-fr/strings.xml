@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="viewer_close">Fermer</string>
+    <string name="viewer_wrap">Retour à la ligne</string>
+    <string name="viewer_open_with">Ouvrir avec</string>
+    <string name="viewer_download">Télécharger</string>
+    <string name="viewer_preview_unavailable">Aperçu indisponible</string>
+    <string name="viewer_unsupported">Ce type de fichier ne peut pas être affiché</string>
+</resources>

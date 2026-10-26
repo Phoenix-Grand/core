@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react'
 import { Link2, Upload, Camera, Palette, X, Search, Image as ImageIcon } from 'lucide-react'
 import { Button, Input } from '@ui'
@@ -7,16 +8,16 @@ import ImagePickerIllustrations from './ImagePickerIllustrations'
 
 /* ── Source: a plain URL ─────────────────────────────────────────────────── */
 function FromUrl({ onPick }: ImageSourceProps) {
+  const { t: translate } = useTranslation()
   const [url, setUrl] = useState('')
   const ok = /^https?:\/\/.+/i.test(url.trim())
   return (
     <div className="space-y-3">
       <Input value={url} onChange={e => setUrl(e.target.value)} className="w-full"
-        placeholder="Collez l'URL de l'image…"
+        placeholder={translate('image_picker.url_placeholder')}
         onKeyDown={e => { if (e.key === 'Enter' && ok) onPick({ kind: 'url', url: url.trim() }) }} />
       <p className="text-xs text-text-tertiary">
-        N'utilisez que des images dont vous détenez les droits d'utilisation.
-      </p>
+        {translate('image_picker.rights')}</p>
       {ok && (
         <div className="rounded-lg border border-border p-2 inline-block">
           <img src={url.trim()} alt="" className="max-h-56 rounded" />
@@ -24,8 +25,7 @@ function FromUrl({ onPick }: ImageSourceProps) {
       )}
       <div>
         <Button variant="primary" disabled={!ok} onClick={() => onPick({ kind: 'url', url: url.trim() })}>
-          Insérer
-        </Button>
+          {translate('image_picker.insert')}</Button>
       </div>
     </div>
   )
@@ -33,6 +33,7 @@ function FromUrl({ onPick }: ImageSourceProps) {
 
 /* ── Source: upload from this device ─────────────────────────────────────── */
 function FromUpload({ onPick, multiple }: ImageSourceProps) {
+  const { t: translate } = useTranslation()
   const inputRef = useRef<HTMLInputElement>(null)
   const [over, setOver] = useState(false)
 
@@ -54,9 +55,9 @@ function FromUpload({ onPick, multiple }: ImageSourceProps) {
       <input ref={inputRef} type="file" accept="image/*" multiple={multiple} className="hidden"
         onChange={e => { take(e.target.files); e.target.value = '' }} />
       <ImageIcon size={44} className="text-text-tertiary" />
-      <Button variant="primary" onClick={() => inputRef.current?.click()}>Parcourir</Button>
+      <Button variant="primary" onClick={() => inputRef.current?.click()}>{translate('image_picker.browse')}</Button>
       <p className="text-xs text-text-tertiary">
-        {multiple ? 'ou faites glisser des fichiers ici' : 'ou faites glisser un fichier ici'}
+        {multiple ? translate('image_picker.drop_multiple') : translate('image_picker.drop_one')}
       </p>
     </div>
   )
@@ -64,6 +65,7 @@ function FromUpload({ onPick, multiple }: ImageSourceProps) {
 
 /* ── Source: webcam capture ──────────────────────────────────────────────── */
 function FromWebcam({ onPick }: ImageSourceProps) {
+  const { t: translate } = useTranslation()
   const videoRef = useRef<HTMLVideoElement>(null)
   const [error, setError] = useState<string | null>(null)
   const [ready, setReady] = useState(false)
@@ -75,7 +77,7 @@ function FromWebcam({ onPick }: ImageSourceProps) {
         stream = s
         if (videoRef.current) { videoRef.current.srcObject = s; setReady(true) }
       })
-      .catch(() => setError("Aucune caméra accessible. Vérifiez l'autorisation du navigateur."))
+      .catch(() => setError(translate('image_picker.camera_error')))
     return () => { stream?.getTracks().forEach(t => t.stop()) }
   }, [])
 
@@ -96,28 +98,28 @@ function FromWebcam({ onPick }: ImageSourceProps) {
     <div className="flex flex-col items-center gap-4 h-full">
       <video ref={videoRef} autoPlay playsInline className="w-full flex-1 min-h-0 rounded-xl bg-black object-cover" />
       <Button variant="primary" icon={<Camera size={16} />} disabled={!ready} onClick={shoot}>
-        Prendre la photo
-      </Button>
+        {translate('image_picker.take_photo')}</Button>
     </div>
   )
 }
 
 /* ── The dialog ──────────────────────────────────────────────────────────── */
-export default function ImagePickerDialog({ title = 'Insérer une image', exclude = [], multiple = false, onPick, onCancel }: {
+export default function ImagePickerDialog({ title, exclude = [], multiple = false, onPick, onCancel }: {
   title?: string
   exclude?: string[]
   multiple?: boolean
   onPick: (r: ImagePickResult | ImagePickResult[]) => void
   onCancel: () => void
 }) {
+  const { t: translate } = useTranslation()
   // Module-contributed sources, re-read whenever one registers.
   const extra = useSyncExternalStore(ImageSourceRegistry.subscribe, ImageSourceRegistry.list, ImageSourceRegistry.list)
 
   const core: ImageSource[] = [
-    { id: 'url',    label: "À partir d'une URL", icon: <Link2 size={18} />,  order: 0,  group: 'library', Component: FromUrl },
+    { id: 'url',    label: translate('image_picker.from_url'), icon: <Link2 size={18} />,  order: 0,  group: 'library', Component: FromUrl },
     { id: 'illustrations', label: 'Illustrations', icon: <Palette size={18} />, order: 10, group: 'library',
-      searchable: true, searchPlaceholder: 'Rechercher dans les illustrations…', Component: ImagePickerIllustrations },
-    { id: 'upload', label: 'Importer', icon: <Upload size={18} />, order: 30, group: 'device', Component: FromUpload },
+      searchable: true, searchPlaceholder: translate('image_picker.search_illustrations'), Component: ImagePickerIllustrations },
+    { id: 'upload', label: translate('image_picker.upload'), icon: <Upload size={18} />, order: 30, group: 'device', Component: FromUpload },
     { id: 'webcam', label: 'Webcam',   icon: <Camera size={18} />, order: 40, group: 'device', Component: FromWebcam },
   ]
   const all = [...core, ...extra]
@@ -142,18 +144,18 @@ export default function ImagePickerDialog({ title = 'Insérer une image', exclud
         {/* The search box belongs to the DIALOG, not the tab: it stays in place
             while the user switches sources, so the frame never jumps. */}
         <div className="flex items-center gap-4 px-6 py-3 shrink-0">
-          <h2 className="text-xl text-text-primary whitespace-nowrap">{title}</h2>
+          <h2 className="text-xl text-text-primary whitespace-nowrap">{title ?? translate('image_picker.title')}</h2>
           <div className="flex-1 min-w-0">
             {source?.searchable && (
               <div className="flex items-center gap-2 h-11 px-4 rounded-full bg-surface-2">
                 <Search size={18} className="shrink-0 text-text-secondary" />
                 <input value={query} onChange={e => setQuery(e.target.value)}
-                  placeholder={source.searchPlaceholder ?? 'Rechercher…'}
+                  placeholder={source.searchPlaceholder ?? translate('shared_ui.search')}
                   className="flex-1 min-w-0 bg-transparent outline-none text-sm text-text-primary" />
               </div>
             )}
           </div>
-          <button onClick={onCancel} aria-label="Fermer" title="Fermer"
+          <button onClick={onCancel} aria-label={translate('common.close')} title={translate('common.close')}
             className="shrink-0 p-2 rounded-full hover:bg-surface-2 text-text-secondary">
             <X size={20} />
           </button>

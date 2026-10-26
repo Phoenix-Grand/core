@@ -2,7 +2,8 @@ import { cn } from '../cn'
 import { addMonths, formatDate, isSameDay, isSameMonth, isToday, subMonths } from '../../core/intl/datetime'
 import type { Dispatch, SetStateAction } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { WEEKDAYS, calendarGrid } from './helpers'
+import { weekdayLabels, calendarGrid } from './helpers'
+import { useUiLocale } from '../useUiLocale'
 import type { PickerView } from './types'
 
 /** Month grid: weekday headers + day cells (single date, or range highlight). */
@@ -22,6 +23,7 @@ export function DayView({
   inRange:      (d: Date) => boolean
   isEdge:       (d: Date) => boolean | null
 }) {
+  const weekdays = weekdayLabels(useUiLocale())
   const days = calendarGrid(viewDate)
   const mName = formatDate(viewDate, 'month')
   const mNameCap = mName.charAt(0).toUpperCase() + mName.slice(1)
@@ -64,7 +66,7 @@ export function DayView({
 
       {/* Weekday headers */}
       <div className="grid grid-cols-7 mb-0.5">
-        {WEEKDAYS.map((d, i) => (
+        {weekdays.map((d, i) => (
           <div key={i} className="h-7 flex items-center justify-center text-[11px] font-medium text-text-tertiary">
             {d}
           </div>

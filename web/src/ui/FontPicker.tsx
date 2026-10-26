@@ -137,7 +137,7 @@ export function FontPicker({
       add(hits, null)
     } else {
       const recentFonts = all.filter(f => recentSet.has(f.toLowerCase()))
-      add(recentFonts, recentFonts.length ? 'Récentes' : null)
+      add(recentFonts, recentFonts.length ? "Recent" : null)
       const rest = all.filter(f => !recentSet.has(f.toLowerCase()))
       for (const cat of CAT_ORDER) {
         add(rest.filter(f => classifyFont(f) === cat).sort((a, b) => a.localeCompare(b)), CAT_LABEL[cat])
@@ -247,14 +247,14 @@ export function FontPicker({
             <Search size={15} style={{ color: P.ter, flexShrink: 0 }} />
             <input
               ref={searchRef} value={query} onChange={e => { setQuery(e.target.value); setHi(0) }} onKeyDown={onKey}
-              placeholder="Rechercher une police…" aria-label="Rechercher une police"
+              placeholder="Search fonts…" aria-label="Search fonts"
               aria-controls={listId} aria-autocomplete="list"
               className="flex-1 outline-none bg-transparent" style={{ color: P.text, fontSize: 11.5 }}
             />
             {query && (
               <button type="button" onClick={() => { setQuery(''); setHi(0); searchRef.current?.focus() }}
                 className="text-xs px-1.5 py-0.5 rounded" style={{ color: P.sec }}
-                aria-label="Effacer la recherche">Effacer</button>
+                aria-label="Clear search">Effacer</button>
             )}
           </div>
           {/* Liste */}
@@ -262,7 +262,8 @@ export function FontPicker({
             style={{ maxHeight: 340, overflowY: 'auto', padding: '4px 0' }}>
             {options.length === 0 && (
               <div className="px-4 py-6 text-center" style={{ color: P.ter, fontSize: 11.5 }}>
-                Aucune police pour « {q} »
+
+                No fonts for “ {q} »
               </div>
             )}
             {rows.map((row, ri) => row.kind === 'header' ? (

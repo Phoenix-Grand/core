@@ -8,7 +8,8 @@ import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { Phone as PhoneIcon, ChevronDown, ChevronUp } from 'lucide-react'
 import { OutlinedField } from './OutlinedField'
 import { LabelCombobox } from './LabelCombobox'
-import { COUNTRIES, countryOf, flagEmoji } from './countries'
+import { localizedCountries, flagEmoji } from './countries'
+import { useUiLocale } from './useUiLocale'
 
 export interface PhoneValue {
   /** ISO-3166 alpha-2, e.g. "FR". */
@@ -35,19 +36,20 @@ export interface PhoneFieldProps {
 }
 
 const DEFAULT_LABEL_PRESETS = [
-  'Domicile', 'Professionnel', 'Mobile', 'Principal', 'Autre',
-  'Fax (personnel)', 'Fax (professionnel)',
+  "Home", "Work", 'Mobile', "Main", "Other",
+  "Fax (home)", "Fax (work)",
 ]
 
 // ── Country dial-code selector ───────────────────────────────────────────────
 function CountrySelect({ value, onChange, primaryColor, large }: {
   value: string; onChange: (iso2: string) => void; primaryColor: string; large?: boolean
 }) {
+  const countries = localizedCountries(useUiLocale())
   const [open, setOpen] = useState(false)
   const [query, setQuery] = useState('')
   const boxRef = useRef<HTMLDivElement>(null)
   const searchRef = useRef<HTMLInputElement>(null)
-  const country = countryOf(value) ?? COUNTRIES[0]
+  const country = countries.find(c => c.iso2 === value) ?? countries[0]
 
   useEffect(() => {
     if (!open) { setQuery(''); return }
@@ -62,8 +64,8 @@ function CountrySelect({ value, onChange, primaryColor, large }: {
 
   const q = query.trim().toLowerCase()
   const list = q
-    ? COUNTRIES.filter(c => c.name.toLowerCase().includes(q) || c.dial.includes(q.replace('+', '')))
-    : COUNTRIES
+    ? countries.filter(c => c.name.toLowerCase().includes(q) || c.dial.includes(q.replace('+', '')))
+    : countries
 
   const boxH = large ? 56 : 48
   return (
@@ -73,7 +75,7 @@ function CountrySelect({ value, onChange, primaryColor, large }: {
         onClick={() => setOpen(o => !o)}
         aria-haspopup="listbox"
         aria-expanded={open}
-        aria-label={`Indicatif : ${country.name} (+${country.dial})`}
+        aria-label={`Calling code: ${country.name} (+${country.dial})`}
         style={{
           height: boxH, boxSizing: 'border-box', display: 'flex', alignItems: 'center', gap: 6,
           padding: '0 8px', borderRadius: 6, cursor: 'pointer',
@@ -100,7 +102,7 @@ function CountrySelect({ value, onChange, primaryColor, large }: {
               ref={searchRef}
               value={query}
               onChange={e => setQuery(e.target.value)}
-              placeholder="Rechercher un pays"
+              placeholder="Search countries"
               style={{
                 width: '100%', height: 34, padding: '0 10px', fontSize: 13.5,
                 border: '1px solid #dadce0', borderRadius: 6, outline: 'none', boxSizing: 'border-box',
@@ -132,7 +134,7 @@ function CountrySelect({ value, onChange, primaryColor, large }: {
             )
           })}
           {list.length === 0 && (
-            <div style={{ padding: '14px', color: '#80868b', fontSize: 13, textAlign: 'center' }}>Aucun pays</div>
+            <div style={{ padding: '14px', color: '#80868b', fontSize: 13, textAlign: 'center' }}>No countries found</div>
           )}
         </div>
       )}
@@ -154,7 +156,7 @@ export function PhoneField({ value, onChange, primaryColor, icon, withLabel, lab
       />
       <div style={{ flex: 1, minWidth: 0 }}>
         <OutlinedField
-          label="Téléphone"
+          label="Phone"
           value={value.number}
           // A phone number can only contain digits and usual separators.
           onChange={n => onChange({ ...value, number: n.replace(/[^0-9 ().\-\/]/g, '').slice(0, 20) })}

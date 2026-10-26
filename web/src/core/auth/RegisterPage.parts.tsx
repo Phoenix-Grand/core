@@ -45,7 +45,7 @@ export function Part3({ t, form, handleChange }: { t: NonNullable<RegisterPage['
                 onChange={handleChange}
                 required
                 autoComplete="email"
-                placeholder="vous@exemple.com"
+                placeholder="you@example.com"
               />
   )
 }

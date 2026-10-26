@@ -201,7 +201,7 @@ export default function AddAccountModal({ open, onClose, prefillEmail, slot }: P
                   type="text"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="vous@exemple.com"
+                  placeholder="you@example.com"
                   autoFocus={!remoteMode}
                   disabled={!!prefillEmail}
                   className="bg-surface-1"

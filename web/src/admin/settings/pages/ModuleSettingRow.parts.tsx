@@ -116,6 +116,7 @@ function Control({ item, value, invalid, readOnly, onChange }: ControlProps) {
           <p className="mt-1 text-danger" style={{ fontSize: 'var(--kb-text-micro)' }}>
             {t('admin.m_out_of_range', {
               defaultValue: `Valeur attendue : un entier ${bounds || 'valide'}`,
+              bounds,
             })}
           </p>
         ) : bounds ? (

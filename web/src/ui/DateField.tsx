@@ -8,11 +8,8 @@ import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { Calendar, ChevronDown, ChevronUp } from 'lucide-react'
 import { OutlinedField } from './OutlinedField'
 import { LabelCombobox } from './LabelCombobox'
-
-const MONTHS = [
-  'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
-  'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre',
-]
+import { monthLabels } from './date-picker/helpers'
+import { useUiLocale } from './useUiLocale'
 
 export interface DateValue {
   day: string
@@ -65,12 +62,13 @@ function isYearPrefix(typed: string, min: number, max: number): boolean {
   return false
 }
 
-const DEFAULT_DATE_PRESETS = ['Anniversaire', 'Fête', 'Autre']
+const DEFAULT_DATE_PRESETS = ["Birthday", "Anniversary", "Other"]
 
 // ── Month dropdown (Material outlined select) ────────────────────────────────
 function MonthSelect({ value, onChange, primaryColor, large }: {
   value: string; onChange: (m: string) => void; primaryColor: string; large?: boolean
 }) {
+  const months = monthLabels(useUiLocale(), 'long')
   const [open, setOpen] = useState(false)
   const wrapRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
@@ -81,14 +79,14 @@ function MonthSelect({ value, onChange, primaryColor, large }: {
   }, [open])
 
   const idx = value ? Number(value) - 1 : -1
-  const monthName = idx >= 0 && idx < 12 ? MONTHS[idx] : ''
+  const monthName = idx >= 0 && idx < 12 ? months[idx] : ''
   const boxH = large ? 56 : 48
 
   return (
     <div ref={wrapRef} style={{ position: 'relative', width: large ? 210 : 190 }}
       onFocus={() => setOpen(true)}>
       <OutlinedField
-        label="Mois"
+        label="Month"
         value={monthName}
         onChange={() => {}}
         readOnly
@@ -106,7 +104,7 @@ function MonthSelect({ value, onChange, primaryColor, large }: {
             boxShadow: '0 4px 8px 3px rgba(0,0,0,.15),0 1px 3px rgba(0,0,0,.3)',
           }}
         >
-          {MONTHS.map((m, i) => {
+          {months.map((m, i) => {
             const active = i === idx
             return (
               <button
@@ -163,7 +161,7 @@ export function DateField({ value, onChange, primaryColor, icon, withLabel, labe
       {lead && <span style={{ color: '#5f6368', flexShrink: 0, display: 'flex' }}>{lead}</span>}
       <div style={{ width: large ? 110 : 96, flexShrink: 0 }}>
         <OutlinedField
-          label="Jour" placeholder="JJ"
+          label="Day" placeholder="JJ"
           value={value.day}
           onChange={setDay}
           inputMode="numeric"
@@ -179,7 +177,7 @@ export function DateField({ value, onChange, primaryColor, icon, withLabel, labe
       />
       <div style={{ flex: 1, minWidth: 0 }}>
         <OutlinedField
-          label="Année (facultatif)" placeholder="AAAA"
+          label="Year (optional)" placeholder="AAAA"
           value={value.year}
           onChange={setYear}
           inputMode="numeric"

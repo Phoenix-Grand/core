@@ -7,9 +7,9 @@ import { ViewBase } from './QuotaField.kbcontrol'
 import * as __parts from './QuotaField.parts'
 
 const UNITS = [
-  { id: 'MiB', label: 'Mo', factor: 1024 ** 2 },
-  { id: 'GiB', label: 'Go', factor: 1024 ** 3 },
-  { id: 'TiB', label: 'To', factor: 1024 ** 4 },
+  { id: 'MiB', label: 'MiB', factor: 1024 ** 2 },
+  { id: 'GiB', label: 'GiB', factor: 1024 ** 3 },
+  { id: 'TiB', label: 'TiB', factor: 1024 ** 4 },
 ] as const
 
 export type QuotaUnit = (typeof UNITS)[number]['id']
@@ -97,7 +97,7 @@ export class QuotaField extends ViewBase {
   get span_text() {
     return this.memo('span_text', [this.bytes, this.props], () => {
       if (!((this.props.hint || this.bytes != null)) || !(this.bytes != null)) return undefined as never
-      return String(this.bytes.toLocaleString()) + " o"
+      return String(this.bytes.toLocaleString()) + " B"
     })
   }
 

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="viewer_close">Close</string>
+    <string name="viewer_wrap">Word wrap</string>
+    <string name="viewer_open_with">Open with</string>
+    <string name="viewer_download">Download</string>
+    <string name="viewer_preview_unavailable">Preview unavailable</string>
+    <string name="viewer_unsupported">This file type cannot be displayed</string>
+</resources>

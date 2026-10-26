@@ -185,7 +185,7 @@ export const useAuthStore = create<AuthState>((set, get) => {
 
     verifyTotp: async (code, kind = 'totp') => {
       const { totpSession } = get()
-      if (!totpSession) throw new Error('Aucune session TOTP en cours')
+      if (!totpSession) throw new Error('No TOTP session in progress')
       set({ isLoading: true })
       try {
         const payload = kind === 'backup'

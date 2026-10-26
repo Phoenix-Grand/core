@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 /**
  * Global host of the cross-module label picker (mounted once in App.tsx, like
  * PromptHost). Opens when `openLabelPicker(envelope)` is called from anywhere -
@@ -12,6 +13,7 @@ import { labelsApi, type CoreLabel } from '../api/labels'
 const PALETTE = ['#1a73e8', '#1e8e3e', '#d93025', '#f9ab00', '#9334e6', '#e8710a', '#12805c', '#5f6368']
 
 export default function LabelPickerHost() {
+  const { t: translate } = useTranslation()
   const current = useLabelPickerStore(s => s.current)
   const close = useLabelPickerStore(s => s.close)
   const [labels, setLabels] = useState<CoreLabel[]>([])
@@ -99,7 +101,7 @@ export default function LabelPickerHost() {
         <div className="flex items-start gap-2.5 px-5 pt-4 pb-2">
           <Tag size={18} className="text-primary mt-0.5 flex-shrink-0" />
           <div className="min-w-0 flex-1">
-            <h3 className="text-sm font-semibold text-text-primary">Étiquettes</h3>
+            <h3 className="text-sm font-semibold text-text-primary">{translate('labels.title')}</h3>
             <p className="text-xs text-text-tertiary truncate">{envelope.title ?? envelope.type} · {envelope.module}</p>
           </div>
           <button onClick={() => close(false)} className="p-1 rounded-full text-text-tertiary hover:bg-surface-2">
@@ -113,7 +115,7 @@ export default function LabelPickerHost() {
             value={query}
             onChange={e => setQuery(e.target.value)}
             onKeyDown={e => { if (e.key === 'Enter' && query.trim() && !exactMatch) createAndCheck() }}
-            placeholder="Rechercher ou créer une étiquette…"
+            placeholder={translate('labels.search_or_create')}
             className="w-full text-sm px-3 py-2 rounded-lg border border-border bg-surface-0 text-text-primary outline-none focus:border-primary placeholder:text-text-tertiary"
           />
         </div>
@@ -132,7 +134,7 @@ export default function LabelPickerHost() {
                   <span className="w-3.5 h-3.5 rounded-full flex-shrink-0" style={{ backgroundColor: l.color }} />
                   <span className="flex-1 text-sm text-text-primary truncate">{l.name}</span>
                   {!l.is_owner && (
-                    <span title={`Partagée par ${l.owner_name}`} className="flex-shrink-0">
+                    <span title={translate('labels.shared_by', { name: l.owner_name })} className="flex-shrink-0">
                       <Users size={12} className="text-text-tertiary" />
                     </span>
                   )}
@@ -146,13 +148,12 @@ export default function LabelPickerHost() {
                   className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg hover:bg-surface-1 text-left text-primary"
                 >
                   <Plus size={15} className="flex-shrink-0" />
-                  <span className="text-sm">Créer « {query.trim()} »</span>
+                  <span className="text-sm">{translate('labels.create_named', { name: query.trim() })}</span>
                 </button>
               )}
               {!filtered.length && !query.trim() && (
                 <p className="px-3 py-6 text-center text-xs text-text-tertiary">
-                  Aucune étiquette pour l'instant - tapez un nom pour en créer une.
-                </p>
+                  {translate('labels.none')}</p>
               )}
             </>
           )}
@@ -165,22 +166,21 @@ export default function LabelPickerHost() {
             <Info size={12} className="mt-0.5 flex-shrink-0" />
             <span>
               {sharedChecked.length === 1
-                ? `« ${sharedChecked[0].name} » est une étiquette partagée : ses gestionnaires (${sharedChecked[0].owner_name}…) verront cet élément.`
-                : `${sharedChecked.length} étiquettes partagées sont cochées : leurs gestionnaires verront cet élément.`}
+                ? translate('labels.shared_warning', { name: sharedChecked[0].name, owner: sharedChecked[0].owner_name })
+                : translate('labels.shared_warnings', { count: sharedChecked.length })}
             </span>
           </p>
         )}
 
         <div className="flex justify-end gap-2 px-5 py-3 border-t border-border">
           <button onClick={() => close(false)} className="px-3 py-1.5 text-sm rounded-lg text-text-secondary hover:bg-surface-2">
-            Annuler
-          </button>
+            {translate('common.cancel')}</button>
           <button
             onClick={save}
             disabled={saving || loading}
             className="px-4 py-1.5 text-sm rounded-lg bg-primary text-white hover:bg-primary-hover disabled:opacity-50"
           >
-            {saving ? '…' : 'Enregistrer'}
+            {saving ? '…' : translate('common.save')}
           </button>
         </div>
       </div>

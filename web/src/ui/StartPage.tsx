@@ -60,7 +60,7 @@ export interface StartPageProps {
 }
 
 export function StartPage({
-  recentTitle = 'Récents', recentIcon, recentItems, recentEmpty,
+  recentTitle = "Recent", recentIcon, recentItems, recentEmpty,
   tabs, defaultTab, activeTab, onTabChange,
 }: StartPageProps) {
   const [internal, setInternal] = useState(defaultTab ?? tabs[0]?.id ?? '')

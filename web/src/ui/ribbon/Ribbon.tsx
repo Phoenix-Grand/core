@@ -22,7 +22,7 @@ const MOBILE_BAR_H = 48   // height of the mobile command bar (at the bottom)
 // tabs aligned at the bottom, transparent background - the topbar already has the strip colour).
 // Once moved into the topbar the dedicated row disappears → 30px of height gained, and the
 // search mode (opaque overlay on the topbar) hides the tabs without shifting anything.
-export function RibbonTabStrip({ tabs, theme, activeId, onSelect, tabStripActions, inTopbar = false, height, collapsed = false, onToggleCollapsed, expandLabel = 'Développer le ruban (Ctrl+F1)', collapseLabel = 'Réduire le ruban (Ctrl+F1)' }: {
+export function RibbonTabStrip({ tabs, theme, activeId, onSelect, tabStripActions, inTopbar = false, height, collapsed = false, onToggleCollapsed, expandLabel = "Expand ribbon (Ctrl+F1)", collapseLabel = "Collapse ribbon (Ctrl+F1)" }: {
   tabs: RibbonTab[]
   theme: RibbonTheme
   activeId?: string

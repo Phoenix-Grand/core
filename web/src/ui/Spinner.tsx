@@ -15,7 +15,7 @@ const sizes: Record<SpinnerSize, string> = {
   lg: 'h-8 w-8 border-[3px]',
 }
 
-export function Spinner({ size = 'md', className, label = 'Chargement…' }: SpinnerProps) {
+export function Spinner({ size = 'md', className, label = "Loading…" }: SpinnerProps) {
   return (
     <span
       role="status"
@@ -29,7 +29,7 @@ export function Spinner({ size = 'md', className, label = 'Chargement…' }: Spi
   )
 }
 
-export function SpinnerOverlay({ label = 'Chargement…' }: { label?: string }) {
+export function SpinnerOverlay({ label = "Loading…" }: { label?: string }) {
   return (
     <div className="absolute inset-0 flex items-center justify-center bg-white/70 z-10">
       <Spinner size="lg" label={label} />

@@ -24,7 +24,7 @@ export default function PromptDialog({
   defaultValue = '',
   placeholder,
   confirmLabel = 'OK',
-  cancelLabel  = 'Annuler',
+  cancelLabel  = "Cancel",
   multiline    = false,
   allowEmpty   = false,
   onConfirm,

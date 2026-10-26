@@ -3,13 +3,13 @@
   <Panel Class="rounded-lg overflow-hidden border [border-color:var(--kbn-ws-border,_#dadce0)]">
     <Panel Class="flex items-end gap-1 px-2 pt-1.5 [height:34px] [background:var(--kbn-office-tabstrip,_#1557b0)]">
       <Label HtmlTag="Div"
-             Text="Fichier"
+             Text="File"
              Role="Meta"
              FontWeight="SemiBold"
              Overflow="Wrap"
              Class="px-3.5 h-[26px] flex items-center rounded-t-lg [background:var(--kbn-office-file-accent,_#3f7dd0)] [color:var(--kbn-office-file-accent-text,_#fff)]"/>
       <Label HtmlTag="Div"
-             Text="Accueil"
+             Text="Home"
              Role="Meta"
              FontWeight="Medium"
              Overflow="Wrap"
@@ -60,7 +60,7 @@
         <Stack Direction="LeftToRight" Gap="0" CrossAlign="Center" Justify="Center" Class="flex-1">
           <Panel Class="flex flex-col w-14 items-center justify-center gap-1 rounded cursor-default [color:var(--kbn-ws-text,_#202124)]">
             <Icon Name="Folder" Size="22"/>
-            <Label HtmlTag="Span" Text="Insérer" TextAlign="TopCenter" Overflow="Wrap" Class="text-[10px] leading-tight"/>
+            <Label HtmlTag="Span" Text="Insert" TextAlign="TopCenter" Overflow="Wrap" Class="text-[10px] leading-tight"/>
           </Panel>
         </Stack>
         <!-- TODO(views-migrate): <div> with a computed style -->
@@ -68,7 +68,7 @@
       </Stack>
     </Panel>
     <Panel Class="flex items-center justify-between px-3 text-[11px] [height:22px] [background:var(--kbn-ws-status,_#f8f9fa)] [color:var(--kbn-ws-text-dim,_#5f6368)] [border-top:1px_solid_var(--kbn-ws-border,_#dadce0)]">
-      <Label HtmlTag="Span" Text="Page 1 sur 3 · 428 mots" Overflow="Wrap" InheritFontSize="true"/>
+      <Label HtmlTag="Span" Text="Page 1 of 3 · 428 words" Overflow="Wrap" InheritFontSize="true"/>
       <Label HtmlTag="Span" Text="100 %" Overflow="Wrap" InheritFontSize="true"/>
     </Panel>
   </Panel>

@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 /**
  * Code-behind of `OAuthProvidersPanel.kbcontrol` (converted from `OAuthProvidersPanel.tsx` by @kubuno/views-migrate).
  */
@@ -71,6 +72,8 @@ const emptyForm: FormState = {
 }
 
 export class OAuthProvidersPanel extends ViewBase {
+  tr!: ReturnType<typeof useTranslation>['t']
+
   @bind accessor editing: string | null = null
   @bind accessor probe: Record<string, DiscoveryProbe> = {}
   qc!: OAuthProvidersPanelStores['qc']
@@ -126,6 +129,7 @@ export class OAuthProvidersPanel extends ViewBase {
 
   /** Runs the hooks and publishes what they give as fields (the bindings, the getters and the methods read them). */
   use(): void {
+    this.publish({ tr: useTranslation().t })
     const s = this.useStores()
     this.publish({ qc: s.qc, confirm: s.confirm, confirmState: s.confirmState, handleConfirm: s.handleConfirm, handleCancel: s.handleCancel, providers: s.providers, isLoading: s.isLoading })
     const h = this.useHooks()
@@ -264,9 +268,9 @@ export class OAuthProvidersPanel extends ViewBase {
 
   async onDelete(p: AdminProvider) {
     const ok = await this.confirm({
-      title: 'Supprimer le fournisseur',
-      message: `Supprimer « ${p.display_name} » ? Les utilisateurs liés conservent leur compte mais ne pourront plus se connecter via ce fournisseur.`,
-      confirmLabel: 'Supprimer',
+      title: this.tr('oauth_admin.delete_title'),
+      message: this.tr('oauth_admin.delete_message', { name: p.display_name }),
+      confirmLabel: this.tr('common.delete'),
       variant: 'danger',
     })
     if (ok) this.deleteM.mutate(p.id)

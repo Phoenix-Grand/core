@@ -69,13 +69,13 @@ export function MediaViewer({ files, start, contentOf, onClose }: {
       </div>
       <div className="relative flex-1 min-h-0 flex items-center justify-center p-4" onClick={e => e.stopPropagation()}>
         {canNav && (
-          <button onClick={() => go(-1)} aria-label="Précédent"
+          <button onClick={() => go(-1)} aria-label="Previous"
             className="absolute left-3 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-white/10 hover:bg-white/25 text-white transition-colors">
             <ChevronLeft size={26} />
           </button>
         )}
         {err ? (
-          <p className="text-white/80 text-sm">Aperçu indisponible.</p>
+          <p className="text-white/80 text-sm">Preview unavailable.</p>
         ) : isText ? (
           <pre className="max-w-4xl w-full max-h-full overflow-auto bg-white text-text-primary text-sm rounded-lg p-4 whitespace-pre-wrap">{text ?? '…'}</pre>
         ) : !src ? (
@@ -89,10 +89,10 @@ export function MediaViewer({ files, start, contentOf, onClose }: {
         ) : m === 'application/pdf' ? (
           <iframe src={src} title={file.name} className="w-full h-full bg-white rounded-lg" />
         ) : (
-          <p className="text-white/80 text-sm">Aperçu non disponible - téléchargez le fichier.</p>
+          <p className="text-white/80 text-sm">Preview unavailable — download the file.</p>
         )}
         {canNav && (
-          <button onClick={() => go(1)} aria-label="Suivant"
+          <button onClick={() => go(1)} aria-label="Next"
             className="absolute right-3 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-white/10 hover:bg-white/25 text-white transition-colors">
             <ChevronRight size={26} />
           </button>

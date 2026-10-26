@@ -10,8 +10,8 @@ import type { OverlaysGroup } from './OverlaysGroup'
 
 export function Part1({ t }: { t: NonNullable<OverlaysGroup['tr']> }) {
   return (
-    <PreviewStage title={t('admin.t_prev_window', { defaultValue: 'Fenêtre flottante' })} width={360} height={280}>
-              <FloatingWindow title="Fenêtre flottante" onClose={noop} defaultWidth={260} minWidth={200} minHeight={120}>
+    <PreviewStage title={t('admin.t_prev_window', { defaultValue: "Floating window" })} width={360} height={280}>
+              <FloatingWindow title="Floating window" onClose={noop} defaultWidth={260} minWidth={200} minHeight={120}>
                 <div className="p-4 text-sm text-text-secondary">{t('admin.t_prev_window_body', { defaultValue: 'Contenu de la fenêtre.' })}</div>
               </FloatingWindow>
             </PreviewStage>
@@ -25,7 +25,7 @@ export function Part2({ t }: { t: NonNullable<OverlaysGroup['tr']> }) {
                 title={t('admin.t_prev_confirm_title', { defaultValue: 'Supprimer l’élément ?' })}
                 message={t('admin.t_prev_confirm_msg', { defaultValue: 'Cette action est définitive et ne peut pas être annulée.' })}
                 variant="danger"
-                confirmLabel={t('common.delete', { defaultValue: 'Supprimer' })}
+                confirmLabel={t('common.delete', { defaultValue: "Delete" })}
                 onConfirm={noop}
                 onCancel={noop}
               />

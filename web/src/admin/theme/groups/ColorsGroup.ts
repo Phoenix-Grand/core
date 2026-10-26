@@ -36,7 +36,7 @@ export class ColorsGroup extends ViewBase {
   }
 
   get swatch_props7() {
-    return this.memo('swatch_props7', [], () => ({ varName: "--color-success", label: "succès" }))
+    return this.memo('swatch_props7', [], () => ({ varName: "--color-success", label: "success" }))
   }
 
   get swatch_props8() {

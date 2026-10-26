@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 /**
  * The parts of `OAuthProvidersPanel.kbcontrol` still written in React (the codemod could not convert them; see the
  * TODO comments in the view). Each is rendered by a `<ReactHost>` with the values it reads as props.
@@ -41,6 +42,7 @@ function ProviderForm({
   onSave: (data: FormState) => void
   onCancel: () => void
 }) {
+  const { t: translate } = useTranslation()
   const [f, setF] = useState<FormState>(initial)
   const [copied, setCopied] = useState(false)
   const set = (k: keyof FormState, v: string | boolean) => setF((p) => ({ ...p, [k]: v }))
@@ -73,7 +75,7 @@ function ProviderForm({
               }))}
               className="px-3 py-1.5 rounded-md text-xs font-medium border border-border hover:bg-surface-2 transition-colors"
             >
-              {p.label}
+              {p.key === 'generic' ? translate('oauth_admin.other') : p.label}
             </button>
           ))}
         </div>
@@ -81,13 +83,13 @@ function ProviderForm({
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         <label className="text-sm">
-          <span className="text-text-secondary">Identifiant (slug, dans l'URL)</span>
+          <span className="text-text-secondary">{translate('oauth_admin.slug')}</span>
           <Input value={f.slug} disabled={isEdit}
             onChange={(e) => set('slug', e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''))}
             placeholder="keycloak" />
         </label>
         <label className="text-sm">
-          <span className="text-text-secondary">Nom affiché (bouton)</span>
+          <span className="text-text-secondary">{translate('oauth_admin.button_name')}</span>
           <Input value={f.display_name} onChange={(e) => set('display_name', e.target.value)} placeholder="Keycloak" />
         </label>
         <label className="text-sm md:col-span-2">
@@ -101,17 +103,17 @@ function ProviderForm({
         </label>
         <label className="text-sm">
           <span className="text-text-secondary">
-            Client secret {isEdit && <span className="text-text-tertiary">(laisser vide = inchangé)</span>}
+            Client secret {isEdit && <span className="text-text-tertiary">{translate('oauth_admin.secret_hint')}</span>}
           </span>
           <Input type="password" value={f.client_secret} onChange={(e) => set('client_secret', e.target.value)}
-            placeholder={isEdit ? '••••••••' : 'secret (vide si client public)'} autoComplete="new-password" />
+            placeholder={isEdit ? '••••••••' : translate('oauth_admin.secret_placeholder')} autoComplete="new-password" />
         </label>
         <label className="text-sm">
           <span className="text-text-secondary">Scopes</span>
           <Input value={f.scopes} onChange={(e) => set('scopes', e.target.value)} placeholder="openid email profile" />
         </label>
         <label className="text-sm">
-          <span className="text-text-secondary">Couleur du bouton (hex, optionnel)</span>
+          <span className="text-text-secondary">{translate('oauth_admin.color_label')}</span>
           <Input value={f.button_color} onChange={(e) => set('button_color', e.target.value)} placeholder="#4d9de0" />
         </label>
       </div>
@@ -121,29 +123,27 @@ function ProviderForm({
           écrits, faux pour tout fournisseur ayant choisi les siens. Un chemin
           pointé est accepté (resource_access.<client>.roles chez Keycloak). */}
       <div>
-        <div className="text-sm font-medium text-text-primary">Mappage des revendications</div>
+        <div className="text-sm font-medium text-text-primary">{translate('oauth_admin.claim_mapping')}</div>
         <p className="mt-0.5 text-text-tertiary" style={{ fontSize: 'var(--kb-text-meta)' }}>
-          Quelle revendication du profil alimente quel champ. Les valeurs par défaut sont celles
-          d’OpenID Connect. Un chemin pointé est accepté.
-        </p>
+          {translate('oauth_admin.claims_help')}</p>
         <div className="mt-2 grid grid-cols-1 md:grid-cols-2 gap-3">
           <label className="text-sm">
-            <span className="text-text-secondary">Identifiant</span>
+            <span className="text-text-secondary">{translate('oauth_admin.username')}</span>
             <Input value={f.claim_username} onChange={(e) => set('claim_username', e.target.value)}
               placeholder="preferred_username" className="font-mono" />
           </label>
           <label className="text-sm">
-            <span className="text-text-secondary">Adresse électronique</span>
+            <span className="text-text-secondary">{translate('oauth_admin.email')}</span>
             <Input value={f.claim_email} onChange={(e) => set('claim_email', e.target.value)}
               placeholder="email" className="font-mono" />
           </label>
           <label className="text-sm">
-            <span className="text-text-secondary">Nom affiché</span>
+            <span className="text-text-secondary">{translate('oauth_admin.display_name')}</span>
             <Input value={f.claim_display_name} onChange={(e) => set('claim_display_name', e.target.value)}
               placeholder="name" className="font-mono" />
           </label>
           <label className="text-sm">
-            <span className="text-text-secondary">Groupes</span>
+            <span className="text-text-secondary">{translate('oauth_admin.groups')}</span>
             <Input value={f.claim_groups} onChange={(e) => set('claim_groups', e.target.value)}
               placeholder="groups" className="font-mono" />
           </label>
@@ -153,40 +153,34 @@ function ProviderForm({
       <div className="flex flex-wrap gap-5">
         <label className="flex items-center gap-2 text-sm cursor-pointer">
           <input type="checkbox" checked={f.enabled} onChange={(e) => set('enabled', e.target.checked)} />
-          Activé (visible sur la page de connexion)
-        </label>
+          {translate('oauth_admin.enabled')}</label>
         <label className="flex items-center gap-2 text-sm cursor-pointer">
           <input type="checkbox" checked={f.allow_signup} onChange={(e) => set('allow_signup', e.target.checked)} />
-          Autoriser la création de comptes
-        </label>
+          {translate('oauth_admin.allow_signup')}</label>
         <label className="flex items-center gap-2 text-sm cursor-pointer">
           <input type="checkbox" checked={f.sync_groups} onChange={(e) => set('sync_groups', e.target.checked)} />
-          Importer les groupes revendiqués
-        </label>
+          {translate('oauth_admin.sync_groups')}</label>
       </div>
 
       {f.sync_groups && (
         <Callout variant="info">
-          Le fournisseur décidera de l’appartenance aux groupes sur cette instance. Seules les
-          adhésions accordées par lui sont reprises : ce qu’un administrateur a attribué à la main
-          n’est jamais retiré.
-        </Callout>
+          {translate('oauth_admin.sync_groups_help')}</Callout>
       )}
 
       {/* Redirect URI to register in the IdP */}
       <div className="rounded-lg bg-surface-2 p-3 text-sm">
-        <div className="text-text-secondary mb-1">URL de redirection à déclarer dans le fournisseur :</div>
+        <div className="text-text-secondary mb-1">{translate('oauth_admin.redirect_url')}</div>
         <div className="flex items-center gap-2">
           <code className="flex-1 text-xs break-all text-text-primary">{redirectUri}</code>
-          <button onClick={copyRedirect} className="p-1.5 rounded hover:bg-surface-3 text-text-secondary" title="Copier">
+          <button onClick={copyRedirect} className="p-1.5 rounded hover:bg-surface-3 text-text-secondary" title={translate('textmenu.copy')}>
             {copied ? <Check size={15} /> : <Copy size={15} />}
           </button>
         </div>
       </div>
 
       <div className="flex justify-end gap-2">
-        <Button variant="ghost" onClick={onCancel}>Annuler</Button>
-        <Button disabled={!canSave} onClick={() => onSave(f)}>{isEdit ? 'Enregistrer' : 'Ajouter'}</Button>
+        <Button variant="ghost" onClick={onCancel}>{translate('common.cancel')}</Button>
+        <Button disabled={!canSave} onClick={() => onSave(f)}>{isEdit ? translate('common.save') : translate('sharing.add_prefix')}</Button>
       </div>
     </div>
   )
@@ -194,12 +188,14 @@ function ProviderForm({
 export { ProviderForm }
 
 export function Part1({ setEditing }: { setEditing: NonNullable<OAuthProvidersPanel['setEditing']> }) {
+  const { t: translate } = useTranslation()
   return (
-    <Button onClick={() => setEditing('new')}><Plus size={16} className="mr-1" /> Ajouter</Button>
+    <Button onClick={() => setEditing('new')}><Plus size={16} className="mr-1" /> {translate('sharing.add_prefix')}</Button>
   )
 }
 
 export function Part2({ providers, editing, toFormState, submit, setEditing, testM, updateM, onDelete }: { providers: OAuthProvidersPanel['providers']; editing: OAuthProvidersPanel['editing']; toFormState: OAuthProvidersPanel['toFormState']; submit: OAuthProvidersPanel['submit']; setEditing: NonNullable<OAuthProvidersPanel['setEditing']>; testM: NonNullable<OAuthProvidersPanel['testM']>; updateM: NonNullable<OAuthProvidersPanel['updateM']>; onDelete: OAuthProvidersPanel['onDelete'] }) {
+  const { t: translate } = useTranslation()
   return (
     <>{providers?.map((p) => (
                 editing === p.id ? (
@@ -216,28 +212,28 @@ export function Part2({ providers, editing, toFormState, submit, setEditing, tes
                       <div className="flex items-center gap-2">
                         <span className="font-medium truncate">{p.display_name}</span>
                         <span className="text-xs font-mono text-text-tertiary">/{p.slug}</span>
-                        {!p.enabled && <span className="text-xs px-1.5 py-0.5 rounded bg-surface-3 text-text-tertiary">désactivé</span>}
+                        {!p.enabled && <span className="text-xs px-1.5 py-0.5 rounded bg-surface-3 text-text-tertiary">{translate('common.disabled')}</span>}
                       </div>
                       <div className="text-sm text-text-tertiary truncate">{p.issuer_url}</div>
                     </div>
                     <button
                       onClick={() => testM.mutate(p.id)}
-                      title="Tester la découverte OIDC"
+                      title={translate('oauth_admin.test')}
                       className="p-2 rounded-lg hover:bg-surface-2 text-text-secondary"
                     >
                       <PlugZap size={16} />
                     </button>
                     <button
                       onClick={() => updateM.mutate({ id: p.id, data: { enabled: !p.enabled } })}
-                      title={p.enabled ? 'Désactiver' : 'Activer'}
+                      title={p.enabled ? translate('oauth_admin.disable') : translate('oauth_admin.enable')}
                       className={`p-2 rounded-lg hover:bg-surface-2 ${p.enabled ? 'text-success' : 'text-text-tertiary'}`}
                     >
                       <Power size={16} />
                     </button>
-                    <button onClick={() => setEditing(p.id)} title="Modifier" className="p-2 rounded-lg hover:bg-surface-2 text-text-secondary">
+                    <button onClick={() => setEditing(p.id)} title={translate('common.edit')} className="p-2 rounded-lg hover:bg-surface-2 text-text-secondary">
                       <Edit2 size={16} />
                     </button>
-                    <button onClick={() => onDelete(p)} title="Supprimer" className="p-2 rounded-lg hover:bg-danger-light text-danger">
+                    <button onClick={() => onDelete(p)} title={translate('common.delete')} className="p-2 rounded-lg hover:bg-danger-light text-danger">
                       <Trash2 size={16} />
                     </button>
                   </div>

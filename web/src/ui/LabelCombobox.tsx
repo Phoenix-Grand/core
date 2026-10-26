@@ -15,7 +15,7 @@ export interface LabelComboboxProps {
   large?: boolean
 }
 
-export function LabelCombobox({ value, onChange, primaryColor, presets, label = 'Libellé', large }: LabelComboboxProps) {
+export function LabelCombobox({ value, onChange, primaryColor, presets, label = "Label", large }: LabelComboboxProps) {
   const [open, setOpen] = useState(false)
   const wrapRef = useRef<HTMLDivElement>(null)
 

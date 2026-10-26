@@ -6,7 +6,7 @@
     <Panel Class="flex-1 max-w-md">
       <Stack Direction="LeftToRight" CrossAlign="Center" ForeColor="TextSecondary" Class="h-9 px-3 rounded-full bg-search-bg">
         <Icon Name="Search" Size="16"/>
-        <Label HtmlTag="Span" Text="Rechercher…" Overflow="Wrap"/>
+        <Label HtmlTag="Span" Text="Search…" Overflow="Wrap"/>
       </Stack>
     </Panel>
     <Label HtmlTag="Div"

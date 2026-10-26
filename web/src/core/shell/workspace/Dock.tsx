@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 // Core primitive: a draggable / dockable panel system shared by advanced editors
 // (PaintSharp sub-editors, the App builder, …). Panels are tabs that can be
 // re-docked left/right, merged into a tab group, split top/bottom, torn off as
@@ -194,6 +195,7 @@ export function DockArea({
   viewportRef?: React.Ref<HTMLDivElement>
   controllerRef?: React.MutableRefObject<DockController | null>
 }) {
+  const { t: translate } = useTranslation()
   const known = new Set(Object.keys(panels))
   const [layout, setLayout] = useState<DockLayout>(() => {
     try {
@@ -396,13 +398,13 @@ export function DockArea({
   const tabMenuItems = (panel: PanelId): MenuItem[] => [
     { type:'label', text: String((panels[panel]?.label as string) ?? panel) },
     { type:'separator' },
-    { type:'action', label:'Détacher (flottant)', onClick: () => floatHere(panel) },
-    { type:'action', label:'Ancrer à gauche', onClick: () => setLayout(prev => applyDrop(prev, panel, { type:'newcol', side:'left' })) },
-    { type:'action', label:'Ancrer à droite', onClick: () => setLayout(prev => applyDrop(prev, panel, { type:'newcol', side:'right' })) },
+    { type:'action', label:translate('workspace.float'), onClick: () => floatHere(panel) },
+    { type:'action', label:translate('workspace.dock_left'), onClick: () => setLayout(prev => applyDrop(prev, panel, { type:'newcol', side:'left' })) },
+    { type:'action', label:translate('workspace.dock_right'), onClick: () => setLayout(prev => applyDrop(prev, panel, { type:'newcol', side:'right' })) },
     { type:'separator' },
-    { type:'action', label:'Fermer le panneau', danger:true, onClick: () => setLayout(prev => closePanel(prev, panel)) },
+    { type:'action', label:translate('workspace.close_panel'), danger:true, onClick: () => setLayout(prev => closePanel(prev, panel)) },
     { type:'separator' },
-    { type:'action', label:'Réinitialiser la disposition', onClick: resetLayout },
+    { type:'action', label:translate('workspace.reset_layout'), onClick: resetLayout },
   ]
 
   // ── Rendering ──
@@ -450,7 +452,7 @@ export function DockArea({
                           background: active ? tabActiveBg : 'transparent',
                           borderRadius: `${r}px ${r}px 0 0` }}>
               <span className="truncate max-w-[150px]">{panels[p]?.label}</span>
-              <button type="button" title="Fermer"
+              <button type="button" title={translate('common.close')}
                 onPointerDown={(e)=>e.stopPropagation()}
                 onClick={(e)=>{ e.stopPropagation(); setLayout(prev => closePanel(prev, p)) }}
                 className={`flex items-center justify-center rounded-full p-0.5 ${active ? 'opacity-70' : 'opacity-0 group-hover/tab:opacity-70'} hover:opacity-100 hover:bg-black/10`}
@@ -464,12 +466,12 @@ export function DockArea({
         {/* Float-only caption controls: roll-up to header + maximize to viewport. */}
         {side==='float' && (
           <div className="ml-auto flex items-center gap-0.5 pr-1" style={{ color: theme.textDim }}>
-            <button type="button" title={grp.rolled ? 'Dérouler' : 'Enrouler'}
+            <button type="button" title={grp.rolled ? translate('workspace.expand') : translate('workspace.collapse')}
               onPointerDown={(e)=>e.stopPropagation()} onClick={(e)=>{ e.stopPropagation(); toggleRoll(grp.id) }}
               className="flex items-center justify-center rounded-full w-7 h-7 opacity-70 hover:opacity-100 hover:bg-black/10">
               {grp.rolled ? <ChevronDown size={14} /> : <ChevronUp size={14} />}
             </button>
-            <button type="button" title={grp.max ? 'Restaurer' : 'Agrandir'}
+            <button type="button" title={grp.max ? translate('workspace.restore') : translate('workspace.maximize')}
               onPointerDown={(e)=>e.stopPropagation()} onClick={(e)=>{ e.stopPropagation(); toggleMax(grp.id) }}
               className="flex items-center justify-center rounded-full w-7 h-7 opacity-70 hover:opacity-100 hover:bg-black/10">
               {grp.max ? <Copy size={12} /> : <Square size={12} />}

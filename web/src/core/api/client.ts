@@ -27,7 +27,7 @@ api.interceptors.response.use(
     // If the server returned HTML instead of JSON, the module isn't running.
     const ct = String(response.headers['content-type'] ?? '')
     if (ct.includes('text/html') && response.config.url && !response.config.url.includes('/auth/')) {
-      return Promise.reject({ message: 'Module non disponible (service inactif)', code: 'MODULE_UNAVAILABLE' })
+      return Promise.reject({ message: 'Module unavailable (service inactive)', code: 'MODULE_UNAVAILABLE' })
     }
     // A settings write may have changed a PUBLIC setting (instance name, logo,
     // theme, idle timeout…), which `getPublicConfig` holds a short-lived copy
@@ -126,7 +126,7 @@ api.interceptors.response.use(
 function normalizeError(error: AxiosError): { message: string; code: string } {
   const data = error.response?.data as { message?: string; error?: string } | undefined
   return {
-    message: data?.message ?? error.message ?? 'Erreur inconnue',
+    message: data?.message ?? error.message ?? 'Unknown error',
     code: data?.error ?? 'UNKNOWN',
   }
 }

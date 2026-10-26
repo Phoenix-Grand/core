@@ -9,8 +9,7 @@
 import { useRef, useState } from 'react'
 import { ChevronDown, Globe } from 'lucide-react'
 import { MenuDropdown, type MenuDropdownPos } from '@ui'
-import { LANGUAGES, applyDir } from '../i18n'
-import i18n from 'i18next'
+import { LANGUAGES, setLanguage } from '../i18n'
 
 export function LanguageMenu({ value, onChange }: { value: string; onChange: (lng: string) => void }) {
   const [pos, setPos] = useState<MenuDropdownPos | null>(null)
@@ -18,8 +17,7 @@ export function LanguageMenu({ value, onChange }: { value: string; onChange: (ln
   const current = LANGUAGES.find(l => l.code === value) ?? LANGUAGES[0]
 
   const pick = (code: string) => {
-    void i18n.changeLanguage(code)
-    applyDir(code)          // ar / he read right to left
+    setLanguage(code)
     onChange(code)
     setPos(null)
   }

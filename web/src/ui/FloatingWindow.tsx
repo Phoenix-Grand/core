@@ -627,7 +627,7 @@ export function FloatingWindow({
                 onClose()
               }}
               onMouseDown={e => e.stopPropagation()}
-              title="Détacher dans une fenêtre"
+              title="Open in a separate window"
               className="flex-shrink-0 grid place-items-center w-[30px] h-[30px] rounded-[5px]
                          text-current opacity-80 transition-colors hover:opacity-100 hover:bg-white/20"
             >
@@ -637,7 +637,7 @@ export function FloatingWindow({
           {showClose && <button
             onClick={closeWindow}
             onMouseDown={e => e.stopPropagation()}
-            title="Fermer (Échap)"
+            title="Close (Esc)"
             className="flex-shrink-0 grid place-items-center w-[30px] h-[30px] rounded-[5px]
                        text-current opacity-80 transition-colors hover:opacity-100 hover:bg-white/20"
           >

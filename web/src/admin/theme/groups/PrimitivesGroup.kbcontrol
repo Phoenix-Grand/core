@@ -9,8 +9,8 @@
       <Button Size="Sm" Loading="true" Text="…"/>
     </Stack>
     <Stack Direction="LeftToRight" CrossAlign="Center" WrapContents="true" Class="mb-3">
-      <Badge Text="Défaut"/>
-      <Badge Variant="Success" Text="Succès"/>
+      <Badge Text="Default"/>
+      <Badge Variant="Success" Text="Success"/>
       <Badge Variant="Danger" Text="Erreur"/>
       <Badge Variant="Warning" Text="Alerte"/>
       <Badge Dot="true" Variant="Primary" Text="En ligne"/>
@@ -20,7 +20,7 @@
         <!-- TODO(views-migrate): <TextField LeftIcon>: an icon size the element cannot take -->
         <ReactHost Component="{Binding Part1}"/>
       </Panel>
-      <CheckBox Checked="{Binding chk, Mode=TwoWay}" Text="Case à cocher"/>
+      <CheckBox Checked="{Binding chk, Mode=TwoWay}" Text="Checkbox"/>
       <RadioButton SelectedValue="true" Value="true" Text="Option" OnCheckedChanged="radio_button_checked_changed"/>
       <Switch On="{Binding tgl, Mode=TwoWay}" Label="Bascule"/>
       <Spinner Size="Sm"/>

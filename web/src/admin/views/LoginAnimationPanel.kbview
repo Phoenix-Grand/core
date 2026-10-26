@@ -2,16 +2,16 @@
 <Panel Class="mt-10 max-w-3xl">
   <Panel HtmlTag="H2" Class="text-lg font-medium flex items-center gap-2 mb-1">
     <Icon Name="Waves" Class="text-primary"/>
-    <Label HtmlTag="Span" InheritFontSize="true" Overflow="Wrap" Text=" Animation de la page de connexion"/>
+    <Label HtmlTag="Span" InheritFontSize="true" Overflow="Wrap" Text="{Res admin.login_animation_title}"/>
   </Panel>
-  <Label Text="Réglez le drapé animé en direct sur l'aperçu, puis enregistrez : les valeurs s'appliquent à tous les visiteurs de la page de connexion."
+  <Label Text="{Res admin.login_animation_help}"
          Overflow="Wrap"
          ForeColor="TextSecondary"
          Class="mb-4"/>
   <Panel Class="relative w-full rounded-xl overflow-hidden border border-border mb-4 [aspect-ratio:16/8] [background:linear-gradient(160deg,_#08174d_0%,_#03091a_100%)]">
     <!-- TODO(views-migrate): <LoginAnimationGL> is no .kbview element (../auth/LoginAnimationGL#default) -->
     <ReactHost Component="{Binding LoginAnimationGL}"/>
-    <Label HtmlTag="Span" Text="Aperçu - page de connexion" Overflow="Wrap" Class="absolute top-3 left-3 text-white/50 select-none z-10"/>
+    <Label HtmlTag="Span" Text="{Res admin.login_animation_preview}" Overflow="Wrap" Class="absolute top-3 left-3 text-white/50 select-none z-10"/>
   </Panel>
   <Panel Class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-3 mb-4">
     <Repeater ItemKey="key" ItemsSource="{Binding rows_anim_sliders}">
@@ -29,13 +29,13 @@
     </Repeater>
   </Panel>
   <Stack Direction="LeftToRight" CrossAlign="Center">
-    <Button Loading="{Binding saveM.isPending}" Enabled="{Binding enabled_unless_dirty}" Text="Enregistrer" OnClick="button_click"/>
-    <Button Variant="Secondary" IconSize="14" Icon="RotateCcw" Text="Valeurs par défaut" OnClick="button_click2"/>
+    <Button Loading="{Binding saveM.isPending}" Enabled="{Binding enabled_unless_dirty}" Text="{Res common.save}" OnClick="button_click"/>
+    <Button Variant="Secondary" IconSize="14" Icon="RotateCcw" Text="{Res admin.login_animation_defaults}" OnClick="button_click2"/>
     <Label HtmlTag="Span"
-           Text="Enregistré - appliqué à la page de connexion."
+           Text="{Res admin.login_animation_saved}"
            Overflow="Wrap"
            ForeColor="Success"
            Visible="{Binding show_save_m_is_success_dirty}"/>
-    <Label HtmlTag="Span" Text="Échec de l'enregistrement." Overflow="Wrap" ForeColor="Danger" Visible="{Binding saveM.isError}"/>
+    <Label HtmlTag="Span" Text="{Res admin.login_animation_error}" Overflow="Wrap" ForeColor="Danger" Visible="{Binding saveM.isError}"/>
   </Stack>
 </Panel>

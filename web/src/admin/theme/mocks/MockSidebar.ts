@@ -9,10 +9,10 @@ import * as __parts from './MockSidebar.parts'
 export class MockSidebar extends ViewBase {
   get items() {
     return this.memo('items', [], () => [
-    { icon: House, label: 'Accueil', active: true },
-    { icon: Folder, label: 'Mon Drive', active: false },
-    { icon: Star, label: 'Étoilés', active: false },
-    { icon: Trash2, label: 'Corbeille', active: false },
+    { icon: House, label: "Home", active: true },
+    { icon: Folder, label: "My Drive", active: false },
+    { icon: Star, label: "Starred", active: false },
+    { icon: Trash2, label: "Trash", active: false },
   ])
   }
 

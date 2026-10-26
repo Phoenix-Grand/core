@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { useMemo, useState } from 'react'
 import type { ImageSourceProps } from '../registry/ImageSourceRegistry'
 import { ILLUSTRATIONS, COLLECTIONS, illustrationSrc, illustrationFile } from './illustrations'
@@ -13,15 +14,18 @@ import { ILLUSTRATIONS, COLLECTIONS, illustrationSrc, illustrationFile } from '.
  * whoever reads the record later with a blob they cannot resolve.
  */
 export default function ImagePickerIllustrations({ onPick, query }: ImageSourceProps) {
+  const { t: translate } = useTranslation()
   const [collection, setCollection] = useState<string | null>(null)
 
   const shown = useMemo(() => {
     const q = query.trim().toLowerCase()
     return ILLUSTRATIONS.filter(i =>
       (!collection || i.collection === collection) &&
-      (!q || i.keywords.some(k => k.toLowerCase().includes(q)))
+      (!q || i.keywords.some(k => k.toLowerCase().includes(q)) ||
+        translate(`image_picker.art_${i.id.split('-')[0]}`).toLowerCase().includes(q) ||
+        translate(`image_picker.collection_${i.collection}`).toLowerCase().includes(q))
     )
-  }, [query, collection])
+  }, [query, collection, translate])
 
   const chip = (id: string | null, label: string) => (
     <button key={id ?? 'all'} type="button" onClick={() => setCollection(id)}
@@ -34,14 +38,13 @@ export default function ImagePickerIllustrations({ onPick, query }: ImageSourceP
   return (
     <div className="h-full flex flex-col">
       <div className="flex items-center gap-1 flex-wrap px-1 pb-3 shrink-0">
-        {chip(null, 'Tout')}
-        {COLLECTIONS.map(c => chip(c.id, c.label))}
+        {chip(null, translate('image_picker.all'))}
+        {COLLECTIONS.map(c => chip(c.id, translate(`image_picker.collection_${c.id}`)))}
       </div>
 
       {!shown.length ? (
         <p className="flex-1 flex items-center justify-center text-sm text-text-secondary">
-          Aucune illustration ne correspond.
-        </p>
+          {translate('image_picker.no_illustrations')}</p>
       ) : (
         <div className="flex-1 overflow-y-auto">
           <div className="grid gap-3 pb-2"
@@ -49,7 +52,7 @@ export default function ImagePickerIllustrations({ onPick, query }: ImageSourceP
             {shown.map(ill => (
               <button key={ill.id} type="button"
                 onClick={() => onPick({ kind: 'file', file: illustrationFile(ill) })}
-                title={ill.keywords[0]}
+                title={translate(`image_picker.art_${ill.id.split('-')[0]}`)}
                 className="aspect-square rounded-full overflow-hidden border-2 border-transparent
                            hover:border-primary focus-visible:border-primary outline-none transition-colors">
                 <img src={illustrationSrc(ill.svg)} alt="" className="w-full h-full object-cover" />

@@ -74,20 +74,20 @@ export function useAppPickerTheme(): Required<PickerTheme> {
   return theme
 }
 
-// Built-in French fallbacks, used only when no `t` is supplied. Modules that pass
+// Built-in English fallbacks, used only when no `t` is supplied. Modules that pass
 // a `t` keep full i18n; the keys match PaintSharp's existing `layer_*` translations.
 const FALLBACK_LABELS: Record<string, string> = {
-  layer_color_picker:   'Couleur',
-  layer_harmony_comp:   'Complémentaire',
-  layer_harmony_analog: 'Analogues',
-  layer_harmony_triad:  'Triade',
-  layer_harmony_tetrad: 'Tétrade',
-  layer_harmony_split:  'Complémentaires divisées',
+  layer_color_picker:   "Color",
+  layer_harmony_comp:   "Complementary",
+  layer_harmony_analog: "Analogous",
+  layer_harmony_triad:  "Triadic",
+  layer_harmony_tetrad: "Tetradic",
+  layer_harmony_split:  "Split complementary",
   layer_harmony_mono:   'Monochrome',
-  layer_color_recent:   'Récemment utilisées',
-  layer_color_eyedropper: 'Pipette',
-  layer_color_cancel:   'Annuler',
-  layer_color_confirm:  'Ajouter',
+  layer_color_recent:   "Recently used",
+  layer_color_eyedropper: "Eyedropper",
+  layer_color_cancel:   "Cancel",
+  layer_color_confirm:  "Add",
 }
 
 export type Scheme = 'comp'|'analog'|'triad'|'tetrad'|'split'|'mono'
@@ -293,7 +293,7 @@ export function ColorPicker({ t, color, onChange, onClose, C: CProp = DEFAULT_PI
 }) {
   // Normalise le thème : `surface`/`title` absents (ex. thème PaintSharp) → défauts sombres.
   const C = { ...DEFAULT_PICKER_THEME, ...CProp } as Required<PickerTheme>
-  const tr = (k: string) => (t ? t(k) : (FALLBACK_LABELS[k] ?? k))
+  const tr = (k: string) => (t ? t(k, { defaultValue: FALLBACK_LABELS[k] ?? k }) : (FALLBACK_LABELS[k] ?? k))
   const [r0,g0,b0] = hexToRgb(color)
   const [h0,s0,v0] = rgbToHsv(r0,g0,b0)
   const [h, setH] = useState(h0); const [s, setS] = useState(s0); const [v, setV] = useState(v0)

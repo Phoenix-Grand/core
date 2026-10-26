@@ -1,7 +1,8 @@
 import { cn } from '../cn'
 import type { Dispatch, SetStateAction } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { MONTHS_FR } from './helpers'
+import { monthLabels } from './helpers'
+import { useUiLocale } from '../useUiLocale'
 import type { PickerView } from './types'
 
 /** Month grid of the displayed year. */
@@ -13,6 +14,7 @@ export function MonthView({
   setView:     Dispatch<SetStateAction<PickerView>>
   selected:    Date | null
 }) {
+  const months = monthLabels(useUiLocale())
   return (
     <div>
       <div className="flex items-center gap-1 mb-3">
@@ -39,7 +41,7 @@ export function MonthView({
         </button>
       </div>
       <div className="grid grid-cols-3 gap-1">
-        {MONTHS_FR.map((name, idx) => {
+        {months.map((name, idx) => {
           const isSel = selected && selected.getMonth() === idx && selected.getFullYear() === viewDate.getFullYear()
           return (
             <button

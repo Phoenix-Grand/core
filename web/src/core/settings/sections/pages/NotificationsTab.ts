@@ -67,7 +67,15 @@ export class NotificationsTab extends ViewBase {
   }
 
   get groups() {
-    return this.memo('groups', [this.activeIds], () => NotificationRegistry.getGroups(this.activeIds))
+    return this.memo('groups', [this.activeIds, this.tr], () => NotificationRegistry.getGroups(this.activeIds).map(group =>
+      group.moduleId === 'core' ? {
+        ...group,
+        title: this.tr('settings.notif_core_title'),
+        activities: group.activities.map(activity => ({
+          ...activity,
+          label: this.tr(`settings.notif_core_${activity.id}`, { defaultValue: activity.label }),
+        })),
+      } : group))
   }
 
   get stored() {

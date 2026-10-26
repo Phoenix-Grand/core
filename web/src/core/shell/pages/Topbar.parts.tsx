@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 /**
  * The parts of `Topbar.kbcontrol` still written in React (the codemod could not convert them; see the
  * TODO comments in the view). Each is rendered by a `<ReactHost>` with the values it reads as props.
@@ -23,10 +24,11 @@ function openLinkedAccount(account: LinkedAccount) {
 }
 
 export function Part1() {
+  const { t: translate } = useTranslation()
   return (
     <input
                 type="search"
-                placeholder="Rechercher dans Kubuno"
+                placeholder={translate('shared_ui.search_kubuno')}
                 className="w-full pl-9 pr-10 py-2 bg-surface-2 rounded-full text-sm text-text-primary
                            placeholder-text-tertiary border border-transparent
                            focus:outline-none focus:bg-white focus:border-border focus:shadow-sm transition-all"
@@ -41,6 +43,7 @@ export function Part2({ SettingsButtonOverride }: { SettingsButtonOverride: NonN
 }
 
 export function Part3() {
+  const { t: translate } = useTranslation()
   return (
     <DropdownMenu.Root>
               <DropdownMenu.Trigger asChild>
@@ -63,8 +66,7 @@ export function Part3() {
                                  hover:bg-surface-1 cursor-pointer outline-none"
                     >
                       <Info size={16} className="text-text-secondary" />
-                      À propos de Kubuno
-                    </Link>
+                      {translate('user.about')}</Link>
                   </DropdownMenu.Item>
                 </DropdownMenu.Content>
               </DropdownMenu.Portal>
@@ -73,6 +75,7 @@ export function Part3() {
 }
 
 export function Part4({ user, user_avatar_url, initials, accounts, remove, setAddModalOpen, handleLogout }: { user: Topbar['user']; user_avatar_url: string; initials: NonNullable<Topbar['initials']>; accounts: NonNullable<Topbar['accounts']>; remove: NonNullable<Topbar['remove']>; setAddModalOpen: NonNullable<Topbar['setAddModalOpen']>; handleLogout: Topbar['handleLogout'] }) {
+  const { t: translate } = useTranslation()
   return (
     <DropdownMenu.Root>
               <DropdownMenu.Trigger asChild>
@@ -85,7 +88,7 @@ export function Part4({ user, user_avatar_url, initials, accounts, remove, setAd
                   </Avatar.Root>
                 </button>
               </DropdownMenu.Trigger>
-    
+
               <DropdownMenu.Portal>
                 <DropdownMenu.Content
                   align="end"
@@ -97,24 +100,22 @@ export function Part4({ user, user_avatar_url, initials, accounts, remove, setAd
                     <p className="text-sm font-medium text-text-primary">{user?.display_name ?? user?.username}</p>
                     <p className="text-xs text-text-tertiary">{user?.email}</p>
                   </div>
-    
+
                   <DropdownMenu.Item asChild>
                     <Link to="/settings" className="flex items-center gap-2 px-3 py-2 text-sm text-text-primary
                                                      hover:bg-surface-1 cursor-pointer outline-none">
                       <UserIcon size={16} className="text-text-secondary" />
-                      Profil
-                    </Link>
+                      {translate('shared_ui.profile')}</Link>
                   </DropdownMenu.Item>
-    
+
                   <Slot name="user-menu-items" />
-    
+
                   {/* Comptes liés */}
                   {accounts.length > 0 && (
                     <>
                       <DropdownMenu.Separator className="h-px bg-border my-1" />
                       <p className="px-3 pt-1 pb-0.5 text-xs font-medium text-text-tertiary uppercase tracking-wide">
-                        Autres comptes
-                      </p>
+                        {translate('shared_ui.other_accounts')}</p>
                       {accounts.map((account) => (
                         <div key={account.id} className="group flex items-center px-3 py-1.5 gap-2 hover:bg-surface-1">
                           <Avatar.Root className="w-7 h-7 rounded-full overflow-hidden bg-surface-3 flex items-center justify-center shrink-0">
@@ -136,14 +137,14 @@ export function Part4({ user, user_avatar_url, initials, accounts, remove, setAd
                             <button
                               onClick={() => openLinkedAccount(account)}
                               className="p-1 rounded hover:bg-surface-2 text-text-tertiary"
-                              title="Ouvrir dans un nouvel onglet"
+                              title={translate('shared_ui.open_tab')}
                             >
                               <ExternalLink size={13} />
                             </button>
                             <button
                               onClick={() => remove(account.id)}
                               className="p-1 rounded hover:bg-danger-light text-text-tertiary hover:text-danger"
-                              title="Supprimer ce compte"
+                              title={translate('shared_ui.remove_account')}
                             >
                               <LogOut size={13} />
                             </button>
@@ -152,9 +153,9 @@ export function Part4({ user, user_avatar_url, initials, accounts, remove, setAd
                       ))}
                     </>
                   )}
-    
+
                   <DropdownMenu.Separator className="h-px bg-border my-1" />
-    
+
                   {/* Ajouter un compte */}
                   <DropdownMenu.Item
                     onSelect={() => setAddModalOpen(true)}
@@ -162,19 +163,17 @@ export function Part4({ user, user_avatar_url, initials, accounts, remove, setAd
                                hover:bg-surface-1 cursor-pointer outline-none"
                   >
                     <UserPlus size={16} className="text-text-secondary" />
-                    Ajouter un compte
-                  </DropdownMenu.Item>
-    
+                    {translate('shell.add_account')}</DropdownMenu.Item>
+
                   <DropdownMenu.Separator className="h-px bg-border my-1" />
-    
+
                   <DropdownMenu.Item
                     onSelect={handleLogout}
                     className="flex items-center gap-2 px-3 py-2 text-sm text-danger
                                hover:bg-danger-light cursor-pointer outline-none"
                   >
                     <LogOut size={16} />
-                    Déconnexion
-                  </DropdownMenu.Item>
+                    {translate('user.logout')}</DropdownMenu.Item>
                 </DropdownMenu.Content>
               </DropdownMenu.Portal>
             </DropdownMenu.Root>

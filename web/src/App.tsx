@@ -50,6 +50,7 @@ const HEX_PATH =
   'L 18.82 78.00 Q 10.16 73.00 10.16 63.00 L 10.16 37.00 Q 10.16 27.00 18.82 22.00 Z'
 
 function LoadingSplash() {
+  const { t: translate } = useTranslation()
   return (
     <div className="min-h-screen flex flex-col items-center justify-center gap-6">
       <div className="relative flex items-center justify-center" style={{ width: 210, height: 210 }}>
@@ -83,7 +84,7 @@ function LoadingSplash() {
         </svg>
         <KubunoLogo size={156} className="relative animate-pulse" />
       </div>
-      <span className="text-text-secondary text-sm">Chargement…</span>
+      <span className="text-text-secondary text-sm">{translate('common.loading')}</span>
     </div>
   )
 }
@@ -125,11 +126,12 @@ function PublicOnlyRoute({ children }: { children: React.ReactNode }) {
 }
 
 function NotFoundPage() {
+  const { t: translate } = useTranslation()
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
       <p className="text-6xl font-bold text-text-tertiary mb-4">404</p>
       <p className="text-lg font-medium text-text-primary mb-2">Page introuvable</p>
-      <a href="/" className="text-primary hover:underline text-sm">Retour à l'accueil</a>
+      <a href="/" className="text-primary hover:underline text-sm">{translate('shared_ui.back_home')}</a>
     </div>
   )
 }

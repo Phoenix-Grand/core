@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 /**
  * The parts of `LabelsPage.kbview` still written in React (the codemod could not convert them; see the
  * TODO comments in the view). Each is rendered by a `<ReactHost>` with the values it reads as props.
@@ -18,6 +19,7 @@ function LabelRow({ label, active, onToggle, onChanged, onShare, confirm }: {
   onShare: () => void
   confirm: ReturnType<typeof useConfirm>['confirm']
 }) {
+  const { t: translate } = useTranslation()
   const [editing, setEditing] = useState(false)
   const [name, setName] = useState(label.name)
 
@@ -34,11 +36,11 @@ function LabelRow({ label, active, onToggle, onChanged, onShare, confirm }: {
   const remove = async () => {
     const shared = label.share_count > 0
     const ok = await confirm({
-      title:        `Supprimer « ${label.name} » ?`,
+      title:        translate('labels.delete_title', { name: label.name }),
       message: shared
-        ? `Cette étiquette est partagée. La supprimer la retire pour tous ses destinataires et détache les ${label.link_count} élément(s) qu'elle relie. Cette action est irréversible.`
-        : `L'étiquette sera supprimée et détachée des ${label.link_count} élément(s) qu'elle relie. Les éléments eux-mêmes ne sont pas supprimés.`,
-      confirmLabel: 'Supprimer',
+        ? translate('labels.delete_shared', { count: label.link_count })
+        : translate('labels.delete_private', { count: label.link_count }),
+      confirmLabel: translate('common.delete'),
       variant:      'danger',
     })
     if (!ok) return
@@ -63,14 +65,14 @@ function LabelRow({ label, active, onToggle, onChanged, onShare, confirm }: {
           <span className={`flex-1 text-sm truncate ${active ? 'text-primary font-medium' : 'text-text-primary'}`}>{label.name}</span>
         )}
         {label.share_count > 0 && label.is_owner && (
-          <span title={`Partagée avec ${label.share_count} destinataire(s)`}><Users size={12} className="text-text-tertiary flex-shrink-0" /></span>
+          <span title={translate('labels.shared_with', { count: label.share_count })}><Users size={12} className="text-text-tertiary flex-shrink-0" /></span>
         )}
         <span className="text-[11px] text-text-tertiary">{label.link_count}</span>
         <span className="hidden group-hover:flex items-center gap-0.5" onClick={e => e.stopPropagation()}>
           {label.can_manage && <>
-            <button title="Partager" onClick={onShare} className="p-1 rounded text-text-tertiary hover:text-text-primary"><Share2 size={13} /></button>
-            <button title="Renommer" onClick={() => setEditing(true)} className="p-1 rounded text-text-tertiary hover:text-text-primary"><Pencil size={13} /></button>
-            <button title="Supprimer" onClick={remove} className="p-1 rounded text-text-tertiary hover:text-danger"><Trash2 size={13} /></button>
+            <button title={translate('sharing.share')} onClick={onShare} className="p-1 rounded text-text-tertiary hover:text-text-primary"><Share2 size={13} /></button>
+            <button title={translate('shared_ui.rename')} onClick={() => setEditing(true)} className="p-1 rounded text-text-tertiary hover:text-text-primary"><Pencil size={13} /></button>
+            <button title={translate('common.delete')} onClick={remove} className="p-1 rounded text-text-tertiary hover:text-danger"><Trash2 size={13} /></button>
           </>}
         </span>
         {active && <Check size={14} className="text-primary flex-shrink-0" />}
@@ -78,7 +80,7 @@ function LabelRow({ label, active, onToggle, onChanged, onShare, confirm }: {
       {/* Shared with the caller: name the owner, so a homonym of their own label stays legible. */}
       {!label.is_owner && (
         <p className="px-3 pb-1.5 pl-9 text-[11px] text-text-tertiary truncate">
-          Partagée par {label.owner_name}{label.can_manage ? ' · vous pouvez la gérer' : ''}
+          {translate('labels.shared_by', { name: label.owner_name })}{label.can_manage ? translate('labels.manage_suffix') : ''}
         </p>
       )}
       {/* Palette, shown on hover: recolor in one click. */}
@@ -101,11 +103,12 @@ function LabelRow({ label, active, onToggle, onChanged, onShare, confirm }: {
 export { LabelRow }
 
 export function Part1({ query, setQuery }: { query: NonNullable<LabelsPage['query']>; setQuery: NonNullable<LabelsPage['setQuery']> }) {
+  const { t: translate } = useTranslation()
   return (
     <Input
                   value={query}
                   onChange={e => setQuery(e.target.value)}
-                  placeholder="Rechercher dans les éléments étiquetés…"
+                  placeholder={translate('labels.search_items')}
                   leftIcon={<Search size={14} />}
                 />
   )
@@ -132,6 +135,7 @@ export function Part3({ selected, byId, toggle }: { selected: NonNullable<Labels
 }
 
 export function Part4({ item, byId, toggle }: { item: NonNullable<LabelsPage['rows_items']>[number]['item']; byId: NonNullable<LabelsPage['byId']>; toggle: LabelsPage['toggle'] }) {
+  const { t: translate } = useTranslation()
   return (
     <>{item.label_ids.map(id => {
                           const l = byId.get(id)
@@ -139,7 +143,7 @@ export function Part4({ item, byId, toggle }: { item: NonNullable<LabelsPage['ro
                             <button
                               key={id}
                               onClick={() => toggle(id)}
-                              title={`Filtrer sur « ${l.name} »`}
+                              title={translate('labels.filter_label', { name: l.name })}
                               className="flex items-center gap-1 pl-1.5 pr-2 py-0.5 rounded-full text-[10px] text-white hover:opacity-80"
                               style={{ backgroundColor: l.color }}
                             ><LabelIcon size={7} />{l.name}</button>

@@ -73,7 +73,7 @@ export default function ModuleStartPage({
       onClick:  () => { openAndRecord(f) },
       actions: [
         { id: 'open',   label: t('common.open'),  icon: <ExternalLink size={15} />, onClick: () => { openAndRecord(f) } },
-        { id: 'remove', label: t('app.clear_search', { defaultValue: 'Retirer des récents' }), icon: <Trash2 size={15} />, onClick: () => { recentApi.remove(f.id).then(() => qc.invalidateQueries({ queryKey: ['recent-opens'] })) } },
+        { id: 'remove', label: t('app.clear_search', { defaultValue: "Remove from recent" }), icon: <Trash2 size={15} />, onClick: () => { recentApi.remove(f.id).then(() => qc.invalidateQueries({ queryKey: ['recent-opens'] })) } },
       ],
     }))
     // eslint-disable-next-line react-hooks/exhaustive-deps

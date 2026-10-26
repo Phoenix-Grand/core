@@ -7,11 +7,12 @@ import { Button, Callout, Card, Input } from "@ui"
 import LdapDirectoryForm from "./LdapDirectoryForm"
 import { toForm, type ConnectionProbe } from "./types"
 import type { LdapSection } from './LdapSection'
+import { formatDate } from '../../core/intl/datetime'
 function relative(t: (k: string, o?: Record<string, unknown>) => string, iso: string | null) {
   if (!iso) return t('ldap.never_synced')
   const d = new Date(iso)
   if (Number.isNaN(d.getTime())) return t('ldap.never_synced')
-  return d.toLocaleString()
+  return formatDate(d, 'dateTime')
 }
 
 function RawDetail({ text }: { text: string }) {
@@ -131,17 +132,17 @@ export function Part2({ list, probe, authProbe, report, editing, form, setForm, 
                         <span>{t('ldap.governed', { count: d.governed_accounts })}</span>
                         <span>{t('ldap.last_sync', { when: relative(t, d.last_sync_at) })}</span>
                       </div>
-    
+
                       {!d.usable && d.enabled && (
                         <Callout variant="warning">{t('ldap.incomplete')}</Callout>
                       )}
-    
+
                       {d.last_sync_detail && (
                         <p className="text-text-tertiary" style={{ fontSize: 'var(--kb-text-meta)' }}>
                           {d.last_sync_detail}
                         </p>
                       )}
-    
+
                       <div className="flex flex-wrap gap-2">
                         <Button
                           variant="secondary"
@@ -162,7 +163,7 @@ export function Part2({ list, probe, authProbe, report, editing, form, setForm, 
                           {t('ldap.sync_now')}
                         </Button>
                       </div>
-    
+
                       {/* ── Connection probe ─────────────────────────────── */}
                       {p && (
                         <Callout
@@ -196,7 +197,7 @@ export function Part2({ list, probe, authProbe, report, editing, form, setForm, 
                           )}
                         </Callout>
                       )}
-    
+
                       {/* ── Authentication trial ─────────────────────────── */}
                       <div className="rounded-lg border border-border p-3">
                         <p className="font-medium text-text-primary" style={{ fontSize: 'var(--kb-text-body)' }}>
@@ -238,7 +239,7 @@ export function Part2({ list, probe, authProbe, report, editing, form, setForm, 
                             {t('ldap.trial_run')}
                           </Button>
                         </div>
-    
+
                         {a && (
                           <div className="mt-3">
                             <Callout variant={a.ok ? 'success' : 'danger'} title={a.message}>
@@ -270,7 +271,7 @@ export function Part2({ list, probe, authProbe, report, editing, form, setForm, 
                           </div>
                         )}
                       </div>
-    
+
                       {/* ── Last manual run ──────────────────────────────── */}
                       {r && (
                         <Callout

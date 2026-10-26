@@ -65,9 +65,9 @@ export function DayPanel({ date }: { date: Date }) {
       {/* Events / tasks of that day */}
       <div className="flex-1 overflow-y-auto p-2 min-h-0" style={{ maxHeight: 300 }}>
         {!loaded ? (
-          <div className="text-xs text-text-tertiary px-1 py-3">Chargement…</div>
+          <div className="text-xs text-text-tertiary px-1 py-3">Loading…</div>
         ) : dayItems.length === 0 ? (
-          <div className="text-xs text-text-tertiary px-1 py-6 text-center">Aucun évènement</div>
+          <div className="text-xs text-text-tertiary px-1 py-6 text-center">No events</div>
         ) : (
           <ul className="space-y-0.5">
             {dayItems.map(it => (

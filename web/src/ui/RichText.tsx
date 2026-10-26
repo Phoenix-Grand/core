@@ -72,15 +72,15 @@ export function RichText({ value, onChange, placeholder, className, minHeight = 
   return (
     <div className={`kb-field-focus rounded-md border border-border bg-white overflow-hidden ${className ?? ''}`}>
       <div className="flex items-center gap-0.5 px-1.5 py-1 border-b border-border">
-        <Btn title="Gras" on={() => exec('bold')}><Bold size={15} /></Btn>
-        <Btn title="Italique" on={() => exec('italic')}><Italic size={15} /></Btn>
-        <Btn title="Souligné" on={() => exec('underline')}><Underline size={15} /></Btn>
+        <Btn title="Bold" on={() => exec('bold')}><Bold size={15} /></Btn>
+        <Btn title="Italic" on={() => exec('italic')}><Italic size={15} /></Btn>
+        <Btn title="Underline" on={() => exec('underline')}><Underline size={15} /></Btn>
         <span className="w-px h-5 bg-border mx-1" />
-        <Btn title="Liste numérotée" on={() => exec('insertOrderedList')}><ListOrdered size={15} /></Btn>
-        <Btn title="Liste à puces" on={() => exec('insertUnorderedList')}><List size={15} /></Btn>
+        <Btn title="Numbered list" on={() => exec('insertOrderedList')}><ListOrdered size={15} /></Btn>
+        <Btn title="Bulleted list" on={() => exec('insertUnorderedList')}><List size={15} /></Btn>
         <span className="w-px h-5 bg-border mx-1" />
-        <Btn title="Insérer un lien" on={() => { saveSel(); setLinkOpen(o => !o) }}><Link2 size={15} /></Btn>
-        <Btn title="Effacer la mise en forme" on={() => exec('removeFormat')}><Eraser size={15} /></Btn>
+        <Btn title="Insert link" on={() => { saveSel(); setLinkOpen(o => !o) }}><Link2 size={15} /></Btn>
+        <Btn title="Clear formatting" on={() => exec('removeFormat')}><Eraser size={15} /></Btn>
       </div>
       {linkOpen && (
         <div className="kb-richtext-linkbar flex items-center gap-1.5 px-2 py-1.5 border-b border-border bg-surface-1">

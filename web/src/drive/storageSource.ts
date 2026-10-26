@@ -112,7 +112,7 @@ export async function transferItem(
     await to.createFolder(item.name, toParentId)
     const { folders } = await to.list(toParentId)
     const created = folders.find(x => x.name === item.name)
-    if (!created) throw new Error(`mkdir distant échoué: ${item.name}`)
+    if (!created) throw new Error(`Remote mkdir failed: ${item.name}`)
     const { folders: subDirs, files: subFiles } = await from.list(item.id)
     for (const sf of subFiles) await transferItem(from, to, { id: sf.id, type: 'file', name: sf.name }, created.id, 'copy')
     for (const sd of subDirs)  await transferItem(from, to, { id: sd.id, type: 'folder', name: sd.name }, created.id, 'copy')
@@ -149,7 +149,7 @@ export async function resolveRootFolder(pathPrefix: string): Promise<Folder | nu
 }
 
 export function localSource(opts: LocalSourceOpts = {}): StorageSource {
-  const rootName = opts.rootName ?? 'Mon Drive'
+  const rootName = opts.rootName ?? "My Drive"
   return {
     key: opts.rootPrefix ? `local:${opts.rootPrefix}` : 'local',
     capabilities: { ...ALL },

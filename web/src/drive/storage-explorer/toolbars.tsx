@@ -116,7 +116,7 @@ export function SortFilterBarBase({ sortField, sortDir, typeFilter, onSortField,
     { value: 'size', label: t('common.size') }, { value: 'type', label: t('filter.type') },
     // « Date de création » is only ever selected from the details-table header,
     // but it must have a label so the sort chip doesn't show the raw key.
-    { value: 'created', label: t('details.col_created', { defaultValue: 'Date de création' }) },
+    { value: 'created', label: t('details.col_created', { defaultValue: "Date created" }) },
   ]
   const TYPE_OPTIONS = [
     { value: '', label: t('app.ft_all') }, { value: 'image', label: t('app.ft_images') },

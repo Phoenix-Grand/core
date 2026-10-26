@@ -96,7 +96,7 @@ export default function GalleryBody({ theme }: { theme: ThemeDef }) {
             <MockUploadPanel />
             <div className="flex flex-col items-center justify-center py-8 px-10 text-center gap-2 rounded-xl border-2 border-dashed border-primary bg-primary/5">
               <CloudUpload size={40} className="text-primary opacity-80" />
-              <p className="text-primary font-medium text-sm">Déposez vos fichiers ici</p>
+              <p className="text-primary font-medium text-sm">Drop your files here</p>
             </div>
           </div>
         </>) },

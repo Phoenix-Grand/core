@@ -5,9 +5,9 @@
       <Panel HtmlTag="H1" ForeColor="TextPrimary" Class="text-lg font-semibold flex items-center gap-2">
         <!-- TODO(views-migrate): <LabelIcon> is no .kbview element (@ui#LabelIcon) -->
         <ReactHost Component="{Binding LabelIcon}" Props="{Binding label_icon_props}"/>
-        <Label HtmlTag="Span" InheritFontSize="true" Overflow="Wrap" Text=" Étiquettes"/>
+        <Label HtmlTag="Span" InheritFontSize="true" Overflow="Wrap" Text="{Res labels.title}"/>
       </Panel>
-      <Label Text="Reliez des éléments de tous les modules, puis filtrez et retrouvez-les ici."
+      <Label Text="{Res labels.intro}"
              Role="Meta"
              Overflow="Wrap"
              ForeColor="TextTertiary"
@@ -16,11 +16,11 @@
     <Panel Class="px-3 pb-2">
       <Stack Direction="LeftToRight" Gap="6" CrossAlign="Center">
         <TextField Text="{Binding newName, Mode=TwoWay}"
-                   Placeholder="Nouvelle étiquette…"
+                   Placeholder="{Res labels.new_placeholder}"
                    FieldClass="flex-1 min-w-0"
                    OnKeyDown="text_field_key_down"/>
         <Button Enabled="{Binding enabled_unless_new_name_trim}"
-                AccessibleName="Créer l'étiquette"
+                AccessibleName="{Res labels.create}"
                 IconSize="15"
                 Icon="Plus"
                 OnClick="createLabel"/>
@@ -31,7 +31,7 @@
         <!-- TODO(views-migrate): <LabelRow> is no .kbview element (a local or dynamic component) -->
         <ReactHost Component="{Binding LabelRow}" Props="{Binding label_row_props}"/>
       </Repeater>
-      <Label Text="Créez votre première étiquette ci-dessus, puis attachez-la depuis n'importe quel module (menu « Étiquettes… »)."
+      <Label Text="{Res labels.first_label}"
              Role="Meta"
              TextAlign="TopCenter"
              Overflow="Wrap"
@@ -57,8 +57,8 @@
       </Stack>
       <Stack Gap="0" CrossAlign="Center" Justify="Center" Visible="{Binding visible}" Class="py-16 text-center">
         <Icon Name="Package" Size="32" Class="text-text-tertiary mb-3"/>
-        <Label Text="Aucun élément étiqueté ne correspond." Overflow="Wrap" ForeColor="TextSecondary"/>
-        <Label Text="Ouvrez un fichier, une tâche, un contact… et choisissez « Étiquettes… » dans son menu."
+        <Label Text="{Res labels.no_items}" Overflow="Wrap" ForeColor="TextSecondary"/>
+        <Label Text="{Res labels.no_items_help}"
                Role="Meta"
                Overflow="Wrap"
                ForeColor="TextTertiary"

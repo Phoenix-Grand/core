@@ -64,7 +64,7 @@ export class RibbonMock extends ViewBase {
   }
 
   get content_small_btn_span_class_name3() {
-    return this.memo('content_small_btn_span_class_name3', [], () => ({ children: this.smallBtn(<span className="underline text-xs">S</span>, 'Souligné') }))
+    return this.memo('content_small_btn_span_class_name3', [], () => ({ children: this.smallBtn(<span className="underline text-xs">S</span>, "Underline") }))
   }
 
   get content_small_btn_file_text_size() {

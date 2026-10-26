@@ -120,10 +120,10 @@ function SizeCombo({
           }}
           className="min-w-0 flex-1 outline-none bg-transparent text-left"
           style={{ height: '100%', padding: '0 2px 0 8px', fontSize, color: P.text, fontFamily: 'var(--font-family-sans)' }}
-          aria-label="Taille de police"
+          aria-label="Font size"
         />
         <button type="button" tabIndex={-1} disabled={disabled} onMouseDown={e => e.preventDefault()} onClick={openList}
-          aria-label="Choisir une taille" aria-haspopup="listbox" aria-expanded={open}
+          aria-label="Choose a size" aria-haspopup="listbox" aria-expanded={open}
           className="flex items-center justify-center" style={{ width: 18, height: '100%', flexShrink: 0, cursor: disabled ? 'not-allowed' : 'pointer' }}>
           <CaretDown size={10} color={P.sec} />
         </button>

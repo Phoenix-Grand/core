@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 /**
  * Code-behind of `LabelsPage.kbview` (converted from `LabelsPage.tsx` by @kubuno/views-migrate).
  */
@@ -17,6 +18,8 @@ import * as __parts from './LabelsPage.parts.tsx'
 const PALETTE = ['#1a73e8', '#1e8e3e', '#d93025', '#f9ab00', '#9334e6', '#e8710a', '#12805c', '#5f6368']
 
 export class LabelsPage extends ViewBase {
+  tr!: ReturnType<typeof useTranslation>['t']
+
   @bind accessor labels: CoreLabel[] = []
   @bind accessor items: LabelBrowseItem[] = []
   @bind accessor query = ''
@@ -65,8 +68,8 @@ export class LabelsPage extends ViewBase {
     const byId = useMemo(() => new Map(this.labels.map(l => [l.id, l])), [this.labels])
     this.publish({ byId })
     const moduleOptions = useMemo(
-      () => [{ value: '', label: 'Tous les modules' }, ...modules.map(m => ({ value: m, label: m }))],
-      [modules],
+      () => [{ value: '', label: this.tr('labels.all_modules') }, ...modules.map(m => ({ value: m, label: m }))],
+      [modules, this.tr],
     )
     this.publish({ moduleOptions })
     return { refreshLabels, modules, byId, moduleOptions }
@@ -74,6 +77,7 @@ export class LabelsPage extends ViewBase {
 
   /** Runs the hooks and publishes what they give as fields (the bindings, the getters and the methods read them). */
   use(): void {
+    this.publish({ tr: useTranslation().t })
     const s = this.useStores()
     this.publish({ navigate: s.navigate, selected: s.selected, setSelected: s.setSelected, confirm: s.confirm, confirmState: s.confirmState, handleConfirm: s.handleConfirm, handleCancel: s.handleCancel })
     const h = this.useHooks()
@@ -164,10 +168,10 @@ export class LabelsPage extends ViewBase {
 
   /** The rows of the Repeater over `items`. */
   get rows_items() {
-    return this.memo('rows_items', [this.items, this.loading, this.byId, this.memo, this.setSelected], () => {
+    return this.memo('rows_items', [this.items, this.loading, this.byId, this.memo, this.setSelected, this.tr], () => {
       if (!(!(this.loading)) || !(!(!this.items.length))) return undefined as never
       return this.items.map((item) => {
-      return { item, show_item_envelope: ((!(this.loading)) && (!(!this.items.length))) ? (!!(item.envelope)) : undefined, show_not_item_envelope: ((!(this.loading)) && (!(!this.items.length))) ? (!(item.envelope)) : undefined, data_card_view_props: ((!(this.loading)) && (!(!this.items.length)) && (item.envelope)) ? ({ envelope: item.envelope }) : undefined, p_text: ((!(this.loading)) && (!(!this.items.length)) && (!(item.envelope))) ? (item.title ?? item.resource_id) : undefined, p_text2: ((!(this.loading)) && (!(!this.items.length)) && (!(item.envelope))) ? (String(item.module) + " · " + String(item.resource_type)) : undefined, part4_props: ((!(this.loading)) && (!(!this.items.length))) ? ({ item: item, byId: this.byId, toggle: this.memo("toggle:bound", [], () => this.toggle.bind(this)) }) : undefined, show_item_other_owners: ((!(this.loading)) && (!(!this.items.length))) ? (!!item.other_owners.length) : undefined, p_text3: ((!(this.loading)) && (!(!this.items.length)) && (!!item.other_owners.length)) ? ("Étiqueté par " + String(item.other_owners.join(', '))) : undefined, key: `${item.resource_type}:${item.resource_id}` }
+      return { item, show_item_envelope: ((!(this.loading)) && (!(!this.items.length))) ? (!!(item.envelope)) : undefined, show_not_item_envelope: ((!(this.loading)) && (!(!this.items.length))) ? (!(item.envelope)) : undefined, data_card_view_props: ((!(this.loading)) && (!(!this.items.length)) && (item.envelope)) ? ({ envelope: item.envelope }) : undefined, p_text: ((!(this.loading)) && (!(!this.items.length)) && (!(item.envelope))) ? (item.title ?? item.resource_id) : undefined, p_text2: ((!(this.loading)) && (!(!this.items.length)) && (!(item.envelope))) ? (String(item.module) + " · " + String(item.resource_type)) : undefined, part4_props: ((!(this.loading)) && (!(!this.items.length))) ? ({ item: item, byId: this.byId, toggle: this.memo("toggle:bound", [], () => this.toggle.bind(this)) }) : undefined, show_item_other_owners: ((!(this.loading)) && (!(!this.items.length))) ? (!!item.other_owners.length) : undefined, p_text3: ((!(this.loading)) && (!(!this.items.length)) && (!!item.other_owners.length)) ? (this.tr('labels.labeled_by', { names: item.other_owners.join(', ') })) : undefined, key: `${item.resource_type}:${item.resource_id}` }
     })
     })
   }

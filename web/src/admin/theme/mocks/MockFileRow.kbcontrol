@@ -12,7 +12,7 @@
     <Panel Class="flex-1 min-w-0">
       <Label Text="{Binding name}" ForeColor="TextPrimary"/>
     </Panel>
-    <Label HtmlTag="Span" Text="30 juin 2026" Role="Meta" Overflow="Wrap" ForeColor="TextTertiary" Class="shrink-0 w-28 text-right"/>
+    <Label HtmlTag="Span" Text="June 30, 2026" Role="Meta" Overflow="Wrap" ForeColor="TextTertiary" Class="shrink-0 w-28 text-right"/>
     <Label HtmlTag="Span" Text="{Binding size}" Role="Meta" Overflow="Wrap" ForeColor="TextTertiary" Class="shrink-0 w-20 text-right"/>
     <Icon Name="MoreVertical" Size="14" Class="shrink-0 text-text-secondary opacity-0 group-hover:opacity-100"/>
   </Panel>

@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 /**
  * Generic renderer for cross-module data cards (`KubunoDataEnvelope`).
  *
@@ -27,6 +28,7 @@ import { clipboardApi } from '../api/clipboard'
 import './DriveFileCard'
 
 export function DataCardView({ envelope }: DataCardProps) {
+  const { t: translate } = useTranslation()
   const navigate = useNavigate()
   const [showJson, setShowJson] = useState(false)
 
@@ -45,7 +47,7 @@ export function DataCardView({ envelope }: DataCardProps) {
           <button
             onClick={() => navigate(envelope.href!)}
             className="p-1 text-text-tertiary hover:text-primary flex-shrink-0"
-            title="Ouvrir dans le module"
+            title={translate('shared_ui.open_in_module')}
           >
             <ExternalLink size={13} />
           </button>

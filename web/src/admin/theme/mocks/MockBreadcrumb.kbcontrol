@@ -7,7 +7,7 @@
                AutoSize="true"
                Class="inline-flex items-center text-sm font-medium text-text-secondary hover:text-primary transition-colors">
           <Icon Name="Home" Size="16" Class="me-1.5 shrink-0"/>
-          <Label HtmlTag="Span" Text="Mon Drive" Overflow="Wrap" InheritFontSize="true"/>
+          <Label HtmlTag="Span" Text="My Drive" Overflow="Wrap" InheritFontSize="true"/>
         </Panel>
       </Panel>
       <Panel HtmlTag="Li" Class="inline-flex items-center gap-1.5">

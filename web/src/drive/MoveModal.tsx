@@ -158,7 +158,8 @@ export default function MoveModal({ target, onClose }: Props) {
               </div>
             ) : folders.length === 0 ? (
               <p className="flex items-center justify-center h-32 text-xs text-text-tertiary">
-                Aucun sous-dossier ici
+
+                No subfolders here
               </p>
             ) : (
               folders.map(f => (
