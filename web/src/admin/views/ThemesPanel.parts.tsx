@@ -44,8 +44,8 @@ export function Part2({ zipInputRef, handleZipChange }: { zipInputRef: NonNullab
 export function Part3() {
   return (
     <pre className="text-xs text-text-tertiary overflow-x-auto">{`{
-  "id":           "mon-theme",
-  "name":         "Mon Thème",
+  "id":           "my-theme",
+  "name":         "My Theme",
   "color_scheme": "light",
   "vars": { "--color-primary": "#1a73e8", "--color-surface-0": "#ffffff", ... },
   "global":  { "css": "global.css", "script": "global.js" },

@@ -6,7 +6,7 @@ import type { RibbonMock } from './RibbonMock'
 
 export function Part1({ groupLabel }: { groupLabel: NonNullable<RibbonMock['groupLabel']> }) {
   return (
-    <div className="text-[10px] text-center whitespace-nowrap" style={groupLabel}>Presse-papiers</div>
+    <div className="text-[10px] text-center whitespace-nowrap" style={groupLabel}>Clipboard</div>
   )
 }
 
@@ -18,7 +18,7 @@ export function Part2({ sep }: { sep: NonNullable<RibbonMock['sep']> }) {
 
 export function Part3({ groupLabel }: { groupLabel: NonNullable<RibbonMock['groupLabel']> }) {
   return (
-    <div className="text-[10px] text-center whitespace-nowrap" style={groupLabel}>Police</div>
+    <div className="text-[10px] text-center whitespace-nowrap" style={groupLabel}>Font</div>
   )
 }
 
@@ -30,6 +30,6 @@ export function Part4({ sep }: { sep: NonNullable<RibbonMock['sep']> }) {
 
 export function Part5({ groupLabel }: { groupLabel: NonNullable<RibbonMock['groupLabel']> }) {
   return (
-    <div className="text-[10px] text-center whitespace-nowrap" style={groupLabel}>Objets</div>
+    <div className="text-[10px] text-center whitespace-nowrap" style={groupLabel}>Objects</div>
   )
 }

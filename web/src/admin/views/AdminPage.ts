@@ -269,7 +269,7 @@ useToolbarStore.getState().register({
 useSearchStore.getState().register({
   moduleId:        'core-admin',
   routePrefix:     '/admin',
-  placeholder:     'Rechercher des utilisateurs, groupes ou paramètres',
+  placeholder:     'Search for users, groups or settings',
   placeholderKey:  'admin.search_ph',
   SearchComponent: AdminSearchBar,
   inline:          true,

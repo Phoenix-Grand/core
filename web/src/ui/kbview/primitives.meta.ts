@@ -70,7 +70,7 @@ export const LabelMeta = {
   ],
   events: [],
   inheritedMap: { AccessibleName: { prop: 'aria-label' }, TabIndex: { prop: 'tabIndex' }, Class: { prop: 'className' } },
-  designDefaults: { attributes: { Text: 'Étiquette' }, size: [120, 20] },
+  designDefaults: { attributes: { Text: 'Label' }, size: [120, 20] },
   web: { module: '@ui', export: 'Label', domRoot: 'ref' },
 } as const satisfies ElementMeta<ComponentProps<typeof Label>>
 

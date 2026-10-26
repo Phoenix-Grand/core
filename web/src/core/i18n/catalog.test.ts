@@ -3,7 +3,10 @@ import { join } from 'node:path'
 import ts from 'typescript'
 import { expect, it } from 'vitest'
 import en from './locales/en/core.json'
-import { CAUTION_KEYS, ENUM_OPTIONS, flatKey, specForTab } from '../../admin/settings/settingsMap'
+import fr from './locales/fr/core.json'
+import setupEn from '../setup/locales/en'
+import setupFr from '../setup/locales/fr'
+import { CAUTION_KEYS, ENUM_OPTIONS, SETTINGS_PAGES, flatKey } from '../../admin/settings/settingsMap'
 
 /** Missing English entries otherwise display a component's French defaultValue. */
 it('provides English for literal Core/admin translation and view resource keys', () => {
@@ -45,15 +48,59 @@ it('provides English for literal Core/admin translation and view resource keys',
   expect([...missing].sort()).toEqual([])
 })
 
-it('provides English for every SSO setting, including conditional CAPTCHA fields', () => {
-  const keys = specForTab('sso')!.groups.flatMap(group => group.keys)
+it('provides English for every mapped setting and settings group', () => {
+  const groups = SETTINGS_PAGES.flatMap(page => page.groups)
+  const keys = groups.flatMap(group => group.keys)
   const required = keys.flatMap(key => [
     `setlabel_${flatKey(key)}`,
-    `setdesc_${flatKey(key)}`,
     ...(CAUTION_KEYS.has(key) ? [`setwarn_${flatKey(key)}`] : []),
-    ...(ENUM_OPTIONS[key] ?? []).map(option => option.label.replace(/^admin\./, '')),
+    ...(ENUM_OPTIONS[key] ?? []).filter(option => option.label.startsWith('admin.'))
+      .map(option => option.label.replace(/^admin\./, '')),
   ])
+  required.push(...groups.flatMap(group => [`sgrp_${group.id}`, `sgrp_${group.id}_desc`]))
   const admin = en.admin as Record<string, string>
   // Without these entries, SettingControl displays the database's French text.
   expect(required.filter(key => !admin[key]?.trim())).toEqual([])
+})
+
+it('translates every nonempty label and description seeded in the settings database', () => {
+  // Include unclaimed keys too: they still appear on the fallback settings page.
+  const sql = readFileSync(join(process.cwd(), '../server/migrations/sqlite/000001_core_schema.up.sql'), 'utf8')
+  const missing: string[] = []
+  let checked = 0
+  for (const row of sql.matchAll(/INSERT INTO "core"\."settings" \(([^\n]+?)\) VALUES \(([^\n]+)\);/g)) {
+    const columns = row[1].split(',').map(column => column.trim().replaceAll('"', ''))
+    const values = [...row[2].matchAll(/\s*('(?:[^']|'')*'|[^,]+)\s*(?:,|$)/g)].map(value => {
+      const raw = value[1].trim()
+      return raw === 'NULL' ? null : raw.replace(/^'|'$/g, '').replaceAll("''", "'")
+    })
+    expect(values.length).toBe(columns.length)
+    const setting = Object.fromEntries(columns.map((column, index) => [column, values[index]]))
+    for (const [column, prefix] of [['label', 'setlabel'], ['description', 'setdesc']]) {
+      if (!setting[column]) continue
+      const key = `${prefix}_${flatKey(setting.key!)}`
+      if (!(en.admin as Record<string, string>)[key]?.trim()) missing.push(key)
+      checked++
+    }
+  }
+  expect(checked).toBeGreaterThan(200)
+  expect(missing).toEqual([])
+})
+
+it('has an English translation family for every French catalogue entry', () => {
+  const flatten = (value: object, prefix = ''): string[] => Object.entries(value).flatMap(([key, item]) =>
+    item && typeof item === 'object' ? flatten(item, `${prefix}${key}.`) : [`${prefix}${key}`])
+  const english = new Set(flatten(en))
+  // French has a "many" form; English uses "one" and "other" instead.
+  expect(flatten(fr).filter(key => {
+    const base = key.replace(/_(?:zero|one|two|few|many|other)$/, '')
+    return ![key, base, `${base}_one`, `${base}_other`].some(candidate => english.has(candidate))
+  })).toEqual([])
+})
+
+it('covers the installation wizard in its separate English namespace', () => {
+  const keys = (value: object, prefix = ''): string[] => Object.entries(value).flatMap(([key, item]) =>
+    item && typeof item === 'object' ? keys(item, `${prefix}${key}.`) : [`${prefix}${key}`])
+  const english = new Set(keys(setupEn))
+  expect(keys(setupFr).filter(key => !english.has(key))).toEqual([])
 })

@@ -66,7 +66,7 @@ export class ProfileTab extends ViewBase {
     extraEmails:    Array.isArray(this.prof.extraEmails) ? (this.prof.extraEmails as string[]) : [],
     phone:          this.s(this.prof.phone),
     location:       this.s(this.prof.location),
-    language:       this.s(this.prefs.language) || 'fr',
+    language:       this.s(this.prefs.language) || this.i18n.resolvedLanguage || this.i18n.language || 'en',
     locale:         this.s(this.prefs.locale),
     firstDayOfWeek: this.s(this.prefs.firstDayOfWeek) || 'auto',
     timezone:       this.s(this.prefs.timezone),

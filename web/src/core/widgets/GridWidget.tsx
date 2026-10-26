@@ -79,27 +79,27 @@ function GridWidget({
               onClick={() => onManualResize(widget.id, 'col-')}
               disabled={pos.colSpan <= MIN_COL_SPAN}
               className="p-0.5 rounded-full hover:bg-surface-2 disabled:opacity-30 transition-colors"
-              title="Moins large"
+              title={t('widgets.narrower')}
             ><ChevronLeft size={11} /></button>
             <span className="text-[10px] text-text-tertiary px-0.5 select-none tabular-nums">{pos.colSpan}</span>
             <button
               onClick={() => onManualResize(widget.id, 'col+')}
               disabled={pos.col + pos.colSpan - 1 >= MAX_COL_SPAN}
               className="p-0.5 rounded-full hover:bg-surface-2 disabled:opacity-30 transition-colors"
-              title="Plus large"
+              title={t('widgets.wider')}
             ><ChevronRight size={11} /></button>
             <div className="w-px h-3 bg-border mx-0.5" />
             <button
               onClick={() => onManualResize(widget.id, 'row-')}
               disabled={pos.rowSpan <= MIN_ROW_SPAN}
               className="p-0.5 rounded-full hover:bg-surface-2 disabled:opacity-30 transition-colors"
-              title="Moins haut"
+              title={t('widgets.shorter')}
             ><ChevronUp size={11} /></button>
             <span className="text-[10px] text-text-tertiary px-0.5 select-none tabular-nums">{pos.rowSpan}</span>
             <button
               onClick={() => onManualResize(widget.id, 'row+')}
               className="p-0.5 rounded-full hover:bg-surface-2 disabled:opacity-30 transition-colors"
-              title="Plus haut"
+              title={t('widgets.taller')}
             ><ChevronDown size={11} /></button>
           </div>
 

@@ -34,7 +34,7 @@ export const GroupBoxMeta = {
   ],
   events: [],
   inheritedMap: { Class: { prop: 'className' } },
-  designDefaults: { attributes: { Title: 'Groupe' }, size: [320, 160] },
+  designDefaults: { attributes: { Title: 'Group' }, size: [320, 160] },
   web: { module: '@ui', export: 'GroupBox', domRoot: 'ref', content: 'children' },
 } as const satisfies ElementMeta<ComponentProps<typeof GroupBox>>
 
@@ -62,7 +62,7 @@ export const SettingsRowMeta = {
   ],
   events: [],
   inheritedMap: { Class: { prop: 'className' } },
-  designDefaults: { attributes: { Label: 'Réglage' }, size: [640, 64] },
+  designDefaults: { attributes: { Label: 'Setting' }, size: [640, 64] },
   web: { module: '@ui', export: 'SettingsRow', domRoot: 'ref', content: 'children' },
 } as const satisfies ElementMeta<ComponentProps<typeof SettingsRow>>
 

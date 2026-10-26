@@ -91,7 +91,7 @@ export function PickerPopover({
               values={hourValues}
               selected={hours}
               onSelect={onHours}
-              label="Heure"
+              label="Hour"
             />
             <span className="mt-8 text-text-tertiary text-base font-semibold">:</span>
             <TimeScroll
@@ -115,7 +115,7 @@ export function PickerPopover({
                 onClick={onClear}
                 className="text-xs text-text-secondary hover:text-danger transition-colors"
               >
-                Effacer
+                Clear
               </button>
             ) : <span />}
             <button

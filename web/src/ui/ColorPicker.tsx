@@ -225,7 +225,7 @@ function SvArea({ size, h, s, v, shape, onChange }: {
   return (
     <div className="absolute" style={{ left:(212-size)/2, top:(212-size)/2, width:size, height:size }}>
       <canvas ref={canRef} tabIndex={0} role="slider"
-              aria-label="Saturation / valeur"
+              aria-label="Saturation / value"
               aria-valuetext={`S ${Math.round(s*100)}%, V ${Math.round(v*100)}%`}
               onPointerDown={e=>{drag.current=true;upd(e)}}
               onKeyDown={e=>{

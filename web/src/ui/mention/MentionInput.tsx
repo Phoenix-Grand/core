@@ -100,7 +100,7 @@ export function MentionInput({
         >
           <span className="truncate">{c.label}</span>
           <button
-            type="button" aria-label="Retirer" disabled={disabled}
+            type="button" aria-label="Remove" disabled={disabled}
             onClick={() => removeChip(i)}
             className="shrink-0 opacity-60 hover:opacity-100"
           >

@@ -6,7 +6,7 @@
            BackColor="PrimaryLight"
            Class="flex items-center gap-2 w-full h-10 px-3 mb-2 rounded-full text-text-nav-active font-medium text-sm">
       <Icon Name="Plus" Size="18"/>
-      <Label HtmlTag="Span" InheritFontSize="true" Overflow="Wrap" Text=" Nouveau"/>
+      <Label HtmlTag="Span" InheritFontSize="true" Overflow="Wrap" Text=" New"/>
     </Panel>
     <!-- TODO(views-migrate): a list callback destructuring its item -->
     <ReactHost Component="{Binding Part1}" Props="{Binding part1_props}"/>

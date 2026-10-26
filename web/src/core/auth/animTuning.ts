@@ -26,13 +26,13 @@ export const ANIM_DEFAULTS: AnimParams = {
 
 /** Slider definitions shared by the admin tuning panel. */
 export const ANIM_SLIDERS: { key: keyof AnimParams; label: string; min: number; max: number; step: number }[] = [
-  { key: 'sigma',      label: 'Flou des plis',       min: 0.003, max: 0.03, step: 0.0005 },
-  { key: 'gain',       label: 'Luminosité',          min: 1.5,   max: 12,   step: 0.1 },
-  { key: 'amp',        label: 'Hauteur ondulations', min: 0.2,   max: 2.2,  step: 0.05 },
-  { key: 'nonUniform', label: 'Non-uniformité',      min: 0,     max: 1,    step: 0.05 },
-  { key: 'tilt',       label: 'Étendue verticale',   min: 0.08,  max: 0.65, step: 0.01 },
-  { key: 'speed',      label: 'Vitesse',             min: 0,     max: 4,    step: 0.05 },
-  { key: 'shift',      label: 'Position verticale',  min: -0.15, max: 0.30, step: 0.01 },
+  { key: 'sigma',      label: "Fold blur",       min: 0.003, max: 0.03, step: 0.0005 },
+  { key: 'gain',       label: "Brightness",          min: 1.5,   max: 12,   step: 0.1 },
+  { key: 'amp',        label: "Wave height", min: 0.2,   max: 2.2,  step: 0.05 },
+  { key: 'nonUniform', label: "Non-uniformity",      min: 0,     max: 1,    step: 0.05 },
+  { key: 'tilt',       label: "Vertical spread",   min: 0.08,  max: 0.65, step: 0.01 },
+  { key: 'speed',      label: "Speed",             min: 0,     max: 4,    step: 0.05 },
+  { key: 'shift',      label: "Vertical position",  min: -0.15, max: 0.30, step: 0.01 },
 ]
 
 /** Parse a raw config value (object from JSONB) into AnimParams, with defaults. */

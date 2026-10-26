@@ -112,7 +112,7 @@ export const AccountButtonMeta = {
   properties: [],
   events: [
     { name: 'OnAddAccount', category: 'Action', args: 'EventArgs',
-      doc: 'Occurs when « Ajouter un compte » (or « Connexion » on a dead session) asks for the add-account dialog.',
+      doc: 'Occurs when Add account (or Sign in on an expired session) asks for the add-account dialog.',
       docFr: "Se produit quand « Ajouter un compte » (ou « Connexion » sur une session expirée) demande la boîte d'ajout de compte.",
       from: { prop: 'onAddAccount', args: 'none' } },
   ],

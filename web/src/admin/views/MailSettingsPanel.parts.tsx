@@ -22,7 +22,7 @@ export function Part1({ t, form, set }: { t: NonNullable<MailSettingsPanel['tr']
                     <Input
                       value={form.host}
                       onChange={e => set('host', e.target.value)}
-                      placeholder="smtp.exemple.com"
+                      placeholder="smtp.example.com"
                       autoComplete="off"
                     />
                   </Field>
@@ -94,7 +94,7 @@ export function Part6({ t, form, set }: { t: NonNullable<MailSettingsPanel['tr']
                   <Input
                     value={form.from_address}
                     onChange={e => set('from_address', e.target.value)}
-                    placeholder="no-reply@exemple.com"
+                    placeholder="no-reply@example.com"
                     autoComplete="off"
                   />
                 </Field>
@@ -115,7 +115,7 @@ export function Part8({ t, form, set }: { t: NonNullable<MailSettingsPanel['tr']
                 <Input
                   value={form.public_url}
                   onChange={e => set('public_url', e.target.value)}
-                  placeholder="https://cloud.exemple.com"
+                  placeholder="https://cloud.example.com"
                   autoComplete="off"
                 />
               </Field>
@@ -130,7 +130,7 @@ export function Part9({ t, testRef, testTo, setTestTo, settings }: { t: NonNulla
                       type="email"
                       value={testTo}
                       onChange={e => setTestTo(e.target.value)}
-                      placeholder={settings.from_address || 'admin@exemple.com'}
+                      placeholder={settings.from_address || 'admin@example.com'}
                       autoComplete="off"
                     />
                   </Field>

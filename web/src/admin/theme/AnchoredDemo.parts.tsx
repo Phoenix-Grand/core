@@ -19,7 +19,7 @@ export function Part2({ ref }: { ref: NonNullable<AnchoredDemo['ref']> }) {
   return (
     <AnchoredPopover anchorRef={ref} open onClose={noop}>
             <div className="w-44 py-1 rounded-lg bg-white border border-border shadow-[0_2px_6px_2px_rgba(0,0,0,.12)]">
-              {['Renommer', "Move", 'Dupliquer', "Delete"].map((l) => (
+              {['Rename', "Move", 'Dupliquer', "Delete"].map((l) => (
                 <div key={l} className="px-3 py-1.5 text-sm text-text-primary hover:bg-surface-2 cursor-default">{l}</div>
               ))}
             </div>

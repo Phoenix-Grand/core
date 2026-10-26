@@ -161,7 +161,7 @@ export function DateField({ value, onChange, primaryColor, icon, withLabel, labe
       {lead && <span style={{ color: '#5f6368', flexShrink: 0, display: 'flex' }}>{lead}</span>}
       <div style={{ width: large ? 110 : 96, flexShrink: 0 }}>
         <OutlinedField
-          label="Day" placeholder="JJ"
+          label="Day" placeholder="DD"
           value={value.day}
           onChange={setDay}
           inputMode="numeric"
@@ -177,7 +177,7 @@ export function DateField({ value, onChange, primaryColor, icon, withLabel, labe
       />
       <div style={{ flex: 1, minWidth: 0 }}>
         <OutlinedField
-          label="Year (optional)" placeholder="AAAA"
+          label="Year (optional)" placeholder="YYYY"
           value={value.year}
           onChange={setYear}
           inputMode="numeric"

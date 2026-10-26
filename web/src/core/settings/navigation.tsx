@@ -23,12 +23,12 @@ export interface NavItem {
 export const SETTINGS_NAV: NavItem[] = [
   { id: 'profile',       labelKey: 'settings.tab_profile',       defaultLabel: 'Profile',       Icon: User },
   { id: 'notifications', labelKey: 'settings.tab_notifications', defaultLabel: 'Notifications', Icon: Bell },
-  { id: 'themes',        labelKey: 'settings.tab_themes',        defaultLabel: 'Thèmes',        Icon: Palette },
+  { id: 'themes',        labelKey: 'settings.tab_themes',        defaultLabel: 'Themes',        Icon: Palette },
   { id: 'clients',       labelKey: 'settings.tab_clients',       defaultLabel: 'Clients',       Icon: Download },
-  { id: 'security',      labelKey: 'settings.tab_security',      defaultLabel: 'Sécurité',      Icon: Shield },
+  { id: 'security',      labelKey: 'settings.tab_security',      defaultLabel: 'Security',      Icon: Shield },
   { id: 'sessions',      labelKey: 'settings.tab_sessions',      defaultLabel: 'Sessions',      Icon: Laptop },
   { id: 'api-tokens',    labelKey: 'settings.tab_api',           defaultLabel: 'API tokens',    Icon: Key },
-  { id: 'my-data',       labelKey: 'settings.tab_my_data',       defaultLabel: 'Télécharger mes données',
+  { id: 'my-data',       labelKey: 'settings.tab_my_data',       defaultLabel: 'Download my data',
     Icon: HardDriveDownload, feature: 'data_export_self_service' },
 ]
 

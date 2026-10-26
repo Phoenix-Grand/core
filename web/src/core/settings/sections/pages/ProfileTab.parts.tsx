@@ -54,7 +54,7 @@ export function Part1({ t, vis, setV, f, set, user }: { t: NonNullable<ProfileTa
               {f.extraEmails.map((em, i) => (
                 <div key={i} className="flex items-center gap-2 mb-2">
                   <div className="flex-1">
-                    <Input type="email" value={em} placeholder="email@exemple.com"
+                    <Input type="email" value={em} placeholder="email@example.com"
                       onChange={e => set('extraEmails', f.extraEmails.map((x, j) => j === i ? e.target.value : x))} />
                   </div>
                   <button type="button" onClick={() => set('extraEmails', f.extraEmails.filter((_, j) => j !== i))}

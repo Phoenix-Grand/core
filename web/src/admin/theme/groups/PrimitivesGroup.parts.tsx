@@ -8,7 +8,7 @@ import type { PrimitivesGroup } from './PrimitivesGroup'
 
 export function Part1() {
   return (
-    <Input placeholder="Champ texte" leftIcon={<Search size={15} />} />
+    <Input placeholder="Text field" leftIcon={<Search size={15} />} />
   )
 }
 

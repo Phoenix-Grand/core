@@ -6,7 +6,7 @@
     <!-- TODO(views-migrate): <ResizeHandle> is no .kbview element (@ui#ResizeHandle) -->
     <ReactHost Component="{Binding ResizeHandle}" Props="{Binding resize_handle_props}"/>
     <Label HtmlTag="Div"
-           Text="Contenu"
+           Text="Content"
            Role="Meta"
            Overflow="Wrap"
            ForeColor="TextTertiary"

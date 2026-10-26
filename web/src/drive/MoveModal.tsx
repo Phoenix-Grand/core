@@ -135,7 +135,7 @@ export default function MoveModal({ target, onClose }: Props) {
               onClick={() => navigateTo(-1)}
               className="flex items-center gap-1 hover:text-primary"
             >
-              <Home size={11} /> Mes fichiers
+              <Home size={11} /> My files
             </button>
             {path.map((p, i) => (
               <span key={p.id} className="flex items-center gap-1">

@@ -13,7 +13,7 @@ export function Part1({ t, name, setName }: { t: NonNullable<AddDomainDialog['tr
                 value={name}
                 autoFocus
                 maxLength={253}
-                placeholder="exemple.fr"
+                placeholder="example.com"
                 onChange={e => setName(e.target.value)}
                 hint={t('admin.dom_field_name_hint')}
               />

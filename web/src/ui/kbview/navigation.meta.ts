@@ -302,7 +302,7 @@ export const SearchFieldMeta = {
     AccessibleName: { prop: 'aria-label' },
     Class: { prop: 'className' },
   },
-  designDefaults: { attributes: { Placeholder: 'Rechercher' }, size: [240, 36] },
+  designDefaults: { attributes: { Placeholder: 'Search' }, size: [240, 36] },
   web: { module: '@ui', export: 'SearchField', domRoot: 'wrapper' },
 } as const satisfies ElementMeta<ComponentProps<typeof SearchField>>
 

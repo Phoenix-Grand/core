@@ -17,9 +17,9 @@ export class RibbonMock extends ViewBase {
     return this.memo('sep', [], () => ({ width: 1, background: 'var(--kbn-ws-border, #dadce0)' }))
   }
 
-  /** The rows of the Repeater over `['Insertion', 'Mise en page', 'Affichage']`. */
+  /** The rows of the Repeater over `['Insert', 'Page layout', 'View']`. */
   get rows_items() {
-    return this.memo('rows_items', [], () => ['Insertion', 'Mise en page', 'Affichage'].map((l) => {
+    return this.memo('rows_items', [], () => ['Insert', 'Page layout', 'View'].map((l) => {
       return { l, key: l }
     }))
   }
@@ -30,11 +30,11 @@ export class RibbonMock extends ViewBase {
   }
 
   get content_small_btn_copy_size() {
-    return this.memo('content_small_btn_copy_size', [], () => ({ children: this.smallBtn(<Copy size={13} />, 'Copier') }))
+    return this.memo('content_small_btn_copy_size', [], () => ({ children: this.smallBtn(<Copy size={13} />, 'Copy') }))
   }
 
   get content_small_btn_pencil_size() {
-    return this.memo('content_small_btn_pencil_size', [], () => ({ children: this.smallBtn(<Pencil size={13} />, 'Coller') }))
+    return this.memo('content_small_btn_pencil_size', [], () => ({ children: this.smallBtn(<Pencil size={13} />, 'Paste') }))
   }
 
   get part1_props() {

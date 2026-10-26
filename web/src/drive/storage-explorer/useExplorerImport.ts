@@ -53,7 +53,7 @@ export function useExplorerImport({ src, caps, effectiveFolderId, invalidate, t,
   const openNewFolder = useCallback(() => {
     if (caps.richModals) { setNewFolderOpen(true); return }
     void (async () => {
-      const n = await prompt({ title: t('newfolder.title', { defaultValue: 'Nouveau dossier' }), defaultValue: '' })
+      const n = await prompt({ title: t('newfolder.title', { defaultValue: 'New folder' }), defaultValue: '' })
       if (n) { await src.createFolder(n, effectiveFolderId); invalidate() }
     })()
   }, [caps.richModals, src, effectiveFolderId, invalidate, t])

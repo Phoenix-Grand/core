@@ -339,7 +339,7 @@ export const FloatingWindowMeta = {
       from: { prop: 'actions', field: 'cancel.onClick', args: 'none' } },
   ],
   inheritedMap: { Width: { prop: 'defaultWidth' }, Height: { prop: 'defaultHeight' } },
-  designDefaults: { attributes: { Title: 'Fenêtre' }, size: [560, 360] },
+  designDefaults: { attributes: { Title: 'Window' }, size: [560, 360] },
   web: { module: '@ui', export: 'FloatingWindow', domRoot: 'portal', content: 'children', slots: { Banner: 'banner', TitleActions: 'titleActions' } },
 } as const satisfies ElementMeta<ComponentProps<typeof FloatingWindow>>
 

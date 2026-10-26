@@ -130,7 +130,7 @@ function NotFoundPage() {
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
       <p className="text-6xl font-bold text-text-tertiary mb-4">404</p>
-      <p className="text-lg font-medium text-text-primary mb-2">Page introuvable</p>
+      <p className="text-lg font-medium text-text-primary mb-2">{translate('shell.page_not_found')}</p>
       <a href="/" className="text-primary hover:underline text-sm">{translate('shared_ui.back_home')}</a>
     </div>
   )

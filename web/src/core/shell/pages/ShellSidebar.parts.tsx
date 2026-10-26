@@ -65,6 +65,7 @@ function SidebarLink({ item, iconOverride }: { item: SidebarItem; iconOverride?:
 export { SidebarLink }
 
 export function Part1({ closeSidebar }: { closeSidebar: NonNullable<ShellSidebar['closeSidebar']> }) {
+  const { t } = useTranslation()
   return (
     <NavLink
                   to="/"
@@ -73,7 +74,7 @@ export function Part1({ closeSidebar }: { closeSidebar: NonNullable<ShellSidebar
                              text-text-secondary hover:bg-surface-2 transition-colors"
                 >
                   <ChevronLeft size={16} />
-                  <span>Accueil</span>
+                  <span>{t('shell.home')}</span>
                 </NavLink>
   )
 }

@@ -322,7 +322,7 @@ export default function StorageExplorer({
       }
       useBatchRenameStore.getState().start(out)
     } else {
-      const nn = await prompt({ title: t('common.rename', { defaultValue: 'Renommer' }), defaultValue: menu.item.name })
+      const nn = await prompt({ title: t('common.rename', { defaultValue: 'Rename' }), defaultValue: menu.item.name })
       if (nn && nn !== menu.item.name) { await src.rename(asRef(menu), nn); invalidate() }
     }
   }

@@ -24,9 +24,9 @@ export class MenusGroup extends ViewBase {
 
   get items_source() {
     return this.memo('items_source', [], () => [
-            { value: 'name', label: 'Nom', icon: <FileText size={14} /> },
-            { value: 'date', label: 'Date de modification' },
-            { value: 'size', label: 'Taille' },
+            { value: 'name', label: 'Name', icon: <FileText size={14} /> },
+            { value: 'date', label: 'Date modified' },
+            { value: 'size', label: 'Size' },
             { value: 'type', label: 'Type' },
           ])
   }

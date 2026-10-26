@@ -71,7 +71,7 @@ export function Part2({ t, form, isEdit, set }: { t: NonNullable<LdapDirectoryFo
                       value={form.slug}
                       disabled={isEdit}
                       onChange={e => set('slug', e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''))}
-                      placeholder="annuaire"
+                      placeholder="directory"
                       autoComplete="off"
                     />
                   </Field>
@@ -84,7 +84,7 @@ export function Part3({ t, form, set }: { t: NonNullable<LdapDirectoryForm['tr']
                     <Input
                       value={form.display_name}
                       onChange={e => set('display_name', e.target.value)}
-                      placeholder="Annuaire interne"
+                      placeholder="Internal directory"
                       autoComplete="off"
                     />
                   </Field>
@@ -97,7 +97,7 @@ export function Part4({ t, form, set }: { t: NonNullable<LdapDirectoryForm['tr']
                       <Input
                         value={form.host}
                         onChange={e => set('host', e.target.value.trim())}
-                        placeholder="dc01.exemple.com"
+                        placeholder="dc01.example.com"
                         autoComplete="off"
                       />
                     </Field>
@@ -168,7 +168,7 @@ export function Part9({ t, form, set }: { t: NonNullable<LdapDirectoryForm['tr']
                   <Input
                     value={form.bind_dn}
                     onChange={e => set('bind_dn', e.target.value)}
-                    placeholder="cn=kubuno,ou=services,dc=exemple,dc=com"
+                    placeholder="cn=kubuno,ou=services,dc=example,dc=com"
                     autoComplete="off"
                   />
                 </Field>
@@ -198,7 +198,7 @@ export function Part11({ t, form, set }: { t: NonNullable<LdapDirectoryForm['tr'
                   <Input
                     value={form.base_dn}
                     onChange={e => set('base_dn', e.target.value)}
-                    placeholder="dc=exemple,dc=com"
+                    placeholder="dc=example,dc=com"
                     autoComplete="off"
                   />
                 </Field>
@@ -304,7 +304,7 @@ export function Part19({ t, form, set }: { t: NonNullable<LdapDirectoryForm['tr'
                       <Input
                         value={form.group_base_dn}
                         onChange={e => set('group_base_dn', e.target.value)}
-                        placeholder="ou=groupes,dc=exemple,dc=com"
+                        placeholder="ou=groups,dc=example,dc=com"
                         autoComplete="off"
                       />
                     </Field>

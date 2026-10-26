@@ -45,7 +45,7 @@ export const CheckBoxMeta = {
       from: { prop: 'onChange', args: 'value' } },
   ],
   inheritedMap: { Enabled: { prop: 'disabled', convert: 'invert' } },
-  designDefaults: { attributes: { Text: 'Case à cocher' }, size: [140, 24] },
+  designDefaults: { attributes: { Text: 'Checkbox' }, size: [140, 24] },
   web: { module: '@ui', export: 'Checkbox', domRoot: 'wrapper' },
 } as const satisfies ElementMeta<ComponentProps<typeof Checkbox>>
 

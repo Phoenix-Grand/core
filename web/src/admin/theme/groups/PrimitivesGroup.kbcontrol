@@ -2,8 +2,8 @@
 <UserControl>
   <Panel Class="contents">
     <Stack Direction="LeftToRight" CrossAlign="Center" WrapContents="true" Class="mb-3">
-      <Button Size="Sm" Text="Primaire"/>
-      <Button Variant="Secondary" Size="Sm" Text="Secondaire"/>
+      <Button Size="Sm" Text="Primary"/>
+      <Button Variant="Secondary" Size="Sm" Text="Secondary"/>
       <Button Variant="Ghost" Size="Sm" Text="Ghost"/>
       <Button Variant="Danger" Size="Sm" Text="Danger"/>
       <Button Size="Sm" Loading="true" Text="…"/>
@@ -11,9 +11,9 @@
     <Stack Direction="LeftToRight" CrossAlign="Center" WrapContents="true" Class="mb-3">
       <Badge Text="Default"/>
       <Badge Variant="Success" Text="Success"/>
-      <Badge Variant="Danger" Text="Erreur"/>
-      <Badge Variant="Warning" Text="Alerte"/>
-      <Badge Dot="true" Variant="Primary" Text="En ligne"/>
+      <Badge Variant="Danger" Text="Error"/>
+      <Badge Variant="Warning" Text="Warning"/>
+      <Badge Dot="true" Variant="Primary" Text="Online"/>
     </Stack>
     <Stack Direction="LeftToRight" Gap="16" CrossAlign="Center" WrapContents="true">
       <Panel Class="w-48">
@@ -22,7 +22,7 @@
       </Panel>
       <CheckBox Checked="{Binding chk, Mode=TwoWay}" Text="Checkbox"/>
       <RadioButton SelectedValue="true" Value="true" Text="Option" OnCheckedChanged="radio_button_checked_changed"/>
-      <Switch On="{Binding tgl, Mode=TwoWay}" Label="Bascule"/>
+      <Switch On="{Binding tgl, Mode=TwoWay}" Label="Toggle"/>
       <Spinner Size="Sm"/>
       <Separator Orientation="Vertical" Class="h-6"/>
     </Stack>

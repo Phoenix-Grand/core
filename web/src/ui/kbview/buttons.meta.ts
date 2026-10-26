@@ -104,6 +104,6 @@ export const IconButtonMeta = {
     TabIndex: { prop: 'tabIndex' },
     Class: { prop: 'className' },
   },
-  designDefaults: { attributes: { Icon: 'Plus', AccessibleName: 'Ajouter' }, size: [36, 36] },
+  designDefaults: { attributes: { Icon: 'Plus', AccessibleName: 'Add' }, size: [36, 36] },
   web: { module: '@ui', export: 'IconButton', domRoot: 'ref' },
 } as const satisfies ElementMeta<IconButtonProps>

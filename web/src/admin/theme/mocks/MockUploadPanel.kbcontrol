@@ -3,7 +3,7 @@
   <Panel Class="w-72 bg-white rounded-xl shadow-xl border border-border overflow-hidden">
     <Stack Direction="LeftToRight" CrossAlign="Center" BackColor="Surface1" Class="px-4 py-3 border-b border-border">
       <Icon Name="Loader2" Size="14" Class="animate-spin text-primary"/>
-      <Label HtmlTag="Span" Text="Import en cours…" FontWeight="Medium" Overflow="Wrap" ForeColor="TextPrimary"/>
+      <Label HtmlTag="Span" Text="Uploading…" FontWeight="Medium" Overflow="Wrap" ForeColor="TextPrimary"/>
     </Stack>
     <Panel HtmlTag="Ul" Class="divide-y divide-border">
       <Panel HtmlTag="Li" Class="flex items-center gap-3 px-4 py-2.5">

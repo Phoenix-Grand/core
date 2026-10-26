@@ -16,13 +16,13 @@ import type { VoiceSession, VoiceErrorCode } from './voiceStt'
 function voiceErrorInfo(code?: VoiceErrorCode): { key: string; def: string } {
   switch (code) {
     case 'not-allowed':
-      return { key: 'shell.voice_err_denied', def: 'Micro non autorisé. Autorisez le microphone pour ce site dans le navigateur.' }
+      return { key: 'shell.voice_err_denied', def: "Microphone blocked. Allow microphone access for this site in your browser." }
     case 'audio-capture':
-      return { key: 'shell.voice_err_nomic',  def: 'Aucun microphone détecté.' }
+      return { key: 'shell.voice_err_nomic', def: "No microphone found." }
     case 'connect':
-      return { key: 'shell.voice_err_connect', def: 'Connexion au service vocal impossible.' }
+      return { key: 'shell.voice_err_connect', def: "Could not connect to the voice service." }
     default:
-      return { key: 'shell.voice_err_generic', def: 'Reconnaissance vocale indisponible.' }
+      return { key: 'shell.voice_err_generic', def: "Voice recognition unavailable." }
   }
 }
 

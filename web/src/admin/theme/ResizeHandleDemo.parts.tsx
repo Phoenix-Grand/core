@@ -7,7 +7,7 @@ import type { ResizeHandleDemo } from './ResizeHandleDemo'
 export function Part1({ w }: { w: NonNullable<ResizeHandleDemo['w']> }) {
   return (
     <div className="h-full bg-surface-1 flex items-center justify-center text-xs text-text-tertiary" style={{ width: w }}>
-            Panneau
+            Panel
           </div>
   )
 }

@@ -79,7 +79,7 @@ export function MentionList({
         </button>
       ))}
       {loading && !items.length && (
-        <div className="px-3 py-2 text-xs text-text-tertiary">Recherche…</div>
+        <div className="px-3 py-2 text-xs text-text-tertiary">Searching…</div>
       )}
     </div>,
     document.body,

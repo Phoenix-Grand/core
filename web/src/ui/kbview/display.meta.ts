@@ -202,6 +202,6 @@ export const EmptyStateMeta = {
       doc: 'Occurs when the secondary action button is clicked.', docFr: "Se produit quand le bouton d'action secondaire est cliqué.",
       from: { prop: 'secondaryAction', field: 'onClick', args: 'none' } },
   ],
-  designDefaults: { attributes: { Icon: 'Inbox', Title: 'Rien à afficher' }, size: [320, 200] },
+  designDefaults: { attributes: { Icon: 'Inbox', Title: 'Nothing to display' }, size: [320, 200] },
   web: { module: '@ui', export: 'EmptyState', domRoot: 'wrapper' },
 } as const satisfies ElementMeta<ComponentProps<typeof EmptyState>>

@@ -156,7 +156,7 @@ class Boundary extends Component<{ children?: ReactNode; onError: (e: Error) => 
     this.props.onError(error)
   }
   render(): ReactNode {
-    if (this.state.error) return createElement('div', { className: 'kbd-frame-error' }, `La vue n'a pas pu être affichée :\n${this.state.error.message}`)
+    if (this.state.error) return createElement('div', { className: 'kbd-frame-error' }, `The view could not be displayed :\n${this.state.error.message}`)
     return this.props.children
   }
 }
@@ -268,7 +268,7 @@ export class DesignSurface {
     host.append(this.toolbar.el, this.canvas, this.overlay)
     this.root = createRoot(this.frame)
     this.wireDom()
-    this.applyLanguage(this.prefs.lang ?? (DESIGN_LANGUAGES as readonly string[]).find((l) => i18n.language?.startsWith(l)) ?? 'fr')
+    this.applyLanguage(this.prefs.lang ?? (DESIGN_LANGUAGES as readonly string[]).find((l) => i18n.language?.startsWith(l)) ?? 'en')
     this.layoutOverlay()
     this.refreshToolbar()
     this.renderView()
@@ -295,7 +295,7 @@ export class DesignSurface {
     } catch (err) {
       const e = err as Error
       this.channel.post({ type: 'surfaceError', message: e.message || String(e), line: 0, column: 0 })
-      this.showMessage(`Le concepteur n'a pas pu démarrer :\n${e.message || String(e)}`, true)
+      this.showMessage(`The designer could not start :\n${e.message || String(e)}`, true)
     }
     this.ready = true
     this.channel.post({ type: 'ready' })
@@ -495,7 +495,7 @@ export class DesignSurface {
     for (const [spec, exports] of planModules(plan)) {
       if (HOST_SPECIFIERS.has(spec)) continue
       let mod: Record<string, unknown> | null = null
-      let reason = this.config.mode === 'bundled' ? 'Runtime intégré : contrôle du projet non chargé' : ''
+      let reason = this.config.mode === 'bundled' ? 'Embedded runtime: project control not loaded' : ''
       // Project modules are project-root-relative (`/src/x`) once the registry is read from the project; entries
       // received with `projectComponents` keep their registry-relative `./x` and are never imported.
       if (this.loadedModules.get(spec) !== 'real' && this.config.importModule && spec.startsWith('/')) {
@@ -504,7 +504,7 @@ export class DesignSurface {
           registerElements(spec, mod)
           this.loadedModules.set(spec, 'real')
         } catch (err) {
-          reason = `Échec du chargement de ${spec} : ${(err as Error).message}`
+          reason = `Failed to load ${spec} : ${(err as Error).message}`
           this.log(reason)
         }
       }
@@ -738,7 +738,7 @@ export class DesignSurface {
   }
 
   private currentLang(): string {
-    return this.frame.lang || 'fr'
+    return this.frame.lang || 'en'
   }
 
   private viewportChanged(): void {
@@ -759,10 +759,10 @@ export class DesignSurface {
       landscape: this.prefs.landscape,
       sample,
       sampleTitle: sample
-        ? `Données d'exemple : ${data ? `${stemOf(this.doc?.file ?? '')}.design.json` : ''}${data && hasDesignValues ? ' + ' : ''}${hasDesignValues ? 'attributs d:' : ''}`
-        : "Pas de données d'exemple (ajoutez <vue>.design.json ou des attributs d:)",
+        ? `Sample data : ${data ? `${stemOf(this.doc?.file ?? '')}.design.json` : ''}${data && hasDesignValues ? ' + ' : ''}${hasDesignValues ? 'd: attributes' : ''}`
+        : "No sample data (add <view>.design.json or d: attributes)",
       zoom: this.ready || this.plan ? this.zoom() : 1,
-      note: this.config.mode === 'bundled' ? 'Runtime intégré : les contrôles du projet sont des espaces réservés' : null,
+      note: this.config.mode === 'bundled' ? 'Embedded runtime: project controls are placeholders' : null,
     }
     this.toolbar.update(s)
   }

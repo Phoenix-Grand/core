@@ -180,11 +180,11 @@ export type NotificationsTabHooks = ReturnType<NotificationsTab['useHooks']>
 export default NotificationsTab.component()
 
 NotificationRegistry.register({
-  moduleId: 'core', title: 'Compte et sécurité', order: 90,
+  moduleId: 'core', title: "Account and security", order: 90,
   activities: [
-    { id: 'group_membership', label: 'Vos adhésions aux groupes ont été modifiées', emailDefault: true },
-    { id: 'password_email',   label: 'Votre mot de passe ou adresse e-mail a été modifié', emailDefault: true },
-    { id: 'security',         label: 'Connexion à un nouvel appareil ou navigateur', emailDefault: true, pushDefault: true },
-    { id: 'totp',             label: "TOTP (application d'authentification)", emailDefault: true, pushDefault: true },
+    { id: 'group_membership', label: "Your group memberships have changed", emailDefault: true },
+    { id: 'password_email',   label: "Your password or email address has changed", emailDefault: true },
+    { id: 'security',         label: "Sign-in from a new device or browser", emailDefault: true, pushDefault: true },
+    { id: 'totp',             label: "TOTP (authenticator app)", emailDefault: true, pushDefault: true },
   ],
 })

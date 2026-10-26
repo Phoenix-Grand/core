@@ -47,7 +47,7 @@
         <ReactHost Component="{Binding Part3}" Props="{Binding part3_props}"/>
         <Stack Direction="LeftToRight" Gap="12" CrossAlign="Start" WrapContents="true">
           <Panel Class="min-w-56 flex-1">
-            <TextField Text="{Binding host, Mode=TwoWay}" Label="{Res admin.migr_field_host}" MaxLength="255" Placeholder="imap.exemple.fr"/>
+            <TextField Text="{Binding host, Mode=TwoWay}" Label="{Res admin.migr_field_host}" MaxLength="255" Placeholder="imap.example.com"/>
           </Panel>
           <Panel Class="w-28">
             <!-- TODO(views-migrate): <TextField> inputMode: no .kbview property -->
