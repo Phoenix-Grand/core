@@ -93,7 +93,7 @@ impl SplashContent {
             product: artwork.product().to_string(),
             version: String::new(),
             tagline: artwork.tagline().to_string(),
-            status: format!("Démarrage de {}…", artwork.product()),
+            status: format!("Starting {}...", artwork.product()),
             progress: None,
             legal: legal_line("AGPL-3.0-or-later"),
             credits: DEFAULT_CREDITS.to_string(),
@@ -109,7 +109,7 @@ impl SplashContent {
 }
 
 /// The credits line every application shows unless it sets its own.
-pub const DEFAULT_CREDITS: &str = "Logiciel libre et auto-hébergé, conçu par la communauté Kubuno.";
+pub const DEFAULT_CREDITS: &str = "Free, self-hosted software built by the Kubuno community.";
 
 /// « © Kubuno contributors · <licence> ».
 pub fn legal_line(license: &str) -> String {
@@ -307,7 +307,7 @@ impl SplashScreen {
 
     /// The artwork, and with it the default product name and tagline (set them after).
     pub fn artwork(mut self, artwork: Artwork) -> Self {
-        let status_default = self.content.status == format!("Démarrage de {}…", self.content.product);
+        let status_default = self.content.status == format!("Starting {}...", self.content.product);
         if self.content.product == self.content.artwork.product() {
             self.content.product = artwork.product().to_string();
         }
@@ -316,17 +316,17 @@ impl SplashScreen {
         }
         self.content.artwork = artwork;
         if status_default {
-            self.content.status = format!("Démarrage de {}…", self.content.product);
+            self.content.status = format!("Starting {}...", self.content.product);
         }
         self
     }
 
     /// The product name, « Kubuno Drive ».
     pub fn product(mut self, name: impl Into<String>) -> Self {
-        let status_default = self.content.status == format!("Démarrage de {}…", self.content.product);
+        let status_default = self.content.status == format!("Starting {}...", self.content.product);
         self.content.product = name.into();
         if status_default {
-            self.content.status = format!("Démarrage de {}…", self.content.product);
+            self.content.status = format!("Starting {}...", self.content.product);
         }
         self
     }

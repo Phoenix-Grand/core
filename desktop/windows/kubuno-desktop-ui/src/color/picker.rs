@@ -200,11 +200,11 @@ impl Scheme {
     /// The French fallback label (`FALLBACK_LABELS`), shown as its tooltip.
     pub fn label(self) -> &'static str {
         match self {
-            Self::Comp => "Complémentaire",
+            Self::Comp => "Complementary",
             Self::Analog => "Analogues",
             Self::Triad => "Triade",
-            Self::Tetrad => "Tétrade",
-            Self::Split => "Complémentaires divisées",
+            Self::Tetrad => "Tetradic",
+            Self::Split => "Split complementary",
             Self::Mono => "Monochrome",
         }
     }
@@ -700,7 +700,7 @@ impl ColorPicker {
             recent: Vec::new(),
             swatches: picker_swatches(),
             title: "Couleur".to_string(),
-            recent_label: "Récemment utilisées".to_string(),
+            recent_label: "Recently used".to_string(),
             eyedropper: true,
             tools: Vec::new(),
             footer: None,

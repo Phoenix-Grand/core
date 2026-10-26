@@ -24,8 +24,8 @@ pub enum AuthFailure {
 impl std::fmt::Display for AuthFailure {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            AuthFailure::Genuine => write!(f, "session rejetée - reconnexion nécessaire"),
-            AuthFailure::Transient => write!(f, "rafraîchissement temporairement indisponible"),
+            AuthFailure::Genuine => write!(f, "Session rejected: sign in again"),
+            AuthFailure::Transient => write!(f, "Token refresh is temporarily unavailable"),
         }
     }
 }
@@ -468,7 +468,7 @@ impl Api {
     pub fn delta(&mut self, cursor: i64, limit: i64) -> Result<Delta> {
         let resp = self.get(&format!("/api/v1/drive/sync/delta?cursor={cursor}&limit={limit}"))?;
         if !resp.status().is_success() {
-            bail!("récupération du delta : HTTP {}", resp.status());
+            bail!("Retrieving changes: HTTP {}", resp.status());
         }
         Ok(resp.json()?)
     }
@@ -478,7 +478,7 @@ impl Api {
     pub fn modules(&mut self) -> Result<serde_json::Value> {
         let resp = self.get("/api/v1/modules")?;
         if !resp.status().is_success() {
-            bail!("récupération des modules : HTTP {}", resp.status());
+            bail!("Retrieving modules: HTTP {}", resp.status());
         }
         Ok(resp.json()?)
     }
@@ -519,7 +519,7 @@ impl Api {
     /// One auto-refresh retry on 401, like the other helpers; transport failures are errors.
     pub fn request(&mut self, method: &str, path: &str, headers: &[(String, String)], body: Option<Vec<u8>>) -> Result<RawResponse> {
         let url = format!("{}{}", self.base, path);
-        let method = reqwest::Method::from_bytes(method.as_bytes()).map_err(|e| anyhow::anyhow!("méthode HTTP invalide : {e}"))?;
+        let method = reqwest::Method::from_bytes(method.as_bytes()).map_err(|e| anyhow::anyhow!("Invalid HTTP method: {e}"))?;
         let attempt = |http: &reqwest::blocking::Client, token: &str| {
             let mut req = http.request(method.clone(), &url).bearer_auth(token);
             for (k, v) in headers {
@@ -573,7 +573,7 @@ impl Api {
             resp
         };
         if !resp.status().is_success() {
-            bail!("enregistrement des préférences : HTTP {}", resp.status());
+            bail!("Saving preferences: HTTP {}", resp.status());
         }
         Ok(())
     }
@@ -583,7 +583,7 @@ impl Api {
     pub fn get_bytes(&mut self, path: &str) -> Result<Vec<u8>> {
         let resp = self.get(path)?;
         if !resp.status().is_success() {
-            bail!("téléchargement : HTTP {}", resp.status());
+            bail!("Download: HTTP {}", resp.status());
         }
         Ok(resp.bytes()?.to_vec())
     }
@@ -592,7 +592,7 @@ impl Api {
     pub fn me(&mut self) -> Result<(User, Privileges)> {
         let resp = self.get("/api/v1/me")?;
         if !resp.status().is_success() {
-            bail!("récupération du profil : HTTP {}", resp.status());
+            bail!("Retrieving profile: HTTP {}", resp.status());
         }
         let env: MeEnvelope = resp.json()?;
         Ok((env.user, env.privileges))
@@ -607,7 +607,7 @@ impl Api {
         }
         let resp = self.get("/api/v1/labels")?;
         if !resp.status().is_success() {
-            bail!("étiquettes : HTTP {}", resp.status());
+            bail!("Labels: HTTP {}", resp.status());
         }
         Ok(resp.json::<Envelope>()?.labels)
     }
@@ -625,7 +625,7 @@ impl Api {
             resp = { let token = self.bearer()?; attempt(&self.http, &token)? };
         }
         if !resp.status().is_success() {
-            bail!("création d'étiquette : HTTP {}", resp.status());
+            bail!("Creating label: HTTP {}", resp.status());
         }
         Ok(())
     }
@@ -656,7 +656,7 @@ impl Api {
             resp = { let token = self.bearer()?; attempt(&self.http, &token)? };
         }
         if !resp.status().is_success() {
-            bail!("modification d'étiquette : HTTP {}", resp.status());
+            bail!("Updating label: HTTP {}", resp.status());
         }
         Ok(())
     }
@@ -673,7 +673,7 @@ impl Api {
             resp = { let token = self.bearer()?; attempt(&self.http, &token)? };
         }
         if !resp.status().is_success() && resp.status() != reqwest::StatusCode::NOT_FOUND {
-            bail!("suppression d'étiquette : HTTP {}", resp.status());
+            bail!("Deleting label: HTTP {}", resp.status());
         }
         Ok(())
     }
@@ -730,7 +730,7 @@ impl Api {
         }
         let resp = self.get("/api/v1/admin/settings")?;
         if !resp.status().is_success() {
-            bail!("paramètres : HTTP {}", resp.status());
+            bail!("Settings: HTTP {}", resp.status());
         }
         Ok(resp.json::<Env>()?.settings)
     }
@@ -831,7 +831,7 @@ impl Api {
         }
         let resp = self.get("/api/v1/admin/org-units")?;
         if !resp.status().is_success() {
-            bail!("unités : HTTP {}", resp.status());
+            bail!("Organisational units: HTTP {}", resp.status());
         }
         Ok(resp.json::<Env>()?.org_units)
     }
@@ -879,7 +879,7 @@ impl Api {
     pub fn download(&mut self, file_id: &str) -> Result<Vec<u8>> {
         let resp = self.get(&format!("/api/v1/drive/{file_id}/download"))?;
         if !resp.status().is_success() {
-            bail!("téléchargement {file_id} : HTTP {}", resp.status());
+            bail!("Downloading {file_id}: HTTP {}", resp.status());
         }
         Ok(resp.bytes()?.to_vec())
     }
@@ -980,7 +980,7 @@ impl Api {
             resp = { let token = self.bearer()?; attempt(&self.http, &token)? };
         }
         if !resp.status().is_success() {
-            bail!("création dossier '{name}' : HTTP {}", resp.status());
+            bail!("Creating folder '{name}': HTTP {}", resp.status());
         }
         let v: serde_json::Value = resp.json()?;
         let f = &v["folder"];

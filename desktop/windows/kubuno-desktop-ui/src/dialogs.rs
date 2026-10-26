@@ -1179,7 +1179,7 @@ impl ConfirmDialog {
         let mut window = FloatingWindow::new(title)
             .modal()
             .with_width(WIDTH_CONFIRM)
-            .with_actions(Actions::pair("Confirmer", "Annuler"));
+            .with_actions(Actions::pair("Confirm", "Cancel"));
         // `autoFocus: true` on the confirming action: Entrée confirms at once,
         // and no ring shows until the keyboard moves the focus.
         window.focus = window.initial_focus();
@@ -1452,7 +1452,7 @@ impl PromptDialog {
         let mut window = FloatingWindow::new(title)
             .modal()
             .with_width(WIDTH_PROMPT)
-            .with_actions(Actions::pair("OK", "Annuler"));
+            .with_actions(Actions::pair("OK", "Cancel"));
         // `el.focus()` on open: the field holds the focus from the start.
         window.focus = Some(DialogPart::Field);
         let mut p = Self {
@@ -1811,7 +1811,7 @@ impl ConflictDialog {
         let window = FloatingWindow::new("Conflit de nom")
             .modal()
             .with_width(WIDTH_CONFLICT)
-            .with_actions(Actions::only_cancel("Annuler"));
+            .with_actions(Actions::only_cancel("Cancel"));
         let mut d = Self { window, name: name.into(), kind, hot: None };
         d.window.focus = d.initial_focus();
         d
@@ -1856,20 +1856,20 @@ impl ConflictDialog {
     /// says today and a dialog that says something else is a different dialog.
     pub fn options(&self) -> [(ConflictChoice, String, String, &'static str); 2] {
         let folder = self.kind == ConflictKind::Folder;
-        let first = if folder { "Fusionner" } else { "Écraser" };
+        let first = if folder { "Merge" } else { "Overwrite" };
         let explain = if folder {
-            "Les deux dossiers seront fusionnés. Les fichiers en conflit seront remplacés."
+            "Both folders will be merged. Conflicting files will be replaced."
                 .to_string()
         } else {
-            "Le fichier existant sera remplacé par le nouveau.".to_string()
+            "The existing file will be replaced by the new one.".to_string()
         };
         [
             (ConflictChoice::Overwrite, first.to_string(), explain, "Layers"),
             (
                 ConflictChoice::KeepBoth,
-                "Conserver les deux".to_string(),
+                "Keep both".to_string(),
                 format!(
-                    "Le nouvel élément sera renommé automatiquement (ex. : « {} (2) »).",
+                    "The new item will be renamed automatically (for example, {} (2)).",
                     self.name
                 ),
                 // The lucide `Copy` this row draws on the web is unreachable by
@@ -1885,8 +1885,8 @@ impl ConflictDialog {
 
     /// The sentence above the options.
     pub fn message(&self) -> String {
-        let what = if self.kind == ConflictKind::Folder { "dossier" } else { "fichier" };
-        format!("Un {what} nommé « {} » existe déjà à cet emplacement.", self.name)
+        let what = if self.kind == ConflictKind::Folder { "folder" } else { "file" };
+        format!("A {what} named {} already exists in this location.", self.name)
     }
 
     /// The message, wrapped to the body's content width.
@@ -3020,14 +3020,14 @@ mod tests {
         // The body then runs to the bottom edge.
         assert_eq!(w.body_rect(bounds).bottom, 300.0);
 
-        w.actions = Actions::pair("OK", "Annuler");
+        w.actions = Actions::pair("OK", "Cancel");
         assert_eq!(w.footer_height(), 2.0 * FOOTER_PAD_Y + height::BUTTON_MD);
         assert_eq!(w.body_rect(bounds).bottom, 300.0 - w.footer_height());
     }
 
     #[test]
     fn the_three_bands_tile_the_window_without_a_gap() {
-        let w = FloatingWindow::new("t").with_actions(Actions::pair("OK", "Annuler"));
+        let w = FloatingWindow::new("t").with_actions(Actions::pair("OK", "Cancel"));
         let bounds = Rect::new(100.0, 50.0, 500.0, 400.0);
         let band = w.titlebar_rect(bounds);
         let body = w.body_rect(bounds);
@@ -3086,10 +3086,10 @@ mod tests {
 
     #[test]
     fn the_actions_are_listed_in_paint_order() {
-        let a = Actions::pair("Renommer", "Annuler");
+        let a = Actions::pair("Rename", "Cancel");
         let ids: Vec<ActionId> = a.list().into_iter().map(|(id, _)| id).collect();
         assert_eq!(ids, vec![ActionId::Confirm, ActionId::Cancel]);
-        assert!(Actions::only_cancel("Fermer").confirm.is_none());
+        assert!(Actions::only_cancel("Close").confirm.is_none());
         assert!(Actions::default().is_empty(), "no actions means no footer");
     }
 
@@ -3162,12 +3162,12 @@ mod tests {
         assert!(d.actions.confirm.as_ref().is_some_and(|a| a.danger));
         assert!(d.actions.cancel.as_ref().is_some_and(|a| !a.danger));
 
-        let n = ConfirmDialog::new("Renommer", "…");
+        let n = ConfirmDialog::new("Rename", "…");
         assert_eq!(n.variant.icon(), "AlertTriangle");
         assert!(n.actions.confirm.as_ref().is_some_and(|a| !a.danger));
 
         // …and the pairing survives a label change.
-        let relabelled = ConfirmDialog::danger("Supprimer", "…").labels("Supprimer", "Annuler");
+        let relabelled = ConfirmDialog::danger("Supprimer", "…").labels("Supprimer", "Cancel");
         assert!(relabelled.actions.confirm.as_ref().is_some_and(|a| a.danger));
     }
 
@@ -3206,7 +3206,7 @@ mod tests {
 
     #[test]
     fn a_prompt_opens_with_its_default_value_selected() {
-        let p = PromptDialog::new("Renommer").with_value("Rapport.pdf");
+        let p = PromptDialog::new("Rename").with_value("Rapport.pdf");
         assert_eq!(p.field.text(), "Rapport.pdf");
         assert_eq!(p.field.selection_start(), 0);
         assert_eq!(p.field.selection_length(), "Rapport.pdf".chars().count() as i32);
@@ -3216,10 +3216,10 @@ mod tests {
     fn a_folder_conflict_offers_to_merge_and_a_file_conflict_to_overwrite() {
         let file = ConflictDialog::new("Rapport.pdf", ConflictKind::File);
         let folder = ConflictDialog::new("Photos", ConflictKind::Folder);
-        assert_eq!(file.options()[0].1, "Écraser");
-        assert_eq!(folder.options()[0].1, "Fusionner");
-        assert!(file.message().contains("fichier"));
-        assert!(folder.message().contains("dossier"));
+        assert_eq!(file.options()[0].1, "Overwrite");
+        assert_eq!(folder.options()[0].1, "Merge");
+        assert!(file.message().contains("file"));
+        assert!(folder.message().contains("folder"));
         // The rename hint quotes the name it will rename.
         assert!(file.options()[1].2.contains("Rapport.pdf (2)"));
         assert_eq!(file.options()[0].0, ConflictChoice::Overwrite);
@@ -3483,7 +3483,7 @@ mod tests {
 
     #[test]
     fn typing_replaces_the_initial_selection_then_appends() {
-        let mut p = PromptDialog::new("Renommer").with_value("Rapport.pdf");
+        let mut p = PromptDialog::new("Rename").with_value("Rapport.pdf");
         assert!(p.edit(FieldEdit::Insert("Bilan".into())), "the selected default is replaced");
         assert_eq!(p.field.text(), "Bilan");
         p.edit(FieldEdit::Insert(" 2026".into()));
@@ -3634,7 +3634,7 @@ mod tests {
     #[test]
     fn a_toast_lists_its_action_before_its_close() {
         assert_eq!(Toast::info("x").focus_order(), vec![ToastPart::Close]);
-        assert_eq!(Toast::info("x").with_action("Annuler").focus_order(), vec![ToastPart::Action, ToastPart::Close]);
+        assert_eq!(Toast::info("x").with_action("Cancel").focus_order(), vec![ToastPart::Action, ToastPart::Close]);
     }
 
     // ── The trap every family in this crate is tested against ─────────────

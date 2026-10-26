@@ -175,16 +175,16 @@ where
             if p.conflicts > 0 {
                 on_event(id, SyncEvent {
                     kind:  "conflict".into(),
-                    title: "Conflit de synchronisation".into(),
-                    body:  format!("{} fichier(s) en conflit - une copie a été conservée.", p.conflicts),
+                    title: "Sync conflict".into(),
+                    body:  format!("{} conflicting files: a copy was kept.", p.conflicts),
                 });
             }
             let sent = p.uploaded + p.modified + p.deleted;
             if sent > 0 {
                 on_event(id, SyncEvent {
                     kind:  "synced".into(),
-                    title: "Modifications envoyées".into(),
-                    body:  format!("{} créé(s), {} modifié(s), {} supprimé(s).", p.uploaded, p.modified, p.deleted),
+                    title: "Changes uploaded".into(),
+                    body:  format!("{} created, {} modified, {} deleted.", p.uploaded, p.modified, p.deleted),
                 });
             }
         }
@@ -194,7 +194,7 @@ where
             eprintln!("  push : {e}");
             cycle_error = Some(SyncEvent {
                 kind:  "error".into(),
-                title: "Erreur de synchronisation".into(),
+                title: "Sync error".into(),
                 body:  e.to_string(),
             });
         }
@@ -207,8 +207,8 @@ where
             );
             on_event(id, SyncEvent {
                 kind:  "synced".into(),
-                title: "Fichiers reçus".into(),
-                body:  format!("{} téléchargé(s), {} dossier(s), {} supprimé(s).", s.downloaded, s.folders, s.deleted),
+                title: "Files received".into(),
+                body:  format!("{} downloaded, {} folders, {} deleted.", s.downloaded, s.folders, s.deleted),
             });
         }
         Ok(_) => {}
@@ -217,7 +217,7 @@ where
             eprintln!("  pull : {e}");
             cycle_error = Some(SyncEvent {
                 kind:  "error".into(),
-                title: "Erreur de synchronisation".into(),
+                title: "Sync error".into(),
                 body:  e.to_string(),
             });
         }
@@ -257,8 +257,8 @@ where
                 tracing::warn!(instance = id, "session expired: file sync paused until the account signs in again");
                 on_event(id, SyncEvent {
                     kind:  "expired".into(),
-                    title: "Session expirée".into(),
-                    body:  "La synchronisation est en pause : reconnectez-vous. Vos fichiers locaux sont conservés.".into(),
+                    title: "Session expired".into(),
+                    body:  "Sync is paused: sign in again. Your local files are kept.".into(),
                 });
             }
             false

@@ -254,38 +254,38 @@ pub struct WorkspaceMenuActions {
 pub fn build_workspace_menus(a: &WorkspaceMenuActions, extra: Vec<WsMenu>) -> Vec<WsMenu> {
     let act = |id: &str, label: &str, on: bool| WsMenuItem::action(id, label).enabled(on);
     let file = vec![
-        act("ws.new", a.new_label.as_deref().unwrap_or("Nouveau"), a.new).shortcut("Ctrl+N"),
-        act("ws.open", "Ouvrir", a.open).shortcut("Ctrl+O"),
-        act("ws.duplicate", "Créer une copie", a.duplicate),
+        act("ws.new", a.new_label.as_deref().unwrap_or("New"), a.new).shortcut("Ctrl+N"),
+        act("ws.open", "Open", a.open).shortcut("Ctrl+O"),
+        act("ws.duplicate", "Create a copy", a.duplicate),
         WsMenuItem::Separator,
         if a.download_items.is_empty() {
-            act("ws.download", "Télécharger", false)
+            act("ws.download", "Download", false)
         } else {
-            WsMenuItem::Submenu { label: "Télécharger".into(), items: a.download_items.clone() }
+            WsMenuItem::Submenu { label: "Download".into(), items: a.download_items.clone() }
         },
-        act("ws.rename", "Renommer", a.rename),
-        act("ws.trash", "Mettre à la corbeille", a.trash),
+        act("ws.rename", "Rename", a.rename),
+        act("ws.trash", "Move to trash", a.trash),
         WsMenuItem::Separator,
-        act("ws.details", a.details_label.as_deref().unwrap_or("Détails"), a.details),
+        act("ws.details", a.details_label.as_deref().unwrap_or("Details"), a.details),
     ];
     let edit = vec![
-        act("ws.undo", "Annuler", a.undo && a.can_undo).shortcut("Ctrl+Z"),
-        act("ws.redo", "Rétablir", a.redo && a.can_redo).shortcut("Ctrl+Shift+Z"),
+        act("ws.undo", "Undo", a.undo && a.can_undo).shortcut("Ctrl+Z"),
+        act("ws.redo", "Redo", a.redo && a.can_redo).shortcut("Ctrl+Shift+Z"),
         WsMenuItem::Separator,
-        act("ws.cut", "Couper", a.cut).shortcut("Ctrl+X"),
-        act("ws.copy", "Copier", a.copy).shortcut("Ctrl+C"),
-        act("ws.paste", "Coller", a.paste).shortcut("Ctrl+V"),
+        act("ws.cut", "Cut", a.cut).shortcut("Ctrl+X"),
+        act("ws.copy", "Copy", a.copy).shortcut("Ctrl+C"),
+        act("ws.paste", "Paste", a.paste).shortcut("Ctrl+V"),
         WsMenuItem::Separator,
-        act("ws.find_replace", "Rechercher et remplacer", a.find_replace).shortcut("Ctrl+H"),
+        act("ws.find_replace", "Find and replace", a.find_replace).shortcut("Ctrl+H"),
     ];
-    let view = vec![WsMenuItem::action("ws.fullscreen", "Plein écran").shortcut("F11")];
+    let view = vec![WsMenuItem::action("ws.fullscreen", "Full screen").shortcut("F11")];
     let help = vec![
-        WsMenuItem::action("ws.help", "Aide en ligne"),
+        WsMenuItem::action("ws.help", "Online help"),
         WsMenuItem::action("ws.forum", "Forum"),
         WsMenuItem::Separator,
-        WsMenuItem::action("ws.about", "À propos"),
+        WsMenuItem::action("ws.about", "About"),
     ];
-    let mut out = vec![WsMenu::new("Fichier", file), WsMenu::new("Édition", edit), WsMenu::new("Affichage", view)];
+    let mut out = vec![WsMenu::new("File", file), WsMenu::new("Edit", edit), WsMenu::new("View", view)];
     out.extend(extra);
     out.push(WsMenu::new("Aide", help));
     out
@@ -820,7 +820,7 @@ mod tests {
     fn standard_menus_follow_the_web_order_and_grey_missing_actions() {
         let menus = build_workspace_menus(&WorkspaceMenuActions { undo: true, can_undo: true, ..Default::default() }, vec![WsMenu::new("Insertion", vec![])]);
         let labels: Vec<&str> = menus.iter().map(|m| m.label.as_str()).collect();
-        assert_eq!(labels, ["Fichier", "Édition", "Affichage", "Insertion", "Aide"]);
+        assert_eq!(labels, ["File", "Edit", "View", "Insertion", "Aide"]);
         let enabled = |m: &WsMenu, id: &str| {
             m.items.iter().find_map(|i| match i {
                 WsMenuItem::Action { id: x, enabled, .. } if x == id => Some(*enabled),

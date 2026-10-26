@@ -1899,7 +1899,7 @@ impl SwatchPicker {
             inner: PanelModel::new(),
             colors: docs_swatches(),
             custom: Vec::new(),
-            custom_label: "Personnalisé".to_string(),
+            custom_label: "Custom".to_string(),
             selected: None,
             hot: None,
             columns: m::SWATCHES_COLS,
@@ -2848,7 +2848,7 @@ impl Widget for GradientPicker {
         // The two type buttons: `background: active ? C.accent : C.surface`,
         // `color: active ? '#fff' : C.textDim`, `border: 1px solid C.border`.
         for (rect, label, on, part) in [
-            (g.linear, "Linéaire", self.gradient.kind == GradientKind::Linear, GradientPart::Linear),
+            (g.linear, "Linear", self.gradient.kind == GradientKind::Linear, GradientPart::Linear),
             (g.radial, "Radial", self.gradient.kind == GradientKind::Radial, GradientPart::Radial),
         ] {
             let fill = if on { t.accent } else { t.surface_2 };
@@ -2925,7 +2925,7 @@ impl Widget for GradientPicker {
         }
 
         let parts = (GradientPart::Opacity, GradientPart::OpacityBox);
-        self.paint_slider_row(canvas, g.opacity, "Opacité", &self.opacity_slider(), parts, alpha);
+        self.paint_slider_row(canvas, g.opacity, "Opacity", &self.opacity_slider(), parts, alpha);
 
         // « Ajouter un arrêt » - `px-1.5 py-1 text-[10px] rounded`,
         // `background: C.surface`, `color: C.textDim`, a `Plus size={11}`, `gap-1`.
@@ -2934,7 +2934,7 @@ impl Widget for GradientPicker {
         canvas.vector_icon("Plus", &glyph, m::ICON_SM, &fade(t.text_secondary, alpha));
         picker::text(
             canvas,
-            "Ajouter un arrêt",
+            "Add a stop",
             Rect::new(glyph.right + m::GRID_GAP, g.add.top, g.add.right, g.add.bottom),
             pm::TEXT_SM,
             false,

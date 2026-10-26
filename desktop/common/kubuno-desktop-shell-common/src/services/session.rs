@@ -173,10 +173,10 @@ pub fn set_event_handler(handler: impl Fn(AccountEvent) + Send + 'static) {
 }
 
 fn owner() -> Result<(&'static Session, Arc<TokenOwner>)> {
-    let session = SESSION.get().ok_or_else(|| anyhow!("les comptes ne sont pas démarrés"))?;
+    let session = SESSION.get().ok_or_else(|| anyhow!("Accounts have not been started"))?;
     match &session.mode {
         Mode::Owner(o) => Ok((session, o.clone())),
-        Mode::Client => bail!("Kubuno Desktop est déjà ouvert : utilisez sa fenêtre (zone de notification)."),
+        Mode::Client => bail!("Kubuno Desktop is already open: use its window from the notification area."),
     }
 }
 
@@ -196,10 +196,10 @@ fn api_for(server: &str) -> Result<ApiClient> {
 /// A user-facing reason for a failed sign-in (never the server's raw body).
 fn sign_in_error(e: kubuno_desktop_api_client::ApiError) -> anyhow::Error {
     match e.status() {
-        Some(401) | Some(403) => anyhow!("Identifiant, mot de passe ou code incorrect."),
-        Some(429) => anyhow!("Trop de tentatives : réessayez dans une minute."),
-        Some(code) => anyhow!("Connexion refusée par le serveur (HTTP {code})."),
-        None => anyhow!("Serveur injoignable : {e}"),
+        Some(401) | Some(403) => anyhow!("Incorrect username, password, or code."),
+        Some(429) => anyhow!("Too many attempts: try again in a minute."),
+        Some(code) => anyhow!("Sign-in refused by the server (HTTP {code})."),
+        None => anyhow!("Server unreachable: {e}"),
     }
 }
 
@@ -279,10 +279,10 @@ pub enum SignOutOutcome {
 fn export_dir(instance: &str) -> Result<PathBuf> {
     let base = match paths::sandbox_dir() {
         Some(s) => s.join("exports"),
-        None => documents_dir().ok_or_else(|| anyhow!("le dossier Documents est introuvable"))?,
+        None => documents_dir().ok_or_else(|| anyhow!("The Documents folder was not found"))?,
     };
     let stamp = std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).map(|d| d.as_secs()).unwrap_or(0);
-    Ok(base.join(format!("Kubuno - modifications non envoyées - {instance} - {stamp}")))
+    Ok(base.join(format!("Kubuno - unsent changes - {instance} - {stamp}")))
 }
 
 /// The user's Documents folder, as the platform knows it (`crate::platform::Folders`).

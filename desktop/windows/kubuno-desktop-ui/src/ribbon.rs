@@ -2244,12 +2244,12 @@ impl Default for RibbonTexts {
     fn default() -> Self {
         Self {
             automatic: "Automatique".into(),
-            theme_colors: "Couleurs du thème".into(),
-            qat_add: "Ajouter à la barre d'outils Accès rapide".into(),
-            qat_remove: "Supprimer de la barre d'outils Accès rapide".into(),
+            theme_colors: "Theme colors".into(),
+            qat_add: "Add to Quick Access Toolbar".into(),
+            qat_remove: "Remove from Quick Access Toolbar".into(),
             more: "Plus".into(),
-            scroll_up: "Ligne précédente".into(),
-            scroll_down: "Ligne suivante".into(),
+            scroll_up: "Previous row".into(),
+            scroll_down: "Next row".into(),
             launcher: "Plus d'options".into(),
         }
     }
@@ -2283,8 +2283,8 @@ impl Ribbon {
             tabs,
             theme,
             strip_actions: Vec::new(),
-            collapse_label: "Réduire le ruban (Ctrl+F1)".to_string(),
-            expand_label: "Développer le ruban (Ctrl+F1)".to_string(),
+            collapse_label: "Collapse ribbon (Ctrl+F1)".to_string(),
+            expand_label: "Expand ribbon (Ctrl+F1)".to_string(),
             owns_caption: true,
             qat_position: QatPosition::InTabStrip,
             display_mode: DisplayMode::Classic,
@@ -4245,7 +4245,7 @@ mod tests {
     #[test]
     fn wide_items_take_a_column_of_their_own() {
         let items = vec![
-            RibbonItem::button("paste", "Coller", "ClipboardPaste").large(),
+            RibbonItem::button("paste", "Paste", "ClipboardPaste").large(),
             small("cut"),
             small("copy"),
             RibbonItem::dropdown("font", vec![RibbonOption::new("a", "A")], "a", 120.0),
@@ -4256,9 +4256,9 @@ mod tests {
 
     #[test]
     fn the_tooltip_joins_label_and_shortcut() {
-        let it = RibbonItem::button("copy", "Copier", "Copy").shortcut("Ctrl+C");
+        let it = RibbonItem::button("copy", "Copy", "Copy").shortcut("Ctrl+C");
         assert_eq!(it.tip_text().as_deref(), Some("Copier · Ctrl+C"));
-        let it = RibbonItem::button("copy", "Copier", "Copy").tooltip("Copier la sélection");
+        let it = RibbonItem::button("copy", "Copy", "Copy").tooltip("Copier la sélection");
         assert_eq!(it.tip_text().as_deref(), Some("Copier la sélection"));
     }
 
@@ -4279,8 +4279,8 @@ mod tests {
     fn an_idle_design_frame_is_stable_and_asks_for_no_repaint() {
         use crate::graphics::testing::RecordingCanvas;
         let tabs = vec![
-            RibbonTab::file("file", "Fichier"),
-            RibbonTab::new("home", "Accueil", vec![RibbonGroup::new("clip", "Presse-papiers", vec![RibbonItem::button("paste", "Coller", "ClipboardPaste").large(), RibbonItem::button("cut", "Couper", "Scissors")])]),
+            RibbonTab::file("file", "File"),
+            RibbonTab::new("home", "Accueil", vec![RibbonGroup::new("clip", "Presse-papiers", vec![RibbonItem::button("paste", "Paste", "ClipboardPaste").large(), RibbonItem::button("cut", "Cut", "Scissors")])]),
             RibbonTab::new("pic", "Image", vec![]).contextual(hex(0xb7472a), false),
         ];
         let mut r = Ribbon::new(tabs, RibbonTheme::default());
@@ -4316,7 +4316,7 @@ mod tests {
     #[test]
     fn a_new_contextual_tab_takes_the_focus_and_its_loss_falls_back() {
         let tabs = vec![
-            RibbonTab::file("file", "Fichier"),
+            RibbonTab::file("file", "File"),
             RibbonTab::new("home", "Accueil", vec![]),
             RibbonTab::new("pic", "Image", vec![]).contextual(hex(0xb7472a), false),
         ];

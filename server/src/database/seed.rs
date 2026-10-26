@@ -151,7 +151,7 @@ pub async fn ensure_default_admin(pool: &DbPool) -> Result<()> {
             (id, email, username, password_hash, display_name, role, email_verified, is_active, \
              must_change_password, org_unit_id) \
          VALUES \
-            ($1, $2, $3, $4, 'Administrateur', 'admin', TRUE, TRUE, $5, $6)",
+            ($1, $2, $3, $4, 'Administrator', 'admin', TRUE, TRUE, $5, $6)",
         params![
             new_user_id,
             &email,

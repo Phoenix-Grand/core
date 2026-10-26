@@ -32,11 +32,11 @@ fn the_legal_line_names_the_licence() {
 fn the_builder_follows_the_artwork_until_told_otherwise() {
     let s = SplashScreen::new().artwork(Artwork::Chat);
     assert_eq!(s.content().product, "Kubuno Chat");
-    assert_eq!(s.content().status, "Démarrage de Kubuno Chat…");
+    assert_eq!(s.content().status, "Starting Kubuno Chat...");
     assert_eq!(s.content().tagline, Artwork::Chat.tagline());
     let s = SplashScreen::new().product("Kubuno Messagerie").artwork(Artwork::Chat).version("1.2.3").build("1.2.3-5.g0ff1ce").license("MIT");
     assert_eq!(s.content().product, "Kubuno Messagerie", "a product set by hand is kept");
-    assert_eq!(s.content().status, "Démarrage de Kubuno Messagerie…");
+    assert_eq!(s.content().status, "Starting Kubuno Messagerie...");
     assert_eq!(s.content().version, "Version 1.2.3 · build 5.g0ff1ce");
     assert_eq!(s.content().legal, "© Kubuno contributors · MIT");
     let s = SplashScreen::new().status("Préparation…").artwork(Artwork::Drive);

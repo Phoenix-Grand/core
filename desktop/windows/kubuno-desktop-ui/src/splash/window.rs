@@ -613,7 +613,7 @@ fn access_tree(content: &SplashContent, scale: f32) -> TreeUpdate {
     status.set_live(Live::Polite);
     status.set_bounds(bounds(l.status));
     let mut progress = Node::new(Role::ProgressIndicator);
-    progress.set_label("Progression du démarrage");
+    progress.set_label("Startup progress");
     progress.set_bounds(bounds(l.progress));
     if let Some(p) = content.progress {
         progress.set_min_numeric_value(0.0);

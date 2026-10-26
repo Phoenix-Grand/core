@@ -2260,7 +2260,7 @@ impl FontPicker {
         let is_recent = |f: &str| self.recent.iter().any(|r| r.eq_ignore_ascii_case(f));
         let recent: Vec<&String> = self.inner.items.iter().filter(|f| is_recent(f)).collect();
         if !recent.is_empty() {
-            rows.push(FontRow::Header("Récentes"));
+            rows.push(FontRow::Header("Recent"));
             for f in recent {
                 push(&mut rows, &mut seen, f);
             }
@@ -2903,7 +2903,7 @@ impl FontPicker {
         c.pop_clip();
         if rows.is_empty() {
             // `Aucune police pour « {q} »`, centred.
-            let text = format!("Aucune police pour « {} »", self.query.trim());
+            let text = format!("No fonts for {}", self.query.trim());
             let r = Rect::new(list.left + font_metrics::EMPTY_PAD_H, list.top, list.right - font_metrics::EMPTY_PAD_H, list.bottom);
             c.push_clip(&r);
             c.text_ellipsis_center(&text, &r, &f.caption, &t.text_tertiary);
@@ -2938,7 +2938,7 @@ impl FontPicker {
 }
 
 /// The search box's placeholder, verbatim.
-const SEARCH_PLACEHOLDER: &str = "Rechercher une police…";
+const SEARCH_PLACEHOLDER: &str = "Search fonts...";
 /// The clear button's label, verbatim (`aria-label="Effacer la recherche"`).
 const CLEAR_LABEL: &str = "Effacer";
 
@@ -3671,17 +3671,17 @@ impl RichTextCommand {
     /// The `title` / `aria-label` the web gives the button, verbatim.
     pub const fn label(self) -> &'static str {
         match self {
-            Self::Bold => "Gras",
-            Self::Italic => "Italique",
-            Self::Underline => "Souligné",
-            Self::OrderedList => "Liste numérotée",
-            Self::BulletList => "Liste à puces",
-            Self::Link => "Insérer un lien",
-            Self::ClearFormat => "Effacer la mise en forme",
-            Self::AlignLeft => "Aligner à gauche",
-            Self::AlignCenter => "Centrer",
-            Self::AlignRight => "Aligner à droite",
-            Self::AlignJustify => "Justifier",
+            Self::Bold => "Bold",
+            Self::Italic => "Italic",
+            Self::Underline => "Underline",
+            Self::OrderedList => "Numbered list",
+            Self::BulletList => "Bulleted list",
+            Self::Link => "Insert link",
+            Self::ClearFormat => "Clear formatting",
+            Self::AlignLeft => "Align left",
+            Self::AlignCenter => "Center",
+            Self::AlignRight => "Align right",
+            Self::AlignJustify => "Justify",
         }
     }
 
@@ -4358,7 +4358,7 @@ mod tests {
         assert_eq!(
             rows,
             vec![
-                FontRow::Header("Récentes"),
+                FontRow::Header("Recent"),
                 FontRow::Option { font: "Verdana".into(), index: 0 },
                 FontRow::Header("Sans Serif"),
                 FontRow::Option { font: "Arial".into(), index: 1 },
@@ -4783,9 +4783,9 @@ mod tests {
         assert!(!e.editing);
 
         e.begin_edit();
-        e.type_text("Nouveau");
+        e.type_text("New");
         assert_eq!(e.key_down(vk::ENTER, Modifiers::NONE), EditKey::Committed);
-        assert_eq!(e.text(), "Nouveau");
+        assert_eq!(e.text(), "New");
         assert!(!e.editing);
 
         // Read-only: the caret moves, the text does not change.
@@ -4793,7 +4793,7 @@ mod tests {
         e.begin_edit();
         assert!(!e.type_text("x"));
         assert_eq!(e.key_down(vk::BACK, Modifiers::NONE), EditKey::Moved);
-        assert_eq!(e.text(), "Nouveau");
+        assert_eq!(e.text(), "New");
     }
 
     #[test]
@@ -4951,7 +4951,7 @@ mod tests {
         assert_eq!(bar.key_down(vk::ENTER, Modifiers::NONE), ToolbarKey::Activated(0));
         assert!(bar.is_active(RichTextCommand::Bold));
         assert_eq!(bar.key_down(vk::TAB, Modifiers::NONE), ToolbarKey::Ignored);
-        assert_eq!(bar.tooltip_of(0), Some("Gras"));
+        assert_eq!(bar.tooltip_of(0), Some("Bold"));
         assert_eq!(bar.tooltip_of(3), None, "a rule has no title");
         assert_eq!(bar.command_at(5), Some(RichTextCommand::BulletList));
     }

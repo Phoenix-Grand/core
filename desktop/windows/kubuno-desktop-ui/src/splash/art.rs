@@ -105,9 +105,9 @@ impl Artwork {
     /// Its default tagline.
     pub fn tagline(self) -> &'static str {
         match self {
-            Artwork::Kubuno => "Votre cloud souverain, à portée de bureau.",
-            Artwork::Drive => "Vos fichiers, partout, synchronisés chez vous.",
-            Artwork::Chat => "Messages et réunions, sans intermédiaire.",
+            Artwork::Kubuno => "Your sovereign cloud, right on your desktop.",
+            Artwork::Drive => "Your files everywhere, synced on your own server.",
+            Artwork::Chat => "Messages and meetings, directly connected.",
             Artwork::Documents => "Écrire, mettre en page, partager.",
         }
     }

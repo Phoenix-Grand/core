@@ -1,21 +1,21 @@
 #[derive(Debug, thiserror::Error)]
 pub enum StorageError {
-    #[error("Fichier introuvable: {0}")]
+    #[error("File not found: {0}")]
     NotFound(String),
 
-    #[error("Chemin invalide: {0}")]
+    #[error("Invalid path: {0}")]
     InvalidPath(String),
 
-    #[error("Erreur I/O: {0}")]
+    #[error("I/O error: {0}")]
     Io(#[from] std::io::Error),
 
-    #[error("Erreur S3: {0}")]
+    #[error("S3 error: {0}")]
     S3(String),
 
-    #[error("Upload multipart introuvable: {0}")]
+    #[error("Multipart upload not found: {0}")]
     MultipartNotFound(String),
 
-    #[error("Erreur interne: {0}")]
+    #[error("Internal error: {0}")]
     Internal(String),
 }
 

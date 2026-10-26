@@ -88,7 +88,7 @@ pub async fn handle_message(
             let params = msg.get("params").cloned().unwrap_or(Value::Null);
             let name = params.get("name").and_then(|n| n.as_str()).unwrap_or("");
             if name.is_empty() {
-                return Some(rpc_error(id, -32602, "Paramètre 'name' manquant"));
+                return Some(rpc_error(id, -32602, "Missing 'name' parameter"));
             }
             let args = params.get("arguments").cloned().unwrap_or(json!({}));
             let res = provider.call_tool(name, args, user_id).await;
@@ -98,6 +98,6 @@ pub async fn handle_message(
             })))
         }
 
-        other => Some(rpc_error(id, -32601, &format!("Méthode inconnue: {other}"))),
+        other => Some(rpc_error(id, -32601, &format!("Unknown method: {other}"))),
     }
 }

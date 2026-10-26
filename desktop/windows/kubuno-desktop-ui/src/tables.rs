@@ -893,26 +893,26 @@ pub struct Wording {
 impl Default for Wording {
     fn default() -> Self {
         Self {
-            selected: "en sélection".into(),
-            columns: "Colonnes".into(),
-            rows_per_page: "Lignes par page".into(),
-            copy_cell: "Copier cette cellule".into(),
-            copy_row: "Copier cette ligne".into(),
-            copy_column: "Copier la colonne « {name} »".into(),
+            selected: "selected".into(),
+            columns: "Columns".into(),
+            rows_per_page: "Rows per page".into(),
+            copy_cell: "Copy this cell".into(),
+            copy_row: "Copy this row".into(),
+            copy_column: "Copy column {name}".into(),
             empty: EmptyWording::new(
-                "Rien pour l’instant",
-                "Les éléments que vous ajouterez apparaîtront dans ce tableau.",
+                "Nothing yet",
+                "Items you add will appear in this table.",
                 None,
             ),
             no_results: EmptyWording::new(
-                "Aucun résultat",
-                "Aucune ligne ne correspond aux filtres actifs.",
-                Some("Effacer les filtres"),
+                "No results",
+                "No rows match the active filters.",
+                Some("Clear filters"),
             ),
             error: EmptyWording::new(
-                "Chargement impossible",
-                "La requête a échoué. Vérifiez la connexion, puis réessayez.",
-                Some("Réessayer"),
+                "Could not load",
+                "The request failed. Check your connection and try again.",
+                Some("Retry"),
             ),
         }
     }

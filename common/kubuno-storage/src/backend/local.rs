@@ -35,7 +35,7 @@ impl LocalStorage {
 
         if !normalized.starts_with(&canonical_base) {
             return Err(StorageError::InvalidPath(format!(
-                "Chemin '{path}' hors de la zone de stockage autorisée"
+                "Path '{path}' is outside the allowed storage area"
             )));
         }
         Ok(normalized)

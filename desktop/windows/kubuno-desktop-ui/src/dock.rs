@@ -809,17 +809,17 @@ pub struct DockStrings {
 impl Default for DockStrings {
     fn default() -> Self {
         Self {
-            float: "Détacher (flottant)".into(),
-            dock_left: "Ancrer à gauche".into(),
-            dock_right: "Ancrer à droite".into(),
-            close_panel: "Fermer le panneau".into(),
-            reset: "Réinitialiser la disposition".into(),
-            close: "Fermer".into(),
-            roll: "Enrouler".into(),
-            unroll: "Dérouler".into(),
-            maximize: "Agrandir".into(),
-            restore: "Restaurer".into(),
-            reopen: "Panneaux fermés".into(),
+            float: "Undock (floating)".into(),
+            dock_left: "Dock left".into(),
+            dock_right: "Dock right".into(),
+            close_panel: "Close panel".into(),
+            reset: "Reset layout".into(),
+            close: "Close".into(),
+            roll: "Roll up".into(),
+            unroll: "Unroll".into(),
+            maximize: "Maximize".into(),
+            restore: "Restore".into(),
+            reopen: "Closed panels".into(),
         }
     }
 }

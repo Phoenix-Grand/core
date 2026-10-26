@@ -59,21 +59,21 @@ pub enum AdminError {
     Sqlx(#[from] sqlx::Error),
     /// A row count mismatch after a copy: the destination did not receive every
     /// source row, so the caller must not switch the pointer to it.
-    #[error("copie incomplète de la table {table} : {expected} lignes attendues, {got} copiées")]
+    #[error("Incomplete copy of table {table}: expected {expected} rows, copied {got}")]
     RowCountMismatch {
         table: String,
         expected: i64,
         got: i64,
     },
-    #[error("préfixe de schéma invalide : {0}")]
+    #[error("Invalid schema prefix: {0}")]
     BadPrefix(String),
     /// A prefix rename would land on a namespace that already exists - possibly
     /// another instance's on a shared server. Refused before anything moves.
-    #[error("le schéma cible {0} existe déjà : renommage refusé pour ne pas mélanger deux instances")]
+    #[error("Target schema {0} already exists: rename refused to avoid mixing two instances")]
     TargetExists(String),
     /// A MySQL database holds views, routines or events, which `RENAME TABLE`
     /// cannot carry and the final `DROP DATABASE` would destroy.
-    #[error("la base {schema} contient {count} vue(s), routine(s) ou évènement(s) qu'un renommage ne peut pas déplacer")]
+    #[error("Database {schema} contains {count} views, routines, or events that a rename cannot move")]
     UnmovableObjects { schema: String, count: i64 },
     /// A type-poor source value could not be reconstructed into the destination
     /// column's strict logical type. Returned instead of mis-storing, so the copy
