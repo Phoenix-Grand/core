@@ -7,6 +7,7 @@ import { useQuery } from "@tanstack/react-query"
 import { api } from "../../../core/api/client"
 import { scopeLabel } from "../controls/ProvenanceLine"
 import type { ActiveScope, ChainResponse } from "../scopeTypes"
+import { settingDisplayValue } from "../settingValues"
 
 import { ViewBase } from './InheritanceChainWindow.kbview'
 import * as __parts from './InheritanceChainWindow.parts.tsx'
@@ -67,8 +68,9 @@ export class InheritanceChainWindow extends ViewBase {
 
   /** The rows of the Repeater over `(data?.levels ?? [])`. */
   get rows_items() {
-    return this.memo('rows_items', [this.data, this.tr], () => (this.data?.levels ?? []).map((l, i) => {
-      return { l, i, part1_props: { l: l, i: i, t: this.tr }, key: `${l.scope_type}-${l.scope_id ?? 'x'}-${i}` }
+    return this.memo('rows_items', [this.data, this.tr, this.props.settingKey], () => (this.data?.levels ?? []).map((l, i) => {
+      const value = settingDisplayValue(this.tr, this.props.settingKey, l.value, l.scope_type)
+      return { l, i, part1_props: { l: l, i: i, t: this.tr, value }, key: `${l.scope_type}-${l.scope_id ?? 'x'}-${i}` }
     }))
   }
 

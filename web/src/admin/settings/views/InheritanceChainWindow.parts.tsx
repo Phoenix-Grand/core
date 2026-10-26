@@ -8,7 +8,7 @@ import type { InheritanceChainWindow } from './InheritanceChainWindow'
 const fmt = (v: unknown) =>
   typeof v === 'string' ? v : JSON.stringify(v)
 
-export function Part1({ l, i, t }: { l: NonNullable<InheritanceChainWindow['rows_items']>[number]['l']; i: NonNullable<InheritanceChainWindow['rows_items']>[number]['i']; t: NonNullable<InheritanceChainWindow['tr']> }) {
+export function Part1({ l, i, t, value }: { l: NonNullable<InheritanceChainWindow['rows_items']>[number]['l']; i: NonNullable<InheritanceChainWindow['rows_items']>[number]['i']; t: NonNullable<InheritanceChainWindow['tr']>; value: unknown }) {
   return (
     <li
                   key={`${l.scope_type}-${l.scope_id ?? 'x'}-${i}`}
@@ -40,7 +40,7 @@ export function Part1({ l, i, t }: { l: NonNullable<InheritanceChainWindow['rows
                       )}
                     </span>
                     <span className="mt-0.5 block break-all font-mono text-xs text-text-secondary">
-                      {fmt(l.value)}
+                      {fmt(value)}
                     </span>
                   </span>
                 </li>

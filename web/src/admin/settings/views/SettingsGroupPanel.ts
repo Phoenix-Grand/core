@@ -15,6 +15,7 @@ import { settingLabel } from "../pages/SettingControl"
 import { DEDICATED_EDITOR, ENUM_OPTIONS, FALLBACK_TAB, TIMEZONE_KEYS, VISIBLE_WHEN, isClaimed, specForTab } from "../settingsMap"
 import { apiErrorDetail } from "../../../core/api/errorMessage"
 import { INSTANCE_SCOPE, type ActiveScope, type ResolvedSetting, type ResolvedSettingsResponse } from "../scopeTypes"
+import { settingControlValue } from "../settingValues"
 
 import { ViewBase } from './SettingsGroupPanel.kbview'
 import * as __parts from './SettingsGroupPanel.parts.tsx'
@@ -329,7 +330,7 @@ export class SettingsGroupPanel extends ViewBase {
 
   currentValue(s: ResolvedSetting) {
     if (!(!(!this.canRead || !this.settings || this.sections.length === 0))) return undefined as never
-    return (s.key in this.edits ? this.edits[s.key] : s.value)
+    return settingControlValue(this.tr, s, this.edits)
   }
 
   visibleForBranch(s: ResolvedSetting): boolean {

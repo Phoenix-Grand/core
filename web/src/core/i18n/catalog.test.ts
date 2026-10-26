@@ -67,6 +67,7 @@ it('translates every nonempty label and description seeded in the settings datab
   // Include unclaimed keys too: they still appear on the fallback settings page.
   const sql = readFileSync(join(process.cwd(), '../server/migrations/sqlite/000001_core_schema.up.sql'), 'utf8')
   const missing: string[] = []
+  const categories = new Set<string>()
   let checked = 0
   for (const row of sql.matchAll(/INSERT INTO "core"\."settings" \(([^\n]+?)\) VALUES \(([^\n]+)\);/g)) {
     const columns = row[1].split(',').map(column => column.trim().replaceAll('"', ''))
@@ -76,6 +77,7 @@ it('translates every nonempty label and description seeded in the settings datab
     })
     expect(values.length).toBe(columns.length)
     const setting = Object.fromEntries(columns.map((column, index) => [column, values[index]]))
+    categories.add(setting.category!)
     for (const [column, prefix] of [['label', 'setlabel'], ['description', 'setdesc']]) {
       if (!setting[column]) continue
       const key = `${prefix}_${flatKey(setting.key!)}`
@@ -85,6 +87,7 @@ it('translates every nonempty label and description seeded in the settings datab
   }
   expect(checked).toBeGreaterThan(200)
   expect(missing).toEqual([])
+  expect([...categories].filter(category => !(en.admin as Record<string, string>)[`cat_${category}`]?.trim())).toEqual([])
 })
 
 it('has an English translation family for every French catalogue entry', () => {
