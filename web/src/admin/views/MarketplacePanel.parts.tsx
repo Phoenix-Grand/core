@@ -5,10 +5,21 @@
 import { isNewerVersion } from "../../core/utils/semver"
 import { Package, Check, Download, RefreshCw, Star, ExternalLink, Trash2 } from "lucide-react"
 import type { MarketplacePanel } from './MarketplacePanel'
+import { categoryKey, progressLabel } from './marketplaceLocale'
+
+export function ErrorNotice({ message, detail, detailsLabel }: { message: string; detail?: string; detailsLabel: string }) {
+  return <div className="flex-1 min-w-0">
+    <p>{message}</p>
+    {detail && <details className="mt-1">
+      <summary className="cursor-pointer">{detailsLabel}</summary>
+      <pre className="mt-1 whitespace-pre-wrap break-words text-xs">{detail}</pre>
+    </details>}
+  </div>
+}
 
 export function Part1({ visible, cat, busy, t, uninstall, install, phase }: { visible: NonNullable<MarketplacePanel['visible']>; cat: NonNullable<MarketplacePanel['rows_categories']>[number]['cat']; busy: MarketplacePanel['busy']; t: NonNullable<MarketplacePanel['tr']>; uninstall: NonNullable<MarketplacePanel['uninstall']>; install: NonNullable<MarketplacePanel['install']>; phase: NonNullable<MarketplacePanel['phase']> }) {
   return (
-    <>{visible.filter((m) => (m.category || 'Autres') === cat).map((mod) => {
+    <>{visible.filter((m) => categoryKey(m) === cat).map((mod) => {
                   // Strictly newer only: a catalogue lagging behind must never invite
                   // an administrator to downgrade (string comparison offered 0.1.8
                   // to an instance running 0.1.10).
@@ -69,7 +80,7 @@ export function Part1({ visible, cat, busy, t, uninstall, install, phase }: { vi
                               disabled={isBusy}
                               className="text-sm px-3 py-1.5 rounded-lg bg-primary text-white font-medium inline-flex items-center gap-1.5 hover:bg-primary-hover disabled:opacity-60 transition-colors">
                               {isBusy
-                                ? <><RefreshCw size={13} className="animate-spin" /> {phase[mod.id] || t('admin.mk_installing', { defaultValue: 'Installation…' })}</>
+                                ? <><RefreshCw size={13} className="animate-spin" /> {progressLabel(phase[mod.id], t)}</>
                                 : canUpdate
                                   ? <><RefreshCw size={13} /> {t('admin.mk_update', { defaultValue: 'Mettre à jour' })}</>
                                   : <><Download size={13} /> {t('admin.mk_install', { defaultValue: 'Installer' })}</>}

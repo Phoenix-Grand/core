@@ -1,6 +1,7 @@
 //! Catalogue distant : client HTTP partagé, modèles et lectures du registre
 //! servi par kubuno.com (`GET /api/v1/modules[/:id]`).
 
+use std::collections::BTreeMap;
 use serde::{Deserialize, Serialize};
 
 use crate::errors::AppError;
@@ -55,6 +56,15 @@ pub struct CatalogArtifact {
     pub sha256: Option<String>,
 }
 
+/// Optional, locale-keyed display metadata. IDs and install data are never localized.
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+pub struct MarketText {
+    pub name: Option<String>,
+    pub summary: Option<String>,
+    pub description: Option<String>,
+    pub category: Option<String>,
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct MarketModule {
     pub id:      String,
@@ -66,6 +76,10 @@ pub struct MarketModule {
     pub official:    bool,
     #[serde(default)]
     pub category:    Option<String>,
+    #[serde(default)]
+    pub category_id: Option<String>,
+    #[serde(default)]
+    pub localizations: Option<BTreeMap<String, MarketText>>,
     #[serde(default)]
     pub accent:      Option<String>,
     #[serde(default)]
@@ -184,4 +198,42 @@ pub fn validate_id(id: &str) -> Result<(), AppError> {
         return Err(AppError::Validation(format!("Invalid module ID: '{id}'")));
     }
     Ok(())
+}
+
+#[cfg(test)]
+mod localization_tests {
+    use super::*;
+    use serde_json::json;
+
+    #[test]
+    fn retains_localizations_and_stable_ids_without_changing_legacy_metadata() {
+        let value = json!({
+            "id": "calendar", "name": "Calendar", "version": "1.0",
+            "category": "Bureautique", "category_id": "office", "summary": "Agendas",
+            "localizations": {
+                "en": { "summary": "Calendars", "description": "" },
+                "fr": { "summary": "Agendas" },
+                "pt-BR": { "name": "Calendário" }
+            }
+        });
+        let module: MarketModule = serde_json::from_value(value.clone()).unwrap();
+        let encoded = serde_json::to_value(module).unwrap();
+        for field in ["id", "name", "version", "category", "category_id", "summary"] {
+            assert_eq!(encoded[field], value[field]);
+        }
+        assert_eq!(encoded["localizations"]["en"]["summary"], "Calendars");
+        assert_eq!(encoded["localizations"]["en"]["description"], "");
+        assert_eq!(encoded["localizations"]["pt-BR"]["name"], "Calendário");
+    }
+
+    #[test]
+    fn accepts_catalogs_without_localizations_and_explicit_nulls() {
+        for extra in [json!({}), json!({"localizations": null, "category_id": null})] {
+            let mut value = json!({"id": "custom", "name": "Custom", "version": "1.0"});
+            value.as_object_mut().unwrap().extend(extra.as_object().unwrap().clone());
+            let module: MarketModule = serde_json::from_value(value).unwrap();
+            assert!(module.localizations.is_none());
+            assert!(module.category_id.is_none());
+        }
+    }
 }

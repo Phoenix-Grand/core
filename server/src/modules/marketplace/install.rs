@@ -14,7 +14,7 @@ use crate::{config::Settings, errors::AppError};
 use super::artifact::{is_kbpkg, resolve_artifact, Artifact};
 use super::catalog::{client, fetch_detail, validate_id};
 use super::extract::{copy_dir_all, extract_kbpkg, find_module_root, sha256_hex};
-use super::progress::set_phase;
+use super::progress::{set_phase, set_dependency};
 
 const TRUSTED_REPO_PREFIX: &str = "https://github.com/kubuno/";
 
@@ -245,7 +245,7 @@ async fn materialize(settings: &Settings, db: &DbPool, id: &str) -> Result<Mater
         .map_err(|e| AppError::Internal(anyhow::anyhow!("écriture artefact: {e}")))?;
 
     // 4) Extraction du .kbpkg (archive ZIP, en Rust pur).
-    set_phase(id, "extracting", "Extraction du paquet…");
+    set_phase(id, "extracting", "Extracting package…");
     let extract = staging.join("extract");
     tokio::fs::create_dir_all(&extract)
         .await
@@ -430,7 +430,7 @@ fn install_node<'a>(
             if !visited.insert(dep.clone()) {
                 continue; // cycle ou déjà en cours d'installation
             }
-            set_phase(id, "dependencies", &format!("Installing dependency '{dep}'…"));
+            set_dependency(id, dep);
             tracing::info!(module_id = %id, dependency = %dep, "Marketplace : installation d'une dépendance manquante");
             install_node(settings.clone(), db.clone(), dep, &mut *visited, depth + 1).await?;
         }

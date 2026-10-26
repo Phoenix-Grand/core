@@ -58,6 +58,8 @@ pub async fn list_marketplace(
                 "author":        m.author,
                 "official":      m.official,
                 "category":      m.category,
+                "category_id":   m.category_id,
+                "localizations": m.localizations,
                 "accent":        m.accent,
                 "summary":       m.summary,
                 "description":   m.description,

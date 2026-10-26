@@ -35,7 +35,7 @@
          Visible="{Binding show_err_msg}"
          Class="mb-4 rounded-lg border border-danger px-4 py-3 text-sm">
     <Icon Name="AlertCircle" Size="16" Class="mt-0.5 flex-shrink-0"/>
-    <Label HtmlTag="Span" Text="{Binding errMsg}" Overflow="Wrap" InheritFontSize="true" Class="flex-1"/>
+    <ReactHost Component="{Binding ErrorNotice}" Props="{Binding error_notice_props}"/>
     <Panel AccessibleRole="PushButton" AutoSize="true" Class="flex-shrink-0" OnClick="panel_click3">
       <Icon Name="X" Size="14"/>
     </Panel>
