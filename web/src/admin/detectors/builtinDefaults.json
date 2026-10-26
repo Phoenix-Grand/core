@@ -1,0 +1,58 @@
+{
+  "core.api_token": {
+    "label": "Jeton d'API",
+    "description": "Jeton d'accès : secret interne Kubuno, jeton porteur JWT, clé d'API de forme courante, ou affectation explicite d'une clé."
+  },
+  "core.bic": {
+    "label": "BIC / SWIFT",
+    "description": "Code d'identification bancaire. Aucune somme de contrôle n'existe : la proximité d'un mot-clé est ce qui distingue un BIC d'un acronyme de huit lettres."
+  },
+  "core.card": {
+    "label": "Numéro de carte bancaire",
+    "description": "Carte de paiement, 13 à 19 chiffres. La clé de Luhn est vérifiée : sans elle, tout numéro de commande de seize chiffres serait une carte."
+  },
+  "core.email": {
+    "label": "Adresse électronique",
+    "description": "Adresse de courrier électronique. Très fréquente et rarement sensible seule : c'est le nombre de valeurs DISTINCTES qui fait la fuite, pas la présence."
+  },
+  "core.iban": {
+    "label": "IBAN",
+    "description": "Numéro de compte bancaire international. Le contrôle modulo 97-10 est appliqué : une suite de caractères de la bonne forme mais fausse est écartée."
+  },
+  "core.ip": {
+    "label": "Adresse IP",
+    "description": "Adresse IPv4 ou IPv6. Une adresse isolée n'est pas une fuite ; un export en contenant des centaines en est une — d'où le seuil de valeurs distinctes."
+  },
+  "core.nir": {
+    "label": "Numéro de sécurité sociale (NIR)",
+    "description": "Numéro d'inscription au répertoire, 15 chiffres avec sa clé de contrôle. La clé (modulo 97) est vérifiée, y compris la correction corse 2A/2B."
+  },
+  "core.password": {
+    "label": "Mot de passe en clair",
+    "description": "Un mot de passe annoncé puis écrit. La forme seule ne vaut rien — c'est le signe adjacent (« : », « = », « est ») qui fait la détection, d'où la proximité obligatoire."
+  },
+  "core.phone": {
+    "label": "Numéro de téléphone",
+    "description": "Numéro français (0X ou +33) ou international au format E.164. La forme est trop banale pour valoir seule : un mot-clé de proximité est exigé."
+  },
+  "core.plate": {
+    "label": "Plaque d'immatriculation",
+    "description": "Immatriculation française, système SIV (AA-123-AA) ou ancien FNI (1234 AB 56). La forme seule est trop banale : un mot-clé de proximité est exigé."
+  },
+  "core.private_key": {
+    "label": "Clé privée SSH ou PGP",
+    "description": "En-tête de bloc de clé privée (OpenSSH, RSA, EC, DSA, PGP). Une seule occurrence suffit : une clé privée qui sort est une compromission complète."
+  },
+  "core.rib": {
+    "label": "RIB français",
+    "description": "Relevé d'identité bancaire : code banque, code guichet, numéro de compte et clé RIB. La clé (modulo 97) est vérifiée, lettres du compte converties."
+  },
+  "core.siren": {
+    "label": "SIREN",
+    "description": "Identifiant d'entreprise à 9 chiffres, clé de Luhn vérifiée. Peu sensible seul : sans mot-clé adjacent, la confiance reste sous le seuil par défaut."
+  },
+  "core.siret": {
+    "label": "SIRET",
+    "description": "Identifiant d'établissement à 14 chiffres, clé de Luhn vérifiée (règle particulière de La Poste incluse)."
+  }
+}

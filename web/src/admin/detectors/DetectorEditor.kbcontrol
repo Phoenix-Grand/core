@@ -30,7 +30,7 @@
         <Panel Class="contents">
           <Panel Class="grid gap-3 sm:grid-cols-2">
             <TextField Label="{Res admin.det_field_label}"
-                       Text="{Binding form.label}"
+                       Text="{Binding displayLabel}"
                        Enabled="{Binding enabled_unless_can_manage}"
                        OnTextChanged="text_field_text_changed"/>
             <TextField Label="{Res admin.det_field_key}"
@@ -41,7 +41,7 @@
           </Panel>
           <Panel Class="mt-3">
             <TextField Label="{Res admin.det_field_description}"
-                       Text="{Binding form.description}"
+                       Text="{Binding displayDescription}"
                        Enabled="{Binding enabled_unless_can_manage}"
                        OnTextChanged="text_field_text_changed3"/>
           </Panel>

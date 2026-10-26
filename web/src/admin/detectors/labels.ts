@@ -7,6 +7,31 @@
 
 import type { TFunction } from 'i18next'
 import type { ChecksumAlgo, DetectorKind } from './api'
+// Canonical migration text is used only to recognize untouched factory fields.
+import builtinDefaults from './builtinDefaults.json'
+
+type DetectorText = {
+  key: string
+  label: string
+  description: string | null
+  is_builtin?: boolean
+}
+
+/** Translate only unchanged factory text; administrator edits remain their data. */
+function builtinText(t: TFunction, detector: DetectorText, field: 'label' | 'description'): string | null {
+  const stored = detector[field]
+  const defaults = (builtinDefaults as Record<string, { label: string; description: string }>)[detector.key]
+  if (detector.is_builtin === false || !defaults || stored !== defaults[field]) return stored
+  return t(`admin.det_builtin_${detector.key.slice('core.'.length)}_${field}`, { defaultValue: defaults[field] })
+}
+
+export function detectorLabel(t: TFunction, detector: DetectorText): string {
+  return builtinText(t, detector, 'label') ?? detector.label
+}
+
+export function detectorDescription(t: TFunction, detector: DetectorText): string | null {
+  return builtinText(t, detector, 'description')
+}
 
 export function kindLabel(t: TFunction, kind: DetectorKind): string {
   return t(`admin.det_kind_${kind}`)

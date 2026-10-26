@@ -37,7 +37,7 @@ import { useNavigate } from 'react-router-dom'
 import type { TFunction } from 'i18next'
 import { FlaskConical } from 'lucide-react'
 import { Checkbox, Combobox, Input } from '@ui'
-import { asPercent, categoryLabel, categoryOrder } from '../detectors/labels'
+import { asPercent, categoryLabel, categoryOrder, detectorDescription, detectorLabel } from '../detectors/labels'
 import { registerLeafKind, type LeafContext, type LeafEditorProps } from './leafKinds'
 import { adminUrl } from '../adminAction'
 import type { CondNode, DetectorNode, DetectorRow, FieldDef } from './types'
@@ -75,7 +75,7 @@ function asDetector(node: CondNode): DetectorNode {
 function detectorsOf(ctx: LeafContext): DetectorRow[] {
   const list = ctx.catalog?.detectors ?? []
   return [...list].sort((a, b) =>
-    categoryOrder(a.category) - categoryOrder(b.category) || a.label.localeCompare(b.label))
+    categoryOrder(a.category) - categoryOrder(b.category) || detectorLabel(ctx.t, a).localeCompare(detectorLabel(ctx.t, b)))
 }
 
 /**
@@ -121,8 +121,8 @@ function DetectorLeafEditor({ node, onChange, ctx, disabled }: LeafEditorProps) 
 
   const options = detectors.map(d => ({
     value:       d.key,
-    label:       d.label,
-    description: d.description ?? d.key,
+    label:       detectorLabel(t, d),
+    description: detectorDescription(t, d) ?? d.key,
     group:       categoryLabel(t, d.category),
     keywords:    `${d.key} ${d.category} ${d.kind}`,
   }))
@@ -318,7 +318,7 @@ registerLeafKind({
 
     return t(named.length > 1 ? 'admin.rl_det_describe_many' : 'admin.rl_det_describe_one', {
       parts:      partsPhrase,
-      detector:   row.label,
+      detector:   detectorLabel(t, row),
       thresholds: thresholds.join(t('admin.rl_join_comma')),
     })
   },
@@ -330,12 +330,13 @@ registerLeafKind({
   validate: (node, ctx, t) => {
     const leaf = asDetector(node)
     if (!leaf.detector) return t('admin.rl_det_err_no_detector')
-    if (!detectorsOf(ctx).find(d => d.key === leaf.detector)) {
+    const detector = detectorsOf(ctx).find(d => d.key === leaf.detector)
+    if (!detector) {
       return t('admin.rl_det_err_missing', { key: leaf.detector })
     }
     if (leaf.min_unique_matches > leaf.min_matches) {
       return t('admin.rl_det_err_unreachable', {
-        detector: detectorsOf(ctx).find(d => d.key === leaf.detector)?.label ?? leaf.detector,
+        detector: detectorLabel(t, detector),
         unique:   leaf.min_unique_matches,
         matches:  leaf.min_matches,
       })

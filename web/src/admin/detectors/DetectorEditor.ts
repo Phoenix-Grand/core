@@ -9,6 +9,7 @@ import { PRIV } from "../../core/authz/types"
 import { usePrivileges } from "../../core/authz/usePrivileges"
 import { errorMessage, useCreateDetector, useDetector, useUpdateDetector, type ChecksumAlgo, type Detector, type DetectorInput, type DetectorKind, type DetectorLimits } from "./api"
 import { useAdminCrumbs } from "../pages/AdminBreadcrumb"
+import { detectorDescription, detectorLabel } from './labels'
 
 import { ViewBase } from './DetectorEditor.kbcontrol'
 import * as __parts from './DetectorEditor.parts'
@@ -158,8 +159,8 @@ export class DetectorEditor extends ViewBase {
     const id = this.props.id
     const detector = this.detector
     useAdminCrumbs(useMemo(
-      () => (id ? [{ label: detector?.label ?? t('admin.det_edit') }] : []),
-      [id, detector?.label, t],
+      () => (id ? [{ label: detector ? detectorLabel(t, detector) : t('admin.det_edit') }] : []),
+      [id, detector, t],
     ))
     return { data, isLoading }
   }
@@ -215,7 +216,17 @@ export class DetectorEditor extends ViewBase {
   }
 
   get h1_text() {
-    return this.props.id ? (this.detector?.label ?? this.tr('admin.det_edit')) : this.tr('admin.det_new')
+    return this.props.id ? (this.detector ? detectorLabel(this.tr, this.detector) : this.tr('admin.det_edit')) : this.tr('admin.det_new')
+  }
+
+  // Keep raw form values for saves. Displaying a translation must not rewrite
+  // a detector's metadata when the administrator only adjusts a threshold.
+  get displayLabel(): string {
+    return this.detector ? detectorLabel(this.tr, { ...this.detector, label: this.form.label }) : this.form.label
+  }
+
+  get displayDescription(): string {
+    return (this.detector ? detectorDescription(this.tr, { ...this.detector, description: this.form.description }) : this.form.description) ?? ''
   }
 
   get show_is_loading_id() {

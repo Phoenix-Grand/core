@@ -13,7 +13,7 @@ import { usePrivileges } from "../../core/authz/usePrivileges"
 import { adminUrl, useAdminAction } from "../adminAction"
 import type { AdminSectionProps } from "../sections/registry"
 import { useDetectors, useDeleteDetector, errorMessage, type Detector } from "./api"
-import { asPercent, categoryLabel, categoryOrder, checksumLabel, kindLabel } from "./labels"
+import { asPercent, categoryLabel, categoryOrder, checksumLabel, detectorLabel, kindLabel } from "./labels"
 
 import { ViewBase } from './DetectorsSection.kbview'
 import * as __parts from './DetectorsSection.parts'
@@ -50,8 +50,8 @@ export class DetectorsSection extends ViewBase {
       const list = data?.detectors ?? []
       return [...list].sort((a, b) =>
         categoryOrder(a.category) - categoryOrder(b.category) ||
-        a.label.localeCompare(b.label))
-    }, [data])
+        detectorLabel(t, a).localeCompare(detectorLabel(t, b)))
+    }, [data, t])
     return { t, can, confirm, confirmState, handleConfirm, handleCancel, data, isLoading, isError, refetch, remove, rows }
   }
 
@@ -98,10 +98,10 @@ export class DetectorsSection extends ViewBase {
       header: this.tr('admin.det_col_detector'),
       primary: true,
       minWidth: 220,
-      sortValue: r => r.label,
+      sortValue: r => detectorLabel(this.tr, r),
       cell: r => (
         <div className="min-w-0">
-          <div className="truncate text-text-primary">{r.label}</div>
+          <div className="truncate text-text-primary">{detectorLabel(this.tr, r)}</div>
           <div className="truncate text-text-tertiary" style={{ fontSize: 'var(--kb-text-meta)' }}>
             {r.key}
           </div>
