@@ -8,10 +8,10 @@ import { Plus, Trash2, Edit2, KeyRound, Copy, Check, Power, PlugZap } from "luci
 import { Button, Callout, Input } from "@ui"
 import type { OAuthProvidersPanel } from './OAuthProvidersPanel'
 const PRESETS: { key: string; label: string; display: string; issuerHint: string; scopes: string }[] = [
-  { key: 'keycloak', label: 'Keycloak', display: 'Keycloak', issuerHint: 'https://auth.exemple.com/realms/mon-realm', scopes: 'openid email profile' },
+  { key: 'keycloak', label: 'Keycloak', display: 'Keycloak', issuerHint: 'https://auth.example.com/realms/my-realm', scopes: 'openid email profile' },
   { key: 'gitlab',   label: 'GitLab',   display: 'GitLab',   issuerHint: 'https://gitlab.com',                         scopes: 'openid email profile' },
-  { key: 'authentik',label: 'Authentik',display: 'Authentik',issuerHint: 'https://auth.exemple.com/application/o/<app>/', scopes: 'openid email profile' },
-  { key: 'generic',  label: 'Autre (OIDC)', display: '',     issuerHint: 'https://idp.exemple.com',                   scopes: 'openid email profile' },
+  { key: 'authentik',label: 'Authentik',display: 'Authentik',issuerHint: 'https://auth.example.com/application/o/<app>/', scopes: 'openid email profile' },
+  { key: 'generic',  label: 'Other (OIDC)', display: '',     issuerHint: 'https://idp.example.com',                   scopes: 'openid email profile' },
 ]
 
 export interface FormState {
@@ -95,7 +95,7 @@ function ProviderForm({
         <label className="text-sm md:col-span-2">
           <span className="text-text-secondary">Issuer URL (OIDC discovery)</span>
           <Input value={f.issuer_url} onChange={(e) => set('issuer_url', e.target.value)}
-            placeholder="https://auth.exemple.com/realms/mon-realm" />
+            placeholder="https://auth.example.com/realms/my-realm" />
         </label>
         <label className="text-sm">
           <span className="text-text-secondary">Client ID</span>

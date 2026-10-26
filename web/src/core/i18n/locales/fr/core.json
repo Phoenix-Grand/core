@@ -4012,7 +4012,34 @@
     "login_animation_tilt": "Étendue verticale",
     "login_animation_speed": "Vitesse",
     "login_animation_shift": "Position verticale",
-    "login_animation_title": "Animation de la page de connexion"
+    "login_animation_title": "Animation de la page de connexion",
+    "setdesc_security_admin_2fa_required": "Les comptes administrateurs sans second facteur perdent l'accès à l'administration à l'expiration du délai de grâce. Activez-la seulement après avoir vérifié que vos administrateurs disposent de codes de secours.",
+    "setdesc_security_admin_2fa_grace_days": "Nombre de jours laissés à un administrateur sans second facteur pour en configurer un.",
+    "setdesc_security_backup_codes_low_threshold": "En dessous de ce nombre de codes de secours restants, un avertissement est affiché.",
+    "setlabel_security_password_min_length": "Longueur minimale du mot de passe",
+    "setdesc_security_password_min_length": "Nombre minimal de caractères exigé lors du choix ou du changement d'un mot de passe local. Accepté entre 8 et 128 ; en dessous de 8, la valeur est refusée à l'écriture plutôt que silencieusement corrigée. Ne s'applique pas aux comptes gouvernés par un annuaire ou un fournisseur d'identité : leur mot de passe n'est pas détenu ici.",
+    "setlabel_security_password_strong": "Exiger un mot de passe robuste",
+    "setdesc_security_password_strong": "Le mot de passe doit combiner au moins trois des quatre familles de caractères (minuscules, majuscules, chiffres, symboles) et ne pas être une répétition ou une suite triviale. Activé, un mot de passe qui ne satisfait pas la règle est refusé avec la raison exacte, jamais accepté puis signalé plus tard.",
+    "setlabel_security_password_reuse_allowed": "Autoriser la réutilisation d'un ancien mot de passe",
+    "setdesc_security_password_reuse_allowed": "Désactivé, un mot de passe déjà employé par le compte est refusé — la comparaison porte sur les empreintes conservées, jamais sur des mots de passe en clair. Activé, l'historique cesse d'être consulté (il continue d'être écrit, pour que la règle redevienne effective dès sa réactivation).",
+    "setlabel_security_password_history_depth": "Profondeur de l'historique des mots de passe",
+    "setdesc_security_password_history_depth": "Nombre d'anciens mots de passe comparés au nouveau quand la réutilisation est interdite. Accepté entre 1 et 24 : chaque entrée coûte une vérification argon2id, volontairement lente, au moment du changement.",
+    "setlabel_security_password_expiry_days": "Expiration du mot de passe (jours)",
+    "setdesc_security_password_expiry_days": "Au-delà de cet âge, la prochaine connexion réussie impose le changement du mot de passe avant toute autre action. 0 désactive l'expiration. Les comptes existants comptent leur âge depuis leur création : activer l'expiration renouvellera donc immédiatement les mots de passe les plus anciens.",
+    "setlabel_security_password_enforce_at_login": "Appliquer la politique à la prochaine connexion",
+    "setdesc_security_password_enforce_at_login": "Le mot de passe présenté à la connexion est confronté à la politique en vigueur ; s'il ne la satisfait plus, la session s'ouvre mais impose d'abord un changement. Désactivé, un durcissement de la politique ne s'applique qu'aux mots de passe choisis après lui.",
+    "setlabel_auth_self_service_recovery": "Réinitialisation autonome du mot de passe",
+    "setdesc_auth_self_service_recovery": "Le formulaire « mot de passe oublié » envoie un lien de réinitialisation. Désactivé pour une portée, la demande reste acceptée à l'identique — aucune réponse ne révèle l'existence d'un compte — mais aucun lien n'est émis : seul un administrateur peut alors réinitialiser le mot de passe.",
+    "setdesc_security_captcha_type": "Le genre de défi présenté quand un CAPTCHA est exigé : « Texte déformé » (recopier des caractères), « Puzzle coulissant » (faire glisser une pièce jusqu'à sa place dans l'image) ou « Calcul » (résoudre une petite opération). Tous sont générés et vérifiés par le serveur, sans service tiers.",
+    "setdesc_security_captcha_length": "Nombre de caractères à recopier, pour le type « Texte déformé ». Accepté entre 4 et 8 : plus long = plus dur à deviner et à lire.",
+    "setdesc_security_captcha_distortion": "Intensité de la rotation et de l'ondulation des caractères, de 0 (droits, faciles à lire) à 100 (fortement déformés, plus résistants aux robots mais plus pénibles à lire). N'affecte que le type « Texte déformé ». 40 par défaut.",
+    "setdesc_security_captcha_noise": "Densité des points parasites et des lignes qui traversent l'image, de 0 (fond propre) à 100 (très bruité). N'affecte que le type « Texte déformé ». 40 par défaut.",
+    "setdesc_security_captcha_slider_tolerance": "Écart maximal, en pixels, entre la position où l'utilisateur relâche la pièce et son emplacement exact, pour le type « Puzzle coulissant ». Plus la valeur est basse, plus il faut être précis. Accepté entre 2 et 20 ; 6 par défaut.",
+    "setdesc_security_captcha_math_max": "Plus grand nombre utilisé dans l'opération, pour le type « Calcul » (une addition de deux nombres tirés entre 1 et cette valeur). Accepté entre 5 et 50 ; 10 par défaut.",
+    "subtab_overview": "Vue d’ensemble",
+    "subtab_settings": "Réglages",
+    "subtab_themes": "Thèmes",
+    "subtab_login": "Animation de connexion"
   },
   "account": {
     "add_title": "Ajouter un compte Kubuno",
@@ -4753,6 +4780,7 @@
     "secret_placeholder": "secret (vide si client public)",
     "color_label": "Couleur du bouton (hex, optionnel)",
     "claim_mapping": "Mappage des revendications",
-    "other": "Autre (OIDC)"
+    "other": "Autre (OIDC)",
+    "title": "Fournisseurs SSO (OIDC)"
   }
 }

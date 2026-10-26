@@ -49,7 +49,7 @@ export function Part1({ t }: { t: NonNullable<AuthMethodsPanel['tr']> }) {
                     className="mt-2 max-w-full overflow-x-auto rounded-md border border-border bg-surface-1 px-2.5 py-2 font-mono text-text-primary"
                     style={{ fontSize: 'var(--kb-text-meta)' }}
                   >
-                    sudo kubuno auth:recover admin@exemple.com --local-access --set-password
+                    sudo kubuno auth:recover admin@example.com --local-access --set-password
                   </pre>
                   <p className="mt-2 flex items-start gap-2">
                     <Terminal size={15} className="mt-0.5 shrink-0" />

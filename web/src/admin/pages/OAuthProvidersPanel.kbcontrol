@@ -5,7 +5,7 @@
       <Panel>
         <Panel HtmlTag="H2" Class="text-lg font-medium flex items-center gap-2">
           <Icon Name="ShieldCheck" Class="text-primary"/>
-          <Label HtmlTag="Span" InheritFontSize="true" Overflow="Wrap" Text=" Fournisseurs SSO (OIDC)"/>
+          <Label HtmlTag="Span" InheritFontSize="true" Overflow="Wrap" Text="{Res oauth_admin.title}"/>
         </Panel>
         <Panel HtmlTag="P" ForeColor="TextSecondary" Class="text-sm mt-0.5">
           <Label HtmlTag="Span"

@@ -139,7 +139,7 @@ function TabbedSubsystem({
 
 /** The "Réglages" tab: this subsystem's scoped settings, full width. */
 const settingsPanel = (tab: string): TabbedPanel => ({
-  id: 'settings', labelKey: 'admin.subtab_settings', labelDefault: 'Réglages',
+  id: 'settings', labelKey: 'admin.subtab_settings', labelDefault: 'Settings',
   Panel: () => <SettingsGroupPanel tab={tab} layout="tab" />,
 })
 
@@ -179,7 +179,7 @@ function withSettings(
 ): ComponentType<AdminSectionProps> {
   return tabbed(
     tab,
-    [{ id: 'overview', labelKey: 'admin.subtab_overview', labelDefault: 'Vue d’ensemble', Panel: Section }],
+    [{ id: 'overview', labelKey: 'admin.subtab_overview', labelDefault: 'Overview', Panel: Section }],
     { isDetail, settings: true },
   )
 }
@@ -264,8 +264,8 @@ export const ADMIN_SECTIONS: Record<string, AdminSection> = {
   // Three tabs: the theme gallery, the login-page animation (a live editor that
   // deserves its own room), and the scoped settings.
   'apparence':     { Component: tabbed('apparence', [
-    { id: 'themes', labelKey: 'admin.subtab_themes', labelDefault: 'Thèmes', Panel: () => <ThemesPanel /> },
-    { id: 'login',  labelKey: 'admin.subtab_login',  labelDefault: 'Animation de connexion',
+    { id: 'themes', labelKey: 'admin.subtab_themes', labelDefault: 'Themes', Panel: () => <ThemesPanel /> },
+    { id: 'login',  labelKey: 'admin.subtab_login',  labelDefault: 'Login animation',
       Panel: () => <LoginAnimationPanel /> },
   ], { settings: true }) },
   'email':         { Component: MailSettingsPanel },

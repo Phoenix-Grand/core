@@ -3914,7 +3914,34 @@
     "login_animation_tilt": "Vertical spread",
     "login_animation_speed": "Speed",
     "login_animation_shift": "Vertical position",
-    "login_animation_title": "Sign-in page animation"
+    "login_animation_title": "Sign-in page animation",
+    "setdesc_security_admin_2fa_required": "Administrator accounts without a second factor lose access to administration when the grace period expires. Enable this only after checking that your administrators have backup codes.",
+    "setdesc_security_admin_2fa_grace_days": "Number of days an administrator without a second factor has to set one up.",
+    "setdesc_security_backup_codes_low_threshold": "Shows a warning when fewer than this many backup codes remain.",
+    "setlabel_security_password_min_length": "Minimum password length",
+    "setdesc_security_password_min_length": "Minimum number of characters required when choosing or changing a local password. Accepts 8 to 128; values below 8 are rejected when saved rather than silently corrected. Does not apply to accounts managed by a directory or identity provider: their passwords are not stored here.",
+    "setlabel_security_password_strong": "Require a strong password",
+    "setdesc_security_password_strong": "The password must combine at least three of the four character types (lowercase letters, uppercase letters, numbers, symbols) and must not be a simple repetition or sequence. When enabled, a password that fails the rule is rejected with the exact reason, rather than accepted and flagged later.",
+    "setlabel_security_password_reuse_allowed": "Allow reuse of a previous password",
+    "setdesc_security_password_reuse_allowed": "When disabled, a password previously used by the account is rejected. Only stored hashes are compared, never plain-text passwords. When enabled, history is no longer checked but is still recorded, so the rule takes effect again as soon as it is re-enabled.",
+    "setlabel_security_password_history_depth": "Password history depth",
+    "setdesc_security_password_history_depth": "Number of previous passwords compared with the new one when reuse is prohibited. Accepts 1 to 24: each entry requires a deliberately slow Argon2id verification during a password change.",
+    "setlabel_security_password_expiry_days": "Password expiry (days)",
+    "setdesc_security_password_expiry_days": "After this many days, the next successful sign-in requires a password change before any other action. 0 disables expiry. Existing accounts count password age from their creation date, so enabling expiry immediately requires the oldest passwords to be changed.",
+    "setlabel_security_password_enforce_at_login": "Enforce the policy at the next sign-in",
+    "setdesc_security_password_enforce_at_login": "The password entered at sign-in is checked against the current policy. If it no longer meets the policy, the session opens but requires a password change first. When disabled, stricter rules apply only to passwords chosen after the policy changes.",
+    "setlabel_auth_self_service_recovery": "Self-service password reset",
+    "setdesc_auth_self_service_recovery": "The forgotten-password form sends a reset link. When disabled for a scope, the request is still accepted with the same response, revealing nothing about whether an account exists, but no link is sent: only an administrator can reset the password.",
+    "setdesc_security_captcha_type": "The challenge shown when a CAPTCHA is required: Distorted text (copy characters), Sliding puzzle (drag a piece into place in the image), or Arithmetic (solve a short calculation). All challenges are generated and verified by the server, with no third-party service.",
+    "setdesc_security_captcha_length": "Number of characters to copy for Distorted text. Accepts 4 to 8: longer codes are harder to guess and read.",
+    "setdesc_security_captcha_distortion": "Character rotation and warping, from 0 (straight and easy to read) to 100 (heavily distorted, harder for bots and people to read). Only affects Distorted text. Default: 40.",
+    "setdesc_security_captcha_noise": "Density of stray dots and lines across the image, from 0 (clean background) to 100 (very noisy). Only affects Distorted text. Default: 40.",
+    "setdesc_security_captcha_slider_tolerance": "Maximum distance, in pixels, between where the user releases the piece and its exact position in Sliding puzzle. Lower values require greater precision. Accepts 2 to 20; default: 6.",
+    "setdesc_security_captcha_math_max": "Largest number used in Arithmetic: two numbers drawn between 1 and this value are added together. Accepts 5 to 50; default: 10.",
+    "subtab_overview": "Overview",
+    "subtab_settings": "Settings",
+    "subtab_themes": "Themes",
+    "subtab_login": "Login animation"
   },
   "account": {
     "add_title": "Add a Kubuno account",
@@ -4644,6 +4671,7 @@
     "secret_placeholder": "secret (leave blank for a public client)",
     "color_label": "Button color (hex, optional)",
     "claim_mapping": "Claim mapping",
-    "other": "Other (OIDC)"
+    "other": "Other (OIDC)",
+    "title": "SSO providers (OIDC)"
   }
 }
