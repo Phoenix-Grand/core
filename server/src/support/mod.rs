@@ -196,27 +196,26 @@ pub fn read_key(raw: &str, instance_id: &str) -> Result<SupportKey, AppError> {
     let token = raw.trim();
     if token.is_empty() {
         return Err(AppError::Validation(
-            "Collez la clé de support fournie par l'éditeur.".into(),
+            "Paste the support key supplied by the publisher.".into(),
         ));
     }
     // A generous ceiling, well above any plausible key: it bounds the work done
     // on unauthenticated-looking input before anything is parsed.
     if token.len() > 8192 {
         return Err(AppError::Validation(
-            "Cette clé de support est trop longue pour en être une.".into(),
+            "This support key is too long.".into(),
         ));
     }
 
     let header = decode_header(token).map_err(|_| {
         AppError::Validation(
-            "Cette clé de support est illisible. Vérifiez qu'elle a été collée en entier, \
-             sans espace ni retour à la ligne."
+            "This support key is unreadable. Check that it was pasted in full without spaces or line breaks."
                 .into(),
         )
     })?;
     if header.alg != Algorithm::EdDSA {
         return Err(AppError::Validation(
-            "Cette clé n'est pas signée avec l'algorithme attendu (Ed25519).".into(),
+            "This key was not signed using the expected algorithm (Ed25519).".into(),
         ));
     }
 
@@ -249,8 +248,7 @@ fn verify(token: &str, signing: &SigningKey) -> Result<SupportKey, AppError> {
         // hunting for a problem they do not have.
         tracing::error!(error = %e, key_id = %signing.id, "support: clé publique de confiance illisible");
         AppError::Validation(
-            "Vérification impossible : la clé publique embarquée est inutilisable. \
-             Signalez-le à l'éditeur."
+            "Cannot verify: the embedded public key is unusable. Report this to the publisher."
                 .into(),
         )
     })?;
@@ -272,7 +270,7 @@ fn verify(token: &str, signing: &SigningKey) -> Result<SupportKey, AppError> {
         // detail.
         tracing::warn!(error = %e, key_id = %signing.id, "support: clé refusée");
         AppError::Validation(
-            "Cette clé de support n'est pas valide : signature incorrecte ou contrat expiré."
+            "This support key is invalid: the signature is incorrect or the contract has expired."
                 .into(),
         )
     })?;
@@ -293,7 +291,7 @@ fn verify(token: &str, signing: &SigningKey) -> Result<SupportKey, AppError> {
 fn read_claims_unverified(token: &str) -> Result<SupportClaims, AppError> {
     let unreadable = || {
         AppError::Validation(
-            "Cette clé de support est illisible : son contenu n'a pas pu être décodé.".into(),
+            "This support key is unreadable: its content could not be decoded.".into(),
         )
     };
 
@@ -306,8 +304,7 @@ fn read_claims_unverified(token: &str) -> Result<SupportClaims, AppError> {
     let decoded = B64URL.decode(payload).map_err(|_| unreadable())?;
     serde_json::from_slice::<SupportClaims>(&decoded).map_err(|_| {
         AppError::Validation(
-            "Cette clé de support ne décrit pas un contrat : il lui manque le titulaire \
-             (« sub ») ou l'échéance (« exp »)."
+            "This support key does not describe a contract: the holder ('sub') or expiry ('exp') is missing."
                 .into(),
         )
     })
@@ -322,19 +319,19 @@ fn validate_claims(claims: &SupportClaims, instance_id: &str) -> Result<(), AppE
     let subject = claims.sub.trim();
     if subject.is_empty() || subject.chars().count() > 255 {
         return Err(AppError::Validation(
-            "Le titulaire du contrat (« sub ») est vide ou trop long.".into(),
+            "The contract holder ('sub') is empty or too long.".into(),
         ));
     }
 
     let expires_at = Utc.timestamp_opt(claims.exp, 0).single().ok_or_else(|| {
-        AppError::Validation("L'échéance de ce contrat (« exp ») n'est pas une date.".into())
+        AppError::Validation("The contract expiry ('exp') is not a date.".into())
     })?;
     // Checked here as well as by `jsonwebtoken`, because the declarative path
     // never goes through it. Registering a contract that is already over would
     // put a permanently red panel on the page and help nobody.
     if expires_at <= Utc::now() {
         return Err(AppError::Validation(format!(
-            "Ce contrat de support a pris fin le {}.",
+            "This support contract ended on {}.",
             expires_at.format("%d/%m/%Y")
         )));
     }
@@ -342,14 +339,14 @@ fn validate_claims(claims: &SupportClaims, instance_id: &str) -> Result<(), AppE
     if let Some(plan) = claims.plan.as_deref() {
         if plan.chars().count() > 120 {
             return Err(AppError::Validation(
-                "Le nom de l'offre (« plan ») est trop long.".into(),
+                "The plan name ('plan') is too long.".into(),
             ));
         }
     }
     if let Some(perimeter) = claims.perimeter.as_deref() {
         if perimeter.chars().count() > 2000 {
             return Err(AppError::Validation(
-                "Le périmètre du contrat est trop long.".into(),
+                "The contract scope is too long.".into(),
             ));
         }
     }
@@ -363,7 +360,7 @@ fn validate_claims(claims: &SupportClaims, instance_id: &str) -> Result<(), AppE
     if let Some(bound) = claims.instance.as_deref() {
         if !bound.trim().is_empty() && !bound.trim().eq_ignore_ascii_case(instance_id) {
             return Err(AppError::Validation(
-                "Cette clé a été émise pour une autre instance.".into(),
+                "This key was issued for another instance.".into(),
             ));
         }
     }
@@ -378,12 +375,12 @@ fn validate_contact(contact: &str) -> Result<(), AppError> {
     let value = contact.trim();
     if value.is_empty() || value.chars().count() > 320 {
         return Err(AppError::Validation(
-            "Le contact du support est vide ou trop long.".into(),
+            "The support contact is empty or too long.".into(),
         ));
     }
     if value.contains(char::is_whitespace) {
         return Err(AppError::Validation(
-            "Le contact du support ne peut pas contenir d'espace.".into(),
+            "The support contact cannot contain spaces.".into(),
         ));
     }
 
@@ -405,7 +402,7 @@ fn validate_contact(contact: &str) -> Result<(), AppError> {
         Ok(())
     } else {
         Err(AppError::Validation(
-            "Le contact du support doit être une adresse e-mail ou une URL https://.".into(),
+            "The support contact must be an email address or an https:// URL.".into(),
         ))
     }
 }

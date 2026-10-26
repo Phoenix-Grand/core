@@ -12,6 +12,6 @@
     <Panel BackColor="#6e59f0" CornerRadius="24" Width="104" Height="104"/>
     <Label Text="Kubuno" Role="Display" FontWeight="SemiBold" ForeColor="#1a162e"/>
     <Label Text="kbview · Rust · vello" Role="Body" ForeColor="#6e59f0"/>
-    <Button Text="Ouvrir Drive" Variant="Primary" Size="Lg"/>
+    <Button Text="Open Drive" Variant="Primary" Size="Lg"/>
   </Stack>
 </Panel>

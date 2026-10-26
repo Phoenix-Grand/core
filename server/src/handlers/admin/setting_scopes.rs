@@ -94,7 +94,7 @@ fn authorize(ctx: &AdminCtx, scope: &SettingScope, privilege: &str) -> Result<()
         // like every other operation on that account.
         ScopeKind::User => Ok(()),
         ScopeKind::Default => Err(AppError::Validation(
-            "La valeur d'usine n'est pas modifiable".into(),
+            "The factory default cannot be changed".into(),
         )),
     }
 }
@@ -366,7 +366,7 @@ pub async fn set_scoped_value(
     state.events.publish(change_event(&key, &scope, &out, true));
     apply_side_effects(&state, &key, &scope).await;
 
-    Ok(Json(json!({ "message": "Réglage enregistré" })))
+    Ok(Json(json!({ "message": "Setting saved" })))
 }
 
 /// DELETE /api/v1/admin/settings/scoped/:key - revert to the inherited value.
@@ -412,7 +412,7 @@ pub async fn clear_scoped_value(
     apply_side_effects(&state, &key, &scope).await;
 
     Ok(Json(json!({
-        "message": "Valeur héritée rétablie",
+        "message": "Inherited value restored",
         "value":   out.effective,
     })))
 }
@@ -442,7 +442,7 @@ pub async fn set_scoped_lock(
     state.events.publish(change_event(&key, &scope, &out, true));
 
     Ok(Json(json!({
-        "message": if dto.locked { "Réglage verrouillé" } else { "Verrou retiré" },
+        "message": if dto.locked { "Setting locked" } else { "Lock removed" },
     })))
 }
 
@@ -452,7 +452,7 @@ pub async fn set_scoped_lock(
 fn guard_owned_elsewhere(key: &str) -> Result<(), AppError> {
     if crate::handlers::admin::mail::owns_setting(key) {
         return Err(AppError::Validation(format!(
-            "'{key}' se règle depuis Administration → Courriel (PATCH /admin/mail/settings)"
+            "'{key}' is configured in Administration → Email (PATCH /admin/mail/settings)"
         )));
     }
     // The restore drill is a *statement*, not a preference: it is written by the
@@ -461,8 +461,7 @@ fn guard_owned_elsewhere(key: &str) -> Result<(), AppError> {
     // somebody vouched for it.
     if key == crate::backup::policy::KEY_LAST_RESTORE_TEST {
         return Err(AppError::Validation(format!(
-            "'{key}' s'enregistre depuis Administration → Tâches de fond \
-             (POST /admin/backup/restore-test)"
+            "'{key}' is saved in Administration → Background jobs (POST /admin/backup/restore-test)"
         )));
     }
     Ok(())
@@ -490,11 +489,11 @@ pub(crate) fn validate_password_policy_value(key: &str, value: &Value) -> Result
         return Ok(());
     }
     let n = value.as_i64().ok_or_else(|| {
-        AppError::Validation(format!("'{key}' attend une valeur de type entier"))
+        AppError::Validation(format!("'{key}' expects an integer value"))
     })?;
     if !(min..=max).contains(&n) {
         return Err(AppError::Validation(format!(
-            "'{key}' doit être compris entre {min} et {max}"
+            "'{key}' must be between {min} and {max}"
         )));
     }
     Ok(())

@@ -45,16 +45,16 @@ pub mod events {
 /// one payload shape for all of them.
 fn audit_fields() -> Vec<FieldDef> {
     vec![
-        field("user_id", "uuid", "Compte concerné", STRING_OPS),
-        field("actor_user_id", "uuid", "Compte à l'origine de l'appel", STRING_OPS),
-        field("actor_label", "string", "Nom de l'auteur", STRING_OPS),
-        field("actor_origin", "string", "Origine (session, jeton d'API…)", STRING_OPS),
-        field("outcome", "string", "Issue (success, denied, error)", STRING_OPS),
-        field("reason", "string", "Motif consigné", STRING_OPS),
-        field("ip", "string", "Adresse d'origine", STRING_OPS),
-        field("target_type", "string", "Type de cible", STRING_OPS),
-        field("target_label", "string", "Libellé de la cible", STRING_OPS),
-        field("action", "string", "Action auditée", STRING_OPS),
+        field("user_id", "uuid", "Affected account", STRING_OPS),
+        field("actor_user_id", "uuid", "Account making the request", STRING_OPS),
+        field("actor_label", "string", "Actor name", STRING_OPS),
+        field("actor_origin", "string", "Origin (session, API token…)", STRING_OPS),
+        field("outcome", "string", "Outcome (success, denied, error)", STRING_OPS),
+        field("reason", "string", "Recorded reason", STRING_OPS),
+        field("ip", "string", "Source address", STRING_OPS),
+        field("target_type", "string", "Target type", STRING_OPS),
+        field("target_label", "string", "Target label", STRING_OPS),
+        field("action", "string", "Audited action", STRING_OPS),
     ]
 }
 
@@ -95,12 +95,12 @@ fn field(name: &str, value_type: &str, label: &str, ops: &[Operator]) -> FieldDe
 /// fact regardless of the event.
 fn ambient_fields() -> Vec<FieldDef> {
     vec![
-        field("event_type", "string", "Type d'événement", STRING_OPS),
-        field("source_module", "string", "Module émetteur", STRING_OPS),
+        field("event_type", "string", "Event type", STRING_OPS),
+        field("source_module", "string", "Source module", STRING_OPS),
         field(
             "depth",
             "number",
-            "Profondeur de rétroaction (0 = action humaine)",
+            "Feedback depth (0 = human action)",
             NUMBER_OPS,
         ),
     ]
@@ -136,70 +136,70 @@ pub fn triggers() -> Vec<TriggerDef> {
         trigger(
             "account_created",
             "UserCreated",
-            "Compte créé",
-            "Un compte utilisateur vient d'être créé, par inscription ou par un administrateur.",
+            "Account created",
+            "A user account was created through registration or by an administrator.",
             vec![
-                field("user_id", "uuid", "Identifiant du compte", STRING_OPS),
-                field("email", "string", "Adresse du compte", STRING_OPS),
+                field("user_id", "uuid", "Account ID", STRING_OPS),
+                field("email", "string", "Account address", STRING_OPS),
             ],
         ),
         trigger(
             "account_updated",
             "UserUpdated",
-            "Compte modifié",
-            "Un compte a été modifié. `fields` liste les champs touchés.",
-            vec![field("user_id", "uuid", "Identifiant du compte", STRING_OPS)],
+            "Account updated",
+            "An account was updated. `fields` lists the changed fields.",
+            vec![field("user_id", "uuid", "Account ID", STRING_OPS)],
         ),
         trigger(
             "login_failed",
             events::LOGIN_FAILED,
-            "Échec de connexion",
-            "Une tentative de connexion a échoué sur un compte d'administration. Combiné à un seuil « N fois en T », c'est le déclencheur d'une réaction au bourrage d'identifiants.",
+            "Sign-in failed",
+            "An administrator sign-in attempt failed. Combine this with an 'N times in T' threshold to respond to credential stuffing.",
             audit_fields(),
         ),
         trigger(
             "admin_call_denied",
             events::ADMIN_DENIED,
-            "Appel d'administration refusé",
-            "Une requête d'administration a été refusée faute de privilège. Une rafale sur un même compte mérite d'être regardée.",
+            "Administrative request denied",
+            "An administrative request was denied for lack of privileges. A burst from the same account deserves attention.",
             audit_fields(),
         ),
         trigger(
             "setting_changed",
             "SettingChanged",
-            "Réglage modifié",
-            "Un réglage a changé à une portée quelconque. La valeur n'est jamais transmise : l'événement traverse tous les modules et certains réglages portent des identifiants.",
+            "Setting changed",
+            "A setting changed at a scope. Its value is never sent: the event reaches every module, and some settings contain credentials.",
             vec![
-                field("key", "string", "Clé du réglage", STRING_OPS),
-                field("scope_type", "string", "Portée", STRING_OPS),
-                field("module_id", "string", "Module propriétaire", STRING_OPS),
-                field("locked", "bool", "Verrouillé", BOOL_OPS),
-                field("value_set", "bool", "Valeur posée (faux = retour à l'héritage)", BOOL_OPS),
+                field("key", "string", "Setting key", STRING_OPS),
+                field("scope_type", "string", "Scope", STRING_OPS),
+                field("module_id", "string", "Owning module", STRING_OPS),
+                field("locked", "bool", "Locked", BOOL_OPS),
+                field("value_set", "bool", "Value set (false = return to inheritance)", BOOL_OPS),
             ],
         ),
         trigger(
             "privilege_granted",
             events::PRIVILEGE_GRANTED,
-            "Privilège accordé",
-            "Un rôle d'administration a été affecté à un compte ou à un groupe.",
+            "Privilege granted",
+            "An administrative role was assigned to an account or group.",
             vec![
-                field("user_id", "uuid", "Compte bénéficiaire", STRING_OPS),
-                field("group_id", "uuid", "Groupe bénéficiaire", STRING_OPS),
-                field("role_slug", "string", "Rôle affecté", STRING_OPS),
-                field("role_name", "string", "Nom du rôle", STRING_OPS),
-                field("scope", "string", "Portée de l'affectation", STRING_OPS),
-                field("granted_by", "uuid", "Compte ayant accordé", STRING_OPS),
+                field("user_id", "uuid", "Recipient account", STRING_OPS),
+                field("group_id", "uuid", "Recipient group", STRING_OPS),
+                field("role_slug", "string", "Assigned role", STRING_OPS),
+                field("role_name", "string", "Role name", STRING_OPS),
+                field("scope", "string", "Assignment scope", STRING_OPS),
+                field("granted_by", "uuid", "Granting account", STRING_OPS),
             ],
         ),
         trigger(
             "notification_sent",
             events::NOTIFICATION_SENT,
-            "Notification envoyée par une règle",
-            "Une règle a notifié un compte. Réagir à cet événement crée une chaîne : le champ « depth » dit à quelle profondeur de rétroaction on se trouve, et le moteur coupe au-delà du plafond configuré.",
+            "Notification sent by a rule",
+            "A rule notified an account. Reacting to this event creates a chain: 'depth' indicates the feedback depth, and the engine stops beyond the configured limit.",
             vec![
-                field("user_id", "uuid", "Compte notifié", STRING_OPS),
-                field("title", "string", "Titre de la notification", STRING_OPS),
-                field("rule_id", "uuid", "Règle à l'origine", STRING_OPS),
+                field("user_id", "uuid", "Notified account", STRING_OPS),
+                field("title", "string", "Notification title", STRING_OPS),
+                field("rule_id", "uuid", "Originating rule", STRING_OPS),
             ],
         ),
         // ── The gate's own trigger ───────────────────────────────────────────
@@ -217,29 +217,29 @@ pub fn triggers() -> Vec<TriggerDef> {
         TriggerDef {
             key: "content_gate".into(),
             event_type: "core.rules.gate".into(),
-            label: "Contenu soumis avant validation (portail)".into(),
+            label: "Content submitted before committing (gate)".into(),
             description: Some(
-                "Un module demande, AVANT de valider une opération, si elle est autorisée. Une règle attachée à ce déclencheur peut autoriser, avertir ou bloquer. Les parties de contenu sont inspectées puis oubliées : elles ne sont jamais journalisées ni stockées.".into(),
+                "Before committing an operation, a module asks whether it is allowed. A rule attached to this trigger can allow, warn, or block it. Content parts are inspected and then discarded; they are never logged or stored.".into(),
             ),
             fields: {
                 let mut fields = vec![
-                    field("operation", "string", "Opération demandée (envoi, partage, export…)", STRING_OPS),
-                    field("module", "string", "Module demandeur", STRING_OPS),
-                    field("actor_user_id", "uuid", "Compte à l'origine de l'opération", STRING_OPS),
-                    field("destination", "string", "Destination (interne, externe, publique…)", STRING_OPS),
-                    field("recipient_domain", "string", "Domaine du destinataire", STRING_OPS),
-                    field("recipient_count", "number", "Nombre de destinataires", NUMBER_OPS),
-                    field("mime_type", "string", "Type de contenu", STRING_OPS),
-                    field("size", "number", "Taille en octets", NUMBER_OPS),
+                    field("operation", "string", "Requested operation (send, share, export…)", STRING_OPS),
+                    field("module", "string", "Requesting module", STRING_OPS),
+                    field("actor_user_id", "uuid", "Account initiating the operation", STRING_OPS),
+                    field("destination", "string", "Destination (internal, external, public…)", STRING_OPS),
+                    field("recipient_domain", "string", "Recipient domain", STRING_OPS),
+                    field("recipient_count", "number", "Recipient count", NUMBER_OPS),
+                    field("mime_type", "string", "Content type", STRING_OPS),
+                    field("size", "number", "Size in bytes", NUMBER_OPS),
                     // Content parts. They declare NO operator, which is what
                     // makes a comparison against them refused at write time -
                     // and content never enters the facts, so there would be
                     // nothing to compare even if one slipped through. The only
                     // thing a rule may say about them is a detector leaf.
-                    content_part("title", "Titre ou objet"),
-                    content_part("body", "Corps du contenu"),
-                    content_part("attachment_text", "Texte extrait des pièces jointes"),
-                    content_part("filename", "Nom de fichier"),
+                    content_part("title", "Title or subject"),
+                    content_part("body", "Content body"),
+                    content_part("attachment_text", "Text extracted from attachments"),
+                    content_part("filename", "File name"),
                 ];
                 fields.extend(ambient_fields());
                 fields
@@ -248,11 +248,11 @@ pub fn triggers() -> Vec<TriggerDef> {
         trigger(
             "module_health_changed",
             "ModuleHealthChanged",
-            "Santé d'un module modifiée",
-            "Un module est passé d'un état de santé à un autre.",
+            "Module health changed",
+            "A module changed from one health state to another.",
             vec![
-                field("module_id", "string", "Module concerné", STRING_OPS),
-                field("status", "string", "Nouvel état", STRING_OPS),
+                field("module_id", "string", "Affected module", STRING_OPS),
+                field("status", "string", "New state", STRING_OPS),
             ],
         ),
     ]
@@ -268,15 +268,15 @@ pub fn actions() -> Vec<ActionDef> {
     vec![
         ActionDef {
             key: "suspend_account".into(),
-            label: "Suspendre le compte".into(),
+            label: "Suspend account".into(),
             description: Some(
-                "Désactive le compte visé par l'événement. Il ne peut plus se connecter ; ses données sont intactes.".into(),
+                "Disables the account targeted by the event. It can no longer sign in; its data remains intact.".into(),
             ),
             endpoint: None,
             params: vec![ParamDef {
                 name: "reason".into(),
                 value_type: "string".into(),
-                label: "Motif consigné dans le journal d'audit".into(),
+                label: "Reason recorded in the audit log".into(),
                 required: false,
                 values: None,
             }],
@@ -285,9 +285,9 @@ pub fn actions() -> Vec<ActionDef> {
         },
         ActionDef {
             key: "revoke_sessions".into(),
-            label: "Révoquer les sessions".into(),
+            label: "Revoke sessions".into(),
             description: Some(
-                "Invalide toutes les sessions actives du compte visé. Irréversible : les appareils devront se reconnecter.".into(),
+                "Invalidates all active sessions of the targeted account. This cannot be undone; devices must sign in again.".into(),
             ),
             endpoint: None,
             params: vec![],
@@ -296,9 +296,9 @@ pub fn actions() -> Vec<ActionDef> {
         },
         ActionDef {
             key: "require_password_change".into(),
-            label: "Exiger un changement de mot de passe".into(),
+            label: "Require password change".into(),
             description: Some(
-                "Le compte devra choisir un nouveau mot de passe à sa prochaine connexion.".into(),
+                "The account must choose a new password at its next sign-in.".into(),
             ),
             endpoint: None,
             params: vec![],
@@ -307,16 +307,16 @@ pub fn actions() -> Vec<ActionDef> {
         },
         ActionDef {
             key: "notify".into(),
-            label: "Notifier le compte".into(),
+            label: "Notify account".into(),
             description: Some(
-                "Envoie une notification au compte visé, distribuée par le hub WebSocket.".into(),
+                "Sends a notification to the targeted account through the WebSocket hub.".into(),
             ),
             endpoint: None,
             params: vec![
                 ParamDef {
                     name: "title".into(),
                     value_type: "string".into(),
-                    label: "Titre".into(),
+                    label: "Title".into(),
                     required: true,
                     values: None,
                 },
@@ -333,30 +333,30 @@ pub fn actions() -> Vec<ActionDef> {
         },
         ActionDef {
             key: "raise_alert".into(),
-            label: "Lever une alerte".into(),
+            label: "Raise an alert".into(),
             description: Some(
-                "Ouvre une alerte dans le centre d'alertes. En mode simulation, l'alerte est isolée : jamais comptée, jamais notifiée.".into(),
+                "Opens an alert in the alert center. In simulation mode, the alert is isolated: never counted or notified.".into(),
             ),
             endpoint: None,
             params: vec![
                 ParamDef {
                     name: "title".into(),
                     value_type: "string".into(),
-                    label: "Titre de l'alerte".into(),
+                    label: "Alert title".into(),
                     required: true,
                     values: None,
                 },
                 ParamDef {
                     name: "summary".into(),
                     value_type: "string".into(),
-                    label: "Résumé".into(),
+                    label: "Summary".into(),
                     required: false,
                     values: None,
                 },
                 ParamDef {
                     name: "severity".into(),
                     value_type: "enum".into(),
-                    label: "Gravité (par défaut : celle de la règle)".into(),
+                    label: "Severity (defaults to the rule's severity)".into(),
                     required: false,
                     values: Some(vec![
                         serde_json::json!("critical"),
@@ -381,9 +381,9 @@ pub fn actions() -> Vec<ActionDef> {
         // that a user with a text box cannot map the policy by bisection.
         ActionDef {
             key: "block_operation".into(),
-            label: "Bloquer l'opération".into(),
+            label: "Block the operation".into(),
             description: Some(
-                "Refuse l'opération auprès du module demandeur. N'a d'effet que sur un déclencheur de portail (contenu soumis avant validation) et en mode « actif avec actions » : en simulation et en observation, la règle journalise ce qu'elle aurait bloqué et laisse passer.".into(),
+                "Refuses the operation requested by the module. Only takes effect for a gate trigger (content submitted before committing) in 'active with actions' mode. In simulation and observation modes, the rule logs what it would have blocked and allows the operation.".into(),
             ),
             endpoint: None,
             params: vec![],
@@ -392,9 +392,9 @@ pub fn actions() -> Vec<ActionDef> {
         },
         ActionDef {
             key: "warn_operation".into(),
-            label: "Avertir sans bloquer".into(),
+            label: "Warn without blocking".into(),
             description: Some(
-                "L'opération est autorisée, le module demandeur reçoit un avertissement à présenter à l'utilisateur. Même condition que le blocage : un déclencheur de portail et le mode « actif avec actions ».".into(),
+                "Allows the operation and returns a warning for the requesting module to show the user. Requires a gate trigger and 'active with actions' mode, just like blocking.".into(),
             ),
             endpoint: None,
             params: vec![],

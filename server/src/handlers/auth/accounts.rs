@@ -122,7 +122,7 @@ pub async fn switch_account(
     Json(dto): Json<SwitchDto>,
 ) -> Result<Response, AppError> {
     if dto.slot >= MAX_ACCOUNT_SLOTS {
-        return Err(AppError::Validation("Emplacement de compte invalide".into()));
+        return Err(AppError::Validation("Invalid account slot".into()));
     }
     let raw = read_slot_cookie(&headers, dto.slot).ok_or(AppError::Unauthorized)?;
     let hash = token::hash_token(&raw);

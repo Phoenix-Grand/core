@@ -179,7 +179,7 @@ pub async fn get(db: &DbPool, id: Uuid) -> Result<Detector, AppError> {
             AppError::Database(e)
         })?
         .map(RawDetectorRow::into_detector)
-        .ok_or_else(|| AppError::NotFound("détecteur".into()))
+        .ok_or_else(|| AppError::NotFound("detector".into()))
 }
 
 pub async fn key_exists(db: &DbPool, key: &str, except: Option<Uuid>) -> Result<bool, AppError> {
@@ -318,7 +318,7 @@ pub async fn update(
             AppError::Database(e)
         })?;
     if affected == 0 {
-        return Err(AppError::NotFound("détecteur".into()));
+        return Err(AppError::NotFound("detector".into()));
     }
     reselect(tx, id).await
 }
@@ -335,7 +335,7 @@ async fn reselect(tx: &mut DbTx, id: Uuid) -> Result<Detector, AppError> {
             tracing::error!(error = %e, %id, "detectors: relecture");
             AppError::Database(e)
         })?
-        .ok_or_else(|| AppError::NotFound("détecteur".into()))?;
+        .ok_or_else(|| AppError::NotFound("detector".into()))?;
     detector_from_row(&row).map_err(AppError::Database)
 }
 

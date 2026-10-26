@@ -169,7 +169,7 @@ impl UsageEntry {
             None => Ok(Category::default()),
             Some(s) => Category::parse(s).ok_or_else(|| {
                 AppError::Validation(format!(
-                    "Catégorie de stockage inconnue : « {s} ». Attendu : {}",
+                    "Unknown storage category: '{s}'. Expected: {}",
                     Category::ALL
                         .iter()
                         .map(|c| c.as_str())
@@ -222,13 +222,13 @@ pub struct DeclarationOutcome {
 fn validate(entries: &[UsageEntry]) -> Result<Vec<Category>, AppError> {
     if entries.len() > MAX_ENTRIES {
         return Err(AppError::Validation(format!(
-            "Déclaration trop volumineuse : {} entrées pour un maximum de {MAX_ENTRIES}",
+            "Declaration too large: {} entries, maximum {MAX_ENTRIES}",
             entries.len()
         )));
     }
     if let Some(bad) = entries.iter().find(|e| e.used_bytes < 0) {
         return Err(AppError::Validation(format!(
-            "Consommation négative déclarée pour le compte {}",
+            "Negative usage declared for account {}",
             bad.user_id
         )));
     }
@@ -237,7 +237,7 @@ fn validate(entries: &[UsageEntry]) -> Result<Vec<Category>, AppError> {
         .find(|e| e.object_count.is_some_and(|c| c < 0))
     {
         return Err(AppError::Validation(format!(
-            "Nombre d'objets négatif déclaré pour le compte {}",
+            "Negative object count declared for account {}",
             bad.user_id
         )));
     }
@@ -276,7 +276,7 @@ pub async fn declare(
 
     if !module_exists(db, module_id).await? {
         return Err(AppError::NotFound(format!(
-            "Module « {module_id} » inconnu du core"
+            "Module '{module_id}' is unknown to the core"
         )));
     }
 

@@ -284,7 +284,7 @@ pub async fn revoke(
             AppError::Database(e)
         })?;
     if affected == 0 {
-        return Err(AppError::NotFound("Token introuvable".into()));
+        return Err(AppError::NotFound("Token not found".into()));
     }
 
     let token = state
@@ -319,7 +319,7 @@ pub async fn revoke(
         )
         .await;
 
-    Ok(Json(json!({ "message": "Token révoqué" })))
+    Ok(Json(json!({ "message": "Token revoked" })))
 }
 
 /// Charge la liste des rôles autorisés depuis la setting `auth.api_token_allowed_roles`.

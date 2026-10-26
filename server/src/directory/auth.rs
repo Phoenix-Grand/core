@@ -42,7 +42,7 @@
 //!
 //! Nothing that distinguishes the cases. Whether the address is unknown, the
 //! password is wrong, the directory refused the bind or the directory is down,
-//! the sign-in route answers the same "Identifiants invalides" it has always
+//! the sign-in route answers the same "Invalid credentials" it has always
 //! answered. The diagnosis lives in the log and in the administration console's
 //! test button, both of which require an operator.
 
@@ -177,7 +177,7 @@ pub async fn search_then_bind(
 ) -> Result<MappedUser, DirectoryError> {
     if !dir.is_usable() {
         return Err(DirectoryError::Misconfigured(
-            "annuaire désactivé ou incomplet".into(),
+            "Directory disabled or incompletely configured".into(),
         ));
     }
     let search_filter = filter::build_user_filter(&dir.user_filter, login)
@@ -222,7 +222,7 @@ pub async fn search_then_bind(
     let mapped = map_user(&entry, &attrs);
     if mapped.dn.is_empty() {
         conn.close().await;
-        return Err(DirectoryError::SearchFailed("entrée sans DN".into()));
+        return Err(DirectoryError::SearchFailed("Entry has no DN".into()));
     }
 
     // The bind is the authentication. It runs on the same connection, which

@@ -430,7 +430,7 @@ pub async fn export_users(
 
     if users.len() as i64 > EXPORT_MAX {
         return Err(AppError::Validation(format!(
-            "Trop de comptes pour un seul export (maximum {EXPORT_MAX}) - restreignez la recherche ou l'unité"
+            "Too many accounts for one export (maximum {EXPORT_MAX}). Narrow the search or unit"
         )));
     }
 
@@ -566,7 +566,7 @@ pub async fn create_user(
         .map_err(|e| { tracing::error!(error = %e, "create_user: unicité"); AppError::Database(e) })?;
 
     if exists {
-        return Err(AppError::Conflict("Email ou username déjà utilisé".into()));
+        return Err(AppError::Conflict("Email or username already in use".into()));
     }
 
     // No unit named means the root, resolved here rather than left to the
@@ -973,11 +973,11 @@ pub async fn bulk_set_org_unit(
     ids.dedup();
 
     if ids.is_empty() {
-        return Err(AppError::Validation("Aucun compte sélectionné".into()));
+        return Err(AppError::Validation("No accounts selected".into()));
     }
     if ids.len() > BULK_MAX {
         return Err(AppError::Validation(format!(
-            "Trop de comptes en une fois (maximum {BULK_MAX})"
+            "Too many accounts at once (maximum {BULK_MAX})"
         )));
     }
 
@@ -994,7 +994,7 @@ pub async fn bulk_set_org_unit(
         )
         .await
         .map_err(|e| { tracing::error!(error = %e, "bulk_set_org_unit: unité"); AppError::Database(e) })?
-        .ok_or_else(|| AppError::NotFound(format!("Unité {}", dto.org_unit_id)))?;
+        .ok_or_else(|| AppError::NotFound(format!("Unit {}", dto.org_unit_id)))?;
 
     // Locked one row at a time, in the sorted id order, so two concurrent bulk
     // moves take the rows in the same order and queue instead of deadlocking.
@@ -1015,7 +1015,7 @@ pub async fn bulk_set_org_unit(
 
     if previous.len() != ids.len() {
         return Err(AppError::NotFound(format!(
-            "{} compte(s) introuvable(s)",
+            "{} account(s) not found",
             ids.len() - previous.len()
         )));
     }
@@ -1092,11 +1092,11 @@ fn bulk_ids(raw: &[Uuid]) -> Result<Vec<Uuid>, AppError> {
     ids.sort_unstable();
     ids.dedup();
     if ids.is_empty() {
-        return Err(AppError::Validation("Aucun compte sélectionné".into()));
+        return Err(AppError::Validation("No accounts selected".into()));
     }
     if ids.len() > BULK_MAX {
         return Err(AppError::Validation(format!(
-            "Trop de comptes en une fois (maximum {BULK_MAX})"
+            "Too many accounts at once (maximum {BULK_MAX})"
         )));
     }
     Ok(ids)
@@ -1130,7 +1130,7 @@ async fn bulk_load_and_authorise(
 
     if users.len() != ids.len() {
         return Err(AppError::NotFound(format!(
-            "{} compte(s) introuvable(s)",
+            "{} account(s) not found",
             ids.len() - users.len()
         )));
     }
@@ -1478,7 +1478,7 @@ pub async fn delete_user(
 
     state.events.publish(crate::events::AppEvent::UserDeleted { user_id: id });
 
-    Ok(Json(json!({ "message": "Utilisateur désactivé" })))
+    Ok(Json(json!({ "message": "User disabled" })))
 }
 
 /// Body of a purge: the account's own email address, typed back.
@@ -1543,7 +1543,7 @@ pub async fn purge_user(
                     .target(target::USER, id, user_label(&victim))
                     .denied("compte encore actif"),
                 AppError::Validation(
-                    "Ce compte est encore actif : désactivez-le d'abord. La suppression définitive ne s'applique qu'à un compte déjà retiré du service.".into(),
+                    "This account is still active. Disable it first; permanent deletion only applies to an account already taken out of service.".into(),
                 ),
             )
             .await);
@@ -1560,7 +1560,7 @@ pub async fn purge_user(
                     .target(target::USER, id, user_label(&victim))
                     .denied("adresse de confirmation incorrecte"),
                 AppError::Validation(
-                    "L'adresse saisie ne correspond pas à celle du compte. Recopiez-la exactement pour confirmer la suppression définitive.".into(),
+                    "The entered address does not match the account's address. Copy it exactly to confirm permanent deletion.".into(),
                 ),
             )
             .await);
@@ -1604,7 +1604,7 @@ pub async fn purge_user(
             // finish, or to say precisely what is in the way.
             match e.as_database_error().and_then(|d| d.constraint()) {
                 Some(c) => AppError::Conflict(format!(
-                    "Des données liées empêchent l'effacement de ce compte (contrainte « {c} »). Elles doivent être traitées avant la suppression définitive."
+                    "Related data prevents this account from being erased (constraint '{c}'). Resolve it before permanently deleting the account."
                 )),
                 None => AppError::Database(e),
             }
@@ -1627,7 +1627,7 @@ pub async fn purge_user(
     // that only reacts to this one still learns of it.
     state.events.publish(crate::events::AppEvent::UserDeleted { user_id: id });
 
-    Ok(Json(json!({ "message": "Compte supprimé définitivement" })))
+    Ok(Json(json!({ "message": "Account permanently deleted" })))
 }
 
 /// One zero-filled daily series over the last `days` days, up to today in UTC.
@@ -1951,7 +1951,7 @@ pub async fn revoke_user_session(
         .map_err(|e| { tracing::error!(error = %e, "revoke_user_session: lecture"); AppError::Database(e) })?;
 
     let Some(session) = session else {
-        return Err(AppError::NotFound("Session introuvable".into()));
+        return Err(AppError::NotFound("Session not found".into()));
     };
     let device_name: Option<String> = session.try_get("device_name").map_err(AppError::Database)?;
     let device_type: Option<String> = session.try_get("device_type").map_err(AppError::Database)?;

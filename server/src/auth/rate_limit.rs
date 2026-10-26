@@ -65,7 +65,7 @@ pub async fn rate_limit_auth(req: Request<Body>, next: Next) -> Response {
 
     if exceeded {
         let mut resp = axum::response::Response::new(axum::body::Body::from(
-            json!({ "error": "RATE_LIMITED", "message": "Trop de tentatives, réessayez dans 60 secondes" }).to_string(),
+            json!({ "error": "RATE_LIMITED", "message": "Too many attempts. Try again in 60 seconds" }).to_string(),
         ));
         *resp.status_mut() = StatusCode::TOO_MANY_REQUESTS;
         resp.headers_mut().insert(

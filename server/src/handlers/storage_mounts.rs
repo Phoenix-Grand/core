@@ -24,7 +24,7 @@ use crate::{
 ///
 /// This used to collapse every variant into `Internal`, so an unreachable NAS,
 /// a renamed directory and credentials that can no longer be decrypted all came
-/// back as the same bare 500 "Erreur interne" - and the last of those is the
+/// back as the same bare 500 "Internal error" - and the last of those is the
 /// only one the user can actually do something about.
 fn remote_err(e: RemoteError) -> AppError {
     match e {
@@ -151,7 +151,7 @@ pub async fn create(
     Json(dto): Json<CreateMountDto>,
 ) -> Result<(StatusCode, Json<Value>), AppError> {
     if dto.name.trim().is_empty() {
-        return Err(AppError::Validation("Nom requis".into()));
+        return Err(AppError::Validation("Name required".into()));
     }
     let mount_name = dto.name.to_lowercase().chars()
         .map(|c| if c.is_alphanumeric() || c == '-' { c } else { '-' })
@@ -255,7 +255,7 @@ pub async fn smb_shares(
 ) -> Result<Json<Value>, AppError> {
     let host = dto.host.trim();
     if host.is_empty() {
-        return Err(AppError::Validation("Hôte requis".into()));
+        return Err(AppError::Validation("Host required".into()));
     }
 
     // The edit form never holds the password (write-only), so fall back to the
@@ -319,7 +319,7 @@ pub async fn update(
     let provider = row.0;
 
     let name = match dto.name.as_deref().map(str::trim) {
-        Some("") => return Err(AppError::Validation("Nom requis".into())),
+        Some("") => return Err(AppError::Validation("Name required".into())),
         other    => other,
     };
 

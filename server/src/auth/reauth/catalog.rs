@@ -49,19 +49,19 @@ pub const SENSITIVE_ACTIONS: &[SensitiveAction] = &[
         method: "POST",
         path: "/me/api-tokens",
         privilege: "api_tokens.create",
-        label: "Créer un jeton d'API",
+        label: "Create an API token",
     },
     SensitiveAction {
         method: "DELETE",
         path: "/me/2fa",
         privilege: "security.two_factor.disable",
-        label: "Désactiver la double authentification",
+        label: "Disable two-factor authentication",
     },
     SensitiveAction {
         method: "POST",
         path: "/me/2fa/backup-codes",
         privilege: "security.backup_codes.regenerate",
-        label: "Régénérer les codes de secours",
+        label: "Regenerate backup codes",
     },
 ];
 

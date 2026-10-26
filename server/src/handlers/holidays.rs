@@ -64,7 +64,7 @@ pub struct FeedParams {
 fn parse_date(raw: &str, field: &str) -> Result<NaiveDate, AppError> {
     raw.trim()
         .parse::<NaiveDate>()
-        .map_err(|_| AppError::Validation(format!("Paramètre « {field} » : date attendue au format AAAA-MM-JJ")))
+        .map_err(|_| AppError::Validation(format!("Parameter '{field}': expected a date in YYYY-MM-DD format")))
 }
 
 fn parse_categories(raw: Option<&str>) -> Result<Vec<Category>, AppError> {
@@ -117,22 +117,22 @@ pub async fn feed(
     let from = match params.from.as_deref() {
         Some(raw) => parse_date(raw, "from")?,
         None => NaiveDate::from_ymd_opt(today.year(), 1, 1)
-            .ok_or_else(|| AppError::Validation("Année hors de portée".into()))?,
+            .ok_or_else(|| AppError::Validation("Year out of range".into()))?,
     };
     let to = match params.to.as_deref() {
         Some(raw) => parse_date(raw, "to")?,
         None => NaiveDate::from_ymd_opt(from.year() + 1, 1, 1)
             .map(|d| d.pred_opt().unwrap_or(d))
-            .ok_or_else(|| AppError::Validation("Année hors de portée".into()))?,
+            .ok_or_else(|| AppError::Validation("Year out of range".into()))?,
     };
     if to < from {
         return Err(AppError::Validation(
-            "La date de fin précède la date de début".into(),
+            "The end date precedes the start date".into(),
         ));
     }
     if (to - from).num_days() > MAX_SPAN_DAYS {
         return Err(AppError::Validation(
-            "Plage trop large : cinq ans au maximum par requête".into(),
+            "Range too large: maximum five years per request".into(),
         ));
     }
 

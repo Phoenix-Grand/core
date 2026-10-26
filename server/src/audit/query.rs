@@ -211,7 +211,7 @@ pub async fn get(db: &DbPool, id: i64) -> Result<AuditRow, AppError> {
             tracing::error!(error = %e, entry_id = id, "audit: lecture de l'entrée");
             AppError::Database(e)
         })?
-        .ok_or_else(|| AppError::NotFound(format!("Entrée d'audit {id}")))
+        .ok_or_else(|| AppError::NotFound(format!("Audit entry {id}")))
 }
 
 /// Escapes one CSV field (RFC 4180) and neutralises spreadsheet formula

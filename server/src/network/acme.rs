@@ -208,7 +208,7 @@ pub async fn issue(state: &AppState) -> Result<StoredCert, AppError> {
         .is_err()
     {
         return Err(AppError::Conflict(
-            "Une demande de certificat est déjà en cours".into(),
+            "A certificate request is already in progress".into(),
         ));
     }
     let _guard = IssuingGuard;
@@ -236,17 +236,17 @@ async fn issue_inner(state: &AppState) -> Result<StoredCert, AppError> {
 
     if !cfg.tos_agreed {
         return Err(AppError::Validation(
-            "Acceptez les conditions d'utilisation de l'autorité ACME avant de demander un certificat".into(),
+            "Accept the ACME authority's terms of service before requesting a certificate".into(),
         ));
     }
     if cfg.email.trim().is_empty() {
         return Err(AppError::Validation(
-            "Renseignez une adresse de contact ACME".into(),
+            "Enter an ACME contact address".into(),
         ));
     }
     if cfg.domains.is_empty() {
         return Err(AppError::Validation(
-            "Renseignez au moins un domaine à certifier".into(),
+            "Enter at least one domain to certify".into(),
         ));
     }
     // Checked again at the point of use, not only where it is written: this
@@ -276,7 +276,7 @@ async fn issue_inner(state: &AppState) -> Result<StoredCert, AppError> {
                     None,
                 )
                 .await
-                .map_err(|e| acme_err("création du compte", e))?;
+                .map_err(|e| acme_err("Account creation", e))?;
             store_credentials(&state.db, &paths, &cfg.directory_url, &cfg.email, &credentials)
                 .await?;
             account
@@ -304,12 +304,12 @@ async fn issue_inner(state: &AppState) -> Result<StoredCert, AppError> {
                 other => {
                     return Err(acme_err(
                         "autorisation",
-                        format!("état inattendu : {other:?}"),
+                        format!("Unexpected state: {other:?}"),
                     ));
                 }
             }
             let mut challenge = authz.challenge(ChallengeType::Http01).ok_or_else(|| {
-                acme_err("challenge", "aucun challenge HTTP-01 proposé par l'autorité")
+                acme_err("challenge", "The authority did not offer an HTTP-01 challenge")
             })?;
             let key_auth = challenge.key_authorization().as_str().to_string();
             let token = key_auth
@@ -330,14 +330,14 @@ async fn issue_inner(state: &AppState) -> Result<StoredCert, AppError> {
             .await
             .map_err(|e| acme_err("attente de validation", e))?;
         if status != OrderStatus::Ready {
-            return Err(acme_err("commande", format!("état inattendu : {status:?}")));
+            return Err(acme_err("commande", format!("Unexpected state: {status:?}")));
         }
 
         let key_pem = order.finalize().await.map_err(|e| acme_err("finalisation", e))?;
         let cert_pem = order
             .poll_certificate(&RetryPolicy::default())
             .await
-            .map_err(|e| acme_err("récupération du certificat", e))?;
+            .map_err(|e| acme_err("Certificate retrieval", e))?;
         Ok((cert_pem, key_pem))
     }
     .await;

@@ -90,7 +90,7 @@ pub async fn install_marketplace(
     // Refuse une installation déjà en cours pour ce module.
     if let Some(p) = marketplace::get_progress(&id) {
         if !matches!(p.phase.as_str(), "done" | "error") {
-            return Err(AppError::Conflict(format!("installation de « {id} » déjà en cours")));
+            return Err(AppError::Conflict(format!("Installation of '{id}' is already in progress")));
         }
     }
     marketplace::begin(&id);

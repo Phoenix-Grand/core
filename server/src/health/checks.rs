@@ -840,7 +840,7 @@ fn instance_locale(f: &Facts) -> Check {
             None => Observed::new(
                 "locale_unknown",
                 json!({ "locale": raw }),
-                format!("'{raw}' - aucune langue livrée"),
+                format!("'{raw}' — not a supported language"),
             ),
             Some(code) if f.instance_locale_chosen => {
                 Observed::new("locale_chosen", json!({ "locale": code }), code.to_string())

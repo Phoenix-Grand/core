@@ -151,7 +151,7 @@ pub async fn probe(
     dto.source.validate()?;
     if dto.login.trim().is_empty() || dto.password.is_empty() {
         return Err(AppError::Validation(
-            "Indiquez un compte source et son mot de passe pour tester la connexion.".into(),
+            "Enter a source account and its password to test the connection.".into(),
         ));
     }
 
@@ -214,7 +214,7 @@ pub async fn create(
     let name = dto.name.trim();
     if name.is_empty() || name.len() > 200 {
         return Err(AppError::Validation(
-            "Donnez un nom à la campagne (200 caractères au maximum).".into(),
+            "Give the campaign a name (maximum 200 characters).".into(),
         ));
     }
     let service = ServiceKind::parse(&dto.service)?;
@@ -223,12 +223,12 @@ pub async fn create(
 
     if dto.accounts.is_empty() {
         return Err(AppError::Validation(
-            "Une campagne sans correspondance de comptes ne migrerait rien.".into(),
+            "A campaign with no account mappings would not migrate anything.".into(),
         ));
     }
     if dto.accounts.len() > MAX_ACCOUNTS_PER_CAMPAIGN {
         return Err(AppError::Validation(format!(
-            "Trop de comptes dans une seule campagne ({} au maximum).",
+            "Too many accounts in a single campaign (maximum {}).",
             MAX_ACCOUNTS_PER_CAMPAIGN
         )));
     }
@@ -311,7 +311,7 @@ pub async fn start(
 
     let campaign = store::get(&state.db, id).await?;
     if campaign.status == "running" {
-        return Err(AppError::Conflict("Cette campagne est déjà en cours.".into()));
+        return Err(AppError::Conflict("This campaign is already running.".into()));
     }
 
     // Checked again at every start: a module removed between two runs must stop
@@ -355,7 +355,7 @@ pub async fn pause(
     let campaign = store::get(&state.db, id).await?;
     if campaign.status != "running" {
         return Err(AppError::Conflict(
-            "Cette campagne n'est pas en cours : il n'y a rien à interrompre.".into(),
+            "This campaign is not running; there is nothing to interrupt.".into(),
         ));
     }
 
@@ -426,7 +426,7 @@ pub async fn delete(
     let campaign = store::get(&state.db, id).await?;
     if campaign.status == "running" {
         return Err(AppError::Conflict(
-            "Interrompez la campagne avant de la supprimer.".into(),
+            "Stop the campaign before deleting it.".into(),
         ));
     }
 
@@ -456,8 +456,7 @@ async fn module_url(state: &AppState, service: ServiceKind) -> Result<String, Ap
         .await?
         .ok_or_else(|| {
             AppError::Validation(format!(
-                "Le module chargé de ce service (« {} ») n'est pas actif : \
-                 installez-le et réessayez.",
+                "The module responsible for this service ('{}') is inactive. Install it and try again.",
                 service.module_id()
             ))
         })

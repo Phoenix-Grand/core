@@ -75,7 +75,7 @@ async fn deny(
         entry("core.auth.reauth.failed", user).denied(reason),
     )
     .await;
-    AppError::Validation("Preuve invalide".into())
+    AppError::Validation("Invalid proof".into())
 }
 
 #[utoipa::path(
@@ -128,7 +128,7 @@ pub async fn reauth_challenge(
     responses(
         (status = 200, description = "Preuve fraîche émise"),
         (status = 403, description = "Un jeton d'API ne peut pas satisfaire un défi"),
-        (status = 422, description = "Preuve invalide")
+        (status = 422, description = "Invalid proof")
     )
 )]
 pub async fn reauth(
@@ -148,7 +148,7 @@ pub async fn reauth(
             .map(str::trim)
             .filter(|s| !s.is_empty())
             .ok_or_else(|| {
-                AppError::Validation("Code de double authentification requis".into())
+                AppError::Validation("Two-factor authentication code required".into())
             })?;
 
         if backup_codes::looks_like_code(submitted) {
@@ -187,11 +187,11 @@ pub async fn reauth(
             .password
             .as_deref()
             .filter(|s| !s.is_empty())
-            .ok_or_else(|| AppError::Validation("Mot de passe requis".into()))?;
+            .ok_or_else(|| AppError::Validation("Password required".into()))?;
         let hash = user
             .password_hash
             .as_deref()
-            .ok_or_else(|| AppError::Validation("Ce compte n'a pas de mot de passe local".into()))?;
+            .ok_or_else(|| AppError::Validation("This account has no local password".into()))?;
         let ok = password::verify_password(submitted, hash).map_err(AppError::Internal)?;
         if !ok {
             return Err(deny(&state, &ctx, &user, "bad_password").await);

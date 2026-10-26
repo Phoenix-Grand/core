@@ -18,7 +18,7 @@ impl PushProvider for UnifiedPush {
     ) -> anyhow::Result<bool> {
         // SSRF guard: refuse non-HTTPS endpoints (no internal http://169.254… etc.).
         if !endpoint.starts_with("https://") {
-            anyhow::bail!("endpoint UnifiedPush non https refusé");
+            anyhow::bail!("Non-HTTPS UnifiedPush endpoint rejected");
         }
 
         let resp = client
@@ -33,7 +33,7 @@ impl PushProvider for UnifiedPush {
             return Ok(false);
         }
         if !status.is_success() {
-            anyhow::bail!("UnifiedPush a renvoyé {status}");
+            anyhow::bail!("UnifiedPush returned {status}");
         }
         Ok(true)
     }

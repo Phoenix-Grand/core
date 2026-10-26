@@ -111,10 +111,10 @@ async fn raise_action_failure(db: &DbPool, job: &dispatch::ActionJob, failed: i1
         catalog::RULE_ACTION_FAILED,
         catalog::SRC_RULES,
         Severity::Warning,
-        format!("Action de règle en échec : « {} »", job.rule_name),
+        format!("Rule action failed: '{}'", job.rule_name),
     )
     .summary(format!(
-        "{failed} action(s) de cette règle n'ont pas pu être exécutées."
+        "{failed} action(s) of this rule could not run."
     ))
     .payload(serde_json::json!({
         "rule_id":         job.rule_id,

@@ -88,11 +88,11 @@ fn io_err(what: &str, path: &Path, e: std::io::Error) -> AppError {
 /// would be served at the next restart and fail the handshake.
 pub fn write_material(paths: &Paths, cert_pem: &str, key_pem: &str) -> Result<(), AppError> {
     write_private(&paths.key, key_pem)
-        .map_err(|e| io_err("écriture de la clé privée TLS", &paths.key, e))?;
+        .map_err(|e| io_err("Writing the TLS private key", &paths.key, e))?;
     // The chain is public; it is written with the same care but no secrecy is
     // implied by its mode.
     write_private(&paths.cert, cert_pem)
-        .map_err(|e| io_err("écriture du certificat TLS", &paths.cert, e))?;
+        .map_err(|e| io_err("Writing the TLS certificate", &paths.cert, e))?;
     Ok(())
 }
 
@@ -118,7 +118,7 @@ pub fn delete_material(paths: &Paths) -> Result<(), AppError> {
         match std::fs::remove_file(p) {
             Ok(()) => {}
             Err(e) if e.kind() == std::io::ErrorKind::NotFound => {}
-            Err(e) => return Err(io_err("suppression du matériel TLS", p, e)),
+            Err(e) => return Err(io_err("Removing TLS material", p, e)),
         }
     }
     Ok(())
@@ -128,7 +128,7 @@ pub fn delete_material(paths: &Paths) -> Result<(), AppError> {
 /// key) with the same protection as the TLS key.
 pub fn write_acme_account(paths: &Paths, json: &str) -> Result<(), AppError> {
     write_private(&paths.acme_account, json)
-        .map_err(|e| io_err("écriture du compte ACME", &paths.acme_account, e))
+        .map_err(|e| io_err("Writing the ACME account", &paths.acme_account, e))
 }
 
 /// Reads the stored ACME account, or `None` on a first run.

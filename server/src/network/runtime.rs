@@ -38,17 +38,17 @@ pub fn build_server_config(
     let mut cr: &[u8] = cert_pem;
     let certs: Vec<CertificateDer<'static>> = rustls_pemfile::certs(&mut cr)
         .collect::<Result<Vec<_>, _>>()
-        .map_err(|e| AppError::Validation(format!("Chaîne de certificats illisible : {e}")))?;
+        .map_err(|e| AppError::Validation(format!("Unreadable certificate chain: {e}")))?;
     if certs.is_empty() {
         return Err(AppError::Validation(
-            "Aucun certificat trouvé dans le PEM fourni".into(),
+            "No certificate found in the supplied PEM".into(),
         ));
     }
 
     let mut kr: &[u8] = key_pem;
     let key: PrivateKeyDer<'static> = rustls_pemfile::private_key(&mut kr)
-        .map_err(|e| AppError::Validation(format!("Clé privée illisible : {e}")))?
-        .ok_or_else(|| AppError::Validation("Aucune clé privée trouvée dans le PEM fourni".into()))?;
+        .map_err(|e| AppError::Validation(format!("Unreadable private key: {e}")))?
+        .ok_or_else(|| AppError::Validation("No private key found in the supplied PEM".into()))?;
 
     let versions: &[&'static rustls::SupportedProtocolVersion] = match min {
         TlsMinVersion::V1_3 => &[&rustls::version::TLS13],
@@ -59,7 +59,7 @@ pub fn build_server_config(
         .with_no_client_auth()
         .with_single_cert(certs, key)
         .map_err(|e| {
-            AppError::Validation(format!("Certificat et clé incompatibles ou invalides : {e}"))
+            AppError::Validation(format!("Certificate and key are incompatible or invalid: {e}"))
         })?;
 
     Ok(Arc::new(cfg))

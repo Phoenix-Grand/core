@@ -140,7 +140,7 @@ pub async fn validate_requested(
 
     if scopes.is_empty() {
         return Err(AppError::Validation(
-            "Un jeton doit porter au moins une portée : il n'existe pas de valeur par défaut « tout »."
+            "A token must have at least one scope; there is no default 'all' value."
                 .into(),
         ));
     }
@@ -154,8 +154,7 @@ pub async fn validate_requested(
         // why it will never be granted.
         if forbids_scope(key) {
             return Err(AppError::Validation(format!(
-                "La portée « {key} » exige une réauthentification interactive \
-                 (réinitialisation du second facteur) : elle ne peut pas être confiée à un jeton."
+                "Scope '{key}' requires interactive reauthentication (second-factor reset) and cannot be assigned to a token."
             )));
         }
         parse_key(key)?;
@@ -177,14 +176,12 @@ pub async fn validate_requested(
         match rows.iter().find(|(k, _)| k == key) {
             None => {
                 return Err(AppError::Validation(format!(
-                    "Portée inconnue « {key} » : elle n'existe pas dans le catalogue des privilèges."
+                    "Unknown scope '{key}': it does not exist in the privilege catalog."
                 )));
             }
             Some((_, false)) => {
                 return Err(AppError::Validation(format!(
-                    "La portée « {key} » est réservée aux opérations interactives \
-                     (gestion des rôles, installation de modules, approbation de thèmes, \
-                     réinitialisation du second facteur) et ne peut pas être confiée à un jeton."
+                    "Scope '{key}' is reserved for interactive operations (role management, module installation, theme approval, second-factor reset) and cannot be assigned to a token."
                 )));
             }
             Some((_, true)) => {}
@@ -220,8 +217,7 @@ pub async fn resolve_expiry(
     let Some(days) = expires_in_days else {
         if let Some(key) = mandatory.first() {
             return Err(AppError::Validation(format!(
-                "La portée « {key} » modifie l'instance : ce jeton doit porter une expiration \
-                 (au plus {cap} jours)."
+                "Scope '{key}' modifies the instance, so this token must expire within at most {cap} days."
             )));
         }
         return Ok(None);
@@ -229,7 +225,7 @@ pub async fn resolve_expiry(
 
     if days == 0 {
         return Err(AppError::Validation(
-            "L'expiration doit être d'au moins un jour.".into(),
+            "The expiration must be at least one day away.".into(),
         ));
     }
     let days = i64::from(days).min(cap);

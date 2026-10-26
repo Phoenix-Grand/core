@@ -98,7 +98,7 @@ pub async fn discover(client: &reqwest::Client, issuer_url: &str) -> anyhow::Res
         .get(&url)
         .send()
         .await
-        .context("Appel discovery OIDC échoué")?;
+        .context("OIDC discovery request failed")?;
     if !resp.status().is_success() {
         let body = resp.text().await.unwrap_or_default();
         return Err(anyhow::anyhow!("Discovery OIDC ({issuer}): {body}"));
@@ -167,7 +167,7 @@ pub async fn oidc_exchange_code(
         .form(&form)
         .send()
         .await
-        .context("Appel token OIDC échoué")?;
+        .context("OIDC token request failed")?;
 
     if !resp.status().is_success() {
         let body = resp.text().await.unwrap_or_default();
@@ -176,7 +176,7 @@ pub async fn oidc_exchange_code(
 
     resp.json::<OidcTokenResponse>()
         .await
-        .context("Réponse token OIDC invalide")
+        .context("Invalid OIDC token response")
 }
 
 // ── User info ─────────────────────────────────────────────────────────────────
@@ -207,7 +207,7 @@ pub async fn oidc_userinfo(
         .bearer_auth(access_token)
         .send()
         .await
-        .context("Appel userinfo OIDC échoué")?;
+        .context("OIDC userinfo request failed")?;
 
     if !resp.status().is_success() {
         let body = resp.text().await.unwrap_or_default();
@@ -220,7 +220,7 @@ pub async fn oidc_userinfo(
     let raw: serde_json::Value = resp
         .json()
         .await
-        .context("Réponse userinfo OIDC invalide")?;
+        .context("Invalid OIDC userinfo response")?;
     let mut info: OidcUserInfo =
         serde_json::from_value(raw.clone()).context("Profil OIDC sans `sub` exploitable")?;
     info.raw = raw;

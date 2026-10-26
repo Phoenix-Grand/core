@@ -8,15 +8,15 @@ use thiserror::Error;
 
 #[derive(Debug, Error)]
 pub enum AppError {
-    #[error("Non authentifié")]
+    #[error("Not authenticated")]
     Unauthorized,
 
-    #[error("Accès refusé")]
+    #[error("Access denied")]
     Forbidden,
 
     /// The account still carries the password it was seeded with: administrative
     /// writes stay closed until the owner picks a new one.
-    #[error("Changement de mot de passe requis avant toute action d'administration")]
+    #[error("You must change your password before performing administrative actions")]
     PasswordChangeRequired,
 
     /// The action is sensitive and the caller has not proved presence recently.
@@ -25,13 +25,13 @@ pub enum AppError {
     /// indistinguishable from a genuine lack of authorisation, so a client cannot
     /// tell whether to offer a way forward. This one carries a code the client
     /// acts on - open the re-authentication dialog, then replay the request.
-    #[error("Réauthentification requise pour cette action sensible")]
+    #[error("Reauthentication is required for this sensitive action")]
     ReauthRequired,
 
     /// The caller is a personal API token: no second factor, nobody at the
     /// keyboard, so the challenge can never be met. Final, not retryable - a
     /// `ReauthRequired` here would send an unattended script into a loop.
-    #[error("Cette action sensible exige une personne : un jeton d'API ne peut pas la réaliser")]
+    #[error("This sensitive action requires a person; an API token cannot perform it")]
     ReauthImpossible,
 
     /// A personal API token issued before scopes existed, presented after its
@@ -43,30 +43,25 @@ pub enum AppError {
     /// one with explicit scopes. A 401 would send the holder debugging the wrong
     /// thing, and the client's refresh interceptor chasing a token it cannot mint.
     #[error(
-        "Ce jeton d'API a été émis avant les portées et sa période de transition est terminée. \
-         Réémettez un jeton en sélectionnant explicitement ses portées \
-         (Paramètres → Jetons d'API)."
+        "This API token was issued before scopes were introduced and its transition period has ended. Issue a new token with explicitly selected scopes (Settings → API tokens)."
     )]
     ApiTokenLegacyExpired,
 
     /// A legacy token attempting an administrative write. Refused immediately,
     /// with no grace period - this is the defect the scoping work exists to close.
     #[error(
-        "Un jeton d'API sans portées ne peut pas effectuer d'écriture d'administration. \
-         Réémettez un jeton en sélectionnant explicitement ses portées."
+        "An API token without scopes cannot make administrative changes. Issue a new token with explicitly selected scopes."
     )]
     ApiTokenLegacyAdminWrite,
 
     /// The token authenticated, but does not carry the scope this route needs.
-    #[error("Ce jeton d'API ne porte pas la portée requise pour cette opération : {0}")]
+    #[error("This API token does not have the scope required for this operation: {0}")]
     ApiTokenScopeMissing(String),
 
     /// The instance requires administrators to carry a second factor and this
     /// account's grace window has closed.
     #[error(
-        "Double authentification obligatoire pour les administrateurs : \
-         le délai de grâce est écoulé. Configurez-la dans Paramètres → Sécurité \
-         pour retrouver l'accès à l'administration."
+        "Two-factor authentication is required for administrators and the grace period has ended. Configure it in Settings → Security to regain administrative access."
     )]
     TwoFactorRequired,
 
@@ -78,13 +73,13 @@ pub enum AppError {
     #[error("{0}")]
     SettingLocked(String),
 
-    #[error("Ressource introuvable: {0}")]
+    #[error("Resource not found: {0}")]
     NotFound(String),
 
-    #[error("Données invalides: {0}")]
+    #[error("Invalid data: {0}")]
     Validation(String),
 
-    #[error("Conflit: {0}")]
+    #[error("Conflict: {0}")]
     Conflict(String),
 
     /// Sign-in is refused because the account has failed enough times that a
@@ -92,10 +87,10 @@ pub enum AppError {
     /// user-facing message is the SAME generic "invalid credentials" as every
     /// other sign-in failure - only the machine `code` differs, so the login
     /// form knows to show the CAPTCHA. See `handlers::auth::login`.
-    #[error("Identifiants invalides")]
+    #[error("Invalid credentials")]
     CaptchaRequired,
 
-    #[error("Quota dépassé")]
+    #[error("Quota exceeded")]
     QuotaExceeded,
 
     /// A remote mount's stored credentials can no longer be decrypted, because
@@ -104,22 +99,20 @@ pub enum AppError {
     /// reconnect the mount. It gets its own code so the client can say that
     /// instead of showing a bare failure.
     #[error(
-        "Les identifiants de ce stockage distant ne sont plus déchiffrables : \
-         le secret interne de l'instance a changé depuis leur enregistrement. \
-         Reconnectez le montage pour les saisir à nouveau."
+        "The credentials for this remote storage can no longer be decrypted because the instance's internal secret has changed since they were saved. Reconnect the mount to enter them again."
     )]
     RemoteMountUnreadable,
 
     /// A remote storage provider was unreachable, refused us, or answered
     /// something unusable. The failure is upstream: reporting it as a 500 sends
     /// whoever reads it auditing Kubuno's own logs for a fault that is not here.
-    #[error("Stockage distant injoignable : {0}")]
+    #[error("Remote storage unreachable: {0}")]
     RemoteUnavailable(String),
 
-    #[error("Erreur base de données")]
+    #[error("Database error")]
     Database(#[from] sqlx::Error),
 
-    #[error("Erreur interne")]
+    #[error("Internal error")]
     Internal(#[from] anyhow::Error),
 }
 
@@ -130,7 +123,7 @@ impl AppError {
     /// `Display` stays deliberately generic on `Internal` and `Database` so that
     /// a response body never leaks internals. That genericity used to reach the
     /// logs and the audit trail too, which left an administrator facing
-    /// "Erreur interne" on four surfaces at once with no way to diagnose the
+    /// "Internal error" on four surfaces at once with no way to diagnose the
     /// failure - even with full shell access to the server.
     pub fn detail(&self) -> String {
         match self {
@@ -183,14 +176,14 @@ impl IntoResponse for AppError {
             }
             AppError::Database(e) => {
                 tracing::error!(error = %e, "Database error");
-                (StatusCode::INTERNAL_SERVER_ERROR, "DATABASE_ERROR", "Erreur base de données".to_string())
+                (StatusCode::INTERNAL_SERVER_ERROR, "DATABASE_ERROR", "Database error".to_string())
             }
             AppError::Internal(e) => {
                 // The chain, not just the outermost message: the response body
                 // below stays generic, so this log is the only place the cause
                 // survives.
                 tracing::error!(error = %format!("{e:#}"), "Internal error");
-                (StatusCode::INTERNAL_SERVER_ERROR, "INTERNAL_ERROR", "Erreur interne".to_string())
+                (StatusCode::INTERNAL_SERVER_ERROR, "INTERNAL_ERROR", "Internal error".to_string())
             }
         };
 
@@ -210,7 +203,7 @@ mod tests {
             .into();
 
         // What the response body and the old logs showed: nothing usable.
-        assert_eq!(err.to_string(), "Erreur interne");
+        assert_eq!(err.to_string(), "Internal error");
 
         // What an administrator now gets on the log, the audit trail and the
         // install status endpoint: the operation AND its root cause.

@@ -82,10 +82,10 @@ impl ProbeError {
     /// shows an administrator.
     pub fn message(&self) -> String {
         match self {
-            Self::NoResolver => "Cette instance n'a pas de résolveur DNS utilisable : la vérification est impossible tant que le serveur ne peut pas interroger le DNS.".into(),
-            Self::UnknownDomain => "Ce domaine n'existe pas dans le DNS. Vérifiez son orthographe.".into(),
-            Self::NoRecord => "Aucun enregistrement de ce type n'est publié sur ce domaine.".into(),
-            Self::Unreachable(detail) => format!("Le DNS n'a pas répondu : {detail}"),
+            Self::NoResolver => "This instance has no usable DNS resolver. Verification is impossible until the server can query DNS.".into(),
+            Self::UnknownDomain => "This domain does not exist in DNS. Check its spelling.".into(),
+            Self::NoRecord => "No record of this type is published for this domain.".into(),
+            Self::Unreachable(detail) => format!("DNS did not respond: {detail}"),
         }
     }
 }
@@ -99,7 +99,7 @@ async fn lookup(name: &str, record_type: RecordType) -> Result<Vec<String>, Prob
     let query = format!("{}.", name.trim_end_matches('.'));
 
     let response = match tokio::time::timeout(QUERY_TIMEOUT, resolver.lookup(query, record_type)).await {
-        Err(_) => return Err(ProbeError::Unreachable("délai dépassé".into())),
+        Err(_) => return Err(ProbeError::Unreachable("Timed out".into())),
         Ok(Ok(response)) => response,
         Ok(Err(e)) => {
             let text = e.to_string();

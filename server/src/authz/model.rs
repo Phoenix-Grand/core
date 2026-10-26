@@ -38,7 +38,7 @@ impl AssignmentScope {
             "instance" => Ok(Self::Instance),
             "org_unit" => Ok(Self::OrgUnit),
             other => Err(AppError::Validation(format!(
-                "Portée inconnue « {other} » : attendu « instance » ou « org_unit »"
+                "Unknown scope '{other}': expected 'instance' or 'org_unit'"
             ))),
         }
     }
@@ -104,7 +104,7 @@ pub struct ParsedKey<'a> {
 pub fn parse_key(key: &str) -> Result<ParsedKey<'_>, AppError> {
     let invalid = |reason: &str| {
         AppError::Validation(format!(
-            "Privilège « {key} » invalide : {reason}. Attendu « <espace>.<domaine>.<verbe> »"
+            "Invalid privilege '{key}': {reason}. Expected '<namespace>.<domain>.<verb>'"
         ))
     };
 
@@ -119,7 +119,7 @@ pub fn parse_key(key: &str) -> Result<ParsedKey<'_>, AppError> {
     };
 
     if namespace.is_empty() || domain.is_empty() || verb.is_empty() {
-        return Err(invalid("aucun segment ne peut être vide"));
+        return Err(invalid("No segment can be empty"));
     }
     let segment_ok = |s: &str| {
         s.chars()

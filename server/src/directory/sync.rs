@@ -99,20 +99,20 @@ impl SyncReport {
     /// One-line summary stored in `last_sync_detail` and shown in the list.
     pub fn summary(&self) -> String {
         let mut parts = vec![format!(
-            "{} compte(s) vus - {} créé(s), {} lié(s), {} ignoré(s)",
+            "{} account(s) seen — {} created, {} linked, {} skipped",
             self.users_seen, self.users_created, self.users_linked, self.users_skipped
         )];
         if self.groups_seen > 0 {
             parts.push(format!(
-                "{} groupe(s), {} adhésion(s) ajoutée(s), {} retirée(s)",
+                "{} group(s), {} membership(s) added, {} removed",
                 self.groups_seen, self.memberships_added, self.memberships_removed
             ));
         }
         if self.disabled > 0 {
-            parts.push(format!("{} compte(s) désactivé(s)", self.disabled));
+            parts.push(format!("{} account(s) disabled", self.disabled));
         }
         if let Some(reason) = &self.disable_refused {
-            parts.push(format!("désactivation suspendue : {reason}"));
+            parts.push(format!("Deactivation suspended: {reason}"));
         }
         for w in self.warnings.iter().take(3) {
             parts.push(w.clone());
@@ -132,15 +132,13 @@ pub fn disable_guard(governed: usize, seen: usize, would_disable: usize) -> Opti
     }
     if seen == 0 {
         return Some(format!(
-            "l'annuaire n'a retourné aucune entrée alors que {governed} compte(s) en dépendent - \
-             incident réseau ou configuration cassée plutôt que départs"
+            "The directory returned no entries even though {governed} account(s) depend on it. This may be a network or configuration issue rather than departures"
         ));
     }
     let ceiling = DISABLE_FLOOR.max((governed as f64 * DISABLE_MAX_RATIO).ceil() as usize);
     if would_disable > ceiling {
         return Some(format!(
-            "{would_disable} compte(s) sur {governed} seraient désactivés, au-delà du plafond de {ceiling} \
-             par exécution - relancez après avoir vérifié le filtre et le DN de base"
+            "{would_disable} of {governed} account(s) would be disabled, exceeding the per-run limit of {ceiling}. Check the filter and base DN before running again"
         ));
     }
     None
@@ -162,7 +160,7 @@ pub async fn run(db: &DbPool, jwt_secret: &str, dir: &LdapDirectory) -> Result<S
 
     if !dir.is_usable() {
         report.status = "failed".into();
-        report.warnings.push("Annuaire désactivé ou incomplet".into());
+        report.warnings.push("Directory disabled or incompletely configured".into());
         return Ok(finalise(db, dir, report.finish(started)).await);
     }
 
@@ -235,7 +233,7 @@ pub async fn run(db: &DbPool, jwt_secret: &str, dir: &LdapDirectory) -> Result<S
                 report.users_skipped += 1;
                 if report.warnings.len() < 5 {
                     report.warnings.push(super::client::truncate(&format!(
-                        "entrée non importée ({})",
+                        "Entry not imported ({})",
                         mapped.dn
                     )));
                 }
@@ -256,7 +254,7 @@ pub async fn run(db: &DbPool, jwt_secret: &str, dir: &LdapDirectory) -> Result<S
         let trustworthy = report.users_seen > 0;
         if !trustworthy {
             report.warnings.push(
-                "aucune entrée retournée : adhésions de groupe laissées intactes".into(),
+                "No entries returned; group memberships left unchanged".into(),
             );
         }
         match sync_groups(db, dir, &mut conn, &by_dn, &member_of_edges, trustworthy).await {
@@ -285,7 +283,7 @@ pub async fn run(db: &DbPool, jwt_secret: &str, dir: &LdapDirectory) -> Result<S
                 report.disable_refused = Some(reason);
             }
             Err(e) => {
-                report.warnings.push(super::client::truncate(&format!("désactivation : {e}")));
+                report.warnings.push(super::client::truncate(&format!("Deactivation: {e}")));
             }
         }
     }
@@ -380,7 +378,7 @@ async fn disable_missing(
                 .module("core")
                 .target(target::USER, *id, username.clone())
                 .detail(format!(
-                    "absent de l'annuaire « {} » - compte désactivé, aucune donnée supprimée",
+                    "Missing from directory '{}'; account disabled, no data deleted",
                     dir.display_name
                 ))
                 .reversible(),
@@ -454,7 +452,7 @@ async fn sync_groups(
             }
             Err(e) => {
                 out.warnings.push(super::client::truncate(&format!(
-                    "groupe « {} » non importé : {e}",
+                    "Group '{}' not imported: {e}",
                     group.name
                 )));
                 continue;
@@ -589,7 +587,7 @@ async fn upsert_group(
         params![
             id,
             &name,
-            format!("Importé de l'annuaire « {} »", dir.display_name),
+            format!("Imported from directory '{}'", dir.display_name),
             dir.id,
             &group.dn
         ],
@@ -680,7 +678,7 @@ async fn finalise(db: &DbPool, dir: &LdapDirectory, report: SyncReport) -> SyncR
                 .warnings
                 .first()
                 .cloned()
-                .unwrap_or_else(|| "synchronisation échouée".into()),
+                .unwrap_or_else(|| "Synchronization failed".into()),
         )
     } else {
         outcome_entry
@@ -700,7 +698,7 @@ mod tests {
         // Every one of them looks "missing" and every one of them would be
         // switched off. Refused, with a reason an operator can act on.
         let reason = disable_guard(120, 0, 120).expect("garde-fou déclenché");
-        assert!(reason.contains("aucune entrée"));
+        assert!(reason.contains("no entries"));
     }
 
     #[test]
@@ -708,7 +706,7 @@ mod tests {
         // 100 governed, 100 returned, but half of them stamped as missing -
         // a filter change, not a hundred resignations.
         let reason = disable_guard(100, 100, 50).expect("garde-fou déclenché");
-        assert!(reason.contains("plafond"));
+        assert!(reason.contains("limit"));
     }
 
     #[test]
@@ -739,7 +737,7 @@ mod tests {
         r.disable_refused = Some("l'annuaire n'a retourné aucune entrée".into());
         let s = r.summary();
         assert!(s.contains("3 compte(s) vus"));
-        assert!(s.contains("désactivation suspendue"));
+        assert!(s.contains("Deactivation suspended"));
         // Bounded, whatever the directory answered.
         assert!(s.chars().count() <= super::super::client::MAX_ERROR_LEN + 1);
     }

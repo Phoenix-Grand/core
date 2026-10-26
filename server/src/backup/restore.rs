@@ -86,7 +86,7 @@ fn ensure_engine_matches(db: &DbPool, format: &str) -> Result<(), AppError> {
         Ok(())
     } else {
         Err(AppError::Validation(
-            "Cette sauvegarde (format PostgreSQL COPY) ne peut être restaurée que sur une instance PostgreSQL".into(),
+            "This backup (PostgreSQL COPY format) can only be restored on a PostgreSQL instance".into(),
         ))
     }
 }
@@ -109,7 +109,7 @@ pub async fn restore_from_file(
     let source_path = dest_dir.join(file_name);
 
     if !tokio::fs::try_exists(&source_path).await.unwrap_or(false) {
-        return Err(AppError::NotFound(format!("Sauvegarde introuvable : {file_name}")));
+        return Err(AppError::NotFound(format!("Backup not found: {file_name}")));
     }
     let format = archive::format_of(file_name);
     ensure_engine_matches(db, format)?;

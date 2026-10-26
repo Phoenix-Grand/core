@@ -31,7 +31,7 @@ pub const MAX_LIMIT: i64 = 200;
 pub const DEFAULT_LIMIT: i64 = 50;
 
 /// Label recorded on the timeline for work the server did on its own.
-pub const SYSTEM_ACTOR: &str = "Système";
+pub const SYSTEM_ACTOR: &str = "System";
 
 // Macros rather than `const`s so call sites splice them with `concat!`: each
 // query is then a single `&'static str` literal fixed at compile time, and the
@@ -376,7 +376,7 @@ pub async fn auto_resolve(db: &DbPool, kind: &str, live: &[String]) -> Result<u6
                 SYSTEM_ACTOR,
                 Some(&row.status),
                 Some(Status::Resolved.as_str()),
-                Some("La condition n'est plus observée."),
+                Some("The condition is no longer observed."),
             )
             .await?;
             closed += 1;
@@ -679,7 +679,7 @@ pub async fn get(db: &DbPool, id: Uuid, ctx: &AdminContext) -> Result<AlertRow, 
             tracing::error!(error = %e, alert_id = %id, "alerts: lecture d'une alerte");
             AppError::Database(e)
         })?
-        .ok_or_else(|| AppError::NotFound("Alerte introuvable".into()))?;
+        .ok_or_else(|| AppError::NotFound("Alert not found".into()))?;
 
     let mut alert = map_raw(row);
     if !ctx.has(catalog::read_privilege(&alert.kind)) {
@@ -831,14 +831,14 @@ pub async fn set_status(
             tracing::error!(error = %e, alert_id = %alert_id, "alerts: lecture de l'état courant");
             AppError::Database(e)
         })?
-        .ok_or_else(|| AppError::NotFound("Alerte introuvable".into()))?;
+        .ok_or_else(|| AppError::NotFound("Alert not found".into()))?;
 
     let previous = Status::parse(&current)
         .ok_or_else(|| AppError::Internal(anyhow::anyhow!("État d'alerte inconnu : {current}")))?;
 
     if !previous.may_move_to(next) {
         return Err(AppError::Validation(
-            "L'alerte est déjà dans cet état".into(),
+            "The alert is already in this state".into(),
         ));
     }
 
@@ -899,7 +899,7 @@ pub async fn set_assignee(
             tracing::error!(error = %e, alert_id = %alert_id, "alerts: lecture de l'assigné courant");
             AppError::Database(e)
         })?
-        .ok_or_else(|| AppError::NotFound("Alerte introuvable".into()))?
+        .ok_or_else(|| AppError::NotFound("Alert not found".into()))?
         .try_get::<Option<String>>("label")
         .map_err(AppError::Database)?;
 
@@ -952,7 +952,7 @@ pub async fn add_comment(
             AppError::Database(e)
         })?;
     if exists.is_none() {
-        return Err(AppError::NotFound("Alerte introuvable".into()));
+        return Err(AppError::NotFound("Alert not found".into()));
     }
 
     record_event(
@@ -1029,7 +1029,7 @@ pub async fn eligible_assignee(db: &DbPool, user_id: Uuid) -> Result<String, App
         .ok_or_else(|| {
             tracing::warn!(user_id = %user_id, "alerts: assignation à un compte sans accès au centre d'alertes");
             AppError::Validation(
-                "Ce compte n'a pas accès au centre d'alertes : il ne peut pas se voir assigner une alerte".into(),
+                "This account cannot access the alert center and cannot be assigned an alert".into(),
             )
         })
 }
@@ -1078,13 +1078,13 @@ pub async fn save_view(
 ) -> Result<AlertView, AppError> {
     let name = name.trim();
     if name.is_empty() {
-        return Err(AppError::Validation("Le nom du filtre est vide".into()));
+        return Err(AppError::Validation("The filter name is empty".into()));
     }
     if name.chars().count() > 120 {
-        return Err(AppError::Validation("Le nom du filtre est trop long".into()));
+        return Err(AppError::Validation("The filter name is too long".into()));
     }
     if !filters.is_object() {
-        return Err(AppError::Validation("Filtre invalide".into()));
+        return Err(AppError::Validation("Invalid filter".into()));
     }
 
     // Upsert then reselect: `RETURNING` is not portable, and on the conflict path
@@ -1137,7 +1137,7 @@ pub async fn delete_view(db: &DbPool, owner: Uuid, id: Uuid) -> Result<(), AppEr
             AppError::Database(e)
         })?;
     if affected == 0 {
-        return Err(AppError::NotFound("Filtre introuvable".into()));
+        return Err(AppError::NotFound("Filter not found".into()));
     }
     Ok(())
 }
@@ -1236,7 +1236,7 @@ pub async fn severity_of(db: &DbPool, id: Uuid) -> Result<Severity, AppError> {
             tracing::error!(error = %e, alert_id = %id, "alerts: lecture de la gravité");
             AppError::Database(e)
         })?
-        .ok_or_else(|| AppError::NotFound("Alerte introuvable".into()))?;
+        .ok_or_else(|| AppError::NotFound("Alert not found".into()))?;
     Severity::parse(&raw)
         .ok_or_else(|| AppError::Internal(anyhow::anyhow!("Gravité d'alerte inconnue : {raw}")))
 }

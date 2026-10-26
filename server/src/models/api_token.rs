@@ -35,7 +35,7 @@ pub struct ApiToken {
 
 #[derive(Debug, Deserialize, Validate)]
 pub struct CreateApiTokenDto {
-    #[validate(length(min = 1, max = 255, message = "Nom: 1-255 caractères"))]
+    #[validate(length(min = 1, max = 255, message = "Name: 1-255 characters"))]
     pub name: String,
 
     /// Privilege keys the token may exercise.

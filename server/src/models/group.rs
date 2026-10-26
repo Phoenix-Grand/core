@@ -30,7 +30,7 @@ pub struct UserGroupMember {
 
 #[derive(Debug, Deserialize, Validate)]
 pub struct CreateGroupDto {
-    #[validate(length(min = 1, max = 100, message = "Nom: 1-100 caractères"))]
+    #[validate(length(min = 1, max = 100, message = "Name: 1-100 characters"))]
     pub name:        String,
     pub description: Option<String>,
     #[serde(default)]
@@ -43,7 +43,7 @@ pub struct CreateGroupDto {
 
 #[derive(Debug, Deserialize, Validate)]
 pub struct UpdateGroupDto {
-    #[validate(length(min = 1, max = 100, message = "Nom: 1-100 caractères"))]
+    #[validate(length(min = 1, max = 100, message = "Name: 1-100 characters"))]
     pub name:        Option<String>,
     pub description: Option<String>,
     pub permissions: Option<Vec<String>>,

@@ -249,18 +249,18 @@ pub fn validate_destination(raw: &str) -> Result<String, crate::errors::AppError
     let trimmed = raw.trim();
     if trimmed.is_empty() {
         return Err(AppError::Validation(
-            "Le répertoire de destination est obligatoire".into(),
+            "The destination directory is required".into(),
         ));
     }
     if trimmed.len() > 512 {
         return Err(AppError::Validation(
-            "Répertoire de destination : 512 caractères maximum".into(),
+            "Destination directory: maximum 512 characters".into(),
         ));
     }
     let path = std::path::Path::new(trimmed);
     if !path.is_absolute() {
         return Err(AppError::Validation(
-            "Le répertoire de destination doit être un chemin absolu".into(),
+            "The destination directory must be an absolute path".into(),
         ));
     }
     if path
@@ -268,7 +268,7 @@ pub fn validate_destination(raw: &str) -> Result<String, crate::errors::AppError
         .any(|c| matches!(c, std::path::Component::ParentDir))
     {
         return Err(AppError::Validation(
-            "Le répertoire de destination ne peut pas contenir « .. »".into(),
+            "The destination directory cannot contain '..'".into(),
         ));
     }
     Ok(trimmed.to_string())

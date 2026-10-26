@@ -163,7 +163,7 @@ pub async fn get_rule(db: &DbPool, id: Uuid) -> Result<Rule, AppError> {
             tracing::error!(error = %e, rule_id = %id, "rules: lecture d'une règle");
             AppError::Database(e)
         })?
-        .ok_or_else(|| AppError::NotFound("règle".into()))?;
+        .ok_or_else(|| AppError::NotFound("rule".into()))?;
     Ok(row.into_rule())
 }
 
@@ -258,7 +258,7 @@ pub async fn insert_rule(
             tracing::error!(error = %e, "rules: relecture d'une règle");
             AppError::Database(e)
         })?
-        .ok_or_else(|| AppError::NotFound("règle".into()))?;
+        .ok_or_else(|| AppError::NotFound("rule".into()))?;
     let rule = row_to_rule(&row).map_err(AppError::Database)?;
     insert_version(tx, rule.id, 1, &draft.snapshot(1), author, note).await?;
     Ok(rule)
@@ -304,7 +304,7 @@ pub async fn update_rule(
             AppError::Database(e)
         })?;
     if affected == 0 {
-        return Err(AppError::NotFound("règle".into()));
+        return Err(AppError::NotFound("rule".into()));
     }
 
     let row = tx
@@ -317,7 +317,7 @@ pub async fn update_rule(
             tracing::error!(error = %e, rule_id = %id, "rules: relecture d'une règle");
             AppError::Database(e)
         })?
-        .ok_or_else(|| AppError::NotFound("règle".into()))?;
+        .ok_or_else(|| AppError::NotFound("rule".into()))?;
     let rule = row_to_rule(&row).map_err(AppError::Database)?;
     insert_version(
         tx,
@@ -361,7 +361,7 @@ pub async fn delete_rule(tx: &mut DbTx, id: Uuid) -> Result<(), AppError> {
             AppError::Database(e)
         })?;
     if affected == 0 {
-        return Err(AppError::NotFound("règle".into()));
+        return Err(AppError::NotFound("rule".into()));
     }
     Ok(())
 }
@@ -867,7 +867,7 @@ pub async fn get_backtest(db: &DbPool, id: Uuid) -> Result<BacktestRow, AppError
         tracing::error!(error = %e, backtest_id = %id, "rules: lecture d'un test rétrospectif");
         AppError::Database(e)
     })?
-    .ok_or_else(|| AppError::NotFound("test rétrospectif".into()))
+    .ok_or_else(|| AppError::NotFound("backtest".into()))
 }
 
 pub async fn list_backtests(db: &DbPool, rule_id: Uuid) -> Result<Vec<BacktestRow>, AppError> {

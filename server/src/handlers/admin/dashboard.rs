@@ -823,7 +823,7 @@ pub async fn dashboard(
                 .iter()
                 .find(|p| p.id == asked)
                 .map(|p| p.id)
-                .ok_or_else(|| AppError::Validation(format!("panneau inconnu : « {asked} »")))?,
+                .ok_or_else(|| AppError::Validation(format!("Unknown panel: '{asked}'")))?,
         ),
     };
     let full = q.full.unwrap_or(false);

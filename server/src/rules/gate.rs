@@ -199,16 +199,16 @@ fn message_for(decision: Decision, degraded: bool) -> String {
     match (decision, degraded) {
         (Decision::Allow, _) => String::new(),
         (Decision::Warn, _) => {
-            "Ce contenu semble comporter des données sensibles. Vérifiez avant de continuer.".into()
+            "This content may contain sensitive data. Check it before continuing.".into()
         }
         (Decision::Block, false) => {
-            "Ce contenu comporte des données sensibles et ne peut pas être envoyé.".into()
+            "This content contains sensitive data and cannot be sent.".into()
         }
         (Decision::Block, true) => {
             // The user must be able to tell "the policy says no" from "the
             // policy could not be consulted": the two need different phone
             // calls, and only one of them is their problem to fix.
-            "La vérification de conformité est momentanément indisponible et cette instance refuse de continuer sans elle.".into()
+            "The compliance check is temporarily unavailable, and this instance does not allow continuing without it.".into()
         }
     }
 }
@@ -277,7 +277,7 @@ pub async fn decide(db: &DbPool, request: GateRequest) -> GateResponse {
             started,
             fail_mode,
             &request,
-            "délai dépassé",
+            "Timed out",
             None,
         ),
     }
@@ -567,7 +567,7 @@ mod tests {
             content: Default::default(),
         };
 
-        let open = degraded(Instant::now(), FailMode::Open, &request, "délai dépassé", None);
+        let open = degraded(Instant::now(), FailMode::Open, &request, "Timed out", None);
         assert_eq!(open.decision, Decision::Allow);
         assert!(open.degraded);
         // Traceable even though it passed: an instance whose protection has
@@ -575,12 +575,12 @@ mod tests {
         assert!(open.reference.is_some());
         assert_eq!(open.code, CODE_UNAVAILABLE);
 
-        let closed = degraded(Instant::now(), FailMode::Closed, &request, "délai dépassé", None);
+        let closed = degraded(Instant::now(), FailMode::Closed, &request, "Timed out", None);
         assert_eq!(closed.decision, Decision::Block);
         assert!(closed.degraded);
         // …and the sentence distinguishes "the policy says no" from "the policy
         // could not be consulted".
-        assert!(closed.message.contains("indisponible"));
+        assert!(closed.message.contains("unavailable"));
     }
 
     // ── What the user is told ────────────────────────────────────────────────
@@ -596,12 +596,12 @@ mod tests {
                 "le message révèle « {forbidden} » : {message}"
             );
         }
-        assert!(message.contains("données sensibles"));
+        assert!(message.contains("sensitive data"));
 
         // The warning says as little.
         let warn = message_for(Decision::Warn, false);
         assert!(!warn.contains("core."));
-        assert!(!warn.contains("détecteur"));
+        assert!(!warn.contains("detector"));
     }
 
     #[test]

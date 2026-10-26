@@ -39,37 +39,37 @@ pub enum RemoteError {
     /// secret is rotated, every config sealed with the previous one is lost for
     /// good. Kept apart from [`RemoteError::Auth`] on purpose - nothing was sent
     /// to the remote here, and the only way forward is to reconnect the mount.
-    #[error("Identifiants du montage illisibles")]
+    #[error("Cannot read the mount credentials")]
     ConfigUnreadable,
 
     /// The config could not be sealed (AES-GCM encryption failed). Distinct from
     /// [`RemoteError::ConfigUnreadable`]: nothing was stored, so the caller must
     /// not persist a row that would be unreadable forever.
-    #[error("Chiffrement de la configuration échoué")]
+    #[error("Configuration encryption failed")]
     ConfigSealFailed,
 
-    #[error("Authentification échouée: {0}")]
+    #[error("Authentication failed: {0}")]
     Auth(String),
 
-    #[error("Ressource introuvable: {0}")]
+    #[error("Resource not found: {0}")]
     NotFound(String),
 
-    #[error("Accès refusé: {0}")]
+    #[error("Access denied: {0}")]
     Forbidden(String),
 
-    #[error("Erreur réseau: {0}")]
+    #[error("Network error: {0}")]
     Network(String),
 
-    #[error("Erreur du provider: {0}")]
+    #[error("Provider error: {0}")]
     Provider(String),
 
-    #[error("Opération non supportée: {0}")]
+    #[error("Unsupported operation: {0}")]
     Unsupported(String),
 
-    #[error("Quota dépassé")]
+    #[error("Quota exceeded")]
     QuotaExceeded,
 
-    #[error("Erreur d'E/S: {0}")]
+    #[error("I/O error: {0}")]
     Io(#[from] std::io::Error),
 }
 
@@ -214,7 +214,7 @@ pub trait RemoteConnector: Send + Sync {
     /// Copie un fichier (peut ne pas être supporté par tous les providers).
     async fn copy_file(&self, from: &str, to: &str) -> Result<RemoteEntry, RemoteError> {
         let _ = (from, to);
-        Err(RemoteError::Unsupported("copy non supportée par ce provider".into()))
+        Err(RemoteError::Unsupported("Copy is not supported by this provider".into()))
     }
 
     /// Génère une URL temporaire de téléchargement (presigned URL).

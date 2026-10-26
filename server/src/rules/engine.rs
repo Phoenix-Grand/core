@@ -309,10 +309,10 @@ async fn persist_and_react(
             alert_catalog::RULE_FEEDBACK_LOOP,
             alert_catalog::SRC_RULES,
             alerts::Severity::Critical,
-            format!("Boucle de rétroaction coupée : règle « {} »", rule.name),
+            format!("Feedback loop stopped: rule '{}'", rule.name),
         )
         .summary(format!(
-            "Une action de règle a produit un événement qui redéclenche une règle. La chaîne a été coupée à la profondeur {}.",
+            "A rule action produced an event that triggered another rule. The chain was stopped at depth {}.",
             facts.depth
         ))
         .payload(json!({
@@ -338,7 +338,7 @@ async fn persist_and_react(
             alert_catalog::RULE_MATCHED,
             alert_catalog::SRC_RULES,
             rule.severity(),
-            format!("Règle « {} » déclenchée", rule.name),
+            format!("Rule '{}' triggered", rule.name),
         )
         .payload(json!({
             "rule_id":         rule.id,

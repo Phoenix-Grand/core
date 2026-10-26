@@ -144,7 +144,7 @@ pub async fn apply(
         })?;
 
     if affected == 0 {
-        return Err(AppError::NotFound("Appareil introuvable".into()));
+        return Err(AppError::NotFound("Device not found".into()));
     }
 
     // The timeline records that a declaration arrived and what it claimed - the

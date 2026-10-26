@@ -110,7 +110,7 @@ fn is_valid_theme_id(id: &str) -> bool {
 fn theme_file_path(themes_dir: &str, id: &str) -> Result<String, AppError> {
     if !is_valid_theme_id(id) {
         return Err(AppError::Validation(
-            "ID de thème invalide (caractères autorisés : a-z, 0-9, -, _)".into(),
+            "Invalid theme ID (allowed characters: a-z, 0-9, -, _)".into(),
         ));
     }
     Ok(format!("{}/{}.json", themes_dir, id))
@@ -120,7 +120,7 @@ fn theme_file_path(themes_dir: &str, id: &str) -> Result<String, AppError> {
 fn theme_dir_path(themes_dir: &str, id: &str) -> Result<std::path::PathBuf, AppError> {
     if !is_valid_theme_id(id) {
         return Err(AppError::Validation(
-            "ID de thème invalide (caractères autorisés : a-z, 0-9, -, _)".into(),
+            "Invalid theme ID (allowed characters: a-z, 0-9, -, _)".into(),
         ));
     }
     Ok(std::path::Path::new(themes_dir).join(id))
@@ -191,15 +191,15 @@ pub async fn create_theme(
     ctx.require(keys::THEMES_MANAGE)?;
     if BUILTIN_IDS.contains(&theme.id.as_str()) {
         return Err(AppError::Validation(
-            "Impossible de remplacer un thème livré avec l'application".into(),
+            "Cannot replace a theme bundled with the application".into(),
         ));
     }
     if theme.name.trim().is_empty() {
-        return Err(AppError::Validation("Le thème doit avoir un nom".into()));
+        return Err(AppError::Validation("The theme must have a name".into()));
     }
     if theme.vars.is_empty() {
         return Err(AppError::Validation(
-            "Le thème doit contenir des variables de couleur".into(),
+            "The theme must contain color variables".into(),
         ));
     }
 
@@ -258,16 +258,16 @@ pub async fn import_theme_zip(
     while let Some(field) = multipart
         .next_field()
         .await
-        .map_err(|e| AppError::Validation(format!("Champ invalide : {e}")))?
+        .map_err(|e| AppError::Validation(format!("Invalid field: {e}")))?
     {
         if field.name() == Some("file") {
             let data = field
                 .bytes()
                 .await
-                .map_err(|e| AppError::Validation(format!("Lecture du fichier : {e}")))?;
+                .map_err(|e| AppError::Validation(format!("Reading file: {e}")))?;
             if data.len() > MAX_ZIP_BYTES {
                 return Err(AppError::Validation(format!(
-                    "L'archive ne doit pas dépasser {} Mo",
+                    "The archive must not exceed {} MB",
                     MAX_ZIP_BYTES / (1024 * 1024)
                 )));
             }
@@ -276,7 +276,7 @@ pub async fn import_theme_zip(
     }
 
     let zip_bytes =
-        zip_bytes.ok_or_else(|| AppError::Validation("Champ 'file' (archive .zip) manquant".into()))?;
+        zip_bytes.ok_or_else(|| AppError::Validation("Missing 'file' field (.zip archive)".into()))?;
     let themes_dir = state.settings.server.themes_dir.clone();
 
     // The `zip` crate is synchronous and extraction touches the filesystem - run
@@ -331,7 +331,7 @@ fn extract_theme_zip(zip_bytes: Vec<u8>, themes_dir: &str) -> Result<ThemeManife
     let manifest: ThemeManifest = {
         let mut f = archive
             .by_name("theme.json")
-            .map_err(|_| "theme.json manquant à la racine de l'archive".to_string())?;
+            .map_err(|_| "theme.json is missing from the archive root".to_string())?;
         let mut s = String::new();
         f.read_to_string(&mut s)
             .map_err(|e| format!("Lecture de theme.json : {e}"))?;
@@ -339,36 +339,36 @@ fn extract_theme_zip(zip_bytes: Vec<u8>, themes_dir: &str) -> Result<ThemeManife
     };
 
     if !is_valid_theme_id(&manifest.id) {
-        return Err("ID de thème invalide (a-z, 0-9, -, _, max 64)".into());
+        return Err("Invalid theme ID (a-z, 0-9, -, _, maximum 64)".into());
     }
     if BUILTIN_IDS.contains(&manifest.id.as_str()) {
-        return Err("Impossible de remplacer un thème livré avec l'application".into());
+        return Err("Cannot replace a theme bundled with the application".into());
     }
     if manifest.name.trim().is_empty() {
-        return Err("Le thème doit avoir un nom".into());
+        return Err("The theme must have a name".into());
     }
 
     let dest = std::path::Path::new(themes_dir).join(&manifest.id);
     // Replace any previous version of this theme.
     if dest.exists() {
         std::fs::remove_dir_all(&dest)
-            .map_err(|e| format!("Nettoyage de l'ancien thème : {e}"))?;
+            .map_err(|e| format!("Cleaning up the old theme: {e}"))?;
     }
-    std::fs::create_dir_all(&dest).map_err(|e| format!("Création du répertoire : {e}"))?;
+    std::fs::create_dir_all(&dest).map_err(|e| format!("Creating directory: {e}"))?;
 
     // 2. Extract every entry with strict guards.
     let mut total: u64 = 0;
     for i in 0..archive.len() {
         let mut file = archive
             .by_index(i)
-            .map_err(|e| format!("Lecture de l'entrée {i} : {e}"))?;
+            .map_err(|e| format!("Reading entry {i}: {e}"))?;
         if file.is_dir() {
             continue;
         }
         // `enclosed_name` rejects absolute paths and `..` traversal.
         let rel = match file.enclosed_name() {
             Some(p) => p,
-            None => return Err("Nom de fichier non sûr dans l'archive".into()),
+            None => return Err("Unsafe file name in archive".into()),
         };
         let ext = rel
             .extension()
@@ -376,7 +376,7 @@ fn extract_theme_zip(zip_bytes: Vec<u8>, themes_dir: &str) -> Result<ThemeManife
             .map(|e| e.to_ascii_lowercase())
             .unwrap_or_default();
         if !ALLOWED_EXTS.contains(&ext.as_str()) {
-            return Err(format!("Type de fichier non autorisé : {}", rel.display()));
+            return Err(format!("File type not allowed: {}", rel.display()));
         }
         let size = file.size();
         if size > MAX_FILE_UNCOMPRESSED {
@@ -384,16 +384,16 @@ fn extract_theme_zip(zip_bytes: Vec<u8>, themes_dir: &str) -> Result<ThemeManife
         }
         total = total.saturating_add(size);
         if total > MAX_TOTAL_UNCOMPRESSED {
-            return Err("Archive décompressée trop volumineuse".into());
+            return Err("Uncompressed archive is too large".into());
         }
 
         let out_path = dest.join(&rel);
         if let Some(parent) = out_path.parent() {
             std::fs::create_dir_all(parent)
-                .map_err(|e| format!("Création de dossier : {e}"))?;
+                .map_err(|e| format!("Creating folder: {e}"))?;
         }
         let mut out = std::fs::File::create(&out_path)
-            .map_err(|e| format!("Écriture de {} : {e}", rel.display()))?;
+            .map_err(|e| format!("Writing {}: {e}", rel.display()))?;
         std::io::copy(&mut file, &mut out)
             .map_err(|e| format!("Copie de {} : {e}", rel.display()))?;
     }
@@ -408,7 +408,7 @@ pub async fn serve_theme_asset(
     Path((id, asset_path)): Path<(String, String)>,
 ) -> Result<Response, AppError> {
     if !is_valid_theme_id(&id) {
-        return Err(AppError::NotFound("thème".into()));
+        return Err(AppError::NotFound("theme".into()));
     }
     if asset_path
         .split('/')
@@ -463,12 +463,12 @@ pub async fn set_theme_trust(
 ) -> Result<Json<Value>, AppError> {
     ctx.require_superuser("approbation d'un thème")?;
     if !is_valid_theme_id(&id) {
-        return Err(AppError::Validation("ID de thème invalide".into()));
+        return Err(AppError::Validation("Invalid theme ID".into()));
     }
     if BUILTIN_IDS.contains(&id.as_str()) {
         // Built-ins carry no scripts - nothing to trust.
         return Err(AppError::Validation(
-            "Les thèmes intégrés n'exécutent aucun script".into(),
+            "Built-in themes do not run scripts".into(),
         ));
     }
 
@@ -546,7 +546,7 @@ pub async fn delete_theme(
     }
 
     if !removed {
-        return Err(AppError::NotFound(format!("Thème '{id}' introuvable")));
+        return Err(AppError::NotFound(format!("Theme '{id}' not found")));
     }
 
     // Drop it from the trust list as well, so a re-import starts untrusted.

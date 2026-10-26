@@ -86,7 +86,7 @@ pub struct SmbConnector {
 impl SmbConnector {
     pub fn new(config: &ConnectorConfig) -> Result<Self, RemoteError> {
         let host  = config.host.clone()
-            .ok_or_else(|| RemoteError::Auth("Hôte SMB manquant".into()))?;
+            .ok_or_else(|| RemoteError::Auth("Missing SMB host".into()))?;
         let share = config.share_name.clone()
             .ok_or_else(|| RemoteError::Auth("Nom de partage SMB manquant".into()))?;
 
@@ -161,7 +161,7 @@ impl SmbConnector {
         // listing nobody parsed.
         if !out.status.success() {
             let detail = combined.trim();
-            let detail = if detail.is_empty() { "échec de smbclient" } else { detail };
+            let detail = if detail.is_empty() { "smbclient failed" } else { detail };
             return Err(RemoteError::Provider(format!("SMB: {detail}")));
         }
         Ok(stdout)

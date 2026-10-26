@@ -77,7 +77,7 @@ pub struct RegisterModuleDto {
 /// One page of a module's administration surface.
 fn validate_module_id(id: &str) -> Result<(), AppError> {
     if id.is_empty() || id.len() > 50 {
-        return Err(AppError::Validation("module_id: 1-50 caractères".into()));
+        return Err(AppError::Validation("module_id: 1-50 characters".into()));
     }
     if !id.chars().all(|c| c.is_ascii_alphanumeric() || c == '-' || c == '_') {
         return Err(AppError::Validation(
@@ -86,7 +86,7 @@ fn validate_module_id(id: &str) -> Result<(), AppError> {
     }
     if RESERVED_MODULE_IDS.contains(&id) {
         return Err(AppError::Validation(format!(
-            "L'identifiant '{id}' est réservé par le core"
+            "Identifier '{id}' is reserved by the core"
         )));
     }
     Ok(())
@@ -358,7 +358,7 @@ pub async fn register_module(
         tokio::spawn(async move { crate::handlers::theme_mirror::sync(&st).await });
     }
 
-    Ok((StatusCode::CREATED, Json(json!({ "message": "Module enregistré" }))))
+    Ok((StatusCode::CREATED, Json(json!({ "message": "Module registered" }))))
 }
 
 /// GET /api/v1/modules/:module/config
@@ -505,7 +505,7 @@ pub async fn module_heartbeat(
     if found {
         Ok(Json(json!({ "ok": true })))
     } else {
-        Err(AppError::NotFound(format!("Module '{module_id}' non enregistré")))
+        Err(AppError::NotFound(format!("Module '{module_id}' is not registered")))
     }
 }
 
@@ -518,5 +518,5 @@ pub async fn unregister_module(
     state.modules.write().await.unregister(&module_id);
     crate::modules::manager::mark_stopped(&state.db, &module_id).await?;
     state.events.publish(AppEvent::ModuleUnregistered { module_id });
-    Ok(Json(json!({ "message": "Module désenregistré" })))
+    Ok(Json(json!({ "message": "Module unregistered" })))
 }

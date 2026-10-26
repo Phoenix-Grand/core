@@ -129,7 +129,7 @@ impl SettingDef {
         };
         let Some(n) = n else {
             return Err(AppError::Validation(format!(
-                "'{}' attend un entier",
+                "'{}' expects an integer",
                 self.key
             )));
         };
@@ -137,14 +137,14 @@ impl SettingDef {
         if let Some(min) = self.min {
             if n < min {
                 return Err(AppError::Validation(format!(
-                    "'{label}' doit être supérieur ou égal à {min}"
+                    "'{label}' must be greater than or equal to {min}"
                 )));
             }
         }
         if let Some(max) = self.max {
             if n > max {
                 return Err(AppError::Validation(format!(
-                    "'{label}' doit être inférieur ou égal à {max}"
+                    "'{label}' must be less than or equal to {max}"
                 )));
             }
         }
@@ -172,7 +172,7 @@ pub fn validate_settings_schema(module_id: &str, defs: &[SettingDef]) -> Result<
         if let Some(risk) = &def.risk {
             if !VALID_RISKS.contains(&risk.as_str()) {
                 return Err(AppError::Validation(format!(
-                    "{where_}: risk '{risk}' inconnu (attendu : info, warning ou danger)"
+                    "{where_}: unknown risk '{risk}' (expected: info, warning, or danger)"
                 )));
             }
         }
@@ -180,14 +180,14 @@ pub fn validate_settings_schema(module_id: &str, defs: &[SettingDef]) -> Result<
         if def.min.is_some() || def.max.is_some() {
             if def.value_type != "int" {
                 return Err(AppError::Validation(format!(
-                    "{where_}: min/max ne s'appliquent qu'à type = \"int\" (ici \"{}\")",
+                    "{where_}: min/max only apply to type = \"int\" (received \"{}\")",
                     def.value_type
                 )));
             }
             if let (Some(min), Some(max)) = (def.min, def.max) {
                 if min > max {
                     return Err(AppError::Validation(format!(
-                        "{where_}: min ({min}) est supérieur à max ({max})"
+                        "{where_}: min ({min}) is greater than max ({max})"
                     )));
                 }
             }
@@ -195,7 +195,7 @@ pub fn validate_settings_schema(module_id: &str, defs: &[SettingDef]) -> Result<
 
         if def.multiline && def.value_type != "string" {
             return Err(AppError::Validation(format!(
-                "{where_}: multiline ne s'applique qu'à type = \"string\" (ici \"{}\")",
+                "{where_}: multiline only applies to type = \"string\" (received \"{}\")",
                 def.value_type
             )));
         }
@@ -203,20 +203,19 @@ pub fn validate_settings_schema(module_id: &str, defs: &[SettingDef]) -> Result<
         if let Some(parent) = &def.depends_on {
             if parent.trim().is_empty() {
                 return Err(AppError::Validation(format!(
-                    "{where_}: depends_on est vide"
+                    "{where_}: depends_on is empty"
                 )));
             }
             if parent == &def.key {
                 return Err(AppError::Validation(format!(
-                    "{where_}: depends_on se référence lui-même"
+                    "{where_}: depends_on references itself"
                 )));
             }
             // Resolved against this manifest on purpose: a typo would otherwise
             // hide the setting for good, with nothing to point at.
             if !bool_keys.contains(parent.as_str()) {
                 return Err(AppError::Validation(format!(
-                    "{where_}: depends_on = '{parent}' ne désigne aucun réglage \
-                     booléen déclaré par ce module"
+                    "{where_}: depends_on = '{parent}' does not name a boolean setting declared by this module"
                 )));
             }
         }
@@ -249,12 +248,12 @@ pub fn validate_setting_groups(
         let id = g.id.as_str();
         if id.is_empty() {
             return Err(AppError::Validation(format!(
-                "{module_id}: un groupe de réglages a un id vide"
+                "{module_id}: a settings group has an empty ID"
             )));
         }
         if id.len() > MAX_GROUP_ID_LEN {
             return Err(AppError::Validation(format!(
-                "{module_id}: l'id de groupe '{id}' dépasse {MAX_GROUP_ID_LEN} caractères"
+                "{module_id}: group ID '{id}' exceeds {MAX_GROUP_ID_LEN} characters"
             )));
         }
         if !id
@@ -262,24 +261,23 @@ pub fn validate_setting_groups(
             .all(|c| c.is_ascii_lowercase() || c.is_ascii_digit() || c == '-')
         {
             return Err(AppError::Validation(format!(
-                "{module_id}: l'id de groupe '{id}' n'est pas un slug d'URL \
-                 (minuscules, chiffres et tirets uniquement)"
+                "{module_id}: group ID '{id}' is not a URL slug (only lowercase letters, numbers, and hyphens)"
             )));
         }
         if !seen.insert(id) {
             return Err(AppError::Validation(format!(
-                "{module_id}: l'id de groupe '{id}' est déclaré deux fois"
+                "{module_id}: group ID '{id}' is declared twice"
             )));
         }
         if g.label.trim().is_empty() {
             return Err(AppError::Validation(format!(
-                "{module_id}: le groupe '{id}' n'a pas de libellé"
+                "{module_id}: group '{id}' has no label"
             )));
         }
         if let Some(icon) = &g.icon {
             if icon.trim().is_empty() {
                 return Err(AppError::Validation(format!(
-                    "{module_id}: le groupe '{id}' déclare une icône vide"
+                    "{module_id}: group '{id}' declares an empty icon"
                 )));
             }
         }
@@ -289,8 +287,7 @@ pub fn validate_setting_groups(
         let Some(group) = &def.group else { continue };
         if !seen.contains(group.as_str()) {
             return Err(AppError::Validation(format!(
-                "{module_id}.{}: group = '{group}' ne désigne aucun \
-                 [[setting_groups]] déclaré par ce module",
+                "{module_id}.{}: group = '{group}' does not name a [[setting_groups]] declared by this module",
                 def.key
             )));
         }

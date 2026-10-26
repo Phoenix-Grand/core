@@ -35,16 +35,16 @@ pub fn clamp_retention(requested: i64) -> i64 {
 /// the floor exists, not left believing they got what they asked for.
 pub fn validate_retention(value: &serde_json::Value) -> Result<i64, AppError> {
     let days = value.as_i64().ok_or_else(|| {
-        AppError::Validation(format!("{RETENTION_SETTING_KEY} : un nombre de jours est attendu"))
+        AppError::Validation(format!("{RETENTION_SETTING_KEY}: expected a number of days"))
     })?;
     if days < MIN_RETENTION_DAYS {
         return Err(AppError::Validation(format!(
-            "{RETENTION_SETTING_KEY} : plancher de {MIN_RETENTION_DAYS} jours, non abaissable"
+            "{RETENTION_SETTING_KEY}: the minimum of {MIN_RETENTION_DAYS} days cannot be lowered"
         )));
     }
     if days > 3650 {
         return Err(AppError::Validation(format!(
-            "{RETENTION_SETTING_KEY} : plafond de 3650 jours (10 ans)"
+            "{RETENTION_SETTING_KEY}: maximum 3650 days (10 years)"
         )));
     }
     Ok(days)

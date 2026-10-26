@@ -162,13 +162,13 @@ fn qualify(namespace: &str, bare: &str) -> Result<String, AppError> {
     let bare = bare.trim();
     if bare.is_empty() || bare.len() > MAX_NAME_LEN {
         return Err(AppError::Validation(format!(
-            "Nom « {bare} » invalide : 1 à {MAX_NAME_LEN} caractères"
+            "Invalid name '{bare}': expected 1 to {MAX_NAME_LEN} characters"
         )));
     }
     // A bare name carrying its own prefix is a module choosing its namespace.
     if bare.contains('.') {
         return Err(AppError::Validation(format!(
-            "Nom « {bare} » invalide : un module déclare un nom simple, le préfixe est ajouté par le core"
+            "Invalid name '{bare}': a module declares a simple name; the core adds the prefix"
         )));
     }
     if !bare
@@ -176,7 +176,7 @@ fn qualify(namespace: &str, bare: &str) -> Result<String, AppError> {
         .all(|c| c.is_ascii_lowercase() || c.is_ascii_digit() || c == '_')
     {
         return Err(AppError::Validation(format!(
-            "Nom « {bare} » invalide : minuscules, chiffres et underscores uniquement"
+            "Invalid name '{bare}': only lowercase letters, numbers, and underscores are allowed"
         )));
     }
     Ok(format!("{namespace}.{bare}"))
@@ -186,7 +186,7 @@ fn qualify(namespace: &str, bare: &str) -> Result<String, AppError> {
 fn refuse_core_namespace(module_id: &str) -> Result<(), AppError> {
     if module_id == CORE_NAMESPACE {
         return Err(AppError::Validation(
-            "L'espace « core » est réservé au core".into(),
+            "The 'core' namespace is reserved for the core".into(),
         ));
     }
     Ok(())

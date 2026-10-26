@@ -159,7 +159,7 @@ fn clean_opt(raw: Option<&str>) -> Option<String> {
 fn max_len(value: &str, limit: usize, field: &str) -> Result<(), AppError> {
     if value.chars().count() > limit {
         return Err(AppError::Validation(format!(
-            "{field} ne peut pas dépasser {limit} caractères."
+            "{field} cannot exceed {limit} characters."
         )));
     }
     Ok(())
@@ -325,29 +325,29 @@ async fn resources_with_feature(db: &DbPool, feature_id: Uuid) -> Result<Vec<Uui
 fn write_error(e: sqlx::Error, context: &'static str) -> AppError {
     let s = e.to_string();
     if s.contains("idx_core_buildings_key") {
-        return AppError::Conflict("Un bâtiment porte déjà cet identifiant.".into());
+        return AppError::Conflict("A building already uses this identifier.".into());
     }
     if s.contains("idx_core_features_name") {
-        return AppError::Conflict("Une fonctionnalité porte déjà ce nom.".into());
+        return AppError::Conflict("A feature already uses this name.".into());
     }
     if s.contains("idx_core_resources_name") {
         return AppError::Conflict(
-            "Une ressource porte déjà ce nom à cet étage de ce bâtiment.".into(),
+            "A resource already uses this name on this floor of this building.".into(),
         );
     }
     if s.contains("resources_floor_in_building") {
         return AppError::Validation(
-            "Cet étage n'existe pas dans le bâtiment choisi. Ajoutez-le d'abord à la fiche du bâtiment.".into(),
+            "This floor does not exist in the selected building. Add it to the building first.".into(),
         );
     }
     if s.contains("resources_type_iff_other") {
         return AppError::Validation(
-            "Le type ne se renseigne que pour une ressource qui n'est pas une salle, et il y est obligatoire.".into(),
+            "Type is only used for a resource that is not a room, and is required for those resources.".into(),
         );
     }
     if s.contains("buildings_coordinates_pair") {
         return AppError::Validation(
-            "Latitude et longitude vont ensemble : renseignez les deux, ou aucune.".into(),
+            "Latitude and longitude must be provided together; enter both or neither.".into(),
         );
     }
     tracing::error!(error = %e, context, "ressources: écriture");
@@ -389,10 +389,10 @@ fn validate_building(dto: &BuildingDto) -> Result<CleanBuilding, AppError> {
     let key = clean(&dto.building_key);
     if key.is_empty() {
         return Err(AppError::Validation(
-            "L'identifiant du bâtiment est obligatoire : c'est lui qui apparaît dans le nom des ressources.".into(),
+            "The building identifier is required because it appears in resource names.".into(),
         ));
     }
-    max_len(&key, MAX_BUILDING_KEY, "L'identifiant du bâtiment")?;
+    max_len(&key, MAX_BUILDING_KEY, "Building identifier")?;
     // Same alphabet as the column's CHECK. Refused here so the message can say
     // *why*: the key is followed by a hyphen and a floor inside the generated
     // name, and a space there would make that name ambiguous exactly where it is
@@ -402,19 +402,19 @@ fn validate_building(dto: &BuildingDto) -> Result<CleanBuilding, AppError> {
         .all(|c| c.is_ascii_alphanumeric() || c == '.' || c == '_' || c == '-')
     {
         return Err(AppError::Validation(
-            "L'identifiant du bâtiment n'accepte que des lettres non accentuées, des chiffres, un point, un tiret ou un tiret bas - il compose le nom des ressources.".into(),
+            "The building identifier only accepts unaccented letters, numbers, dots, hyphens, and underscores because it forms part of resource names.".into(),
         ));
     }
 
     let name = clean_opt(dto.name.as_deref());
     if let Some(n) = &name {
-        max_len(n, MAX_BUILDING_NAME, "Le nom du bâtiment")?;
+        max_len(n, MAX_BUILDING_NAME, "Building name")?;
     }
 
     let address = clean(&dto.address);
     if address.is_empty() {
         return Err(AppError::Validation(
-            "L'adresse est obligatoire : c'est la seule question que se pose quelqu'un qui a rendez-vous là-bas.".into(),
+            "The address is required so visitors know where to go.".into(),
         ));
     }
     max_len(&address, MAX_ADDRESS, "L'adresse")?;
@@ -428,7 +428,7 @@ fn validate_building(dto: &BuildingDto) -> Result<CleanBuilding, AppError> {
         (Some(la), Some(lo)) => {
             if !(-90.0..=90.0).contains(&la) || !(-180.0..=180.0).contains(&lo) {
                 return Err(AppError::Validation(
-                    "Coordonnées hors limites : latitude entre -90 et 90, longitude entre -180 et 180.".into(),
+                    "Coordinates out of range: latitude must be between -90 and 90, longitude between -180 and 180.".into(),
                 ));
             }
         }
@@ -437,7 +437,7 @@ fn validate_building(dto: &BuildingDto) -> Result<CleanBuilding, AppError> {
         // valid coordinate.
         _ => {
             return Err(AppError::Validation(
-                "Latitude et longitude vont ensemble : renseignez les deux, ou aucune.".into(),
+                "Latitude and longitude must be provided together; enter both or neither.".into(),
             ))
         }
     }
@@ -448,7 +448,7 @@ fn validate_building(dto: &BuildingDto) -> Result<CleanBuilding, AppError> {
         if f.is_empty() {
             continue;
         }
-        max_len(&f, MAX_FLOOR, "Un nom d'étage")?;
+        max_len(&f, MAX_FLOOR, "Floor name")?;
         // Case-insensitive, because the unique index is: two floors that read
         // the same must not both exist, or a resource's floor would be ambiguous.
         if floors
@@ -456,19 +456,19 @@ fn validate_building(dto: &BuildingDto) -> Result<CleanBuilding, AppError> {
             .any(|e: &String| e.to_lowercase() == f.to_lowercase())
         {
             return Err(AppError::Validation(format!(
-                "L'étage « {f} » figure deux fois."
+                "Floor '{f}' appears twice."
             )));
         }
         floors.push(f);
     }
     if floors.is_empty() {
         return Err(AppError::Validation(
-            "Un bâtiment doit avoir au moins un étage : c'est ce qui permet de dire où se trouve une ressource.".into(),
+            "A building must have at least one floor to locate its resources.".into(),
         ));
     }
     if floors.len() > MAX_FLOORS {
         return Err(AppError::Validation(format!(
-            "Au plus {MAX_FLOORS} étages par bâtiment."
+            "At most {MAX_FLOORS} floors per building."
         )));
     }
 
@@ -527,7 +527,7 @@ async fn write_floors(db: &mut DbTx, building_id: Uuid, floors: &[String]) -> Re
     if let Err(e) = qb.tx_execute(db).await {
         return Err(if e.to_string().contains("resources_floor_in_building") {
             AppError::Validation(
-                "Un étage retiré porte encore des ressources. Déplacez-les ou supprimez-les d'abord.".into(),
+                "A removed floor still contains resources. Move or delete them first.".into(),
             )
         } else {
             tracing::error!(error = %e, "bâtiments: retrait d'étages");
@@ -714,7 +714,7 @@ pub async fn update_building(
             tracing::error!(error = %e, "bâtiments: lecture avant modification");
             AppError::Database(e)
         })?
-        .ok_or_else(|| AppError::NotFound("Bâtiment introuvable".into()))?;
+        .ok_or_else(|| AppError::NotFound("Building not found".into()))?;
 
     let before_json = building_json(&before);
     let refuse = || AuditEntry::new("core.buildings.update").target(target::BUILDING, id, b.key.clone());
@@ -800,7 +800,7 @@ pub async fn delete_building(
             tracing::error!(error = %e, "bâtiments: lecture avant suppression");
             AppError::Database(e)
         })?
-        .ok_or_else(|| AppError::NotFound("Bâtiment introuvable".into()))?;
+        .ok_or_else(|| AppError::NotFound("Building not found".into()))?;
 
     let key: String = row.building_key.clone();
     let count: i64 = row.resource_count;
@@ -812,7 +812,7 @@ pub async fn delete_building(
                 &state.db,
                 refuse(),
                 AppError::Validation(format!(
-                    "Ce bâtiment porte encore {count} ressource(s). Supprimez-les ou déplacez-les d'abord."
+                    "This building still contains {count} resource(s). Delete or move them first."
                 )),
             )
             .await);
@@ -848,10 +848,10 @@ fn validate_feature(dto: &FeatureDto) -> Result<(String, Option<String>), AppErr
     let name = clean(&dto.name);
     if name.is_empty() {
         return Err(AppError::Validation(
-            "Le nom de la fonctionnalité est obligatoire.".into(),
+            "The feature name is required.".into(),
         ));
     }
-    max_len(&name, MAX_FEATURE_NAME, "Le nom de la fonctionnalité")?;
+    max_len(&name, MAX_FEATURE_NAME, "Feature name")?;
     let description = clean_opt(dto.description.as_deref());
     if let Some(d) = &description {
         max_len(d, MAX_ADMIN_NOTE, "La description")?;
@@ -973,7 +973,7 @@ pub async fn update_feature(
             tracing::error!(error = %e, "fonctionnalités: lecture avant modification");
             AppError::Database(e)
         })?
-        .ok_or_else(|| AppError::NotFound("Fonctionnalité introuvable".into()))?;
+        .ok_or_else(|| AppError::NotFound("Feature not found".into()))?;
 
     let before_json = json!({
         "name":        before.try_get::<String>("name")?,
@@ -1038,7 +1038,7 @@ pub async fn delete_feature(
             tracing::error!(error = %e, "fonctionnalités: lecture avant suppression");
             AppError::Database(e)
         })?
-        .ok_or_else(|| AppError::NotFound("Fonctionnalité introuvable".into()))?;
+        .ok_or_else(|| AppError::NotFound("Feature not found".into()))?;
 
     let name: String = row.try_get("name")?;
     let description: Option<String> = row.try_get("description")?;
@@ -1120,14 +1120,14 @@ struct CleanResource {
 fn validate_resource(dto: &ResourceDto) -> Result<CleanResource, AppError> {
     let name = clean(&dto.name);
     if name.is_empty() {
-        return Err(AppError::Validation("Le nom de la ressource est obligatoire.".into()));
+        return Err(AppError::Validation("The resource name is required.".into()));
     }
     max_len(&name, MAX_RESOURCE_NAME, "Le nom de la ressource")?;
 
     let category = dto.category.trim().to_string();
     if category != CATEGORY_ROOM && category != CATEGORY_OTHER {
         return Err(AppError::Validation(format!(
-            "Catégorie inconnue : « {category} ». Attendu : {CATEGORY_ROOM}, {CATEGORY_OTHER}."
+            "Unknown category: '{category}'. Expected: {CATEGORY_ROOM}, {CATEGORY_OTHER}."
         )));
     }
 
@@ -1137,12 +1137,12 @@ fn validate_resource(dto: &ResourceDto) -> Result<CleanResource, AppError> {
     match (category.as_str(), &resource_type) {
         (CATEGORY_ROOM, Some(_)) => {
             return Err(AppError::Validation(
-                "Une salle n'a pas de type : elle est le type. Laissez le champ vide.".into(),
+                "A room does not have a type; leave the field empty.".into(),
             ))
         }
         (CATEGORY_OTHER, None) => {
             return Err(AppError::Validation(
-                "Le type est obligatoire pour une ressource qui n'est pas une salle (« Vélo », « Salon », « Vidéoprojecteur »…).".into(),
+                "Type is required for a resource that is not a room (e.g. 'Bike', 'Lounge', 'Projector').".into(),
             ))
         }
         _ => {}
@@ -1153,23 +1153,23 @@ fn validate_resource(dto: &ResourceDto) -> Result<CleanResource, AppError> {
 
     let floor = clean(&dto.floor_name);
     if floor.is_empty() {
-        return Err(AppError::Validation("L'étage est obligatoire.".into()));
+        return Err(AppError::Validation("The floor is required.".into()));
     }
-    max_len(&floor, MAX_FLOOR, "L'étage")?;
+    max_len(&floor, MAX_FLOOR, "Floor")?;
 
     let section = clean_opt(dto.floor_section.as_deref());
     if let Some(s) = &section {
-        max_len(s, MAX_SECTION, "La partie de l'étage")?;
+        max_len(s, MAX_SECTION, "Floor section")?;
     }
 
     if dto.capacity <= 0 {
         return Err(AppError::Validation(
-            "La capacité est un nombre entier de places strictement positif.".into(),
+            "Capacity must be a positive integer number of seats.".into(),
         ));
     }
     if dto.capacity > MAX_CAPACITY {
         return Err(AppError::Validation(format!(
-            "La capacité dépasse {MAX_CAPACITY} : il s'agit très probablement d'un chiffre en trop."
+            "Capacity exceeds {MAX_CAPACITY}; check for an extra digit."
         )));
     }
 
@@ -1205,7 +1205,7 @@ async fn write_features(
     let mut seen = std::collections::HashSet::new();
     if !feature_ids.iter().all(|id| seen.insert(*id)) {
         return Err(AppError::Validation(
-            "La même fonctionnalité figure deux fois.".into(),
+            "The same feature appears twice.".into(),
         ));
     }
 
@@ -1227,7 +1227,7 @@ async fn write_features(
         .await
         .map_err(|e| {
             if e.to_string().contains("foreign key") {
-                AppError::Validation("Une des fonctionnalités indiquées n'existe pas.".into())
+                AppError::Validation("One of the specified features does not exist.".into())
             } else {
                 tracing::error!(error = %e, "ressources: liaison d'une fonctionnalité");
                 AppError::Database(e)
@@ -1526,7 +1526,7 @@ pub async fn update_resource(
             tracing::error!(error = %e, "ressources: lecture avant modification");
             AppError::Database(e)
         })?
-        .ok_or_else(|| AppError::NotFound("Ressource introuvable".into()))?;
+        .ok_or_else(|| AppError::NotFound("Resource not found".into()))?;
 
     let before_json = resource_json(&before);
     let refuse = || {
@@ -1629,7 +1629,7 @@ pub async fn delete_resource(
             tracing::error!(error = %e, "ressources: lecture avant suppression");
             AppError::Database(e)
         })?
-        .ok_or_else(|| AppError::NotFound("Ressource introuvable".into()))?;
+        .ok_or_else(|| AppError::NotFound("Resource not found".into()))?;
 
     let generated: String = row.generated_name.clone();
     let refuse =

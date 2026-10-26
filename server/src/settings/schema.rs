@@ -42,13 +42,13 @@ impl SettingSchema {
     pub fn validate(&self, value: &Value) -> Result<(), AppError> {
         let mismatch = |expected: &str| {
             Err(AppError::Validation(format!(
-                "'{}' attend une valeur de type {expected}",
+                "'{}' expects a value of type {expected}",
                 self.key
             )))
         };
 
         match self.value_type.as_deref() {
-            Some("bool") if !value.is_boolean() => return mismatch("booléen"),
+            Some("bool") if !value.is_boolean() => return mismatch("boolean"),
             Some("int") if !value.is_number() => return mismatch("entier"),
             Some("string") if !value.is_string() => return mismatch("texte"),
             Some("enum") => {
@@ -66,7 +66,7 @@ impl SettingSchema {
                     });
                     if !accepted {
                         return Err(AppError::Validation(format!(
-                            "'{}' n'accepte pas cette valeur",
+                            "'{}' does not accept this value",
                             self.key
                         )));
                     }
@@ -111,7 +111,7 @@ pub async fn load(db: &DbPool, key: &str) -> Result<SettingSchema, AppError> {
         tracing::error!(error = %e, key = %key, "settings: lecture du schéma impossible");
         AppError::Database(e)
     })?
-    .ok_or_else(|| AppError::NotFound(format!("Réglage '{key}' inexistant")))
+    .ok_or_else(|| AppError::NotFound(format!("Setting '{key}' does not exist")))
 }
 
 /// Loads every declaration matching an optional module filter.

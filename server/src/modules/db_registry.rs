@@ -272,7 +272,7 @@ pub async fn mark_current(db: &DbPool, scope: &str, id: Uuid) -> Result<(), AppE
     if n != 1 {
         // The row is gone or belongs to another scope; do not leave the scope
         // with no current connection.
-        return Err(AppError::NotFound("Connexion enregistrée introuvable".into()));
+        return Err(AppError::NotFound("Saved connection not found".into()));
     }
     tx.commit().await.map_err(AppError::Database)?;
     Ok(())
@@ -317,10 +317,10 @@ pub async fn current(db: &DbPool, scope: &str) -> Result<Option<ConnRow>, AppErr
 /// Forgets a connection. Refuses to forget the scope's current connection, so the
 /// registry never loses the pointer to the live database.
 pub async fn forget(db: &DbPool, scope: &str, id: Uuid) -> Result<(), AppError> {
-    let row = get(db, scope, id).await?.ok_or_else(|| AppError::NotFound("Connexion enregistrée introuvable".into()))?;
+    let row = get(db, scope, id).await?.ok_or_else(|| AppError::NotFound("Saved connection not found".into()))?;
     if row.is_current {
         return Err(AppError::Validation(
-            "Impossible d'oublier la connexion en cours d'utilisation.".into(),
+            "Cannot forget the connection currently in use.".into(),
         ));
     }
     db.execute(

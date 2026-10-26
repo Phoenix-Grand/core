@@ -164,9 +164,7 @@ fn verify(body: &[u8], sig_b64: &str) -> bool {
 /// manifeste - alors que ce manifeste, lui, est bien là et valide.
 pub fn downgrade_error(id: &str) -> AppError {
     AppError::Validation(format!(
-        "« {id} » a déjà été installé depuis un catalogue signé, et le manifeste signé actuel ne \
-         couvre pas l'artefact proposé. Installation refusée : une signature qui disparaît est une \
-         régression, pas une nouveauté."
+        "'{id}' was previously installed from a signed catalog, but the current signed manifest does not cover the proposed artifact. Installation refused: removing a signature reduces security."
     ))
 }
 
@@ -177,9 +175,7 @@ pub fn downgrade_error(id: &str) -> AppError {
 /// tout seul, et l'administrateur doit savoir qu'il n'a rien à corriger.
 pub fn unavailable_error(id: &str) -> AppError {
     AppError::Validation(format!(
-        "« {id} » a déjà été installé depuis un catalogue signé, mais le manifeste signé du \
-         catalogue est momentanément indisponible : impossible de vérifier l'origine de l'artefact. \
-         Installation reportée - réessayez plus tard."
+        "'{id}' was previously installed from a signed catalog, but the catalog's signed manifest is temporarily unavailable, so the artifact's origin cannot be verified. Installation postponed; try again later."
     ))
 }
 

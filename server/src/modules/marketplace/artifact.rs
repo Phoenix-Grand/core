@@ -136,7 +136,7 @@ pub(super) async fn resolve_artifact(
     version: &str,
 ) -> Result<Artifact, AppError> {
     let (owner, name) = parse_owner_repo(repo_url)
-        .ok_or_else(|| AppError::Validation(format!("dépôt invalide : {repo_url}")))?;
+        .ok_or_else(|| AppError::Validation(format!("Invalid repository: {repo_url}")))?;
     let suffix = kbpkg_suffix();
 
     let candidates = [
@@ -163,7 +163,7 @@ pub(super) async fn resolve_artifact(
         }
     }
     Err(AppError::NotFound(format!(
-        "aucun paquet .kbpkg {}/{} dans les releases de {owner}/{name}",
+        "No .kbpkg package for {}/{} in {owner}/{name}'s releases",
         std::env::consts::OS, std::env::consts::ARCH
     )))
 }

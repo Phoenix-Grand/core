@@ -91,7 +91,7 @@ async fn module_exists(state: &AppState, id: &str) -> Result<(), AppError> {
     if found {
         Ok(())
     } else {
-        Err(AppError::NotFound(format!("Module '{id}' introuvable")))
+        Err(AppError::NotFound(format!("Module '{id}' not found")))
     }
 }
 
@@ -136,12 +136,12 @@ pub async fn switch_core_connection(
     ctx.require_superuser("bascule de la base de données principale")?;
     let target = registry::get(&state.db, registry::CORE_SCOPE, cid)
         .await?
-        .ok_or_else(|| AppError::NotFound("Connexion enregistrée introuvable".into()))?;
+        .ok_or_else(|| AppError::NotFound("Saved connection not found".into()))?;
     if target.is_current {
-        return Err(AppError::Validation("Cette connexion est déjà la base courante.".into()));
+        return Err(AppError::Validation("This connection is already the current database.".into()));
     }
     let target_backend = Backend::parse(&target.engine)
-        .ok_or_else(|| AppError::Validation(format!("Moteur inconnu : {}", target.engine)))?;
+        .ok_or_else(|| AppError::Validation(format!("Unknown engine: {}", target.engine)))?;
     db_switch::ensure_switchable_config(target_backend)?;
     let target_creds = target.to_credentials(&state.settings.auth.jwt_secret).map_err(AppError::Internal)?;
     let prefix = instance_prefix(&state);
@@ -166,7 +166,7 @@ pub async fn switch_core_connection(
         &state.db,
         &state.ws_hub,
         GLOBAL_SCOPE,
-        format!("Bascule de la base de données principale vers {tgt_label} en cours…"),
+        format!("Switching the primary database to {tgt_label}…"),
         "switch",
     )
     .await;
@@ -183,7 +183,7 @@ pub async fn switch_core_connection(
             match do_core_copy(&state, &target_settings, &eff, job).await {
                 Ok((tables, rows)) => {
                     if let Err(e) = db_switch::persist_core_settings(&target_creds, target_backend) {
-                        finish_err(&state.db, job, &format!("Copie réussie mais configuration non écrite : {}", e.detail())).await;
+                        finish_err(&state.db, job, &format!("Copy succeeded, but the configuration could not be written: {}", e.detail())).await;
                         return Err(e);
                     }
                     finish_ok(&state.db, job, tables, rows).await;
@@ -242,10 +242,10 @@ pub async fn sync_core_connection(
     ctx.require_superuser("synchronisation de la base de données principale")?;
     let target = registry::get(&state.db, registry::CORE_SCOPE, cid)
         .await?
-        .ok_or_else(|| AppError::NotFound("Connexion enregistrée introuvable".into()))?;
+        .ok_or_else(|| AppError::NotFound("Saved connection not found".into()))?;
     if target.is_current {
         return Err(AppError::Validation(
-            "La base courante ne peut pas être synchronisée avec elle-même.".into(),
+            "The current database cannot be synchronized with itself.".into(),
         ));
     }
     let target_creds = target.to_credentials(&state.settings.auth.jwt_secret).map_err(AppError::Internal)?;
@@ -263,7 +263,7 @@ pub async fn sync_core_connection(
         &state.db,
         &state.ws_hub,
         GLOBAL_SCOPE,
-        format!("Synchronisation de la base de données principale vers {tgt_label} en cours…"),
+        format!("Synchronizing the primary database to {tgt_label}…"),
         "sync",
     )
     .await;
@@ -401,9 +401,9 @@ pub async fn switch_module_connection(
     module_exists(&state, &id).await?;
     let target = registry::get(&state.db, &id, cid)
         .await?
-        .ok_or_else(|| AppError::NotFound("Connexion enregistrée introuvable".into()))?;
+        .ok_or_else(|| AppError::NotFound("Saved connection not found".into()))?;
     if target.is_current {
-        return Err(AppError::Validation("Cette connexion est déjà la base courante du module.".into()));
+        return Err(AppError::Validation("This connection is already the module's current database.".into()));
     }
     let target_creds = target.to_credentials(&state.settings.auth.jwt_secret).map_err(AppError::Internal)?;
     let target_prefix = target.prefix();
@@ -506,10 +506,10 @@ pub async fn sync_module_connection(
     module_exists(&state, &id).await?;
     let target = registry::get(&state.db, &id, cid)
         .await?
-        .ok_or_else(|| AppError::NotFound("Connexion enregistrée introuvable".into()))?;
+        .ok_or_else(|| AppError::NotFound("Saved connection not found".into()))?;
     if target.is_current {
         return Err(AppError::Validation(
-            "La base courante ne peut pas être synchronisée avec elle-même.".into(),
+            "The current database cannot be synchronized with itself.".into(),
         ));
     }
     let source = db_config::resolve(&state.db, &state.settings.database, &state.settings.auth.jwt_secret, &id)
@@ -533,7 +533,7 @@ pub async fn sync_module_connection(
     let has_tables = db_switch::count_tables(&target_pool, &dst_eff).await.map_err(AppError::Database)?;
     if has_tables == 0 {
         return Err(AppError::Validation(
-            "La cible ne contient pas encore les tables du module : basculez d'abord dessus pour l'initialiser."
+            "The target does not yet contain the module's tables. Switch to it first to initialize them."
                 .into(),
         ));
     }

@@ -88,22 +88,22 @@ impl SettingScope {
     pub fn from_parts(scope_type: &str, scope_id: Option<Uuid>) -> Result<Self, AppError> {
         let kind = ScopeKind::parse(scope_type).ok_or_else(|| {
             AppError::Validation(format!(
-                "Portée '{scope_type}' inconnue (instance, org_unit, group, user)"
+                "Unknown scope '{scope_type}' (instance, org_unit, group, user)"
             ))
         })?;
         if !kind.is_writable() {
             return Err(AppError::Validation(
-                "La valeur d'usine n'est pas une portée".into(),
+                "The factory default is not a scope".into(),
             ));
         }
         match (kind, scope_id) {
             (ScopeKind::Instance, None) => Ok(SettingScope::INSTANCE),
             (ScopeKind::Instance, Some(_)) => Err(AppError::Validation(
-                "La portée instance ne prend pas d'identifiant".into(),
+                "The instance scope does not take an identifier".into(),
             )),
             (_, Some(id)) if id != INSTANCE_SCOPE_ID => Ok(SettingScope { kind, id: Some(id) }),
             _ => Err(AppError::Validation(format!(
-                "La portée '{scope_type}' exige un identifiant de sujet"
+                "Scope '{scope_type}' requires a subject identifier"
             ))),
         }
     }

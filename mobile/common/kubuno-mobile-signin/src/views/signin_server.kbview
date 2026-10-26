@@ -8,15 +8,15 @@
        Layout="Dock" BackColor="#FFFFFF">
   <Stack Dock="Fill" Justify="Center" CrossAlign="Stretch" Gap="0" Padding="24, 32, 24, 32">
     <Label Text="{Bind signin_app}" Role="Display" FontWeight="SemiBold" ForeColor="#202124"/>
-    <Label Text="Indiquez l'adresse de votre serveur Kubuno." Role="Body" ForeColor="#5F6368" Padding="0, 8, 0, 0"/>
+    <Label Text="Enter your Kubuno server address." Role="Body" ForeColor="#5F6368" Padding="0, 8, 0, 0"/>
     <Stack CrossAlign="Stretch" Padding="0, 24, 0, 0">
-      <TextField x:Name="signin_server_url" Label="Adresse du serveur" Placeholder="https://kubuno.exemple.com"
+      <TextField x:Name="signin_server_url" Label="Server address" Placeholder="https://kubuno.example.com"
                  LeftIcon="Globe" InputType="Url" OnKeyDown="signin_server_next"/>
     </Stack>
     <Label Text="{Bind signin_error}" Role="Meta" ForeColor="#D93025" Overflow="Wrap" Padding="0, 10, 0, 0"/>
     <Label Text="{Bind signin_busy}" Role="Meta" ForeColor="#5F6368" Padding="0, 4, 0, 0"/>
     <Stack CrossAlign="Stretch" Padding="0, 12, 0, 0">
-      <Button x:Name="signin_continue" Text="Continuer" Variant="Primary" Size="Lg" OnClick="signin_server_next"/>
+      <Button x:Name="signin_continue" Text="Continue" Variant="Primary" Size="Lg" OnClick="signin_server_next"/>
     </Stack>
   </Stack>
 </Panel>

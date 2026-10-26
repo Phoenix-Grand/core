@@ -78,7 +78,7 @@ impl WebDavConnector {
                 return Err(RemoteError::NotFound(format!("Chemin {path} introuvable")));
             }
             s if !s.is_success() && s.as_u16() != 207 => {
-                return Err(RemoteError::Provider(format!("PROPFIND a retourné {s}")));
+                return Err(RemoteError::Provider(format!("PROPFIND returned {s}")));
             }
             _ => {}
         }
@@ -264,9 +264,9 @@ impl RemoteConnector for WebDavConnector {
             .map_err(|e| RemoteError::Network(e.to_string()))?;
 
         match resp.status() {
-            StatusCode::UNAUTHORIZED => return Err(RemoteError::Auth("Authentification échouée".into())),
+            StatusCode::UNAUTHORIZED => return Err(RemoteError::Auth("Authentication failed".into())),
             StatusCode::NOT_FOUND    => return Err(RemoteError::NotFound(format!("{path} introuvable"))),
-            s if !s.is_success()    => return Err(RemoteError::Provider(format!("GET a retourné {s}"))),
+            s if !s.is_success()    => return Err(RemoteError::Provider(format!("GET returned {s}"))),
             _ => {}
         }
 
@@ -300,10 +300,10 @@ impl RemoteConnector for WebDavConnector {
             .map_err(|e| RemoteError::Network(e.to_string()))?;
 
         match resp.status() {
-            StatusCode::UNAUTHORIZED => return Err(RemoteError::Auth("Authentification échouée".into())),
+            StatusCode::UNAUTHORIZED => return Err(RemoteError::Auth("Authentication failed".into())),
             StatusCode::FORBIDDEN    => return Err(RemoteError::Forbidden(path.into())),
             StatusCode::INSUFFICIENT_STORAGE => return Err(RemoteError::QuotaExceeded),
-            s if !s.is_success() => return Err(RemoteError::Provider(format!("PUT a retourné {s}"))),
+            s if !s.is_success() => return Err(RemoteError::Provider(format!("PUT returned {s}"))),
             _ => {}
         }
 
@@ -323,9 +323,9 @@ impl RemoteConnector for WebDavConnector {
 
         match resp.status() {
             s if s.is_success() || s.as_u16() == 405 => Ok(()), // 405 = already exists
-            StatusCode::UNAUTHORIZED => Err(RemoteError::Auth("Authentification échouée".into())),
+            StatusCode::UNAUTHORIZED => Err(RemoteError::Auth("Authentication failed".into())),
             StatusCode::FORBIDDEN    => Err(RemoteError::Forbidden(path.into())),
-            s                        => Err(RemoteError::Provider(format!("MKCOL a retourné {s}"))),
+            s                        => Err(RemoteError::Provider(format!("MKCOL returned {s}"))),
         }
     }
 
@@ -339,9 +339,9 @@ impl RemoteConnector for WebDavConnector {
 
         match resp.status() {
             s if s.is_success() || s.as_u16() == 404 => Ok(()),
-            StatusCode::UNAUTHORIZED => Err(RemoteError::Auth("Authentification échouée".into())),
+            StatusCode::UNAUTHORIZED => Err(RemoteError::Auth("Authentication failed".into())),
             StatusCode::FORBIDDEN    => Err(RemoteError::Forbidden(path.into())),
-            s                        => Err(RemoteError::Provider(format!("DELETE a retourné {s}"))),
+            s                        => Err(RemoteError::Provider(format!("DELETE returned {s}"))),
         }
     }
 
@@ -362,9 +362,9 @@ impl RemoteConnector for WebDavConnector {
 
         match resp.status() {
             s if s.is_success() => Ok(()),
-            StatusCode::UNAUTHORIZED => Err(RemoteError::Auth("Authentification échouée".into())),
+            StatusCode::UNAUTHORIZED => Err(RemoteError::Auth("Authentication failed".into())),
             StatusCode::FORBIDDEN    => Err(RemoteError::Forbidden(from.into())),
-            s                        => Err(RemoteError::Provider(format!("MOVE a retourné {s}"))),
+            s                        => Err(RemoteError::Provider(format!("MOVE returned {s}"))),
         }
     }
 
@@ -385,9 +385,9 @@ impl RemoteConnector for WebDavConnector {
 
         match resp.status() {
             s if s.is_success() => self.stat(to).await,
-            StatusCode::UNAUTHORIZED => Err(RemoteError::Auth("Authentification échouée".into())),
+            StatusCode::UNAUTHORIZED => Err(RemoteError::Auth("Authentication failed".into())),
             StatusCode::FORBIDDEN    => Err(RemoteError::Forbidden(from.into())),
-            s                        => Err(RemoteError::Provider(format!("COPY a retourné {s}"))),
+            s                        => Err(RemoteError::Provider(format!("COPY returned {s}"))),
         }
     }
 }

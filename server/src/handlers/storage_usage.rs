@@ -78,7 +78,7 @@ fn declaring_module(
         // Unidentified caller naming nobody: there is no identity to fall back
         // on, and guessing one would attribute bytes at random.
         (None, None) => Err(AppError::Validation(
-            "module_id requis : l'appelant n'est pas identifié par son secret interne".into(),
+            "module_id is required: the caller was not identified by its internal secret".into(),
         )),
     }
 }

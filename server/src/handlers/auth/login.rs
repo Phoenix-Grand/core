@@ -30,7 +30,7 @@ use super::tokens::{
     request_body = LoginDto,
     responses(
         (status = 200, description = "Authentifié. Pour client_type 'native'/'desktop' le corps est un NativeTokenResponse ; sinon LoginResponse + cookie HttpOnly refresh_token.", body = NativeTokenResponse),
-        (status = 422, description = "Identifiants invalides")
+        (status = 422, description = "Invalid credentials")
     )
 )]
 pub async fn login(
@@ -60,7 +60,7 @@ pub async fn login(
         .map_err(AppError::Internal)?;
 
     // Même message dans tous les cas (pas d'énumération email/mot de passe)
-    let invalid = || AppError::Validation("Identifiants invalides".into());
+    let invalid = || AppError::Validation("Invalid credentials".into());
 
     // Failed sign-ins are audited for administrator accounts only: they are the
     // ones whose compromise matters, and recording every miss on every unknown
@@ -451,7 +451,7 @@ pub async fn logout(
         // Remove ONE parked account. The active session survives - unless the
         // removed slot IS the active account.
         if slot >= MAX_ACCOUNT_SLOTS {
-            return Err(AppError::Validation("Emplacement de compte invalide".into()));
+            return Err(AppError::Validation("Invalid account slot".into()));
         }
         if let Some(raw) = read_slot_cookie(&headers, slot) {
             revoke_session(&state, &raw).await;
@@ -488,7 +488,7 @@ pub async fn logout(
     }
 
     let mut response =
-        (StatusCode::OK, Json(json!({ "message": "Déconnecté" }))).into_response();
+        (StatusCode::OK, Json(json!({ "message": "Signed out" }))).into_response();
     for cookie in cookies_to_clear {
         if let Ok(value) = header::HeaderValue::from_str(&cookie) {
             response.headers_mut().append(header::SET_COOKIE, value);

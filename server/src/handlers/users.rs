@@ -395,7 +395,7 @@ pub async fn change_password(
         .map_err(AppError::Internal)?;
 
     if !ok {
-        return Err(AppError::Validation("Ancien mot de passe incorrect".into()));
+        return Err(AppError::Validation("Incorrect current password".into()));
     }
 
     // Validate before touching the database: the DTO's own rules (length), plus
@@ -406,7 +406,7 @@ pub async fn change_password(
 
     if dto.new_password == dto.old_password {
         return Err(AppError::Validation(
-            "Le nouveau mot de passe doit être différent de l'actuel".into(),
+            "The new password must be different from the current password".into(),
         ));
     }
 
@@ -460,7 +460,7 @@ pub async fn change_password(
     // replaced, the proof goes with it.
     reauth_store::revoke_all(&state.db, user.id).await;
 
-    Ok(Json(json!({ "message": "Mot de passe mis à jour" })))
+    Ok(Json(json!({ "message": "Password updated" })))
 }
 
 /// `GET /api/v1/me/security` - everything the settings page needs to talk about
@@ -536,10 +536,10 @@ pub async fn revoke_session(
         .await?;
 
     if affected == 0 {
-        return Err(AppError::NotFound("Session introuvable".into()));
+        return Err(AppError::NotFound("Session not found".into()));
     }
 
-    Ok(Json(json!({ "message": "Session révoquée" })))
+    Ok(Json(json!({ "message": "Session revoked" })))
 }
 
 pub async fn revoke_all_sessions(
@@ -556,7 +556,7 @@ pub async fn revoke_all_sessions(
         )
         .await?;
 
-    Ok(Json(json!({ "message": "Toutes les sessions révoquées" })))
+    Ok(Json(json!({ "message": "All sessions revoked" })))
 }
 
 #[derive(Deserialize)]
@@ -767,7 +767,7 @@ pub async fn user_card(
     // opened is not an error the reader can act on, and every module would have
     // to render a failure where there is simply nothing to publish.
     if !policy.enabled && caller.id != id {
-        return Err(AppError::NotFound("Compte introuvable".into()));
+        return Err(AppError::NotFound("Account not found".into()));
     }
 
     #[allow(clippy::type_complexity)]
@@ -791,7 +791,7 @@ pub async fn user_card(
 
     let (uid, username, display_name, first_name, last_name, avatar_url, email,
          name_pronunciation, pronouns, work_location, introduction, org_unit_id) =
-        row.ok_or_else(|| AppError::NotFound("Compte introuvable".into()))?;
+        row.ok_or_else(|| AppError::NotFound("Account not found".into()))?;
 
     // Narrowed directories answer only inside the caller's own unit and its
     // sub-units - the same anchor the search uses, so one policy, one meaning.
@@ -813,7 +813,7 @@ pub async fn user_card(
                 AppError::Database(e)
             })?;
         if same != Some(true) {
-            return Err(AppError::NotFound("Compte introuvable".into()));
+            return Err(AppError::NotFound("Account not found".into()));
         }
     }
 
@@ -939,7 +939,7 @@ pub async fn setup_totp(
     AuthUser(user): AuthUser,
 ) -> Result<Json<serde_json::Value>, AppError> {
     if user.totp_enabled {
-        return Err(AppError::Conflict("La 2FA est déjà activée".into()));
+        return Err(AppError::Conflict("2FA is already enabled".into()));
     }
 
     let (secret_base32, uri, encrypted) = totp_auth::generate_secret(
@@ -974,7 +974,7 @@ pub async fn enable_totp(
     let encrypted = user
         .totp_pending_secret
         .as_deref()
-        .ok_or_else(|| AppError::Validation("Démarrez d'abord la configuration 2FA".into()))?;
+        .ok_or_else(|| AppError::Validation("Start 2FA setup first".into()))?;
 
     let valid = totp_auth::verify_code(
         &state.settings.auth.jwt_secret, encrypted, &dto.code, &user.email,
@@ -982,7 +982,7 @@ pub async fn enable_totp(
     .map_err(AppError::Internal)?;
 
     if !valid {
-        return Err(AppError::Validation("Code incorrect".into()));
+        return Err(AppError::Validation("Incorrect code".into()));
     }
 
     state
@@ -1040,7 +1040,7 @@ pub async fn disable_totp(
     let user = proof.user().clone();
 
     if !user.totp_enabled {
-        return Err(AppError::Validation("La 2FA n'est pas activée".into()));
+        return Err(AppError::Validation("2FA is not enabled".into()));
     }
 
     let encrypted = user
@@ -1054,7 +1054,7 @@ pub async fn disable_totp(
     .map_err(AppError::Internal)?;
 
     if !valid {
-        return Err(AppError::Validation("Code incorrect".into()));
+        return Err(AppError::Validation("Incorrect code".into()));
     }
 
     state
@@ -1118,19 +1118,19 @@ pub async fn upload_avatar(
     while let Some(field) = multipart
         .next_field()
         .await
-        .map_err(|e| AppError::Validation(format!("Champ invalide : {e}")))?
+        .map_err(|e| AppError::Validation(format!("Invalid field: {e}")))?
     {
         let name = field.name().map(|s| s.to_owned());
         let content_type = field.content_type().unwrap_or("image/jpeg").to_owned();
         match name.as_deref() {
             Some("avatar") | Some("original") => {
                 if !content_type.starts_with("image/") {
-                    return Err(AppError::Validation("Le fichier doit être une image".into()));
+                    return Err(AppError::Validation("The file must be an image".into()));
                 }
                 let bytes = field.bytes().await
                     .map_err(|e| AppError::Validation(format!("Lecture fichier : {e}")))?;
                 if bytes.len() > 10 * 1024 * 1024 {
-                    return Err(AppError::Validation("L'image ne doit pas dépasser 10 Mo".into()));
+                    return Err(AppError::Validation("The image must not exceed 10 MB".into()));
                 }
                 if name.as_deref() == Some("avatar") { data = Some((bytes, content_type)); }
                 else { original = Some((bytes, content_type)); }
@@ -1139,7 +1139,7 @@ pub async fn upload_avatar(
         }
     }
 
-    let (bytes, content_type) = data.ok_or_else(|| AppError::Validation("Champ 'avatar' manquant".into()))?;
+    let (bytes, content_type) = data.ok_or_else(|| AppError::Validation("Missing 'avatar' field".into()))?;
     let ext = ext_for(&content_type);
     let path = format!("avatars/{}.{}", user.id, ext);
 
@@ -1193,7 +1193,7 @@ pub async fn get_avatar(
                 .unwrap());
         }
     }
-    Err(AppError::NotFound("Avatar introuvable".into()))
+    Err(AppError::NotFound("Avatar not found".into()))
 }
 
 /// GET /api/v1/users/:id/avatar/original - serve l'image originale (pour re-recadrage)
@@ -1212,7 +1212,7 @@ pub async fn get_avatar_original(
                 .unwrap());
         }
     }
-    Err(AppError::NotFound("Image originale introuvable".into()))
+    Err(AppError::NotFound("Original image not found".into()))
 }
 
 /// Largest answer accepted from a remote instance's login route.
@@ -1234,21 +1234,21 @@ pub async fn linked_account_login(
     let raw_url = body
         .get("instance_url")
         .and_then(|v| v.as_str())
-        .ok_or_else(|| AppError::Validation("instance_url requis".into()))?;
+        .ok_or_else(|| AppError::Validation("instance_url is required".into()))?;
     let login = body.get("email").and_then(|v| v.as_str()).unwrap_or("");
     let password = body.get("password").and_then(|v| v.as_str()).unwrap_or("");
     if raw_url.len() > 2048 || login.len() > 320 || password.len() > 1024 {
-        return Err(AppError::Validation("Données invalides".into()));
+        return Err(AppError::Validation("Invalid data".into()));
     }
 
-    let unreachable = || AppError::Validation("Impossible de joindre l'instance".into());
+    let unreachable = || AppError::Validation("Cannot reach the instance".into());
     let target = crate::network::outbound::resolve_public_http(raw_url.trim_end_matches('/'))
         .await
         .map_err(|e| {
             tracing::warn!(user_id = %user.id, reason = ?e, "linked account: instance URL refused");
             match e {
                 crate::network::outbound::OutboundError::InvalidUrl => {
-                    AppError::Validation("URL invalide".into())
+                    AppError::Validation("Invalid URL".into())
                 }
                 _ => unreachable(),
             }
@@ -1386,7 +1386,7 @@ pub async fn internal_get_user(
             tracing::error!(error = %e, %id, "annuaire interne : lecture d'un compte impossible");
             AppError::Database(e)
         })?
-        .ok_or_else(|| AppError::NotFound("Compte introuvable".into()))?;
+        .ok_or_else(|| AppError::NotFound("Account not found".into()))?;
 
     Ok(Json(directory_entry(row)))
 }
@@ -1527,7 +1527,7 @@ pub async fn internal_provisioning_user(
             tracing::error!(error = %e, %id, "provisioning mail : lecture d'un compte impossible");
             AppError::Database(e)
         })?
-        .ok_or_else(|| AppError::NotFound("Compte introuvable".into()))?;
+        .ok_or_else(|| AppError::NotFound("Account not found".into()))?;
     Ok(Json(provisioning_entry(row)))
 }
 

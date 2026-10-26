@@ -70,13 +70,13 @@ impl DirectoryError {
     /// Wording for the administration console. Never reaches the sign-in path.
     pub fn message(&self) -> String {
         match self {
-            Self::Misconfigured(d) => format!("Configuration incomplète : {d}"),
-            Self::Unreachable(_) => "Annuaire injoignable".into(),
-            Self::ServiceBindFailed(_) => "Liaison du compte de service refusée".into(),
-            Self::SearchFailed(_) => "Recherche refusée par l'annuaire".into(),
-            Self::NoSuchUser => "Aucune entrée ne correspond au filtre".into(),
-            Self::Ambiguous(n) => format!("Le filtre correspond à {n} entrées - il doit en désigner une seule"),
-            Self::InvalidCredentials(_) => "Identifiants refusés par l'annuaire".into(),
+            Self::Misconfigured(d) => format!("Incomplete configuration: {d}"),
+            Self::Unreachable(_) => "Directory unreachable".into(),
+            Self::ServiceBindFailed(_) => "Service account bind refused".into(),
+            Self::SearchFailed(_) => "Search refused by the directory".into(),
+            Self::NoSuchUser => "No entry matches the filter".into(),
+            Self::Ambiguous(n) => format!("The filter matches {n} entries; it must identify exactly one"),
+            Self::InvalidCredentials(_) => "Credentials refused by the directory".into(),
         }
     }
 
@@ -96,28 +96,22 @@ impl DirectoryError {
     /// them and no idea which of six fields is wrong.
     pub fn hint(&self) -> &'static str {
         match self {
-            Self::Misconfigured(_) => "Renseignez l'hôte, le DN de base et le filtre de recherche.",
+            Self::Misconfigured(_) => "Enter the host, base DN, and search filter.",
             Self::Unreachable(_) => {
-                "Vérifiez l'hôte, le port et le mode de chiffrement. En LDAPS le certificat doit être \
-                 signé par une autorité connue - collez l'autorité privée de votre annuaire si nécessaire."
+                "Check the host, port, and encryption mode. For LDAPS, the certificate must be signed by a trusted authority. Paste your directory's private CA if needed."
             }
             Self::ServiceBindFailed(_) => {
-                "Vérifiez le DN complet du compte de service (par ex. cn=service,ou=comptes,dc=exemple,dc=com) \
-                 et son mot de passe. Active Directory accepte aussi la forme service@exemple.com."
+                "Check the service account's full DN (e.g. cn=service,ou=accounts,dc=example,dc=com) and its password. Active Directory also accepts service@example.com."
             }
             Self::SearchFailed(_) => {
-                "Vérifiez le DN de base et la syntaxe du filtre. Le compte de service doit avoir le droit \
-                 de lire cette branche."
+                "Check the base DN and filter syntax. The service account must have permission to read this branch."
             }
             Self::NoSuchUser => {
-                "Le filtre est syntaxiquement valide mais ne trouve personne : vérifiez l'attribut \
-                 d'identifiant (uid pour un annuaire standard, sAMAccountName pour Active Directory) \
-                 et le DN de base."
+                "The filter is syntactically valid but finds no users. Check the username attribute (uid for a standard directory, sAMAccountName for Active Directory) and the base DN."
             }
-            Self::Ambiguous(_) => "Ajoutez une clause au filtre pour qu'il ne désigne qu'une entrée.",
+            Self::Ambiguous(_) => "Add a filter clause so it identifies exactly one entry.",
             Self::InvalidCredentials(_) => {
-                "Le compte a été trouvé dans l'annuaire mais la liaison a échoué : mot de passe erroné, \
-                 ou compte désactivé, expiré ou verrouillé côté annuaire."
+                "The account was found in the directory, but the bind failed: the password is incorrect or the account is disabled, expired, or locked in the directory."
             }
         }
     }
@@ -177,18 +171,18 @@ fn root_store_with(ca_pem: &str) -> Result<RootCertStore, DirectoryError> {
     let certs: Vec<CertificateDer<'static>> = rustls_pemfile::certs(&mut reader)
         .collect::<Result<Vec<_>, _>>()
         .map_err(|e| {
-            DirectoryError::Misconfigured(format!("autorité de certification illisible : {e}"))
+            DirectoryError::Misconfigured(format!("Cannot read the certificate authority: {e}"))
         })?;
     if certs.is_empty() {
         return Err(DirectoryError::Misconfigured(
-            "l'autorité de certification fournie ne contient aucun certificat PEM".into(),
+            "The supplied certificate authority contains no PEM certificates".into(),
         ));
     }
     let count = certs.len();
     let (added, ignored) = store.add_parsable_certificates(certs);
     if added == 0 {
         return Err(DirectoryError::Misconfigured(format!(
-            "l'autorité de certification fournie ({count} bloc(s) PEM) n'a pas pu être chargée"
+            "The supplied certificate authority ({count} PEM block(s)) could not be loaded"
         )));
     }
     if ignored > 0 {
@@ -263,10 +257,10 @@ impl Connection {
         service_password: &str,
     ) -> Result<Self, DirectoryError> {
         if dir.host.trim().is_empty() {
-            return Err(DirectoryError::Misconfigured("hôte non renseigné".into()));
+            return Err(DirectoryError::Misconfigured("Host not specified".into()));
         }
         if dir.base_dn.trim().is_empty() {
-            return Err(DirectoryError::Misconfigured("DN de base non renseigné".into()));
+            return Err(DirectoryError::Misconfigured("Base DN not specified".into()));
         }
 
         // rustls refuses to build anything before a crypto provider exists.
@@ -349,7 +343,7 @@ impl Connection {
     pub async fn bind_as(&mut self, dn: &str, password: &str) -> Result<(), DirectoryError> {
         if password.is_empty() {
             return Err(DirectoryError::InvalidCredentials(
-                "mot de passe vide (liaison non authentifiée refusée)".into(),
+                "Empty password (unauthenticated bind refused)".into(),
             ));
         }
         let res = self
@@ -528,7 +522,7 @@ mod tests {
             }
             other => panic!("attendu ServiceBindFailed, obtenu {other:?}"),
         }
-        assert!(err.hint().contains("compte de service"));
+        assert!(err.hint().contains("service account"));
     }
 
     #[test]

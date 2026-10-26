@@ -81,22 +81,22 @@ fn schema_prefix_is_valid(p: &str) -> bool {
 
 fn validate(dto: &ModuleDbDto) -> Result<(), AppError> {
     if !ENGINES.contains(&dto.engine.as_str()) {
-        return Err(AppError::Validation(format!("Moteur inconnu : {}", dto.engine)));
+        return Err(AppError::Validation(format!("Unknown engine: {}", dto.engine)));
     }
     let prefix = dto.schema_prefix.as_deref().unwrap_or("").trim();
     if !schema_prefix_is_valid(prefix) {
         return Err(AppError::Validation(
-            "Préfixe de schéma invalide : minuscules, chiffres et « _ » uniquement, 32 max.".into(),
+            "Invalid schema prefix: only lowercase letters, numbers, and '_'; maximum 32 characters.".into(),
         ));
     }
     match Backend::parse(&dto.engine) {
         Some(Backend::Sqlite) => {}
         _ => {
             if dto.host.trim().is_empty() {
-                return Err(AppError::Validation("L'hôte de la base est requis.".into()));
+                return Err(AppError::Validation("The database host is required.".into()));
             }
             if dto.user.trim().is_empty() {
-                return Err(AppError::Validation("L'utilisateur de la base est requis.".into()));
+                return Err(AppError::Validation("The database user is required.".into()));
             }
         }
     }
@@ -134,7 +134,7 @@ pub async fn get_module_database(
 ) -> Result<Json<Value>, AppError> {
     ctx.require_superuser("gestion de la base de données d'un module")?;
     if !module_exists(&state.db, &id).await? {
-        return Err(AppError::NotFound(format!("Module '{id}' introuvable")));
+        return Err(AppError::NotFound(format!("Module '{id}' not found")));
     }
 
     let inherited_engine = state.settings.database.engine.clone();
@@ -277,14 +277,14 @@ async fn ensure_target(
             } else {
                 creds.path.trim().to_string()
             };
-            std::fs::create_dir_all(&dir).map_err(|e| format!("Répertoire inaccessible « {dir} » : {e}"))?;
+            std::fs::create_dir_all(&dir).map_err(|e| format!("Cannot access directory '{dir}': {e}"))?;
             let probe = std::path::Path::new(&dir).join(".kubuno-write-probe");
             std::fs::File::create(&probe)
-                .map_err(|e| format!("Le répertoire « {dir} » n'est pas accessible en écriture : {e}"))?;
+                .map_err(|e| format!("Directory '{dir}' is not writable: {e}"))?;
             let _ = std::fs::remove_file(&probe);
             Ok(())
         }
-        None => Err(format!("Moteur inconnu : {}", creds.engine)),
+        None => Err(format!("Unknown engine: {}", creds.engine)),
     }
 }
 
@@ -299,7 +299,7 @@ pub async fn test_module_database(
 ) -> Result<Response, AppError> {
     ctx.require_superuser("test de la base de données d'un module")?;
     if !module_exists(&state.db, &id).await? {
-        return Err(AppError::NotFound(format!("Module '{id}' introuvable")));
+        return Err(AppError::NotFound(format!("Module '{id}' not found")));
     }
     validate(&dto)?;
 
@@ -343,7 +343,7 @@ pub async fn put_module_database(
 ) -> Result<Json<Value>, AppError> {
     ctx.require_superuser("gestion de la base de données d'un module")?;
     if !module_exists(&state.db, &id).await? {
-        return Err(AppError::NotFound(format!("Module '{id}' introuvable")));
+        return Err(AppError::NotFound(format!("Module '{id}' not found")));
     }
     validate(&dto)?;
 
@@ -482,7 +482,7 @@ pub async fn delete_module_database(
 ) -> Result<Json<Value>, AppError> {
     ctx.require_superuser("gestion de la base de données d'un module")?;
     if !module_exists(&state.db, &id).await? {
-        return Err(AppError::NotFound(format!("Module '{id}' introuvable")));
+        return Err(AppError::NotFound(format!("Module '{id}' not found")));
     }
 
     // A banner scoped to this module covers the delete + restart.

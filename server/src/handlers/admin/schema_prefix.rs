@@ -127,9 +127,7 @@ pub async fn put_schema_prefix(
 
     if !applicable(&state) {
         return Err(AppError::Validation(
-            "Le préfixe de schéma ne s'applique pas à SQLite : chaque schéma est un fichier, \
-             il n'y a pas d'espace de noms serveur à renommer. Changez le préfixe uniquement \
-             sur PostgreSQL ou MySQL."
+            "Schema prefixes do not apply to SQLite: each schema is a file, so there is no server namespace to rename. Change the prefix only on PostgreSQL or MySQL."
                 .into(),
         ));
     }
@@ -157,7 +155,7 @@ pub async fn put_schema_prefix(
         &state.ws_hub,
         GLOBAL_SCOPE,
         format!(
-            "Changement du préfixe de schéma (« {} » → « {} ») en cours…",
+            "Changing schema prefix ('{}' → '{}')…",
             prefix_label(&old_prefix),
             prefix_label(&new_prefix)
         ),
@@ -206,7 +204,7 @@ pub async fn put_schema_prefix(
                 let mapped = match e {
                     kubuno_db::AdminError::Sqlx(err) => AppError::Database(err),
                     kubuno_db::AdminError::BadPrefix(p) => {
-                        AppError::Validation(format!("Préfixe invalide : {p}"))
+                        AppError::Validation(format!("Invalid prefix: {p}"))
                     }
                     other => AppError::Internal(anyhow::anyhow!(other.to_string())),
                 };

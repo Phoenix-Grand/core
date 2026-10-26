@@ -55,7 +55,7 @@ fn validate_slug(slug: &str) -> Result<(), AppError> {
         Ok(())
     } else {
         Err(AppError::Validation(
-            "Identifiant invalide : 2 à 40 caractères, minuscules, chiffres et tirets".into(),
+            "Invalid identifier: 2 to 40 characters; lowercase letters, numbers, and hyphens".into(),
         ))
     }
 }
@@ -63,7 +63,7 @@ fn validate_slug(slug: &str) -> Result<(), AppError> {
 fn validate_field(label: &str, value: &str) -> Result<(), AppError> {
     if value.chars().count() > MAX_FIELD {
         return Err(AppError::Validation(format!(
-            "{label} : {MAX_FIELD} caractères maximum"
+            "{label}: maximum {MAX_FIELD} characters"
         )));
     }
     Ok(())
@@ -77,7 +77,7 @@ fn validate_field(label: &str, value: &str) -> Result<(), AppError> {
 fn validate_host(host: &str) -> Result<(), AppError> {
     let host = host.trim();
     if host.is_empty() || host.chars().count() > 255 {
-        return Err(AppError::Validation("Hôte requis (255 caractères maximum)".into()));
+        return Err(AppError::Validation("Host required (maximum 255 characters)".into()));
     }
     let bad = host.contains("://")
         || host.contains('/')
@@ -86,7 +86,7 @@ fn validate_host(host: &str) -> Result<(), AppError> {
         || host.contains('@');
     if bad {
         return Err(AppError::Validation(
-            "Hôte invalide : indiquez seulement le nom ou l'adresse (par ex. dc01.exemple.com), sans schéma ni chemin".into(),
+            "Invalid host: enter only the name or address (e.g. dc01.example.com), without a scheme or path".into(),
         ));
     }
     Ok(())
@@ -96,7 +96,7 @@ fn validate_filter(label: &str, value: &str) -> Result<(), AppError> {
     validate_field(label, value)?;
     let value = value.trim();
     if value.is_empty() {
-        return Err(AppError::Validation(format!("{label} requis")));
+        return Err(AppError::Validation(format!("{label} required")));
     }
     // Balanced parentheses is the one structural property worth checking here;
     // the directory itself is the authority on the rest of the grammar and says
@@ -108,14 +108,14 @@ fn validate_filter(label: &str, value: &str) -> Result<(), AppError> {
             ')' => {
                 depth -= 1;
                 if depth < 0 {
-                    return Err(AppError::Validation(format!("{label} : parenthèses déséquilibrées")));
+                    return Err(AppError::Validation(format!("{label}: unbalanced parentheses")));
                 }
             }
             _ => {}
         }
     }
     if depth != 0 {
-        return Err(AppError::Validation(format!("{label} : parenthèses déséquilibrées")));
+        return Err(AppError::Validation(format!("{label}: unbalanced parentheses")));
     }
     Ok(())
 }
@@ -125,8 +125,7 @@ fn validate_user_filter(value: &str) -> Result<(), AppError> {
     validate_filter("Filtre de recherche", value)?;
     if !value.contains(crate::directory::filter::LOGIN_PLACEHOLDER) {
         return Err(AppError::Validation(
-            "Le filtre de recherche doit contenir « {login} » - c'est là que l'identifiant saisi est inséré. \
-             Sans lui, la même requête serait exécutée pour tout le monde."
+            "The search filter must contain '{login}', where the entered username is inserted. Without it, the same query would run for everyone."
                 .into(),
         ));
     }
@@ -203,16 +202,16 @@ pub async fn create_directory(
     let slug = dto.slug.trim().to_lowercase();
     validate_slug(&slug)?;
     if dto.display_name.trim().is_empty() {
-        return Err(AppError::Validation("Nom affiché requis".into()));
+        return Err(AppError::Validation("Display name required".into()));
     }
     validate_host(&dto.host)?;
     if dto.base_dn.trim().is_empty() {
-        return Err(AppError::Validation("DN de base requis".into()));
+        return Err(AppError::Validation("Base DN required".into()));
     }
     validate_field("DN de base", &dto.base_dn)?;
     validate_field("DN du compte de service", &dto.bind_dn)?;
     if dto.ca_certificate.chars().count() > MAX_PEM {
-        return Err(AppError::Validation("Autorité de certification trop volumineuse".into()));
+        return Err(AppError::Validation("Certificate authority data is too large".into()));
     }
 
     let security = crate::directory::Security::parse(dto.security.as_deref().unwrap_or("starttls"));
@@ -313,7 +312,7 @@ pub async fn create_directory(
     .await
     .map_err(|e| match &e {
         sqlx::Error::Database(db) if db.is_unique_violation() => {
-            AppError::Conflict(format!("Un annuaire portant l'identifiant « {slug} » existe déjà"))
+            AppError::Conflict(format!("A directory with identifier '{slug}' already exists"))
         }
         _ => {
             tracing::error!(error = %e, "create_directory");
@@ -403,7 +402,7 @@ pub async fn update_directory(
     if let Some(dn) = dto.base_dn.as_deref() {
         validate_field("DN de base", dn)?;
         if dn.trim().is_empty() {
-            return Err(AppError::Validation("DN de base requis".into()));
+            return Err(AppError::Validation("Base DN required".into()));
         }
     }
     if let Some(dn) = dto.bind_dn.as_deref() {
@@ -411,7 +410,7 @@ pub async fn update_directory(
     }
     if let Some(pem) = dto.ca_certificate.as_deref() {
         if pem.chars().count() > MAX_PEM {
-            return Err(AppError::Validation("Autorité de certification trop volumineuse".into()));
+            return Err(AppError::Validation("Certificate authority data is too large".into()));
         }
     }
 
@@ -435,7 +434,7 @@ pub async fn update_directory(
             tracing::error!(error = %e, "update_directory: read");
             AppError::Database(e)
         })?
-        .ok_or_else(|| AppError::NotFound("Annuaire introuvable".into()))?;
+        .ok_or_else(|| AppError::NotFound("Directory not found".into()))?;
 
     let mut tx = audit.begin(&state.db).await?;
 
@@ -703,7 +702,7 @@ pub async fn delete_directory(
             tracing::error!(error = %e, "delete_directory: read");
             AppError::Database(e)
         })?
-        .ok_or_else(|| AppError::NotFound("Annuaire introuvable".into()))?;
+        .ok_or_else(|| AppError::NotFound("Directory not found".into()))?;
 
     let mut tx = audit.begin(&state.db).await?;
 
@@ -750,7 +749,7 @@ pub async fn delete_directory(
     .await?;
 
     Ok(Json(json!({
-        "message": "Annuaire supprimé",
+        "message": "Directory deleted",
         "deactivated_accounts": deactivated,
     })))
 }
@@ -805,7 +804,7 @@ pub async fn test_directory_auth(
 ) -> Result<Json<Value>, AppError> {
     ctx.require(keys::AUTH_PROVIDERS_MANAGE)?;
     if dto.login.trim().is_empty() || dto.password.is_empty() {
-        return Err(AppError::Validation("Identifiant et mot de passe requis".into()));
+        return Err(AppError::Validation("Username and password required".into()));
     }
     let dir = dircfg::load(&state.db, id).await?;
     let result = probe::probe_authentication(
@@ -897,7 +896,7 @@ pub async fn govern_accounts(
     let dir = dircfg::load(&state.db, id).await?;
 
     if dto.user_ids.is_empty() && !dto.all {
-        return Err(AppError::Validation("Aucun compte désigné".into()));
+        return Err(AppError::Validation("No account specified".into()));
     }
 
     let backend = state.db.backend();
@@ -921,7 +920,7 @@ pub async fn govern_accounts(
 
     if candidates.is_empty() {
         return Err(AppError::Validation(
-            "Aucun compte concerné : ces comptes n'ont pas de mot de passe local, ou ne dépendent pas de cet annuaire".into(),
+            "No affected accounts: these accounts have no local password or are not managed by this directory".into(),
         ));
     }
 
@@ -949,8 +948,7 @@ pub async fn govern_accounts(
 
     if remaining_local_admins <= 0 {
         return Err(AppError::Validation(
-            "Refusé : plus aucun administrateur ne pourrait se connecter sans l'annuaire. \
-             Conservez au moins un compte d'administration avec un mot de passe local."
+            "Refused: no administrator would be able to sign in without the directory. Keep at least one administrator account with a local password."
                 .into(),
         ));
     }
@@ -978,7 +976,7 @@ pub async fn govern_accounts(
     .await?;
 
     Ok(Json(json!({
-        "message": "Comptes confiés à l'annuaire",
+        "message": "Accounts assigned to the directory",
         "affected": affected,
         "remaining_local_admins": remaining_local_admins,
     })))

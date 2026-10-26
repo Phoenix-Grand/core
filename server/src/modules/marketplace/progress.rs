@@ -49,9 +49,9 @@ pub fn begin(id: &str) {
 pub fn finish_progress(id: &str, result: &Result<InstallReport, AppError>) {
     if let Ok(mut m) = progress_map().lock() {
         let entry = match result {
-            Ok(r)  => InstallProgress { phase: "done".into(),  message: "Installé".into(),
+            Ok(r)  => InstallProgress { phase: "done".into(),  message: "Installed".into(),
                                         report: Some(r.clone()), error: None },
-            Err(e) => InstallProgress { phase: "error".into(), message: "Échec".into(),
+            Err(e) => InstallProgress { phase: "error".into(), message: "Failed".into(),
                                         report: None, error: Some(e.detail()) },
         };
         m.insert(id.to_string(), entry);

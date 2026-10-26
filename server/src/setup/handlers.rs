@@ -89,7 +89,7 @@ async fn not_installed() -> Response {
     (
         StatusCode::SERVICE_UNAVAILABLE,
         Json(json!({
-            "error": "Kubuno n'est pas encore installé",
+            "error": "Kubuno is not installed yet",
             "setup_required": true,
         })),
     )
@@ -398,8 +398,7 @@ impl DbForm {
         if !self.schema_prefix_is_safe() {
             return Err((
                 "db.schema_prefix_invalid",
-                "Préfixe de schéma invalide : minuscules, chiffres et « _ » uniquement, 32 \
-                 caractères maximum."
+                "Invalid schema prefix: only lowercase letters, numbers, and '_'; maximum 32 characters."
                     .to_string(),
             ));
         }
@@ -409,7 +408,7 @@ impl DbForm {
             return Ok(());
         }
         if self.host.trim().is_empty() {
-            return Err(("db.host_required", "L'hôte de la base est requis.".to_string()));
+            return Err(("db.host_required", "The database host is required.".to_string()));
         }
         if self.user.trim().is_empty() {
             return Err(("db.user_required", "L'utilisateur de la base est requis.".to_string()));
@@ -417,8 +416,7 @@ impl DbForm {
         if !self.database_name_is_safe() {
             return Err((
                 "db.name_invalid",
-                "Nom de base invalide : lettres, chiffres et « _ » uniquement, sans chiffre en \
-                 première position."
+                "Invalid database name: only letters, numbers, and '_'; cannot start with a number."
                     .to_string(),
             ));
         }
@@ -669,13 +667,13 @@ async fn test_database_sqlite(form: &DbForm) -> Response {
     // "Connect" to SQLite is "can I write the file?". Create the directory and
     // probe it, rather than parsing permission bits.
     if let Err(e) = std::fs::create_dir_all(&dir) {
-        return db_test_error("db.sqlite_dir", format!("Répertoire inaccessible « {dir} » : {e}"));
+        return db_test_error("db.sqlite_dir", format!("Cannot access directory '{dir}': {e}"));
     }
     let probe = std::path::Path::new(&dir).join(".kubuno-write-probe");
     if let Err(e) = std::fs::File::create(&probe) {
         return db_test_error(
             "db.sqlite_readonly",
-            format!("Le répertoire « {dir} » n'est pas accessible en écriture : {e}"),
+            format!("Directory '{dir}' is not writable: {e}"),
         );
     }
     let _ = std::fs::remove_file(&probe);
@@ -736,14 +734,14 @@ fn db_test_error(code: &str, msg: String) -> Response {
 fn friendly_db_error(e: &sqlx::Error) -> (&'static str, String) {
     match e {
         sqlx::Error::Database(d) => match d.code().as_deref() {
-            Some("28P01") => ("db.bad_password", "Mot de passe refusé par PostgreSQL pour cet utilisateur.".into()),
-            Some("28000") => ("db.refused", "Connexion refusée pour cet utilisateur (voir pg_hba.conf).".into()),
+            Some("28P01") => ("db.bad_password", "PostgreSQL refused the password for this user.".into()),
+            Some("28000") => ("db.refused", "Connection refused for this user (see pg_hba.conf).".into()),
             Some("3D000") => ("db.missing", "Cette base n'existe pas.".into()),
-            _ => ("db.other", format!("PostgreSQL a refusé la connexion : {d}")),
+            _ => ("db.other", format!("PostgreSQL refused the connection: {d}")),
         },
         sqlx::Error::PoolTimedOut => (
             "db.timeout",
-            "Délai dépassé : l'hôte ou le port ne répond pas.".into(),
+            "Timed out: the host or port is not responding.".into(),
         ),
         other => ("db.unreachable", format!("Connexion impossible : {other}")),
     }
@@ -801,7 +799,7 @@ impl AdminForm {
     fn validate(&self) -> Result<(), (&'static str, String)> {
         let u = self.username.trim();
         if u.len() < 3 {
-            return Err(("admin.username_short", "Le nom d'utilisateur doit faire au moins 3 caractères.".to_string()));
+            return Err(("admin.username_short", "The username must contain at least 3 characters.".to_string()));
         }
         if !u.chars().all(|c| c.is_alphanumeric() || c == '.' || c == '-' || c == '_') {
             return Err((
@@ -817,7 +815,7 @@ impl AdminForm {
         if self.password.chars().count() < MIN_ADMIN_PASSWORD {
             return Err((
                 "admin.password_short",
-                format!("Le mot de passe administrateur doit faire au moins {MIN_ADMIN_PASSWORD} caractères."),
+                format!("The administrator password must contain at least {MIN_ADMIN_PASSWORD} characters."),
             ));
         }
         Ok(())
@@ -865,8 +863,7 @@ fn is_reasonable_image_dataurl(v: &str) -> bool {
 fn name_invalid_response() -> Response {
     bad_code(
         "db.name_invalid",
-        "Nom de base invalide : lettres, chiffres et « _ » uniquement, sans chiffre en \
-         première position.",
+        "Invalid database name: only letters, numbers, and '_'; cannot start with a number.",
         json!({}),
     )
 }
@@ -906,7 +903,7 @@ async fn reach_database(
                         admin_pool.close().await;
                         return Err(Box::new(bad_code(
                             "install.create_db_failed",
-                            format!("Création de la base impossible : {e}"),
+                            format!("Cannot create the database: {e}"),
                             json!({ "detail": e.to_string() }),
                         )));
                     }
@@ -935,7 +932,7 @@ async fn reach_database(
                     server.close().await;
                     return Err(Box::new(bad_code(
                         "install.create_db_failed",
-                        format!("Création de la base impossible : {e}"),
+                        format!("Cannot create the database: {e}"),
                         json!({ "detail": e.to_string() }),
                     )));
                 }
@@ -988,7 +985,7 @@ async fn install(State(st): State<Arc<SetupState>>, Json(req): Json<InstallReque
     }
     if let Some(c) = req.instance.as_ref().and_then(|i| i.color_primary.as_deref()) {
         if !c.is_empty() && !is_hex_colour(c) {
-            return bad_code("instance.color_invalid", "La couleur d'accent doit être au format #RRGGBB.", json!({}));
+            return bad_code("instance.color_invalid", "The accent color must use #RRGGBB format.", json!({}));
         }
     }
     if let Some(u) = req.instance.as_ref().and_then(|i| i.logo_dataurl.as_deref()) {
@@ -1022,7 +1019,7 @@ async fn install(State(st): State<Arc<SetupState>>, Json(req): Json<InstallReque
     //    database repairs its configuration instead of destroying its data.
     if let Err(e) = crate::database::migrations::run(&db).await {
         tracing::error!(error = %e, "Migrations refusées pendant l'installation");
-        return bad_code("install.schema_failed", format!("Création du schéma impossible : {e}"), json!({ "detail": e.to_string() }));
+        return bad_code("install.schema_failed", format!("Cannot create the schema: {e}"), json!({ "detail": e.to_string() }));
     }
 
     // 2b. The single-row instance identity is seeded by a PostgreSQL migration
@@ -1048,7 +1045,7 @@ async fn install(State(st): State<Arc<SetupState>>, Json(req): Json<InstallReque
             Ok(h) => h,
             Err(e) => {
                 tracing::error!(error = %e, "Hachage du mot de passe administrateur impossible");
-                return bad_code("install.hash_failed", "Impossible de préparer le mot de passe administrateur.", json!({}));
+                return bad_code("install.hash_failed", "Cannot prepare the administrator password.", json!({}));
             }
         };
         let root_unit = crate::database::seed::root_org_unit(&db).await;
@@ -1073,7 +1070,7 @@ async fn install(State(st): State<Arc<SetupState>>, Json(req): Json<InstallReque
             .await;
         if let Err(e) = res {
             tracing::error!(error = %e, "Création du compte administrateur impossible");
-            return bad_code("install.admin_failed", format!("Création du compte administrateur impossible : {e}"), json!({ "detail": e.to_string() }));
+            return bad_code("install.admin_failed", format!("Cannot create the administrator account: {e}"), json!({ "detail": e.to_string() }));
         }
 
         // The console derives every entry from the role ASSIGNMENT, not from
@@ -1191,7 +1188,7 @@ async fn install(State(st): State<Arc<SetupState>>, Json(req): Json<InstallReque
         tracing::error!(error = %e, "Écriture de la configuration impossible");
         return bad_code(
             "install.config_failed",
-            format!("La base est prête mais {} n'a pas pu être écrit : {e}", target.display()),
+            format!("The database is ready, but {} could not be written: {e}", target.display()),
             json!({ "path": target.display().to_string(), "detail": e.to_string() }),
         );
     }

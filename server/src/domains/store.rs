@@ -115,7 +115,7 @@ pub async fn get(db: &DbPool, id: Uuid) -> Result<Domain, AppError> {
             tracing::error!(error = %e, "domains: lecture");
             AppError::Database(e)
         })?
-        .ok_or_else(|| AppError::NotFound("Domaine introuvable".into()))?
+        .ok_or_else(|| AppError::NotFound("Domain not found".into()))?
         .into_domain()
 }
 
@@ -170,7 +170,7 @@ pub async fn create(
 ) -> Result<Uuid, AppError> {
     if kind == DomainKind::Primary {
         return Err(AppError::Validation(
-            "Le domaine principal ne se crée pas : ajoutez le domaine, vérifiez-le, puis promouvez-le.".into(),
+            "The primary domain cannot be created directly. Add the domain, verify it, then promote it.".into(),
         ));
     }
 
@@ -179,7 +179,7 @@ pub async fn create(
     // claim the registry exists to check.
     if kind == DomainKind::Alias {
         let parent_id = parent_id.ok_or_else(|| {
-            AppError::Validation("Un alias doit désigner le domaine dont il reprend les adresses.".into())
+            AppError::Validation("An alias must specify the domain whose addresses it uses.".into())
         })?;
         let parent = tx
             .fetch_optional_row(
@@ -188,23 +188,23 @@ pub async fn create(
             )
             .await
             .map_err(AppError::Database)?
-            .ok_or_else(|| AppError::Validation("Le domaine désigné n'existe pas.".into()))?;
+            .ok_or_else(|| AppError::Validation("The specified domain does not exist.".into()))?;
         let parent_kind: String = parent.try_get("kind").map_err(AppError::Database)?;
         if parent_kind == "alias" {
             return Err(AppError::Validation(
-                "Un alias ne peut pas désigner un autre alias : rattachez-le au domaine d'origine.".into(),
+                "An alias cannot point to another alias. Link it to the original domain.".into(),
             ));
         }
         let parent_verified: Option<DateTime<Utc>> =
             parent.try_get("verified_at").map_err(AppError::Database)?;
         if parent_verified.is_none() {
             return Err(AppError::Validation(
-                "Vérifiez d'abord le domaine dont cet alias reprend les adresses.".into(),
+                "First verify the domain whose addresses this alias uses.".into(),
             ));
         }
     } else if parent_id.is_some() {
         return Err(AppError::Validation(
-            "Seul un alias désigne un domaine d'origine.".into(),
+            "Only an alias specifies an original domain.".into(),
         ));
     }
 
@@ -225,7 +225,7 @@ pub async fn create(
     .map_err(|e| {
         if let sqlx::Error::Database(db) = &e {
             if db.is_unique_violation() {
-                return AppError::Conflict(format!("Le domaine « {name} » est déjà déclaré ici."));
+                return AppError::Conflict(format!("Domain '{name}' is already configured here."));
             }
         }
         tracing::error!(error = %e, domain = %name, "domains: création");
@@ -258,12 +258,12 @@ pub async fn verify(db: &DbPool, id: Uuid) -> Result<Domain, AppError> {
             .map_err(AppError::Database)?;
         }
         Ok(result) => {
-            let mut message = "L'enregistrement TXT attendu n'a pas été trouvé sur ce domaine.".to_string();
+            let mut message = "The expected TXT record was not found on this domain.".to_string();
             if !result.others.is_empty() {
                 // The near-miss worth naming: a token from another instance, or
                 // one published on the wrong name.
                 message.push_str(&format!(
-                    " D'autres jetons de vérification sont publiés : {}.",
+                    "Other verification tokens are published: {}.",
                     result.others.join(", ")
                 ));
             }
@@ -330,19 +330,19 @@ pub async fn promote(tx: &mut DbTx, id: Uuid) -> Result<(String, Option<String>)
         )
         .await
         .map_err(AppError::Database)?
-        .ok_or_else(|| AppError::NotFound("Domaine introuvable".into()))?;
+        .ok_or_else(|| AppError::NotFound("Domain not found".into()))?;
 
     let name: String = row.try_get("name").map_err(AppError::Database)?;
     let kind: String = row.try_get("kind").map_err(AppError::Database)?;
     match kind.as_str() {
         "primary" => {
             return Err(AppError::Validation(format!(
-                "« {name} » est déjà le domaine principal."
+                "'{name}' is already the primary domain."
             )))
         }
         "alias" => {
             return Err(AppError::Validation(
-                "Un alias ne peut pas devenir le domaine principal : il ne porte aucun compte.".into(),
+                "An alias cannot become the primary domain because it has no accounts.".into(),
             ))
         }
         _ => {}
@@ -351,7 +351,7 @@ pub async fn promote(tx: &mut DbTx, id: Uuid) -> Result<(String, Option<String>)
         row.try_get("verified_at").map_err(AppError::Database)?;
     if verified_at.is_none() {
         return Err(AppError::Validation(format!(
-            "Vérifiez « {name} » avant d'en faire le domaine principal."
+            "Verify '{name}' before making it the primary domain."
         )));
     }
 
@@ -401,7 +401,7 @@ pub async fn removal_blockers(db: &DbPool, domain: &Domain) -> Result<Vec<String
     }
     if domain.account_count > 0 {
         blockers.push(format!(
-            "{} compte(s) portent une adresse à ce domaine. Changez leur adresse avant de le retirer.",
+            "{} account(s) use an address on this domain. Change their addresses before removing it.",
             domain.account_count
         ));
     }

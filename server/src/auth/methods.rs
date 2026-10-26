@@ -41,7 +41,7 @@
 //! configuration only ([`active_anywhere`]) - never on whether a login exists,
 //! never on which unit it belongs to. The per-unit rule is applied once the
 //! account is known, and a refusal at that point returns the same
-//! "Identifiants invalides" as every other failure, so it leaks nothing either.
+//! "Invalid credentials" as every other failure, so it leaks nothing either.
 //! The cost is a slightly less guided sign-in page. That is the right trade
 //! against an enumeration oracle.
 //!
@@ -189,13 +189,13 @@ impl MethodSet {
     pub fn validate(value: &Value) -> Result<Self, AppError> {
         let Value::Array(items) = value else {
             return Err(AppError::Validation(
-                "auth.methods attend une liste, par exemple [\"local\",\"directory\"]".into(),
+                "auth.methods expects a list, for example [\"local\",\"directory\"]".into(),
             ));
         };
         let mut set = Self::none();
         for item in items {
             let name = item.as_str().ok_or_else(|| {
-                AppError::Validation("auth.methods : chaque élément doit être un texte".into())
+                AppError::Validation("auth.methods: each item must be a string".into())
             })?;
             match Method::parse(name) {
                 Some(Method::Local) => set.local = true,
@@ -203,14 +203,14 @@ impl MethodSet {
                 Some(Method::Sso) => set.sso = true,
                 None => {
                     return Err(AppError::Validation(format!(
-                        "auth.methods : méthode inconnue « {name} » (attendu : local, directory, sso)"
+                        "auth.methods: unknown method '{name}' (expected: local, directory, sso)"
                     )))
                 }
             }
         }
         if set.is_empty() {
             return Err(AppError::Validation(
-                "auth.methods : au moins une méthode doit rester acceptée - une liste vide fermerait la porte à tout le monde".into(),
+                "auth.methods: at least one method must remain enabled; an empty list would lock everyone out".into(),
             ));
         }
         Ok(set)
@@ -449,15 +449,12 @@ pub async fn ensure_no_administrator_is_stranded(db: &DbPool) -> Result<(), AppE
         .take(5)
         .map(|a| match &a.org_unit {
             Some(u) => format!("{} ({u})", a.username),
-            None => format!("{} (sans unité)", a.username),
+            None => format!("{} (no unit)", a.username),
         })
         .collect();
 
     Err(AppError::Validation(format!(
-        "Refusé : {} administrateur(s) - délégués compris - ne pourraient plus se connecter : {}. \
-         Laissez-leur une méthode utilisable pour leur unité, ou gardez le secours local des \
-         administrateurs actif. En dernier recours, depuis la machine : \
-         kubuno auth:recover <compte> --local-access",
+        "Refused: {} administrator(s), including delegated administrators, would be unable to sign in: {}. Keep a usable method for their unit, or keep administrator local recovery enabled. As a last resort, run on the server: kubuno auth:recover <account> --local-access",
         stranded.len(),
         names.join(", ")
     )))

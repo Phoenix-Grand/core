@@ -134,13 +134,13 @@ fn invalidate_authz_cache() {
 fn clean_name(raw: &str) -> Result<&str, AppError> {
     let name = raw.trim();
     if name.is_empty() {
-        return Err(AppError::Validation("Nom requis".into()));
+        return Err(AppError::Validation("Name required".into()));
     }
     // Characters, not bytes: a 200-letter accented name is legal and a byte
     // check would reject it.
     if name.chars().count() > MAX_NAME_CHARS {
         return Err(AppError::Validation(format!(
-            "Nom trop long : {MAX_NAME_CHARS} caractères au maximum"
+            "Name too long: maximum {MAX_NAME_CHARS} characters"
         )));
     }
     Ok(name)
@@ -160,8 +160,7 @@ fn check_depth(parent_depth: i32, subtree_height: i32) -> Result<(), AppError> {
     let depth = resulting_depth(parent_depth, subtree_height);
     if depth > MAX_ORG_UNIT_DEPTH {
         return Err(AppError::Validation(format!(
-            "Profondeur maximale dépassée : l'arborescence est limitée à \
-             {MAX_ORG_UNIT_DEPTH} niveaux sous l'unité racine, cette opération en demanderait {depth}"
+            "Maximum depth exceeded: the tree is limited to {MAX_ORG_UNIT_DEPTH} levels below the root unit; this operation would require {depth}"
         )));
     }
     Ok(())
@@ -172,7 +171,7 @@ fn check_depth(parent_depth: i32, subtree_height: i32) -> Result<(), AppError> {
 fn map_write_error(e: sqlx::Error, name: &str, context: &'static str) -> AppError {
     if matches!(&e, sqlx::Error::Database(db) if db.is_unique_violation()) {
         AppError::Conflict(format!(
-            "Une unité nommée « {name} » existe déjà sous la même unité parente"
+            "A unit named '{name}' already exists under the same parent unit"
         ))
     } else {
         tracing::error!(error = %e, "{context}");
@@ -347,7 +346,7 @@ pub async fn org_unit_impact(
         )
         .await
         .map_err(|e| { tracing::error!(error = %e, "org_unit_impact: read"); AppError::Database(e) })?
-        .ok_or_else(|| AppError::NotFound(format!("Unité {id}")))?;
+        .ok_or_else(|| AppError::NotFound(format!("Unit {id}")))?;
 
     // The subtree of a legal tree never exceeds the ceiling; the bound is a
     // safety net for a tree that predates it.
@@ -400,8 +399,7 @@ pub async fn create_org_unit(
     // request", and the message says why there is nothing to guess.
     let Some(parent_id) = dto.parent_id else {
         return Err(AppError::Validation(
-            "Unité parente requise : une instance n'a qu'une seule unité racine, \
-             toute nouvelle unité se crée sous une unité existante"
+            "Parent unit required: an instance has only one root unit; every new unit must be created under an existing unit"
                 .into(),
         ));
     };
@@ -419,7 +417,7 @@ pub async fn create_org_unit(
     let refuse = || AuditEntry::new("core.org_units.create").target_kind(target::ORG_UNIT, name);
 
     let Some(parent_depth) = unit_depth(&mut tx, parent_id).await? else {
-        let reason = format!("Unité parente {parent_id} introuvable");
+        let reason = format!("Parent unit {parent_id} not found");
         return Err(tx
             .abort(&state.db, refuse(), AppError::Validation(reason))
             .await);
@@ -524,7 +522,7 @@ pub async fn update_org_unit(
         )
         .await
         .map_err(|e| { tracing::error!(error = %e, "update_org_unit: read"); AppError::Database(e) })?
-        .ok_or_else(|| AppError::NotFound(format!("Unité {id}")))?;
+        .ok_or_else(|| AppError::NotFound(format!("Unit {id}")))?;
     let previous = OrgUnit {
         id:          previous_row.try_get("id")?,
         name:        previous_row.try_get("name")?,
@@ -544,14 +542,14 @@ pub async fn update_org_unit(
         // `"parent_id": null` asks for a second root. There is exactly one, and
         // it is the one migration 000036 seeded.
         Some(None) => {
-            let reason = "Une instance n'a qu'une seule unité racine : une unité ne peut pas être promue racine";
+            let reason = "An instance has only one root unit; another unit cannot be promoted to root";
             return Err(tx
                 .abort(&state.db, refuse(), AppError::Validation(reason.into()))
                 .await);
         }
         Some(Some(new_parent)) => {
             if new_parent == id {
-                let reason = "Une unité ne peut pas être son propre parent";
+                let reason = "A unit cannot be its own parent";
                 return Err(tx
                     .abort(&state.db, refuse(), AppError::Validation(reason.into()))
                     .await);
@@ -572,7 +570,7 @@ pub async fn update_org_unit(
 
             if creates_cycle {
                 let reason =
-                    "Parent invalide : cette unité fait partie du sous-arbre de l'unité déplacée (cycle)";
+                    "Invalid parent: this unit is in the moved unit's subtree (cycle)";
                 return Err(tx
                     .abort(&state.db, refuse(), AppError::Validation(reason.into()))
                     .await);
@@ -581,7 +579,7 @@ pub async fn update_org_unit(
             // A move carries the whole subtree with it, so the ceiling applies
             // to its deepest leaf - not to the unit being dragged.
             let Some(parent_depth) = unit_depth(&mut tx, new_parent).await? else {
-                let reason = format!("Unité parente {new_parent} introuvable");
+                let reason = format!("Parent unit {new_parent} not found");
                 return Err(tx
                     .abort(&state.db, refuse(), AppError::Validation(reason))
                     .await);
@@ -684,7 +682,7 @@ pub async fn delete_org_unit(
         )
         .await
         .map_err(|e| { tracing::error!(error = %e, "delete_org_unit: read"); AppError::Database(e) })?
-        .ok_or_else(|| AppError::NotFound(format!("Unité {id}")))?;
+        .ok_or_else(|| AppError::NotFound(format!("Unit {id}")))?;
     let unit = OrgUnit {
         id:          unit_row.try_get("id")?,
         name:        unit_row.try_get("name")?,
@@ -698,7 +696,7 @@ pub async fn delete_org_unit(
     // the organisation itself, never an accidental second root. The refusal is
     // journalled like any other attempt.
     let Some(parent_id) = unit.parent_id else {
-        let reason = "Impossible de supprimer l'unité racine";
+        let reason = "Cannot delete the root unit";
         return Err(tx
             .abort(
                 &state.db,
@@ -720,7 +718,7 @@ pub async fn delete_org_unit(
         .fetch_optional_row(&impact_sql, params![id, id, id, id, id, id])
         .await
         .map_err(|e| { tracing::error!(error = %e, %id, "delete_org_unit: count"); AppError::Database(e) })?
-        .ok_or_else(|| AppError::NotFound(format!("Unité {id}")))?;
+        .ok_or_else(|| AppError::NotFound(format!("Unit {id}")))?;
     let impact = DeletionImpact {
         children:          impact_row.try_get("children")?,
         descendants:       impact_row.try_get("descendants")?,
@@ -748,7 +746,7 @@ pub async fn delete_org_unit(
         Err(e) => {
             let err = if matches!(&e, sqlx::Error::Database(db) if db.is_unique_violation()) {
                 AppError::Conflict(
-                    "Suppression impossible : une sous-unité porterait le même nom qu'une unité déjà présente sous le parent. Renommez-la d'abord."
+                    "Cannot delete: a child unit would have the same name as an existing unit under the parent. Rename it first."
                         .into(),
                 )
             } else {
@@ -812,7 +810,7 @@ pub async fn delete_org_unit(
     invalidate_authz_cache();
 
     Ok(Json(json!({
-        "message":           "Unité supprimée",
+        "message":           "Unit deleted",
         // Echoed back so a caller that skipped `/impact` still learns what it
         // did - the same numbers, in the same names.
         "children":          impact.children,

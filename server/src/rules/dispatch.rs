@@ -276,7 +276,7 @@ async fn call_module(
 
     let Some(base_url) = base_url else {
         return Err(AppError::Validation(format!(
-            "Le module « {module_id} » n'est pas actif : son action ne peut pas être exécutée"
+            "Module '{module_id}' is inactive; its action cannot run"
         )));
     };
 
@@ -316,7 +316,7 @@ async fn call_module(
     if !response.status().is_success() {
         let status = response.status();
         return Err(AppError::Validation(format!(
-            "Le module « {module_id} » a refusé l'action ({status})"
+            "Module '{module_id}' refused the action ({status})"
         )));
     }
     Ok(())

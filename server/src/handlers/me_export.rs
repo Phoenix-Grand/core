@@ -105,7 +105,7 @@ async fn gate(state: &AppState, user_id: Uuid) -> Result<(), AppError> {
     if policy::self_service_enabled(&state.db, user_id).await {
         return Ok(());
     }
-    Err(AppError::NotFound("Ressource introuvable".into()))
+    Err(AppError::NotFound("Resource not found".into()))
 }
 
 /// The denormalised name the archive and the history keep.
@@ -258,12 +258,12 @@ pub async fn request_my_export(
     // ── Validation, before anything is read from the database ───────────────
     if dto.services.len() > MAX_SERVICES {
         return Err(AppError::Validation(
-            "Trop de services demandés dans une seule requête".into(),
+            "Too many services requested in a single request".into(),
         ));
     }
     if dto.services.iter().any(|s| s.len() > MAX_SERVICE_ID) {
         return Err(AppError::Validation(
-            "Identifiant de service invalide".into(),
+            "Invalid service identifier".into(),
         ));
     }
 
@@ -274,8 +274,7 @@ pub async fn request_my_export(
     // whatever happens; this exists so the ordinary case gets a sentence.
     if let Some(run) = runs::active_for_user(&state.db, user.id).await? {
         return Err(AppError::Conflict(format!(
-            "Une demande est déjà en cours depuis le {}. Attendez qu'elle se termine \
-             avant d'en faire une nouvelle.",
+            "A request has been in progress since {}. Wait for it to finish before submitting another.",
             run.requested_at.format("%d/%m/%Y %H:%M UTC")
         )));
     }
@@ -367,7 +366,7 @@ pub async fn request_my_export(
     let job_id = jobs::enqueue_run(&state.db, export_id).await?;
 
     Ok(Json(json!({
-        "message":      "Demande enregistrée",
+        "message":      "Request saved",
         "export_id":    export_id,
         "job_id":       job_id,
         "services":     services,
@@ -431,32 +430,32 @@ pub async fn download_my_export(
     // Somebody else's export - administrative or personal - is simply not found
     // here. Not "forbidden": from this route's point of view it does not exist.
     let Some(run) = runs::get_own(&state.db, id, user.id).await? else {
-        return Err(AppError::NotFound("Archive introuvable".into()));
+        return Err(AppError::NotFound("Archive not found".into()));
     };
 
     let now = Utc::now();
     if run.status != "ready" {
-        return Err(AppError::Conflict("Cette archive n'est pas prête".into()));
+        return Err(AppError::Conflict("This archive is not ready".into()));
     }
     if run.file_deleted {
         return Err(AppError::NotFound(
-            "Cette archive a été supprimée du serveur".into(),
+            "This archive has been deleted from the server".into(),
         ));
     }
     if now < run.available_at {
         return Err(AppError::Conflict(format!(
-            "Cette archive sera disponible à partir du {}",
+            "This archive will be available from {}",
             run.available_at.format("%d/%m/%Y %H:%M UTC")
         )));
     }
     if now >= run.expires_at {
         return Err(AppError::NotFound(
-            "Cette archive a expiré. Demandez-en une nouvelle.".into(),
+            "This archive has expired. Request a new one.".into(),
         ));
     }
     if run.download_exhausted() {
         return Err(AppError::Conflict(
-            "Cette archive a atteint son nombre de téléchargements. Demandez-en une nouvelle."
+            "This archive has reached its download limit. Request a new one."
                 .into(),
         ));
     }
@@ -464,13 +463,13 @@ pub async fn download_my_export(
     let (Some(destination), Some(file_name)) =
         (run.destination.as_deref(), run.file_name.as_deref())
     else {
-        return Err(AppError::NotFound("Archive introuvable sur le disque".into()));
+        return Err(AppError::NotFound("Archive not found on disk".into()));
     };
     // Re-validated even though it came from our own row: this is the one handler
     // here that turns a database string into an open file descriptor.
     if !archive::is_export_file(file_name) {
         tracing::error!(export_id = %id, "export: nom d'archive non reconnu - téléchargement refusé");
-        return Err(AppError::NotFound("Archive introuvable sur le disque".into()));
+        return Err(AppError::NotFound("Archive not found on disk".into()));
     }
 
     let path = std::path::Path::new(destination).join(file_name);
@@ -478,7 +477,7 @@ pub async fn download_my_export(
     // must not cost the person one of their downloads.
     let file = tokio::fs::File::open(&path).await.map_err(|e| {
         tracing::error!(error = %e, export_id = %id, "export: ouverture de l'archive impossible");
-        AppError::NotFound("Archive introuvable sur le disque".into())
+        AppError::NotFound("Archive not found on disk".into())
     })?;
 
     // The ceiling, claimed atomically. `None` means another request took the last
@@ -486,7 +485,7 @@ pub async fn download_my_export(
     // would lose.
     let Some(left) = runs::claim_download(&state.db, id, user.id).await? else {
         return Err(AppError::Conflict(
-            "Cette archive a atteint son nombre de téléchargements. Demandez-en une nouvelle."
+            "This archive has reached its download limit. Request a new one."
                 .into(),
         ));
     };

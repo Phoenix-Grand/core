@@ -108,13 +108,13 @@ pub async fn push(
     let payload_size = dto.payload.to_string().len();
     if payload_size > MAX_PAYLOAD_BYTES {
         return Err(AppError::Validation(format!(
-            "Contenu trop volumineux pour l'historique du presse-papiers ({} Ko, maximum {} Ko)",
+            "Content is too large for clipboard history ({} KB, maximum {} KB)",
             payload_size / 1024,
             MAX_PAYLOAD_BYTES / 1024
         )));
     }
     if dto.payload.is_null() {
-        return Err(AppError::Validation("Contenu vide".into()));
+        return Err(AppError::Validation("Content is empty".into()));
     }
 
     let fp = fingerprint(&dto.payload);
@@ -216,7 +216,7 @@ pub async fn update(
 ) -> Result<Json<Value>, AppError> {
     dto.validate().map_err(|e| AppError::Validation(e.to_string()))?;
     let Some(pinned) = dto.pinned else {
-        return Err(AppError::Validation("Rien à modifier".into()));
+        return Err(AppError::Validation("Nothing to change".into()));
     };
 
     // No RETURNING on the update (MySQL has none): flip the pin on the identity
@@ -234,7 +234,7 @@ pub async fn update(
             e
         })?;
     if affected == 0 {
-        return Err(AppError::NotFound("Élément introuvable".into()));
+        return Err(AppError::NotFound("Item not found".into()));
     }
 
     let item = state
@@ -271,7 +271,7 @@ pub async fn delete(
             e
         })?;
     if done == 0 {
-        return Err(AppError::NotFound("Élément introuvable".into()));
+        return Err(AppError::NotFound("Item not found".into()));
     }
     Ok(Json(json!({ "ok": true })))
 }

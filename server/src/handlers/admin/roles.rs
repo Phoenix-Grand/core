@@ -235,7 +235,7 @@ pub struct CreateRoleDto {
 /// Slug shape: what appears in URLs and in the trail.
 fn validate_slug(slug: &str) -> Result<(), AppError> {
     if slug.len() < 2 || slug.len() > 100 {
-        return Err(AppError::Validation("Identifiant : 2 à 100 caractères".into()));
+        return Err(AppError::Validation("Identifier: 2 to 100 characters".into()));
     }
     if !slug
         .chars()
@@ -273,7 +273,7 @@ async fn validate_privileges(db: &DbPool, keys_in: &[String]) -> Result<(), AppE
     let unknown: Vec<&String> = keys_in.iter().filter(|k| !known.contains(k)).collect();
     if !unknown.is_empty() {
         return Err(AppError::Validation(format!(
-            "Privilège(s) inconnu(s) du catalogue : {}",
+            "Privilege(s) not found in the catalog: {}",
             unknown
                 .iter()
                 .map(|k| k.as_str())
@@ -294,7 +294,7 @@ pub async fn create_role(
     ensure_role_management(&ctx)?;
     validate_slug(&dto.slug)?;
     if dto.name.trim().is_empty() {
-        return Err(AppError::Validation("Nom requis".into()));
+        return Err(AppError::Validation("Name required".into()));
     }
 
     // The catalogue check reads static reference data, so it runs on the pool
@@ -316,7 +316,7 @@ pub async fn create_role(
     .await
     .map_err(|e| {
         if e.to_string().contains("unique") {
-            AppError::Conflict(format!("Un rôle « {} » existe déjà", dto.slug))
+            AppError::Conflict(format!("A role named '{}' already exists", dto.slug))
         } else {
             tracing::error!(error = %e, "create_role");
             AppError::Database(e)
@@ -386,7 +386,7 @@ pub async fn update_role(
         )
         .await
         .map_err(|e| { tracing::error!(error = %e, "update_role: read"); AppError::Database(e) })?
-        .ok_or_else(|| AppError::NotFound(format!("Rôle {role_id}")))?;
+        .ok_or_else(|| AppError::NotFound(format!("Role {role_id}")))?;
     let previous = role_from_row(&previous_row)?;
 
     // Read on the pool: no write has happened in this transaction yet, so the
@@ -406,7 +406,7 @@ pub async fn update_role(
                     .target(target::ROLE, role_id, name)
                     .before(role_snapshot(&previous, &before_privileges)),
                 AppError::Validation(
-                    "Les privilèges d'un rôle système ne sont pas modifiables".into(),
+                    "System role privileges cannot be changed".into(),
                 ),
             )
             .await);
@@ -445,7 +445,7 @@ pub async fn update_role(
             )
             .await
             .map_err(|e| { tracing::error!(error = %e, "update_role: reselect"); AppError::Database(e) })?
-            .ok_or_else(|| AppError::NotFound(format!("Rôle {role_id}")))?;
+            .ok_or_else(|| AppError::NotFound(format!("Role {role_id}")))?;
         role_from_row(&row)?
     };
 
@@ -493,9 +493,7 @@ pub async fn update_role(
                         .target(target::ROLE, role_id, name)
                         .before(role_snapshot(&previous, &before_privileges)),
                     AppError::Validation(format!(
-                        "Modification refusée : {broken} affectation(s) de ce rôle sont restreintes \
-                         à une unité organisationnelle, et le nouvel ensemble contient un privilège \
-                         non restreignable."
+                        "Change refused: {broken} assignment(s) of this role are restricted to an organizational unit, and the new set contains a privilege that cannot be restricted."
                     )),
                 )
                 .await);
@@ -549,7 +547,7 @@ pub async fn delete_role(
         )
         .await
         .map_err(|e| { tracing::error!(error = %e, "delete_role: read"); AppError::Database(e) })?
-        .ok_or_else(|| AppError::NotFound(format!("Rôle {role_id}")))?;
+        .ok_or_else(|| AppError::NotFound(format!("Role {role_id}")))?;
     let role = role_from_row(&role_row)?;
 
     // Committed state (no write yet in this transaction), read on the pool.
@@ -584,7 +582,7 @@ pub async fn delete_role(
     .await?;
 
     cache::invalidate_all();
-    Ok(Json(json!({ "message": "Rôle supprimé" })))
+    Ok(Json(json!({ "message": "Role deleted" })))
 }
 
 // ── Assignments ───────────────────────────────────────────────────────────────
@@ -690,21 +688,21 @@ pub async fn create_assignment(
     match (dto.user_id, dto.group_id) {
         (Some(_), Some(_)) => {
             return Err(AppError::Validation(
-                "Un sujet et un seul : utilisateur OU groupe".into(),
+                "Specify exactly one subject: user OR group".into(),
             ))
         }
-        (None, None) => return Err(AppError::Validation("Sujet requis".into())),
+        (None, None) => return Err(AppError::Validation("Subject required".into())),
         _ => {}
     }
     if scope == AssignmentScope::OrgUnit && dto.org_unit_id.is_none() {
         return Err(AppError::Validation(
-            "Unité organisationnelle requise pour une portée « org_unit »".into(),
+            "Organizational unit required for an 'org_unit' scope".into(),
         ));
     }
     if let Some(expiry) = dto.expires_at {
         if expiry <= chrono::Utc::now() {
             return Err(AppError::Validation(
-                "La date d'expiration doit être dans le futur".into(),
+                "The expiration date must be in the future".into(),
             ));
         }
     }
@@ -751,9 +749,9 @@ pub async fn create_assignment(
     .await
     .map_err(|e| {
         if e.to_string().contains("uniq_core_assign") {
-            AppError::Conflict("Cette affectation existe déjà".into())
+            AppError::Conflict("This assignment already exists".into())
         } else if e.to_string().contains("foreign key") {
-            AppError::NotFound("Rôle, sujet ou unité introuvable".into())
+            AppError::NotFound("Role, subject, or unit not found".into())
         } else {
             tracing::error!(error = %e, "create_assignment");
             AppError::Database(e)
@@ -879,7 +877,7 @@ pub async fn delete_assignment(
     .await?;
 
     cache::invalidate_all();
-    Ok(Json(json!({ "message": "Affectation retirée" })))
+    Ok(Json(json!({ "message": "Assignment removed" })))
 }
 
 /// `GET /admin/users/:id/privileges` - what one account effectively holds.

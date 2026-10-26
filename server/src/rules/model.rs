@@ -64,11 +64,11 @@ impl Mode {
     pub fn parse_settable(raw: &str) -> Result<Self, AppError> {
         match Mode::parse(raw) {
             Some(Mode::Backtest) => Err(AppError::Validation(
-                "« backtest » est un type d'exécution, pas un mode de règle".into(),
+                "'backtest' is a run type, not a rule mode".into(),
             )),
             Some(m) => Ok(m),
             None => Err(AppError::Validation(format!(
-                "Mode inconnu « {raw} » : attendus {}",
+                "Unknown mode '{raw}': expected {}",
                 Mode::SETTABLE
                     .iter()
                     .map(|m| m.as_str())

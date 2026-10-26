@@ -94,7 +94,7 @@ pub async fn get(db: &DbPool, id: Uuid) -> Result<Campaign, AppError> {
         tracing::error!(error = %e, campagne = %id, "data_migration: lecture d'une campagne");
         AppError::Database(e)
     })?
-    .ok_or_else(|| AppError::NotFound("Campagne de migration introuvable".into()))
+    .ok_or_else(|| AppError::NotFound("Migration campaign not found".into()))
 }
 
 /// What the console counts on a campaign row, read back per campaign.
@@ -247,7 +247,7 @@ pub async fn secret_of(db: &DbPool, account_id: Uuid) -> Result<String, AppError
         tracing::error!(error = %e, compte = %account_id, "data_migration: lecture d'identifiant");
         AppError::Database(e)
     })?
-    .ok_or_else(|| AppError::NotFound("Compte de migration introuvable".into()))
+    .ok_or_else(|| AppError::NotFound("Migration account not found".into()))
 }
 
 // ── Writes ──────────────────────────────────────────────────────────────────
@@ -325,7 +325,7 @@ pub async fn add_accounts(
             // form and the submission.
             sqlx::Error::Database(ref db_err) if db_err.code().as_deref() == Some("23503") => {
                 AppError::Validation(
-                    "Compte de destination inconnu : rechargez la page et refaites la correspondance."
+                    "Unknown destination account. Reload the page and map the accounts again."
                         .into(),
                 )
             }
@@ -386,7 +386,7 @@ pub async fn retry_account(db: &DbPool, campaign_id: Uuid, account_id: Uuid) -> 
 
     if affected == 0 {
         return Err(AppError::Conflict(
-            "Ce compte n'est pas en échec : il n'y a rien à relancer.".into(),
+            "This account has not failed; there is nothing to retry.".into(),
         ));
     }
     Ok(())

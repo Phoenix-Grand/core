@@ -73,13 +73,13 @@ pub async fn prepare(db: &DbPool, input: &RuleInput) -> Result<RuleDraft, AppErr
     let name = input.name.trim();
     if name.is_empty() || name.chars().count() > MAX_NAME_LEN {
         return Err(AppError::Validation(format!(
-            "Le nom de la règle doit faire 1 à {MAX_NAME_LEN} caractères"
+            "The rule name must contain 1 to {MAX_NAME_LEN} characters"
         )));
     }
     if let Some(d) = input.description.as_deref() {
         if d.chars().count() > MAX_DESCRIPTION_LEN {
             return Err(AppError::Validation(format!(
-                "La description dépasse {MAX_DESCRIPTION_LEN} caractères"
+                "The description exceeds {MAX_DESCRIPTION_LEN} characters"
             )));
         }
     }
@@ -94,7 +94,7 @@ pub async fn prepare(db: &DbPool, input: &RuleInput) -> Result<RuleDraft, AppErr
         .to_string();
     if crate::alerts::Severity::parse(&severity).is_none() {
         return Err(AppError::Validation(format!(
-            "Gravité inconnue « {severity} » : attendues critical, warning ou info"
+            "Unknown severity '{severity}': expected critical, warning, or info"
         )));
     }
 
@@ -104,14 +104,14 @@ pub async fn prepare(db: &DbPool, input: &RuleInput) -> Result<RuleDraft, AppErr
         .await?
         .ok_or_else(|| {
             AppError::Validation(format!(
-                "Déclencheur « {trigger_key} » inconnu du catalogue"
+                "Trigger '{trigger_key}' is not in the catalog"
             ))
         })?;
     if trigger.is_orphan {
         // Writing a rule on a trigger whose module is gone would produce a rule
         // that can never fire, and would look enabled while doing so.
         return Err(AppError::Validation(format!(
-            "Le déclencheur « {trigger_key} » appartient à un module absent : la règle ne pourrait jamais s'exécuter"
+            "Trigger '{trigger_key}' belongs to a missing module; the rule would never run"
         )));
     }
 
@@ -124,12 +124,12 @@ pub async fn prepare(db: &DbPool, input: &RuleInput) -> Result<RuleDraft, AppErr
     for (field, op) in input.conditions.comparisons() {
         let Some(declared) = fields.iter().find(|f| f.name == field) else {
             return Err(AppError::Validation(format!(
-                "Le déclencheur « {trigger_key} » n'expose pas le champ « {field} »"
+                "Trigger '{trigger_key}' does not expose field '{field}'"
             )));
         };
         if !declared.operators.contains(&op) {
             return Err(AppError::Validation(format!(
-                "L'opérateur « {} » n'est pas permis sur le champ « {field} » ({})",
+                "Operator '{}' is not allowed on field '{field}' ({})",
                 op.as_str(),
                 declared.value_type
             )));
@@ -142,12 +142,12 @@ pub async fn prepare(db: &DbPool, input: &RuleInput) -> Result<RuleDraft, AppErr
     // ── Actions ──────────────────────────────────────────────────────────────
     if input.actions.len() > MAX_ACTIONS {
         return Err(AppError::Validation(format!(
-            "Une règle exécute au plus {MAX_ACTIONS} actions"
+            "A rule can run at most {MAX_ACTIONS} actions"
         )));
     }
     if mode.acts() && input.actions.is_empty() {
         return Err(AppError::Validation(
-            "Le mode « actif avec actions » exige au moins une action".into(),
+            "'Active with actions' mode requires at least one action".into(),
         ));
     }
     for spec in &input.actions {
@@ -157,11 +157,11 @@ pub async fn prepare(db: &DbPool, input: &RuleInput) -> Result<RuleDraft, AppErr
             .into_iter()
             .find(|a| a.key == key)
             .ok_or_else(|| {
-                AppError::Validation(format!("Action « {key} » inconnue du catalogue"))
+                AppError::Validation(format!("Action '{key}' is not in the catalog"))
             })?;
         if row.is_orphan {
             return Err(AppError::Validation(format!(
-                "L'action « {key} » appartient à un module absent"
+                "Action '{key}' belongs to a missing module"
             )));
         }
         let params: Vec<ParamDef> =
@@ -173,14 +173,14 @@ pub async fn prepare(db: &DbPool, input: &RuleInput) -> Result<RuleDraft, AppErr
     let refs: Vec<&ScopeRef> = input.scope.referenced().collect();
     if refs.len() > MAX_SCOPE_REFS {
         return Err(AppError::Validation(format!(
-            "Une portée nomme au plus {MAX_SCOPE_REFS} entrées"
+            "A scope can name at most {MAX_SCOPE_REFS} entries"
         )));
     }
     for r in refs {
         if let ScopeRef::OrgUnit { id, .. } = r {
             if !catalog::org_unit_exists(db, *id).await? {
                 return Err(AppError::Validation(format!(
-                    "L'unité organisationnelle {id} n'existe pas"
+                    "Organizational unit {id} does not exist"
                 )));
             }
         }
@@ -193,19 +193,19 @@ pub async fn prepare(db: &DbPool, input: &RuleInput) -> Result<RuleDraft, AppErr
             (Some(c), Some(w)) => {
                 if c < 2 {
                     return Err(AppError::Validation(
-                        "Un seuil compte au moins 2 occurrences ; sans seuil, la règle réagit dès la première".into(),
+                        "A threshold requires at least 2 occurrences; without a threshold, the rule reacts to the first occurrence".into(),
                     ));
                 }
                 if !(10..=604_800).contains(&w) {
                     return Err(AppError::Validation(
-                        "La fenêtre d'un seuil va de 10 secondes à 7 jours".into(),
+                        "A threshold window must be between 10 seconds and 7 days".into(),
                     ));
                 }
                 (Some(c), Some(w))
             }
             _ => {
                 return Err(AppError::Validation(
-                    "Un seuil exige un nombre d'occurrences ET une fenêtre".into(),
+                    "A threshold requires both an occurrence count and a time window".into(),
                 ))
             }
         };
@@ -214,7 +214,7 @@ pub async fn prepare(db: &DbPool, input: &RuleInput) -> Result<RuleDraft, AppErr
     let rollout_percent = input.rollout_percent.unwrap_or(100);
     if !(0..=100).contains(&rollout_percent) {
         return Err(AppError::Validation(
-            "Le pourcentage de déploiement va de 0 à 100".into(),
+            "The rollout percentage must be between 0 and 100".into(),
         ));
     }
 
@@ -274,13 +274,13 @@ async fn check_detectors(
     let parts = catalog::content_parts(fields);
     if parts.is_empty() {
         return Err(AppError::Validation(format!(
-            "Le déclencheur « {trigger_key} » ne transmet aucune partie de contenu : une condition de détection n'y trouverait rien à inspecter"
+            "Trigger '{trigger_key}' does not provide any content parts for a detection condition to inspect"
         )));
     }
 
     if leaves.len() > MAX_DETECTOR_LEAVES {
         return Err(AppError::Validation(format!(
-            "Une règle utilise au plus {MAX_DETECTOR_LEAVES} conditions de détection"
+            "A rule can use at most {MAX_DETECTOR_LEAVES} detection conditions"
         )));
     }
 
@@ -289,28 +289,28 @@ async fn check_detectors(
         let key = leaf.detector.trim();
         let Some(detector) = catalogue.iter().find(|d| d.key == key) else {
             return Err(AppError::Validation(format!(
-                "Détecteur « {key} » inconnu du catalogue"
+                "Detector '{key}' is not in the catalog"
             )));
         };
         if !detector.is_enabled {
             return Err(AppError::Validation(format!(
-                "Le détecteur « {} » est désactivé : la règle serait enregistrée sans jamais rien détecter",
+                "Detector '{}' is disabled; the rule would be saved but would never detect anything",
                 detector.label
             )));
         }
         if !(0.0..=1.0).contains(&leaf.min_confidence) {
             return Err(AppError::Validation(
-                "Le seuil de confiance va de 0 à 1".into(),
+                "The confidence threshold must be between 0 and 1".into(),
             ));
         }
         if !(1..=10_000).contains(&leaf.min_matches) {
             return Err(AppError::Validation(
-                "Le nombre minimal de correspondances va de 1 à 10 000".into(),
+                "The minimum match count must be between 1 and 10,000".into(),
             ));
         }
         if !(1..=10_000).contains(&leaf.min_unique_matches) {
             return Err(AppError::Validation(
-                "Le nombre minimal de correspondances uniques va de 1 à 10 000".into(),
+                "The minimum unique match count must be between 1 and 10,000".into(),
             ));
         }
         if leaf.min_unique_matches > leaf.min_matches {
@@ -318,14 +318,14 @@ async fn check_detectors(
             // occurrences, so the rule could never fire - and would sit in the
             // console looking armed.
             return Err(AppError::Validation(format!(
-                "Le détecteur « {} » exige {} valeurs distinctes pour {} correspondances : ce seuil ne peut jamais être atteint",
+                "Detector '{}' requires {} distinct values for {} matches; this threshold can never be reached",
                 detector.label, leaf.min_unique_matches, leaf.min_matches
             )));
         }
         for part in &leaf.parts {
             if !parts.contains(&part.as_str()) {
                 return Err(AppError::Validation(format!(
-                    "Le déclencheur « {trigger_key} » ne transmet pas la partie de contenu « {part} »"
+                    "Trigger '{trigger_key}' does not provide content part '{part}'"
                 )));
             }
         }
@@ -342,14 +342,14 @@ fn check_params(action: &str, schema: &[ParamDef], supplied: &Value) -> Result<(
         let value = given.get(&p.name);
         if p.required && value.map(Value::is_null).unwrap_or(true) {
             return Err(AppError::Validation(format!(
-                "L'action « {action} » exige le paramètre « {} »",
+                "Action '{action}' requires parameter '{}'",
                 p.name
             )));
         }
         if let (Some(v), Some(domain)) = (value, p.values.as_ref()) {
             if !v.is_null() && !domain.contains(v) {
                 return Err(AppError::Validation(format!(
-                    "Valeur hors domaine pour « {}.{} »",
+                    "Value out of range for '{}.{}'",
                     action, p.name
                 )));
             }
@@ -361,7 +361,7 @@ fn check_params(action: &str, schema: &[ParamDef], supplied: &Value) -> Result<(
     for key in given.keys() {
         if !schema.iter().any(|p| &p.name == key) {
             return Err(AppError::Validation(format!(
-                "Paramètre « {key} » inconnu pour l'action « {action} »"
+                "Unknown parameter '{key}' for action '{action}'"
             )));
         }
     }
@@ -389,7 +389,7 @@ mod tests {
             ParamDef {
                 name: "title".into(),
                 value_type: "string".into(),
-                label: "Titre".into(),
+                label: "Title".into(),
                 required: true,
                 values: None,
             },

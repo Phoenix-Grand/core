@@ -183,7 +183,7 @@ fn server_next() {
         Ok(s) => s,
         Err(e) => return fail(&e),
     };
-    let Some((generation, device_key)) = begin("Vérification du serveur…") else { return };
+    let Some((generation, device_key)) = begin("Checking server…") else { return };
     spawn(async move {
         let result = probe_server(&server, &device_key).await;
         post_ui(move || {
@@ -207,9 +207,9 @@ fn submit() {
     let login = input_value("signin_login").unwrap_or_default().trim().to_string();
     let password = input_value("signin_password").unwrap_or_default();
     if login.is_empty() || password.is_empty() {
-        return set_error("Saisissez votre identifiant et votre mot de passe.".into());
+        return set_error("Enter your username and password.".into());
     }
-    let Some((generation, device_key)) = begin("Connexion…") else { return };
+    let Some((generation, device_key)) = begin("Signing in…") else { return };
     let (server, app) = FLOW.with(|f| (f.borrow().server.clone(), f.borrow().app.clone()));
     let opts = LoginOptions {
         server,
@@ -240,10 +240,10 @@ fn submit() {
 fn verify() {
     let code = input_value("signin_code").unwrap_or_default().trim().to_string();
     if code.is_empty() {
-        return set_error("Saisissez le code.".into());
+        return set_error("Enter the code.".into());
     }
     let Some(pending) = FLOW.with(|f| f.borrow().pending.clone()) else { return go(Step::Login) };
-    let Some((generation, _)) = begin("Vérification…") else { return };
+    let Some((generation, _)) = begin("Verifying…") else { return };
     spawn(async move {
         let result = verify_totp(&pending, &code).await;
         post_ui(move || {
@@ -296,18 +296,18 @@ fn finish(tokens: NativeTokens) {
 /// What to tell the user about a failed step.
 pub fn message(e: &AccountError) -> String {
     match e {
-        AccountError::InvalidServer => "Adresse de serveur invalide.".into(),
-        AccountError::NotKubuno => "Cette adresse ne répond pas comme un serveur Kubuno.".into(),
-        AccountError::Secret(_) => "Impossible d'enregistrer la session sur cet appareil.".into(),
-        AccountError::Protocol(_) => "Réponse inattendue du serveur.".into(),
+        AccountError::InvalidServer => "Invalid server address.".into(),
+        AccountError::NotKubuno => "This address does not respond as a Kubuno server.".into(),
+        AccountError::Secret(_) => "Cannot save the session on this device.".into(),
+        AccountError::Protocol(_) => "Unexpected server response.".into(),
         AccountError::Api(api) => match api.status() {
-            Some(401) | Some(403) => "Identifiant, mot de passe ou code incorrect.".into(),
-            Some(429) => "Trop de tentatives. Réessayez dans une minute.".into(),
-            Some(s) if s >= 500 => "Le serveur rencontre un problème. Réessayez plus tard.".into(),
-            Some(s) => format!("Le serveur a refusé la demande (HTTP {s})."),
+            Some(401) | Some(403) => "Incorrect username, password, or code.".into(),
+            Some(429) => "Too many attempts. Try again in a minute.".into(),
+            Some(s) if s >= 500 => "The server is experiencing a problem. Try again later.".into(),
+            Some(s) => format!("The server refused the request (HTTP {s})."),
             None => match api {
-                ApiError::Network { .. } => "Serveur injoignable. Vérifiez l'adresse et votre connexion.".into(),
-                _ => "Réponse inattendue du serveur.".into(),
+                ApiError::Network { .. } => "Server unreachable. Check the address and your connection.".into(),
+                _ => "Unexpected server response.".into(),
             },
         },
     }

@@ -180,7 +180,7 @@ pub async fn set_approval(
     ctx.require(keys::SESSIONS_DELETE)?;
 
     let next = Approval::parse(dto.approval.trim())
-        .ok_or_else(|| AppError::Validation("État d'approbation inconnu".into()))?;
+        .ok_or_else(|| AppError::Validation("Unknown approval state".into()))?;
     let reason = dto
         .reason
         .as_deref()

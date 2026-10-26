@@ -244,12 +244,12 @@ pub async fn register_key(
     let key_text = dto.key.trim();
     if key_text.is_empty() {
         return Err(AppError::Validation(
-            "Collez la clé de support fournie par l'éditeur.".into(),
+            "Paste the support key supplied by the publisher.".into(),
         ));
     }
     if key_text.len() > MAX_KEY_LEN {
         return Err(AppError::Validation(
-            "Cette clé de support est trop longue pour en être une.".into(),
+            "This support key is too long.".into(),
         ));
     }
 
@@ -307,7 +307,7 @@ pub async fn register_key(
 
     let stored = store::contract(&state.db).await?.ok_or_else(|| {
         tracing::error!("subscription: contrat introuvable juste après son enregistrement");
-        AppError::NotFound("Contrat de support".into())
+        AppError::NotFound("Support contract".into())
     })?;
     Ok(Json(json!({ "contract": contract_json(&stored, &key.trust) })))
 }
@@ -326,7 +326,7 @@ pub async fn remove_key(
     ctx.require(keys::SETTINGS_MANAGE)?;
 
     let previous = store::contract(&state.db).await?.ok_or_else(|| {
-        AppError::NotFound("Aucun contrat de support n'est enregistré".into())
+        AppError::NotFound("No support contract is saved".into())
     })?;
 
     let mut tx = audit.begin(&state.db).await?;

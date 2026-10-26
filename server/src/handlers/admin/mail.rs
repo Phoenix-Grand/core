@@ -115,7 +115,7 @@ fn validate_address(value: &str) -> Result<(), AppError> {
         Ok(())
     } else {
         Err(AppError::Validation(format!(
-            "Adresse invalide : « {value} »"
+            "Invalid address: '{value}'"
         )))
     }
 }
@@ -134,7 +134,7 @@ fn validate_host(value: &str) -> Result<(), AppError> {
         Ok(())
     } else {
         Err(AppError::Validation(
-            "Hôte SMTP invalide (nom d'hôte ou adresse IP attendu)".into(),
+            "Invalid SMTP host (expected a hostname or IP address)".into(),
         ))
     }
 }
@@ -147,7 +147,7 @@ fn validate_public_url(value: &str) -> Result<(), AppError> {
     match url::Url::parse(value) {
         Ok(u) if (u.scheme() == "https" || u.scheme() == "http") && u.host().is_some() => Ok(()),
         _ => Err(AppError::Validation(
-            "URL publique invalide (URL http(s) absolue attendue)".into(),
+            "Invalid public URL (expected an absolute http(s) URL)".into(),
         )),
     }
 }
@@ -252,13 +252,13 @@ pub async fn update_mail_settings(
     if let Some(security) = &dto.security {
         if !["none", "starttls", "tls"].contains(&security.as_str()) {
             return Err(AppError::Validation(
-                "Chiffrement invalide : aucun, starttls ou tls".into(),
+                "Invalid encryption: expected none, starttls, or tls".into(),
             ));
         }
     }
     if let Some(port) = dto.port {
         if port == 0 {
-            return Err(AppError::Validation("Port SMTP invalide".into()));
+            return Err(AppError::Validation("Invalid SMTP port".into()));
         }
     }
     for (label, value) in [
@@ -266,12 +266,12 @@ pub async fn update_mail_settings(
         ("Nom d'expédition", dto.from_name.as_deref()),
     ] {
         if value.is_some_and(|v| v.len() > MAX_FIELD) {
-            return Err(AppError::Validation(format!("{label} : 255 caractères maximum")));
+            return Err(AppError::Validation(format!("{label}: maximum 255 characters")));
         }
     }
     if dto.password.as_deref().is_some_and(|p| p.len() > 512) {
         return Err(AppError::Validation(
-            "Mot de passe SMTP : 512 caractères maximum".into(),
+            "SMTP password: maximum 512 characters".into(),
         ));
     }
 
@@ -321,7 +321,7 @@ pub async fn update_mail_settings(
     // `AuditTx` cannot be committed without an entry - a PATCH that changed
     // nothing has nothing to write either.
     let Some(last) = entries.pop() else {
-        return Ok(Json(json!({ "message": "Aucun réglage modifié", "updated": 0 })));
+        return Ok(Json(json!({ "message": "No settings changed", "updated": 0 })));
     };
     let updated = entries.len() + 1;
     for entry in entries {
@@ -333,7 +333,7 @@ pub async fn update_mail_settings(
     // health report caches it.
     crate::health::invalidate();
 
-    Ok(Json(json!({ "message": "Relais de courriel mis à jour", "updated": updated })))
+    Ok(Json(json!({ "message": "Email relay updated", "updated": updated })))
 }
 
 #[derive(Debug, Deserialize)]
@@ -367,12 +367,12 @@ pub async fn test_mail(
     // letting lettre fail with "invalid hostname" on an empty string.
     if cfg.host.is_empty() {
         return Err(AppError::Validation(
-            "Renseignez l'hôte SMTP avant d'envoyer un test".into(),
+            "Enter the SMTP host before sending a test".into(),
         ));
     }
     if cfg.from_address.is_empty() {
         return Err(AppError::Validation(
-            "Renseignez l'adresse d'expédition avant d'envoyer un test".into(),
+            "Enter the sender address before sending a test".into(),
         ));
     }
 
@@ -417,7 +417,7 @@ pub async fn test_mail(
                 .await;
             Ok(Json(json!({
                 "ok":         true,
-                "message":    format!("Message de test envoyé à {to}."),
+                "message":    format!("Test message sent to {to}."),
                 "to":         to,
                 "host":       cfg.host,
                 "port":       cfg.port,
@@ -452,32 +452,30 @@ fn hint_for(err: &send::SendError, cfg: &MailConfig) -> Option<String> {
     let raw = err.raw.to_lowercase();
     if raw.contains("connection refused") || raw.contains("refused") {
         return Some(format!(
-            "Aucun service n'écoute sur {}:{}. Vérifiez l'hôte et le port.",
+            "No service is listening on {}:{}. Check the host and port.",
             cfg.host, cfg.port
         ));
     }
     if raw.contains("timed out") || raw.contains("timeout") {
         return Some(
-            "Le relais ne répond pas : pare-feu, port bloqué, ou hôte injoignable.".into(),
+            "The relay is not responding: check for a firewall, blocked port, or unreachable host.".into(),
         );
     }
     if raw.contains("535") || raw.contains("authentication") || raw.contains("auth") {
         return Some(
-            "Le relais a refusé les identifiants. Vérifiez l'identifiant et le mot de passe \
-             (certains fournisseurs exigent un mot de passe d'application)."
+            "The relay refused the credentials. Check the username and password; some providers require an app password."
                 .into(),
         );
     }
     if raw.contains("tls") || raw.contains("certificate") || raw.contains("handshake") {
         return Some(format!(
-            "Échec TLS avec le mode « {} ». Essayez starttls sur le port 587, ou tls sur le 465.",
+            "TLS failed with mode '{}'. Try starttls on port 587 or tls on port 465.",
             cfg.security.as_str()
         ));
     }
     if raw.contains("relay") && raw.contains("denied") {
         return Some(
-            "Le relais refuse de router ce message : l'adresse d'expédition n'est probablement \
-             pas autorisée sur ce serveur."
+            "The relay refuses to route this message. The sender address may not be authorized on this server."
                 .into(),
         );
     }
@@ -568,7 +566,7 @@ mod tests {
         assert!(hint_for(&refused, &cfg).unwrap_or_default().contains("587"));
 
         let auth = send::SendError { stage: "Envoi SMTP", raw: "535 5.7.8 Authentication failed".into() };
-        assert!(hint_for(&auth, &cfg).unwrap_or_default().contains("identifiants"));
+        assert!(hint_for(&auth, &cfg).unwrap_or_default().contains("credentials"));
 
         let unknown = send::SendError { stage: "Envoi SMTP", raw: "quelque chose d'inédit".into() };
         assert!(hint_for(&unknown, &cfg).is_none());

@@ -61,7 +61,7 @@ pub async fn identity(db: &DbPool) -> Result<InstanceIdentity, AppError> {
     // identity would hand out a new one every time somebody looked at the page.
     let row = row.ok_or_else(|| {
         tracing::error!("support: aucune ligne d'identité d'instance");
-        AppError::NotFound("Identité de l'instance".into())
+        AppError::NotFound("Instance identity".into())
     })?;
 
     Ok(InstanceIdentity {

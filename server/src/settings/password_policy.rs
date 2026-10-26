@@ -201,16 +201,14 @@ impl PasswordPolicy {
         let length = candidate.chars().count();
         if length < self.min_length {
             return Err(AppError::Validation(format!(
-                "Mot de passe : {} caractères minimum",
+                "Password: minimum {} characters",
                 self.min_length
             )));
         }
 
         if self.strong && !is_strong(candidate) {
             return Err(AppError::Validation(
-                "Mot de passe : il doit combiner au moins trois familles de caractères \
-                 (minuscules, majuscules, chiffres, symboles) et ne pas être une répétition \
-                 ou une suite triviale"
+                "The password must combine at least three character groups (lowercase letters, uppercase letters, numbers, symbols) and cannot be a repetition or a simple sequence"
                     .into(),
             ));
         }
@@ -344,13 +342,13 @@ pub async fn reject_reuse(
     .map_err(|e| {
         tracing::error!(error = %e, "password_policy: pool bloquant indisponible");
         AppError::Internal(anyhow::anyhow!(
-            "Vérification de l'historique des mots de passe impossible"
+            "Cannot check password history"
         ))
     })?;
 
     if reused {
         return Err(AppError::Validation(
-            "Ce mot de passe a déjà été utilisé par ce compte : choisissez-en un autre.".into(),
+            "This password has already been used by this account. Choose another.".into(),
         ));
     }
     Ok(())

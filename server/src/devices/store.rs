@@ -286,7 +286,7 @@ pub async fn get(db: &DbPool, id: Uuid, ctx: &AdminContext) -> Result<DeviceRow,
 
     // Outside the perimeter reads as "does not exist", which is also what an
     // enumeration attempt must be told.
-    row.ok_or_else(|| AppError::NotFound("Appareil introuvable".into()))
+    row.ok_or_else(|| AppError::NotFound("Device not found".into()))
 }
 
 /// One device owned by a given account. Used by the personal screen, where the
@@ -304,7 +304,7 @@ pub async fn get_owned(db: &DbPool, id: Uuid, user_id: Uuid) -> Result<DeviceRow
             tracing::error!(error = %e, device_id = %id, "devices: reading a personal device");
             AppError::Database(e)
         })?;
-    row.ok_or_else(|| AppError::NotFound("Appareil introuvable".into()))
+    row.ok_or_else(|| AppError::NotFound("Device not found".into()))
 }
 
 /// Every device of one account, most recently seen first.
@@ -515,7 +515,7 @@ pub async fn set_approval(
             tracing::error!(error = %e, device_id = %device_id, "devices: reading the approval");
             AppError::Database(e)
         })?
-        .ok_or_else(|| AppError::NotFound("Appareil introuvable".into()))?;
+        .ok_or_else(|| AppError::NotFound("Device not found".into()))?;
 
     // Placeholders must appear once each in ascending order (portable rewrite),
     // so the WHERE key is numbered after the SET assignments.
@@ -590,7 +590,7 @@ pub async fn forget(tx: &mut DbTx, device_id: Uuid) -> Result<(), AppError> {
             AppError::Database(e)
         })?;
     if affected == 0 {
-        return Err(AppError::NotFound("Appareil introuvable".into()));
+        return Err(AppError::NotFound("Device not found".into()));
     }
     Ok(())
 }
@@ -614,7 +614,7 @@ pub async fn rename(
             AppError::Database(e)
         })?;
     if affected == 0 {
-        return Err(AppError::NotFound("Appareil introuvable".into()));
+        return Err(AppError::NotFound("Device not found".into()));
     }
     Ok(())
 }

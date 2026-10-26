@@ -417,17 +417,17 @@ pub async fn list_backup_files(destination: &Path) -> anyhow::Result<Vec<BackupF
 pub fn validate_backup_name(name: &str) -> Result<(), crate::errors::AppError> {
     use crate::errors::AppError;
     if name.is_empty() || name.len() > 255 {
-        return Err(AppError::Validation("Nom de sauvegarde invalide".into()));
+        return Err(AppError::Validation("Invalid backup name".into()));
     }
     // No directory separators, no traversal: a name is a base name, never a path.
     if name.contains('/') || name.contains('\\') || name.contains("..") || name.contains('\0') {
         return Err(AppError::Validation(
-            "Le nom de sauvegarde ne peut pas contenir de chemin".into(),
+            "The backup name cannot contain a path".into(),
         ));
     }
     if !is_dump_file(name) {
         return Err(AppError::Validation(
-            "Ce fichier n'est pas une sauvegarde Kubuno".into(),
+            "This file is not a Kubuno backup".into(),
         ));
     }
     Ok(())

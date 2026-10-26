@@ -27,9 +27,9 @@ pub struct ClipboardItem {
 /// size cap - a client is never trusted with either.
 #[derive(Debug, Deserialize, Validate)]
 pub struct PushClipboardDto {
-    #[validate(length(min = 1, max = 100, message = "Module: 1-100 caractères"))]
+    #[validate(length(min = 1, max = 100, message = "Module: 1-100 characters"))]
     pub module:  String,
-    #[validate(length(min = 1, max = 100, message = "Type: 1-100 caractères"))]
+    #[validate(length(min = 1, max = 100, message = "Type: 1-100 characters"))]
     pub kind:    String,
     #[validate(length(max = 500))]
     pub title:   Option<String>,

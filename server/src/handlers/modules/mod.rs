@@ -292,10 +292,10 @@ mod tests {
     #[test]
     fn rejects_empty_or_duplicate_group_id() {
         let err = validate_setting_groups("mail", &[group("")], &[]).unwrap_err();
-        assert!(matches!(err, AppError::Validation(ref m) if m.contains("id vide")));
+        assert!(matches!(err, AppError::Validation(ref m) if m.contains("empty ID")));
 
         let err = validate_setting_groups("mail", &[group("a"), group("a")], &[]).unwrap_err();
-        assert!(matches!(err, AppError::Validation(ref m) if m.contains("deux fois")));
+        assert!(matches!(err, AppError::Validation(ref m) if m.contains("twice")));
 
         let long = "a".repeat(MAX_GROUP_ID_LEN + 1);
         assert!(validate_setting_groups("mail", &[group(&long)], &[]).is_err());
@@ -306,7 +306,7 @@ mod tests {
         let mut blank = group("services");
         blank.label = "   ".into();
         let err = validate_setting_groups("mail", &[blank], &[]).unwrap_err();
-        assert!(matches!(err, AppError::Validation(ref m) if m.contains("libellé")));
+        assert!(matches!(err, AppError::Validation(ref m) if m.contains("label")));
 
         let mut no_icon = group("services");
         no_icon.icon = Some(" ".into());
@@ -391,7 +391,7 @@ mod tests {
         d.min = Some(100);
         d.max = Some(10);
         let err = validate_settings_schema("mail", &[d]).unwrap_err();
-        assert!(matches!(err, AppError::Validation(ref m) if m.contains("supérieur à max")));
+        assert!(matches!(err, AppError::Validation(ref m) if m.contains("greater than max")));
     }
 
     #[test]

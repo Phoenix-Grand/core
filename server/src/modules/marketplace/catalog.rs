@@ -181,7 +181,7 @@ pub fn validate_id(id: &str) -> Result<(), AppError> {
         || id.len() > 50
         || !id.chars().all(|c| c.is_ascii_alphanumeric() || c == '-' || c == '_')
     {
-        return Err(AppError::Validation(format!("id de module invalide : « {id} »")));
+        return Err(AppError::Validation(format!("Invalid module ID: '{id}'")));
     }
     Ok(())
 }

@@ -210,7 +210,7 @@ pub async fn create(db: &DbPool, new: &NewExport) -> Result<Uuid, AppError> {
             "export: ouverture d'une exécution impossible");
         match e.as_database_error().and_then(|d| d.constraint()) {
             Some("uq_core_data_export_self_active") => AppError::Conflict(
-                "Une demande d'export est déjà en cours pour ce compte".into(),
+                "An export request is already in progress for this account".into(),
             ),
             _ => AppError::Database(e),
         }

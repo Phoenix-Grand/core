@@ -35,7 +35,7 @@ impl DomainKind {
             "alias" => Self::Alias,
             other => {
                 return Err(AppError::Validation(format!(
-                    "Type de domaine « {other} » inconnu"
+                    "Unknown domain type '{other}'"
                 )))
             }
         })
@@ -124,37 +124,36 @@ pub fn normalise_name(raw: &str) -> Result<String, AppError> {
     let name = name.trim_end_matches('.').trim().to_string();
 
     if name.is_empty() {
-        return Err(AppError::Validation("Indiquez un nom de domaine.".into()));
+        return Err(AppError::Validation("Enter a domain name.".into()));
     }
     if name.len() > 253 {
-        return Err(AppError::Validation("Nom de domaine trop long.".into()));
+        return Err(AppError::Validation("The domain name is too long.".into()));
     }
     if !name.contains('.') {
         return Err(AppError::Validation(
-            "Un domaine comporte au moins un point (« exemple.fr »).".into(),
+            "A domain must contain at least one dot (e.g. 'example.com').".into(),
         ));
     }
     if !name.is_ascii() {
         return Err(AppError::Validation(
-            "Les noms accentués ou non latins doivent être saisis sous leur forme punycode (« xn--… »), \
-             qui est celle que le DNS transporte."
+            "Accented or non-Latin names must be entered in punycode form ('xn--…'), which is the form used by DNS."
                 .into(),
         ));
     }
     for label in name.split('.') {
         if label.is_empty() || label.len() > 63 {
             return Err(AppError::Validation(
-                "Chaque partie du domaine doit faire entre 1 et 63 caractères.".into(),
+                "Each domain label must contain between 1 and 63 characters.".into(),
             ));
         }
         if label.starts_with('-') || label.ends_with('-') {
             return Err(AppError::Validation(
-                "Une partie du domaine ne peut pas commencer ni finir par un tiret.".into(),
+                "A domain label cannot start or end with a hyphen.".into(),
             ));
         }
         if !label.chars().all(|c| c.is_ascii_alphanumeric() || c == '-') {
             return Err(AppError::Validation(
-                "Un domaine ne contient que des lettres, des chiffres et des tirets.".into(),
+                "A domain can only contain letters, numbers, and hyphens.".into(),
             ));
         }
     }

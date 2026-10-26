@@ -130,7 +130,7 @@ impl GDriveConnector {
                 .map_err(|e| RemoteError::Network(e.to_string()))?;
 
             if resp.status() == reqwest::StatusCode::UNAUTHORIZED {
-                return Err(RemoteError::Auth("Token Google Drive expiré".into()));
+                return Err(RemoteError::Auth("Google Drive token expired".into()));
             }
 
             let list: DriveList = resp.json().await
@@ -207,7 +207,7 @@ impl RemoteConnector for GDriveConnector {
                 .map_err(|e| RemoteError::Network(e.to_string()))?;
 
             if resp.status() == reqwest::StatusCode::UNAUTHORIZED {
-                return Err(RemoteError::Auth("Token Google Drive expiré".into()));
+                return Err(RemoteError::Auth("Google Drive token expired".into()));
             }
 
             let list: DriveList = resp.json().await

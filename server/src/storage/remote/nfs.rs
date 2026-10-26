@@ -35,7 +35,7 @@ fn parse_nfs_size(txt: &str) -> Option<u64> {
 impl NfsConnector {
     pub fn new(config: &ConnectorConfig) -> Result<Self, RemoteError> {
         let host = config.host.clone()
-            .ok_or_else(|| RemoteError::Auth("Hôte NFS manquant".into()))?;
+            .ok_or_else(|| RemoteError::Auth("Missing NFS host".into()))?;
         let export = config.export_path.clone()
             .ok_or_else(|| RemoteError::Auth("Export NFS manquant (ex: /srv/partage)".into()))?;
         Ok(Self {
@@ -156,14 +156,14 @@ impl RemoteConnector for NfsConnector {
     }
 
     async fn create_dir(&self, _path: &str) -> Result<(), RemoteError> {
-        Err(RemoteError::Unsupported("Création de dossier non supportée sur NFS (libnfs-utils)".into()))
+        Err(RemoteError::Unsupported("Creating folders is not supported on NFS (libnfs-utils)".into()))
     }
 
     async fn delete(&self, _path: &str) -> Result<(), RemoteError> {
-        Err(RemoteError::Unsupported("Suppression non supportée sur NFS (libnfs-utils)".into()))
+        Err(RemoteError::Unsupported("Deletion is not supported on NFS (libnfs-utils)".into()))
     }
 
     async fn rename(&self, _from: &str, _to: &str) -> Result<(), RemoteError> {
-        Err(RemoteError::Unsupported("Renommage non supporté sur NFS (libnfs-utils)".into()))
+        Err(RemoteError::Unsupported("Renaming is not supported on NFS (libnfs-utils)".into()))
     }
 }

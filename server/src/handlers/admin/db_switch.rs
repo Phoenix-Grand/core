@@ -73,13 +73,13 @@ impl TargetDto {
     pub(crate) fn validate(&self) -> Result<Backend, AppError> {
         let backend = Backend::parse(&self.engine)
             .filter(|_| ENGINES.contains(&self.engine.as_str()))
-            .ok_or_else(|| AppError::Validation(format!("Moteur inconnu : {}", self.engine)))?;
+            .ok_or_else(|| AppError::Validation(format!("Unknown engine: {}", self.engine)))?;
         if backend != Backend::Sqlite {
             if self.host.trim().is_empty() {
-                return Err(AppError::Validation("L'hôte de la base cible est requis.".into()));
+                return Err(AppError::Validation("The target database host is required.".into()));
             }
             if self.user.trim().is_empty() {
-                return Err(AppError::Validation("L'utilisateur de la base cible est requis.".into()));
+                return Err(AppError::Validation("The target database user is required.".into()));
             }
         }
         Ok(backend)
@@ -282,7 +282,7 @@ pub async fn get_job(
         .map_err(AppError::Database)?;
     match job {
         Some(j) => Ok(Json(json!({ "job": job_json(&j) }))),
-        None => Err(AppError::NotFound("Migration introuvable".into())),
+        None => Err(AppError::NotFound("Migration not found".into())),
     }
 }
 
@@ -338,7 +338,7 @@ pub async fn migrate_core_database(
         &state.ws_hub,
         GLOBAL_SCOPE,
         format!(
-            "Migration de la base de données principale ({source_engine} → {}) en cours…",
+            "Migrating the primary database ({source_engine} → {})…",
             dto.engine
         ),
         "migrate",
@@ -351,7 +351,7 @@ pub async fn migrate_core_database(
     let outcome: Result<Json<Value>, AppError> = match result {
         Ok((tables, rows)) => match persist_core_settings(&creds, target_backend) {
             Err(e) => {
-                let msg = format!("Copie réussie mais configuration non écrite : {}", e.detail());
+                let msg = format!("Copy succeeded, but the configuration could not be written: {}", e.detail());
                 finish_err(&state.db, job, &msg).await;
                 record_core_switch(&audit, &state.db, &source_engine, &dto.engine, Err(&msg)).await;
                 Err(e)
@@ -571,9 +571,7 @@ fn database_env_overrides(target: Backend, is_set: impl Fn(&str) -> bool) -> Opt
 pub(crate) fn ensure_switchable_config(target: Backend) -> Result<(), AppError> {
     match database_pinned_by_env(target) {
         Some(vars) => Err(AppError::Validation(format!(
-            "La base de données principale est fixée par l'environnement ({vars}) : \
-             une bascule ne pourrait pas prendre effet au redémarrage. Retirez ces variables \
-             (ou configurez la base dans le fichier de configuration) avant de migrer."
+            "The primary database is set by the environment ({vars}), so switching would not take effect after a restart. Remove these variables or configure the database in the configuration file before migrating."
         ))),
         None => Ok(()),
     }
@@ -610,7 +608,7 @@ pub async fn migrate_module_database(
         .map_err(AppError::Database)?
         .is_some();
     if !exists {
-        return Err(AppError::NotFound(format!("Module '{id}' introuvable")));
+        return Err(AppError::NotFound(format!("Module '{id}' not found")));
     }
 
     // The source (current) credentials, resolved BEFORE we change anything.

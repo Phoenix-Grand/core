@@ -107,34 +107,34 @@ impl ProfileField {
     fn refusal(self) -> &'static str {
         match self {
             ProfileField::Name => {
-                "Le nom affiché est géré par votre administrateur : il ne peut pas être modifié ici."
+                "Your display name is managed by your administrator and cannot be changed here."
             }
             ProfileField::FirstName => {
-                "Votre prénom est géré par votre administrateur : il ne peut pas être modifié ici."
+                "Your first name is managed by your administrator and cannot be changed here."
             }
             ProfileField::LastName => {
-                "Votre nom de famille est géré par votre administrateur : il ne peut pas être modifié ici."
+                "Your last name is managed by your administrator and cannot be changed here."
             }
             ProfileField::Photo => {
-                "La photo de profil est gérée par votre administrateur : elle ne peut pas être modifiée ici."
+                "Your profile photo is managed by your administrator and cannot be changed here."
             }
             ProfileField::NamePronunciation => {
-                "La prononciation de votre nom est gérée par votre administrateur : elle ne peut pas être modifiée ici."
+                "Your name pronunciation is managed by your administrator and cannot be changed here."
             }
             ProfileField::Pronouns => {
-                "Vos pronoms sont gérés par votre administrateur : ils ne peuvent pas être modifiés ici."
+                "Your pronouns are managed by your administrator and cannot be changed here."
             }
             ProfileField::WorkLocation => {
-                "Votre lieu de travail est géré par votre administrateur : il ne peut pas être modifié ici."
+                "Your work location is managed by your administrator and cannot be changed here."
             }
             ProfileField::Introduction => {
-                "Votre présentation est gérée par votre administrateur : elle ne peut pas être modifiée ici."
+                "Your introduction is managed by your administrator and cannot be changed here."
             }
             ProfileField::Gender => {
-                "Le champ « genre » est géré par votre administrateur : il ne peut pas être modifié ici."
+                "Your gender field is managed by your administrator and cannot be changed here."
             }
             ProfileField::Birthday => {
-                "Votre date de naissance est gérée par votre administrateur : elle ne peut pas être modifiée ici."
+                "Your date of birth is managed by your administrator and cannot be changed here."
             }
         }
     }

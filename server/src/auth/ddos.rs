@@ -186,7 +186,7 @@ pub async fn concurrency_limit(req: Request<Body>, next: Next) -> Response {
     if current > max {
         INFLIGHT.fetch_sub(1, Ordering::Relaxed);
         tracing::warn!("concurrency limit reached ({max} max) - shedding request");
-        return too_busy("SERVER_BUSY", "Service momentanément saturé, réessayez");
+        return too_busy("SERVER_BUSY", "The service is temporarily overloaded. Please try again");
     }
     let _guard = InflightGuard; // décrémente en fin de scope
     next.run(req).await
@@ -268,7 +268,7 @@ pub async fn global_rate_limit(req: Request<Body>, next: Next) -> Response {
                 return next.run(req).await;
             }
         }
-        return too_busy("RATE_LIMITED", "Trop de requêtes, ralentissez");
+        return too_busy("RATE_LIMITED", "Too many requests. Please slow down");
     }
     next.run(req).await
 }

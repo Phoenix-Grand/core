@@ -253,7 +253,7 @@ pub async fn calendar(db: &DbPool, id: Uuid) -> Result<HolidayCalendar, AppError
             tracing::error!(error = %e, "holidays: lecture d'un calendrier");
             AppError::Database(e)
         })?
-        .ok_or_else(|| AppError::NotFound("Calendrier introuvable".into()))?;
+        .ok_or_else(|| AppError::NotFound("Calendar not found".into()))?;
     Ok(row.into_calendar())
 }
 

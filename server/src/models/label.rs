@@ -33,7 +33,7 @@ pub struct LabelLink {
 
 #[derive(Debug, Deserialize, Validate)]
 pub struct CreateLabelDto {
-    #[validate(length(min = 1, max = 100, message = "Nom: 1-100 caractères"))]
+    #[validate(length(min = 1, max = 100, message = "Name: 1-100 characters"))]
     pub name:        String,
     #[validate(length(max = 20))]
     pub color:       Option<String>,
@@ -43,7 +43,7 @@ pub struct CreateLabelDto {
 
 #[derive(Debug, Deserialize, Validate)]
 pub struct UpdateLabelDto {
-    #[validate(length(min = 1, max = 100, message = "Nom: 1-100 caractères"))]
+    #[validate(length(min = 1, max = 100, message = "Name: 1-100 characters"))]
     pub name:        Option<String>,
     #[validate(length(max = 20))]
     pub color:       Option<String>,

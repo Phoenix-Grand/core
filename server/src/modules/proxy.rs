@@ -104,7 +104,7 @@ pub async fn proxy_to_module(
             "Accès refusé à une route interne de module depuis une requête client"
         );
         return Err(AppError::NotFound(format!(
-            "Route inconnue pour le module '{module_id}'"
+            "Unknown route for module '{module_id}'"
         )));
     }
 
@@ -518,7 +518,7 @@ pub async fn proxy_ws_to_module(
             module = %module_id,
             "Accès refusé à une route interne de module depuis une WebSocket cliente"
         );
-        return AppError::NotFound(format!("Route inconnue pour le module '{module_id}'"))
+        return AppError::NotFound(format!("Unknown route for module '{module_id}'"))
             .into_response();
     }
 

@@ -36,7 +36,7 @@ pub async fn forgot_password(
     Json(dto): Json<ForgotPasswordDto>,
 ) -> impl IntoResponse {
     // Répondre identiquement quelle que soit l'existence de l'email (anti-énumération)
-    let ok = Json(json!({ "message": "Si cet email existe, un lien de réinitialisation a été envoyé." }));
+    let ok = Json(json!({ "message": "If this email address exists, a password reset link has been sent." }));
 
     let email = dto.email.trim();
     // A syntactically impossible address cannot match a row; bailing out here
@@ -163,7 +163,7 @@ pub async fn reset_password(
             params![&hash, chrono::Utc::now()],
         )
         .await?
-        .ok_or_else(|| AppError::Validation("Token invalide ou expiré".into()))?;
+        .ok_or_else(|| AppError::Validation("Invalid or expired token".into()))?;
 
     // Holding a valid link is not an exemption from the policy: this is the one
     // route on which a password is chosen by somebody who has just proved
@@ -220,5 +220,5 @@ pub async fn reset_password(
 
     tx.commit().await?;
 
-    Ok(Json(json!({ "message": "Mot de passe réinitialisé avec succès" })))
+    Ok(Json(json!({ "message": "Password reset successfully" })))
 }

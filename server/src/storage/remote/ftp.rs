@@ -22,7 +22,7 @@ pub struct FtpConnector {
 impl FtpConnector {
     pub fn new(config: &ConnectorConfig) -> Result<Self, RemoteError> {
         let host = config.host.clone()
-            .ok_or_else(|| RemoteError::Auth("Hôte FTP manquant".into()))?;
+            .ok_or_else(|| RemoteError::Auth("Missing FTP host".into()))?;
 
         Ok(Self {
             host,
@@ -74,7 +74,7 @@ impl RemoteConnector for FtpConnector {
             Ok(None)
         } else {
             let err = String::from_utf8_lossy(&out.stderr);
-            Err(RemoteError::Auth(format!("FTP connexion échouée: {err}")))
+            Err(RemoteError::Auth(format!("FTP connection failed: {err}")))
         }
     }
 
@@ -189,7 +189,7 @@ impl RemoteConnector for FtpConnector {
             self.stat(path).await
         } else {
             let err = String::from_utf8_lossy(&out.stderr);
-            Err(RemoteError::Provider(format!("FTP upload échoué: {err}")))
+            Err(RemoteError::Provider(format!("FTP upload failed: {err}")))
         }
     }
 

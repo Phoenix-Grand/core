@@ -42,7 +42,7 @@ async fn load_enabled_provider(db: &DbPool, slug: &str) -> Result<OAuthProvider,
         params![slug],
     )
     .await?
-    .ok_or_else(|| AppError::NotFound(format!("Fournisseur SSO inconnu ou désactivé: {slug}")))
+    .ok_or_else(|| AppError::NotFound(format!("Unknown or disabled SSO provider: {slug}")))
 }
 
 /// Which sign-in methods the page must draw, for an anonymous visitor.
@@ -148,16 +148,16 @@ pub async fn oauth_callback(
 
     let p = load_enabled_provider(&state.db, &provider).await?;
 
-    let code        = params.code.ok_or_else(|| AppError::Validation("Code d'autorisation manquant".into()))?;
-    let state_param = params.state.ok_or_else(|| AppError::Validation("Paramètre state manquant".into()))?;
+    let code        = params.code.ok_or_else(|| AppError::Validation("Missing authorization code".into()))?;
+    let state_param = params.state.ok_or_else(|| AppError::Validation("Missing state parameter".into()))?;
 
     // Read and verify the PKCE cookie (CSRF protection via `state`).
     let pkce_value = extract_cookie_value(&headers, "oauth_pkce")
-        .ok_or_else(|| AppError::Validation("Session OAuth expirée - veuillez réessayer".into()))?;
+        .ok_or_else(|| AppError::Validation("OAuth session expired. Please try again".into()))?;
     let pkce = OAuthPkce::from_cookie_value(&pkce_value)
-        .ok_or_else(|| AppError::Validation("Cookie OAuth corrompu".into()))?;
+        .ok_or_else(|| AppError::Validation("Corrupted OAuth cookie".into()))?;
     if state_param != pkce.nonce {
-        return Err(AppError::Validation("Vérification CSRF échouée".into()));
+        return Err(AppError::Validation("CSRF verification failed".into()));
     }
 
     // Decrypt the stored client secret (empty for public clients).
@@ -193,7 +193,7 @@ pub async fn oauth_callback(
         .map(|e| e.to_lowercase())
         .ok_or_else(|| {
             AppError::Validation(format!(
-                "Le profil SSO ne contient pas de revendication « {} » exploitable (scope 'email' requis)",
+                "The SSO profile does not contain a usable '{}' claim (the 'email' scope is required)",
                 claims.email
             ))
         })?;
@@ -213,7 +213,7 @@ pub async fn oauth_callback(
         None if !p.allow_signup => {
             let url = format!(
                 "/auth/oauth/callback?error={}",
-                urlencoding_encode("Création de compte via SSO désactivée pour ce fournisseur")
+                urlencoding_encode("SSO account creation is disabled for this provider")
             );
             return Ok(([(header::SET_COOKIE, clear_pkce)], Redirect::to(&url)).into_response());
         }
@@ -238,7 +238,7 @@ pub async fn oauth_callback(
         let url = format!(
             "/auth/oauth/callback?error={}",
             urlencoding_encode(
-                "La connexion par fournisseur d'identité n'est pas autorisée pour votre unité organisationnelle."
+                "Identity provider sign-in is not allowed for your organizational unit."
             )
         );
         return Ok(([(header::SET_COOKIE, clear_pkce)], Redirect::to(&url)).into_response());

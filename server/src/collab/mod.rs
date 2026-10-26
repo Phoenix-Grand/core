@@ -628,7 +628,7 @@ pub async fn close_room(
 ) -> Result<Json<serde_json::Value>, AppError> {
     let room = dto.room.trim();
     if room.is_empty() || room.len() > MAX_ROOM_LEN || room.chars().any(char::is_control) {
-        return Err(AppError::Validation("room invalide".into()));
+        return Err(AppError::Validation("Invalid room".into()));
     }
     if !may_close(internal.module_id(), room) {
         tracing::warn!(caller = %internal.0.label(), room = %room, "collab: room close refused (not the owner)");

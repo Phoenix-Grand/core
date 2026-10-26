@@ -78,7 +78,7 @@ async fn role_contents(db: &DbPool, role_id: Uuid) -> Result<(bool, Vec<String>)
             AppError::Database(e)
         })?;
     let is_superuser =
-        is_superuser.ok_or_else(|| AppError::NotFound(format!("Rôle {role_id}")))?;
+        is_superuser.ok_or_else(|| AppError::NotFound(format!("Role {role_id}")))?;
 
     let keys: Vec<String> = db
         .fetch_all_as::<KeyRow>(
@@ -116,8 +116,7 @@ pub async fn ensure_scopable(
     let (is_superuser, _) = role_contents(db, role_id).await?;
     if is_superuser {
         return Err(AppError::Validation(
-            "Un rôle super-utilisateur ne peut pas être restreint à une unité organisationnelle : \
-             il détient tout, présent et futur."
+            "A superuser role cannot be restricted to an organizational unit: it holds all current and future privileges."
                 .into(),
         ));
     }
@@ -145,8 +144,7 @@ pub async fn ensure_scopable(
     }
 
     Err(AppError::Validation(format!(
-        "Affectation impossible à une unité organisationnelle : ce rôle contient {} privilège(s) \
-         non restreignable(s) ({}). Une portée d'unité serait une illusion de sécurité.",
+        "Cannot assign this role to an organizational unit: it contains {} privilege(s) that cannot be restricted ({}). A unit scope would not provide a real security boundary.",
         blocking.len(),
         blocking.join(", ")
     )))
@@ -179,7 +177,7 @@ pub async fn ensure_can_grant(
     // one's own scope even when every privilege is held.
     if scope == AssignmentScope::OrgUnit {
         let Some(target_unit) = unit else {
-            return Err(AppError::Validation("Unité organisationnelle requise".into()));
+            return Err(AppError::Validation("Organizational unit required".into()));
         };
         let covered = keys
             .iter()
@@ -338,7 +336,7 @@ pub async fn ensure_superadmin_remains(tx: &mut DbTx) -> Result<(), AppError> {
     }
     tracing::warn!("Refus : l'opération retirerait le dernier super-administrateur de l'instance");
     Err(AppError::Validation(
-        "Opération refusée : l'instance doit conserver au moins un super-administrateur actif.".into(),
+        "Operation refused: the instance must retain at least one active super-administrator.".into(),
     ))
 }
 

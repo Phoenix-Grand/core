@@ -52,7 +52,7 @@ fn validate_slug(slug: &str) -> Result<(), AppError> {
         Ok(())
     } else {
         Err(AppError::Validation(
-            "slug invalide : 2 à 40 caractères, minuscules/chiffres/tirets uniquement".into(),
+            "Invalid slug: 2 to 40 characters; only lowercase letters, numbers, and hyphens".into(),
         ))
     }
 }
@@ -71,7 +71,7 @@ fn validate_issuer(url: &str) -> Result<(), AppError> {
     match url::Url::parse(url) {
         Ok(u) if u.scheme() == "https" || u.scheme() == "http" => Ok(()),
         _ => Err(AppError::Validation(
-            "issuer_url invalide (URL http(s) attendue)".into(),
+            "Invalid issuer_url (expected an http(s) URL)".into(),
         )),
     }
 }
@@ -114,7 +114,7 @@ pub async fn create_oauth_provider(
     validate_slug(&slug)?;
     validate_issuer(dto.issuer_url.trim())?;
     if dto.display_name.trim().is_empty() || dto.client_id.trim().is_empty() {
-        return Err(AppError::Validation("display_name et client_id requis".into()));
+        return Err(AppError::Validation("display_name and client_id are required".into()));
     }
 
     let secret_enc = encrypt_secret(&state, &dto.client_secret)?;
@@ -161,7 +161,7 @@ pub async fn create_oauth_provider(
     .await
     .map_err(|e| match &e {
         sqlx::Error::Database(db) if db.is_unique_violation() => {
-            AppError::Conflict(format!("Un fournisseur avec le slug '{slug}' existe déjà"))
+            AppError::Conflict(format!("A provider with slug '{slug}' already exists"))
         }
         _ => {
             tracing::error!(error = %e, "create_oauth_provider");
@@ -217,7 +217,7 @@ pub async fn update_oauth_provider(
         )
         .await
         .map_err(|e| { tracing::error!(error = %e, "update_oauth_provider: lecture"); AppError::Database(e) })?
-        .ok_or_else(|| AppError::NotFound("Fournisseur SSO introuvable".into()))?;
+        .ok_or_else(|| AppError::NotFound("SSO provider not found".into()))?;
     let previous = provider_from_row(&prev_raw)?;
 
     let updated_raw = kubuno_db::returning::update_returning_row(
@@ -261,7 +261,7 @@ pub async fn update_oauth_provider(
     )
     .await
     .map_err(|e| { tracing::error!(error = %e, "update_oauth_provider: écriture"); AppError::Database(e) })?
-    .ok_or_else(|| AppError::NotFound("Fournisseur SSO introuvable".into()))?;
+    .ok_or_else(|| AppError::NotFound("SSO provider not found".into()))?;
     let row = provider_from_row(&updated_raw)?;
 
     let public = AdminOAuthProvider::from(row.clone());
@@ -301,7 +301,7 @@ pub async fn delete_oauth_provider(
         )
         .await
         .map_err(|e| { tracing::error!(error = %e, "delete_oauth_provider: lecture"); AppError::Database(e) })?
-        .ok_or_else(|| AppError::NotFound("Fournisseur SSO introuvable".into()))?;
+        .ok_or_else(|| AppError::NotFound("SSO provider not found".into()))?;
     let previous = provider_from_row(&prev_raw)?;
 
     tx.execute("DELETE FROM core.oauth_providers WHERE id = $1", params![id])
@@ -316,7 +316,7 @@ pub async fn delete_oauth_provider(
     )
     .await?;
 
-    Ok(Json(json!({ "message": "Fournisseur supprimé" })))
+    Ok(Json(json!({ "message": "Provider deleted" })))
 }
 
 // ── Diagnostic ───────────────────────────────────────────────────────────────
@@ -346,7 +346,7 @@ pub async fn test_oauth_provider(
             tracing::error!(error = %e, "test_oauth_provider: lecture");
             AppError::Database(e)
         })?
-        .ok_or_else(|| AppError::NotFound("Fournisseur SSO introuvable".into()))?;
+        .ok_or_else(|| AppError::NotFound("SSO provider not found".into()))?;
 
     let started = std::time::Instant::now();
     let http = reqwest::Client::builder()
@@ -357,7 +357,7 @@ pub async fn test_oauth_provider(
     let result = match oauth::discover(&http, &provider.issuer_url).await {
         Ok(disc) => json!({
             "ok": true,
-            "message": "Document de découverte récupéré",
+            "message": "Discovery document retrieved",
             "issuer_url": provider.issuer_url,
             "authorization_endpoint": disc.authorization_endpoint,
             "token_endpoint": disc.token_endpoint,
@@ -375,12 +375,11 @@ pub async fn test_oauth_provider(
         }),
         Err(e) => json!({
             "ok": false,
-            "message": "Découverte OIDC échouée",
+            "message": "OIDC discovery failed",
             // The provider's own answer, truncated and verbatim: the useful part
             // is usually its 404 body or the TLS alert, not our phrasing.
             "detail": crate::directory::client::truncate(&e.to_string()),
-            "hint": "L'URL d'émetteur doit être la BASE, sans « /.well-known/openid-configuration » : \
-                     le core l'ajoute. Pour Keycloak, elle finit par /realms/<realm>.",
+            "hint": "The issuer URL must be the base URL, without '/.well-known/openid-configuration'; the core adds that path. For Keycloak, it ends with /realms/<realm>.",
             "issuer_url": provider.issuer_url,
             "elapsed_ms": started.elapsed().as_millis() as u64,
         }),

@@ -399,7 +399,7 @@ pub async fn declare(
         .await
         .ok_or_else(|| {
             AppError::Validation(
-                "Appareil non identifié : l'application doit envoyer sa clé d'appareil".into(),
+                "Unidentified device: the app must send its device key".into(),
             )
         })?;
 

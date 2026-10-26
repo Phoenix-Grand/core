@@ -57,7 +57,7 @@ pub fn validate(asked: Option<&str>) -> Result<&'static str, AppError> {
             .iter()
             .copied()
             .find(|p| *p == asked)
-            .ok_or_else(|| AppError::Validation(format!("période inconnue : « {asked} »"))),
+            .ok_or_else(|| AppError::Validation(format!("Unknown period: '{asked}'"))),
     }
 }
 

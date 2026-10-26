@@ -129,7 +129,7 @@ pub async fn run_now(
 
     if runs::is_running(&state.db).await.unwrap_or(false) {
         return Err(AppError::Conflict(
-            "Une sauvegarde est déjà en cours".into(),
+            "A backup is already in progress".into(),
         ));
     }
 
@@ -158,7 +158,7 @@ pub async fn run_now(
         .await;
 
     Ok(Json(json!({
-        "message": "Sauvegarde demandée",
+        "message": "Backup requested",
         "job_id":  job_id,
     })))
 }
@@ -197,7 +197,7 @@ pub async fn declare_restore_test(
     let note = dto.note.as_deref().map(str::trim).unwrap_or_default();
     if note.len() > MAX_NOTE {
         return Err(AppError::Validation(format!(
-            "Note : {MAX_NOTE} caractères maximum"
+            "Note: maximum {MAX_NOTE} characters"
         )));
     }
 
@@ -225,7 +225,7 @@ pub async fn declare_restore_test(
 
     if previous.is_none() {
         return Err(AppError::NotFound(format!(
-            "Réglage '{}' inexistant",
+            "Setting '{}' does not exist",
             policy::KEY_LAST_RESTORE_TEST
         )));
     }
@@ -267,7 +267,7 @@ pub async fn declare_restore_test(
     crate::health::invalidate();
 
     Ok(Json(json!({
-        "message":  if clearing { "Déclaration retirée" } else { "Restauration testée enregistrée" },
+        "message":  if clearing { "Declaration removed" } else { "Test restore recorded" },
         "at":       if clearing { Value::Null } else { value },
         "declared": true,
     })))
@@ -334,7 +334,7 @@ pub async fn restore_now(
     // Strong confirmation: retype the exact file name.
     if dto.confirm.trim() != file_name {
         return Err(AppError::Validation(
-            "Confirmation invalide : retapez exactement le nom du fichier de sauvegarde".into(),
+            "Invalid confirmation: type the exact backup file name again".into(),
         ));
     }
 
@@ -354,7 +354,7 @@ pub async fn restore_now(
         &state.db,
         &state.ws_hub,
         GLOBAL_SCOPE,
-        format!("Restauration de la base de données (« {file_name} ») en cours…"),
+        format!("Database restore ('{file_name}') in progress…"),
         "restore",
     )
     .await;
@@ -390,7 +390,7 @@ pub async fn restore_now(
     let outcome = result?;
 
     Ok(Json(json!({
-        "message":     "Restauration terminée",
+        "message":     "Restore complete",
         "id":          outcome.id,
         "source_file": outcome.source_file,
         "safety_file": outcome.safety_file,

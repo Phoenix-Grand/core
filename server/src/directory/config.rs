@@ -109,7 +109,7 @@ pub async fn load(db: &DbPool, id: uuid::Uuid) -> Result<LdapDirectory, AppError
         tracing::error!(error = %e, "annuaire : lecture d'un annuaire");
         AppError::Database(e)
     })?
-    .ok_or_else(|| AppError::NotFound("Annuaire introuvable".into()))
+    .ok_or_else(|| AppError::NotFound("Directory not found".into()))
 }
 
 #[cfg(test)]

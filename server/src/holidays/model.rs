@@ -66,7 +66,7 @@ impl Category {
             "observance" => Self::Observance,
             other => {
                 return Err(AppError::Validation(format!(
-                    "Catégorie « {other} » inconnue"
+                    "Unknown category '{other}'"
                 )))
             }
         })
@@ -115,7 +115,7 @@ impl Observance {
             "saturday_to_friday" => Self::SaturdayToFriday,
             other => {
                 return Err(AppError::Validation(format!(
-                    "Règle de report « {other} » inconnue"
+                    "Unknown observance rule '{other}'"
                 )))
             }
         })
@@ -191,7 +191,7 @@ impl Rule {
             params
                 .get(name)
                 .and_then(Value::as_i64)
-                .ok_or_else(|| AppError::Validation(format!("Règle « {kind} » : champ « {name} » manquant")))
+                .ok_or_else(|| AppError::Validation(format!("Rule '{kind}': missing field '{name}'")))
         };
 
         match kind {
@@ -210,7 +210,7 @@ impl Rule {
                     "julian" => EasterBasis::Julian,
                     other => {
                         return Err(AppError::Validation(format!(
-                            "Règle « easter » : base « {other} » inconnue (gregorian ou julian)"
+                            "Rule 'easter': unknown base '{other}' (gregorian or julian)"
                         )))
                     }
                 };
@@ -234,14 +234,14 @@ impl Rule {
                 let raw = params
                     .get("dates")
                     .and_then(Value::as_array)
-                    .ok_or_else(|| AppError::Validation("Règle « dates » : liste manquante".into()))?;
+                    .ok_or_else(|| AppError::Validation("Rule 'dates': missing list".into()))?;
                 let mut dates = Vec::with_capacity(raw.len());
                 for entry in raw {
                     let text = entry.as_str().ok_or_else(|| {
-                        AppError::Validation("Règle « dates » : une date doit être une chaîne AAAA-MM-JJ".into())
+                        AppError::Validation("Rule 'dates': each date must be a YYYY-MM-DD string".into())
                     })?;
                     dates.push(text.parse::<NaiveDate>().map_err(|_| {
-                        AppError::Validation(format!("Date « {text} » invalide (attendu AAAA-MM-JJ)"))
+                        AppError::Validation(format!("Invalid date '{text}' (expected YYYY-MM-DD)"))
                     })?);
                 }
                 dates.sort_unstable();
@@ -251,7 +251,7 @@ impl Rule {
                 Ok(rule)
             }
             other => Err(AppError::Validation(format!(
-                "Type de règle « {other} » inconnu"
+                "Unknown rule type '{other}'"
             ))),
         }
     }
@@ -278,7 +278,7 @@ impl Rule {
             }
             Self::Easter { offset, .. } => {
                 if !(-400..=400).contains(offset) {
-                    return bad("Décalage de Pâques hors de portée (±400 jours)".into());
+                    return bad("Easter offset out of range (±400 days)".into());
                 }
                 Ok(())
             }
@@ -290,13 +290,13 @@ impl Rule {
                     return bad("Jour de la semaine invalide (1 = lundi … 7 = dimanche)".into());
                 }
                 if *nth != -1 && !(1..=5).contains(nth) {
-                    return bad("Rang invalide (1 à 5, ou -1 pour le dernier)".into());
+                    return bad("Invalid rank (1 to 5, or -1 for last)".into());
                 }
                 Ok(())
             }
             Self::Dates { dates } => {
                 if dates.is_empty() {
-                    return bad("Une règle « dates » doit citer au moins une date".into());
+                    return bad("A 'dates' rule must list at least one date".into());
                 }
                 Ok(())
             }

@@ -345,7 +345,7 @@ async fn a_condition_that_disappeared_is_closed_automatically() {
     let auto = timeline.last().expect("dernière ligne");
     assert_eq!(auto.kind, "status");
     assert!(auto.actor_id.is_none(), "close par le serveur, pas par une personne");
-    assert!(auto.body.as_deref().unwrap_or_default().contains("plus observée"));
+    assert!(auto.body.as_deref().unwrap_or_default().contains("no longer observed"));
 
     cleanup(&db, &t).await;
 }

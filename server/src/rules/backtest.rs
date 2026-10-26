@@ -117,7 +117,7 @@ async fn execute(
         })?;
     let Some(event_type) = event_type else {
         return Err(AppError::Validation(
-            "Le déclencheur de cette règle n'est plus au catalogue".into(),
+            "This rule's trigger is no longer in the catalog".into(),
         ));
     };
 
@@ -220,7 +220,7 @@ async fn execute(
                             }
                             unit_names.get(&u).cloned().unwrap_or_else(|| u.to_string())
                         }
-                        None => "(hors unité)".to_string(),
+                        None => "(outside the unit)".to_string(),
                     };
                     *by_unit.entry(bucket).or_insert(0) += 1;
 
@@ -254,19 +254,19 @@ async fn execute(
     }
 
     let mut limitations = vec![
-        "Seuls les champs structurels du journal d'événements sont rejouables : une condition portant sur une donnée absente de la charge utile ne correspondra jamais.".to_string(),
-        "La portée et le pourcentage de déploiement sont évalués sur les comptes, groupes et unités d'AUJOURD'HUI, pas sur ceux du moment de l'événement.".to_string(),
-        "Le journal d'événements est purgé à 30 jours : au-delà, la fenêtre est vide, pas « sans correspondance ».".to_string(),
-        "Avant la migration 000061, le module émetteur n'était jamais consigné : une condition sur « source_module » ne correspondra pas aux événements antérieurs.".to_string(),
+        "Only structural event-log fields can be replayed. A condition on data absent from the payload will never match.".to_string(),
+        "Scope and rollout percentage are evaluated against current accounts, groups, and units, rather than those at the time of the event.".to_string(),
+        "The event log is purged after 30 days. Older windows are empty, rather than having no matches.".to_string(),
+        "Before migration 000061, the source module was never recorded. A 'source_module' condition will not match earlier events.".to_string(),
     ];
     if rule.threshold().is_some() {
         limitations.push(
-            "Cette règle porte un seuil « N fois en T » : il n'est PAS rejoué (le compter écrirait dans les compteurs de la règle en production). Les correspondances ci-dessus ignorent le seuil et sont donc une borne HAUTE.".to_string(),
+            "This rule has an 'N times in T' threshold. It is not replayed, because counting it would change the live rule's counters. The matches above ignore the threshold and are therefore an upper bound.".to_string(),
         );
     }
     if truncated {
         limitations.push(format!(
-            "Rejeu interrompu à {cap} événements (plafond « rules.backtest_max_events ») : les nombres sont partiels."
+            "Replay stopped at {cap} events (the 'rules.backtest_max_events' limit). Counts are partial."
         ));
     }
 
@@ -327,14 +327,14 @@ pub fn clamp_window(
     let from = from.unwrap_or_else(|| to - Duration::days(7));
     if from >= to {
         return Err(AppError::Validation(
-            "La fenêtre du test rétrospectif est vide".into(),
+            "The backtest window is empty".into(),
         ));
     }
     let floor = now - Duration::days(MAX_WINDOW_DAYS);
     // Silently shortening would produce a confident answer about deleted days.
     if from < floor {
         return Err(AppError::Validation(format!(
-            "Le journal d'événements est conservé {MAX_WINDOW_DAYS} jours : une fenêtre plus ancienne ne peut pas être rejouée"
+            "The event log is retained for {MAX_WINDOW_DAYS} days; an older window cannot be replayed"
         )));
     }
     Ok((from, to))

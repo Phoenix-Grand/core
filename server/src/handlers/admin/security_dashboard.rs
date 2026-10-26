@@ -427,7 +427,7 @@ pub async fn security_dashboard(
                 .iter()
                 .find(|s| s.id == asked)
                 .map(|s| s.id)
-                .ok_or_else(|| AppError::Validation(format!("panneau inconnu : « {asked} »")))?,
+                .ok_or_else(|| AppError::Validation(format!("Unknown panel: '{asked}'")))?,
         ),
     };
     let full = q.full.unwrap_or(false);

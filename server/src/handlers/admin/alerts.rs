@@ -139,7 +139,7 @@ pub async fn set_alert_status(
     ctx.require(keys::ALERTS_MANAGE)?;
 
     let next = Status::parse(dto.status.trim())
-        .ok_or_else(|| AppError::Validation("État d'alerte inconnu".into()))?;
+        .ok_or_else(|| AppError::Validation("Unknown alert state".into()))?;
     let note = match dto.comment.as_deref() {
         Some(raw) if !raw.trim().is_empty() => Some(clean_comment(raw)?),
         _ => None,
@@ -297,23 +297,23 @@ pub async fn bulk_alerts(
     ctx.require(keys::ALERTS_MANAGE)?;
 
     if dto.ids.is_empty() {
-        return Err(AppError::Validation("Aucune alerte sélectionnée".into()));
+        return Err(AppError::Validation("No alerts selected".into()));
     }
     if dto.ids.len() > MAX_BULK {
         return Err(AppError::Validation(format!(
-            "Sélection trop large : {MAX_BULK} alertes au maximum"
+            "Selection too large: maximum {MAX_BULK} alerts"
         )));
     }
 
     let next = match dto.status.as_deref().map(str::trim).filter(|s| !s.is_empty()) {
         Some(raw) => Some(
-            Status::parse(raw).ok_or_else(|| AppError::Validation("État d'alerte inconnu".into()))?,
+            Status::parse(raw).ok_or_else(|| AppError::Validation("Unknown alert state".into()))?,
         ),
         None => None,
     };
     let assign = dto.assign.unwrap_or(false);
     if next.is_none() && !assign {
-        return Err(AppError::Validation("Aucune opération demandée".into()));
+        return Err(AppError::Validation("No operation requested".into()));
     }
 
     let assignee = match (assign, dto.assignee_id) {
@@ -387,7 +387,7 @@ async fn dead_letter_job_type(
     let alert = store::get(&state.db, id, ctx).await?;
     if alert.kind != catalog::JOB_DEAD_LETTER {
         return Err(AppError::Validation(
-            "Cette action ne s'applique qu'aux alertes de tâches en échec".into(),
+            "This action only applies to failed-job alerts".into(),
         ));
     }
     let job_type = alert
@@ -396,7 +396,7 @@ async fn dead_letter_job_type(
         .and_then(Value::as_str)
         .ok_or_else(|| {
             tracing::error!(alert_id = %id, "alerts: alerte de tâche sans type de tâche");
-            AppError::Validation("Alerte incomplète : type de tâche absent".into())
+            AppError::Validation("Incomplete alert: missing job type".into())
         })?
         .to_string();
     Ok((alert, job_type))

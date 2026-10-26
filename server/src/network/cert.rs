@@ -50,7 +50,7 @@ struct CertMeta {
 /// Parses the leaf certificate (first PEM block) for its human-facing metadata.
 fn parse_metadata(cert_pem: &[u8]) -> Result<CertMeta, AppError> {
     let (_, pem) = x509_parser::pem::parse_x509_pem(cert_pem).map_err(|_| {
-        AppError::Validation("Certificat illisible : le PEM ne contient pas de bloc CERTIFICATE valide".into())
+        AppError::Validation("Unreadable certificate: the PEM does not contain a valid CERTIFICATE block".into())
     })?;
     let cert = pem
         .parse_x509()
@@ -231,12 +231,11 @@ pub async fn delete(
             tracing::error!(error = %e, "network: reading the certificate to delete");
             AppError::Database(e)
         })?
-        .ok_or_else(|| AppError::NotFound("Certificat introuvable".into()))?;
+        .ok_or_else(|| AppError::NotFound("Certificate not found".into()))?;
 
     if cert.is_active && https_enabled {
         return Err(AppError::Validation(
-            "Ce certificat est celui que sert le HTTPS : désactivez d'abord le HTTPS, \
-             ou installez un autre certificat à sa place"
+            "HTTPS is serving this certificate. Disable HTTPS first or install another certificate in its place"
                 .into(),
         ));
     }

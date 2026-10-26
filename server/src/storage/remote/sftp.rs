@@ -46,8 +46,7 @@ impl SftpConnector {
     /// no-host-execution rule in `CLAUDE.md`.
     pub fn new(_config: &ConnectorConfig) -> Result<Self, RemoteError> {
         Err(RemoteError::Unsupported(
-            "SFTP n'est pas disponible sur cette plateforme \
-             (exécution de processus interdite par la politique de sécurité)"
+            "SFTP is not available on this platform (process execution is forbidden by the security policy)"
                 .into(),
         ))
     }

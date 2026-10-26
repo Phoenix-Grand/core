@@ -6,8 +6,8 @@
 <Panel xmlns="https://kubuno.com/views" xmlns:x="https://kubuno.com/views/x"
        Layout="Dock" BackColor="#FFFFFF">
   <Stack Dock="Fill" Justify="Center" CrossAlign="Stretch" Gap="0" Padding="24, 32, 24, 32">
-    <Label Text="Vérification en deux étapes" Role="Display" FontWeight="SemiBold" ForeColor="#202124"/>
-    <Label Text="Entrez le code de votre application d'authentification, ou un code de secours." Role="Body"
+    <Label Text="Two-step verification" Role="Display" FontWeight="SemiBold" ForeColor="#202124"/>
+    <Label Text="Enter the code from your authenticator app or a backup code." Role="Body"
            ForeColor="#5F6368" Overflow="Wrap" Padding="0, 8, 0, 0"/>
     <Stack CrossAlign="Stretch" Padding="0, 24, 0, 0">
       <TextField x:Name="signin_code" Label="Code" Placeholder="123456" InputType="Number" MaxLength="16"
@@ -16,8 +16,8 @@
     <Label Text="{Bind signin_error}" Role="Meta" ForeColor="#D93025" Overflow="Wrap" Padding="0, 10, 0, 0"/>
     <Label Text="{Bind signin_busy}" Role="Meta" ForeColor="#5F6368" Padding="0, 4, 0, 0"/>
     <Stack CrossAlign="Stretch" Gap="4" Padding="0, 12, 0, 0">
-      <Button x:Name="signin_verify_button" Text="Vérifier" Variant="Primary" Size="Lg" OnClick="signin_verify"/>
-      <Button x:Name="signin_back" Text="Retour" Variant="Text" Size="Md" OnClick="signin_back"/>
+      <Button x:Name="signin_verify_button" Text="Verify" Variant="Primary" Size="Lg" OnClick="signin_verify"/>
+      <Button x:Name="signin_back" Text="Back" Variant="Text" Size="Md" OnClick="signin_back"/>
     </Stack>
   </Stack>
 </Panel>

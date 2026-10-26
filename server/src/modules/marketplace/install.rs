@@ -115,10 +115,10 @@ async fn materialize(settings: &Settings, db: &DbPool, id: &str) -> Result<Mater
     let http = client()?;
 
     // 1) Métadonnées + garde de confiance (module officiel, dépôt sous kubuno/).
-    set_phase(id, "resolving", "Résolution du module…");
+    set_phase(id, "resolving", "Resolving module…");
     let detail = fetch_detail(id).await?;
     let repo = detail.links.repo.clone().ok_or_else(|| {
-        AppError::Validation(format!("le module « {id} » n'expose pas de dépôt"))
+        AppError::Validation(format!("Module '{id}' does not publish a repository"))
     })?;
     if !detail.official || !repo.starts_with(TRUSTED_REPO_PREFIX) {
         return Err(AppError::Forbidden);
@@ -143,18 +143,17 @@ async fn materialize(settings: &Settings, db: &DbPool, id: &str) -> Result<Mater
         let dispo: Vec<String> = detail.artifacts.iter()
             .map(|a| format!("{} {}/{}", a.kind, a.os, a.arch)).collect();
         return Err(AppError::Validation(format!(
-            "« {id} » ne publie pas de paquet Kubuno (.kbpkg) pour {}/{} (disponible : {}). \
-             Reconstruisez-le au format .kbpkg puis republiez.",
+            "'{id}' does not publish a Kubuno package (.kbpkg) for {}/{} (available: {}). Rebuild it as a .kbpkg and publish it again.",
             std::env::consts::OS, std::env::consts::ARCH, dispo.join(", ")
         )));
     } else { match detail.download_url.clone() {
         Some(url) => {
             if !url.starts_with("https://") {
-                return Err(AppError::Validation("URL d'artefact non sécurisée (HTTPS requis)".into()));
+                return Err(AppError::Validation("Insecure artifact URL (HTTPS required)".into()));
             }
             if !is_kbpkg(&url) {
                 return Err(AppError::Validation(format!(
-                    "format d'artefact refusé : {url} - un module s'installe uniquement au format .kbpkg"
+                    "Artifact format rejected: {url}; modules can only be installed as .kbpkg packages"
                 )));
             }
             Artifact { url, sha256: detail.sha256.as_deref().map(|s| s.trim_start_matches("sha256:").to_ascii_lowercase()) }
@@ -162,7 +161,7 @@ async fn materialize(settings: &Settings, db: &DbPool, id: &str) -> Result<Mater
         None => resolve_artifact(&http, &repo, &detail.version).await?,
     } };
     tracing::info!(module_id = %id, version_catalogue = %detail.version, os = std::env::consts::OS, arch = std::env::consts::ARCH, url = %asset.url, "Marketplace : téléchargement du paquet .kbpkg");
-    set_phase(id, "downloading", "Téléchargement de l'artefact…");
+    set_phase(id, "downloading", "Downloading artifact…");
     let bytes = http
         .get(&asset.url)
         .send()
@@ -175,7 +174,7 @@ async fn materialize(settings: &Settings, db: &DbPool, id: &str) -> Result<Mater
 
     // 2b) Vérification d'intégrité SHA-256 (empreinte publiée par GitHub). Échec DUR
     //     en cas de divergence ; simple avertissement si aucune empreinte n'est fournie.
-    set_phase(id, "verifying", "Vérification de l'intégrité…");
+    set_phase(id, "verifying", "Verifying integrity…");
     // Le manifeste signé, quand il est disponible ET valide, fait autorité sur
     // l'empreinte : c'est la seule que quelqu'un ait signée. À défaut, on garde
     // celle que le catalogue annonce - et la règle de non-régression ci-dessous
@@ -200,7 +199,7 @@ async fn materialize(settings: &Settings, db: &DbPool, id: &str) -> Result<Mater
             if actual != expected {
                 tracing::error!(module_id = %id, expected, actual, "Marketplace : SHA-256 non conforme - installation refusée");
                 return Err(AppError::Internal(anyhow::anyhow!(
-                    "intégrité du .kbpkg non vérifiée (SHA-256 attendu {expected}, obtenu {actual})"
+                    ".kbpkg integrity verification failed (expected SHA-256 {expected}, received {actual})"
                 )));
             }
             tracing::info!(module_id = %id, sha256 = %actual, "Marketplace : intégrité SHA-256 vérifiée");
@@ -226,8 +225,7 @@ async fn materialize(settings: &Settings, db: &DbPool, id: &str) -> Result<Mater
                     "Marketplace : empreinte SHA-256 absente alors que ce module en avait une - installation refusée"
                 );
                 return Err(AppError::Validation(format!(
-                    "« {id} » a déjà été installé avec une empreinte vérifiée ; l'artefact proposé n'en a plus. \
-                     Installation refusée : une empreinte qui disparaît est une régression, pas une nouveauté."
+                    "'{id}' was previously installed with a verified checksum, but the proposed artifact has none. Installation refused: removing a checksum reduces security."
                 )));
             }
             tracing::warn!(module_id = %id, "Marketplace : aucune empreinte SHA-256 publiée - intégrité non vérifiée");
@@ -266,7 +264,7 @@ async fn materialize(settings: &Settings, db: &DbPool, id: &str) -> Result<Mater
         .await
         .map_err(|e| AppError::Internal(anyhow::anyhow!("lecture module.toml: {e}")))?;
     let pkg_manifest: crate::modules::manifest::ModuleManifest = toml::from_str(&toml_src)
-        .map_err(|e| AppError::Validation(format!("module.toml invalide : {e}")))?;
+        .map_err(|e| AppError::Validation(format!("Invalid module.toml: {e}")))?;
     if let Err(msg) = super::target::check(None, &src_mod, &toml_src, &pkg_manifest) {
         let _ = tokio::fs::remove_dir_all(&staging).await;
         return Err(AppError::Validation(format!("« {id} » : {msg}")));
@@ -417,7 +415,7 @@ fn install_node<'a>(
 ) -> std::pin::Pin<Box<dyn std::future::Future<Output = Result<InstallReport, AppError>> + Send + 'a>> {
     Box::pin(async move {
         if depth > 16 {
-            return Err(AppError::Validation("chaîne de dépendances trop profonde".into()));
+            return Err(AppError::Validation("Dependency chain too deep".into()));
         }
 
         // 1) Matérialise CE module (téléchargement/extraction/relocalisation).
@@ -432,13 +430,13 @@ fn install_node<'a>(
             if !visited.insert(dep.clone()) {
                 continue; // cycle ou déjà en cours d'installation
             }
-            set_phase(id, "dependencies", &format!("Installation de la dépendance « {dep} »…"));
+            set_phase(id, "dependencies", &format!("Installing dependency '{dep}'…"));
             tracing::info!(module_id = %id, dependency = %dep, "Marketplace : installation d'une dépendance manquante");
             install_node(settings.clone(), db.clone(), dep, &mut *visited, depth + 1).await?;
         }
 
         // 3) Démarre ce module (à chaud).
-        set_phase(id, "starting", "Démarrage du module…");
+        set_phase(id, "starting", "Starting module…");
         let started = crate::modules::manager::spawn_module(
             settings.clone(), mat.dest_mod.clone(), mat.manifest, db.clone(),
         ).await;
@@ -478,7 +476,7 @@ pub async fn uninstall(settings: Arc<Settings>, db: DbPool, id: &str) -> Result<
     let store_dir = PathBuf::from(&settings.server.modules_install_dir).join(id);
     if !store_dir.is_dir() {
         return Err(AppError::Validation(format!(
-            "« {id} » n'est pas un module installé depuis la marketplace (non désinstallable ici)"
+            "'{id}' was not installed from the marketplace and cannot be uninstalled here"
         )));
     }
 
@@ -553,7 +551,7 @@ pub async fn install_local(settings: &Settings, file: &Path) -> Result<InstallRe
     let fname = file.file_name().and_then(|s| s.to_str()).unwrap_or_default().to_ascii_lowercase();
     if !is_kbpkg(&fname) {
         return Err(AppError::Validation(format!(
-            "« {fname} » n'est pas un paquet Kubuno - un module s'installe uniquement au format .kbpkg"
+            "'{fname}' is not a Kubuno package; modules can only be installed as .kbpkg packages"
         )));
     }
     if !file.is_file() {

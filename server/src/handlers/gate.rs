@@ -43,7 +43,7 @@ pub async fn gate(
 ) -> Result<Json<GateResponse>, AppError> {
     if request.trigger.trim().is_empty() {
         return Err(AppError::Validation(
-            "Le portail exige le déclencheur auquel l'opération correspond".into(),
+            "The gate requires the trigger corresponding to this operation".into(),
         ));
     }
 

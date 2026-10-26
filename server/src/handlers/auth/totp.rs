@@ -49,7 +49,7 @@ enum Cleared {
     responses(
         (status = 200, description = "2FA validée, session émise", body = NativeTokenResponse),
         (status = 401, description = "Session TOTP invalide"),
-        (status = 422, description = "Code incorrect")
+        (status = 422, description = "Incorrect code")
     )
 )]
 pub async fn totp_verify(
@@ -73,7 +73,7 @@ pub async fn totp_verify(
     let encrypted = user
         .totp_secret
         .as_deref()
-        .ok_or_else(|| AppError::Validation("2FA non configurée".into()))?;
+        .ok_or_else(|| AppError::Validation("2FA is not configured".into()))?;
 
     // A submission is routed by shape, not by which field the client filled in:
     // people paste their backup code into the field the dialog happens to focus,
@@ -93,7 +93,7 @@ pub async fn totp_verify(
         let code = dto
             .code
             .as_deref()
-            .ok_or_else(|| AppError::Validation("Code requis".into()))?;
+            .ok_or_else(|| AppError::Validation("Code required".into()))?;
         let valid = totp_auth::verify_code(
             &state.settings.auth.jwt_secret, encrypted, code, &user.email,
         )
@@ -115,7 +115,7 @@ pub async fn totp_verify(
         }
         // Same message either way: telling the caller *which* factor was wrong
         // would confirm whether the account still has unused backup codes.
-        return Err(AppError::Validation("Code incorrect".into()));
+        return Err(AppError::Validation("Incorrect code".into()));
     };
 
     // Second factor cleared: this is where an administrator's sign-in actually

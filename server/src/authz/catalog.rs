@@ -50,7 +50,7 @@ pub struct PrivilegeDef {
 pub fn qualify(module_id: &str, relative_key: &str) -> Result<String, AppError> {
     if module_id == CORE_NAMESPACE {
         return Err(AppError::Validation(
-            "L'espace « core » est réservé au core".into(),
+            "The 'core' namespace is reserved for the core".into(),
         ));
     }
     let relative = relative_key.trim();
@@ -58,7 +58,7 @@ pub fn qualify(module_id: &str, relative_key: &str) -> Result<String, AppError> 
     // namespace. Refuse instead of silently double-prefixing.
     if relative.split('.').count() != 2 {
         return Err(AppError::Validation(format!(
-            "Privilège « {relative} » invalide : un module déclare « <domaine>.<verbe> », le préfixe est ajouté par le core"
+            "Invalid privilege '{relative}': a module declares '<domain>.<verb>'; the core adds the prefix"
         )));
     }
     let full = format!("{module_id}.{relative}");
@@ -67,7 +67,7 @@ pub fn qualify(module_id: &str, relative_key: &str) -> Result<String, AppError> 
         // Unreachable given the check above; kept as the assertion that the
         // invariant is enforced rather than assumed.
         return Err(AppError::Validation(format!(
-            "Privilège « {full} » hors de l'espace du module « {module_id} »"
+            "Privilege '{full}' is outside module '{module_id}'s namespace"
         )));
     }
     Ok(full)

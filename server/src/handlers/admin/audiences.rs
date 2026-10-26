@@ -75,20 +75,20 @@ fn validate_details(name: &str, description: Option<&str>) -> Result<String, App
     let name = clean_name(name);
     if name.is_empty() {
         return Err(AppError::Validation(
-            "Le nom de l'audience est obligatoire.".into(),
+            "The audience name is required.".into(),
         ));
     }
     // `chars()`, not `len()`: the limit is a label length, and a byte count would
     // reject a French name forty accented characters long.
     if name.chars().count() > 40 {
         return Err(AppError::Validation(
-            "Le nom d'une audience ne peut pas dépasser 40 caractères - il s'affiche dans une liste de partage, à côté d'un nom de fichier.".into(),
+            "An audience name cannot exceed 40 characters because it appears in a sharing list next to a file name.".into(),
         ));
     }
     if let Some(d) = description {
         if d.chars().count() > 150 {
             return Err(AppError::Validation(
-                "La description ne peut pas dépasser 150 caractères.".into(),
+                "The description cannot exceed 150 characters.".into(),
             ));
         }
     }
@@ -98,7 +98,7 @@ fn validate_details(name: &str, description: Option<&str>) -> Result<String, App
 /// Turns the unique-index violation into the sentence an administrator needs.
 fn name_conflict(e: sqlx::Error, name: &str) -> AppError {
     if e.to_string().contains("idx_core_ta_name") {
-        AppError::Conflict(format!("Une audience nommée « {name} » existe déjà."))
+        AppError::Conflict(format!("An audience named '{name}' already exists."))
     } else {
         tracing::error!(error = %e, "audiences: écriture");
         AppError::Database(e)
@@ -299,7 +299,7 @@ pub async fn get_audience(
             tracing::error!(error = %e, "audiences: read");
             AppError::Database(e)
         })?
-        .ok_or_else(|| AppError::NotFound("Audience introuvable".into()))?;
+        .ok_or_else(|| AppError::NotFound("Audience not found".into()))?;
 
     // Portable: the `CASE` yields a `COUNT` for a group and `NULL` for a user,
     // decoded as `Option<i64>` on every engine, so the `::bigint` cast is gone.
@@ -472,7 +472,7 @@ pub async fn update_audience(
             tracing::error!(error = %e, "audiences: reading before modification");
             AppError::Database(e)
         })?
-        .ok_or_else(|| AppError::NotFound("Audience introuvable".into()))?;
+        .ok_or_else(|| AppError::NotFound("Audience not found".into()))?;
 
     let before_json = json!({
         "name":        before.try_get::<String>("name")?,
@@ -531,12 +531,12 @@ pub async fn delete_audience(
             tracing::error!(error = %e, "audiences: reading before deletion");
             AppError::Database(e)
         })?
-        .ok_or_else(|| AppError::NotFound("Audience introuvable".into()))?;
+        .ok_or_else(|| AppError::NotFound("Audience not found".into()))?;
 
     let name: String = row.try_get("name")?;
     if row.try_get::<bool>("is_everyone")? {
         return Err(AppError::Validation(
-            "L'audience « toute l'organisation » ne peut pas être supprimée : une instance doit toujours pouvoir proposer au moins une audience.".into(),
+            "The 'entire organization' audience cannot be deleted: an instance must always offer at least one audience.".into(),
         ));
     }
     let applied_to: i64 = row.try_get("applied_to")?;
@@ -587,7 +587,7 @@ pub async fn add_members(
 ) -> Result<Json<Value>, AppError> {
     ctx.require(keys::AUDIENCES_MANAGE)?;
     if dto.members.is_empty() {
-        return Err(AppError::Validation("Aucun membre à ajouter.".into()));
+        return Err(AppError::Validation("No members to add.".into()));
     }
 
     let mut tx = audit.begin(&state.db).await?;
@@ -602,11 +602,11 @@ pub async fn add_members(
             tracing::error!(error = %e, "audiences: reading before adding members");
             AppError::Database(e)
         })?
-        .ok_or_else(|| AppError::NotFound("Audience introuvable".into()))?;
+        .ok_or_else(|| AppError::NotFound("Audience not found".into()))?;
 
     if row.try_get::<bool>("is_everyone")? {
         return Err(AppError::Validation(
-            "L'audience « toute l'organisation » n'a pas de membres explicites : elle désigne tous les comptes actifs.".into(),
+            "The 'entire organization' audience has no explicit members; it includes all active accounts.".into(),
         ));
     }
     let name: String = row.try_get("name")?;
@@ -642,7 +642,7 @@ pub async fn add_members(
             }
             other => {
                 return Err(AppError::Validation(format!(
-                    "Type de membre inconnu : « {other} ». Attendu : user, group."
+                    "Unknown member type: '{other}'. Expected: user, group."
                 )))
             }
         }
@@ -654,7 +654,7 @@ pub async fn add_members(
 
         if !exists {
             return Err(AppError::Validation(
-                "Un des membres indiqués n'existe pas (ou plus).".into(),
+                "One of the specified members no longer exists.".into(),
             ));
         }
 
@@ -694,7 +694,7 @@ pub async fn remove_members(
 ) -> Result<Json<Value>, AppError> {
     ctx.require(keys::AUDIENCES_MANAGE)?;
     if dto.members.is_empty() {
-        return Err(AppError::Validation("Aucun membre à retirer.".into()));
+        return Err(AppError::Validation("No members to remove.".into()));
     }
 
     let mut tx = audit.begin(&state.db).await?;
@@ -709,7 +709,7 @@ pub async fn remove_members(
             tracing::error!(error = %e, "audiences: reading before removing members");
             AppError::Database(e)
         })?
-        .ok_or_else(|| AppError::NotFound("Audience introuvable".into()))?;
+        .ok_or_else(|| AppError::NotFound("Audience not found".into()))?;
 
     let mut removed = 0u32;
     for m in &dto.members {
@@ -901,11 +901,11 @@ pub async fn set_policy(
     ctx.require(keys::AUDIENCES_APPLY)?;
 
     if dto.module_id.trim().is_empty() {
-        return Err(AppError::Validation("Module non précisé.".into()));
+        return Err(AppError::Validation("No module specified.".into()));
     }
     if dto.audience_ids.len() > MAX_APPLIED {
         return Err(AppError::Validation(format!(
-            "Au plus {MAX_APPLIED} audiences peuvent être proposées à la fois : au-delà, la liste cesse d'être un raccourci."
+            "At most {MAX_APPLIED} audiences can be offered at once; a longer list would no longer be a shortcut."
         )));
     }
     // A duplicate would be accepted by the primary key on (unit, module,
@@ -914,7 +914,7 @@ pub async fn set_policy(
     let mut seen = std::collections::HashSet::new();
     if !dto.audience_ids.iter().all(|id| seen.insert(*id)) {
         return Err(AppError::Validation(
-            "La même audience figure deux fois dans la liste.".into(),
+            "The same audience appears twice in the list.".into(),
         ));
     }
 
@@ -948,7 +948,7 @@ pub async fn set_policy(
             tracing::error!(error = %e, "audiences: reading the unit");
             AppError::Database(e)
         })?
-        .ok_or_else(|| AppError::NotFound("Unité organisationnelle introuvable".into()))?;
+        .ok_or_else(|| AppError::NotFound("Organizational unit not found".into()))?;
 
     tx.execute(
         "DELETE FROM core.target_audience_policies WHERE org_unit_id = $1 AND module_id = $2",
@@ -969,7 +969,7 @@ pub async fn set_policy(
         .await
         .map_err(|e| {
             if e.to_string().contains("foreign key") {
-                AppError::Validation("Une des audiences indiquées n'existe pas.".into())
+                AppError::Validation("One of the specified audiences does not exist.".into())
             } else {
                 tracing::error!(error = %e, "audiences: writing the policy");
                 AppError::Database(e)

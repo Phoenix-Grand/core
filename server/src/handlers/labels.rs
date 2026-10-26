@@ -28,7 +28,7 @@ use crate::{
 fn normalized_color(color: Option<&str>) -> Result<String, AppError> {
     let c = color.unwrap_or("#1a73e8").trim().to_string();
     if !c.starts_with('#') || !(4..=9).contains(&c.len()) || !c[1..].chars().all(|ch| ch.is_ascii_hexdigit()) {
-        return Err(AppError::Validation("Couleur invalide (attendu #rrggbb)".into()));
+        return Err(AppError::Validation("Invalid color (expected #rrggbb)".into()));
     }
     Ok(c)
 }
@@ -62,7 +62,7 @@ async fn require_manage(db: &DbPool, user_id: Uuid, label_id: Uuid) -> Result<()
     match access(db, user_id, label_id).await? {
         Some((_, true)) => Ok(()),
         Some((_, false)) => Err(AppError::Forbidden),
-        None => Err(AppError::NotFound("Étiquette introuvable".into())),
+        None => Err(AppError::NotFound("Label not found".into())),
     }
 }
 
@@ -123,7 +123,7 @@ pub async fn create(
     dto.validate().map_err(|e| AppError::Validation(e.to_string()))?;
     let name = dto.name.trim();
     if name.is_empty() {
-        return Err(AppError::Validation("Nom vide".into()));
+        return Err(AppError::Validation("Name is empty".into()));
     }
     let color = normalized_color(dto.color.as_deref())?;
 
@@ -198,7 +198,7 @@ pub async fn update(
         )
         .await?;
     if affected == 0 {
-        return Err(AppError::NotFound("Étiquette introuvable".into()));
+        return Err(AppError::NotFound("Label not found".into()));
     }
     let label = state
         .db
@@ -513,7 +513,7 @@ pub async fn list_links(
     Path(id): Path<Uuid>,
 ) -> Result<Json<Value>, AppError> {
     if access(&state.db, user.id, id).await?.is_none() {
-        return Err(AppError::NotFound("Étiquette introuvable".into()));
+        return Err(AppError::NotFound("Label not found".into()));
     }
     // Portable `label_access` derived table (see `database::compat`). It takes
     // `$1..$3` (the user id, thrice); `$4` is the label id and `$5` the owner
@@ -554,7 +554,7 @@ pub async fn remove_link(
         )
         .await?;
     if res == 0 {
-        return Err(AppError::NotFound("Lien introuvable".into()));
+        return Err(AppError::NotFound("Link not found".into()));
     }
     Ok(Json(json!({ "ok": true })))
 }
@@ -614,12 +614,12 @@ pub async fn set_shares(
             params![id],
         )
         .await?
-        .ok_or_else(|| AppError::NotFound("Étiquette introuvable".into()))?;
+        .ok_or_else(|| AppError::NotFound("Label not found".into()))?;
 
     for s in &dto.shares {
         if s.user_id.is_some() == s.group_id.is_some() {
             return Err(AppError::Validation(
-                "Chaque partage vise soit un utilisateur, soit un groupe".into(),
+                "Each share must target either a user or a group".into(),
             ));
         }
     }
@@ -656,7 +656,7 @@ pub async fn set_shares(
         .await
         .map_err(|e| {
             tracing::error!(label_id = %id, error = %e, "insertion d'un partage d'étiquette");
-            AppError::Validation("Destinataire inconnu".into())
+            AppError::Validation("Unknown recipient".into())
         })?;
         kept += 1;
     }

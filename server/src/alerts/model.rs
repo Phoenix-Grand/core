@@ -398,11 +398,11 @@ pub const MAX_COMMENT_LEN: usize = 2_000;
 pub fn clean_comment(raw: &str) -> Result<String, AppError> {
     let trimmed = raw.trim();
     if trimmed.is_empty() {
-        return Err(AppError::Validation("Le commentaire est vide".into()));
+        return Err(AppError::Validation("The comment is empty".into()));
     }
     if trimmed.chars().count() > MAX_COMMENT_LEN {
         return Err(AppError::Validation(format!(
-            "Le commentaire dépasse {MAX_COMMENT_LEN} caractères"
+            "The comment exceeds {MAX_COMMENT_LEN} characters"
         )));
     }
     Ok(trimmed.to_string())

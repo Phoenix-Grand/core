@@ -123,7 +123,7 @@ fn validate_address(value: &str) -> Result<(), AppError> {
     if ok {
         Ok(())
     } else {
-        Err(AppError::Validation(format!("Adresse invalide : « {value} »")))
+        Err(AppError::Validation(format!("Invalid address: '{value}'")))
     }
 }
 
@@ -189,8 +189,7 @@ pub async fn reset_user_password(
                     "reset_user_password: la politique rend la génération impossible"
                 );
                 AppError::Validation(
-                    "Impossible de générer un mot de passe satisfaisant la politique en vigueur : \
-                     assouplissez-la ou saisissez le mot de passe manuellement."
+                    "Cannot generate a password that satisfies the current policy. Relax the policy or enter the password manually."
                         .into(),
                 )
             })?;
@@ -200,15 +199,15 @@ pub async fn reset_user_password(
             let supplied = dto
                 .password
                 .as_deref()
-                .ok_or_else(|| AppError::Validation("Mot de passe requis en saisie manuelle".into()))?;
+                .ok_or_else(|| AppError::Validation("A password is required for manual entry".into()))?;
             if supplied.chars().count() < MIN_PASSWORD_LEN {
                 return Err(AppError::Validation(format!(
-                    "Mot de passe : {MIN_PASSWORD_LEN} caractères minimum"
+                    "Password: minimum {MIN_PASSWORD_LEN} characters"
                 )));
             }
             if supplied.len() > MAX_PASSWORD_LEN {
                 return Err(AppError::Validation(format!(
-                    "Mot de passe : {MAX_PASSWORD_LEN} caractères maximum"
+                    "Password: maximum {MAX_PASSWORD_LEN} characters"
                 )));
             }
             policy.check(supplied)?;
@@ -257,7 +256,7 @@ pub async fn reset_user_password(
         })?;
 
     let Some(row) = target_row else {
-        return Err(AppError::NotFound("Utilisateur introuvable".into()));
+        return Err(AppError::NotFound("User not found".into()));
     };
     let username: String = row.try_get("username").map_err(AppError::Database)?;
     let email: String = row.try_get("email").map_err(AppError::Database)?;
@@ -438,7 +437,7 @@ pub async fn require_password_change(
         })?;
 
     let Some(row) = target_row else {
-        return Err(AppError::NotFound("Utilisateur introuvable".into()));
+        return Err(AppError::NotFound("User not found".into()));
     };
     let username: String = row.try_get("username").map_err(AppError::Database)?;
     let was_required: bool = row.try_get("must_change_password").map_err(AppError::Database)?;
@@ -449,8 +448,7 @@ pub async fn require_password_change(
     // because that screen asks for a current password they do not have.
     if dto.required && password_hash.is_none() {
         return Err(AppError::Validation(
-            "Ce compte n'a pas de mot de passe local : son authentification est gouvernée \
-             par un annuaire ou un fournisseur d'identité."
+            "This account has no local password; its authentication is managed by a directory or identity provider."
                 .into(),
         ));
     }

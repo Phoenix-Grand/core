@@ -264,15 +264,15 @@ struct ParsedHoliday {
 fn parse_holiday(dto: &HolidayDto) -> Result<ParsedHoliday, AppError> {
     let name = dto.name.trim();
     if name.is_empty() {
-        return Err(AppError::Validation("Le nom de la journée est vide".into()));
+        return Err(AppError::Validation("The holiday name is empty".into()));
     }
     if name.chars().count() > 200 {
-        return Err(AppError::Validation("Nom trop long (200 caractères)".into()));
+        return Err(AppError::Validation("Name too long (200 characters)".into()));
     }
     if let (Some(from), Some(to)) = (dto.from_year, dto.to_year) {
         if to < from {
             return Err(AppError::Validation(
-                "L'année de fin précède l'année de début".into(),
+                "The end year precedes the start year".into(),
             ));
         }
     }
@@ -280,7 +280,7 @@ fn parse_holiday(dto: &HolidayDto) -> Result<ParsedHoliday, AppError> {
         None => None,
         Some(c) => {
             if !c.starts_with('#') || !(4..=9).contains(&c.len()) || !c[1..].chars().all(|ch| ch.is_ascii_hexdigit()) {
-                return Err(AppError::Validation("Couleur invalide (attendu #rrggbb)".into()));
+                return Err(AppError::Validation("Invalid color (expected #rrggbb)".into()));
             }
             Some(c.to_string())
         }
@@ -292,12 +292,12 @@ fn parse_holiday(dto: &HolidayDto) -> Result<ParsedHoliday, AppError> {
         Some(Value::Object(map)) => {
             if map.values().any(|v| !v.is_string()) {
                 return Err(AppError::Validation(
-                    "Les traductions doivent être des chaînes".into(),
+                    "Translations must be strings".into(),
                 ));
             }
             Value::Object(map)
         }
-        Some(_) => return Err(AppError::Validation("Traductions invalides".into())),
+        Some(_) => return Err(AppError::Validation("Invalid translations".into())),
     };
 
     Ok(ParsedHoliday {
@@ -342,7 +342,7 @@ async fn custom_key(db: &DbPool, calendar_id: Uuid, name: &str) -> Result<String
         }
     }
     Err(AppError::Conflict(
-        "Trop de journées portant ce nom sur ce calendrier".into(),
+        "Too many holidays with this name in this calendar".into(),
     ))
 }
 
@@ -435,7 +435,7 @@ pub async fn update_holiday(
         )
         .await
         .map_err(AppError::Database)?
-        .ok_or_else(|| AppError::NotFound("Journée introuvable".into()))?;
+        .ok_or_else(|| AppError::NotFound("Holiday not found".into()))?;
 
     let before_json = json!({
         "name": before.try_get::<String>("name")?,
@@ -515,7 +515,7 @@ pub async fn set_holiday_enabled(
         .fetch_optional_row("SELECT name FROM core.holidays WHERE id = $1", params![id])
         .await
         .map_err(AppError::Database)?
-        .ok_or_else(|| AppError::NotFound("Journée introuvable".into()))?;
+        .ok_or_else(|| AppError::NotFound("Holiday not found".into()))?;
     let name: String = row.try_get("name")?;
 
     tx.commit(
@@ -555,13 +555,12 @@ pub async fn delete_holiday(
         )
         .await
         .map_err(AppError::Database)?
-        .ok_or_else(|| AppError::NotFound("Journée introuvable".into()))?;
+        .ok_or_else(|| AppError::NotFound("Holiday not found".into()))?;
 
     let name: String = row.try_get("name")?;
     if row.try_get::<bool>("is_builtin")? {
         return Err(AppError::Validation(
-            "Cette journée provient du référentiel livré : désactivez-la plutôt que de la supprimer \
-             (une suppression serait rétablie au prochain chargement du référentiel)."
+            "This holiday comes from the bundled reference data. Disable it instead of deleting it; deletion would be undone when the reference data is reloaded."
                 .into(),
         ));
     }
@@ -600,11 +599,11 @@ pub async fn reset_holiday(
         )
         .await
         .map_err(AppError::Database)?
-        .ok_or_else(|| AppError::NotFound("Journée introuvable".into()))?;
+        .ok_or_else(|| AppError::NotFound("Holiday not found".into()))?;
 
     if !row.try_get::<bool>("is_builtin")? {
         return Err(AppError::Validation(
-            "Cette journée a été créée ici : il n'y a pas de version d'origine à rétablir.".into(),
+            "This holiday was created locally; there is no original version to restore.".into(),
         ));
     }
 
@@ -613,7 +612,7 @@ pub async fn reset_holiday(
     let key: String = row.try_get("key")?;
     let shipped = seed::shipped_holiday(&calendar_code, &key).ok_or_else(|| {
         AppError::Validation(
-            "Le référentiel livré ne contient plus cette journée : elle ne peut pas être rétablie.".into(),
+            "The bundled reference data no longer contains this holiday, so it cannot be restored.".into(),
         )
     })?;
 
@@ -678,7 +677,7 @@ pub async fn create_calendar(
     ctx.require(keys::HOLIDAYS_MANAGE)?;
     let name = dto.name.trim();
     if name.is_empty() {
-        return Err(AppError::Validation("Le nom du calendrier est vide".into()));
+        return Err(AppError::Validation("The calendar name is empty".into()));
     }
 
     let code = match dto.code.as_deref().map(str::trim).filter(|c| !c.is_empty()) {
@@ -695,14 +694,14 @@ pub async fn create_calendar(
     };
     if !code.chars().all(|c| c.is_ascii_uppercase() || c.is_ascii_digit() || "._-".contains(c)) {
         return Err(AppError::Validation(
-            "Identifiant invalide : lettres majuscules, chiffres, point, tiret ou souligné".into(),
+            "Invalid identifier: use uppercase letters, numbers, dots, hyphens, or underscores".into(),
         ));
     }
 
     let country = match dto.country_code.as_deref().map(str::trim).filter(|c| !c.is_empty()) {
         None => None,
         Some(c) if c.len() == 2 && c.chars().all(|ch| ch.is_ascii_alphabetic()) => Some(c.to_uppercase()),
-        Some(_) => return Err(AppError::Validation("Code pays invalide (ISO 3166-1 alpha-2)".into())),
+        Some(_) => return Err(AppError::Validation("Invalid country code (ISO 3166-1 alpha-2)".into())),
     };
 
     let mut tx = audit.begin(&state.db).await?;
@@ -724,7 +723,7 @@ pub async fn create_calendar(
     .map_err(|e| {
         if let sqlx::Error::Database(db) = &e {
             if db.constraint().is_some() {
-                return AppError::Conflict(format!("Un calendrier « {code} » existe déjà."));
+                return AppError::Conflict(format!("A calendar with code '{code}' already exists."));
             }
         }
         tracing::error!(error = %e, "holidays: creating a calendar");
@@ -761,7 +760,7 @@ pub async fn update_calendar(
 ) -> Result<Json<Value>, AppError> {
     ctx.require(keys::HOLIDAYS_MANAGE)?;
     let name = match dto.name.as_deref().map(str::trim) {
-        Some("") => return Err(AppError::Validation("Le nom du calendrier est vide".into())),
+        Some("") => return Err(AppError::Validation("The calendar name is empty".into())),
         other => other.map(str::to_string),
     };
 
@@ -794,7 +793,7 @@ pub async fn update_calendar(
         )
         .await
         .map_err(AppError::Database)?
-        .ok_or_else(|| AppError::NotFound("Calendrier introuvable".into()))?;
+        .ok_or_else(|| AppError::NotFound("Calendar not found".into()))?;
 
     let final_name: String = row.try_get("name")?;
     let final_enabled: bool = row.try_get("enabled")?;
@@ -830,11 +829,11 @@ pub async fn delete_calendar(
         )
         .await
         .map_err(AppError::Database)?
-        .ok_or_else(|| AppError::NotFound("Calendrier introuvable".into()))?;
+        .ok_or_else(|| AppError::NotFound("Calendar not found".into()))?;
 
     if row.try_get::<bool>("is_builtin")? {
         return Err(AppError::Validation(
-            "Ce calendrier fait partie du référentiel livré : désactivez-le plutôt que de le supprimer.".into(),
+            "This calendar is part of the bundled reference data. Disable it instead of deleting it.".into(),
         ));
     }
     let name: String = row.try_get("name")?;
@@ -875,7 +874,7 @@ pub async fn set_exclusions(
     let calendar = store::calendar(&state.db, id).await?;
     if calendar.parent_id.is_none() {
         return Err(AppError::Validation(
-            "Seul un calendrier régional peut retirer une journée : il n'hérite de rien ici.".into(),
+            "Only a regional calendar can exclude a holiday; this calendar does not inherit any here.".into(),
         ));
     }
 
@@ -994,7 +993,7 @@ pub async fn set_unit_pref(
     ctx.require(keys::HOLIDAYS_MANAGE)?;
     if dto.calendar_id.is_some() == dto.holiday_id.is_some() {
         return Err(AppError::Validation(
-            "Indiquez soit un calendrier, soit une journée.".into(),
+            "Specify either a calendar or a holiday.".into(),
         ));
     }
 

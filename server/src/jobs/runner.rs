@@ -196,7 +196,7 @@ async fn dispatch_loop(
                     // Only registered types are claimed, so this cannot happen
                     // unless the registry changed under us.
                     tracing::error!(job_type = %job.job_type, "Tâche réclamée sans gestionnaire - remise en file");
-                    let _ = portable::fail(&db, &job, "Aucun gestionnaire pour ce type de tâche").await;
+                    let _ = portable::fail(&db, &job, "No handler for this job type").await;
                     drop(permit);
                     continue;
                 };
@@ -251,8 +251,8 @@ async fn execute(
     let outcome = match tokio::time::timeout(timeout, run).await {
         Ok(Ok(Ok(()))) => None,
         Ok(Ok(Err(e))) => Some(format!("{e:#}")),
-        Ok(Err(_panic)) => Some("Le gestionnaire a paniqué".to_string()),
-        Err(_) => Some(format!("Délai d'exécution dépassé ({}s)", timeout.as_secs())),
+        Ok(Err(_panic)) => Some("The handler panicked".to_string()),
+        Err(_) => Some(format!("Execution timed out ({}s)", timeout.as_secs())),
     };
 
     let elapsed_ms = started.elapsed().as_millis();

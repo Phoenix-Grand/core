@@ -131,11 +131,11 @@ pub async fn request_acme(
     let net = NetworkConfig::load(&state.db).await;
 
     let message = if https_live {
-        "Certificat obtenu et rechargé à chaud."
+        "Certificate obtained and reloaded live."
     } else if net.https_enabled {
-        "Certificat obtenu. Redémarrez le service pour activer le HTTPS."
+        "Certificate obtained. Restart the service to enable HTTPS."
     } else {
-        "Certificat obtenu. Activez le HTTPS puis redémarrez le service pour l'utiliser."
+        "Certificate obtained. Enable HTTPS, then restart the service to use it."
     };
 
     Ok(Json(json!({
@@ -178,7 +178,7 @@ pub async fn delete_certificate(
     let tx = audit.begin(&state.db).await?;
     tx.commit(entry).await?;
 
-    Ok(Json(json!({ "message": "Certificat supprimé" })))
+    Ok(Json(json!({ "message": "Certificate deleted" })))
 }
 
 #[derive(Deserialize)]
@@ -202,12 +202,12 @@ pub async fn upload_certificate(
 
     if dto.cert_pem.trim().is_empty() || dto.key_pem.trim().is_empty() {
         return Err(AppError::Validation(
-            "Le certificat et la clé privée sont requis".into(),
+            "The certificate and private key are required".into(),
         ));
     }
     if dto.cert_pem.len() > MAX_PEM_LEN || dto.key_pem.len() > MAX_PEM_LEN {
         return Err(AppError::Validation(
-            "Certificat ou clé trop volumineux".into(),
+            "Certificate or key too large".into(),
         ));
     }
 
@@ -246,11 +246,11 @@ pub async fn upload_certificate(
     let restart_required = net.https_enabled && !https_live;
 
     let message = if hot_reloaded {
-        "Certificat installé et rechargé à chaud."
+        "Certificate installed and reloaded live."
     } else if !net.https_enabled {
-        "Certificat installé. Activez le HTTPS puis redémarrez le service pour l'utiliser."
+        "Certificate installed. Enable HTTPS, then restart the service to use it."
     } else {
-        "Certificat installé. Redémarrez le service pour activer le HTTPS."
+        "Certificate installed. Restart the service to enable HTTPS."
     };
 
     Ok(Json(json!({

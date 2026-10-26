@@ -142,7 +142,7 @@ impl Compiled {
                 .filter(|p| !p.is_empty())
                 .ok_or_else(|| {
                     AppError::Validation(
-                        "Un détecteur de type « motif » ou « somme de contrôle » exige un motif"
+                        "A pattern or checksum detector requires a pattern"
                             .into(),
                     )
                 })?
@@ -210,7 +210,7 @@ pub fn compile_ci(source: &str) -> Result<Regex, AppError> {
 fn build_regex(source: &str, case_insensitive: bool) -> Result<Regex, AppError> {
     if source.chars().count() > MAX_PATTERN_LEN {
         return Err(AppError::Validation(format!(
-            "Motif trop long : {MAX_PATTERN_LEN} caractères maximum"
+            "Pattern too long: maximum {MAX_PATTERN_LEN} characters"
         )));
     }
     RegexBuilder::new(source)
@@ -223,7 +223,7 @@ fn build_regex(source: &str, case_insensitive: bool) -> Result<Regex, AppError> 
         .map_err(|e| {
             // The message says which ceiling, because "compiled too big" and
             // "syntax error" are fixed by different edits.
-            AppError::Validation(format!("Motif refusé : {e}"))
+            AppError::Validation(format!("Pattern rejected: {e}"))
         })
 }
 
@@ -236,17 +236,17 @@ fn wordlist_pattern(terms: &[String]) -> Result<String, AppError> {
         .collect();
     if cleaned.is_empty() {
         return Err(AppError::Validation(
-            "Un détecteur de type « liste de mots » exige au moins un terme".into(),
+            "A word-list detector requires at least one term".into(),
         ));
     }
     if cleaned.len() > MAX_TERMS {
         return Err(AppError::Validation(format!(
-            "Une liste de mots compte au plus {MAX_TERMS} termes"
+            "A word list can contain at most {MAX_TERMS} terms"
         )));
     }
     if let Some(long) = cleaned.iter().find(|t| t.chars().count() > MAX_TERM_LEN) {
         return Err(AppError::Validation(format!(
-            "Terme trop long ({} caractères, maximum {MAX_TERM_LEN})",
+            "Term too long ({} characters, maximum {MAX_TERM_LEN})",
             long.chars().count()
         )));
     }

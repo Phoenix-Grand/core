@@ -300,7 +300,7 @@ pub async fn set_mode(
     let mode = Mode::parse_settable(dto.mode.trim())?;
     if mode.acts() && before.actions.is_empty() {
         return Err(AppError::Validation(
-            "Cette règle ne déclare aucune action : le mode « actif avec actions » n'aurait aucun effet".into(),
+            "This rule has no actions; 'active with actions' mode would have no effect".into(),
         ));
     }
 

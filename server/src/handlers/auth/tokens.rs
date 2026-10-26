@@ -321,7 +321,7 @@ async fn resolve_account_slot(
 ) -> Result<u8, AppError> {
     if let Some(slot) = requested {
         if slot >= MAX_ACCOUNT_SLOTS {
-            return Err(AppError::Validation("Emplacement de compte invalide".into()));
+            return Err(AppError::Validation("Invalid account slot".into()));
         }
         return Ok(slot);
     }
@@ -375,7 +375,7 @@ async fn resolve_account_slot(
     }
     first_free.ok_or_else(|| {
         AppError::Validation(format!(
-            "Nombre maximal de comptes simultanés atteint ({MAX_ACCOUNT_SLOTS})"
+            "Maximum number of simultaneous accounts reached ({MAX_ACCOUNT_SLOTS})"
         ))
     })
 }

@@ -95,7 +95,7 @@ pub async fn get_group(
             params![group_id],
         )
         .await?
-        .ok_or_else(|| AppError::NotFound("Groupe introuvable".into()))?;
+        .ok_or_else(|| AppError::NotFound("Group not found".into()))?;
 
     let members = state
         .db
@@ -158,7 +158,7 @@ pub async fn create_group(
     .await
     .map_err(|e| {
         if e.to_string().contains("unique") {
-            AppError::Conflict(format!("Un groupe nommé '{}' existe déjà", dto.name))
+            AppError::Conflict(format!("A group named '{}' already exists", dto.name))
         } else {
             tracing::error!(error = %e, "create_group");
             AppError::Database(e)
@@ -203,7 +203,7 @@ pub async fn update_group(
         )
         .await
         .map_err(|e| { tracing::error!(error = %e, "update_group: lecture"); AppError::Database(e) })?
-        .ok_or_else(|| AppError::NotFound("Groupe introuvable".into()))?;
+        .ok_or_else(|| AppError::NotFound("Group not found".into()))?;
     let previous = group_from_row(&prev_raw)?;
 
     // `COALESCE($n, col)` keeps the stored value when the bind is NULL, the same
@@ -232,7 +232,7 @@ pub async fn update_group(
     )
     .await
     .map_err(|e| { tracing::error!(error = %e, "update_group: écriture"); AppError::Database(e) })?
-    .ok_or_else(|| AppError::NotFound("Groupe introuvable".into()))?;
+    .ok_or_else(|| AppError::NotFound("Group not found".into()))?;
     let group = group_from_row(&updated_raw)?;
 
     tx.commit(
@@ -267,7 +267,7 @@ pub async fn delete_group(
         )
         .await
         .map_err(|e| { tracing::error!(error = %e, "delete_group: lecture"); AppError::Database(e) })?
-        .ok_or_else(|| AppError::NotFound("Groupe introuvable".into()))?;
+        .ok_or_else(|| AppError::NotFound("Group not found".into()))?;
     let group = group_from_row(&group_raw)?;
 
     // System groups (Administrators, Users, Guests) cannot be deleted; the
@@ -302,7 +302,7 @@ pub async fn delete_group(
     )
     .await?;
 
-    Ok(Json(json!({ "message": "Groupe supprimé" })))
+    Ok(Json(json!({ "message": "Group deleted" })))
 }
 
 // ── Membres ───────────────────────────────────────────────────────────────────
@@ -325,7 +325,7 @@ async fn membership_labels(
         )
         .await
         .map_err(|e| { tracing::error!(error = %e, "membership_labels: groupe"); AppError::Database(e) })?;
-    let group_name = group_name.ok_or_else(|| AppError::NotFound("Groupe introuvable".into()))?;
+    let group_name = group_name.ok_or_else(|| AppError::NotFound("Group not found".into()))?;
 
     let username: Option<String> = conn
         .fetch_optional_scalar::<String>(
@@ -374,7 +374,7 @@ pub async fn add_member(
     )
     .await?;
 
-    Ok(Json(json!({ "message": "Membre ajouté" })))
+    Ok(Json(json!({ "message": "Member added" })))
 }
 
 pub async fn remove_member(
@@ -396,7 +396,7 @@ pub async fn remove_member(
         .map_err(|e| { tracing::error!(error = %e, "remove_member"); AppError::Database(e) })?;
 
     if affected == 0 {
-        return Err(AppError::NotFound("Membre introuvable dans ce groupe".into()));
+        return Err(AppError::NotFound("Member not found in this group".into()));
     }
 
     tx.commit(
@@ -413,7 +413,7 @@ pub async fn remove_member(
     )
     .await?;
 
-    Ok(Json(json!({ "message": "Membre retiré" })))
+    Ok(Json(json!({ "message": "Member removed" })))
 }
 
 /// Lists a user's groups (used by other handlers).

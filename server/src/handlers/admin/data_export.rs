@@ -263,24 +263,24 @@ pub async fn request_export(
     // ── Validation ──────────────────────────────────────────────────────────
     if dto.scope != "instance" && dto.scope != "accounts" {
         return Err(AppError::Validation(
-            "Périmètre invalide : « instance » ou « accounts »".into(),
+            "Invalid scope: expected 'instance' or 'accounts'".into(),
         ));
     }
     if dto.scope == "accounts" && dto.user_ids.is_empty() {
         return Err(AppError::Validation(
-            "Sélectionnez au moins un compte à exporter".into(),
+            "Select at least one account to export".into(),
         ));
     }
     if dto.user_ids.len() > MAX_SELECTED {
         return Err(AppError::Validation(format!(
-            "Sélection trop large : {MAX_SELECTED} comptes maximum par export"
+            "Selection too large: maximum {MAX_SELECTED} accounts per export"
         )));
     }
 
     // One at a time, instance-wide - and checked before anything is written, so a
     // double-click produces one export and one clear refusal.
     if runs::active_admin(&state.db).await?.is_some() {
-        return Err(AppError::Conflict("Un export est déjà en cours".into()));
+        return Err(AppError::Conflict("An export is already in progress".into()));
     }
 
     // Services are intersected with what the live modules actually offer: a
@@ -333,7 +333,7 @@ pub async fn request_export(
 
     if rows.is_empty() {
         return Err(AppError::Validation(
-            "Aucun compte existant dans cette sélection".into(),
+            "No existing accounts in this selection".into(),
         ));
     }
 
@@ -413,7 +413,7 @@ pub async fn request_export(
     let job_id = crate::data_export::jobs::enqueue_run(&state.db, export_id).await?;
 
     Ok(Json(json!({
-        "message":      "Export demandé",
+        "message":      "Export requested",
         "export_id":    export_id,
         "job_id":       job_id,
         "available_at": available_at,
@@ -438,7 +438,7 @@ pub async fn cancel_export(
     ctx.require(keys::DATA_EXPORT_EXECUTE)?;
 
     let Some(run) = runs::get_admin(&state.db, id).await? else {
-        return Err(AppError::NotFound("Export introuvable".into()));
+        return Err(AppError::NotFound("Export not found".into()));
     };
 
     let label = audit
@@ -450,7 +450,7 @@ pub async fn cancel_export(
 
     if !runs::cancel(&state.db, id, &format!("Annulé par {label}")).await? {
         return Err(AppError::Conflict(
-            "Cet export est déjà terminé : il ne peut plus être annulé".into(),
+            "This export has already finished and can no longer be canceled".into(),
         ));
     }
 
@@ -475,7 +475,7 @@ pub async fn cancel_export(
         )
         .await;
 
-    Ok(Json(json!({ "message": "Export annulé" })))
+    Ok(Json(json!({ "message": "Export canceled" })))
 }
 
 /// `DELETE /admin/data-export/:id` - remove a produced archive now.
@@ -488,7 +488,7 @@ pub async fn delete_export(
     ctx.require(keys::DATA_EXPORT_EXECUTE)?;
 
     let Some(run) = runs::get_admin(&state.db, id).await? else {
-        return Err(AppError::NotFound("Export introuvable".into()));
+        return Err(AppError::NotFound("Export not found".into()));
     };
 
     if let (Some(destination), Some(file_name)) = (run.destination.as_deref(), run.file_name.as_deref())
@@ -519,7 +519,7 @@ pub async fn delete_export(
         )
         .await;
 
-    Ok(Json(json!({ "message": "Archive supprimée" })))
+    Ok(Json(json!({ "message": "Archive deleted" })))
 }
 
 // ── The archive itself ───────────────────────────────────────────────────────
@@ -538,48 +538,48 @@ pub async fn download_export(
     ctx.require(keys::DATA_EXPORT_READ)?;
 
     let Some(run) = runs::get_admin(&state.db, id).await? else {
-        return Err(AppError::NotFound("Export introuvable".into()));
+        return Err(AppError::NotFound("Export not found".into()));
     };
 
     let now = Utc::now();
     if run.status != "ready" {
         return Err(AppError::Conflict(
-            "Cette archive n'est pas prête".into(),
+            "This archive is not ready".into(),
         ));
     }
     if run.file_deleted {
         return Err(AppError::NotFound(
-            "Cette archive a été supprimée du serveur".into(),
+            "This archive has been deleted from the server".into(),
         ));
     }
     if now < run.available_at {
         // The hold. The one refusal that is not a defect and is worded as such.
         return Err(AppError::Conflict(format!(
-            "Cette archive ne sera disponible qu'à partir du {} (délai de sécurité)",
+            "This archive will only be available from {} (security delay)",
             run.available_at.format("%d/%m/%Y %H:%M UTC")
         )));
     }
     if now >= run.expires_at {
         return Err(AppError::NotFound(
-            "Cette archive a expiré et n'est plus disponible".into(),
+            "This archive has expired and is no longer available".into(),
         ));
     }
 
     let (Some(destination), Some(file_name)) = (run.destination.as_deref(), run.file_name.as_deref())
     else {
-        return Err(AppError::NotFound("Archive introuvable sur le disque".into()));
+        return Err(AppError::NotFound("Archive not found on disk".into()));
     };
     // Re-validated even though it came from our own row: this is the one handler
     // that turns a database string into an open file descriptor.
     if !archive::is_export_file(file_name) {
         tracing::error!(export_id = %id, "export: nom d'archive non reconnu - téléchargement refusé");
-        return Err(AppError::NotFound("Archive introuvable sur le disque".into()));
+        return Err(AppError::NotFound("Archive not found on disk".into()));
     }
 
     let path = std::path::Path::new(destination).join(file_name);
     let file = tokio::fs::File::open(&path).await.map_err(|e| {
         tracing::error!(error = %e, export_id = %id, "export: ouverture de l'archive impossible");
-        AppError::NotFound("Archive introuvable sur le disque".into())
+        AppError::NotFound("Archive not found on disk".into())
     })?;
 
     // Audited BEFORE the bytes leave: a download interrupted halfway still

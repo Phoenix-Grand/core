@@ -162,11 +162,11 @@ pub struct User {
 
 #[derive(Debug, Deserialize, Validate, ToSchema)]
 pub struct CreateUserDto {
-    #[validate(email(message = "Email invalide"))]
+    #[validate(email(message = "Invalid email address"))]
     pub email:    String,
-    #[validate(length(min = 3, max = 100, message = "Username: 3-100 caractères"))]
+    #[validate(length(min = 3, max = 100, message = "Username: 3-100 characters"))]
     pub username: String,
-    #[validate(length(min = 8, message = "Mot de passe: 8 caractères minimum"))]
+    #[validate(length(min = 8, message = "Password: minimum 8 characters"))]
     pub password: String,
     pub display_name: Option<String>,
 }
@@ -176,7 +176,7 @@ fn validate_http_url(url: &str) -> Result<(), ValidationError> {
         Ok(())
     } else {
         let mut e = ValidationError::new("url");
-        e.message = Some(std::borrow::Cow::Borrowed("L'URL doit utiliser le schéma http ou https"));
+        e.message = Some(std::borrow::Cow::Borrowed("The URL must use the http or https scheme"));
         Err(e)
     }
 }
@@ -262,7 +262,7 @@ fn tidy_text(slot: &mut Option<Option<String>>, label: &str, max: usize) -> Resu
     // Counted in characters, not bytes: "60 caractères maximum" must mean the
     // same thing for an accented or a non-latin name as for an ASCII one.
     if trimmed.chars().count() > max {
-        return Err(format!("{label} : {max} caractères maximum"));
+        return Err(format!("{label}: maximum {max} characters"));
     }
     let owned = trimmed.to_owned();
     *inner = Some(owned);
@@ -275,13 +275,13 @@ impl UpdateUserDto {
     /// Returns the sentence to answer with, never a key name: the caller turns
     /// it into a `422` and the person reads which field is at fault.
     pub fn tidy_profile(&mut self, today: NaiveDate) -> Result<(), String> {
-        tidy_text(&mut self.first_name, "Prénom", MAX_FIRST_NAME)?;
-        tidy_text(&mut self.last_name, "Nom de famille", MAX_LAST_NAME)?;
-        tidy_text(&mut self.name_pronunciation, "Prononciation du nom", MAX_NAME_PRONUNCIATION)?;
-        tidy_text(&mut self.pronouns, "Pronoms", MAX_PRONOUNS)?;
-        tidy_text(&mut self.work_location, "Lieu de travail", MAX_WORK_LOCATION)?;
-        tidy_text(&mut self.introduction, "Présentation", MAX_INTRODUCTION)?;
-        tidy_text(&mut self.gender, "Genre", MAX_GENDER)?;
+        tidy_text(&mut self.first_name, "First name", MAX_FIRST_NAME)?;
+        tidy_text(&mut self.last_name, "Last name", MAX_LAST_NAME)?;
+        tidy_text(&mut self.name_pronunciation, "Name pronunciation", MAX_NAME_PRONUNCIATION)?;
+        tidy_text(&mut self.pronouns, "Pronouns", MAX_PRONOUNS)?;
+        tidy_text(&mut self.work_location, "Work location", MAX_WORK_LOCATION)?;
+        tidy_text(&mut self.introduction, "Introduction", MAX_INTRODUCTION)?;
+        tidy_text(&mut self.gender, "Gender", MAX_GENDER)?;
 
         if let Some(Some(day)) = self.birthday {
             // The floor catches a mistyped year; the ceiling catches the far
@@ -293,7 +293,7 @@ impl UpdateUserDto {
             // request can reach.
             let earliest = NaiveDate::from_ymd_opt(y, m, d).unwrap_or(today);
             if day < earliest || day > today {
-                return Err("Date de naissance : date invalide".into());
+                return Err("Date of birth: invalid date".into());
             }
         }
         Ok(())
@@ -323,7 +323,7 @@ impl UpdateUserDto {
 #[derive(Debug, Deserialize, Validate)]
 pub struct ChangePasswordDto {
     pub old_password: String,
-    #[validate(length(min = 8, message = "Nouveau mot de passe: 8 caractères minimum"))]
+    #[validate(length(min = 8, message = "New password: minimum 8 characters"))]
     pub new_password: String,
 }
 
@@ -395,7 +395,7 @@ mod tests {
         let long = "é".repeat(MAX_PRONOUNS + 1);
         let mut dto = UpdateUserDto { pronouns: Some(Some(long)), ..Default::default() };
         let err = dto.tidy_profile(today()).expect_err("too long");
-        assert!(err.contains("Pronoms"), "{err}");
+        assert!(err.contains("Pronouns"), "{err}");
 
         let ok = "é".repeat(MAX_PRONOUNS);
         let mut dto = UpdateUserDto { pronouns: Some(Some(ok)), ..Default::default() };

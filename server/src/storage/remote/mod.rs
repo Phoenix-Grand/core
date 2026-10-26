@@ -33,6 +33,6 @@ pub fn build_connector(
         "dropbox" => Ok(Arc::new(dropbox::DropboxConnector::new(config)?)),
         "smb"     => Ok(Arc::new(smb::SmbConnector::new(config)?)),
         "nfs"     => Ok(Arc::new(nfs::NfsConnector::new(config)?)),
-        p => Err(RemoteError::Unsupported(format!("Provider '{p}' non supporté"))),
+        p => Err(RemoteError::Unsupported(format!("Provider '{p}' is not supported"))),
     }
 }

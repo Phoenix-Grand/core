@@ -283,13 +283,13 @@ pub fn validate(condition: &Condition, max_depth: usize, max_leaves: usize) -> R
     let depth = condition.depth();
     if depth > max_depth {
         return Err(AppError::Validation(format!(
-            "Arbre de conditions trop profond : {depth} niveaux, maximum {max_depth}"
+            "Condition tree too deep: {depth} levels, maximum {max_depth}"
         )));
     }
     let leaves = condition.leaves();
     if leaves > max_leaves {
         return Err(AppError::Validation(format!(
-            "Trop de comparaisons dans la règle : {leaves}, maximum {max_leaves}"
+            "Too many comparisons in the rule: {leaves}, maximum {max_leaves}"
         )));
     }
     Ok(())

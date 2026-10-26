@@ -548,7 +548,7 @@ async fn guard_4_the_last_superadmin_cannot_be_removed() {
     let refusal = guards::ensure_superadmin_remains(&mut tx)
         .await
         .expect_err("retirer le dernier super-administrateur doit être refusé");
-    assert!(refusal.to_string().contains("super-administrateur"));
+    assert!(refusal.to_string().contains("super-administrator"));
 
     tx.rollback().await.expect("annulation");
 

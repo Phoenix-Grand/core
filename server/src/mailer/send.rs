@@ -141,7 +141,7 @@ impl lettre::message::header::Header for AutoSubmitted {
 /// mail clients read as "prefer the last part they understand".
 fn build_message(cfg: &MailConfig, msg: &Outgoing) -> Result<Message, SendError> {
     let from = cfg.from_mailbox().parse().map_err(|e: lettre::address::AddressError| SendError {
-        stage: "Adresse d'expédition invalide",
+        stage: "Invalid sender address",
         raw:   truncate(&e.to_string(), MAX_ERROR_LEN),
     })?;
 

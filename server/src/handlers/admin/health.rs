@@ -119,10 +119,10 @@ pub async fn mute_check(
     // Validate before touching the database: an unknown id would sit in the
     // table forever, invisible to the page that is supposed to clear it.
     let ignorable = health::checks::is_ignorable(&id)
-        .ok_or_else(|| AppError::NotFound(format!("Contrôle '{id}' inconnu")))?;
+        .ok_or_else(|| AppError::NotFound(format!("Unknown check '{id}'")))?;
     if !ignorable {
         return Err(AppError::Validation(format!(
-            "Le contrôle '{id}' ne peut pas être ignoré"
+            "Check '{id}' cannot be ignored"
         )));
     }
 
@@ -133,7 +133,7 @@ pub async fn mute_check(
     if let Some(r) = &reason {
         if r.chars().count() > MAX_REASON_LEN {
             return Err(AppError::Validation(format!(
-                "Justification trop longue (maximum {MAX_REASON_LEN} caractères)"
+                "Reason too long (maximum {MAX_REASON_LEN} characters)"
             )));
         }
     }
@@ -174,7 +174,7 @@ pub async fn mute_check(
 
     // The report is cached; the operator must see their decision immediately.
     health::invalidate();
-    Ok(Json(json!({ "message": "Contrôle ignoré", "check_id": id })))
+    Ok(Json(json!({ "message": "Check ignored", "check_id": id })))
 }
 
 /// `DELETE /api/v1/admin/health-checks/:id/ignore` - put the finding back.
@@ -201,7 +201,7 @@ pub async fn unmute_check(
     if deleted == 0 {
         // Nothing to undo. Rolled back rather than committed with an empty
         // trail entry: "un-ignored a check that was not ignored" is noise.
-        return Err(AppError::NotFound(format!("Le contrôle '{id}' n'est pas ignoré")));
+        return Err(AppError::NotFound(format!("Check '{id}' is not ignored")));
     }
 
     tx.commit(
@@ -212,7 +212,7 @@ pub async fn unmute_check(
     .await?;
 
     health::invalidate();
-    Ok(Json(json!({ "message": "Contrôle réactivé", "check_id": id })))
+    Ok(Json(json!({ "message": "Check re-enabled", "check_id": id })))
 }
 
 #[cfg(test)]

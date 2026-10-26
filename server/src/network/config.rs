@@ -157,7 +157,7 @@ pub fn validate_setting(key: &str, value: &serde_json::Value) -> Result<(), AppE
             let n = value.as_i64().unwrap_or(0);
             if !(1..=65_535).contains(&n) {
                 return Err(AppError::Validation(
-                    "Port invalide : un entier entre 1 et 65535 est attendu".into(),
+                    "Invalid port: expected an integer between 1 and 65535".into(),
                 ));
             }
             Ok(())
@@ -166,7 +166,7 @@ pub fn validate_setting(key: &str, value: &serde_json::Value) -> Result<(), AppE
             let n = value.as_i64().unwrap_or(-1);
             if !(0..=MAX_HSTS_DAYS).contains(&n) {
                 return Err(AppError::Validation(format!(
-                    "Durée HSTS invalide : entre 0 et {MAX_HSTS_DAYS} jours"
+                    "Invalid HSTS duration: between 0 and {MAX_HSTS_DAYS} days"
                 )));
             }
             Ok(())
@@ -193,23 +193,23 @@ pub fn validate_acme_directory_url(raw: &str) -> Result<(), AppError> {
     let raw = raw.trim();
     if raw.is_empty() {
         return Err(AppError::Validation(
-            "L'URL du répertoire ACME est requise".into(),
+            "The ACME directory URL is required".into(),
         ));
     }
     let url = url::Url::parse(raw)
-        .map_err(|_| AppError::Validation("URL du répertoire ACME invalide".into()))?;
+        .map_err(|_| AppError::Validation("Invalid ACME directory URL".into()))?;
     if url.scheme() != "https" {
         return Err(AppError::Validation(
-            "Le répertoire ACME doit être en https (le dialogue avec l'autorité ne doit pas circuler en clair)".into(),
+            "The ACME directory must use HTTPS so communication with the authority is encrypted".into(),
         ));
     }
     let host = url
         .host()
-        .ok_or_else(|| AppError::Validation("URL du répertoire ACME sans hôte".into()))?;
+        .ok_or_else(|| AppError::Validation("The ACME directory URL has no host".into()))?;
 
     let refuse = || {
         Err(AppError::Validation(
-            "Le répertoire ACME ne peut pas désigner une adresse interne (bouclage, lien-local ou réseau privé)".into(),
+            "The ACME directory cannot point to an internal address (loopback, link-local, or private network)".into(),
         ))
     };
     match host {

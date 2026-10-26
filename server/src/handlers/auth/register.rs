@@ -20,7 +20,7 @@ struct GroupIdRow {
     tag = "auth",
     request_body = CreateUserDto,
     responses(
-        (status = 201, description = "Compte créé"),
+        (status = 201, description = "Account created"),
         (status = 403, description = "Inscription fermée"),
         (status = 409, description = "Email ou nom d'utilisateur déjà pris")
     )
@@ -64,10 +64,10 @@ pub async fn register(
         if !crate::domains::store::is_verified(&state.db, &domain).await {
             let accepted = crate::domains::store::verified_names(&state.db).await;
             return Err(AppError::Validation(if accepted.is_empty() {
-                "Les inscriptions sont réservées aux adresses des domaines de cette instance.".into()
+                "Registration is restricted to addresses on this instance's domains.".into()
             } else {
                 format!(
-                    "Les inscriptions sont réservées aux adresses de : {}.",
+                    "Registration is restricted to addresses on: {}.",
                     accepted.join(", ")
                 )
             }));
@@ -84,7 +84,7 @@ pub async fn register(
         .await?;
 
     if exists {
-        return Err(AppError::Conflict("Email ou nom d'utilisateur déjà utilisé".into()));
+        return Err(AppError::Conflict("Email or username already in use".into()));
     }
 
     // A public sign-up names no unit, so it lands at the root of the tree - not

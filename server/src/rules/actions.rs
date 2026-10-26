@@ -29,7 +29,7 @@ use crate::events::{AppEvent, EventMeta};
 use super::dispatch::ActionJob;
 
 /// Label the audit trail records for work the engine did on its own.
-pub const ACTOR_LABEL: &str = "Moteur de règles";
+pub const ACTOR_LABEL: &str = "Rules engine";
 
 /// Reason recorded on a session revoked by a rule.
 const REVOKE_REASON: &str = "rule";
@@ -51,7 +51,7 @@ impl ActionContext<'_> {
     fn subject(&self, action: &str) -> Result<Uuid, AppError> {
         self.job.subject_user_id.ok_or_else(|| {
             AppError::Validation(format!(
-                "L'action « {action} » vise un compte, mais l'événement n'en désigne aucun"
+                "Action '{action}' targets an account, but the event does not identify one"
             ))
         })
     }
@@ -65,7 +65,7 @@ impl ActionContext<'_> {
         AuditEntry::new(action)
             .module("core")
             .detail(format!(
-                "Règle « {} » v{} sur {}",
+                "Rule '{}' v{} on {}",
                 self.job.rule_name, self.job.rule_version, self.job.event_type
             ))
     }
@@ -162,7 +162,7 @@ async fn suspend_account(ctx: &ActionContext<'_>) -> Result<(), AppError> {
                 AppError::Database(e)
             })?;
         if remaining == 0 {
-            let refusal = "Suspension refusée : ce compte est le dernier administrateur actif";
+            let refusal = "Suspension refused: this account is the last active administrator";
             tracing::error!(user_id = %user_id, rule_id = %ctx.job.rule_id, "{refusal}");
             ctx.audit()
                 .record(
@@ -195,7 +195,7 @@ async fn suspend_account(ctx: &ActionContext<'_>) -> Result<(), AppError> {
         .reversible();
     if let Some(reason) = ctx.param_str("reason") {
         entry = entry.detail(format!(
-            "Règle « {} » v{} - motif : {reason}",
+            "Rule '{}' v{} — reason: {reason}",
             ctx.job.rule_name, ctx.job.rule_version
         ));
     }

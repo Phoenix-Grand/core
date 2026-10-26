@@ -26,10 +26,10 @@ pub async fn register_device(
     Json(dto): Json<RegisterDeviceDto>,
 ) -> Result<Json<Value>, AppError> {
     if !matches!(dto.provider.as_str(), "unifiedpush" | "apns" | "fcm") {
-        return Err(AppError::Validation("provider inconnu".into()));
+        return Err(AppError::Validation("Unknown provider".into()));
     }
     if dto.device_token.trim().is_empty() {
-        return Err(AppError::Validation("device_token requis".into()));
+        return Err(AppError::Validation("device_token is required".into()));
     }
 
     // Re-registering the same (provider, token) re-binds it to this user.
@@ -102,9 +102,9 @@ pub async fn delete_device(
         .await?;
 
     if affected == 0 {
-        return Err(AppError::NotFound("Device introuvable".into()));
+        return Err(AppError::NotFound("Device not found".into()));
     }
-    Ok(Json(json!({ "message": "Device supprimé" })))
+    Ok(Json(json!({ "message": "Device removed" })))
 }
 
 /// GET /api/v1/me/push/preferences - list opt-out preferences.
@@ -160,5 +160,5 @@ pub async fn set_preference(
         .execute(&sql, params![user.id, &module_id, &event_type, dto.enabled])
         .await?;
 
-    Ok(Json(json!({ "message": "Préférence enregistrée" })))
+    Ok(Json(json!({ "message": "Preference saved" })))
 }

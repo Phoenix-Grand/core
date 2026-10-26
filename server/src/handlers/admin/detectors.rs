@@ -149,7 +149,7 @@ fn prepare(input: &DetectorInput) -> Result<DetectorDraft, AppError> {
     let key = input.key.trim().to_lowercase();
     if key.is_empty() || key.len() > MAX_KEY_LEN {
         return Err(AppError::Validation(format!(
-            "La clé du détecteur doit faire 1 à {MAX_KEY_LEN} caractères"
+            "The detector key must contain 1 to {MAX_KEY_LEN} characters"
         )));
     }
     if !key
@@ -157,27 +157,27 @@ fn prepare(input: &DetectorInput) -> Result<DetectorDraft, AppError> {
         .all(|c| c.is_ascii_lowercase() || c.is_ascii_digit() || c == '.' || c == '_')
     {
         return Err(AppError::Validation(
-            "La clé n'accepte que minuscules, chiffres, points et underscores".into(),
+            "The key only accepts lowercase letters, numbers, dots, and underscores".into(),
         ));
     }
 
     let label = input.label.trim();
     if label.is_empty() || label.chars().count() > MAX_LABEL_LEN {
         return Err(AppError::Validation(format!(
-            "Le libellé doit faire 1 à {MAX_LABEL_LEN} caractères"
+            "The label must contain 1 to {MAX_LABEL_LEN} characters"
         )));
     }
     if let Some(d) = input.description.as_deref() {
         if d.chars().count() > MAX_DESCRIPTION_LEN {
             return Err(AppError::Validation(format!(
-                "La description dépasse {MAX_DESCRIPTION_LEN} caractères"
+                "The description exceeds {MAX_DESCRIPTION_LEN} characters"
             )));
         }
     }
 
     let kind = Kind::parse(input.kind.trim()).ok_or_else(|| {
         AppError::Validation(format!(
-            "Type de détecteur inconnu « {} » : attendus {}",
+            "Unknown detector type '{}': expected {}",
             input.kind,
             Kind::ALL
                 .iter()
@@ -191,7 +191,7 @@ fn prepare(input: &DetectorInput) -> Result<DetectorDraft, AppError> {
         None => None,
         Some(raw) => Some(Checksum::parse(raw).ok_or_else(|| {
             AppError::Validation(format!(
-                "Somme de contrôle inconnue « {raw} » : attendues {}",
+                "Unknown checksum '{raw}': expected {}",
                 Checksum::ALL
                     .iter()
                     .map(|c| c.as_str())
@@ -202,20 +202,20 @@ fn prepare(input: &DetectorInput) -> Result<DetectorDraft, AppError> {
     };
     if checksum.is_some() && kind != Kind::Checksum {
         return Err(AppError::Validation(
-            "Une somme de contrôle n'a de sens que sur un détecteur de type « somme de contrôle »"
+            "A checksum only applies to a checksum detector"
                 .into(),
         ));
     }
     if kind == Kind::Checksum && checksum.is_none() {
         return Err(AppError::Validation(
-            "Un détecteur de type « somme de contrôle » doit nommer l'algorithme à appliquer".into(),
+            "A checksum detector must specify the algorithm to use".into(),
         ));
     }
 
     let unit = |name: &str, value: Option<f32>, default: f32| -> Result<f32, AppError> {
         let v = value.unwrap_or(default);
         if !(0.0..=1.0).contains(&v) || v.is_nan() {
-            return Err(AppError::Validation(format!("{name} va de 0 à 1")));
+            return Err(AppError::Validation(format!("{name} must be between 0 and 1")));
         }
         Ok(v)
     };
@@ -249,8 +249,8 @@ fn prepare(input: &DetectorInput) -> Result<DetectorDraft, AppError> {
         proximity_window: input.proximity_window.unwrap_or(120).clamp(0, 4_000),
         proximity_required: input.proximity_required,
         base_confidence: unit("La confiance de base", input.base_confidence, 0.5)?,
-        checksum_bonus: unit("Le bonus de somme de contrôle", input.checksum_bonus, 0.35)?,
-        proximity_bonus: unit("Le bonus de proximité", input.proximity_bonus, 0.2)?,
+        checksum_bonus: unit("The checksum bonus", input.checksum_bonus, 0.35)?,
+        proximity_bonus: unit("The proximity bonus", input.proximity_bonus, 0.2)?,
         min_confidence: unit("Le seuil de confiance", input.min_confidence, 0.7)?,
         min_matches: input.min_matches.unwrap_or(1).clamp(1, 10_000),
         min_unique_matches: input.min_unique_matches.unwrap_or(1).clamp(1, 10_000),
@@ -259,12 +259,12 @@ fn prepare(input: &DetectorInput) -> Result<DetectorDraft, AppError> {
 
     if draft.min_unique_matches > draft.min_matches {
         return Err(AppError::Validation(
-            "Le nombre de valeurs distinctes ne peut dépasser le nombre de correspondances : ce seuil ne serait jamais atteint".into(),
+            "The distinct value count cannot exceed the match count; this threshold would never be reached".into(),
         ));
     }
     if draft.proximity_required && draft.proximity_terms.is_empty() {
         return Err(AppError::Validation(
-            "« Mot-clé obligatoire » exige au moins un mot-clé de proximité".into(),
+            "'Keyword required' requires at least one proximity keyword".into(),
         ));
     }
 
@@ -363,7 +363,7 @@ pub async fn create_detector(
     let draft = prepare(&input)?;
     if store::key_exists(&state.db, &draft.key, None).await? {
         return Err(AppError::Validation(format!(
-            "La clé « {} » est déjà prise",
+            "Key '{}' is already taken",
             draft.key
         )));
     }
@@ -412,12 +412,12 @@ pub async fn update_detector(
     // its key is what rules written before this edit point at.
     if before.is_builtin && draft.key != before.key {
         return Err(AppError::Validation(
-            "La clé d'un détecteur fourni avec le core ne peut pas changer : des règles la référencent".into(),
+            "A detector bundled with the core cannot change its key because rules reference it".into(),
         ));
     }
     if store::key_exists(&state.db, &draft.key, Some(id)).await? {
         return Err(AppError::Validation(format!(
-            "La clé « {} » est déjà prise",
+            "Key '{}' is already taken",
             draft.key
         )));
     }
@@ -479,13 +479,13 @@ pub async fn delete_detector(
         // leave every rule that names it pointing at nothing, and the next
         // migration would put it back.
         return Err(AppError::Validation(
-            "Un détecteur fourni avec le core se désactive, il ne se supprime pas".into(),
+            "A detector bundled with the core can be disabled but cannot be deleted".into(),
         ));
     }
     let used_by = store::rules_using(&state.db, &before.key).await?;
     if !used_by.is_empty() {
         return Err(AppError::Validation(format!(
-            "{} règle(s) utilisent ce détecteur : {}",
+            "{} rule(s) use this detector: {}",
             used_by.len(),
             used_by.join(", ")
         )));
@@ -552,7 +552,7 @@ pub async fn test_detector(
 
     if dto.sample.len() > MAX_SAMPLE_BYTES {
         return Err(AppError::Validation(format!(
-            "L'échantillon dépasse {} Ko",
+            "The sample exceeds {} KB",
             MAX_SAMPLE_BYTES / 1024
         )));
     }
@@ -575,7 +575,7 @@ pub async fn test_detector(
         }
         (None, None) => {
             return Err(AppError::Validation(
-                "Indiquez un détecteur existant ou un brouillon à essayer".into(),
+                "Specify an existing detector or a draft to try".into(),
             ))
         }
     };
@@ -644,7 +644,7 @@ pub async fn lookup_reference(
     ctx.require(keys::RULES_READ)?;
     let reference = q.reference.trim().to_uppercase();
     if reference.is_empty() || reference.len() > 16 {
-        return Err(AppError::Validation("Référence invalide".into()));
+        return Err(AppError::Validation("Invalid reference".into()));
     }
     let executions = rules_store::list_executions(
         &state.db,

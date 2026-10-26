@@ -42,7 +42,7 @@ impl ServiceKind {
         match raw {
             "mail" => Ok(ServiceKind::Mail),
             other => Err(AppError::Validation(format!(
-                "Service de migration inconnu : « {other} »"
+                "Unknown migration service: '{other}'"
             ))),
         }
     }
@@ -67,13 +67,13 @@ impl SourceSpec {
     pub fn validate(&self) -> Result<(), AppError> {
         if self.kind != "imap" {
             return Err(AppError::Validation(
-                "Type de serveur source non pris en charge (attendu : imap).".into(),
+                "Unsupported source server type (expected: imap).".into(),
             ));
         }
         let host = self.host.trim();
         if host.is_empty() || host.len() > 255 {
             return Err(AppError::Validation(
-                "Adresse du serveur source manquante ou trop longue.".into(),
+                "The source server address is missing or too long.".into(),
             ));
         }
         // A host is a name or an address, never a URL: accepting
@@ -81,11 +81,11 @@ impl SourceSpec {
         // later, at the first chunk, with nothing to point at.
         if host.contains('/') || host.contains(' ') || host.contains(':') {
             return Err(AppError::Validation(
-                "Adresse du serveur source invalide : indiquez un nom d'hôte, sans schéma ni port.".into(),
+                "Invalid source server address: enter a hostname without a scheme or port.".into(),
             ));
         }
         if !(1..=65535).contains(&self.port) {
-            return Err(AppError::Validation("Port du serveur source invalide.".into()));
+            return Err(AppError::Validation("Invalid source server port.".into()));
         }
         match self.security.as_str() {
             // Refused, and this is not an oversight. The pilot module's IMAP
@@ -95,15 +95,14 @@ impl SourceSpec {
             // and hand an entire organisation's passwords to the network in
             // clear. A missing option is a limitation; this one would be a lie.
             "starttls" => Err(AppError::Validation(
-                "STARTTLS n'est pas pris en charge pour la migration : \
-                 utilisez une connexion SSL/TLS (port 993 en général)."
+                "STARTTLS is not supported for migration. Use an SSL/TLS connection (usually port 993)."
                     .into(),
             )),
             // Allowed because it claims nothing: an operator choosing it knows
             // the session is not encrypted.
             "ssl" | "none" => Ok(()),
             _ => Err(AppError::Validation(
-                "Méthode de connexion invalide (attendu : ssl ou none).".into(),
+                "Invalid connection method (expected: ssl or none).".into(),
             )),
         }
     }
@@ -201,17 +200,17 @@ impl AccountMappingInput {
         let login = self.source_login.trim();
         if login.is_empty() || login.len() > 320 {
             return Err(AppError::Validation(
-                "Identifiant du compte source manquant ou trop long.".into(),
+                "The source account username is missing or too long.".into(),
             ));
         }
         if self.password.is_empty() {
             return Err(AppError::Validation(format!(
-                "Mot de passe manquant pour le compte source « {login} »."
+                "Missing password for source account '{login}'."
             )));
         }
         if self.password.len() > 1024 {
             return Err(AppError::Validation(
-                "Mot de passe du compte source trop long.".into(),
+                "The source account password is too long.".into(),
             ));
         }
         Ok(())
@@ -228,11 +227,11 @@ pub const MAX_ACCOUNTS_PER_CAMPAIGN: usize = 2000;
 pub fn validate_exclusions(folders: &[String]) -> Result<(), AppError> {
     if folders.len() > 200 {
         return Err(AppError::Validation(
-            "Trop de dossiers exclus (200 au maximum).".into(),
+            "Too many excluded folders (maximum 200).".into(),
         ));
     }
     if folders.iter().any(|f| f.len() > 500) {
-        return Err(AppError::Validation("Nom de dossier exclu trop long.".into()));
+        return Err(AppError::Validation("The excluded folder name is too long.".into()));
     }
     Ok(())
 }

@@ -43,7 +43,7 @@ fn ensure_writable(resolution: &Resolution, key: &str, scope: &SettingScope) -> 
         "settings: écriture refusée, réglage verrouillé par un niveau supérieur"
     );
     Err(AppError::SettingLocked(format!(
-        "'{key}' est verrouillé par {by} : la valeur ne peut pas être remplacée ici"
+        "'{key}' is locked by {by}; its value cannot be overridden here"
     )))
 }
 
@@ -60,7 +60,7 @@ fn ensure_writable(resolution: &Resolution, key: &str, scope: &SettingScope) -> 
 /// the query built below interpolates only what is returned here.
 fn subject_relation(kind: ScopeKind) -> Option<(&'static str, &'static str)> {
     match kind {
-        ScopeKind::OrgUnit => Some(("core.org_units", "Unité organisationnelle")),
+        ScopeKind::OrgUnit => Some(("core.org_units", "Organizational unit")),
         ScopeKind::Group => Some(("core.user_groups", "Groupe")),
         ScopeKind::User => Some(("core.users", "Compte")),
         ScopeKind::Instance | ScopeKind::Default => None,
@@ -266,7 +266,7 @@ pub async fn clear_value(
 
     if !before.has_own_value {
         return Err(AppError::Validation(format!(
-            "'{key}' n'a pas de valeur propre à cette portée : rien à rétablir"
+            "'{key}' has no value at this scope; there is nothing to reset"
         )));
     }
 
@@ -315,12 +315,12 @@ pub async fn set_lock(
 
     if locked && !before.has_own_value {
         return Err(AppError::Validation(format!(
-            "'{key}' doit d'abord recevoir une valeur à cette portée pour être verrouillé"
+            "'{key}' must first have a value at this scope before it can be locked"
         )));
     }
     if !locked && !before.has_own_value {
         return Err(AppError::Validation(format!(
-            "'{key}' n'est pas verrouillé à cette portée"
+            "'{key}' is not locked at this scope"
         )));
     }
 

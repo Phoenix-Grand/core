@@ -104,10 +104,10 @@ pub async fn probe_connection(jwt_secret: &str, dir: &LdapDirectory) -> Connecti
     let sample_filter = match filter::build_sync_filter(&dir.user_filter) {
         Ok(f) => f,
         Err(e) => {
-            probe.message = "Filtre de recherche invalide".into();
+            probe.message = "Invalid search filter".into();
             probe.detail = Some(e.message().to_string());
             probe.hint = Some(
-                "Le filtre doit contenir « {login} » : c'est l'endroit où l'identifiant saisi est inséré."
+                "The filter must contain '{login}', where the entered username is inserted."
                     .into(),
             );
             probe.elapsed_ms = started.elapsed().as_millis() as u64;
@@ -164,14 +164,12 @@ pub async fn probe_connection(jwt_secret: &str, dir: &LdapDirectory) -> Connecti
         // Connected, bound, searched - and matched nobody. Worth its own
         // wording: the connection is fine and the mapping is not.
         probe.hint = Some(
-            "La connexion et la liaison fonctionnent, mais le filtre ne trouve personne. \
-             Vérifiez le DN de base et l'attribut d'identifiant (uid pour un annuaire standard, \
-             sAMAccountName pour Active Directory)."
+            "The connection and bind work, but the filter finds no users. Check the base DN and username attribute (uid for a standard directory, sAMAccountName for Active Directory)."
                 .into(),
         );
-        "Connexion établie, aucune entrée trouvée".into()
+        "Connected; no entries found".into()
     } else {
-        "Connexion établie".into()
+        "Connected".into()
     };
     probe.elapsed_ms = started.elapsed().as_millis() as u64;
     probe
@@ -204,7 +202,7 @@ pub async fn probe_authentication(
     match super::auth::search_then_bind(dir, &service_password, login, password).await {
         Ok(mapped) => {
             probe.ok = true;
-            probe.message = "Authentification réussie".into();
+            probe.message = "Authentication succeeded".into();
             probe.dn = Some(mapped.dn.clone());
             probe.sample_mapping = Some(SampleMapping {
                 username: mapped.username.clone(),
@@ -222,16 +220,15 @@ pub async fn probe_authentication(
                      qui l'authentifie, pas l'annuaire.",
                     u.username
                 ),
-                Ok(Some(u)) => format!("Le compte « {} » est gouverné par cet annuaire.", u.username),
+                Ok(Some(u)) => format!("Account '{}' is managed by this directory.", u.username),
                 Ok(None) if dir.allow_signup => {
-                    "Aucun compte local - une connexion réelle en créerait un.".into()
+                    "No local account; a real sign-in would create one.".into()
                 }
                 Ok(None) => {
-                    "Aucun compte local, et la création est désactivée sur cet annuaire : la connexion \
-                     échouerait malgré une liaison réussie."
+                    "No local account, and account creation is disabled for this directory. Sign-in would fail despite a successful bind."
                         .into()
                 }
-                Err(_) => "État du compte local indéterminé.".into(),
+                Err(_) => "Could not determine the local account's state.".into(),
             });
         }
         Err(e) => {

@@ -118,7 +118,7 @@ pub async fn update_settings(
     // exactly one writer, and it encrypts.
     if let Some(key) = updates.keys().find(|k| crate::handlers::admin::mail::owns_setting(k)) {
         return Err(AppError::Validation(format!(
-            "'{key}' se règle depuis Administration → Courriel (PATCH /admin/mail/settings)"
+            "'{key}' is configured in Administration → Email (PATCH /admin/mail/settings)"
         )));
     }
 
@@ -133,7 +133,7 @@ pub async fn update_settings(
                 || k.as_str() == crate::auth::methods::KEY_ADMIN_FALLBACK)
     {
         return Err(AppError::Validation(format!(
-            "'{key}' se règle par portée depuis Administration → Sécurité → Authentification et SSO              (PUT /admin/settings/scoped/{key}), pour qu'il puisse varier par unité organisationnelle              et passer le garde-fou anti-verrouillage"
+            "'{key}' is configured by scope in Administration → Security → Authentication and SSO (PUT /admin/settings/scoped/{key}), so it can vary by organizational unit and pass the lockout protection check"
         )));
     }
 
@@ -200,7 +200,7 @@ pub async fn update_settings(
     // At least one entry is required to commit; an empty PATCH has nothing to
     // audit and nothing to change either.
     let Some(last) = entries.pop() else {
-        return Ok(Json(json!({ "message": "Aucun paramètre à mettre à jour", "updated": 0 })));
+        return Ok(Json(json!({ "message": "No settings to update", "updated": 0 })));
     };
     for entry in entries {
         tx.also(entry);
@@ -217,7 +217,7 @@ pub async fn update_settings(
     // evaluation; not invalidating tells the operator their fix did not take.
     crate::health::invalidate();
 
-    Ok(Json(json!({ "message": "Paramètres mis à jour", "updated": updates.len() })))
+    Ok(Json(json!({ "message": "Settings updated", "updated": updates.len() })))
 }
 
 /// Checks every module-owned key of a settings PATCH against the declaration
@@ -356,7 +356,7 @@ pub async fn get_admin_module(
             params![&id],
         )
         .await?
-        .ok_or_else(|| AppError::NotFound(format!("Module '{id}' introuvable")))?;
+        .ok_or_else(|| AppError::NotFound(format!("Module '{id}' not found")))?;
 
     let config = row.config;
     let settings_path = config.get("settings_path")
@@ -389,7 +389,7 @@ pub async fn toggle_module(
     let enabled = body
         .get("is_enabled")
         .and_then(|v| v.as_bool())
-        .ok_or_else(|| AppError::Validation("Champ 'is_enabled' requis (bool)".into()))?;
+        .ok_or_else(|| AppError::Validation("Field 'is_enabled' is required (bool)".into()))?;
 
     // Only the flag flip is transactional-with-audit; the cascade below drives
     // the in-memory registry and the event bus, which no transaction can roll
@@ -412,7 +412,7 @@ pub async fn toggle_module(
         .map_err(|e| { tracing::error!(error = %e, module_id = %id, "toggle_module: lecture"); AppError::Database(e) })?;
 
     let Some(row) = previous else {
-        return Err(AppError::NotFound(format!("Module '{id}' introuvable")));
+        return Err(AppError::NotFound(format!("Module '{id}' not found")));
     };
     let display_name: String = row.try_get("display_name").map_err(AppError::Database)?;
     let version: String = row.try_get("version").map_err(AppError::Database)?;
@@ -513,7 +513,7 @@ pub async fn toggle_module(
     }
 
     Ok(Json(json!({
-        "message":       if enabled { "Module activé" } else { "Module désactivé" },
+        "message":       if enabled { "Module enabled" } else { "Module disabled" },
         "also_disabled": also_disabled,
     })))
 }
