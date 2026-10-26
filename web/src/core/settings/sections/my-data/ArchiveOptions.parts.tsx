@@ -26,6 +26,7 @@ export function Part2({ maxFileMb, onMaxFileMb, options, t }: { maxFileMb: NonNu
               options={options}
               width={260}
               aria-label={t('settings.mde_opt_size', { defaultValue: 'Taille maximale d’un fichier' })}
+              t={t}
             />
   )
 }

@@ -6,6 +6,7 @@ import { Search, X } from "lucide-react"
 import { Badge, Callout, Checkbox, FloatingWindow, Input, Spinner } from "@ui"
 import { formatWhen } from "../format"
 import type { ExportRequestDialog } from './ExportRequestDialog'
+import { exportServiceLabel, exportServiceDescription } from '../../../core/dataExport/labels'
 const PICKER_LIMIT = 500
 
 function Legend({ children }: { children: React.ReactNode }) {
@@ -168,13 +169,13 @@ export function Part1({ t, onClose, submit, canSubmit, request, scope, setScope,
                           checked={s.required || services.includes(s.id)}
                           disabled={s.required}
                           onChange={on => toggleService(s.id, on)}
-                          aria-label={s.label}
+                          aria-label={exportServiceLabel(t, s, 'admin')}
                         />
                       </span>
                       <span className="flex min-w-0 flex-col">
                         <span className="flex flex-wrap items-center gap-2">
                           <span className="text-text-primary" style={{ fontSize: 'var(--kb-text-body)' }}>
-                            {s.label}
+                            {exportServiceLabel(t, s, 'admin')}
                           </span>
                           {s.required && <Badge variant="neutral" size="sm">{t('admin.dx_service_always')}</Badge>}
                           {s.format && (
@@ -183,9 +184,9 @@ export function Part1({ t, onClose, submit, canSubmit, request, scope, setScope,
                             </span>
                           )}
                         </span>
-                        {s.description && (
+                        {exportServiceDescription(t, s, 'admin') && (
                           <span className="text-text-secondary" style={{ fontSize: 'var(--kb-text-meta)' }}>
-                            {s.description}
+                            {exportServiceDescription(t, s, 'admin')}
                           </span>
                         )}
                       </span>

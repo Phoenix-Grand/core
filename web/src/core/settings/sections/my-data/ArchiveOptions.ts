@@ -4,6 +4,7 @@
 import { useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import type { MyExportPolicy } from "./api"
+import { formatBytes } from "../../../../admin/sections/format"
 
 import { ViewBase } from './ArchiveOptions.kbcontrol'
 import * as __parts from './ArchiveOptions.parts'
@@ -17,18 +18,15 @@ export interface ArchiveOptionsProps {
 
 const STEPS = [100, 250, 500, 1_024, 2_048, 5_120, 10_240]
 
-function humanMb(mb: number): string {
-  return mb >= 1_024 ? `${Math.round(mb / 1_024)} Go` : `${mb} Mo`
-}
-
 export class ArchiveOptions extends ViewBase {
   tr!: ArchiveOptionsStores['t']
+  language!: string
   options!: { value: string; label: string; description: string | undefined; }[]
 
   /** The screen's hooks that read nothing of the view (stores, translations…), as the TSX called them. React's rules apply: `use()` runs them on every render. */
   useStores() {
-    const { t } = useTranslation()
-    return { t }
+    const { t, i18n } = useTranslation()
+    return { t, language: i18n.resolvedLanguage || i18n.language }
   }
 
   /** The screen's hooks that read its members (run after the fields of `useStores()` are set). React's rules apply: `use()` runs them on every render. */
@@ -38,12 +36,12 @@ export class ArchiveOptions extends ViewBase {
       const values = STEPS.filter(v => v < this.props.policy.max_file_mb).concat(this.props.policy.max_file_mb)
       return values.map(v => ({
         value: String(v),
-        label: humanMb(v),
+        label: formatBytes(v * 1_024 ** 2, this.language),
         description: v === this.props.policy.max_file_mb
           ? t('settings.mde_size_max', { defaultValue: 'Maximum autorisé par l’instance' })
           : undefined,
       }))
-    }, [this.props.policy.max_file_mb, t])
+    }, [this.props.policy.max_file_mb, t, this.language])
     this.publish({ options })
     return { options }
   }
@@ -51,7 +49,7 @@ export class ArchiveOptions extends ViewBase {
   /** Runs the hooks and publishes what they give as fields (the bindings, the getters and the methods read them). */
   use(): void {
     const s = this.useStores()
-    this.publish({ tr: s.t })
+    this.publish({ tr: s.t, language: s.language })
     const h = this.useHooks()
     this.publish({ options: h.options })
   }

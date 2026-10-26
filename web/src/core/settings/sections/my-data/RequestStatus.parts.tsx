@@ -37,7 +37,7 @@ export function Part1({ t, latest, locale }: { t: NonNullable<RequestStatus['tr'
                   <dt className="text-text-secondary">
                     {t('settings.mde_size', { defaultValue: 'Taille' })}
                   </dt>
-                  <dd className="text-text-primary">{formatBytes(latest.size_bytes ?? 0)}</dd>
+                  <dd className="text-text-primary">{formatBytes(latest.size_bytes ?? 0, locale)}</dd>
                 </div>
                 <div className="flex justify-between gap-3">
                   <dt className="text-text-secondary">

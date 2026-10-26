@@ -9,12 +9,16 @@ import { formatRelative } from '../../core/intl/datetime'
  */
 
 /** Human-readable size. Below 1 GiB the megabyte is the useful unit. */
-export function formatBytes(bytes: number): string {
+export function formatBytes(bytes: number, locale = typeof document === 'undefined' ? 'en' : document.documentElement.lang || 'en'): string {
   if (!Number.isFinite(bytes) || bytes < 0) return '-'
-  if (bytes < 1024 ** 2) return `${(bytes / 1024).toFixed(0)} Ko`
-  if (bytes < 1024 ** 3) return `${(bytes / 1024 ** 2).toFixed(0)} Mo`
-  if (bytes < 1024 ** 4) return `${(bytes / 1024 ** 3).toFixed(1)} Go`
-  return `${(bytes / 1024 ** 4).toFixed(2)} To`
+  const [power, unit, digits] = bytes < 1024 ** 2 ? [1, 'kilobyte', 0] as const
+    : bytes < 1024 ** 3 ? [2, 'megabyte', 0] as const
+    : bytes < 1024 ** 4 ? [3, 'gigabyte', 1] as const
+    : [4, 'terabyte', 2] as const
+  return new Intl.NumberFormat(locale, {
+    style: 'unit', unit, unitDisplay: 'short',
+    minimumFractionDigits: digits, maximumFractionDigits: digits,
+  }).format(bytes / 1024 ** power)
 }
 
 /**

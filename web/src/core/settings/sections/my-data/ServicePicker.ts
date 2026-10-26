@@ -5,6 +5,7 @@ import { type MouseEventArgs, type ValueChangedEventArgs } from '@kubuno/views'
 import { useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import type { MyExportService } from "./api"
+import { exportServiceLabel, exportServiceDescription } from "../../../dataExport/labels"
 
 import { ViewBase } from './ServicePicker.kbcontrol'
 import * as __parts from './ServicePicker.parts'
@@ -53,7 +54,11 @@ export class ServicePicker extends ViewBase {
 
   /** The screen's hooks that read its members (run after the fields of `useStores()` are set). React's rules apply: `use()` runs them on every render. */
   useHooks() {
-    const groups = useMemo(() => groupByModule(this.props.services), [this.props.services])
+    const groups = useMemo(() => groupByModule(this.props.services.map(service => ({
+      ...service,
+      label: exportServiceLabel(this.tr, service, 'self'),
+      description: exportServiceDescription(this.tr, service, 'self'),
+    }))), [this.props.services, this.tr])
     this.publish({ groups })
     const required = useMemo(
       () => this.props.services.filter(s => s.required).map(s => s.id),
