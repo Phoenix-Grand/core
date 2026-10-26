@@ -146,7 +146,7 @@ export function useBacktest(ruleId: string | null, backtestId: string | null) {
 // ── Directory lookups, for the scope editor ──────────────────────────────────
 
 export interface OrgUnitRow { id: string; name: string; parent_id: string | null }
-export interface GroupRow   { id: string; name: string; member_count: number }
+export interface GroupRow   { id: string; name: string; member_count: number; is_system?: boolean }
 export interface UserRow    { id: string; username: string; email: string; display_name: string | null; org_unit_id: string | null }
 
 /**

@@ -14,6 +14,7 @@ import { adminUrlWith } from "../../adminAction"
 import { AUDIENCES_MANAGE } from "./privileges"
 import { useAudiences, useAudienceMutations, type Audience } from "./api"
 import AudienceDialog from "./AudienceDialog"
+import { audienceName, audienceDescription } from "../../../core/directory/labels"
 
 import { ViewBase } from './AudiencesSection.kbview'
 import * as __parts from './AudiencesSection.parts'
@@ -58,8 +59,8 @@ export class AudiencesSection extends ViewBase {
     const rows = useMemo(() => {
       const all = data?.audiences ?? []
       if (!this.q.trim()) return all
-      return all.filter(a => foldIncludes(a.name, this.q) || (a.description ? foldIncludes(a.description, this.q) : false))
-    }, [data, this.q])
+      return all.filter(a => foldIncludes(audienceName(this.tr, a), this.q) || foldIncludes(audienceDescription(this.tr, a) ?? '', this.q))
+    }, [data, this.q, this.tr])
     this.publish({ rows })
     return { rows }
   }
@@ -87,18 +88,18 @@ export class AudiencesSection extends ViewBase {
     {
       id: 'name',
       header: this.tr('admin.aud_name', { defaultValue: 'Nom' }),
-      sortValue: a => a.name,
+      sortValue: a => audienceName(this.tr, a),
       cell: (a: Audience) => (
         <span className="flex min-w-0 items-center gap-2">
           {a.is_everyone && <Globe size={13} className="shrink-0 text-text-tertiary" />}
-          <span className="truncate text-text-primary">{a.name}</span>
+          <span className="truncate text-text-primary">{audienceName(this.tr, a)}</span>
         </span>
       ),
     },
     {
       id: 'description',
       header: this.tr('admin.aud_description', { defaultValue: 'Description' }),
-      cell: (a: Audience) => <span className="truncate text-text-secondary">{a.description ?? '-'}</span>,
+      cell: (a: Audience) => <span className="truncate text-text-secondary">{audienceDescription(this.tr, a) ?? '-'}</span>,
     },
     {
       id: 'members',
@@ -254,7 +255,7 @@ export class AudiencesSection extends ViewBase {
   async askRemove(a: Audience) {
     if (!(!(this.open))) return undefined as never
     const ok = await this.confirm({
-      title: this.tr('admin.aud_delete_q', { defaultValue: 'Supprimer « {{name}} » ?', name: a.name }),
+      title: this.tr('admin.aud_delete_q', { defaultValue: 'Supprimer « {{name}} » ?', name: audienceName(this.tr, a) }),
       // The count of places it is offered is the part nobody has in mind: the
       // same click removes a list and changes what several units are shown.
       message: a.applied_to > 0

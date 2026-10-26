@@ -6,6 +6,7 @@ import EditableCard from '../../inline-edit/EditableCard'
 import Field, { orDash } from '../../inline-edit/InlineEditField'
 import { useDraft } from '../../inline-edit/useDraft'
 import { useAudienceMutations, type Audience } from './api'
+import { audienceName, audienceDescription } from '../../../core/directory/labels'
 
 /** Same ceilings as `core.target_audiences` and the handler that guards it. */
 const NAME_MAX = 40
@@ -107,8 +108,8 @@ export default function IdentityCard({
         </div>
       ) : (
         <dl className="divide-y divide-border">
-          <Field label={t('admin.aud_name')}>{audience.name}</Field>
-          <Field label={t('admin.aud_description')}>{orDash(audience.description)}</Field>
+          <Field label={t('admin.aud_name')}>{audienceName(t, audience)}</Field>
+          <Field label={t('admin.aud_description')}>{orDash(audienceDescription(t, audience))}</Field>
         </dl>
       )}
     </EditableCard>

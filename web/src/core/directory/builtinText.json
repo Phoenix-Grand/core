@@ -1,0 +1,8 @@
+{
+  "groups": {
+    "users": { "name": "Utilisateurs", "description": "Groupe de base — tous les nouveaux utilisateurs" },
+    "guests": { "name": "Invités", "description": "Accès minimal, aucune action avancée" },
+    "administrators": { "name": "Administrateurs", "description": "Accès complet à l'administration" }
+  },
+  "everyone": { "name": "Toute l'organisation", "description": "Tous les comptes actifs de cette instance." }
+}

@@ -5,6 +5,7 @@
 import { Callout, Combobox, DatePicker } from "@ui"
 import type { User } from "../../core/types"
 import type { AssignRoleDialog } from './AssignRoleDialog'
+import { groupName, groupDescription } from '../../core/directory/labels'
 
 function Avatar({ user, size = 28 }: { user: User; size?: number }) {
   const initial = (user.display_name || user.username || user.email || '?').trim().charAt(0).toUpperCase()
@@ -27,7 +28,7 @@ export function Part1({ groupId, setGroupId, groups, t }: { groupId: AssignRoleD
     <Combobox
                     value={groupId}
                     onChange={setGroupId}
-                    options={(groups ?? []).map(g => ({ value: g.id, label: g.name, description: g.description ?? undefined }))}
+                    options={(groups ?? []).map(g => ({ value: g.id, label: groupName(t, g), description: groupDescription(t, g) ?? undefined }))}
                     placeholder={t('admin.assign_pick_group')}
                     width="100%"
                     t={t}

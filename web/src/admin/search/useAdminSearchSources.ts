@@ -6,6 +6,7 @@ import {
 } from 'lucide-react'
 import { api } from '../../core/api/client'
 import type { OrgUnit, User, UserGroup } from '../../core/types'
+import { groupName, groupDescription } from '../../core/directory/labels'
 import { PRIV, type CanFn } from '../../core/authz/types'
 import { NAV_INDEX, canSeeTab, firstLeafId, navPathLabels } from '../adminNav'
 import { actionUrl, isSoonTarget, visibleActions } from '../adminActions'
@@ -169,9 +170,9 @@ export function useAdminSearchSources(args: SearchSourcesArgs): SearchSources {
         // its order through the generic sort.
         score: 1000 - i,
       })),
-      group:      matchLocal(groups.data, g => fold(g.name, g.description ?? ''), g => ({
-        key: `group:${g.id}`, kind: 'group', label: g.name, sublabel: g.description ?? undefined,
-        url: adminUrl({ tab: 'groups', params: { q: g.name } }), Icon: Contact, score: 0,
+      group:      matchLocal(groups.data, g => fold(groupName(t, g), groupDescription(t, g) ?? ''), g => ({
+        key: `group:${g.id}`, kind: 'group', label: groupName(t, g), sublabel: groupDescription(t, g) ?? undefined,
+        url: adminUrl({ tab: 'groups', params: { q: groupName(t, g) } }), Icon: Contact, score: 0,
       }), terms),
       'org-unit': matchLocal(orgUnits.data, u => fold(u.name, u.description ?? ''), u => ({
         key: `ou:${u.id}`, kind: 'org-unit', label: u.name, sublabel: u.description ?? undefined,
@@ -200,7 +201,7 @@ export function useAdminSearchSources(args: SearchSourcesArgs): SearchSources {
     const flat: AdminResult[] = []
     for (const kind of KIND_ORDER) flat.push(...rankCategory(byKind[kind], caps[kind]))
     return demoteSoon(flat)
-  }, [terms, actionIndex, pageIndex, users.data, groups.data, orgUnits.data, modules.data, settings.data, caps, can])
+  }, [terms, actionIndex, pageIndex, users.data, groups.data, orgUnits.data, modules.data, settings.data, caps, can, t])
 
   // ── Empty field: a few things worth doing ─────────────────────────────────
   const suggestions = useMemo(

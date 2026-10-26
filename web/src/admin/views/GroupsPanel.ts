@@ -9,6 +9,7 @@ import { foldIncludes } from "@ui"
 import { api } from "../../core/api/client"
 import { useAdminAction } from "../adminAction"
 import type { UserGroup } from "../../core/types"
+import { groupName, groupDescription } from "../../core/directory/labels"
 
 import { ViewBase } from './GroupsPanel.kbview'
 import * as __parts from './GroupsPanel.parts.tsx'
@@ -16,6 +17,7 @@ import * as __parts from './GroupsPanel.parts.tsx'
 export class GroupsPanel extends ViewBase {
   @bind accessor showCreate = false
   queryClient!: GroupsPanelStores['queryClient']
+  tr!: GroupsPanelStores['t']
   params!: URLSearchParams
   data!: GroupsPanelStores['data']
   isLoading!: boolean
@@ -50,7 +52,7 @@ export class GroupsPanel extends ViewBase {
   /** Runs the hooks and publishes what they give as fields (the bindings, the getters and the methods read them). */
   use(): void {
     const s = this.useStores()
-    this.publish({ queryClient: s.queryClient, params: s.params, data: s.data, isLoading: s.isLoading })
+    this.publish({ tr: s.t, queryClient: s.queryClient, params: s.params, data: s.data, isLoading: s.isLoading })
     const h = this.useHooks()
     this.publish({ createGroup: h.createGroup })
   }
@@ -60,8 +62,8 @@ export class GroupsPanel extends ViewBase {
   }
 
   get rows(): (UserGroup & { member_count: number; })[] | undefined {
-    return this.memo('rows', [this.filter, this.data], () => this.filter
-    ? this.data?.filter(g => foldIncludes(`${g.name} ${g.description ?? ''}`, this.filter))
+    return this.memo('rows', [this.filter, this.data, this.tr], () => this.filter
+    ? this.data?.filter(g => foldIncludes(`${groupName(this.tr, g)} ${groupDescription(this.tr, g) ?? ''} ${g.name} ${g.description ?? ''}`, this.filter))
     : this.data)
   }
 

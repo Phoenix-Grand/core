@@ -8,6 +8,7 @@ import { useTranslation } from "react-i18next"
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { api } from "../../core/api/client"
 import type { UserGroup } from "../../core/types"
+import { groupName, groupDescription } from "../../core/directory/labels"
 import { Users, Trash2, Edit2, X, Check, Shield, ChevronDown, ChevronRight } from "lucide-react"
 import { Checkbox, Button, Input } from "@ui"
 import { useConfirm } from "../../core/hooks/useConfirm"
@@ -40,12 +41,14 @@ function GroupForm({
   onCancel,
 }: {
   initial?: Partial<UserGroup>
-  onSave: (data: { name: string; description: string; permissions: string[]; is_default: boolean; release_exempt: boolean }) => void
+  onSave: (data: { name?: string; description?: string; permissions: string[]; is_default: boolean; release_exempt: boolean }) => void
   onCancel: () => void
 }) {
   const { t } = useTranslation()
   const [name, setName]             = useState(initial?.name ?? '')
   const [description, setDesc]      = useState(initial?.description ?? '')
+  const [nameEdited, setNameEdited] = useState(false)
+  const [descEdited, setDescEdited] = useState(false)
   const [permissions, setPerms]     = useState<string[]>(initial?.permissions ?? [])
   const [isDefault, setIsDefault]   = useState(initial?.is_default ?? false)
   const [relExempt, setRelExempt]   = useState(initial?.release_exempt ?? false)
@@ -70,8 +73,9 @@ function GroupForm({
       <div>
         <label className="block text-sm font-medium text-text-secondary mb-1">{t('admin.g_name')} *</label>
         <Input
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          value={!nameEdited && initial ? groupName(t, initial) : name}
+          aria-label={t('admin.g_name')}
+          onChange={(e) => { setNameEdited(true); setName(e.target.value) }}
           placeholder={t('admin.g_name_ph')}
         />
       </div>
@@ -79,8 +83,9 @@ function GroupForm({
       <div>
         <label className="block text-sm font-medium text-text-secondary mb-1">{t('admin.g_description')}</label>
         <Input
-          value={description}
-          onChange={(e) => setDesc(e.target.value)}
+          value={!descEdited && initial ? groupDescription(t, initial) ?? '' : description}
+          aria-label={t('admin.g_description')}
+          onChange={(e) => { setDescEdited(true); setDesc(e.target.value) }}
           placeholder={t('admin.g_optional')}
         />
       </div>
@@ -146,7 +151,11 @@ function GroupForm({
       <div className="flex gap-2 pt-1">
         <Button
           icon={<Check size={14} />}
-          onClick={() => onSave({ name, description, permissions, is_default: isDefault, release_exempt: relExempt })}
+          onClick={() => onSave({
+            ...(!initial?.id || nameEdited ? { name } : {}),
+            ...(!initial?.id || descEdited ? { description } : {}),
+            permissions, is_default: isDefault, release_exempt: relExempt,
+          })}
           disabled={!name.trim()}
         >
           {t('settings.save')}
@@ -201,7 +210,7 @@ function GroupRow({ group, onDeleted }: { group: UserGroup & { member_count: num
         </button>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
-            <p className="text-sm font-medium text-text-primary">{group.name}</p>
+            <p className="text-sm font-medium text-text-primary">{groupName(t, group)}</p>
             {group.is_default && (
               <span className="text-xs px-1.5 py-0.5 rounded-full bg-primary-light text-primary">{t('admin.g_default_badge')}</span>
             )}
@@ -210,7 +219,7 @@ function GroupRow({ group, onDeleted }: { group: UserGroup & { member_count: num
             )}
           </div>
           {group.description && (
-            <p className="text-sm text-text-tertiary truncate">{group.description}</p>
+            <p className="text-sm text-text-tertiary truncate">{groupDescription(t, group)}</p>
           )}
         </div>
         <div className="flex items-center gap-3 shrink-0">
@@ -229,7 +238,7 @@ function GroupRow({ group, onDeleted }: { group: UserGroup & { member_count: num
               <button
                 onClick={async () => {
                   const ok = await confirm({
-                    title:        t('admin.g_delete_title', { name: group.name }),
+                    title:        t('admin.g_delete_title', { name: groupName(t, group) }),
                     message:      t('admin.g_delete_msg'),
                     confirmLabel: t('common.delete'),
                     variant:      'danger',

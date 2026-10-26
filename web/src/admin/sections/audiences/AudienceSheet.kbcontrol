@@ -7,7 +7,7 @@
         <Icon Name="Globe" Size="18" Visible="{Binding a.is_everyone}" Class="mt-1 shrink-0 text-text-tertiary"/>
         <Icon Name="Users" Size="18" Visible="{Binding show_not_a_is_everyone}" Class="mt-1 shrink-0 text-text-tertiary"/>
         <Label HtmlTag="H1"
-               Text="{Binding a.name}"
+               Text="{Binding name}"
                Overflow="Wrap"
                ForeColor="TextPrimary"
                InheritFontSize="true"

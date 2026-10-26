@@ -8,6 +8,7 @@ import { useQuery } from "@tanstack/react-query"
 import { foldIncludes } from "@ui"
 import { api } from "../../../core/api/client"
 import type { AudienceMember } from "./api"
+import { groupName } from "../../../core/directory/labels"
 
 import { ViewBase } from './MemberPicker.kbview'
 import * as __parts from './MemberPicker.parts'
@@ -42,7 +43,7 @@ export class MemberPicker extends ViewBase {
     const { t } = useTranslation()
     const groups = useQuery({
       queryKey: ['admin', 'groups'],
-      queryFn: async () => (await api.get<{ groups: { id: string; name: string; member_count: number }[] }>('/admin/groups')).data.groups,
+      queryFn: async () => (await api.get<{ groups: { id: string; name: string; is_system?: boolean; member_count: number }[] }>('/admin/groups')).data.groups,
     })
     const users = useQuery({
       queryKey: ['admin', 'users', 'picker'],
@@ -61,7 +62,7 @@ export class MemberPicker extends ViewBase {
     )
     const candidates = useMemo<Candidate[]>(() => {
       const g: Candidate[] = (groups.data ?? []).map(x => ({
-        member_type: 'group', member_id: x.id, label: x.name, sub: null, reach: x.member_count,
+        member_type: 'group', member_id: x.id, label: groupName(this.tr, x), sub: null, reach: x.member_count,
       }))
       const u: Candidate[] = (users.data ?? [])
         .filter(x => x.is_active)
@@ -70,7 +71,7 @@ export class MemberPicker extends ViewBase {
           label: x.display_name || x.username, sub: x.email, reach: null,
         }))
       return [...g, ...u].filter(c => !taken.has(`${c.member_type}:${c.member_id}`))
-    }, [groups.data, users.data, taken])
+    }, [groups.data, users.data, taken, this.tr])
     const shown = useMemo(
       () => (this.q.trim()
         ? candidates.filter(c => foldIncludes(c.label, this.q) || (c.sub ? foldIncludes(c.sub, this.q) : false))

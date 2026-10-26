@@ -9,6 +9,8 @@
 // an operator over-trusts - so the caveat travels with the number.
 
 import { useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
+import { groupName } from '../../core/directory/labels'
 import { useGroupMembers, useGroupsLite, useOrgUnits, useUsersLite } from './api'
 import type { Scope, ScopeRef } from './types'
 
@@ -30,8 +32,10 @@ export interface Directory {
 }
 
 export function useDirectory(enabled = true): Directory {
+  const { t } = useTranslation()
   const units  = useOrgUnits(enabled)
   const groups = useGroupsLite(enabled)
+  const namedGroups = useMemo(() => (groups.data ?? []).map(g => ({ ...g, name: groupName(t, g) })), [groups.data, t])
   const users  = useUsersLite(enabled)
 
   const unitById = useMemo(() => {
@@ -42,9 +46,9 @@ export function useDirectory(enabled = true): Directory {
 
   const groupById = useMemo(() => {
     const m = new Map<string, string>()
-    for (const g of groups.data ?? []) m.set(g.id, g.name)
+    for (const g of namedGroups) m.set(g.id, g.name)
     return m
-  }, [groups.data])
+  }, [namedGroups])
 
   const userById = useMemo(() => {
     const m = new Map<string, string>()
@@ -65,7 +69,7 @@ export function useDirectory(enabled = true): Directory {
 
   return {
     units:  units.data ?? [],
-    groups: groups.data ?? [],
+    groups: namedGroups,
     users:  users.data?.users ?? [],
     totalUsers: users.data?.total ?? 0,
     partial: (users.data?.total ?? 0) > (users.data?.users.length ?? 0),
