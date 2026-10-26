@@ -1,7 +1,8 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import i18n from '../i18n'
+import type { TFunction } from 'i18next'
 import type { Role } from './types'
+import seededText from './seededText.json'
 
 /**
  * Localised wording for the delegated-administration catalogue.
@@ -29,15 +30,16 @@ import type { Role } from './types'
  * ## An operator's own wording always wins
  *
  * A system role's `name` and `description` remain editable (only its privilege
- * set is frozen server-side). The French entries in `i18n/locales/fr/core.json`
- * are byte-identical to the migration seed, so "the stored value still equals
- * the French string" is precisely "nobody has rewritten it" - and a rewritten
- * role keeps the operator's wording, in every language. Should the two ever
- * drift apart, the fallback is the stored French label: what this screen showed
- * before any of this existed, never a raw key and never a blank.
+ * set is frozen server-side). Compare them with the canonical migration text in
+ * `seededText.json`, independent of which locale bundles have been downloaded.
+ * A French lookup can fall back to English before French is loaded, making an
+ * untouched French name look like an administrator edit. Translation wording
+ * can also differ from the seed's punctuation. Neither should affect whether
+ * a factory field is translated. Edited or explicitly cleared fields retain
+ * the operator's value in every language.
  *
- * Which is why the French strings must be edited in step with the migrations,
- * not "improved" on their own.
+ * The seed snapshot and its English entries are checked against the database
+ * migration by regression tests.
  */
 
 /** `core.users.read` → `core_users_read`; `read-only-admin` → `read_only_admin`. */
@@ -52,11 +54,6 @@ export const roleDescKey       = (slug: string) => `admin.roledsc_${flatten(slug
 /** Functional group heading. Domains carry neither dot nor dash. */
 export const domainKey         = (domain: string) => `admin.privdom_${domain}`
 
-/** The seeded French string for a key, or '' when the core does not ship one. */
-function seededValue(key: string): string {
-  return i18n.getFixedT('fr')(key, { defaultValue: '' }).trim()
-}
-
 /**
  * The core's translation when it ships one and the stored text is still the one
  * the core seeded; the stored text otherwise.
@@ -67,8 +64,8 @@ function resolve(
   stored: string | null | undefined,
 ): string | null {
   const text = stored?.trim() ?? ''
-  if (!i18n.exists(key)) return text || null
-  if (text && text !== seededValue(key)) return text
+  if (!text) return null
+  if (text !== (seededText as Record<string, string>)[key]?.trim()) return text
   return translate(key, text)
 }
 
@@ -90,32 +87,30 @@ export interface AuthzLabels {
   domainLabel:          (domain: string) => string
 }
 
+export function createAuthzLabels(t: TFunction): AuthzLabels {
+  const translate = (key: string, fallback: string) => t(key, { defaultValue: fallback })
+  return {
+    privilegeLabel: entry =>
+      resolve(translate, privilegeLabelKey(entry.key), entry.label) ?? entry.key,
+
+    privilegeDescription: entry =>
+      resolve(translate, privilegeDescKey(entry.key), entry.description),
+
+    roleName: role =>
+      (role.is_system ? resolve(translate, roleNameKey(role.slug), role.name) : role.name.trim())
+      || role.slug,
+
+    roleDescription: role =>
+      role.is_system
+        ? resolve(translate, roleDescKey(role.slug), role.description)
+        : (role.description?.trim() || null),
+
+    domainLabel: domain => t(domainKey(domain), { defaultValue: domain }),
+  }
+}
+
 export function useAuthzLabels(): AuthzLabels {
   const { t, i18n: instance } = useTranslation()
-
   // Rebuilt on every language change so memoised consumers re-render with it.
-  return useMemo<AuthzLabels>(() => {
-    const translate = (key: string, fallback: string) => t(key, { defaultValue: fallback })
-
-    return {
-      privilegeLabel: entry =>
-        resolve(translate, privilegeLabelKey(entry.key), entry.label) ?? entry.key,
-
-      privilegeDescription: entry =>
-        resolve(translate, privilegeDescKey(entry.key), entry.description),
-
-      roleName: role =>
-        (role.is_system ? resolve(translate, roleNameKey(role.slug), role.name) : role.name.trim())
-        || role.slug,
-
-      roleDescription: role =>
-        role.is_system
-          ? resolve(translate, roleDescKey(role.slug), role.description)
-          : (role.description?.trim() || null),
-
-      domainLabel: domain => t(domainKey(domain), { defaultValue: domain }),
-    }
-    // `instance.language` is the dependency that matters here: `t` is stable for
-    // a given language, and every consumer memoises on these functions.
-  }, [t, instance.language])
+  return useMemo(() => createAuthzLabels(t), [t, instance.language])
 }
