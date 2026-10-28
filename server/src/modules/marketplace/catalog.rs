@@ -157,10 +157,13 @@ pub async fn fetch_catalog() -> Result<Vec<MarketModule>, AppError> {
             resp.status()
         )));
     }
-    let env: Envelope<Vec<MarketModule>> = resp
+    let mut env: Envelope<Vec<MarketModule>> = resp
         .json()
         .await
         .map_err(|e| AppError::Internal(anyhow::anyhow!("parse catalogue marketplace: {e}")))?;
+    for module in &mut env.data {
+        super::metadata::apply_configured(module).await;
+    }
     Ok(env.data)
 }
 
@@ -182,10 +185,11 @@ pub async fn fetch_detail(id: &str) -> Result<MarketModule, AppError> {
             resp.status()
         )));
     }
-    let env: Envelope<MarketModule> = resp
+    let mut env: Envelope<MarketModule> = resp
         .json()
         .await
         .map_err(|e| AppError::Internal(anyhow::anyhow!("parse détail marketplace: {e}")))?;
+    super::metadata::apply_configured(&mut env.data).await;
     Ok(env.data)
 }
 

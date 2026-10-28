@@ -43,6 +43,13 @@ pub fn cli() -> Command {
         )
         .subcommand_required(true)
         .arg_required_else_help(true)
+        .subcommand(
+            Command::new("marketplace:metadata")
+                .about("Export optional module Marketplace text, or merge it into catalog JSON")
+                .arg(Arg::new("manifest").required(true).value_name("MODULE_TOML"))
+                .arg(Arg::new("catalog").long("catalog").value_name("CATALOG_JSON")
+                    .help("Preserve all catalog fields and update text only for the matching ID/version")),
+        )
         // ── security:rekey ──
         .subcommand(
             Command::new("security:rekey")

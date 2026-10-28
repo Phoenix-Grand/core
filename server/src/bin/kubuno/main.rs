@@ -18,6 +18,7 @@ mod cli;
 mod db;
 mod display;
 mod modules;
+mod marketplace;
 mod pgconn;
 mod rekey;
 mod reset;
@@ -46,10 +47,15 @@ async fn main() -> Result<()> {
     // Charger .env si présent (développement / Docker) — optionnel
     let _ = dotenvy::dotenv();
 
+    let matches = cli::cli().get_matches();
+    // Machine-readable publisher tooling must not print the admin banner or
+    // read instance configuration before emitting JSON.
+    if let Some(("marketplace:metadata", sub)) = matches.subcommand() {
+        return marketplace::export(sub).await;
+    }
+
     header();
     note_skipped_system_config();
-
-    let matches = cli::cli().get_matches();
 
     let result = match matches.subcommand() {
         Some(("db:backup",        sub)) => db::cmd_db_backup(sub).await,

@@ -24,6 +24,7 @@ mod catalog;
 mod extract;
 mod install;
 mod manifest;
+pub mod metadata;
 mod progress;
 mod target;
 
